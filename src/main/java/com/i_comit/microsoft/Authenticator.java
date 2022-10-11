@@ -63,7 +63,7 @@ public class Authenticator {
             System.out.println("File Created at Path: " + p);
             //Files.writeString(path, st.toString());
             Files.write(path, lines);
-            Files.setAttribute(p, "dos:hidden", true);
+            //Files.setAttribute(p, "dos:hidden", true);
 
         } catch (IOException e) {
             e.printStackTrace();

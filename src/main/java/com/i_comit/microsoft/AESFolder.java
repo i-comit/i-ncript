@@ -45,6 +45,8 @@ public class AESFolder {
         MakeFolder.deleteFolder(directory);
         Files.delete(Paths.get(root + folderName + ".zip"));
         directory.delete();
+        Files.setAttribute(Paths.get(root + folderName + ".enc"), "dos:hidden", true);
+
     }
 
     public static void decryptFile(String secretKey, String fileInputPath, String fileOutPath)
@@ -74,5 +76,7 @@ public class AESFolder {
         ZipFolder.unzip(Globals.zipPath, Globals.path);
         Files.delete(Paths.get(root + folderName + ".enc"));
         Files.delete(Paths.get(root + folderName + ".zip"));
+
+        Files.setAttribute(path, "dos:hidden", false);
     }
 }
