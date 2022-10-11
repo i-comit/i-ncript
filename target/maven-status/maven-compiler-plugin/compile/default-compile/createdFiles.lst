@@ -2,9 +2,6 @@ com\i_comit\microsoft\MakeFolder.class
 com\i_comit\microsoft\AESFolder.class
 com\i_comit\microsoft\ZipFolder.class
 com\i_comit\microsoft\AESMessage.class
-com\i_comit\microsoft\Deleter.class
 com\i_comit\microsoft\Authenticator.class
 com\i_comit\microsoft\ZipFolder$1.class
-com\i_comit\microsoft\ListDevices.class
 com\i_comit\microsoft\Globals.class
-com\i_comit\microsoft\NewEnum.class

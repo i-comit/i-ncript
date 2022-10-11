@@ -13,12 +13,14 @@ import java.util.*;
  *
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
-
 public class Authenticator {
 
     public static void main(String[] args) {
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        root = s.substring(0, 3);
+
         File root[] = File.listRoots();
-        System.out.println("Directory: "+directory);
 
         // check if the root is null or not
         if (root != null) {
@@ -29,8 +31,8 @@ public class Authenticator {
         } else {
             System.out.println("There are no roots");
         }
-        makePassword();
         getGB();
+        makePassword();
     }
 
     public static void makeKey() {
@@ -152,13 +154,11 @@ public class Authenticator {
 
     public static void getGB() {
         try {
-            File[] files = f.listFiles();
-            long GB = Math.floorDiv(f.getTotalSpace(), 1000000000);
-            System.out.println(GB + "GB USB");
-            // Display the names of the files
-            for (int i = 1; i < files.length; i++) {
-                //System.out.println(files[i].getName());
-            }
+            File diskPartition = new File(root);
+
+            long GB = diskPartition.getUsableSpace()/ (1024 *1024*1024);
+            System.out.println("Drive "+root.substring(0, 2) + " | "+GB + "GB");
+
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }

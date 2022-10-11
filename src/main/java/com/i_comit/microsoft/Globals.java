@@ -14,7 +14,7 @@ import java.nio.file.Paths;
  */
 public class Globals {
 
-    public static String root = "D:\\";
+    public static String root = "";
     public static String folderName = ".encrypted-folder";
     //root + folderName = "D:/.encrypted-folder
 
