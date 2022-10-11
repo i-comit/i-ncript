@@ -5,4 +5,4 @@ This app works by checking the serialnumber of a USB drive, hashing it and stori
 
 When the user wants to access the files, the app checks off the hash of the USB drive serial number and the password.
 
-Currently works on Windows. Simply down the jar file from Releases, drop it in your USB drive and run it!
+Currently works on Windows. Simply download the jar file from Releases, drop it in your USB drive and run it!
