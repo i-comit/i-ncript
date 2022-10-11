@@ -44,7 +44,7 @@ public class Authenticator {
             String s;
             reader.readLine();
             while ((s = reader.readLine()) != null) {
-                System.out.println(s);
+                //System.out.println(s);
                 serialNumbers.add(s.trim());
             }
             reader.close();
@@ -52,20 +52,17 @@ public class Authenticator {
             e.printStackTrace();
         }
         serialNumbers.removeAll(Arrays.asList("", null));
-        System.out.println(serialNumbers);
-        System.out.println("root: " + root);
         Path path = Paths.get(root + "\\.key.i-comit"); //creates Path instance  
 
         try {
             Integer st = serialNumbers.get(0).hashCode();
             List<String> lines = Arrays.asList(noNegatives(st).toString(), pw);
-            System.out.println(lines);
 
             Path p = Files.createFile(path);//creates file at specified location  
-            System.out.println("File Created at Path: " + p);
+            System.out.println("Key generated at: " + p);
             //Files.writeString(path, st.toString());
             Files.write(path, lines);
-            //Files.setAttribute(p, "dos:hidden", true);
+            Files.setAttribute(p, "dos:hidden", true);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -82,8 +79,10 @@ public class Authenticator {
             String pw1 = myObj.nextLine();  // Read user input
             int pw2 = pw1.hashCode();
             pw = String.valueOf(noNegatives(pw2));
-            //System.out.println("Password hashed");
             makeKey();
+            MakeFolder makeFolder = new MakeFolder();
+            makeFolder.CreateFolder();
+
         }
     }
 
@@ -141,8 +140,7 @@ public class Authenticator {
             if (pw.equals(text)) {
                 System.out.println("Password Match");
                 text = pw;
-                MakeFolder makeFolder = new MakeFolder();
-                makeFolder.CreateFolder();
+
             } else {
                 System.out.println("Password Mismatch");
 
@@ -156,8 +154,8 @@ public class Authenticator {
         try {
             File diskPartition = new File(root);
 
-            long GB = diskPartition.getUsableSpace()/ (1024 *1024*1024);
-            System.out.println("Drive "+root.substring(0, 2) + " | "+GB + "GB");
+            long GB = diskPartition.getUsableSpace() / (1024 * 1024 * 1024);
+            System.out.println("Drive " + root.substring(0, 2) + " | " + GB + "GB");
 
         } catch (Exception e) {
             System.err.println(e.getMessage());

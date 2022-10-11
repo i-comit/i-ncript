@@ -22,26 +22,18 @@ import java.util.Scanner;
 public class MakeFolder {
 
     public static void CreateFolder() {
-        System.out.println("Password hashed");
         File directory = new File(root + folderName);
         if (!directory.exists()) {
-            try {
-                directory.mkdir();
-                Files.setAttribute(path, "dos:hidden", true);
-                // If you require it to make the entire directory path including parents,
-                // use directory.mkdirs(); here instead.
-                ZipFolder.AESQuery();
-
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            directory.mkdir();
+            //Files.setAttribute(path, "dos:hidden", true);
+            // If you require it to make the entire directory path including parents, use directory.mkdirs(); here instead.
+            System.out.println("You can now fill .encrypted-folder with data!");
         } else {
             try {
                 ZipFolder.AESQuery();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-
         }
     }
 
@@ -51,9 +43,6 @@ public class MakeFolder {
             try {
                 System.out.println(files[i].getName());
                 byte[] fileContent = Files.readAllBytes(files[i].toPath());
-                String bitStr = fileContent.toString();
-                System.out.println("bitString: " + bitStr);
-                //ZipFolder();
 
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -73,23 +62,21 @@ public class MakeFolder {
         }
         System.out.println("Done");
     }
-    
-        public static void deleteFolder(File file) 
-    { 
+
+    public static void deleteFolder(File file) {
         // store all the paths of files and folders present 
         // inside directory 
-        for (File subfile : file.listFiles()) { 
-  
+        for (File subfile : file.listFiles()) {
+
             // if it is a subfolder,e.g Rohan and Ritik, 
             // recursively call function to empty subfolder 
-            if (subfile.isDirectory()) { 
-                deleteFolder(subfile); 
-            } 
-  
+            if (subfile.isDirectory()) {
+                deleteFolder(subfile);
+            }
+
             // delete files and empty subfolders 
-            subfile.delete(); 
-        } 
-    } 
-  
+            subfile.delete();
+        }
+    }
 
 }
