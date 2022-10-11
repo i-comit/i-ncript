@@ -180,31 +180,27 @@ public class ZipFolder {
     public static void AESQuery() throws IOException {
         Scanner myObj = new Scanner(System.in);
         System.out.println("Enter 0 for Encryption | Enter 1 for Decryption: ");
-        File dir = new File(root + folderName + ".enc");
 
         // create output directory if it doesn't exist
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
         Integer q1 = Integer.parseInt(myObj.nextLine());  // Read user input
         if (q1 == 0) {
             try {
                 zipFolder(path);
-
-                AESFolder.encryptFile(encKeyString, "D:\\.encrypted-folder.zip", root + ".encrypted-folder.enc");
+                AESFolder.encryptFile(encKeyString, root + ".encrypted-folder.zip", root + ".encrypted-folder.enc");
             } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
                 ex.printStackTrace();
             }
         }
-        if (q1 == 1 && !dir.exists()) {
+        File dir = new File(root + folderName + ".enc");
+//        if (!dir.exists()) {
+//            dir.mkdirs();
+//        }
+        if (q1 == 1 && dir.exists()) {
             try {
                 AESFolder.decryptFile(Globals.encKeyString, root + ".encrypted-folder.enc", root + ".encrypted-folder.zip");
             } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
                 ex.printStackTrace();
             }
-        }
-        else{
-            System.out.println("Encrypted file does not exist");
         }
 
     }

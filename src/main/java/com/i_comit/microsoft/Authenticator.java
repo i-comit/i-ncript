@@ -18,6 +18,7 @@ public class Authenticator {
 
     public static void main(String[] args) {
         File root[] = File.listRoots();
+        System.out.println("Directory: "+directory);
 
         // check if the root is null or not
         if (root != null) {

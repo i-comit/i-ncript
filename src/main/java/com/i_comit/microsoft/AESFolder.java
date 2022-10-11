@@ -41,10 +41,10 @@ public class AESFolder {
         outputStream.close();
 
         System.out.println("File successfully encrypted!");
-        //System.out.println("New File: " + fileOutPath);
+        System.out.println("New File: " + fileOutPath);
         MakeFolder.deleteFolder(directory);
         Files.delete(Paths.get(root + folderName + ".zip"));
-
+        directory.delete();
     }
 
     public static void decryptFile(String secretKey, String fileInputPath, String fileOutPath)
