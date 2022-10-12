@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.i_comit.microsoft;
+package com.i_comit.windows.dev;
 
-import static com.i_comit.microsoft.Globals.*;
+import static com.i_comit.windows.dev.Globals.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -46,7 +46,7 @@ public class AESFolder {
         Files.delete(Paths.get(root + folderName + ".zip"));
         directory.delete();
         Files.setAttribute(Paths.get(root + folderName + ".enc"), "dos:hidden", true);
-
+        System.exit(0);
     }
 
     public static void decryptFile(String secretKey, String fileInputPath, String fileOutPath)
@@ -78,5 +78,6 @@ public class AESFolder {
         Files.delete(Paths.get(root + folderName + ".zip"));
 
         Files.setAttribute(path, "dos:hidden", false);
+        System.exit(0);
     }
 }

@@ -1,7 +1,9 @@
-com\i_comit\microsoft\MakeFolder.class
-com\i_comit\microsoft\AESFolder.class
-com\i_comit\microsoft\ZipFolder.class
-com\i_comit\microsoft\AESMessage.class
-com\i_comit\microsoft\Authenticator.class
-com\i_comit\microsoft\ZipFolder$1.class
-com\i_comit\microsoft\Globals.class
+com\i_comit\windows\dev\AESFolder.class
+com\i_comit\windows\dev\AESMessage.class
+com\i_comit\windows\dev\ZipFolder.class
+com\i_comit\windows\dev\MakeFolder.class
+com\i_comit\windows\gui\MainGUI$1.class
+com\i_comit\windows\dev\Authenticator.class
+com\i_comit\windows\dev\ZipFolder$1.class
+com\i_comit\windows\dev\Globals.class
+com\i_comit\windows\gui\MainGUI.class

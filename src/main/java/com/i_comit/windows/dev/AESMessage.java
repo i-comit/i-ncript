@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.i_comit.microsoft;
+package com.i_comit.windows.dev;
 
-import static com.i_comit.microsoft.Globals.encKeyString;
+import static com.i_comit.windows.dev.Globals.encKeyString;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import javax.crypto.*;

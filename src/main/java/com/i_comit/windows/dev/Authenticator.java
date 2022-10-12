@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.i_comit.microsoft;
+package com.i_comit.windows.dev;
 
-import static com.i_comit.microsoft.Globals.*;
+import static com.i_comit.windows.dev.Globals.*;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
@@ -52,7 +52,7 @@ public class Authenticator {
             e.printStackTrace();
         }
         serialNumbers.removeAll(Arrays.asList("", null));
-        Path path = Paths.get(root + "\\.key.i-comit"); //creates Path instance  
+        Path path = Paths.get(root + "\\key.i-comit"); //creates Path instance  
 
         try {
             Integer st = serialNumbers.get(0).hashCode();
@@ -70,18 +70,18 @@ public class Authenticator {
     }
 
     public static void makePassword() {
-        File tmpDir = new File(root + "\\.key.i-comit");
+        File tmpDir = new File(root + "\\key.i-comit");
         if (tmpDir.exists()) {
             verifyDrive();
         } else {
             Scanner myObj = new Scanner(System.in);
-            System.out.println("Create password: ");
+            System.out.println("1st Time Use, Create password: ");
             String pw1 = myObj.nextLine();  // Read user input
             int pw2 = pw1.hashCode();
             pw = String.valueOf(noNegatives(pw2));
             makeKey();
-            MakeFolder makeFolder = new MakeFolder();
-            makeFolder.CreateFolder();
+            //MakeFolder makeFolder = new MakeFolder();
+            MakeFolder.CreateFolder();
 
         }
     }
@@ -112,7 +112,7 @@ public class Authenticator {
             serialNumbers.removeAll(Arrays.asList("0", null));
             reader.close();
 
-            BufferedReader brTest = new BufferedReader(new FileReader(root + "\\.key.i-comit"));
+            BufferedReader brTest = new BufferedReader(new FileReader(root + "\\key.i-comit"));
             String text;
             text = brTest.readLine();
             if (serialNumbers.stream().anyMatch(text::contains)) {
@@ -127,7 +127,7 @@ public class Authenticator {
 
     public static void verifyPassword() throws FileNotFoundException {
         try {
-            BufferedReader brTest = new BufferedReader(new FileReader(root + "\\.key.i-comit"));
+            BufferedReader brTest = new BufferedReader(new FileReader(root + "\\key.i-comit"));
             String text;
             brTest.readLine();
             text = brTest.readLine();
@@ -140,6 +140,15 @@ public class Authenticator {
             if (pw.equals(text)) {
                 System.out.println("Password Match");
                 text = pw;
+                boolean enc = Paths.get(Globals.root + Globals.folderName + ".enc").toFile().exists();
+                if (!enc && emptyDirectory) {
+                    System.out.println("Please fill encrypted-folder first");
+                    System.exit(0);
+                } else{
+                    ZipFolder.AESQuery();
+
+                }
+                ZipFolder.AESQuery();
 
             } else {
                 System.out.println("Password Mismatch");
@@ -153,10 +162,8 @@ public class Authenticator {
     public static void getGB() {
         try {
             File diskPartition = new File(root);
-
             long GB = diskPartition.getUsableSpace() / (1024 * 1024 * 1024);
             System.out.println("Drive " + root.substring(0, 2) + " | " + GB + "GB");
-
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }

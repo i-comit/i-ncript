@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.i_comit.microsoft;
+package com.i_comit.windows.dev;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -15,8 +15,10 @@ import java.nio.file.Paths;
 public class Globals {
 
     public static String root = "";
-    public static String folderName = ".encrypted-folder";
+    public static String folderName = "encrypted-folder";
     //root + folderName = "D:/.encrypted-folder
+    
+    public static boolean emptyDirectory;
 
     public static File f = new File(root);
 

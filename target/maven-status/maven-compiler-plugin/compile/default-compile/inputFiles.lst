@@ -1,6 +1,7 @@
-Y:\CODE\java\i-ncript\src\main\java\com\i_comit\microsoft\MakeFolder.java
-Y:\CODE\java\i-ncript\src\main\java\com\i_comit\microsoft\Globals.java
-Y:\CODE\java\i-ncript\src\main\java\com\i_comit\microsoft\AESMessage.java
-Y:\CODE\java\i-ncript\src\main\java\com\i_comit\microsoft\AESFolder.java
-Y:\CODE\java\i-ncript\src\main\java\com\i_comit\microsoft\Authenticator.java
-Y:\CODE\java\i-ncript\src\main\java\com\i_comit\microsoft\ZipFolder.java
+Y:\CODE\java\i-ncript\src\main\java\com\i_comit\windows\dev\MakeFolder.java
+Y:\CODE\java\i-ncript\src\main\java\com\i_comit\windows\dev\ZipFolder.java
+Y:\CODE\java\i-ncript\src\main\java\com\i_comit\windows\dev\AESFolder.java
+Y:\CODE\java\i-ncript\src\main\java\com\i_comit\windows\dev\Authenticator.java
+Y:\CODE\java\i-ncript\src\main\java\com\i_comit\windows\dev\Globals.java
+Y:\CODE\java\i-ncript\src\main\java\com\i_comit\windows\gui\MainGUI.java
+Y:\CODE\java\i-ncript\src\main\java\com\i_comit\windows\dev\AESMessage.java

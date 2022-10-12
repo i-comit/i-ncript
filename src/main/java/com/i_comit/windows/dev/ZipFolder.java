@@ -2,13 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.i_comit.microsoft;
+package com.i_comit.windows.dev;
 
 /**
  *
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
-import static com.i_comit.microsoft.Globals.*;
+import static com.i_comit.windows.dev.Globals.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -31,7 +31,7 @@ public class ZipFolder {
 
         // get folder name as zip file name
         String zipFileName = root + source.getFileName().toString() + ".zip";
-        System.out.println(root + zipFileName);
+        System.out.println(zipFileName);
 
         try (
                  ZipOutputStream zos = new ZipOutputStream(
@@ -186,7 +186,7 @@ public class ZipFolder {
         if (q1 == 0) {
             try {
                 zipFolder(path);
-                AESFolder.encryptFile(encKeyString, root + ".encrypted-folder.zip", root + ".encrypted-folder.enc");
+                AESFolder.encryptFile(encKeyString, root + "encrypted-folder.zip", root + "encrypted-folder.enc");
             } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
                 ex.printStackTrace();
             }
@@ -197,7 +197,7 @@ public class ZipFolder {
 //        }
         if (q1 == 1 && dir.exists()) {
             try {
-                AESFolder.decryptFile(Globals.encKeyString, root + ".encrypted-folder.enc", root + ".encrypted-folder.zip");
+                AESFolder.decryptFile(Globals.encKeyString, root + "encrypted-folder.enc", root + "encrypted-folder.zip");
             } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
                 ex.printStackTrace();
             }
