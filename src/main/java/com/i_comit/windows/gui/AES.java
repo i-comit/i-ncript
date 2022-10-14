@@ -114,7 +114,6 @@ public class AES {
 class AES_T implements Runnable {
     public int threadIterator;
     public void run() {
-
         try {
             AESQuery();
         } catch (IOException ex) {

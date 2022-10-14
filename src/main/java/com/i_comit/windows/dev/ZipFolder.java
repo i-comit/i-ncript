@@ -184,17 +184,29 @@ public class ZipFolder {
         // create output directory if it doesn't exist
         Integer q1 = Integer.parseInt(myObj.nextLine());  // Read user input
         if (q1 == 0) {
-            if (!Paths.get(root + "encrypted-folder.enc").toFile().exists()) {
-                try {
-                    zipFolder(path);
-                    AESFolder.encryptFile(encKeyString, root + "encrypted-folder.zip", root + "encrypted-folder.enc");
-                } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
-                    ex.printStackTrace();
+            File[] contents = directory.listFiles();
+            if (contents != null) {
+                if (contents.length != 0) {
+                    if (!Paths.get(root + "encrypted-folder.enc").toFile().exists()) {
+                        try {
+                            zipFolder(path);
+                            AESFolder.encryptFile(encKeyString, root + "encrypted-folder.zip", root + "encrypted-folder.enc");
+                        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
+                            ex.printStackTrace();
+                        }
+                    } else {
+                        System.out.println("No files to encrypt.");
+                        AESQuery();
+                    }
+                } else {
+                    System.out.println("Encrypted folder has no files.");
+                    AESQuery();
                 }
             } else {
-                System.out.println("No files to encrypt.");
+                System.out.println("Encrypted folder does not exist.");
                 AESQuery();
             }
+
         }
         File dir = new File(root + folderName + ".enc");
 
@@ -210,7 +222,7 @@ public class ZipFolder {
                 AESQuery();
             }
         }
-        if(q1 == 2){
+        if (q1 == 2) {
             System.exit(0);
         }
     }
