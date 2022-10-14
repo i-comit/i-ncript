@@ -5,32 +5,25 @@
 package com.i_comit.windows.gui;
 
 import static com.i_comit.windows.gui.AES.*;
-import static com.i_comit.windows.gui.Globals.root;
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Paths;
-import java.nio.file.StandardWatchEventKinds;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
+import java.nio.file.*;
 import static java.lang.Thread.currentThread;
 
 /**
  *
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
-public class HotFiler {
 
+public class HotFiler {
     public static void HotFilerThread() throws IOException {
-        com.i_comit.windows.gui.HotFiler_T runnableWindows = new com.i_comit.windows.gui.HotFiler_T();
+        HotFiler_T hotFilerThread = new HotFiler_T();
         //runnableWindows.threadIterator = 0;
-        Thread t1 = new Thread(runnableWindows);
+        Thread t1 = new Thread(hotFilerThread);
         if (Globals.state) {
             t1.start();
             System.out.println("Hot Filer thread " + currentThread().getName() + "is " + t1.isAlive());
@@ -40,22 +33,11 @@ public class HotFiler {
             t1.interrupt();
 
         }
-
 //            for(int i=0; i< usbparser.windows.USBParse0.GetDeviceCount(); i++){
 //                runnableWindows.threadIterator++;
 //                Thread t =new Thread(runnableWindows);    
 //                t.start();
 //            }
-    }
-
-    public static List<Path> listFiles(Path path) throws IOException {
-
-        List<Path> result;
-        try ( Stream<Path> walk = Files.walk(path)) {
-            result = walk.filter(Files::isRegularFile)
-                    .collect(Collectors.toList());
-        }
-        return result;
     }
 
     public static List<Path> listNewFiles(Path path) throws IOException {
@@ -114,5 +96,19 @@ public class HotFiler {
             return;
         }
 
+    }
+}
+
+class HotFiler_T implements Runnable{
+
+    public int threadIterator;
+
+    public void run() {
+
+        try {
+            HotFiler.folderWatcher();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }

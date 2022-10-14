@@ -14,6 +14,16 @@ import java.util.*;
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
 public class Login {
+    
+    public static void checkLogin(){
+        
+    }
+    
+    public static void Authenticator(){
+        
+    }
+    
+    
 
     public static void makePassword() {
         File tmpDir = new File(root + "\\key.i-comit");

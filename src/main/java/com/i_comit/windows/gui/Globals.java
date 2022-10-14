@@ -14,10 +14,10 @@ import java.nio.file.Paths;
  */
 public class Globals {
 
-    public static String root = "D:\\";
+    public static String root = "";
     public static String folderName = "i-ncript";
     public static String rootFolder = root + folderName;
-    public static int queryMode;
+    public static int AESMode;
 
     public static boolean state = false;
 
@@ -35,4 +35,7 @@ public class Globals {
     public static String serialNumber = "";
 
     public static String encKeyString = "";
+    
+    public static int fileCount;
+    public static int fileIter;
 }

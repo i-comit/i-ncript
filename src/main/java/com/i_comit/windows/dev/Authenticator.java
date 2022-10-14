@@ -35,6 +35,23 @@ public class Authenticator {
         makePassword();
     }
 
+    public static void makePassword() {
+        File tmpDir = new File(root + "\\key.i-comit");
+        if (tmpDir.exists()) {
+            verifyDrive();
+        } else {
+            Scanner myObj = new Scanner(System.in);
+            System.out.println("1st Time Use, Create password: ");
+            String pw1 = myObj.nextLine();  // Read user input
+            int pw2 = pw1.hashCode();
+            pw = String.valueOf(noNegatives(pw2));
+            makeKey();
+            //MakeFolder makeFolder = new MakeFolder();
+            MakeFolder.CreateFolder();
+
+        }
+    }
+
     public static void makeKey() {
         List<String> serialNumbers = new ArrayList<>();
         String command = "wmic diskdrive where InterfaceType='USB' get SerialNumber";
@@ -66,23 +83,6 @@ public class Authenticator {
 
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    public static void makePassword() {
-        File tmpDir = new File(root + "\\key.i-comit");
-        if (tmpDir.exists()) {
-            verifyDrive();
-        } else {
-            Scanner myObj = new Scanner(System.in);
-            System.out.println("1st Time Use, Create password: ");
-            String pw1 = myObj.nextLine();  // Read user input
-            int pw2 = pw1.hashCode();
-            pw = String.valueOf(noNegatives(pw2));
-            makeKey();
-            //MakeFolder makeFolder = new MakeFolder();
-            MakeFolder.CreateFolder();
-
         }
     }
 
@@ -144,7 +144,7 @@ public class Authenticator {
                 if (!enc && emptyDirectory) {
                     System.out.println("Please fill encrypted-folder first");
                     System.exit(0);
-                } else{
+                } else {
                     ZipFolder.AESQuery();
                 }
                 ZipFolder.AESQuery();

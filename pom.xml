@@ -31,5 +31,12 @@
     </build>
     <artifactId>i-ncript</artifactId>
     <name>i-ncript</name>
+    <dependencies>
+        <dependency>
+            <groupId>org.netbeans.external</groupId>
+            <artifactId>AbsoluteLayout</artifactId>
+            <version>RELEASE150</version>
+        </dependency>
+    </dependencies>
 </project>
 

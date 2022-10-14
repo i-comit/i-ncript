@@ -12,10 +12,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import javax.swing.ImageIcon;
-import javax.swing.JPasswordField;
-import javax.swing.JRadioButton;
-import javax.swing.UIManager;
+
 
 /**
  *
@@ -29,10 +26,10 @@ public class Main extends javax.swing.JFrame {
     public Main() {
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
-        //Globals.root = s.substring(0, 3);
+        Globals.root = s.substring(0, 3);
         Login.getGB();
         initComponents();
-        ActionListener actionListener = new Actions();
+        ActionListener actionListener = new GUI();
 
         jLabel3.setText("Drive " + root.substring(0, 2) + " | " + GB + "GB");
 
@@ -44,7 +41,7 @@ public class Main extends javax.swing.JFrame {
         jButton1.setActionCommand("enter");
         jButton1.addActionListener(actionListener);
         jPasswordField1.setText("");
-        
+
     }
 
     /**
@@ -57,6 +54,8 @@ public class Main extends javax.swing.JFrame {
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
+        jDialog1 = new javax.swing.JDialog();
+        jPanel2 = new javax.swing.JPanel();
         jProgressBar1 = new javax.swing.JProgressBar();
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
@@ -66,6 +65,30 @@ public class Main extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jToggleButton1 = new javax.swing.JToggleButton();
         jLabel3 = new javax.swing.JLabel();
+
+        javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
+        jDialog1.getContentPane().setLayout(jDialog1Layout);
+        jDialog1Layout.setHorizontalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jDialog1Layout.setVerticalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+
+        jPanel2.setOpaque(false);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti.png")));
@@ -82,6 +105,7 @@ public class Main extends javax.swing.JFrame {
         buttonGroup1.add(jRadioButton2);
         jRadioButton2.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jRadioButton2.setText("DECRYPT");
+        jRadioButton2.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadioButton2ActionPerformed(evt);
@@ -182,8 +206,17 @@ public class Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
+        //Decrypt Mode
+        Globals.state = false;
+        jToggleButton1.setSelected(false);
+        jProgressBar1.setMaximum(0);
+        jProgressBar1.setValue(0);
+        GUI.GUIThread();
+//        jProgressBar1.setMaximum(Globals.fileCount);
+//        jProgressBar1.setValue(Globals.fileIter);
+
         try {
-            Globals.queryMode = 1;
+            Globals.AESMode = 1;
             AES.AESThread();
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -191,8 +224,14 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButton2ActionPerformed
 
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+        //Encrypt 
+        jProgressBar1.setMaximum(0);
+        jProgressBar1.setValue(0);
+        GUI.GUIThread();
+//        jProgressBar1.setMaximum(Globals.fileCount);
+//        jProgressBar1.setValue(Globals.fileIter);
         try {
-            Globals.queryMode = 0;
+            Globals.AESMode = 0;
             AES.AESThread();
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -217,6 +256,9 @@ public class Main extends javax.swing.JFrame {
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
         Globals.state ^= true;
         System.out.println(Globals.state);
+        if(Globals.state){
+            jRadioButton2.setSelected(false);
+        }
         try {
             HotFiler.HotFilerThread();
         } catch (IOException ex) {
@@ -261,11 +303,13 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton1;
+    private javax.swing.JDialog jDialog1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JProgressBar jProgressBar1;
+    public static javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JToggleButton jToggleButton1;
