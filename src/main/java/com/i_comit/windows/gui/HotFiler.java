@@ -19,13 +19,34 @@ import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
-import java.util.concurrent.TimeUnit;
+import static java.lang.Thread.currentThread;
 
 /**
  *
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
 public class HotFiler {
+
+    public static void HotFilerThread() throws IOException {
+        com.i_comit.windows.gui.HotFiler_T runnableWindows = new com.i_comit.windows.gui.HotFiler_T();
+        //runnableWindows.threadIterator = 0;
+        Thread t1 = new Thread(runnableWindows);
+        if (Globals.state) {
+            t1.start();
+            System.out.println("Hot Filer thread " + currentThread().getName() + "is " + t1.isAlive());
+
+        } else {
+            System.out.println("Hot Filer thread " + currentThread().getName() + " stopped" + t1.isAlive());
+            t1.interrupt();
+
+        }
+
+//            for(int i=0; i< usbparser.windows.USBParse0.GetDeviceCount(); i++){
+//                runnableWindows.threadIterator++;
+//                Thread t =new Thread(runnableWindows);    
+//                t.start();
+//            }
+    }
 
     public static List<Path> listFiles(Path path) throws IOException {
 
@@ -63,7 +84,7 @@ public class HotFiler {
             WatchKey key;
             while ((key = watchService.take()) != null) {
                 for (WatchEvent<?> event : key.pollEvents()) {
-                    List<Path> paths = listFiles(Globals.path);
+                    List<Path> paths = listNewFiles(Globals.path);
                     paths.forEach(y -> System.out.println(y));
                     System.out.println(
                             "Event kind:" + event.kind()
@@ -81,5 +102,17 @@ public class HotFiler {
     public static void getLastModified() throws IOException {
         List<Path> paths = listNewFiles(Globals.path);
         paths.forEach(x -> System.out.println(x));
+        if (Globals.state) {
+            paths.forEach(x -> {
+                try {
+                    encrypt(Globals.encKeyString, x.toFile(), x.toFile());
+                } catch (CryptoException ex) {
+                    ex.printStackTrace();
+                }
+            });
+        } else {
+            return;
+        }
+
     }
 }

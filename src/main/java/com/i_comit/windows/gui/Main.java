@@ -29,7 +29,7 @@ public class Main extends javax.swing.JFrame {
     public Main() {
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
-        Globals.root = s.substring(0, 3);
+        //Globals.root = s.substring(0, 3);
         Login.getGB();
         initComponents();
         ActionListener actionListener = new Actions();
@@ -44,7 +44,7 @@ public class Main extends javax.swing.JFrame {
         jButton1.setActionCommand("enter");
         jButton1.addActionListener(actionListener);
         jPasswordField1.setText("");
-
+        
     }
 
     /**
@@ -178,6 +178,7 @@ public class Main extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
@@ -213,12 +214,13 @@ public class Main extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    boolean state = false;
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-        state ^= true;
-        System.out.println(state);
-        if (state) {
-
+        Globals.state ^= true;
+        System.out.println(Globals.state);
+        try {
+            HotFiler.HotFilerThread();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }//GEN-LAST:event_jToggleButton1ActionPerformed
 

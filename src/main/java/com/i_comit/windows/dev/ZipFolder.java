@@ -179,29 +179,39 @@ public class ZipFolder {
 
     public static void AESQuery() throws IOException {
         Scanner myObj = new Scanner(System.in);
-        System.out.println("Enter 0 for Encryption | Enter 1 for Decryption: ");
+        System.out.println("0 to Encrypt | 1 to Decrypt | 2 to Exit");
 
         // create output directory if it doesn't exist
         Integer q1 = Integer.parseInt(myObj.nextLine());  // Read user input
         if (q1 == 0) {
-            try {
-                zipFolder(path);
-                AESFolder.encryptFile(encKeyString, root + "encrypted-folder.zip", root + "encrypted-folder.enc");
-            } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
-                ex.printStackTrace();
+            if (!Paths.get(root + "encrypted-folder.enc").toFile().exists()) {
+                try {
+                    zipFolder(path);
+                    AESFolder.encryptFile(encKeyString, root + "encrypted-folder.zip", root + "encrypted-folder.enc");
+                } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
+                    ex.printStackTrace();
+                }
+            } else {
+                System.out.println("No files to encrypt.");
+                AESQuery();
             }
         }
         File dir = new File(root + folderName + ".enc");
-//        if (!dir.exists()) {
-//            dir.mkdirs();
-//        }
-        if (q1 == 1 && dir.exists()) {
-            try {
-                AESFolder.decryptFile(Globals.encKeyString, root + "encrypted-folder.enc", root + "encrypted-folder.zip");
-            } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
-                ex.printStackTrace();
+
+        if (q1 == 1) {
+            if (Paths.get(root + "encrypted-folder.enc").toFile().exists()) {
+                try {
+                    AESFolder.decryptFile(Globals.encKeyString, root + "encrypted-folder.enc", root + "encrypted-folder.zip");
+                } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
+                    ex.printStackTrace();
+                }
+            } else {
+                System.out.println("No files to decrypt.");
+                AESQuery();
             }
         }
-
+        if(q1 == 2){
+            System.exit(0);
+        }
     }
 }

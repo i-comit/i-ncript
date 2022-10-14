@@ -14,11 +14,13 @@ import java.nio.file.Paths;
  */
 public class Globals {
 
-    public static String root = "";
+    public static String root = "D:\\";
     public static String folderName = "i-ncript";
-    public static String rootFolder = root+folderName;
+    public static String rootFolder = root + folderName;
     public static int queryMode;
-    
+
+    public static boolean state = false;
+
     public static long GB;
 
     public static boolean emptyDirectory;

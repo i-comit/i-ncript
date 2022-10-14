@@ -44,7 +44,8 @@ public class AES {
 
             } else {
                 System.out.println("No files to encrypt.");
-                System.exit(0);
+                //System.exit(0);
+                return;
             }
         }
         else {
@@ -61,8 +62,9 @@ public class AES {
                 inputFile.delete();
                 //System.exit(0);
             } else {
-                System.out.println("No encrypted files to decrypt.");
-                System.exit(0);
+                System.out.println("No files to decrypt.");
+                //System.exit(0);
+                return;
             }
         } else {
             System.out.println("Decryption complete!");

@@ -16,7 +16,6 @@ public class Globals {
 
     public static String root = "";
     public static String folderName = "encrypted-folder";
-    //root + folderName = "D:/.encrypted-folder
     
     public static boolean emptyDirectory;
 

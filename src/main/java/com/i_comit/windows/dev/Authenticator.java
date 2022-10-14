@@ -146,7 +146,6 @@ public class Authenticator {
                     System.exit(0);
                 } else{
                     ZipFolder.AESQuery();
-
                 }
                 ZipFolder.AESQuery();
 
