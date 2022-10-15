@@ -24,7 +24,7 @@ public class HotFiler {
         HotFiler_T hotFilerThread = new HotFiler_T();
         //runnableWindows.threadIterator = 0;
         Thread t1 = new Thread(hotFilerThread);
-        if (Globals.state) {
+        if (Statics.state) {
             t1.start();
             System.out.println("Hot Filer thread " + currentThread().getName() + "is " + t1.isAlive());
 
@@ -55,7 +55,7 @@ public class HotFiler {
         try {
             WatchService watchService = FileSystems.getDefault().newWatchService();
 
-            Path rootPath = Paths.get(Globals.rootFolder);
+            Path rootPath = Paths.get(Statics.rootFolder);
 
             rootPath.register(
                     watchService,
@@ -66,7 +66,7 @@ public class HotFiler {
             WatchKey key;
             while ((key = watchService.take()) != null) {
                 for (WatchEvent<?> event : key.pollEvents()) {
-                    List<Path> paths = listNewFiles(Globals.path);
+                    List<Path> paths = listNewFiles(Statics.path);
                     paths.forEach(y -> System.out.println(y));
                     System.out.println(
                             "Event kind:" + event.kind()
@@ -82,12 +82,12 @@ public class HotFiler {
     }
 
     public static void getLastModified() throws IOException {
-        List<Path> paths = listNewFiles(Globals.path);
+        List<Path> paths = listNewFiles(Statics.path);
         paths.forEach(x -> System.out.println(x));
-        if (Globals.state) {
+        if (Statics.state) {
             paths.forEach(x -> {
                 try {
-                    encrypt(Globals.encKeyString, x.toFile(), x.toFile());
+                    encrypt(Statics.password, x.toFile(), x.toFile());
                 } catch (CryptoException ex) {
                     ex.printStackTrace();
                 }

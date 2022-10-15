@@ -12,7 +12,7 @@ import java.nio.file.Paths;
  *
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
-public class Globals {
+public class Statics {
 
     public static String root = "";
     public static String folderName = "i-ncript";
@@ -26,16 +26,16 @@ public class Globals {
     public static boolean emptyDirectory;
 
     public static File f = new File(root);
-
     public static File directory = new File(root + folderName);
+    public static File rootFile = Paths.get(root + "\\i-ncript.key").toFile();
+
     public static Path path = Paths.get(root + folderName);
     public static Path zipPath = Paths.get(root + folderName + ".zip");
     public static Path rootPath = Paths.get(root);
-    public static String pw = "";
-    public static String serialNumber = "";
-
-    public static String encKeyString = "";
     
+    public static String username="";
+    public static String password = "";
+
     public static int fileCount;
     public static int fileIter;
 }

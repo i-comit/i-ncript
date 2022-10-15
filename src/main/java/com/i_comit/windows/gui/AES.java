@@ -6,6 +6,7 @@ package com.i_comit.windows.gui;
 
 import static com.i_comit.windows.gui.AES.decrypt;
 import static com.i_comit.windows.gui.AES.encrypt;
+import static com.i_comit.windows.gui.Statics.*;
 import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.*;
@@ -122,15 +123,14 @@ class AES_T implements Runnable {
     }
 
     public static void AESQuery() throws IOException {
-        Globals.encKeyString = "Mary has one cat";
-        List<Path> paths = listFiles(Globals.path);
+        List<Path> paths = listFiles(path);
         paths.forEach(x -> System.out.println(x));
 
-        switch (Globals.AESMode) {
+        switch (AESMode) {
             case 0:
                 paths.forEach(x -> {
                     try {
-                        encrypt(Globals.encKeyString, x.toFile(), x.toFile());
+                        encrypt(Hasher.modHash(password), x.toFile(), x.toFile());
                     } catch (AES.CryptoException ex) {
                         ex.printStackTrace();
                     }
@@ -139,7 +139,7 @@ class AES_T implements Runnable {
             case 1:
                 paths.forEach(x -> {
                     try {
-                        decrypt(Globals.encKeyString, x.toFile(), x.toFile());
+                        decrypt(Hasher.modHash(password), x.toFile(), x.toFile());
                     } catch (AES.CryptoException ex) {
                         ex.printStackTrace();
                     }
@@ -175,7 +175,7 @@ class AES_T implements Runnable {
     public static void folderWatcher() throws IOException {
         try {
             WatchService watchService = FileSystems.getDefault().newWatchService();
-            Path rootPath = Paths.get(Globals.rootFolder);
+            Path rootPath = Paths.get(rootFolder);
             rootPath.register(
                     watchService,
                     StandardWatchEventKinds.ENTRY_CREATE,
@@ -185,7 +185,7 @@ class AES_T implements Runnable {
             WatchKey key;
             while ((key = watchService.take()) != null) {
                 for (WatchEvent<?> event : key.pollEvents()) {
-                    List<Path> paths = listFiles(Globals.path);
+                    List<Path> paths = listFiles(path);
                     paths.forEach(y -> System.out.println(y));
                     System.out.println(
                             "Event kind:" + event.kind()
@@ -200,7 +200,7 @@ class AES_T implements Runnable {
     }
 
     public static void getLastModified() throws IOException {
-        List<Path> paths = listNewFiles(Globals.path);
+        List<Path> paths = listNewFiles(path);
         paths.forEach(x -> System.out.println(x));
     }
 }

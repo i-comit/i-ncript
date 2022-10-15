@@ -4,7 +4,7 @@
  */
 package com.i_comit.windows.gui;
 
-import static com.i_comit.windows.gui.Globals.*;
+import static com.i_comit.windows.gui.Statics.*;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
@@ -14,63 +14,28 @@ import java.util.*;
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
 public class Login {
-    
-    public static void checkLogin(){
-        
-    }
-    
-    public static void Authenticator(){
-        
-    }
-    
-    
 
-    public static void makePassword() {
-        File tmpDir = new File(root + "\\key.i-comit");
-        if (tmpDir.exists()) {
-            verifyDrive();
+    public static void Authenticator() {
+        if (rootFile.exists()) {
+            verifyPassword();
         } else {
-            //Scanner myObj = new Scanner(System.in);
-            System.out.println("1st Time Use, Create password: ");
-            //String pw1 = myObj.nextLine();  // Read user input
-            int pw2 = pw.hashCode();
-            pw = String.valueOf(noNegatives(pw2));
-            System.out.println("pw from Login: "+pw);
-            //makeKey();
+            makeKey();
             //MakeFolder.CreateFolder();
 
         }
     }
 
     public static void makeKey() {
-        List<String> serialNumbers = new ArrayList<>();
-        String command = "wmic diskdrive where InterfaceType='USB' get SerialNumber";
+        Path path = Paths.get(root + "\\i-ncript.key"); //creates Path instance  
         try {
-            Process process = Runtime.getRuntime().exec(command);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String s;
-            reader.readLine();
-            while ((s = reader.readLine()) != null) {
-                //System.out.println(s);
-                serialNumbers.add(s.trim());
-            }
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        serialNumbers.removeAll(Arrays.asList("", null));
-        Path path = Paths.get(root + "\\key.i-comit"); //creates Path instance  
-
-        try {
-            Integer st = serialNumbers.get(0).hashCode();
-            List<String> lines = Arrays.asList(noNegatives(st).toString(), pw);
-
+            List<String> lines = Arrays.asList(Hasher.modHash(username), Hasher.modHash(password));
             Path p = Files.createFile(path);//creates file at specified location  
             System.out.println("Key generated at: " + p);
             //Files.writeString(path, st.toString());
             Files.write(path, lines);
             Files.setAttribute(p, "dos:hidden", true);
-
+            Main.jLoginPanel.setVisible(false);
+            Main.jToolPanel.setVisible(true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -83,79 +48,39 @@ public class Login {
         return negativeInt;
     }
 
-    public static void verifyDrive() {
-        List<String> serialNumbers = new ArrayList<>();
-        String command = "wmic diskdrive where InterfaceType='USB' get SerialNumber";
+    public static void verifyPassword() {
         try {
-            Process process = Runtime.getRuntime().exec(command);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String s;
-            reader.readLine();
-            s = reader.readLine();
-            while ((s = reader.readLine()) != null) {
-                //System.out.println(s);
-                Integer snInt = noNegatives(s.trim().hashCode());
-                String snStr = snInt.toString();
-                serialNumbers.add(snStr);
+            BufferedReader brTest = new BufferedReader(new FileReader(rootFile));
+            String usernameRead = brTest.readLine();
+            String passwordRead = brTest.readLine();
 
-            }
-            serialNumbers.removeAll(Arrays.asList("0", null));
-            reader.close();
-
-            BufferedReader brTest = new BufferedReader(new FileReader(root + "\\key.i-comit"));
-            String text;
-            text = brTest.readLine();
-            if (serialNumbers.stream().anyMatch(text::contains)) {
-                System.out.println("Drive Match");
-                verifyPassword();
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void verifyPassword() throws FileNotFoundException {
-        try {
-            BufferedReader brTest = new BufferedReader(new FileReader(root + "\\key.i-comit"));
-            String text;
-            brTest.readLine();
-            text = brTest.readLine();
-
-            Scanner myObj = new Scanner(System.in);
-            System.out.println("Enter password: ");
-            String pw1 = myObj.nextLine();  // Read user input
-            int pw2 = pw1.hashCode();
-            pw = String.valueOf(noNegatives(pw2));
-            if (pw.equals(text)) {
-                System.out.println("Password Match");
-                text = pw;
-                boolean enc = Paths.get(Globals.root + Globals.folderName + ".enc").toFile().exists();
-                if (!enc && emptyDirectory) {
-                    System.out.println("Please fill encrypted-folder first");
-                    System.exit(0);
-                } else {
-                    //ZipFolder.AESQuery();
-
+            if (usernameRead.equals(Hasher.modHash(username))) {
+                if (passwordRead.equals(Hasher.modHash(password))) {
+                    Main.jLoginPanel.setVisible(false);
+                    Main.jToolPanel.setVisible(true);
                 }
-                //ZipFolder.AESQuery();
-
-            } else {
-                System.out.println("Password Mismatch");
 
             }
+
+//            if (password.equals(text)) {
+//                System.out.println("Password Match");
+//                text = password;
+//                boolean enc = Paths.get(Statics.root + Statics.folderName + ".enc").toFile().exists();
+//                if (!enc && emptyDirectory) {
+//                    System.out.println("Please fill encrypted-folder first");
+//                    System.exit(0);
+//                } else {
+//                    //ZipFolder.AESQuery();
+//
+//                }
+//                //ZipFolder.AESQuery();
+//
+//            } else {
+//                System.out.println("Password Mismatch");
+//
+//            }
         } catch (IOException ex) {
             ex.printStackTrace();
-        }
-    }
-
-    public static void getGB() {
-        try {
-            File diskPartition = new File(root);
-            GB = diskPartition.getUsableSpace() / (1024 * 1024 * 1024);
-            String str ="Drive " + root.substring(0, 2) + " | " + GB + "GB";
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
         }
     }
 }

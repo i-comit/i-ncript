@@ -5,8 +5,11 @@
 package com.i_comit.windows.gui;
 
 import static com.i_comit.windows.gui.Main.jProgressBar1;
+import static com.i_comit.windows.gui.Statics.GB;
+import static com.i_comit.windows.gui.Statics.root;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,6 +28,16 @@ public class GUI implements ActionListener {
         //guiThread.threadIterator = 0;
         Thread t1 = new Thread(guiThread);
         t1.start();
+    }
+
+    public static void getGB() {
+        try {
+            File diskPartition = new File(root);
+            GB = diskPartition.getUsableSpace() / (1024 * 1024 * 1024);
+            String str = "Drive " + root.substring(0, 2) + " | " + GB + "GB";
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -48,16 +61,16 @@ public class GUI implements ActionListener {
     }
 
     public static void progressBar() throws InterruptedException {
-        Globals.fileIter = 0;
+        Statics.fileIter = 0;
         try {
-            Globals.fileCount = countFiles(Globals.path);
-            jProgressBar1.setMaximum(Globals.fileCount);
-            System.out.println("File Count: " + countFiles(Globals.path));
-            for (int i = 0; i < Globals.fileCount; i++) {
+            Statics.fileCount = countFiles(Statics.path);
+            jProgressBar1.setMaximum(Statics.fileCount);
+            System.out.println("File Count: " + countFiles(Statics.path));
+            for (int i = 0; i < Statics.fileCount; i++) {
                 Thread.sleep(50);
-                Globals.fileIter++;
-                System.out.println(Globals.fileIter);
-                jProgressBar1.setValue(Globals.fileIter);
+                Statics.fileIter++;
+                System.out.println(Statics.fileIter);
+                jProgressBar1.setValue(Statics.fileIter);
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -108,7 +121,7 @@ class GUI_T implements Runnable {
     }
 
     public static void getLastModified() throws IOException {
-        List<Path> paths = listNewFiles(Globals.path);
+        List<Path> paths = listNewFiles(Statics.path);
         paths.forEach(x -> System.out.println(x));
     }
 }
