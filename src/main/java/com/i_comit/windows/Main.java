@@ -2,11 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.i_comit.windows.gui;
+package com.i_comit.windows;
 
-import static com.i_comit.windows.gui.Statics.GB;
-import static com.i_comit.windows.gui.Statics.root;
-import static com.i_comit.windows.gui.Statics.rootFile;
+import static com.i_comit.windows.Statics.GB;
+import static com.i_comit.windows.Statics.root;
+import static com.i_comit.windows.Statics.rootFile;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -26,7 +26,7 @@ public class Main extends javax.swing.JFrame {
 
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
-        Statics.root = s.substring(0, 3);
+        //Statics.root = s.substring(0, 3);
         GUI.getGB();
 
         jLabel3.setText("Drive " + root.substring(0, 2) + " | " + GB + "GB");

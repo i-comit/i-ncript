@@ -2,11 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.i_comit.windows.gui;
+package com.i_comit.windows;
 
-import static com.i_comit.windows.gui.AES.decrypt;
-import static com.i_comit.windows.gui.AES.encrypt;
-import static com.i_comit.windows.gui.Statics.*;
+import static com.i_comit.windows.AES.decrypt;
+import static com.i_comit.windows.AES.encrypt;
+import static com.i_comit.windows.Statics.*;
 import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.*;

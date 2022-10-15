@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.i_comit.windows.gui;
+package com.i_comit.windows;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -14,7 +14,7 @@ import java.nio.file.Paths;
  */
 public class Statics {
 
-    public static String root = "";
+    public static String root = "D:\\";
     public static String folderName = "i-ncript";
     public static String rootFolder = root + folderName;
     public static int AESMode;
