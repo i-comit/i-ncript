@@ -4,6 +4,7 @@
  */
 package com.i_comit.windows;
 
+import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Statics.*;
 import java.io.*;
 import java.nio.file.*;
@@ -16,7 +17,7 @@ import java.util.*;
 public class Login {
 
     public static void Authenticator() {
-        if (rootFile.exists()) {
+        if (keyFile.exists()) {
             verifyPassword();
         } else {
             makeKey();
@@ -50,7 +51,7 @@ public class Login {
 
     public static void verifyPassword() {
         try {
-            BufferedReader brTest = new BufferedReader(new FileReader(rootFile));
+            BufferedReader brTest = new BufferedReader(new FileReader(keyFile));
             String usernameRead = brTest.readLine();
             String passwordRead = brTest.readLine();
 
@@ -59,6 +60,8 @@ public class Login {
                     Main.jLoginPanel.setVisible(false);
                     Main.jToolPanel.setVisible(true);
                 }
+            } else {
+                GUI.labelCutterThread(jAlertLabel, "incorrect login info", 30, 900);
 
             }
 

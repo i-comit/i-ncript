@@ -14,12 +14,15 @@ import java.nio.file.Paths;
  */
 public class Statics {
 
-    public static String root = "D:\\";
+    public static String root = "";
     public static String folderName = "i-ncript";
     public static String rootFolder = root + folderName;
+    
     public static int AESMode;
 
-    public static boolean state = false;
+    public static boolean hotFilerState = false;
+    public static boolean hideFilerState = false;
+    
 
     public static long GB;
 
@@ -27,7 +30,7 @@ public class Statics {
 
     public static File f = new File(root);
     public static File directory = new File(root + folderName);
-    public static File rootFile = Paths.get(root + "\\i-ncript.key").toFile();
+    public static File keyFile = Paths.get(root + "\\i-ncript.key").toFile();
 
     public static Path path = Paths.get(root + folderName);
     public static Path zipPath = Paths.get(root + folderName + ".zip");

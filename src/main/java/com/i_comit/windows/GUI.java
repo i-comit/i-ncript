@@ -7,8 +7,6 @@ package com.i_comit.windows;
 import static com.i_comit.windows.Main.jProgressBar1;
 import static com.i_comit.windows.Statics.GB;
 import static com.i_comit.windows.Statics.root;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,48 +14,29 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.swing.JLabel;
 
 /**
  *
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
-public class GUI implements ActionListener {
+public class GUI {
 
     public static void GUIThread() {
         GUI_T guiThread = new GUI_T();
-        //guiThread.threadIterator = 0;
         Thread t1 = new Thread(guiThread);
         t1.start();
     }
 
     public static void getGB() {
-        try {
-            File diskPartition = new File(root);
-            GB = diskPartition.getUsableSpace() / (1024 * 1024 * 1024);
-            String str = "Drive " + root.substring(0, 2) + " | " + GB + "GB";
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
+        File diskPartition = new File(root);
+        GB = diskPartition.getUsableSpace() / (1024 * 1024 * 1024);
     }
 
-    public void actionPerformed(ActionEvent e) {
-        String str = e.getActionCommand();
-        switch (str) {
-            case "encrypted":
-                System.out.println(0);
-                break;
-            case "decrypted":
-                System.out.println(1);
+    public static void labelCutterThread(JLabel jLabel, String labelMsg, int sleep, int pause) {
+        Thread t = new Thread(() -> labelCutter_T.labelCutter_T(jLabel, labelMsg, sleep, pause));
+        t.start();
 
-                break;
-            case "enter":
-                System.out.println(2);
-                break;
-
-            default:
-            // code block
-        }
-        System.out.println("Clicked = " + str);
     }
 
     public static void progressBar() throws InterruptedException {
@@ -65,16 +44,16 @@ public class GUI implements ActionListener {
         try {
             Statics.fileCount = countFiles(Statics.path);
             jProgressBar1.setMaximum(Statics.fileCount);
-            System.out.println("File Count: " + countFiles(Statics.path));
+            //System.out.println("File Count: " + countFiles(Statics.path));
             for (int i = 0; i < Statics.fileCount; i++) {
                 Thread.sleep(50);
                 Statics.fileIter++;
-                System.out.println(Statics.fileIter);
                 jProgressBar1.setValue(Statics.fileIter);
             }
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+
     }
 
     public static int countFiles(Path path) throws IOException {
@@ -92,11 +71,11 @@ class GUI_T implements Runnable {
     public int threadIterator;
 
     public void run() {
-        try {
-            GUI.progressBar();
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
+            try {
+                GUI.progressBar();
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
     }
 
     public static List<Path> listFiles(Path path) throws IOException {
@@ -119,9 +98,37 @@ class GUI_T implements Runnable {
         }
         return result;
     }
+}
 
-    public static void getLastModified() throws IOException {
-        List<Path> paths = listNewFiles(Statics.path);
-        paths.forEach(x -> System.out.println(x));
+class labelCutter_T implements Runnable {
+
+    public void run() {
+
+    }
+
+    //Thread-4
+    public static void labelCutter_T(JLabel jLabel, String labelMsg, int sleep, int pause) {
+        jLabel.setText("");
+        int msgL = labelMsg.length();
+        try {
+            Thread.sleep(150);
+            for (int i = 0; i <= msgL; i++) {
+                //labelMsg = "";
+                CharSequence cutLabel = labelMsg.subSequence(0, i);
+                //System.out.println(cutLabel.toString());
+                jLabel.setText(cutLabel.toString());
+
+                Thread.sleep(sleep);
+            }
+            Thread.sleep(pause);
+            for (int i = msgL; i >= 0; i--) {
+                CharSequence cutLabel = labelMsg.subSequence(0, i);
+                //System.out.println(cutLabel.toString());
+                jLabel.setText(cutLabel.toString());
+                Thread.sleep(sleep);
+            }
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
     }
 }

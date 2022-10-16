@@ -4,10 +4,9 @@
  */
 package com.i_comit.windows;
 
-import static com.i_comit.windows.Statics.GB;
-import static com.i_comit.windows.Statics.root;
-import static com.i_comit.windows.Statics.rootFile;
+import static com.i_comit.windows.Statics.*;
 import java.awt.Toolkit;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,10 +22,9 @@ public class Main extends javax.swing.JFrame {
      */
     public Main() {
         initComponents();
-
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
-        //Statics.root = s.substring(0, 3);
+        Statics.root = s.substring(0, 3);
         GUI.getGB();
 
         jLabel3.setText("Drive " + root.substring(0, 2) + " | " + GB + "GB");
@@ -34,14 +32,24 @@ public class Main extends javax.swing.JFrame {
         jTextField1.setText("");
         jPasswordField1.setText("");
 
-        if (!rootFile.exists()) {
+        if (!keyFile.exists()) {
             jUsernameLabel.setText("create username");
             jPasswordLabel.setText("create password");
         } else {
             jUsernameLabel.setText("enter username");
             jPasswordLabel.setText("enter password");
         }
-        
+
+        jAlertLabel.setText("");
+
+        File rootFolder = Paths.get(root + folderName).toFile();
+        if (!rootFolder.exists()) {
+            GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 50, 1800);
+            rootFolder.mkdir();
+        } else {
+            GUI.labelCutterThread(jAlertLabel, "developed by i-comit", 50, 1800);
+
+        }
         jToolPanel.setVisible(false);
     }
 
@@ -55,7 +63,7 @@ public class Main extends javax.swing.JFrame {
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
-        jDialog1 = new javax.swing.JDialog();
+        jPopupMenu1 = new javax.swing.JPopupMenu();
         jToolPanel = new javax.swing.JPanel();
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
@@ -70,19 +78,14 @@ public class Main extends javax.swing.JFrame {
         jProgressBar1 = new javax.swing.JProgressBar();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-
-        javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
-        jDialog1.getContentPane().setLayout(jDialog1Layout);
-        jDialog1Layout.setHorizontalGroup(
-            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        jDialog1Layout.setVerticalGroup(
-            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        jAlertLabel = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("\ti-ncript");
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti.png")));
 
         jToolPanel.setOpaque(false);
@@ -120,7 +123,13 @@ public class Main extends javax.swing.JFrame {
         });
 
         jToggleButton2.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+
         jToggleButton2.setText("HIDE FILES");
+        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jToolPanelLayout = new javax.swing.GroupLayout(jToolPanel);
         jToolPanel.setLayout(jToolPanelLayout);
@@ -155,6 +164,7 @@ public class Main extends javax.swing.JFrame {
 
         jLoginPanel.setOpaque(false);
 
+        jTextField1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jTextField1.setText("jTextField1");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -162,6 +172,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        jPasswordField1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jPasswordField1.setText("jPasswordField1");
         jPasswordField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -214,7 +225,7 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(jPasswordLabel)
                     .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
+                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
                 .addGap(13, 13, 13))
         );
 
@@ -225,6 +236,22 @@ public class Main extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Polentical Neon", 0, 14)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("jLabel3");
+
+        jAlertLabel.setFont(new java.awt.Font("Polentical Neon", 0, 14)); // NOI18N
+        jAlertLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jAlertLabel.setText("jLabel2");
+
+        jMenu1.setText("File");
+
+        jMenuItem2.setText("jMenuItem2");
+        jMenu1.add(jMenuItem2);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -239,6 +266,10 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jAlertLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
@@ -258,14 +289,16 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 193, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 157, Short.MAX_VALUE)
+                .addComponent(jAlertLabel)
+                .addGap(18, 18, 18)
                 .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(107, Short.MAX_VALUE)
+                    .addContainerGap(106, Short.MAX_VALUE)
                     .addComponent(jLoginPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(80, Short.MAX_VALUE)))
+                    .addContainerGap(81, Short.MAX_VALUE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                     .addGap(108, 108, 108)
@@ -279,20 +312,19 @@ public class Main extends javax.swing.JFrame {
 
     private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
         //Decrypt Mode
-        Statics.state = false;
+        Statics.hotFilerState = false;
+        GUI.labelCutterThread(jAlertLabel, "decrypting files", 20, 800);
         jToggleButton1.setSelected(false);
-        jProgressBar1.setMaximum(0);
-        jProgressBar1.setValue(0);
-        GUI.GUIThread();
-//        jProgressBar1.setMaximum(Statics.fileCount);
-//        jProgressBar1.setValue(Statics.fileIter);
 
         try {
             Statics.AESMode = 1;
             AES.AESThread();
+            GUI.GUIThread();
+
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+
     }//GEN-LAST:event_jRadioButton2ActionPerformed
 
 
@@ -302,27 +334,44 @@ public class Main extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         //Login Button
-
         char[] password = jPasswordField1.getPassword();
         //System.out.println("Your password is: " + new String(password));
         //System.out.println("Your password char[] is: " + password);
 
         Statics.username = jTextField1.getText();
         Statics.password = new String(password);
-        Login.Authenticator();
+        if (!"".equals(Statics.username) && !"".equals(Statics.password)) {
+            if (Statics.username.length() >= 4 && Statics.password.length() >= 4) {
+                Login.Authenticator();
+            } else {
+                GUI.labelCutterThread(jAlertLabel, "please make a longer username and password", 20, 2000);
+            }
+        } else {
+            GUI.labelCutterThread(jAlertLabel, "please make a username and password", 20, 2000);
+        }
         jTextField1.setText("");
         jPasswordField1.setText("");
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-        Statics.state ^= true;
-        System.out.println(Statics.state);
+        //Hot Filer
+        Statics.hotFilerState ^= true;
+        buttonGroup1.clearSelection();
 
-        jRadioButton2.setSelected(false);
-
+        if (Statics.hotFilerState) {
+            GUI.labelCutterThread(jAlertLabel, "hot filer enabled", 30, 900);
+        } else {
+            GUI.labelCutterThread(jAlertLabel, "hot filer disabled", 30, 900);
+        }
         try {
             HotFiler.HotFilerThread();
+            jRadioButton1.setSelected(true);
+
+            Statics.AESMode = 0;
+            AES.AESThread();
+            GUI.GUIThread();
+
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -334,17 +383,35 @@ public class Main extends javax.swing.JFrame {
 
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
         //Encrypt 
-        jProgressBar1.setMaximum(0);
-        jProgressBar1.setValue(0);
-        GUI.GUIThread();
-//        jProgressBar1.setMaximum(Statics.fileCount);
-//        jProgressBar1.setValue(Statics.fileIter);
+        GUI.labelCutterThread(jAlertLabel, "encrypting files", 20, 800);
+
         try {
             Statics.AESMode = 0;
             AES.AESThread();
+            GUI.GUIThread();
         } catch (IOException ex) {
             ex.printStackTrace();
+
+
         }    }//GEN-LAST:event_jRadioButton1ActionPerformed
+
+    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
+        //Hide Filer
+        Statics.hideFilerState ^= true;
+        buttonGroup1.clearSelection();
+        try {
+            if (Statics.hideFilerState) {
+                GUI.labelCutterThread(jAlertLabel, "hide filer enabled", 30, 900);
+                FileHider.FileHiderThread(true);
+
+            } else {
+                GUI.labelCutterThread(jAlertLabel, "hide filer disabled", 30, 900);
+                FileHider.FileHiderThread(false);
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_jToggleButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -382,13 +449,18 @@ public class Main extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
+    public static javax.swing.JLabel jAlertLabel;
     private javax.swing.JButton jButton1;
-    private javax.swing.JDialog jDialog1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     public static javax.swing.JPanel jLoginPanel;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JLabel jPasswordLabel;
+    private javax.swing.JPopupMenu jPopupMenu1;
     public static javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;

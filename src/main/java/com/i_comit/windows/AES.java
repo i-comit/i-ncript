@@ -6,6 +6,7 @@ package com.i_comit.windows;
 
 import static com.i_comit.windows.AES.decrypt;
 import static com.i_comit.windows.AES.encrypt;
+import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Statics.*;
 import java.io.*;
 import java.nio.file.FileSystems;
@@ -24,18 +25,16 @@ import javax.crypto.spec.SecretKeySpec;
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
 public class AES {
+
     public static void AESThread() throws IOException {
-
-        AES_T aesThread = new AES_T();
-        aesThread.threadIterator = 0;
-        Thread t1 = new Thread(aesThread);
-        t1.start();
-
-//            for(int i=0; i< usbparser.windows.USBParse0.GetDeviceCount(); i++){
-//                runnableWindows.threadIterator++;
-//                Thread t =new Thread(runnableWindows);    
-//                t.start();
-//            }
+        Thread t = new Thread(() -> {
+            try {
+                AES_T.AESQuery();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+        t.start();
     }
 
     private static final String ALGORITHM = "AES";
@@ -49,14 +48,7 @@ public class AES {
                 doCrypto(Cipher.ENCRYPT_MODE, key, inputFile, outputFile);
                 inputFile.delete();
 
-            } else {
-                System.out.println("No files to encrypt.");
-                //System.exit(0);
-                return;
             }
-        }
-        else {
-            System.out.println("Encryption complete!");
         }
     }
 
@@ -67,16 +59,8 @@ public class AES {
                 outputFile = new File(inputFile.toString().replaceAll(".enc", ""));
                 doCrypto(Cipher.DECRYPT_MODE, key, inputFile, outputFile);
                 inputFile.delete();
-                //System.exit(0);
-            } else {
-                System.out.println("No files to decrypt.");
-                //System.exit(0);
-                return;
             }
-        } else {
-            System.out.println("Decryption complete!");
         }
-
     }
 
     private static void doCrypto(int cipherMode, String key, File inputFile,
@@ -113,37 +97,62 @@ public class AES {
 }
 
 class AES_T implements Runnable {
+
     public int threadIterator;
+
     public void run() {
-        try {
-            AESQuery();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+//        try {
+//            AESQuery();
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//        }
+    }
+
+    public static boolean accept(File dir, String name) {
+        return name.toLowerCase().endsWith(".pdf");
     }
 
     public static void AESQuery() throws IOException {
         List<Path> paths = listFiles(path);
-        paths.forEach(x -> System.out.println(x));
+        //paths.forEach(x -> System.out.println(x));
+        File[] contents = directory.listFiles();
 
         switch (AESMode) {
             case 0:
-                paths.forEach(x -> {
-                    try {
-                        encrypt(Hasher.modHash(password), x.toFile(), x.toFile());
-                    } catch (AES.CryptoException ex) {
-                        ex.printStackTrace();
+                if (contents != null) {
+                    if (contents.length != 0) {
+                        paths.forEach(x -> {
+                            try {
+                                encrypt(Hasher.modHash(password), x.toFile(), x.toFile());
+                            } catch (AES.CryptoException ex) {
+                                ex.printStackTrace();
+                            }
+                        });
+                    } else {
+                        GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files",40, 1000);
                     }
-                });
+                } else {
+                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist",40,1000);
+                }
                 break;
             case 1:
-                paths.forEach(x -> {
-                    try {
-                        decrypt(Hasher.modHash(password), x.toFile(), x.toFile());
-                    } catch (AES.CryptoException ex) {
-                        ex.printStackTrace();
+                if (contents != null) {
+                    if (contents.length != 0) {
+                        paths.forEach(x -> {
+                            try {
+                                decrypt(Hasher.modHash(password), x.toFile(), x.toFile());
+                            } catch (AES.CryptoException ex) {
+                                ex.printStackTrace();
+                            }
+                        });
+                    } else {
+                        GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files",40,1000);
+
                     }
-                });
+                } else {
+                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist",40,1000);
+
+                }
                 break;
             default:
                 break;
