@@ -200,13 +200,13 @@ public class Main extends javax.swing.JFrame {
             jLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLoginPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jUsernameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPasswordLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPasswordLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jUsernameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPasswordField1)
-                    .addComponent(jTextField1))
+                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(jLoginPanelLayout.createSequentialGroup()
                 .addGap(95, 95, 95)
@@ -224,9 +224,9 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(jLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jPasswordLabel)
                     .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
-                .addGap(13, 13, 13))
+                .addGap(18, 18, 18)
+                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jLabel1.setFont(new java.awt.Font("Polentical Neon", 0, 24)); // NOI18N
@@ -313,7 +313,7 @@ public class Main extends javax.swing.JFrame {
     private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
         //Decrypt Mode
         Statics.hotFilerState = false;
-        GUI.labelCutterThread(jAlertLabel, "decrypting files", 20, 800);
+        //GUI.labelCutterThread(jAlertLabel, "decrypting files", 20, 800);
         jToggleButton1.setSelected(false);
 
         try {
@@ -383,7 +383,7 @@ public class Main extends javax.swing.JFrame {
 
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
         //Encrypt 
-        GUI.labelCutterThread(jAlertLabel, "encrypting files", 20, 800);
+        //GUI.labelCutterThread(jAlertLabel, "encrypting files", 20, 800);
 
         try {
             Statics.AESMode = 0;
@@ -401,11 +401,11 @@ public class Main extends javax.swing.JFrame {
         buttonGroup1.clearSelection();
         try {
             if (Statics.hideFilerState) {
-                GUI.labelCutterThread(jAlertLabel, "hide filer enabled", 30, 900);
+                GUI.labelCutterThread(jAlertLabel, "file hider enabled", 30, 900);
                 FileHider.FileHiderThread(true);
 
             } else {
-                GUI.labelCutterThread(jAlertLabel, "hide filer disabled", 30, 900);
+                GUI.labelCutterThread(jAlertLabel, "file hider disabled", 30, 900);
                 FileHider.FileHiderThread(false);
             }
         } catch (IOException ex) {

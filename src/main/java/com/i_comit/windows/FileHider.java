@@ -5,7 +5,10 @@
 package com.i_comit.windows;
 
 import static com.i_comit.windows.AES_T.listFiles;
+import static com.i_comit.windows.Main.jAlertLabel;
+import static com.i_comit.windows.Statics.directory;
 import static com.i_comit.windows.Statics.path;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,7 +28,7 @@ public class FileHider {
                 ex.printStackTrace();
             }
         });
-            t.start();
+        t.start();
 
 //            for(int i=0; i< usbparser.windows.USBParse0.GetDeviceCount(); i++){
 //                runnableWindows.threadIterator++;
@@ -51,22 +54,40 @@ class FileHider_T implements Runnable {
 
     public static void FileHider_T(boolean fileHideBool) throws IOException {
         List<Path> paths = listFiles(path);
+        File[] contents = directory.listFiles();
+
         if (fileHideBool) {
-            paths.forEach(x -> {
-                try {
-                    Files.setAttribute(x, "dos:hidden", true);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+            if (contents != null) {
+                if (contents.length != 0) {
+                    paths.forEach(x -> {
+                        try {
+                            Files.setAttribute(x, "dos:hidden", true);
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    });
+                } else {
+//                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 40, 1000);
                 }
-            });
+            } else {
+//                GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 40, 1000);
+            }
         } else {
-            paths.forEach(x -> {
-                try {
-                    Files.setAttribute(x, "dos:hidden", false);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+            if (contents != null) {
+                if (contents.length != 0) {
+                    paths.forEach(x -> {
+                        try {
+                            Files.setAttribute(x, "dos:hidden", false);
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    });
+                } else {
+//                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 40, 1000);
                 }
-            });
+            } else {
+//                GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 40, 1000);
+            }
         }
     }
 }

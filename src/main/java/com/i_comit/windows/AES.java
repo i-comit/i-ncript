@@ -108,17 +108,12 @@ class AES_T implements Runnable {
 //        }
     }
 
-    public static boolean accept(File dir, String name) {
-        return name.toLowerCase().endsWith(".pdf");
-    }
-
     public static void AESQuery() throws IOException {
         List<Path> paths = listFiles(path);
-        //paths.forEach(x -> System.out.println(x));
         File[] contents = directory.listFiles();
 
         switch (AESMode) {
-            case 0:
+            case 0 -> {
                 if (contents != null) {
                     if (contents.length != 0) {
                         paths.forEach(x -> {
@@ -134,8 +129,8 @@ class AES_T implements Runnable {
                 } else {
                     GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist",40,1000);
                 }
-                break;
-            case 1:
+            }
+            case 1 -> {
                 if (contents != null) {
                     if (contents.length != 0) {
                         paths.forEach(x -> {
@@ -153,9 +148,9 @@ class AES_T implements Runnable {
                     GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist",40,1000);
 
                 }
-                break;
-            default:
-                break;
+            }
+            default -> {
+            }
         }
         //folderWatcher();
     }
