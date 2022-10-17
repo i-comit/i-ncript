@@ -7,6 +7,7 @@ package com.i_comit.windows;
 import static com.i_comit.windows.AES.decrypt;
 import static com.i_comit.windows.AES.encrypt;
 import static com.i_comit.windows.Main.jAlertLabel;
+import static com.i_comit.windows.Main.jProgressBar1;
 import static com.i_comit.windows.Statics.*;
 import java.io.*;
 import java.nio.file.FileSystems;
@@ -26,14 +27,10 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class AES {
 
-    public static void AESThread() throws IOException {
-        Thread t = new Thread(() -> {
-            try {
-                AES_T.AESQuery();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        });
+    public static Thread t;
+
+    public static void AESThread() {
+        t = new Thread(() -> AES_T.AESQuery());
         t.start();
     }
 
@@ -47,7 +44,9 @@ public class AES {
                 outputFile = new File(outputFile + ".enc");
                 doCrypto(Cipher.ENCRYPT_MODE, key, inputFile, outputFile);
                 inputFile.delete();
-
+                Statics.fileIter++;
+                jProgressBar1.setValue(Statics.fileIter);
+//                System.out.println("File Iterator  " + Statics.fileIter);
             }
         }
     }
@@ -58,6 +57,8 @@ public class AES {
             if (inputFile.toString().endsWith(".enc")) {
                 outputFile = new File(inputFile.toString().replaceAll(".enc", ""));
                 doCrypto(Cipher.DECRYPT_MODE, key, inputFile, outputFile);
+                Statics.fileIter++;
+                jProgressBar1.setValue(Statics.fileIter);
                 inputFile.delete();
             }
         }
@@ -80,8 +81,11 @@ public class AES {
             outputStream.close();
         } catch (NoSuchPaddingException | NoSuchAlgorithmException
                 | InvalidKeyException | BadPaddingException
-                | IllegalBlockSizeException | IOException ex) {
+                | IllegalBlockSizeException ex) {
             throw new CryptoException("Error encrypting/decrypting file", ex);
+        } catch (IOException | UncheckedIOException ex) {
+            System.out.println("Last File Was " + inputFile.getName());
+            System.exit(0);
         }
     }
 
@@ -108,103 +112,87 @@ class AES_T implements Runnable {
 //        }
     }
 
-    public static void AESQuery() throws IOException {
-        List<Path> paths = listFiles(path);
-        File[] contents = directory.listFiles();
-
-        switch (AESMode) {
-            case 0 -> {
-                if (contents != null) {
-                    if (contents.length != 0) {
-                        paths.forEach(x -> {
-                            try {
-                                encrypt(Hasher.modHash(password), x.toFile(), x.toFile());
-                            } catch (AES.CryptoException ex) {
-                                ex.printStackTrace();
-                            }
-                        });
-                    } else {
-                        GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files",40, 1000);
-                    }
-                } else {
-                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist",40,1000);
-                }
-            }
-            case 1 -> {
-                if (contents != null) {
-                    if (contents.length != 0) {
-                        paths.forEach(x -> {
-                            try {
-                                decrypt(Hasher.modHash(password), x.toFile(), x.toFile());
-                            } catch (AES.CryptoException ex) {
-                                ex.printStackTrace();
-                            }
-                        });
-                    } else {
-                        GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files",40,1000);
-
-                    }
-                } else {
-                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist",40,1000);
-
-                }
-            }
-            default -> {
-            }
+    public static void AESQuery() {
+        if (AES.t.isAlive()) {
+            AES.t.interrupt();
         }
-        //folderWatcher();
-    }
-
-    public static List<Path> listFiles(Path path) throws IOException {
-
-        List<Path> result;
-        try ( Stream<Path> walk = Files.walk(path)) {
-            result = walk.filter(Files::isRegularFile)
-                    .collect(Collectors.toList());
-        }
-        return result;
-    }
-
-    public static List<Path> listNewFiles(Path path) throws IOException {
-
-        List<Path> result;
-        try ( Stream<Path> walk = Files.walk(path)) {
-            result = walk.filter(Files::isRegularFile)
-                    .filter(p -> !p.getFileName().toString().endsWith(".enc"))
-                    .collect(Collectors.toList());
-        }
-        return result;
-    }
-
-    public static void folderWatcher() throws IOException {
         try {
-            WatchService watchService = FileSystems.getDefault().newWatchService();
-            Path rootPath = Paths.get(rootFolder);
-            rootPath.register(
-                    watchService,
-                    StandardWatchEventKinds.ENTRY_CREATE,
-                    StandardWatchEventKinds.ENTRY_DELETE,
-                    StandardWatchEventKinds.ENTRY_MODIFY);
+            List<Path> paths = listPaths(path);
+            File[] contents = directory.listFiles();
 
-            WatchKey key;
-            while ((key = watchService.take()) != null) {
-                for (WatchEvent<?> event : key.pollEvents()) {
-                    List<Path> paths = listFiles(path);
-                    paths.forEach(y -> System.out.println(y));
-                    System.out.println(
-                            "Event kind:" + event.kind()
-                            + ". File affected: " + event.context() + ".");
-                    getLastModified();
+            if (contents != null) {
+                if (contents.length != 0) {
+                    switch (Statics.AESMode) {
+                        case 0 ->
+                            paths.forEach(x -> {
+                                try {
+                                    encrypt(Hasher.modHash(password), x.toFile(), x.toFile());
+                                } catch (AES.CryptoException ex) {
+                                }
+                            });
+                        case 1 ->
+                            paths.forEach(x -> {
+                                try {
+                                    decrypt(Hasher.modHash(password), x.toFile(), x.toFile());
+                                } catch (AES.CryptoException ex) {
+                                }
+                            });
+                    }
+
+                } else {
+                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 40, 40, 1000);
                 }
-                key.reset();
+            } else {
+                GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 40, 40, 1000);
             }
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
+        } catch (IOException | UncheckedIOException ex) {
+            //ex.printStackTrace();
+            System.out.println("USB disconnected");
+            System.exit(0);
+        }
+
+        try {
+            List<Path> paths = listAESPaths(path);
+            if (paths.isEmpty() && jProgressBar1.getValue() == 0) {
+                switch (Statics.AESMode) {
+                    case 0:
+                        GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 40, 40, 1000);
+                        break;
+                    case 1:
+                        GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 40, 40, 1000);
+                        break;
+                }
+            }
+        } catch (IOException | UncheckedIOException ex) {
+            System.out.println("USB disconnected");
+            System.exit(0);
         }
     }
 
-    public static void getLastModified() throws IOException {
-        List<Path> paths = listNewFiles(path);
-        paths.forEach(x -> System.out.println(x));
+    public static List<Path> listPaths(Path path) throws IOException {
+        List<Path> result;
+        try ( Stream<Path> walk = Files.walk(path)) {
+            result = walk.filter(Files::isRegularFile).collect(Collectors.toList());
+            return result;
+        }
+
+    }
+
+    public static List<Path> listAESPaths(Path path) throws IOException {
+
+        List<Path> result = null;
+        try ( Stream<Path> walk = Files.walk(path)) {
+            switch (Statics.AESMode) {
+                case 0:
+                    result = walk.filter(Files::isRegularFile).filter(p -> !p.getFileName().toString().endsWith(".enc"))
+                            .collect(Collectors.toList());
+                    break;
+                case 1:
+                    result = walk.filter(Files::isRegularFile).filter(p -> p.getFileName().toString().endsWith(".enc"))
+                            .collect(Collectors.toList());
+                    break;
+            }
+        }
+        return result;
     }
 }

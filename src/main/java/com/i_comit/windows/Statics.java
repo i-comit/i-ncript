@@ -19,6 +19,8 @@ public class Statics {
     public static String rootFolder = root + folderName;
     
     public static int AESMode;
+    
+    public static volatile boolean alertLabelState = false;
 
     public static boolean hotFilerState = false;
     public static boolean hideFilerState = false;
