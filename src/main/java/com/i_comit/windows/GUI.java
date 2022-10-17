@@ -65,6 +65,24 @@ public class GUI {
         }
         return result;
     }
+
+    public static int countFiles2(Path path) throws IOException {
+        int result = 0;
+        try ( Stream<Path> walk = Files.walk(path)) {
+            int result2 = 0;
+            switch (Statics.AESMode) {
+                case 0 -> {
+                    result2 = Math.toIntExact(walk.filter(Files::isRegularFile).filter(p -> !p.getFileName().toString().endsWith(".enc")).count());
+                    result = result2;
+                }
+                case 1 -> {
+                    result2 = Math.toIntExact(walk.filter(Files::isRegularFile).filter(p -> p.getFileName().toString().endsWith(".enc")).count());
+                    result = result2;
+                }
+            }
+        }
+        return result;
+    }
 };
 
 class progressBar_T implements Runnable {
@@ -79,7 +97,6 @@ class progressBar_T implements Runnable {
             System.exit(0);
         } catch (IOException | UncheckedIOException ex) {
             System.out.println("USB disconnected");
-            System.exit(0);
         }
     }
 
@@ -102,6 +119,8 @@ class progressBar_T implements Runnable {
 
                                 switch (Statics.AESMode) {
                                     case 0 -> {
+                                        AES.t.interrupt();
+
                                         jProgressBar1.setMaximum(100);
                                         jProgressBar1.setValue(100);
                                         GUI.labelCutterThread(jAlertLabel, "encryption of " + Statics.fileCount + " files complete", 20, 20, 600);
@@ -118,6 +137,8 @@ class progressBar_T implements Runnable {
 
                                     }
                                     case 1 -> {
+                                        AES.t.interrupt();
+
                                         jProgressBar1.setMaximum(100);
                                         jProgressBar1.setValue(100);
                                         GUI.labelCutterThread(jAlertLabel, "decryption of " + Statics.fileCount + " files complete", 20, 20, 600);
@@ -139,8 +160,8 @@ class progressBar_T implements Runnable {
                     }
                 }
             } catch (IOException | UncheckedIOException ex) {
-            System.out.println("USB disconnected");
-            System.exit(0);
+                System.out.println("USB disconnected");
+                System.exit(0);
             }
             if (!jProgressBar1.isStringPainted()) {
                 break;

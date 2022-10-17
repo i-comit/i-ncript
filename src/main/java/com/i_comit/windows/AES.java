@@ -84,8 +84,8 @@ public class AES {
                 | IllegalBlockSizeException ex) {
             throw new CryptoException("Error encrypting/decrypting file", ex);
         } catch (IOException | UncheckedIOException ex) {
-            System.out.println("Last File Was " + inputFile.getName());
-            System.exit(0);
+            //System.out.println("Last File Was " + inputFile.getName());
+
         }
     }
 
@@ -117,7 +117,7 @@ class AES_T implements Runnable {
             AES.t.interrupt();
         }
         try {
-            List<Path> paths = listPaths(path);
+            List<Path> paths = listAESPaths(path);
             File[] contents = directory.listFiles();
 
             if (contents != null) {
@@ -145,10 +145,8 @@ class AES_T implements Runnable {
             } else {
                 GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 40, 40, 1000);
             }
-        } catch (IOException | UncheckedIOException ex) {
+        } catch (IOException ex) {
             //ex.printStackTrace();
-            System.out.println("USB disconnected");
-            System.exit(0);
         }
 
         try {
@@ -165,7 +163,6 @@ class AES_T implements Runnable {
             }
         } catch (IOException | UncheckedIOException ex) {
             System.out.println("USB disconnected");
-            System.exit(0);
         }
     }
 

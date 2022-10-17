@@ -5,6 +5,7 @@
 package com.i_comit.windows;
 
 import static com.i_comit.windows.AES.*;
+import static com.i_comit.windows.HotFiler.listNewPaths;
 import static com.i_comit.windows.Main.jAlertLabel;
 import java.io.File;
 import java.nio.file.Files;
@@ -26,17 +27,16 @@ public class HotFiler {
     public static void HotFilerThread() throws IOException {
         HotFiler_T hotFilerThread = new HotFiler_T();
         t = new Thread(hotFilerThread);
+
         if (Statics.hotFilerState) {
             t.start();
-
         } else {
             t.interrupt();
-
         }
 
     }
 
-    public static List<Path> listNewFiles(Path path) throws IOException {
+    public static List<Path> listNewPaths(Path path) throws IOException {
 
         List<Path> result;
         try ( Stream<Path> walk = Files.walk(path)) {
@@ -70,13 +70,13 @@ public class HotFiler {
             WatchKey key;
             while ((key = watchService.take()) != null) {
                 for (WatchEvent<?> event : key.pollEvents()) {
-                    List<Path> paths = listNewFiles(Statics.path);
+                    List<Path> paths = listNewPaths(Statics.path);
 //                    paths.forEach(y -> System.out.println(y));
 //                    System.out.println(
 //                            "Event kind:" + event.kind()
 //                            + ". File affected: " + event.context() + ".");
+                    Main.jProgressBar1.setMaximum(countNewFiles(Statics.path));
                     getLastModified();
-
                 }
 
                 key.reset();
@@ -88,17 +88,18 @@ public class HotFiler {
     }
 
     public static void getLastModified() throws IOException {
-        List<Path> paths = listNewFiles(Statics.path);
+        List<Path> paths = listNewPaths(Statics.path);
         File[] contents = Statics.directory.listFiles();
+
+//        AES.AESThread();
         if (Statics.hotFilerState) {
             if (contents != null) {
                 if (contents.length != 0) {
 
                     paths.forEach(x -> {
                         try {
-                            Main.jProgressBar1.setMaximum(countNewFiles(Statics.path));
                             encrypt(Hasher.modHash(Statics.password), x.toFile(), x.toFile());
-                        } catch (AES.CryptoException | IOException ex) {
+                        } catch (AES.CryptoException ex) {
                             ex.printStackTrace();
                         }
                     });
@@ -125,7 +126,8 @@ class HotFiler_T implements Runnable {
         try {
             HotFiler.folderWatcher();
         } catch (IOException ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
         }
     }
+
 }

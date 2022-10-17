@@ -315,9 +315,8 @@ public class Main extends javax.swing.JFrame {
         }
         Statics.AESMode = 1;
         AES.AESThread();
-
         try {
-            Statics.fileCount = GUI.countFiles(Statics.path);
+            Statics.fileCount = GUI.countFiles2(Statics.path);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -326,6 +325,7 @@ public class Main extends javax.swing.JFrame {
 
         Statics.hotFilerState = false;
         jToggleButton1.setSelected(false);
+
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
 
@@ -360,24 +360,28 @@ public class Main extends javax.swing.JFrame {
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
         Statics.hotFilerState ^= true;
         buttonGroup1.clearSelection();
+        Statics.AESMode = 0;
+        AES.AESThread();
 
-//        if (Statics.hotFilerState) {
-//            GUI.labelCutterThread(jAlertLabel, "hot filer enabled", 30, 900);
-//        } else {
-//            GUI.labelCutterThread(jAlertLabel, "hot filer disabled", 30, 900);
-//        }
-        try {
-            Statics.AESMode = 0;
-            AES.AESThread();
-            HotFiler.HotFilerThread();
-            jRadioButton0.setSelected(true);
-            Statics.fileCount = HotFiler.countNewFiles(Statics.path);
-            GUI.progressBarThread();
+        GUI.progressBarThread();
+        if (Statics.hotFilerState) {
+            try {
+                Statics.fileCount = HotFiler.countNewFiles(Statics.path);
 
-//            Statics.AESMode = 0;
-        } catch (IOException ex) {
-            ex.printStackTrace();
+                GUI.progressBarThread();
+                GUI.labelCutterThread(jAlertLabel, "hot filer enabled", 30, 30, 900);
+
+                HotFiler.HotFilerThread();
+                jRadioButton0.setSelected(true);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            AES.t.interrupt();
+            GUI.labelCutterThread(jAlertLabel, "hot filer disabled", 30, 30, 900);
         }
+
+
     }//GEN-LAST:event_jToggleButton1ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -408,7 +412,7 @@ public class Main extends javax.swing.JFrame {
         Statics.AESMode = 0;
         AES.AESThread();
         try {
-            Statics.fileCount = GUI.countFiles(Statics.path);
+            Statics.fileCount = GUI.countFiles2(Statics.path);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
