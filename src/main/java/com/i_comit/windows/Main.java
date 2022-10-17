@@ -44,10 +44,10 @@ public class Main extends javax.swing.JFrame {
 
         File rootFolder = Paths.get(root + folderName).toFile();
         if (!rootFolder.exists()) {
-            GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 50, 1800);
+            GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 60, 50, 1800);
             rootFolder.mkdir();
         } else {
-            GUI.labelCutterThread(jAlertLabel, "developed by i-comit", 50, 1800);
+            GUI.labelCutterThread(jAlertLabel, "developed by i-comit", 60, 50, 1800);
 
         }
         jToolPanel.setVisible(false);
@@ -225,6 +225,8 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jProgressBar1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+
         jLabel1.setFont(new java.awt.Font("Polentical Neon", 0, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("i-ncript");
@@ -285,9 +287,9 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 157, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 166, Short.MAX_VALUE)
                 .addComponent(jAlertLabel)
-                .addGap(18, 18, 18)
+                .addGap(10, 10, 10)
                 .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -305,11 +307,8 @@ public class Main extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
+    //DECRYPT
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
-        //Decrypt Mode
-        Statics.hotFilerState = false;
-        jToggleButton1.setSelected(false);
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
@@ -317,7 +316,8 @@ public class Main extends javax.swing.JFrame {
         AES.AESThread();
         GUI.progressBarThread();
 
-
+        Statics.hotFilerState = false;
+        jToggleButton1.setSelected(false);
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
 
@@ -340,17 +340,16 @@ public class Main extends javax.swing.JFrame {
             if (Statics.username.length() >= 4 && Statics.password.length() >= 4) {
                 Login.Authenticator();
             } else {
-                GUI.labelCutterThread(jAlertLabel, "please make a longer username and password", 20, 1800);
+                GUI.labelCutterThread(jAlertLabel, "please make a longer username and password", 20, 20, 1800);
             }
         } else {
-            GUI.labelCutterThread(jAlertLabel, "please make a username and password", 20, 1800);
+            GUI.labelCutterThread(jAlertLabel, "please make a username and password", 20, 20, 1800);
         }
         jTextField1.setText("");
         jPasswordField1.setText("");
     }//GEN-LAST:event_jButton1ActionPerformed
-
+    //HOT FILER
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-        //Hot Filer
         Statics.hotFilerState ^= true;
         buttonGroup1.clearSelection();
 //        if (Statics.hotFilerState) {
@@ -373,34 +372,31 @@ public class Main extends javax.swing.JFrame {
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
-
+    //HIDE FILER
     private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
-        //Hide Filer
         Statics.hideFilerState ^= true;
         buttonGroup1.clearSelection();
         try {
             if (Statics.hideFilerState) {
-                GUI.labelCutterThread(jAlertLabel, "file hider enabled", 30, 900);
+                GUI.labelCutterThread(jAlertLabel, "file hider enabled", 30, 30, 900);
                 FileHider.FileHiderThread(true);
 
             } else {
-                GUI.labelCutterThread(jAlertLabel, "file hider disabled", 30, 900);
+                GUI.labelCutterThread(jAlertLabel, "file hider disabled", 30, 30, 900);
                 FileHider.FileHiderThread(false);
             }
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_jToggleButton2ActionPerformed
-
+    //ENCRYPT
     private void jRadioButton0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton0ActionPerformed
-        //Encrypt Mode
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
         Statics.AESMode = 0;
         AES.AESThread();
         GUI.progressBarThread();
-
     }//GEN-LAST:event_jRadioButton0ActionPerformed
 
     /**
@@ -430,10 +426,8 @@ public class Main extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Main().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new Main().setVisible(true);
         });
     }
 

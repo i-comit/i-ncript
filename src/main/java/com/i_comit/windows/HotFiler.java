@@ -80,6 +80,7 @@ public class HotFiler {
     public static void getLastModified() throws IOException {
         List<Path> paths = listNewFiles(Statics.path);
         File[] contents = Statics.directory.listFiles();
+        GUI.progressBarThread();
         if (Statics.hotFilerState) {
             if (contents != null) {
                 if (contents.length != 0) {
@@ -91,10 +92,10 @@ public class HotFiler {
                         }
                     });
                 } else {
-                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 40, 1000);
+                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 40,40, 1000);
                 }
             } else {
-                GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 40, 100);
+                GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 40,40, 100);
             }
         } else {
             return;

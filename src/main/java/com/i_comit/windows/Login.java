@@ -59,30 +59,13 @@ public class Login {
                 if (passwordRead.equals(Hasher.modHash(password))) {
                     Main.jLoginPanel.setVisible(false);
                     Main.jToolPanel.setVisible(true);
-                    GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript", 30, 900);
+                    GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript", 45,30, 900);
                 }
             } else {
-                GUI.labelCutterThread(jAlertLabel, "incorrect login info", 30, 900);
+                GUI.labelCutterThread(jAlertLabel, "incorrect login info", 45,30, 900);
 
             }
 
-//            if (password.equals(text)) {
-//                System.out.println("Password Match");
-//                text = password;
-//                boolean enc = Paths.get(Statics.root + Statics.folderName + ".enc").toFile().exists();
-//                if (!enc && emptyDirectory) {
-//                    System.out.println("Please fill encrypted-folder first");
-//                    System.exit(0);
-//                } else {
-//                    //ZipFolder.AESQuery();
-//
-//                }
-//                //ZipFolder.AESQuery();
-//
-//            } else {
-//                System.out.println("Password Mismatch");
-//
-//            }
         } catch (IOException ex) {
             ex.printStackTrace();
         }

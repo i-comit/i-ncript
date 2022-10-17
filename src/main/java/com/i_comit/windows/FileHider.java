@@ -4,8 +4,7 @@
  */
 package com.i_comit.windows;
 
-import static com.i_comit.windows.AES_T.listFiles;
-import static com.i_comit.windows.Main.jAlertLabel;
+import static com.i_comit.windows.AES_T.listPaths;
 import static com.i_comit.windows.Statics.directory;
 import static com.i_comit.windows.Statics.path;
 import java.io.File;
@@ -53,7 +52,7 @@ class FileHider_T implements Runnable {
     }
 
     public static void FileHider_T(boolean fileHideBool) throws IOException {
-        List<Path> paths = listFiles(path);
+        List<Path> paths = listPaths(path);
         File[] contents = directory.listFiles();
 
         if (fileHideBool) {

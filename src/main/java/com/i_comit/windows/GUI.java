@@ -4,8 +4,12 @@
  */
 package com.i_comit.windows;
 
+import static com.i_comit.windows.AES_T.listPaths;
+import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.jProgressBar1;
 import static com.i_comit.windows.Statics.GB;
+import static com.i_comit.windows.Statics.directory;
+import static com.i_comit.windows.Statics.path;
 import static com.i_comit.windows.Statics.root;
 import java.io.File;
 import java.io.IOException;
@@ -30,32 +34,15 @@ public class GUI {
         GB = diskPartition.getUsableSpace() / (1024 * 1024 * 1024);
     }
 
-    public static void labelCutterThread(JLabel jLabel, String labelMsg, int sleep, int pause) {
-        t = new Thread(() -> labelCutter_T.labelCutter_T(jLabel, labelMsg, sleep, pause));
+    public static void labelCutterThread(JLabel jLabel, String labelMsg, int initSleep, int sleep, int pause) {
+        t = new Thread(() -> labelCutter_T.labelCutter_T(jLabel, labelMsg, initSleep, sleep, pause));
         t.start();
     }
-
 
     public static void progressBarThread() {
         progressBar_T pgThread = new progressBar_T();
         t1 = new Thread(pgThread);
-
-    }
-
-    public static void progressBar() throws InterruptedException {
-        Statics.fileIter = 0;
-        try {
-            Statics.fileCount = countFiles(Statics.path);
-            jProgressBar1.setMaximum(Statics.fileCount);
-            System.out.println("File Count: " + countFiles(Statics.path));
-            for (int i = 0; i < Statics.fileCount; i++) {
-                Thread.sleep(50);
-                Statics.fileIter++;
-                jProgressBar1.setValue(Statics.fileIter);
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        t1.start();
 
     }
 
@@ -63,10 +50,20 @@ public class GUI {
         int result;
         try ( Stream<Path> walk = Files.walk(path)) {
             result = Math.toIntExact(walk.filter(Files::isRegularFile).count());
+//            int result2 = 0;
+//            switch (Statics.AESMode) {
+//                case 0 -> {
+//                    result = Math.toIntExact(walk.filter(Files::isRegularFile).filter(p -> !p.getFileName().toString().endsWith(".enc")).count());
+//                    result = result2;
+//                }
+//                case 1 -> {
+//                    result = Math.toIntExact(walk.filter(Files::isRegularFile).filter(p -> p.getFileName().toString().endsWith(".enc")).count());
+//                    result = result2;
+//                }
+//            }
         }
         return result;
     }
-
 };
 
 class progressBar_T implements Runnable {
@@ -75,10 +72,77 @@ class progressBar_T implements Runnable {
 
     public void run() {
         try {
-            GUI.progressBar();
-        } catch (InterruptedException ex) {
+            progressBar();
+        } catch (InterruptedException | IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public static void progressBar() throws InterruptedException, IOException {
+
+        Statics.fileIter = 0;
+        Statics.fileCount = GUI.countFiles(Statics.path);
+        System.out.println("File Count from GUI progress Bar: " + Statics.fileCount);
+
+        jProgressBar1.setStringPainted(true);
+        while (jProgressBar1.isStringPainted()) {
+            try {
+                jProgressBar1.setMaximum(GUI.countFiles(Statics.path));
+                List<Path> paths = listPaths(path);
+                File[] contents = directory.listFiles();
+
+                if (contents != null) {
+                    if (contents.length != 0) {
+                        if (!paths.isEmpty()) {
+                            if (jProgressBar1.getValue() == Statics.fileCount) {
+                                Thread.sleep(100);
+
+                                switch (Statics.AESMode) {
+                                    case 0 -> {
+                                        jProgressBar1.setMaximum(100);
+                                        jProgressBar1.setValue(100);
+                                        GUI.labelCutterThread(jAlertLabel, "encryption of " + Statics.fileCount + " files complete", 20, 20, 600);
+                                        Thread.sleep(600);
+
+                                        for (int x = 100; x >= 0; x--) {
+                                            Thread.sleep(10);
+                                            jProgressBar1.setValue(x);
+                                        }
+                                        jProgressBar1.setStringPainted(false);
+                                        Statics.fileIter = 0;
+                                        jProgressBar1.setValue(0);
+                                        Thread.currentThread().interrupt();
+
+                                    }
+                                    case 1 -> {
+                                        jProgressBar1.setMaximum(100);
+                                        jProgressBar1.setValue(100);
+                                        GUI.labelCutterThread(jAlertLabel, "decryption of " + Statics.fileCount + " files complete", 20, 20, 600);
+                                        Thread.sleep(600);
+                                        for (int x = 100; x >= 0; x--) {
+                                            Thread.sleep(10);
+                                            jProgressBar1.setValue(x);
+                                        }
+//                        
+                                        jProgressBar1.setStringPainted(false);
+                                        Statics.fileIter = 0;
+                                        jProgressBar1.setValue(0);
+                                        Thread.currentThread().interrupt();
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            if (!jProgressBar1.isStringPainted()) {
+                break;
+            }
+        }
+
     }
 
     public static List<Path> listFiles(Path path) throws IOException {
@@ -88,17 +152,7 @@ class progressBar_T implements Runnable {
             result = walk.filter(Files::isRegularFile)
                     .collect(Collectors.toList());
         }
-        return result;
-    }
 
-    public static List<Path> listNewFiles(Path path) throws IOException {
-
-        List<Path> result;
-        try ( Stream<Path> walk = Files.walk(path)) {
-            result = walk.filter(Files::isRegularFile)
-                    .filter(p -> !p.getFileName().toString().endsWith(".enc"))
-                    .collect(Collectors.toList());
-        }
         return result;
     }
 }
@@ -110,12 +164,12 @@ class labelCutter_T implements Runnable {
     }
 
     //Thread-4
-    public static void labelCutter_T(JLabel jLabel, String labelMsg, int sleep, int pause) {
+    public static void labelCutter_T(JLabel jLabel, String labelMsg, int initSleep, int sleep, int pause) {
         jLabel.setText("");
         int msgL = labelMsg.length();
         try {
 
-            Thread.sleep(50);
+            Thread.sleep(initSleep);
             for (int i = 0; i <= msgL; i++) {
                 //labelMsg = "";
                 CharSequence cutLabel = labelMsg.subSequence(0, i);
@@ -133,7 +187,7 @@ class labelCutter_T implements Runnable {
             }
         } catch (InterruptedException ex) {
             //ex.printStackTrace();
-            
+
         }
     }
 
