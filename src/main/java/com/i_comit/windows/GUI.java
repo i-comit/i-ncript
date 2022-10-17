@@ -22,11 +22,8 @@ import javax.swing.JLabel;
  */
 public class GUI {
 
-    public static void GUIThread() {
-        GUI_T guiThread = new GUI_T();
-        Thread t1 = new Thread(guiThread);
-        t1.start();
-    }
+    public static Thread t;
+    public static Thread t1;
 
     public static void getGB() {
         File diskPartition = new File(root);
@@ -34,8 +31,14 @@ public class GUI {
     }
 
     public static void labelCutterThread(JLabel jLabel, String labelMsg, int sleep, int pause) {
-        Thread t = new Thread(() -> labelCutter_T.labelCutter_T(jLabel, labelMsg, sleep, pause));
+        t = new Thread(() -> labelCutter_T.labelCutter_T(jLabel, labelMsg, sleep, pause));
         t.start();
+    }
+
+
+    public static void progressBarThread() {
+        progressBar_T pgThread = new progressBar_T();
+        t1 = new Thread(pgThread);
 
     }
 
@@ -44,7 +47,7 @@ public class GUI {
         try {
             Statics.fileCount = countFiles(Statics.path);
             jProgressBar1.setMaximum(Statics.fileCount);
-            //System.out.println("File Count: " + countFiles(Statics.path));
+            System.out.println("File Count: " + countFiles(Statics.path));
             for (int i = 0; i < Statics.fileCount; i++) {
                 Thread.sleep(50);
                 Statics.fileIter++;
@@ -66,16 +69,16 @@ public class GUI {
 
 };
 
-class GUI_T implements Runnable {
+class progressBar_T implements Runnable {
 
     public int threadIterator;
 
     public void run() {
-            try {
-                GUI.progressBar();
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
+        try {
+            GUI.progressBar();
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
     }
 
     public static List<Path> listFiles(Path path) throws IOException {
@@ -111,7 +114,8 @@ class labelCutter_T implements Runnable {
         jLabel.setText("");
         int msgL = labelMsg.length();
         try {
-            Thread.sleep(150);
+
+            Thread.sleep(50);
             for (int i = 0; i <= msgL; i++) {
                 //labelMsg = "";
                 CharSequence cutLabel = labelMsg.subSequence(0, i);
@@ -128,7 +132,10 @@ class labelCutter_T implements Runnable {
                 Thread.sleep(sleep);
             }
         } catch (InterruptedException ex) {
-            ex.printStackTrace();
+            //ex.printStackTrace();
+            
         }
     }
+
+//    }
 }

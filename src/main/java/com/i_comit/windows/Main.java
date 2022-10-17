@@ -24,7 +24,7 @@ public class Main extends javax.swing.JFrame {
         initComponents();
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
-        Statics.root = s.substring(0, 3);
+        //Statics.root = s.substring(0, 3);
         GUI.getGB();
 
         jLabel3.setText("Drive " + root.substring(0, 2) + " | " + GB + "GB");
@@ -66,7 +66,7 @@ public class Main extends javax.swing.JFrame {
         jPopupMenu1 = new javax.swing.JPopupMenu();
         jToolPanel = new javax.swing.JPanel();
         jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
+        jRadioButton0 = new javax.swing.JRadioButton();
         jToggleButton1 = new javax.swing.JToggleButton();
         jToggleButton2 = new javax.swing.JToggleButton();
         jLoginPanel = new javax.swing.JPanel();
@@ -92,25 +92,21 @@ public class Main extends javax.swing.JFrame {
 
         buttonGroup1.add(jRadioButton1);
         jRadioButton1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
-        jRadioButton1.setText("ENCRYPT");
-        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton1ActionPerformed(evt);
-            }
-        });
+        jRadioButton1.setText("DECRYPT");
+        jRadioButton1.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadioButton1ActionPerformed(evt);
             }
         });
 
-        buttonGroup1.add(jRadioButton2);
-        jRadioButton2.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
-        jRadioButton2.setText("DECRYPT");
-        jRadioButton2.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
-        jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
+        buttonGroup1.add(jRadioButton0);
+        jRadioButton0.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jRadioButton0.setText("ENCRYPT");
+        jRadioButton0.setActionCommand("ENCRYPT");
+        jRadioButton0.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton2ActionPerformed(evt);
+                jRadioButton0ActionPerformed(evt);
             }
         });
 
@@ -139,26 +135,26 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jToolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jToolPanelLayout.createSequentialGroup()
-                        .addComponent(jRadioButton1)
+                        .addComponent(jRadioButton0)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jRadioButton2))
+                        .addComponent(jRadioButton1))
                     .addGroup(jToolPanelLayout.createSequentialGroup()
                         .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
                         .addComponent(jToggleButton2)))
                 .addContainerGap())
         );
         jToolPanelLayout.setVerticalGroup(
             jToolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jToolPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(7, Short.MAX_VALUE)
                 .addGroup(jToolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jToggleButton2))
                 .addGap(33, 33, 33)
                 .addGroup(jToolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jRadioButton1)
-                    .addComponent(jRadioButton2))
+                    .addComponent(jRadioButton0))
                 .addContainerGap())
         );
 
@@ -310,22 +306,19 @@ public class Main extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
+    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
         //Decrypt Mode
         Statics.hotFilerState = false;
-        //GUI.labelCutterThread(jAlertLabel, "decrypting files", 20, 800);
         jToggleButton1.setSelected(false);
-
-        try {
-            Statics.AESMode = 1;
-            AES.AESThread();
-            GUI.GUIThread();
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        if (GUI.t.isAlive()) {
+            GUI.t.interrupt();
         }
+        Statics.AESMode = 1;
+        AES.AESThread();
+        GUI.progressBarThread();
 
-    }//GEN-LAST:event_jRadioButton2ActionPerformed
+
+    }//GEN-LAST:event_jRadioButton1ActionPerformed
 
 
     private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
@@ -337,6 +330,9 @@ public class Main extends javax.swing.JFrame {
         char[] password = jPasswordField1.getPassword();
         //System.out.println("Your password is: " + new String(password));
         //System.out.println("Your password char[] is: " + password);
+        if (GUI.t.isAlive()) {
+            GUI.t.interrupt();
+        }
 
         Statics.username = jTextField1.getText();
         Statics.password = new String(password);
@@ -344,33 +340,30 @@ public class Main extends javax.swing.JFrame {
             if (Statics.username.length() >= 4 && Statics.password.length() >= 4) {
                 Login.Authenticator();
             } else {
-                GUI.labelCutterThread(jAlertLabel, "please make a longer username and password", 20, 2000);
+                GUI.labelCutterThread(jAlertLabel, "please make a longer username and password", 20, 1800);
             }
         } else {
-            GUI.labelCutterThread(jAlertLabel, "please make a username and password", 20, 2000);
+            GUI.labelCutterThread(jAlertLabel, "please make a username and password", 20, 1800);
         }
         jTextField1.setText("");
         jPasswordField1.setText("");
-
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
         //Hot Filer
         Statics.hotFilerState ^= true;
         buttonGroup1.clearSelection();
-
-        if (Statics.hotFilerState) {
-            GUI.labelCutterThread(jAlertLabel, "hot filer enabled", 30, 900);
-        } else {
-            GUI.labelCutterThread(jAlertLabel, "hot filer disabled", 30, 900);
-        }
+//        if (Statics.hotFilerState) {
+//            GUI.labelCutterThread(jAlertLabel, "hot filer enabled", 30, 900);
+//        } else {
+//            GUI.labelCutterThread(jAlertLabel, "hot filer disabled", 30, 900);
+//        }
         try {
             HotFiler.HotFilerThread();
-            jRadioButton1.setSelected(true);
+            jRadioButton0.setSelected(true);
 
             Statics.AESMode = 0;
             AES.AESThread();
-            GUI.GUIThread();
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -380,20 +373,6 @@ public class Main extends javax.swing.JFrame {
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
-
-    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
-        //Encrypt 
-        //GUI.labelCutterThread(jAlertLabel, "encrypting files", 20, 800);
-
-        try {
-            Statics.AESMode = 0;
-            AES.AESThread();
-            GUI.GUIThread();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-
-
-        }    }//GEN-LAST:event_jRadioButton1ActionPerformed
 
     private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
         //Hide Filer
@@ -412,6 +391,17 @@ public class Main extends javax.swing.JFrame {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_jToggleButton2ActionPerformed
+
+    private void jRadioButton0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton0ActionPerformed
+        //Encrypt Mode
+        if (GUI.t.isAlive()) {
+            GUI.t.interrupt();
+        }
+        Statics.AESMode = 0;
+        AES.AESThread();
+        GUI.progressBarThread();
+
+    }//GEN-LAST:event_jRadioButton0ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -462,8 +452,8 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel jPasswordLabel;
     private javax.swing.JPopupMenu jPopupMenu1;
     public static javax.swing.JProgressBar jProgressBar1;
+    private javax.swing.JRadioButton jRadioButton0;
     private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JToggleButton jToggleButton2;
