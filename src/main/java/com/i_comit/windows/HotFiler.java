@@ -21,14 +21,16 @@ import java.nio.file.*;
  */
 public class HotFiler {
 
+    public static Thread t;
+
     public static void HotFilerThread() throws IOException {
         HotFiler_T hotFilerThread = new HotFiler_T();
-        Thread t1 = new Thread(hotFilerThread);
+        t = new Thread(hotFilerThread);
         if (Statics.hotFilerState) {
-            t1.start();
+            t.start();
 
         } else {
-            t1.interrupt();
+            t.interrupt();
 
         }
 
@@ -41,6 +43,14 @@ public class HotFiler {
             result = walk.filter(Files::isRegularFile)
                     .filter(p -> !p.getFileName().toString().endsWith(".enc"))
                     .collect(Collectors.toList());
+        }
+        return result;
+    }
+
+    public static int countNewFiles(Path path) throws IOException {
+        int result;
+        try ( Stream<Path> walk = Files.walk(path)) {
+            result = Math.toIntExact(walk.filter(Files::isRegularFile).filter(p -> !p.getFileName().toString().endsWith(".enc")).count());
         }
         return result;
     }
@@ -61,7 +71,7 @@ public class HotFiler {
             while ((key = watchService.take()) != null) {
                 for (WatchEvent<?> event : key.pollEvents()) {
                     List<Path> paths = listNewFiles(Statics.path);
-                    paths.forEach(y -> System.out.println(y));
+//                    paths.forEach(y -> System.out.println(y));
 //                    System.out.println(
 //                            "Event kind:" + event.kind()
 //                            + ". File affected: " + event.context() + ".");
@@ -80,25 +90,27 @@ public class HotFiler {
     public static void getLastModified() throws IOException {
         List<Path> paths = listNewFiles(Statics.path);
         File[] contents = Statics.directory.listFiles();
-        GUI.progressBarThread();
         if (Statics.hotFilerState) {
             if (contents != null) {
                 if (contents.length != 0) {
+
                     paths.forEach(x -> {
                         try {
+                            Main.jProgressBar1.setMaximum(countNewFiles(Statics.path));
                             encrypt(Hasher.modHash(Statics.password), x.toFile(), x.toFile());
-                        } catch (AES.CryptoException ex) {
+                        } catch (AES.CryptoException | IOException ex) {
                             ex.printStackTrace();
                         }
                     });
                 } else {
-                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 40,40, 1000);
+                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 40, 40, 1000);
                 }
             } else {
-                GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 40,40, 100);
+                GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 40, 40, 100);
             }
         } else {
             return;
+
         }
 
     }

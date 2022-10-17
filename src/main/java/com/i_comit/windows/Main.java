@@ -24,7 +24,7 @@ public class Main extends javax.swing.JFrame {
         initComponents();
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
-        //Statics.root = s.substring(0, 3);
+        Statics.root = s.substring(0, 3);
         GUI.getGB();
 
         jLabel3.setText("Drive " + root.substring(0, 2) + " | " + GB + "GB");
@@ -51,6 +51,7 @@ public class Main extends javax.swing.JFrame {
 
         }
         jToolPanel.setVisible(false);
+        jProgressBar1.setVisible(false);
     }
 
     /**
@@ -314,6 +315,13 @@ public class Main extends javax.swing.JFrame {
         }
         Statics.AESMode = 1;
         AES.AESThread();
+
+        try {
+            Statics.fileCount = GUI.countFiles(Statics.path);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
         GUI.progressBarThread();
 
         Statics.hotFilerState = false;
@@ -352,18 +360,21 @@ public class Main extends javax.swing.JFrame {
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
         Statics.hotFilerState ^= true;
         buttonGroup1.clearSelection();
+
 //        if (Statics.hotFilerState) {
 //            GUI.labelCutterThread(jAlertLabel, "hot filer enabled", 30, 900);
 //        } else {
 //            GUI.labelCutterThread(jAlertLabel, "hot filer disabled", 30, 900);
 //        }
         try {
-            HotFiler.HotFilerThread();
-            jRadioButton0.setSelected(true);
-
             Statics.AESMode = 0;
             AES.AESThread();
+            HotFiler.HotFilerThread();
+            jRadioButton0.setSelected(true);
+            Statics.fileCount = HotFiler.countNewFiles(Statics.path);
+            GUI.progressBarThread();
 
+//            Statics.AESMode = 0;
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -396,6 +407,12 @@ public class Main extends javax.swing.JFrame {
         }
         Statics.AESMode = 0;
         AES.AESThread();
+        try {
+            Statics.fileCount = GUI.countFiles(Statics.path);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
         GUI.progressBarThread();
     }//GEN-LAST:event_jRadioButton0ActionPerformed
 

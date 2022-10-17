@@ -13,6 +13,7 @@ import static com.i_comit.windows.Statics.path;
 import static com.i_comit.windows.Statics.root;
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -53,11 +54,11 @@ public class GUI {
 //            int result2 = 0;
 //            switch (Statics.AESMode) {
 //                case 0 -> {
-//                    result = Math.toIntExact(walk.filter(Files::isRegularFile).filter(p -> !p.getFileName().toString().endsWith(".enc")).count());
+//                    result2 = Math.toIntExact(walk.filter(Files::isRegularFile).filter(p -> !p.getFileName().toString().endsWith(".enc")).count());
 //                    result = result2;
 //                }
 //                case 1 -> {
-//                    result = Math.toIntExact(walk.filter(Files::isRegularFile).filter(p -> p.getFileName().toString().endsWith(".enc")).count());
+//                    result2 = Math.toIntExact(walk.filter(Files::isRegularFile).filter(p -> p.getFileName().toString().endsWith(".enc")).count());
 //                    result = result2;
 //                }
 //            }
@@ -73,17 +74,19 @@ class progressBar_T implements Runnable {
     public void run() {
         try {
             progressBar();
-        } catch (InterruptedException | IOException ex) {
-            ex.printStackTrace();
+        } catch (InterruptedException ex) {
+            //ex.printStackTrace();
+            System.exit(0);
+        } catch (IOException | UncheckedIOException ex) {
+            System.out.println("USB disconnected");
+            System.exit(0);
         }
     }
 
     public static void progressBar() throws InterruptedException, IOException {
 
         Statics.fileIter = 0;
-        Statics.fileCount = GUI.countFiles(Statics.path);
-        System.out.println("File Count from GUI progress Bar: " + Statics.fileCount);
-
+        //System.out.println("File Count from GUI progress Bar: " + Statics.fileCount);
         jProgressBar1.setStringPainted(true);
         while (jProgressBar1.isStringPainted()) {
             try {
@@ -135,8 +138,9 @@ class progressBar_T implements Runnable {
                         }
                     }
                 }
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            } catch (IOException | UncheckedIOException ex) {
+            System.out.println("USB disconnected");
+            System.exit(0);
             }
             if (!jProgressBar1.isStringPainted()) {
                 break;

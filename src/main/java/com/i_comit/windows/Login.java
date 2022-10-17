@@ -59,6 +59,7 @@ public class Login {
                 if (passwordRead.equals(Hasher.modHash(password))) {
                     Main.jLoginPanel.setVisible(false);
                     Main.jToolPanel.setVisible(true);
+                    Main.jProgressBar1.setVisible(true);
                     GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript", 45,30, 900);
                 }
             } else {
