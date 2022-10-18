@@ -20,9 +20,9 @@ public class Login {
         if (keyFile.exists()) {
             verifyPassword();
         } else {
+            Main.jProgressBar1.setVisible(true);
+            GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript", 45, 30, 900);
             makeKey();
-            //MakeFolder.CreateFolder();
-
         }
     }
 
@@ -31,7 +31,7 @@ public class Login {
         try {
             List<String> lines = Arrays.asList(Hasher.modHash(username), Hasher.modHash(password));
             Path p = Files.createFile(path);//creates file at specified location  
-            System.out.println("Key generated at: " + p);
+            //System.out.println("Key generated at: " + p);
             //Files.writeString(path, st.toString());
             Files.write(path, lines);
             Files.setAttribute(p, "dos:hidden", true);
@@ -40,13 +40,6 @@ public class Login {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static Integer noNegatives(Integer negativeInt) {
-        if (negativeInt < 0) {
-            negativeInt *= -1;
-        }
-        return negativeInt;
     }
 
     public static void verifyPassword() {
@@ -60,10 +53,10 @@ public class Login {
                     Main.jLoginPanel.setVisible(false);
                     Main.jToolPanel.setVisible(true);
                     Main.jProgressBar1.setVisible(true);
-                    GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript", 45,30, 900);
+                    GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript", 45, 30, 900);
                 }
             } else {
-                GUI.labelCutterThread(jAlertLabel, "incorrect login info", 45,30, 900);
+                GUI.labelCutterThread(jAlertLabel, "incorrect login info", 45, 30, 900);
 
             }
 
