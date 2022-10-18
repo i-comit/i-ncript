@@ -5,7 +5,6 @@
 package com.i_comit.windows;
 
 import static com.i_comit.windows.AES.*;
-import static com.i_comit.windows.HotFiler.listNewPaths;
 import static com.i_comit.windows.Main.jAlertLabel;
 import java.io.File;
 import java.nio.file.Files;
@@ -27,13 +26,52 @@ public class HotFiler {
     public static void HotFilerThread() throws IOException {
         HotFiler_T hotFilerThread = new HotFiler_T();
         t = new Thread(hotFilerThread);
-
         if (Statics.hotFilerState) {
             t.start();
         } else {
             t.interrupt();
-        }
 
+        }
+    }
+}
+
+class HotFiler_T implements Runnable {
+
+    public int threadIterator;
+
+    public void run() {
+        try {
+            List<Path> paths = listNewPaths(Statics.path);
+            if (paths.isEmpty()) {
+                System.out.println("No encrypted files found");
+                folderWatcher();
+            } else {
+                //paths.forEach(x -> System.out.println(x));
+//                if (AES.t.isAlive()) {
+//                    AES.t.interrupt();
+                GUI.progressBarThread();
+                AES.AESThread();
+
+                boolean b = true;
+                //GUI.t1.interrupt();
+                while (b = true) {
+                    if (!GUI.t1.isAlive()) {
+//                        System.out.println("Folder watcher after AES enabled");
+                        folderWatcher();
+                        b = false;
+                    }
+                    if (!b) {
+                        break;
+                    }
+                }
+
+//                folderWatcher();
+            }
+
+        } catch (IOException ex) {
+            //ex.printStackTrace();
+
+        }
     }
 
     public static List<Path> listNewPaths(Path path) throws IOException {
@@ -56,6 +94,8 @@ public class HotFiler {
     }
 
     public static void folderWatcher() throws IOException {
+//        System.out.println("Folder watcher live");
+
         try {
             WatchService watchService = FileSystems.getDefault().newWatchService();
 
@@ -114,20 +154,6 @@ public class HotFiler {
 
         }
 
-    }
-}
-
-class HotFiler_T implements Runnable {
-
-    public int threadIterator;
-
-    public void run() {
-
-        try {
-            HotFiler.folderWatcher();
-        } catch (IOException ex) {
-            //ex.printStackTrace();
-        }
     }
 
 }
