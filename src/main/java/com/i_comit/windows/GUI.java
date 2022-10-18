@@ -11,6 +11,8 @@ import static com.i_comit.windows.Statics.GB;
 import static com.i_comit.windows.Statics.directory;
 import static com.i_comit.windows.Statics.path;
 import static com.i_comit.windows.Statics.root;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -102,7 +104,6 @@ class progressBar_T implements Runnable {
 
     public static void progressBar() throws InterruptedException, IOException {
         Statics.fileIter = 0;
-
         jProgressBar1.setStringPainted(true);
         while (jProgressBar1.isStringPainted()) {
             try {
@@ -114,11 +115,10 @@ class progressBar_T implements Runnable {
                     if (contents != null) {
                         if (contents.length != 0) {
                             if (!paths.isEmpty()) {
-                                if (jProgressBar1.getValue() >= Statics.fileCount-1) {
+                                if (jProgressBar1.getValue() >= Statics.fileCount - 1) {
                                     Thread.sleep(50);
                                     switch (Statics.AESMode) {
                                         case 0 -> {
-
                                             jProgressBar1.setMaximum(100);
                                             jProgressBar1.setValue(100);
                                             GUI.labelCutterThread(jAlertLabel, "encryption of " + Statics.fileCount + " files complete", 20, 20, 600);
@@ -207,6 +207,35 @@ class labelCutter_T implements Runnable {
 
         }
     }
+}
 
-//    }
+class KeyListener_C implements KeyListener{
+    public KeyListener_C() {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent ke) {
+//        lbl.setText("You have pressed " + ke.getKeyChar());
+        switch (ke.getKeyCode()) {
+            case KeyEvent.VK_ENTER:
+                System.out.println("Enter");
+                break;
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent ke) {
+//        lbl.setText("You have typed " + ke.getKeyChar());
+    }
+
+    @Override
+    public void keyReleased(KeyEvent ke) {
+//        lbl.setText("You have released " + ke.getKeyChar());
+        //System.out.println("amogus 3");
+    }
+
+    public static void main(String args[]) {
+        new KeyListener_C();
+    }
 }

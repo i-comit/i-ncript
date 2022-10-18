@@ -6,6 +6,7 @@ package com.i_comit.windows;
 
 import static com.i_comit.windows.Statics.*;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -21,8 +22,11 @@ public class Main extends javax.swing.JFrame {
         initComponents();
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
-        //Statics.root = s.substring(0, 3);
+        Statics.root = s.substring(0, 3);
         GUI.getGB();
+
+        KeyListener_C keyListener = new KeyListener_C();
+        jPasswordField1.addKeyListener(keyListener);
 
         jLabel3.setText("Drive " + root.substring(0, 2) + " | " + GB + "GB");
 
@@ -328,9 +332,9 @@ public class Main extends javax.swing.JFrame {
     private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jPasswordField1ActionPerformed
-
+    //LOGIN
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        //Login Button
+
         char[] password = jPasswordField1.getPassword();
         //System.out.println("Your password is: " + new String(password));
         //System.out.println("Your password char[] is: " + password);
@@ -365,15 +369,15 @@ public class Main extends javax.swing.JFrame {
 
         //GUI.progressBarThread();
 //        if (Statics.hotFilerState) {
-            try {
-                //Statics.fileCount = HotFiler_T.countNewFiles(Statics.path);
-                GUI.progressBarThread();
-                HotFiler.HotFilerThread();
-                HotFiler.t.start();
-                jRadioButton0.setSelected(true);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+        try {
+            //Statics.fileCount = HotFiler_T.countNewFiles(Statics.path);
+            GUI.progressBarThread();
+            HotFiler.HotFilerThread();
+            HotFiler.t.start();
+            jRadioButton0.setSelected(true);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
 //        } else { 
 //           jRadioButton0.setSelected(false);
 //            GUI.labelCutterThread(jAlertLabel, "hot filer disabled", 30, 30, 900);
@@ -387,10 +391,10 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
     //HIDE FILER
     private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
-        Statics.hideFilerState ^= true;
+
         buttonGroup1.clearSelection();
         try {
-            if (Statics.hideFilerState) {
+            if (jToggleButton2.isSelected()) {
                 GUI.labelCutterThread(jAlertLabel, "file hider enabled", 30, 30, 900);
                 FileHider.FileHiderThread(true);
 
@@ -453,7 +457,7 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public static javax.swing.ButtonGroup buttonGroup1;
     public static javax.swing.JLabel jAlertLabel;
-    private javax.swing.JButton jButton1;
+    public javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     public static javax.swing.JPanel jLoginPanel;
@@ -461,13 +465,13 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JPasswordField jPasswordField1;
+    protected static javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JLabel jPasswordLabel;
     private javax.swing.JPopupMenu jPopupMenu1;
     public static javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JRadioButton jRadioButton0;
     private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JTextField jTextField1;
+    protected static javax.swing.JTextField jTextField1;
     public static javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JToggleButton jToggleButton2;
     public static javax.swing.JPanel jToolPanel;

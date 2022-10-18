@@ -14,16 +14,11 @@ import java.nio.file.Paths;
  */
 public class Statics {
 
-    public static String root = "E:\\";
+    public static String root = "";
     public static String folderName = "i-ncript";
     public static String rootFolder = root + folderName;
     
     public static int AESMode;
-    
-    public static volatile boolean alertLabelState = false;
-
-
-    public static boolean hideFilerState = false;
     
 
     public static long GB;
