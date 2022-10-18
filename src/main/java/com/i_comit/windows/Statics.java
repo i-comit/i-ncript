@@ -14,7 +14,7 @@ import java.nio.file.Paths;
  */
 public class Statics {
 
-    public static String root = "";
+    public static String root = "E:\\";
     public static String folderName = "i-ncript";
     public static String rootFolder = root + folderName;
     
@@ -28,6 +28,9 @@ public class Statics {
     public static File f = new File(root);
     public static File directory = new File(root + folderName);
     public static File keyFile = Paths.get(root + "\\i-ncript.key").toFile();
+    
+    public static File[] contents = directory.listFiles();
+
 
     public static Path path = Paths.get(root + folderName);
     public static Path zipPath = Paths.get(root + folderName + ".zip");

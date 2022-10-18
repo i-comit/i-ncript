@@ -22,7 +22,7 @@ public class Main extends javax.swing.JFrame {
         initComponents();
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
-        Statics.root = s.substring(0, 3);
+//        Statics.root = s.substring(0, 3);
         GUI.getGB();
 
         KeyListener_C keyListener = new KeyListener_C();
@@ -413,12 +413,14 @@ public class Main extends javax.swing.JFrame {
         }
         Statics.AESMode = 0;
         AES.AESThread();
+//        jRadioButton0.setVisible(false);
+//        jRadioButton1.setVisible(false);
+
         try {
             Statics.fileCount = GUI.countFiles2(Statics.path);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-
         GUI.progressBarThread();
     }//GEN-LAST:event_jRadioButton0ActionPerformed
 
@@ -469,8 +471,8 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLabel jPasswordLabel;
     private javax.swing.JPopupMenu jPopupMenu1;
     public static javax.swing.JProgressBar jProgressBar1;
-    private javax.swing.JRadioButton jRadioButton0;
-    private javax.swing.JRadioButton jRadioButton1;
+    protected static javax.swing.JRadioButton jRadioButton0;
+    protected static javax.swing.JRadioButton jRadioButton1;
     protected static javax.swing.JTextField jTextField1;
     public static javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JToggleButton jToggleButton2;

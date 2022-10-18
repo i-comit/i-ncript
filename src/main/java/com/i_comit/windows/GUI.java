@@ -109,11 +109,10 @@ class progressBar_T implements Runnable {
             try {
                 jProgressBar1.setMaximum(GUI.countFiles(Statics.path));
                 List<Path> paths = listPaths(path);
-                File[] contents = directory.listFiles();
                 List<Path> paths2 = AES_T.listAESPaths(path);
                 if (!paths2.isEmpty()) {
-                    if (contents != null) {
-                        if (contents.length != 0) {
+                    if (Statics.contents != null) {
+                        if (Statics.contents.length != 0) {
                             if (!paths.isEmpty()) {
                                 if (jProgressBar1.getValue() >= Statics.fileCount - 1) {
                                     Thread.sleep(50);
@@ -121,7 +120,7 @@ class progressBar_T implements Runnable {
                                         case 0 -> {
                                             jProgressBar1.setMaximum(100);
                                             jProgressBar1.setValue(100);
-                                            GUI.labelCutterThread(jAlertLabel, "encryption of " + Statics.fileCount + " files complete", 20, 20, 600);
+                                            GUI.labelCutterThread(jAlertLabel, "encryption of " + Statics.fileCount + " files complete", 10, 20, 600);
                                             Thread.sleep(600);
 
                                             for (int x = 100; x >= 0; x--) {
@@ -131,11 +130,13 @@ class progressBar_T implements Runnable {
                                             jProgressBar1.setStringPainted(false);
                                             Statics.fileIter = 0;
                                             jProgressBar1.setValue(0);
+                                            Main.jRadioButton0.setVisible(true);
+                                            Main.jRadioButton1.setVisible(true);
                                         }
                                         case 1 -> {
                                             jProgressBar1.setMaximum(100);
                                             jProgressBar1.setValue(100);
-                                            GUI.labelCutterThread(jAlertLabel, "decryption of " + Statics.fileCount + " files complete", 20, 20, 600);
+                                            GUI.labelCutterThread(jAlertLabel, "decryption of " + Statics.fileCount + " files complete", 10, 20, 600);
                                             Thread.sleep(600);
                                             for (int x = 100; x >= 0; x--) {
                                                 Thread.sleep(10);
@@ -144,6 +145,8 @@ class progressBar_T implements Runnable {
                                             jProgressBar1.setStringPainted(false);
                                             Statics.fileIter = 0;
                                             jProgressBar1.setValue(0);
+                                            Main.jRadioButton0.setVisible(true);
+                                            Main.jRadioButton1.setVisible(true);
                                         }
                                     }
                                 }
@@ -209,7 +212,8 @@ class labelCutter_T implements Runnable {
     }
 }
 
-class KeyListener_C implements KeyListener{
+class KeyListener_C implements KeyListener {
+
     public KeyListener_C() {
 
     }

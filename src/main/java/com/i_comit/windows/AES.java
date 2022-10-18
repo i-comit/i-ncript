@@ -10,7 +10,6 @@ import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.jProgressBar1;
 import static com.i_comit.windows.Statics.*;
 import java.io.*;
-import java.nio.file.FileSystems;
 import java.nio.file.*;
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -119,52 +118,61 @@ class AES_T implements Runnable {
         }
         try {
             List<Path> paths = listAESPaths(path);
-            File[] contents = directory.listFiles();
-
             if (contents != null) {
                 if (contents.length != 0) {
-                    switch (Statics.AESMode) {
-                        case 0 ->
-                            paths.forEach(x -> {
-                                try {
-                                    encrypt(Hasher.modHash(password), x.toFile(), x.toFile());
-                                } catch (AES.CryptoException ex) {
-                                }
-                            });
-                        case 1 ->
-                            paths.forEach(x -> {
-                                try {
-                                    decrypt(Hasher.modHash(password), x.toFile(), x.toFile());
-                                } catch (AES.CryptoException ex) {
-                                }
-                            });
-                    }
+                    if (!paths.isEmpty()) {
+                        Main.jRadioButton0.setVisible(false);
+                        Main.jRadioButton1.setVisible(false);
+                        switch (Statics.AESMode) {
 
+                            case 0:
+                                GUI.labelCutterThread(jAlertLabel, "encrypting files...", 0, 15, 300);
+
+                                paths.forEach(x -> {
+                                    try {
+                                        encrypt(Hasher.modHash(password), x.toFile(), x.toFile());
+                                    } catch (AES.CryptoException ex) {
+                                    }
+                                });
+                                break;
+                            case 1:
+                                GUI.labelCutterThread(jAlertLabel, "decrypting files...", 0, 15, 300);
+
+                                paths.forEach(x -> {
+                                    try {
+                                        decrypt(Hasher.modHash(password), x.toFile(), x.toFile());
+                                    } catch (AES.CryptoException ex) {
+                                    }
+                                });
+                                break;
+                        }
+
+                    } else {
+                        switch (Statics.AESMode) {
+                            case 0 ->
+                                GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 10, 20, 400);
+                            case 1 ->
+                                GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400);
+                        }
+                    }
                 } else {
-                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 40, 40, 1000);
+                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 20, 40, 800);
                 }
             } else {
-                GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 40, 40, 1000);
+                GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 20, 40, 800);
             }
         } catch (IOException ex) {
             //ex.printStackTrace();
         }
 
-        try {
-            List<Path> paths = listAESPaths(path);
-            if (paths.isEmpty() && jProgressBar1.getValue() == 0) {
-                switch (Statics.AESMode) {
-                    case 0:
-                        GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 40, 40, 1000);
-                        break;
-                    case 1:
-                        GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 40, 40, 1000);
-                        break;
-                }
-            }
-        } catch (IOException | UncheckedIOException ex) {
-            System.out.println("USB disconnected");
-        }
+//        try {
+//            List<Path> paths = listAESPaths(path);
+//            if (paths.isEmpty() && jProgressBar1.getValue() == 0) {
+//
+//            }
+//        } catch (IOException | UncheckedIOException ex) {
+//            System.out.println("USB disconnected");
+//        }
     }
 
     public static List<Path> listPaths(Path path) throws IOException {
