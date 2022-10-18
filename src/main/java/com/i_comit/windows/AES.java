@@ -79,6 +79,7 @@ public class AES {
             outputStream.write(outputBytes);
             inputStream.close();
             outputStream.close();
+            AES.t.interrupt();
         } catch (NoSuchPaddingException | NoSuchAlgorithmException
                 | InvalidKeyException | BadPaddingException
                 | IllegalBlockSizeException ex) {

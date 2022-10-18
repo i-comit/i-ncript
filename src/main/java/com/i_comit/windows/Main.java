@@ -17,14 +17,11 @@ import java.nio.file.Paths;
  */
 public class Main extends javax.swing.JFrame {
 
-    /**
-     * Creates new form MainGUI
-     */
     public Main() {
         initComponents();
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
-        Statics.root = s.substring(0, 3);
+        //Statics.root = s.substring(0, 3);
         GUI.getGB();
 
         jLabel3.setText("Drive " + root.substring(0, 2) + " | " + GB + "GB");
@@ -104,7 +101,6 @@ public class Main extends javax.swing.JFrame {
         buttonGroup1.add(jRadioButton0);
         jRadioButton0.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jRadioButton0.setText("ENCRYPT");
-        jRadioButton0.setActionCommand("ENCRYPT");
         jRadioButton0.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadioButton0ActionPerformed(evt);
@@ -361,14 +357,17 @@ public class Main extends javax.swing.JFrame {
         Statics.hotFilerState ^= true;
         buttonGroup1.clearSelection();
         Statics.AESMode = 0;
-        AES.AESThread();
+        //AES.AESThread();
 
-        GUI.progressBarThread();
+        if (GUI.t.isAlive()) {
+            GUI.t.interrupt();
+        }
+
+        //GUI.progressBarThread();
         if (Statics.hotFilerState) {
             try {
-                Statics.fileCount = HotFiler.countNewFiles(Statics.path);
-
-                GUI.progressBarThread();
+                //Statics.fileCount = HotFiler_T.countNewFiles(Statics.path);
+                //GUI.progressBarThread();
                 GUI.labelCutterThread(jAlertLabel, "hot filer enabled", 30, 30, 900);
 
                 HotFiler.HotFilerThread();
@@ -377,7 +376,8 @@ public class Main extends javax.swing.JFrame {
                 ex.printStackTrace();
             }
         } else {
-            AES.t.interrupt();
+            HotFiler.t.interrupt();
+            jRadioButton0.setSelected(false);
             GUI.labelCutterThread(jAlertLabel, "hot filer disabled", 30, 30, 900);
         }
 

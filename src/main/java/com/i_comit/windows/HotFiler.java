@@ -56,7 +56,6 @@ class HotFiler_T implements Runnable {
                 //GUI.t1.interrupt();
                 while (b = true) {
                     if (!GUI.t1.isAlive()) {
-//                        System.out.println("Folder watcher after AES enabled");
                         folderWatcher();
                         b = false;
                     }
@@ -64,8 +63,6 @@ class HotFiler_T implements Runnable {
                         break;
                     }
                 }
-
-//                folderWatcher();
             }
 
         } catch (IOException ex) {
@@ -94,7 +91,7 @@ class HotFiler_T implements Runnable {
     }
 
     public static void folderWatcher() throws IOException {
-//        System.out.println("Folder watcher live");
+        System.out.println("Folder watcher live");
 
         try {
             WatchService watchService = FileSystems.getDefault().newWatchService();
