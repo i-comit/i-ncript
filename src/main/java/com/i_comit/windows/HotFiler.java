@@ -26,12 +26,6 @@ public class HotFiler {
     public static void HotFilerThread() throws IOException {
         HotFiler_T hotFilerThread = new HotFiler_T();
         t = new Thread(hotFilerThread);
-        if (Statics.hotFilerState) {
-            t.start();
-        } else {
-            t.interrupt();
-
-        }
     }
 }
 
@@ -41,10 +35,12 @@ class HotFiler_T implements Runnable {
 
     public void run() {
         try {
+            GUI.labelCutterThread(jAlertLabel, "hot filer enabled", 30, 30, 900);
             List<Path> paths = listNewPaths(Statics.path);
             if (paths.isEmpty()) {
                 System.out.println("No encrypted files found");
                 folderWatcher();
+                return;
             } else {
                 //paths.forEach(x -> System.out.println(x));
 //                if (AES.t.isAlive()) {
@@ -64,10 +60,10 @@ class HotFiler_T implements Runnable {
                     }
                 }
             }
-
         } catch (IOException ex) {
-            //ex.printStackTrace();
-
+            ex.printStackTrace();
+        } catch (NullPointerException ex) {
+//            ex.getMessage();
         }
     }
 
@@ -92,47 +88,55 @@ class HotFiler_T implements Runnable {
 
     public static void folderWatcher() throws IOException {
         System.out.println("Folder watcher live");
+        WatchService watchService = FileSystems.getDefault().newWatchService();
+        if (Main.jToggleButton1.isSelected()) {
+            try {
+                Path rootPath = Paths.get(Statics.rootFolder);
 
-        try {
-            WatchService watchService = FileSystems.getDefault().newWatchService();
+                rootPath.register(
+                        watchService,
+                        StandardWatchEventKinds.ENTRY_CREATE);
+//                    StandardWatchEventKinds.ENTRY_DELETE,
+//                    StandardWatchEventKinds.ENTRY_MODIFY
 
-            Path rootPath = Paths.get(Statics.rootFolder);
-
-            rootPath.register(
-                    watchService,
-                    StandardWatchEventKinds.ENTRY_CREATE,
-                    StandardWatchEventKinds.ENTRY_DELETE,
-                    StandardWatchEventKinds.ENTRY_MODIFY);
-
-            WatchKey key;
-            while ((key = watchService.take()) != null) {
-                for (WatchEvent<?> event : key.pollEvents()) {
-                    List<Path> paths = listNewPaths(Statics.path);
+                WatchKey key;
+                while ((key = watchService.take()) != null) {
+                    for (WatchEvent<?> event : key.pollEvents()) {
+                        List<Path> paths = listNewPaths(Statics.path);
 //                    paths.forEach(y -> System.out.println(y));
 //                    System.out.println(
 //                            "Event kind:" + event.kind()
 //                            + ". File affected: " + event.context() + ".");
-                    Main.jProgressBar1.setMaximum(countNewFiles(Statics.path));
-                    getLastModified();
+                        Main.jProgressBar1.setMaximum(countNewFiles(Statics.path));
+                        getLastModified();
+                    }
+                    key.reset();
                 }
-
-                key.reset();
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
             }
-
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
+        } else {
+            Main.buttonGroup1.clearSelection();
+//            GUI.t.interrupt();
+            GUI.labelCutterThread(jAlertLabel, "hot filer disabled", 30, 30, 900);
+            System.out.println("Hot Filer Thread Disabled");
+            System.out.println("Watch service disabled");
+            HotFiler.t.interrupt();
+            watchService.close();
         }
     }
 
     public static void getLastModified() throws IOException {
         List<Path> paths = listNewPaths(Statics.path);
         File[] contents = Statics.directory.listFiles();
+        if (AES.t.isAlive()) {
+            AES.t.interrupt();
+        }
 
-//        AES.AESThread();
-        if (Statics.hotFilerState) {
+        if (Main.jToggleButton1.isSelected()) {
+            AES.AESThread();
             if (contents != null) {
                 if (contents.length != 0) {
-
                     paths.forEach(x -> {
                         try {
                             encrypt(Hasher.modHash(Statics.password), x.toFile(), x.toFile());
@@ -147,7 +151,7 @@ class HotFiler_T implements Runnable {
                 GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 40, 40, 100);
             }
         } else {
-            return;
+            AES.t.interrupt();
 
         }
 

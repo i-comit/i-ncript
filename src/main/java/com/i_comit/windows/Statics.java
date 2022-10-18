@@ -22,7 +22,7 @@ public class Statics {
     
     public static volatile boolean alertLabelState = false;
 
-    public static boolean hotFilerState = false;
+
     public static boolean hideFilerState = false;
     
 

@@ -319,8 +319,8 @@ public class Main extends javax.swing.JFrame {
 
         GUI.progressBarThread();
 
-        Statics.hotFilerState = false;
-        jToggleButton1.setSelected(false);
+        //Statics.hotFilerState = false;
+        //jToggleButton1.setSelected(false);
 
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
@@ -354,8 +354,8 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
     //HOT FILER
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-        Statics.hotFilerState ^= true;
         buttonGroup1.clearSelection();
+        System.out.println(jToggleButton1.isSelected());
         Statics.AESMode = 0;
         //AES.AESThread();
 
@@ -364,22 +364,20 @@ public class Main extends javax.swing.JFrame {
         }
 
         //GUI.progressBarThread();
-        if (Statics.hotFilerState) {
+//        if (Statics.hotFilerState) {
             try {
                 //Statics.fileCount = HotFiler_T.countNewFiles(Statics.path);
-                //GUI.progressBarThread();
-                GUI.labelCutterThread(jAlertLabel, "hot filer enabled", 30, 30, 900);
-
+                GUI.progressBarThread();
                 HotFiler.HotFilerThread();
+                HotFiler.t.start();
                 jRadioButton0.setSelected(true);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-        } else {
-            HotFiler.t.interrupt();
-            jRadioButton0.setSelected(false);
-            GUI.labelCutterThread(jAlertLabel, "hot filer disabled", 30, 30, 900);
-        }
+//        } else { 
+//           jRadioButton0.setSelected(false);
+//            GUI.labelCutterThread(jAlertLabel, "hot filer disabled", 30, 30, 900);
+//        }
 
 
     }//GEN-LAST:event_jToggleButton1ActionPerformed
@@ -453,7 +451,7 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup buttonGroup1;
+    public static javax.swing.ButtonGroup buttonGroup1;
     public static javax.swing.JLabel jAlertLabel;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
@@ -470,7 +468,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JRadioButton jRadioButton0;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JToggleButton jToggleButton1;
+    public static javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JToggleButton jToggleButton2;
     public static javax.swing.JPanel jToolPanel;
     private javax.swing.JLabel jUsernameLabel;
