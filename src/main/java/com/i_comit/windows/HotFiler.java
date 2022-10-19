@@ -26,7 +26,9 @@ public class HotFiler {
     public static void HotFilerThread() throws IOException {
         HotFiler_T hotFilerThread = new HotFiler_T();
         t = new Thread(hotFilerThread);
+        t.start();
     }
+
 }
 
 class HotFiler_T implements Runnable {
@@ -38,13 +40,9 @@ class HotFiler_T implements Runnable {
             GUI.labelCutterThread(jAlertLabel, "hot filer enabled", 30, 30, 900);
             List<Path> paths = listNewPaths(Statics.path);
             if (paths.isEmpty()) {
-                System.out.println("No encrypted files found");
                 folderWatcher();
                 return;
             } else {
-                //paths.forEach(x -> System.out.println(x));
-//                if (AES.t.isAlive()) {
-//                    AES.t.interrupt();
                 GUI.progressBarThread();
                 AES.AESThread();
 
@@ -78,7 +76,15 @@ class HotFiler_T implements Runnable {
         return result;
     }
 
-    public static int countNewFiles(Path path) throws IOException {
+    public static int countEncFiles(Path path) throws IOException {
+        int result;
+        try ( Stream<Path> walk = Files.walk(path)) {
+            result = Math.toIntExact(walk.filter(Files::isRegularFile).filter(p -> p.getFileName().toString().endsWith(".enc")).count());
+        }
+        return result;
+    }
+
+    public static int countRegularFiles(Path path) throws IOException {
         int result;
         try ( Stream<Path> walk = Files.walk(path)) {
             result = Math.toIntExact(walk.filter(Files::isRegularFile).filter(p -> !p.getFileName().toString().endsWith(".enc")).count());
@@ -86,43 +92,75 @@ class HotFiler_T implements Runnable {
         return result;
     }
 
+    public static int paths2 = 0;
+
     public static void folderWatcher() throws IOException {
-        System.out.println("Folder watcher live");
-        WatchService watchService = FileSystems.getDefault().newWatchService();
+
+        Statics.fileIter = 0;
+
+//        WatchService watchService = FileSystems.getDefault().newWatchService();
         if (Main.jToggleButton1.isSelected()) {
+            WatchService watchService = FileSystems.getDefault().newWatchService();
             try {
                 Path rootPath = Paths.get(Statics.rootFolder);
 
                 rootPath.register(
                         watchService,
                         StandardWatchEventKinds.ENTRY_CREATE);
-//                    StandardWatchEventKinds.ENTRY_DELETE,
-//                    StandardWatchEventKinds.ENTRY_MODIFY
-
+//                        StandardWatchEventKinds.ENTRY_DELETE,
+//                        StandardWatchEventKinds.ENTRY_MODIFY);
                 WatchKey key;
+                boolean b = true;
                 while ((key = watchService.take()) != null) {
                     for (WatchEvent<?> event : key.pollEvents()) {
                         List<Path> paths = listNewPaths(Statics.path);
-//                    paths.forEach(y -> System.out.println(y));
-//                    System.out.println(
-//                            "Event kind:" + event.kind()
-//                            + ". File affected: " + event.context() + ".");
-                        Main.jProgressBar1.setMaximum(countNewFiles(Statics.path));
-                        getLastModified();
+
+                        paths2 = countRegularFiles(Statics.path);
+                        while (b) {
+                            GUI.labelCutterThread(jAlertLabel, "hot filer detected new files", 30, 30, 900);
+                            Thread.sleep(2500);
+                            b = false;
+                        }
+                        paths.forEach(x -> System.out.println(x));
+                        System.out.println("Paths int " + paths2);
+                        System.out.println(
+                                "Event kind:" + event.kind()
+                                + ". File affected: " + event.context() + ".");
+                        File myObj = new File(Statics.rootFolder + "\\i-ncript-temp-folder-refresher.txt.enc");
+                        //This is to refresh the file walker method. This is because watchService runs the file counter before detecting any new files, so I have to make a temporary file to trick it into running the file check again
+                        if (myObj.createNewFile()) {
+                            System.out.println("File created: " + myObj.getName());
+                            Files.setAttribute(myObj.toPath(), "dos:hidden", true);
+
+                        } else {
+                            myObj.delete();
+                        }
                     }
+
+                    int paths3 = countRegularFiles(Statics.path);
+                    System.out.println("Paths int 2: " + paths3);
                     key.reset();
+                    //only run AES when the 2 paths being listed have the same count, after the thread sleep.
+                    if (paths3 == paths2) {
+                        Main.jProgressBar1.setValue(0);
+                        key.cancel();
+                        AES.AESThread();
+                        GUI.progressBarThread();
+                        System.out.println("Hot Filer Called AES");
+                        folderWatcher();
+                    }
                 }
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
+
         } else {
-            Main.buttonGroup1.clearSelection();
+//            Main.buttonGroup1.clearSelection();
 //            GUI.t.interrupt();
             GUI.labelCutterThread(jAlertLabel, "hot filer disabled", 30, 30, 900);
-            System.out.println("Hot Filer Thread Disabled");
             System.out.println("Watch service disabled");
             HotFiler.t.interrupt();
-            watchService.close();
+//            watchService.close();
         }
     }
 
@@ -134,7 +172,7 @@ class HotFiler_T implements Runnable {
         }
 
         if (Main.jToggleButton1.isSelected()) {
-            AES.AESThread();
+//            AES.AESThread();
             if (contents != null) {
                 if (contents.length != 0) {
                     paths.forEach(x -> {
