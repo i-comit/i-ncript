@@ -113,21 +113,24 @@ class AES_T implements Runnable {
     }
 
     public static void AESQuery() {
+        contents = directory.listFiles();
+
         if (AES.t.isAlive()) {
             AES.t.interrupt();
         }
+
         try {
             List<Path> paths = listAESPaths(path);
             if (contents != null) {
                 if (contents.length != 0) {
                     if (!paths.isEmpty()) {
-                        Main.jRadioButton0.setVisible(false);
-                        Main.jRadioButton1.setVisible(false);
+                        Main.jRadioButton0.setEnabled(false);
+                        Main.jRadioButton1.setEnabled(false);
                         switch (Statics.AESMode) {
 
                             case 0:
                                 GUI.labelCutterThread(jAlertLabel, "encrypting files...", 0, 15, 300);
-
+                                Main.jRadioButton1.setVisible(false);
                                 paths.forEach(x -> {
                                     try {
                                         encrypt(Hasher.modHash(password), x.toFile(), x.toFile());
@@ -137,7 +140,7 @@ class AES_T implements Runnable {
                                 break;
                             case 1:
                                 GUI.labelCutterThread(jAlertLabel, "decrypting files...", 0, 15, 300);
-
+                                Main.jRadioButton0.setVisible(false);
                                 paths.forEach(x -> {
                                     try {
                                         decrypt(Hasher.modHash(password), x.toFile(), x.toFile());

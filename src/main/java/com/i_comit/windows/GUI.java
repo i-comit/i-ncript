@@ -8,7 +8,6 @@ import static com.i_comit.windows.AES_T.listPaths;
 import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.jProgressBar1;
 import static com.i_comit.windows.Statics.GB;
-import static com.i_comit.windows.Statics.directory;
 import static com.i_comit.windows.Statics.path;
 import static com.i_comit.windows.Statics.root;
 import java.awt.event.KeyEvent;
@@ -115,38 +114,43 @@ class progressBar_T implements Runnable {
                         if (Statics.contents.length != 0) {
                             if (!paths.isEmpty()) {
                                 if (jProgressBar1.getValue() >= Statics.fileCount - 1) {
-                                    Thread.sleep(50);
                                     switch (Statics.AESMode) {
                                         case 0 -> {
-                                            jProgressBar1.setMaximum(100);
-                                            jProgressBar1.setValue(100);
+                                            jProgressBar1.setMaximum(Statics.fileCount);
                                             GUI.labelCutterThread(jAlertLabel, "encryption of " + Statics.fileCount + " files complete", 10, 20, 600);
-                                            Thread.sleep(600);
+                                            Thread.sleep(500);
 
-                                            for (int x = 100; x >= 0; x--) {
-                                                Thread.sleep(10);
+//                                            jProgressBar1.setValue(100);
+                                            for (int x = Statics.fileCount; x >= 0; x--) {
+                                                Thread.sleep(5);
                                                 jProgressBar1.setValue(x);
                                             }
                                             jProgressBar1.setStringPainted(false);
                                             Statics.fileIter = 0;
-                                            jProgressBar1.setValue(0);
-                                            Main.jRadioButton0.setVisible(true);
+                                            jProgressBar1.setValue(Statics.fileIter);
+                                            Main.jRadioButton0.setEnabled(true);
+                                            Main.jRadioButton1.setEnabled(true);
+
                                             Main.jRadioButton1.setVisible(true);
                                         }
                                         case 1 -> {
-                                            jProgressBar1.setMaximum(100);
-                                            jProgressBar1.setValue(100);
+                                            jProgressBar1.setMaximum(Statics.fileCount);
+
                                             GUI.labelCutterThread(jAlertLabel, "decryption of " + Statics.fileCount + " files complete", 10, 20, 600);
-                                            Thread.sleep(600);
-                                            for (int x = 100; x >= 0; x--) {
-                                                Thread.sleep(10);
+                                            Thread.sleep(500);
+
+//                                            jProgressBar1.setValue(100);
+                                            for (int x = Statics.fileCount; x >= 0; x--) {
+                                                Thread.sleep(5);
                                                 jProgressBar1.setValue(x);
                                             }
                                             jProgressBar1.setStringPainted(false);
                                             Statics.fileIter = 0;
-                                            jProgressBar1.setValue(0);
+                                            jProgressBar1.setValue(Statics.fileIter);
+                                            Main.jRadioButton0.setEnabled(true);
+                                            Main.jRadioButton1.setEnabled(true);
+
                                             Main.jRadioButton0.setVisible(true);
-                                            Main.jRadioButton1.setVisible(true);
                                         }
                                     }
                                 }

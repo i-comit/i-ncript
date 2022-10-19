@@ -358,11 +358,13 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
     //HOT FILER
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-        buttonGroup1.clearSelection();
+
         System.out.println(jToggleButton1.isSelected());
         Statics.AESMode = 0;
         //AES.AESThread();
-
+        jRadioButton1.setVisible(!jToggleButton1.isSelected());
+        jRadioButton0.setSelected(jToggleButton1.isSelected());
+        jRadioButton0.setEnabled(!jToggleButton1.isSelected());
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
@@ -371,10 +373,10 @@ public class Main extends javax.swing.JFrame {
 //        if (Statics.hotFilerState) {
         try {
             //Statics.fileCount = HotFiler_T.countNewFiles(Statics.path);
-            GUI.progressBarThread();
+//            GUI.progressBarThread();
             HotFiler.HotFilerThread();
-            HotFiler.t.start();
-            jRadioButton0.setSelected(true);
+
+            //jRadioButton0.setSelected(true);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
