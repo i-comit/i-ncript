@@ -112,6 +112,7 @@ public class Main extends javax.swing.JFrame {
 
         jToggleButton1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jToggleButton1.setText("HOT FILER");
+        jToggleButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jToggleButton1ActionPerformed(evt);
@@ -120,7 +121,8 @@ public class Main extends javax.swing.JFrame {
 
         jToggleButton2.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
 
-        jToggleButton2.setText("HIDE FILES");
+        jToggleButton2.setText("HIDE FILE");
+        jToggleButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jToggleButton2ActionPerformed(evt);
@@ -136,21 +138,21 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(jToolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jToolPanelLayout.createSequentialGroup()
                         .addComponent(jRadioButton0)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 102, Short.MAX_VALUE)
                         .addComponent(jRadioButton1))
                     .addGroup(jToolPanelLayout.createSequentialGroup()
-                        .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
+                        .addComponent(jToggleButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jToggleButton2)))
                 .addContainerGap())
         );
         jToolPanelLayout.setVerticalGroup(
             jToolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jToolPanelLayout.createSequentialGroup()
-                .addContainerGap(7, Short.MAX_VALUE)
+                .addGap(7, 7, 7)
                 .addGroup(jToolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jToggleButton2))
+                    .addComponent(jToggleButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
+                    .addComponent(jToggleButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(33, 33, 33)
                 .addGroup(jToolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jRadioButton1)

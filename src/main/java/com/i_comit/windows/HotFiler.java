@@ -6,6 +6,7 @@ package com.i_comit.windows;
 
 import static com.i_comit.windows.AES.*;
 import static com.i_comit.windows.Main.jAlertLabel;
+import static com.i_comit.windows.Main.jProgressBar1;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -37,12 +38,15 @@ class HotFiler_T implements Runnable {
 
     public void run() {
         try {
-            GUI.labelCutterThread(jAlertLabel, "hot filer enabled", 30, 30, 900);
             List<Path> paths = listNewPaths(Statics.path);
             if (paths.isEmpty()) {
+                GUI.labelCutterThread(jAlertLabel, "hot filer enabled", 30, 30, 900);
+
                 folderWatcher();
                 return;
             } else {
+                Statics.fileCount = GUI.countFiles2(Statics.path);
+                jProgressBar1.setMaximum(Statics.fileCount);
                 GUI.progressBarThread();
                 AES.AESThread();
 
@@ -148,6 +152,9 @@ class HotFiler_T implements Runnable {
         } else {
 //            Main.buttonGroup1.clearSelection();
 //            GUI.t.interrupt();
+            Main.jRadioButton0.setEnabled(true);
+            Main.jRadioButton1.setEnabled(true);
+            Main.jRadioButton1.setVisible(true);
             GUI.labelCutterThread(jAlertLabel, "hot filer disabled", 30, 30, 900);
             System.out.println("Watch service disabled");
             HotFiler.t.interrupt();

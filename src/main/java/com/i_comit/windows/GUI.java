@@ -128,10 +128,14 @@ class progressBar_T implements Runnable {
                                             jProgressBar1.setStringPainted(false);
                                             Statics.fileIter = 0;
                                             jProgressBar1.setValue(Statics.fileIter);
-                                            Main.jRadioButton0.setEnabled(true);
-                                            Main.jRadioButton1.setEnabled(true);
+                                            if (!Main.jToggleButton1.isSelected()) {
+                                                Main.jRadioButton0.setEnabled(true);
+                                                Main.jRadioButton1.setEnabled(true);
+                                                Main.jRadioButton1.setVisible(false);
+                                                Main.jToggleButton1.setSelected(false);
+                                            }
 
-                                            Main.jRadioButton1.setVisible(true);
+//                                            Main.jRadioButton1.setVisible(true);
                                         }
                                         case 1 -> {
                                             jProgressBar1.setMaximum(Statics.fileCount);
@@ -149,6 +153,7 @@ class progressBar_T implements Runnable {
                                             jProgressBar1.setValue(Statics.fileIter);
                                             Main.jRadioButton0.setEnabled(true);
                                             Main.jRadioButton1.setEnabled(true);
+                                            Main.jToggleButton1.setSelected(false);
 
                                             Main.jRadioButton0.setVisible(true);
                                         }
