@@ -127,8 +127,8 @@ class AES_T implements Runnable {
                         Main.jRadioButton0.setEnabled(false);
                         Main.jRadioButton1.setEnabled(false);
                         switch (Statics.AESMode) {
-
                             case 0:
+                                GUI.progressBarThread();
                                 GUI.labelCutterThread(jAlertLabel, "encrypting files...", 0, 15, 300);
                                 Main.jRadioButton1.setVisible(false);
                                 paths.forEach(x -> {
@@ -139,6 +139,7 @@ class AES_T implements Runnable {
                                 });
                                 break;
                             case 1:
+                                GUI.progressBarThread();
                                 GUI.labelCutterThread(jAlertLabel, "decrypting files...", 0, 15, 300);
                                 Main.jRadioButton0.setVisible(false);
                                 paths.forEach(x -> {
@@ -152,10 +153,14 @@ class AES_T implements Runnable {
 
                     } else {
                         switch (Statics.AESMode) {
-                            case 0 ->
+                            case 0 -> {
                                 GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 10, 20, 400);
-                            case 1 ->
+
+                            }
+                            case 1 -> {
                                 GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400);
+
+                            }
                         }
                     }
                 } else {

@@ -106,7 +106,7 @@ class progressBar_T implements Runnable {
         jProgressBar1.setStringPainted(true);
         while (jProgressBar1.isStringPainted()) {
             try {
-                jProgressBar1.setMaximum(GUI.countFiles(Statics.path));
+//                jProgressBar1.setMaximum(GUI.countFiles(Statics.path));
                 List<Path> paths = listPaths(path);
                 List<Path> paths2 = AES_T.listAESPaths(path);
                 if (!paths2.isEmpty()) {

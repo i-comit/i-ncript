@@ -6,7 +6,6 @@ package com.i_comit.windows;
 
 import static com.i_comit.windows.Statics.*;
 import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -317,11 +316,12 @@ public class Main extends javax.swing.JFrame {
         AES.AESThread();
         try {
             Statics.fileCount = GUI.countFiles2(Statics.path);
+            jProgressBar1.setMaximum(Statics.fileCount);
+            GUI.progressBarThread();
+
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-
-        GUI.progressBarThread();
 
         //Statics.hotFilerState = false;
         //jToggleButton1.setSelected(false);
@@ -420,10 +420,11 @@ public class Main extends javax.swing.JFrame {
 
         try {
             Statics.fileCount = GUI.countFiles2(Statics.path);
+            jProgressBar1.setMaximum(Statics.fileCount);
+
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        GUI.progressBarThread();
     }//GEN-LAST:event_jRadioButton0ActionPerformed
 
     /**

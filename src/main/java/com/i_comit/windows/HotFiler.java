@@ -84,7 +84,7 @@ class HotFiler_T implements Runnable {
         return result;
     }
 
-    public static int countRegularFiles(Path path) throws IOException {
+    public static int countRegFiles(Path path) throws IOException {
         int result;
         try ( Stream<Path> walk = Files.walk(path)) {
             result = Math.toIntExact(walk.filter(Files::isRegularFile).filter(p -> !p.getFileName().toString().endsWith(".enc")).count());
@@ -92,12 +92,7 @@ class HotFiler_T implements Runnable {
         return result;
     }
 
-    public static int paths2 = 0;
-
     public static void folderWatcher() throws IOException {
-
-        Statics.fileIter = 0;
-
 //        WatchService watchService = FileSystems.getDefault().newWatchService();
         if (Main.jToggleButton1.isSelected()) {
             WatchService watchService = FileSystems.getDefault().newWatchService();
@@ -112,43 +107,39 @@ class HotFiler_T implements Runnable {
                 WatchKey key;
                 boolean b = true;
                 while ((key = watchService.take()) != null) {
+                    GUI.labelCutterThread(jAlertLabel, "hot filer detected new files", 30, 30, 900);
                     for (WatchEvent<?> event : key.pollEvents()) {
-                        List<Path> paths = listNewPaths(Statics.path);
-
-                        paths2 = countRegularFiles(Statics.path);
                         while (b) {
-                            GUI.labelCutterThread(jAlertLabel, "hot filer detected new files", 30, 30, 900);
-                            Thread.sleep(2500);
-                            b = false;
+                            int paths0 = countRegFiles(Statics.path);
+                            Thread.sleep(1500);
+                            List<Path> paths = listNewPaths(Statics.path);
+                            paths.forEach(x -> System.out.println(x));
+                            Statics.fileCount = countRegFiles(Statics.path);
+
+                            if (Statics.fileCount == paths0) {
+                                Statics.fileIter = 0;
+                                Main.jProgressBar1.setValue(Statics.fileIter);
+                                Main.jProgressBar1.setMaximum(Statics.fileCount);
+
+                                key.cancel();
+                                GUI.progressBarThread();
+                                AES.AESThread();
+
+                                folderWatcher();
+                                System.out.println("Hot Filer Called AES");
+                                b = false;
+                            }
                         }
-                        paths.forEach(x -> System.out.println(x));
-                        System.out.println("Paths int " + paths2);
+//                        System.out.println("Paths int " + paths2);
+                        System.out.println(Statics.fileIter++);
                         System.out.println(
                                 "Event kind:" + event.kind()
                                 + ". File affected: " + event.context() + ".");
-                        File myObj = new File(Statics.rootFolder + "\\i-ncript-temp-folder-refresher.txt.enc");
-                        //This is to refresh the file walker method. This is because watchService runs the file counter before detecting any new files, so I have to make a temporary file to trick it into running the file check again
-                        if (myObj.createNewFile()) {
-                            System.out.println("File created: " + myObj.getName());
-                            Files.setAttribute(myObj.toPath(), "dos:hidden", true);
-
-                        } else {
-                            myObj.delete();
-                        }
                     }
 
-                    int paths3 = countRegularFiles(Statics.path);
-                    System.out.println("Paths int 2: " + paths3);
+//                    int paths3 = countRegFiles(Statics.path);
+//                    System.out.println("Paths int 2: " + paths3);
                     key.reset();
-                    //only run AES when the 2 paths being listed have the same count, after the thread sleep.
-                    if (paths3 == paths2) {
-                        Main.jProgressBar1.setValue(0);
-                        key.cancel();
-                        AES.AESThread();
-                        GUI.progressBarThread();
-                        System.out.println("Hot Filer Called AES");
-                        folderWatcher();
-                    }
                 }
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
