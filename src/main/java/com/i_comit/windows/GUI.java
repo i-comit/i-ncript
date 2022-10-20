@@ -41,6 +41,17 @@ public class GUI {
         t.start();
     }
 
+    public static void loggerThread(File outputFile) {
+        t = new Thread(() -> {
+            try {
+                logger_T.logger_T(outputFile);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+        });
+        t.start();
+    }
+
     public static void progressBarThread() {
         progressBar_T pgThread = new progressBar_T();
         t1 = new Thread(pgThread);
@@ -131,7 +142,7 @@ class progressBar_T implements Runnable {
                                             if (!Main.jToggleButton1.isSelected()) {
                                                 Main.jRadioButton0.setEnabled(true);
                                                 Main.jRadioButton1.setEnabled(true);
-                                                Main.jRadioButton1.setVisible(false);
+                                                Main.jRadioButton1.setVisible(true);
                                                 Main.jToggleButton1.setSelected(false);
                                             } else {
                                                 Main.jToggleButton1.setSelected(true);
@@ -139,12 +150,10 @@ class progressBar_T implements Runnable {
                                                 Main.jRadioButton0.setEnabled(true);
                                                 Main.jRadioButton1.setEnabled(true);
                                             }
-
-//                                            Main.jRadioButton1.setVisible(true);
+                                            Main.jTextArea1.setText("");
                                         }
                                         case 1 -> {
                                             jProgressBar1.setMaximum(Statics.fileCount);
-
                                             GUI.labelCutterThread(jAlertLabel, "decryption of " + Statics.fileCount + " files complete", 10, 20, 600);
                                             Thread.sleep(500);
 
@@ -158,9 +167,9 @@ class progressBar_T implements Runnable {
                                             jProgressBar1.setValue(Statics.fileIter);
                                             Main.jRadioButton0.setEnabled(true);
                                             Main.jRadioButton1.setEnabled(true);
-                                            Main.jToggleButton1.setSelected(false);
-
                                             Main.jRadioButton0.setVisible(true);
+                                            Main.buttonGroup1.clearSelection();
+                                            Main.jTextArea1.setText("");
                                         }
                                     }
                                 }
@@ -226,34 +235,50 @@ class labelCutter_T implements Runnable {
     }
 }
 
-class KeyListener_C implements KeyListener {
+class logger_T implements Runnable {
 
-    public KeyListener_C() {
+    public void run() {
 
     }
 
-    @Override
-    public void keyPressed(KeyEvent ke) {
-//        lbl.setText("You have pressed " + ke.getKeyChar());
-        switch (ke.getKeyCode()) {
-            case KeyEvent.VK_ENTER:
-                System.out.println("Enter");
-                break;
-        }
-    }
-
-    @Override
-    public void keyTyped(KeyEvent ke) {
-//        lbl.setText("You have typed " + ke.getKeyChar());
-    }
-
-    @Override
-    public void keyReleased(KeyEvent ke) {
-//        lbl.setText("You have released " + ke.getKeyChar());
-        //System.out.println("amogus 3");
-    }
-
-    public static void main(String args[]) {
-        new KeyListener_C();
+    public static void logger_T(File outputFile) throws InterruptedException {
+        Main.jTextArea1.append(outputFile.getPath().substring(11, outputFile.getPath().toString().length()) + "\n");
+//        for(int i =0; i<5;i++){
+//            
+//        }
+        Thread.sleep(200);
+        Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
     }
 }
+
+//class KeyListener_C implements KeyListener {
+//
+//    public KeyListener_C() {
+//
+//    }
+//
+//    @Override
+//    public void keyPressed(KeyEvent ke) {
+////        lbl.setText("You have pressed " + ke.getKeyChar());
+//        switch (ke.getKeyCode()) {
+//            case KeyEvent.VK_ENTER:
+//                System.out.println("Enter");
+//                break;
+//        }
+//    }
+//
+//    @Override
+//    public void keyTyped(KeyEvent ke) {
+////        lbl.setText("You have typed " + ke.getKeyChar());
+//    }
+//
+//    @Override
+//    public void keyReleased(KeyEvent ke) {
+////        lbl.setText("You have released " + ke.getKeyChar());
+//        //System.out.println("amogus 3");
+//    }
+//
+//    public static void main(String args[]) {
+//        new KeyListener_C();
+//    }
+//}

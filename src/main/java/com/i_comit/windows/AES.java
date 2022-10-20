@@ -46,6 +46,8 @@ public class AES {
                 Statics.fileIter++;
                 jProgressBar1.setValue(Statics.fileIter);
                 System.out.println("Current encrypted file path: " + outputFile.getPath());
+                GUI.loggerThread(outputFile);
+
                 try {
                     FileHider.FileHiderAESThread(Main.jToggleButton2.isSelected(), outputFile.toPath());
                 } catch (IOException ex) {
@@ -65,11 +67,14 @@ public class AES {
                 Statics.fileIter++;
                 jProgressBar1.setValue(Statics.fileIter);
                 System.out.println("Current decrypted file path: " + outputFile.getPath());
+                Main.jTextArea1.append(outputFile.getPath().substring(11, outputFile.getPath().length()) + "\n");
+                GUI.loggerThread(outputFile);
                 try {
                     FileHider.FileHiderAESThread(Main.jToggleButton2.isSelected(), outputFile.toPath());
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
+
             }
         }
     }
