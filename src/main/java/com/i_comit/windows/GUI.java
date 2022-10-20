@@ -63,17 +63,6 @@ public class GUI {
         int result;
         try ( Stream<Path> walk = Files.walk(path)) {
             result = Math.toIntExact(walk.filter(Files::isRegularFile).count());
-//            int result2 = 0;
-//            switch (Statics.AESMode) {
-//                case 0 -> {
-//                    result2 = Math.toIntExact(walk.filter(Files::isRegularFile).filter(p -> !p.getFileName().toString().endsWith(".enc")).count());
-//                    result = result2;
-//                }
-//                case 1 -> {
-//                    result2 = Math.toIntExact(walk.filter(Files::isRegularFile).filter(p -> p.getFileName().toString().endsWith(".enc")).count());
-//                    result = result2;
-//                }
-//            }
         }
         return result;
     }

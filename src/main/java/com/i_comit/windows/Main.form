@@ -507,7 +507,7 @@
                     </Property>
                     <Property name="lineWrap" type="boolean" value="true"/>
                     <Property name="rows" type="int" value="5"/>
-                    <Property name="text" type="java.lang.String" value="Copyright 2022 i-comit LLC. All rights reserved.&#xa;&#xa;Developed by Khiem Luong - khiemluong@i-comit.com&#xa;&#xa;User has the right to freely distribute this software. User does not have the right to distribute a modified version of this software."/>
+                    <Property name="text" type="java.lang.String" value="Copyright 2022 i-comit LLC. All rights reserved.&#xa;&#xa;Developed by Khiem Luong - khiemluong@i-comit.com&#xa;&#xa;User has the right to freely distribute this software. User does not have the right to distribute a modified version of this software.&#xa;&#xa;Khiem Luong or i-comit LLC is not responsible for any data loss from using this software."/>
                     <Property name="wrapStyleWord" type="boolean" value="true"/>
                     <Property name="autoscrolls" type="boolean" value="false"/>
                     <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
