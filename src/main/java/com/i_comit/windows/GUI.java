@@ -119,7 +119,7 @@ class progressBar_T implements Runnable {
                                             jProgressBar1.setMaximum(Statics.fileCount);
                                             GUI.labelCutterThread(jAlertLabel, "encryption of " + Statics.fileCount + " files complete", 10, 20, 600);
                                             Thread.sleep(500);
-
+//                                            FileHider.FileHiderThread(true);
 //                                            jProgressBar1.setValue(100);
                                             for (int x = Statics.fileCount; x >= 0; x--) {
                                                 Thread.sleep(5);
@@ -231,11 +231,12 @@ class logger_T implements Runnable {
     }
 
     public static void logger_T(File outputFile) throws InterruptedException {
+        Thread.sleep(150);
         Main.jTextArea1.append(outputFile.getPath().substring(11, outputFile.getPath().toString().length()) + "\n");
 //        for(int i =0; i<5;i++){
 //            
 //        }
-        Thread.sleep(200);
+        Thread.sleep(150);
         Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
     }
 }

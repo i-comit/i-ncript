@@ -378,6 +378,7 @@ public class Main extends javax.swing.JFrame {
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
+        jRadioButton1.setSelected(true);
         Statics.AESMode = 1;
         AES.AESThread();
         try {

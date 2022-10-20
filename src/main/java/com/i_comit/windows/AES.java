@@ -94,7 +94,6 @@ public class AES {
             outputStream.write(outputBytes);
             inputStream.close();
             outputStream.close();
-            AES.t.interrupt();
         } catch (NoSuchPaddingException | NoSuchAlgorithmException
                 | InvalidKeyException | BadPaddingException
                 | IllegalBlockSizeException ex) {
@@ -130,11 +129,6 @@ class AES_T implements Runnable {
 
     public static void AESQuery() {
         contents = directory.listFiles();
-
-        if (AES.t.isAlive()) {
-            AES.t.interrupt();
-        }
-
         try {
             List<Path> paths = listAESPaths(path);
             if (contents != null) {
