@@ -39,26 +39,25 @@ class HotFiler_T implements Runnable {
     public void run() {
         try {
             List<Path> paths = listNewPaths(Statics.path);
-            if (paths.isEmpty()) {
-                GUI.labelCutterThread(jAlertLabel, "hot filer enabled", 30, 30, 900);
-
-                folderWatcher();
-                return;
-            } else {
-                Statics.fileCount = GUI.countFiles2(Statics.path);
-                jProgressBar1.setMaximum(Statics.fileCount);
-                GUI.progressBarThread();
-                AES.AESThread();
-
-                boolean b = true;
-                //GUI.t1.interrupt();
-                while (b = true) {
-                    if (!GUI.t1.isAlive()) {
-                        folderWatcher();
-                        b = false;
-                    }
-                    if (!b) {
-                        break;
+            if (Main.jToggleButton1.isSelected()) {
+                if (paths.isEmpty()) {
+                    GUI.labelCutterThread(jAlertLabel, "hot filer enabled", 30, 30, 900);
+                    folderWatcher();
+                } else {
+                    Statics.fileCount = GUI.countFiles2(Statics.path);
+                    jProgressBar1.setMaximum(Statics.fileCount);
+                    GUI.progressBarThread();
+                    AES.AESThread();
+                    boolean b = true;
+                    //GUI.t1.interrupt();
+                    while (b = true) {
+                        if (!GUI.t1.isAlive()) {
+                            folderWatcher();
+                            b = false;
+                        }
+                        if (!b) {
+                            break;
+                        }
                     }
                 }
             }
@@ -110,12 +109,12 @@ class HotFiler_T implements Runnable {
 //                        StandardWatchEventKinds.ENTRY_MODIFY);
                 WatchKey key;
                 boolean b = true;
-                while ((key = watchService.take()) != null) {
+                while ((key = watchService.take()) != null && Main.jToggleButton1.isSelected()) {
                     GUI.labelCutterThread(jAlertLabel, "hot filer detected new files", 30, 30, 900);
                     for (WatchEvent<?> event : key.pollEvents()) {
                         while (b) {
                             int paths0 = countRegFiles(Statics.path);
-                            Thread.sleep(1500);
+                            Thread.sleep(2000);
                             List<Path> paths = listNewPaths(Statics.path);
                             paths.forEach(x -> System.out.println(x));
                             Statics.fileCount = countRegFiles(Statics.path);

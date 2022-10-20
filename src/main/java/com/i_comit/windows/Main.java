@@ -480,7 +480,7 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JRadioButton jRadioButton1;
     protected static javax.swing.JTextField jTextField1;
     public static javax.swing.JToggleButton jToggleButton1;
-    private javax.swing.JToggleButton jToggleButton2;
+    protected static javax.swing.JToggleButton jToggleButton2;
     public static javax.swing.JPanel jToolPanel;
     private javax.swing.JLabel jUsernameLabel;
     // End of variables declaration//GEN-END:variables

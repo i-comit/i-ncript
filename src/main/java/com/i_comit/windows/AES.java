@@ -152,14 +152,16 @@ class AES_T implements Runnable {
                         }
 
                     } else {
-                        switch (Statics.AESMode) {
-                            case 0 -> {
-                                GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 10, 20, 400);
+                        if (!Main.jToggleButton1.isSelected()) {
+                            switch (Statics.AESMode) {
+                                case 0 -> {
+                                    GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 10, 20, 400);
 
-                            }
-                            case 1 -> {
-                                GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400);
+                                }
+                                case 1 -> {
+                                    GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400);
 
+                                }
                             }
                         }
                     }
