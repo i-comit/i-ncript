@@ -399,11 +399,10 @@ public class Main extends javax.swing.JFrame {
         buttonGroup1.clearSelection();
         try {
             if (jToggleButton2.isSelected()) {
-                GUI.labelCutterThread(jAlertLabel, "file hider enabled", 30, 30, 900);
+                GUI.labelCutterThread(jAlertLabel, "hiding available files", 30, 30, 900);
                 FileHider.FileHiderThread(true);
-
             } else {
-                GUI.labelCutterThread(jAlertLabel, "file hider disabled", 30, 30, 900);
+                GUI.labelCutterThread(jAlertLabel, "unhiding available files", 30, 30, 900);
                 FileHider.FileHiderThread(false);
             }
         } catch (IOException ex) {

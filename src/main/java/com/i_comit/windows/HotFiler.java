@@ -60,6 +60,9 @@ class HotFiler_T implements Runnable {
                         }
                     }
                 }
+            } else {
+                Main.jProgressBar1.setStringPainted(false);
+                GUI.labelCutterThread(jAlertLabel, "hot filer disabled", 30, 30, 900);
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -96,68 +99,48 @@ class HotFiler_T implements Runnable {
     }
 
     public static void folderWatcher() throws IOException {
-//        WatchService watchService = FileSystems.getDefault().newWatchService();
-        if (Main.jToggleButton1.isSelected()) {
+        try {
             WatchService watchService = FileSystems.getDefault().newWatchService();
-            try {
-                Path rootPath = Paths.get(Statics.rootFolder);
-
-                rootPath.register(
-                        watchService,
-                        StandardWatchEventKinds.ENTRY_CREATE);
+            Path rootPath = Paths.get(Statics.rootFolder);
+            rootPath.register(
+                    watchService,
+                    StandardWatchEventKinds.ENTRY_CREATE);
 //                        StandardWatchEventKinds.ENTRY_DELETE,
 //                        StandardWatchEventKinds.ENTRY_MODIFY);
-                WatchKey key;
-                boolean b = true;
-                while ((key = watchService.take()) != null && Main.jToggleButton1.isSelected()) {
-                    GUI.labelCutterThread(jAlertLabel, "hot filer detected new files", 30, 30, 900);
-                    for (WatchEvent<?> event : key.pollEvents()) {
-                        while (b) {
-                            int paths0 = countRegFiles(Statics.path);
-                            Thread.sleep(2000);
-                            List<Path> paths = listNewPaths(Statics.path);
-                            paths.forEach(x -> System.out.println(x));
-                            Statics.fileCount = countRegFiles(Statics.path);
+            WatchKey key;
+            boolean b = true;
+            while ((key = watchService.take()) != null && Main.jToggleButton1.isSelected()) {
+                GUI.labelCutterThread(jAlertLabel, "hot filer detected new files", 30, 30, 900);
+                for (WatchEvent<?> event : key.pollEvents()) {
+                    while (b) {
+                        int paths0 = countRegFiles(Statics.path);
+                        Thread.sleep(2000);
+                        List<Path> paths = listNewPaths(Statics.path);
+                        Statics.fileCount = countRegFiles(Statics.path);
 
-                            if (Statics.fileCount == paths0) {
-                                Statics.fileIter = 0;
-                                Main.jProgressBar1.setValue(Statics.fileIter);
-                                Main.jProgressBar1.setMaximum(Statics.fileCount);
-
-                                key.cancel();
-                                GUI.progressBarThread();
-                                AES.AESThread();
-
-                                folderWatcher();
-                                System.out.println("Hot Filer Called AES");
-                                b = false;
-                            }
+                        if (Statics.fileCount == paths0) {
+                            Statics.fileIter = 0;
+                            Main.jProgressBar1.setValue(Statics.fileIter);
+                            Main.jProgressBar1.setMaximum(Statics.fileCount);
+                            key.cancel();
+                            GUI.progressBarThread();
+                            AES.AESThread();
+                            folderWatcher();
+                            System.out.println("Hot Filer Called AES");
+                            b = false;
                         }
-//                        System.out.println("Paths int " + paths2);
-                        System.out.println(Statics.fileIter++);
-                        System.out.println(
-                                "Event kind:" + event.kind()
-                                + ". File affected: " + event.context() + ".");
                     }
-
-//                    int paths3 = countRegFiles(Statics.path);
-//                    System.out.println("Paths int 2: " + paths3);
-                    key.reset();
+                    System.out.println(Statics.fileIter++);
+                    System.out.println(
+                            "Event kind:" + event.kind()
+                            + ". File affected: " + event.context() + ".");
                 }
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
+                key.reset();
             }
-
-        } else {
-//            Main.buttonGroup1.clearSelection();
-//            GUI.t.interrupt();
-            Main.jRadioButton0.setEnabled(true);
-            Main.jRadioButton1.setEnabled(true);
-            Main.jRadioButton1.setVisible(true);
-            GUI.labelCutterThread(jAlertLabel, "hot filer disabled", 30, 30, 900);
-            System.out.println("Watch service disabled");
-            HotFiler.t.interrupt();
-//            watchService.close();
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }catch(ClosedWatchServiceException ex){
+            System.out.println("Watch Service Closed");
         }
     }
 

@@ -133,6 +133,11 @@ class progressBar_T implements Runnable {
                                                 Main.jRadioButton1.setEnabled(true);
                                                 Main.jRadioButton1.setVisible(false);
                                                 Main.jToggleButton1.setSelected(false);
+                                            } else {
+                                                Main.jToggleButton1.setSelected(true);
+                                                Main.jRadioButton1.setVisible(true);
+                                                Main.jRadioButton0.setEnabled(true);
+                                                Main.jRadioButton1.setEnabled(true);
                                             }
 
 //                                            Main.jRadioButton1.setVisible(true);

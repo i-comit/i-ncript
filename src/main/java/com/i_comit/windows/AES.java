@@ -45,7 +45,12 @@ public class AES {
                 inputFile.delete();
                 Statics.fileIter++;
                 jProgressBar1.setValue(Statics.fileIter);
-//                System.out.println("File Iterator  " + Statics.fileIter);
+                System.out.println("Current encrypted file path: " + outputFile.getPath());
+                try {
+                    FileHider.FileHiderAESThread(Main.jToggleButton2.isSelected(), outputFile.toPath());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
         }
     }
@@ -56,9 +61,15 @@ public class AES {
             if (inputFile.toString().endsWith(".enc")) {
                 outputFile = new File(inputFile.toString().replaceAll(".enc", ""));
                 doCrypto(Cipher.DECRYPT_MODE, key, inputFile, outputFile);
+                inputFile.delete();
                 Statics.fileIter++;
                 jProgressBar1.setValue(Statics.fileIter);
-                inputFile.delete();
+                System.out.println("Current decrypted file path: " + outputFile.getPath());
+                try {
+                    FileHider.FileHiderAESThread(Main.jToggleButton2.isSelected(), outputFile.toPath());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
         }
     }
@@ -124,10 +135,9 @@ class AES_T implements Runnable {
             if (contents != null) {
                 if (contents.length != 0) {
                     if (!paths.isEmpty()) {
-                        Main.jRadioButton0.setEnabled(false);
-                        Main.jRadioButton1.setEnabled(false);
                         switch (Statics.AESMode) {
-                            case 0:
+                            case 0 -> {
+                                Main.jRadioButton0.setEnabled(false);
                                 GUI.progressBarThread();
                                 GUI.labelCutterThread(jAlertLabel, "encrypting files...", 0, 15, 300);
                                 Main.jRadioButton1.setVisible(false);
@@ -137,8 +147,9 @@ class AES_T implements Runnable {
                                     } catch (AES.CryptoException ex) {
                                     }
                                 });
-                                break;
-                            case 1:
+                            }
+                            case 1 -> {
+                                Main.jRadioButton1.setEnabled(false);
                                 GUI.progressBarThread();
                                 GUI.labelCutterThread(jAlertLabel, "decrypting files...", 0, 15, 300);
                                 Main.jRadioButton0.setVisible(false);
@@ -148,7 +159,7 @@ class AES_T implements Runnable {
                                     } catch (AES.CryptoException ex) {
                                     }
                                 });
-                                break;
+                            }
                         }
 
                     } else {
@@ -174,15 +185,6 @@ class AES_T implements Runnable {
         } catch (IOException ex) {
             //ex.printStackTrace();
         }
-
-//        try {
-//            List<Path> paths = listAESPaths(path);
-//            if (paths.isEmpty() && jProgressBar1.getValue() == 0) {
-//
-//            }
-//        } catch (IOException | UncheckedIOException ex) {
-//            System.out.println("USB disconnected");
-//        }
     }
 
     public static List<Path> listPaths(Path path) throws IOException {
