@@ -27,14 +27,16 @@ public class Login {
     }
 
     public static void makeKey() {
-        Path path = Paths.get(root + "\\i-ncript.key"); //creates Path instance  
+        Path path = Paths.get(root + keyName); //creates Path instance  
         try {
             List<String> lines = Arrays.asList(Hasher.modHash(username), Hasher.modHash(password));
             Path p = Files.createFile(path);//creates file at specified location  
             //System.out.println("Key generated at: " + p);
             //Files.writeString(path, st.toString());
             Files.write(path, lines);
-            Files.setAttribute(p, "dos:hidden", true);
+            if (System.getProperty("os.name").equals("windows")) {
+                Files.setAttribute(p, "dos:hidden", true);
+            }
             Main.jLoginPanel.setVisible(false);
             Main.jToolPanel.setVisible(true);
         } catch (IOException e) {
