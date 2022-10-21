@@ -43,15 +43,8 @@ public class AES {
                 outputFile = new File(outputFile + ".enc");
                 doCrypto(Cipher.ENCRYPT_MODE, key, inputFile, outputFile);
                 inputFile.delete();
-                Statics.fileIter++;
-                jProgressBar1.setValue(Statics.fileIter);
-                System.out.println("Current encrypted file path: " + outputFile.getPath());
+//                System.out.println("Current encrypted file path: " + outputFile.getPath());
                 GUI.loggerThread(outputFile);
-                try {
-                    FileHider.FileHiderAESThread(Main.jToggleButton2.isSelected(), outputFile.toPath());
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
             }
         }
     }
@@ -63,16 +56,8 @@ public class AES {
                 outputFile = new File(inputFile.toString().replaceAll(".enc", ""));
                 doCrypto(Cipher.DECRYPT_MODE, key, inputFile, outputFile);
                 inputFile.delete();
-                Statics.fileIter++;
-                jProgressBar1.setValue(Statics.fileIter);
-                System.out.println("Current decrypted file path: " + outputFile.getPath());
+//                System.out.println("Current decrypted file path: " + outputFile.getPath());
                 GUI.loggerThread(outputFile);
-                try {
-                    FileHider.FileHiderAESThread(Main.jToggleButton2.isSelected(), outputFile.toPath());
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-
             }
         }
     }
@@ -92,6 +77,8 @@ public class AES {
             outputStream.write(outputBytes);
             inputStream.close();
             outputStream.close();
+            Statics.fileIter++;
+            jProgressBar1.setValue(Statics.fileIter);
         } catch (NoSuchPaddingException | NoSuchAlgorithmException
                 | InvalidKeyException | BadPaddingException
                 | IllegalBlockSizeException ex) {
@@ -146,9 +133,9 @@ class AES_T implements Runnable {
                                     } catch (AES.CryptoException ex) {
                                     }
                                 });
-                                System.out.println("File Encryption Complete" + Main.jToggleButton2.isSelected());
-                                FileHider.FileHiderThread(Main.jToggleButton2.isSelected());
-
+                                Statics.fileIter = Statics.fileCount;
+                                GUI.progressBarThread();
+                                System.out.println("File Encryption Complete " + Main.jToggleButton2.isSelected());
                             }
                             case 1 -> {
 
@@ -160,9 +147,8 @@ class AES_T implements Runnable {
                                     } catch (AES.CryptoException ex) {
                                     }
                                 });
+                                Statics.fileIter = Statics.fileCount;
                                 System.out.println("File Decryption Complete " + Main.jToggleButton2.isSelected());
-                                FileHider.FileHiderThread(Main.jToggleButton2.isSelected());
-
                             }
                         }
 
@@ -179,7 +165,6 @@ class AES_T implements Runnable {
                                     GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400);
                                     Main.jToggleButton1.setEnabled(true);
                                     Main.jToggleButton2.setEnabled(true);
-
                                 }
                             }
                         }
@@ -187,12 +172,10 @@ class AES_T implements Runnable {
                 } else {
                     GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 20, 40, 800);
                     Main.jToggleButton2.setEnabled(true);
-
                 }
             } else {
                 GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 20, 40, 800);
                 Main.jToggleButton2.setEnabled(true);
-
             }
         } catch (IOException ex) {
             //ex.printStackTrace();

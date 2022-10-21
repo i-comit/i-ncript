@@ -31,7 +31,7 @@ public class GUI {
 
     public static void getGB() {
         File diskPartition = new File(root);
-        GB = diskPartition.getUsableSpace() / (1024 * 1024 * 1024);
+        GB = Heap.humanReadableByteCountBin(diskPartition.getUsableSpace());
     }
 
     public static void labelCutterThread(JLabel jLabel, String labelMsg, int initSleep, int sleep, int pause) {
@@ -104,7 +104,6 @@ class progressBar_T implements Runnable {
         jProgressBar1.setStringPainted(true);
         Main.jToggleButton1.setEnabled(false);
         Main.jToggleButton2.setEnabled(false);
-        boolean b = true;
         while (jProgressBar1.isStringPainted()) {
             try {
 //                jProgressBar1.setMaximum(GUI.countFiles(Statics.path));
@@ -114,19 +113,16 @@ class progressBar_T implements Runnable {
                     if (Statics.contents != null) {
                         if (Statics.contents.length != 0) {
                             if (!paths.isEmpty()) {
-                                if (jProgressBar1.getValue() >= Statics.fileCount - 1) {
+                                if (Statics.fileIter == Statics.fileCount - 1) {
                                     switch (Statics.AESMode) {
                                         case 0 -> {
                                             jProgressBar1.setMaximum(Statics.fileCount);
-                                            if (b) {
-                                                GUI.labelCutterThread(jAlertLabel, "encryption of " + Statics.fileCount + " files complete", 10, 15, 400);
-                                                b = false;
-                                            }
-                                            Thread.sleep(450);
+                                            GUI.labelCutterThread(jAlertLabel, "encryption of " + Statics.fileCount + " files complete", 10, 15, 360);
+                                            Thread.sleep(280);
 //                                            FileHider.FileHiderThread(true);
 //                                            jProgressBar1.setValue(100);
                                             for (int x = Statics.fileCount; x >= 0; x--) {
-                                                Thread.sleep(5);
+                                                Thread.sleep(4);
                                                 jProgressBar1.setValue(x);
                                             }
                                             jProgressBar1.setStringPainted(false);
@@ -143,18 +139,17 @@ class progressBar_T implements Runnable {
                                             }
                                             Main.jToggleButton2.setEnabled(true);
                                             Main.jTextArea1.setText("");
+                                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected());
+                                            GUI.t1.interrupt();
                                         }
                                         case 1 -> {
                                             jProgressBar1.setMaximum(Statics.fileCount);
-                                            if (b) {
-                                                GUI.labelCutterThread(jAlertLabel, "decryption of " + Statics.fileCount + " files complete", 10, 15, 400);
-                                                b = false;
-                                            }
-                                            Thread.sleep(450);
+                                            GUI.labelCutterThread(jAlertLabel, "decryption of " + Statics.fileCount + " files complete", 10, 15, 300);
+                                            Thread.sleep(280);
 
 //                                            jProgressBar1.setValue(100);
                                             for (int x = Statics.fileCount; x >= 0; x--) {
-                                                Thread.sleep(5);
+                                                Thread.sleep(4);
                                                 jProgressBar1.setValue(x);
                                             }
                                             jProgressBar1.setStringPainted(false);
@@ -165,6 +160,7 @@ class progressBar_T implements Runnable {
                                             Main.buttonGroup1.clearSelection();
                                             Main.jToggleButton2.setEnabled(true);
                                             Main.jTextArea1.setText("");
+                                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected());
                                             GUI.t1.interrupt();
                                         }
                                     }

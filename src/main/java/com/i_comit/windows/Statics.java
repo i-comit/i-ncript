@@ -14,7 +14,7 @@ import java.nio.file.Paths;
  */
 public class Statics {
 
-    public static String root = "E:\\";
+    public static String root = "";
     public static String folderName = "i-ncript";
     public static String rootFolder = root + folderName;
     public static String keyName = "\\i-ncript.key";
@@ -22,7 +22,7 @@ public class Statics {
     public static int AESMode;
     
 
-    public static long GB;
+    public static String GB;
 
     public static boolean emptyDirectory;
     public static boolean fileHiderBool = false;

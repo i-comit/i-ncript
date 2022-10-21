@@ -19,6 +19,8 @@ public class Statics {
     public static String rootFolder = root + folderName;
     public static String keyName = "/i-ncript.key";
 
+    public static Runtime env = Runtime.getRuntime();
+
     public static int AESMode;
 
     public static long GB;

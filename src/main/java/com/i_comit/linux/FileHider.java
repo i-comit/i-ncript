@@ -79,7 +79,7 @@ class FileHider_T implements Runnable {
                                 if (Statics.fileHideIter == fileCount) {
                                     Main.jToggleButton2.setEnabled(true);
                                     Main.jToggleButton1.setEnabled(true);
-                                    Thread.sleep(400);
+                                    Thread.sleep(100);
                                     GUI.labelCutterThread(Main.jAlertLabel, fileCount + " files hidden", 60, 20, 300);
 
                                 }
@@ -107,7 +107,7 @@ class FileHider_T implements Runnable {
                                 if (Statics.fileHideIter == fileCount) {
                                     Main.jToggleButton2.setEnabled(true);
                                     Main.jToggleButton1.setEnabled(true);
-                                    Thread.sleep(400);
+                                    Thread.sleep(100);
                                     GUI.labelCutterThread(Main.jAlertLabel, fileCount + " files unhidden", 60, 20, 300);
                                 }
 
