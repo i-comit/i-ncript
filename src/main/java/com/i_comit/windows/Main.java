@@ -22,12 +22,15 @@ public class Main extends javax.swing.JFrame {
 
     public Main() {
         initComponents();
-        Statics.getOperatingSystem();
-
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+//        Statics.root = s.substring(0, 3);
+        GUI.getGB();
 //        KeyListener_C keyListener = new KeyListener_C();
 //        jPasswordField1.addKeyListener(keyListener);
 
-//        jLabel3.setText("Drive " + root.substring(0, 2).toUpperCase() + " | " + GB + "GB");
+        jLabel3.setText("Drive " + root.substring(0, 2) + " | " + GB + "GB");
+
         jTextField1.setText("");
         jPasswordField1.setText("");
 
@@ -41,6 +44,14 @@ public class Main extends javax.swing.JFrame {
 
         jAlertLabel.setText("");
 
+        File rootFolder = Paths.get(root + folderName).toFile();
+        if (!rootFolder.exists()) {
+            GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 60, 50, 1800);
+            rootFolder.mkdir();
+        } else {
+            GUI.labelCutterThread(jAlertLabel, "developed by i-comit", 60, 50, 1800);
+
+        }
         jToolPanel.setVisible(false);
         jProgressBar1.setVisible(false);
 
@@ -504,7 +515,7 @@ public class Main extends javax.swing.JFrame {
     public static javax.swing.JLabel jAlertLabel;
     public javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
-    protected static javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel3;
     public static javax.swing.JPanel jLoginPanel;
     private javax.swing.JPanel jPanel1;
     protected static javax.swing.JPanel jPanel2;
