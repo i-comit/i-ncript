@@ -24,6 +24,7 @@ public class Statics {
     public static long GB;
 
     public static boolean emptyDirectory;
+    public static boolean fileHiderBool = false;
 
     public static File f = new File(root);
     public static File directory = new File(root + folderName);
@@ -41,4 +42,6 @@ public class Statics {
 
     public static int fileCount;
     public static int fileIter;
+    
+    public static int fileHideIter;
 }

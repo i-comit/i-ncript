@@ -47,6 +47,7 @@ class HotFiler_T implements Runnable {
                     Statics.fileCount = GUI.countFiles2(Statics.path);
                     jProgressBar1.setMaximum(Statics.fileCount);
                     GUI.progressBarThread();
+                    Thread.sleep(200);
                     AES.AESThread();
                     boolean b = true;
                     //GUI.t1.interrupt();
@@ -68,6 +69,8 @@ class HotFiler_T implements Runnable {
             ex.printStackTrace();
         } catch (NullPointerException ex) {
 //            ex.getMessage();
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -124,6 +127,7 @@ class HotFiler_T implements Runnable {
                             Main.jProgressBar1.setMaximum(Statics.fileCount);
                             key.cancel();
                             GUI.progressBarThread();
+                            Thread.sleep(200);
                             AES.AESThread();
                             folderWatcher();
                             System.out.println("Hot Filer Called AES");
@@ -139,7 +143,7 @@ class HotFiler_T implements Runnable {
             }
         } catch (InterruptedException ex) {
             ex.printStackTrace();
-        }catch(ClosedWatchServiceException ex){
+        } catch (ClosedWatchServiceException ex) {
             System.out.println("Watch Service Closed");
         }
     }

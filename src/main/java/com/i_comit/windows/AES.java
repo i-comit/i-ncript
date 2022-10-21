@@ -47,7 +47,6 @@ public class AES {
                 jProgressBar1.setValue(Statics.fileIter);
                 System.out.println("Current encrypted file path: " + outputFile.getPath());
                 GUI.loggerThread(outputFile);
-
                 try {
                     FileHider.FileHiderAESThread(Main.jToggleButton2.isSelected(), outputFile.toPath());
                 } catch (IOException ex) {
@@ -67,7 +66,6 @@ public class AES {
                 Statics.fileIter++;
                 jProgressBar1.setValue(Statics.fileIter);
                 System.out.println("Current decrypted file path: " + outputFile.getPath());
-                Main.jTextArea1.append(outputFile.getPath().substring(11, outputFile.getPath().length()) + "\n");
                 GUI.loggerThread(outputFile);
                 try {
                     FileHider.FileHiderAESThread(Main.jToggleButton2.isSelected(), outputFile.toPath());
@@ -134,30 +132,37 @@ class AES_T implements Runnable {
             if (contents != null) {
                 if (contents.length != 0) {
                     if (!paths.isEmpty()) {
+                        Main.jRadioButton0.setEnabled(false);
+                        Main.jRadioButton1.setEnabled(false);
+                        Main.jToggleButton2.setEnabled(false);
+
                         switch (Statics.AESMode) {
                             case 0 -> {
-                                Main.jRadioButton0.setEnabled(false);
                                 GUI.progressBarThread();
                                 GUI.labelCutterThread(jAlertLabel, "encrypting files...", 0, 15, 300);
-                                Main.jRadioButton1.setVisible(false);
                                 paths.forEach(x -> {
                                     try {
                                         encrypt(Hasher.modHash(password), x.toFile(), x.toFile());
                                     } catch (AES.CryptoException ex) {
                                     }
                                 });
+                                System.out.println("File Encryption Complete" + Main.jToggleButton2.isSelected());
+                                FileHider.FileHiderThread(Main.jToggleButton2.isSelected());
+
                             }
                             case 1 -> {
-                                Main.jRadioButton1.setEnabled(false);
+
                                 GUI.progressBarThread();
                                 GUI.labelCutterThread(jAlertLabel, "decrypting files...", 0, 15, 300);
-                                Main.jRadioButton0.setVisible(false);
                                 paths.forEach(x -> {
                                     try {
                                         decrypt(Hasher.modHash(password), x.toFile(), x.toFile());
                                     } catch (AES.CryptoException ex) {
                                     }
                                 });
+                                System.out.println("File Decryption Complete " + Main.jToggleButton2.isSelected());
+                                FileHider.FileHiderThread(Main.jToggleButton2.isSelected());
+
                             }
                         }
 
@@ -166,10 +171,14 @@ class AES_T implements Runnable {
                             switch (Statics.AESMode) {
                                 case 0 -> {
                                     GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 10, 20, 400);
+                                    Main.jToggleButton1.setEnabled(true);
+                                    Main.jToggleButton2.setEnabled(true);
 
                                 }
                                 case 1 -> {
                                     GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400);
+                                    Main.jToggleButton1.setEnabled(true);
+                                    Main.jToggleButton2.setEnabled(true);
 
                                 }
                             }
@@ -177,9 +186,13 @@ class AES_T implements Runnable {
                     }
                 } else {
                     GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 20, 40, 800);
+                    Main.jToggleButton2.setEnabled(true);
+
                 }
             } else {
                 GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 20, 40, 800);
+                Main.jToggleButton2.setEnabled(true);
+
             }
         } catch (IOException ex) {
             //ex.printStackTrace();

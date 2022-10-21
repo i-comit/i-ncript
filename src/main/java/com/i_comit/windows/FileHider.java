@@ -31,15 +31,22 @@ public class FileHider {
     }
 
     public static void FileHiderAESThread(boolean fileHideBool, Path outputFile) throws IOException {
-        Thread t = new Thread(() -> {
+        Thread t1 = new Thread(() -> {
             try {
                 FileHider_T.FileHiderAES_T(fileHideBool, outputFile);
             } catch (IOException | InterruptedException ex) {
                 ex.printStackTrace();
             }
         });
-        t.start();
+        t1.start();
     }
+
+//    public static void hideFilerPBarThread() {
+//        fileHiderPBar_T fileHiderPBar = new fileHiderPBar_T();
+//        Thread t2 = new Thread(fileHiderPBar);
+//        t2.start();
+//
+//    }
 }
 
 class FileHider_T implements Runnable {
@@ -56,17 +63,29 @@ class FileHider_T implements Runnable {
     }
 
     public static void FileHider_T(boolean fileHideBool) throws IOException {
+        Statics.fileHideIter = 0;
         List<Path> paths = listPaths(path);
         File[] contents = directory.listFiles();
-
+        int fileCount = GUI.countFiles(path);
         if (!Main.jToggleButton1.isSelected()) {
             if (fileHideBool) {
                 if (contents != null) {
                     if (contents.length != 0) {
+                        Main.jToggleButton2.setEnabled(false);
                         paths.forEach(x -> {
                             try {
                                 Files.setAttribute(x, "dos:hidden", true);
+                                Statics.fileHideIter++;
+                                if (Statics.fileHideIter == fileCount) {
+                                    Main.jToggleButton2.setEnabled(true);
+                                    Main.jToggleButton1.setEnabled(true);
+                                    Thread.sleep(400);
+                                    GUI.labelCutterThread(Main.jAlertLabel, fileCount + " files hidden", 60, 20, 300);
+
+                                }
                             } catch (IOException ex) {
+                                ex.printStackTrace();
+                            } catch (InterruptedException ex) {
                                 ex.printStackTrace();
                             }
                         });
@@ -79,10 +98,22 @@ class FileHider_T implements Runnable {
             } else {
                 if (contents != null) {
                     if (contents.length != 0) {
+                        Main.jToggleButton2.setEnabled(false);
+
                         paths.forEach(x -> {
                             try {
                                 Files.setAttribute(x, "dos:hidden", false);
+                                Statics.fileHideIter++;
+                                if (Statics.fileHideIter == fileCount) {
+                                    Main.jToggleButton2.setEnabled(true);
+                                    Main.jToggleButton1.setEnabled(true);
+                                    Thread.sleep(400);
+                                    GUI.labelCutterThread(Main.jAlertLabel, fileCount + " files unhidden", 60, 20, 300);
+                                }
+
                             } catch (IOException ex) {
+                                ex.printStackTrace();
+                            } catch (InterruptedException ex) {
                                 ex.printStackTrace();
                             }
                         });
@@ -133,3 +164,22 @@ class FileHider_T implements Runnable {
         }
     }
 }
+
+//class fileHiderPBar_T implements Runnable {
+//
+//    public void run() {
+//        try {
+//            fileHiderProgressBar();
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//        }
+//    }
+//
+//    public static void fileHiderProgressBar() throws IOException {
+//        Main.jProgressBar1.setStringPainted(true);
+//        Statics.fileHideIter = 0;
+//        System.out.println(Statics.fileHideIter);
+//        Main.jProgressBar1.setMaximum(GUI.countFiles(Statics.path));
+//        Main.jProgressBar1.setValue(Statics.fileHideIter);
+//    }
+//}

@@ -240,8 +240,8 @@ public class Main extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("i-ncript");
 
-        jLabel3.setFont(new java.awt.Font("Polentical Neon", 0, 14)); // NOI18N
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setFont(new java.awt.Font("Polentical Neon", 0, 16)); // NOI18N
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel3.setText("jLabel3");
 
         jAlertLabel.setFont(new java.awt.Font("Polentical Neon", 0, 14)); // NOI18N
@@ -326,7 +326,7 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(jAlertLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -375,23 +375,21 @@ public class Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     //DECRYPT
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+        jToggleButton1.setSelected(false);
+        jToggleButton1.setEnabled(false);
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
-        jRadioButton1.setSelected(true);
         Statics.AESMode = 1;
         AES.AESThread();
+
         try {
             Statics.fileCount = GUI.countFiles2(Statics.path);
             jProgressBar1.setMaximum(Statics.fileCount);
-            GUI.progressBarThread();
 
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-
-        //Statics.hotFilerState = false;
-        //jToggleButton1.setSelected(false);
 
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
@@ -403,8 +401,6 @@ public class Main extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
         char[] password = jPasswordField1.getPassword();
-        //System.out.println("Your password is: " + new String(password));
-        //System.out.println("Your password char[] is: " + password);
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
@@ -435,24 +431,12 @@ public class Main extends javax.swing.JFrame {
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
-
-        //GUI.progressBarThread();
-//        if (Statics.hotFilerState) {
         try {
-            //Statics.fileCount = HotFiler_T.countNewFiles(Statics.path);
 //            GUI.progressBarThread();
             HotFiler.HotFilerThread();
-
-            //jRadioButton0.setSelected(true);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-//        } else { 
-//           jRadioButton0.setSelected(false);
-//            GUI.labelCutterThread(jAlertLabel, "hot filer disabled", 30, 30, 900);
-//        }
-
-
     }//GEN-LAST:event_jToggleButton1ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -460,14 +444,11 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
     //HIDE FILER
     private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
-
         buttonGroup1.clearSelection();
         try {
             if (jToggleButton2.isSelected()) {
-                GUI.labelCutterThread(jAlertLabel, "hiding available files", 30, 30, 900);
                 FileHider.FileHiderThread(true);
             } else {
-                GUI.labelCutterThread(jAlertLabel, "unhiding available files", 30, 30, 900);
                 FileHider.FileHiderThread(false);
             }
         } catch (IOException ex) {
@@ -481,8 +462,7 @@ public class Main extends javax.swing.JFrame {
         }
         Statics.AESMode = 0;
         AES.AESThread();
-//        jRadioButton0.setVisible(false);
-//        jRadioButton1.setVisible(false);
+//        jToggleButton1.setEnabled(false);
 
         try {
             Statics.fileCount = GUI.countFiles2(Statics.path);
@@ -517,8 +497,9 @@ public class Main extends javax.swing.JFrame {
             //</editor-fold>
             //</editor-fold>
             //</editor-fold>
-            UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+            UIManager.setLookAndFeel("com.formdev.flatlaf.FlatDarkLaf");
             //</editor-fold>
+
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             ex.printStackTrace();
         }

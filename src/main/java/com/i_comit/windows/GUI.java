@@ -10,8 +10,6 @@ import static com.i_comit.windows.Main.jProgressBar1;
 import static com.i_comit.windows.Statics.GB;
 import static com.i_comit.windows.Statics.path;
 import static com.i_comit.windows.Statics.root;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -104,6 +102,9 @@ class progressBar_T implements Runnable {
     public static void progressBar() throws InterruptedException, IOException {
         Statics.fileIter = 0;
         jProgressBar1.setStringPainted(true);
+        Main.jToggleButton1.setEnabled(false);
+        Main.jToggleButton2.setEnabled(false);
+        boolean b = true;
         while (jProgressBar1.isStringPainted()) {
             try {
 //                jProgressBar1.setMaximum(GUI.countFiles(Statics.path));
@@ -117,8 +118,11 @@ class progressBar_T implements Runnable {
                                     switch (Statics.AESMode) {
                                         case 0 -> {
                                             jProgressBar1.setMaximum(Statics.fileCount);
-                                            GUI.labelCutterThread(jAlertLabel, "encryption of " + Statics.fileCount + " files complete", 10, 20, 600);
-                                            Thread.sleep(500);
+                                            if (b) {
+                                                GUI.labelCutterThread(jAlertLabel, "encryption of " + Statics.fileCount + " files complete", 10, 15, 400);
+                                                b = false;
+                                            }
+                                            Thread.sleep(450);
 //                                            FileHider.FileHiderThread(true);
 //                                            jProgressBar1.setValue(100);
                                             for (int x = Statics.fileCount; x >= 0; x--) {
@@ -131,20 +135,22 @@ class progressBar_T implements Runnable {
                                             if (!Main.jToggleButton1.isSelected()) {
                                                 Main.jRadioButton0.setEnabled(true);
                                                 Main.jRadioButton1.setEnabled(true);
-                                                Main.jRadioButton1.setVisible(true);
                                                 Main.jToggleButton1.setSelected(false);
                                             } else {
                                                 Main.jToggleButton1.setSelected(true);
-                                                Main.jRadioButton1.setVisible(true);
                                                 Main.jRadioButton0.setEnabled(true);
                                                 Main.jRadioButton1.setEnabled(true);
                                             }
+                                            Main.jToggleButton2.setEnabled(true);
                                             Main.jTextArea1.setText("");
                                         }
                                         case 1 -> {
                                             jProgressBar1.setMaximum(Statics.fileCount);
-                                            GUI.labelCutterThread(jAlertLabel, "decryption of " + Statics.fileCount + " files complete", 10, 20, 600);
-                                            Thread.sleep(500);
+                                            if (b) {
+                                                GUI.labelCutterThread(jAlertLabel, "decryption of " + Statics.fileCount + " files complete", 10, 15, 400);
+                                                b = false;
+                                            }
+                                            Thread.sleep(450);
 
 //                                            jProgressBar1.setValue(100);
                                             for (int x = Statics.fileCount; x >= 0; x--) {
@@ -156,9 +162,10 @@ class progressBar_T implements Runnable {
                                             jProgressBar1.setValue(Statics.fileIter);
                                             Main.jRadioButton0.setEnabled(true);
                                             Main.jRadioButton1.setEnabled(true);
-                                            Main.jRadioButton0.setVisible(true);
                                             Main.buttonGroup1.clearSelection();
+                                            Main.jToggleButton2.setEnabled(true);
                                             Main.jTextArea1.setText("");
+                                            GUI.t1.interrupt();
                                         }
                                     }
                                 }
@@ -171,6 +178,8 @@ class progressBar_T implements Runnable {
                 System.exit(0);
             }
             if (!jProgressBar1.isStringPainted()) {
+                Main.jToggleButton1.setEnabled(true);
+
                 break;
             }
         }
