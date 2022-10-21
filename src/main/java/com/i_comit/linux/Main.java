@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.i_comit.windows;
+package com.i_comit.linux;
 
-import static com.i_comit.windows.Statics.*;
+import static com.i_comit.linux.Statics.*;
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.io.File;
@@ -240,10 +240,9 @@ public class Main extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("i-ncript");
 
-        jLabel3.setFont(new java.awt.Font("Polentical Neon", 0, 18)); // NOI18N
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setFont(new java.awt.Font("Polentical Neon", 0, 16)); // NOI18N
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel3.setText("jLabel3");
-        jLabel3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         jAlertLabel.setFont(new java.awt.Font("Polentical Neon", 0, 14)); // NOI18N
         jAlertLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);

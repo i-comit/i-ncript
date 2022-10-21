@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.i_comit.windows;
+package com.i_comit.linux;
 
+import com.i_comit.windows.*;
 import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Statics.*;
 import java.io.*;
@@ -27,7 +28,7 @@ public class Login {
     }
 
     public static void makeKey() {
-        Path path = Paths.get(root + keyName); //creates Path instance  
+        Path path = Paths.get(root + "\\i-ncript.key"); //creates Path instance  
         try {
             List<String> lines = Arrays.asList(Hasher.modHash(username), Hasher.modHash(password));
             Path p = Files.createFile(path);//creates file at specified location  
