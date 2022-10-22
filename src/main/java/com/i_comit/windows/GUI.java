@@ -243,7 +243,7 @@ class logger_T implements Runnable {
 
     public static void logger_T(File outputFile) throws InterruptedException {
         Thread.sleep(150);
-        Main.jTextArea1.append(outputFile.getPath().substring(11, outputFile.getPath().toString().length()) + "\n");
+        Main.jTextArea1.append(outputFile.getAbsolutePath().substring(12, outputFile.getPath().toString().length()) + "\n");
 //        for(int i =0; i<5;i++){
 //            
 //        }
