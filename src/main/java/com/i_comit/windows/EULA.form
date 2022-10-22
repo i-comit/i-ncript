@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+  <Properties>
+    <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="iconImage" type="java.awt.Image" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+      <Connection code="Toolkit.getDefaultToolkit().getImage(getClass().getResource(&quot;/i-comiti.png&quot;))" type="code"/>
+    </Property>
+  </Properties>
+  <SyntheticProperties>
+    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="true"/>
+  </SyntheticProperties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jLabel1" max="32767" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="0" pref="17" max="32767" attributes="0"/>
+                      <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="21" max="32767" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
+          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jPanel2" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+          <Group type="103" rootIndex="2" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jSeparator1" pref="312" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+          <Group type="103" rootIndex="3" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                  <Component id="jPanel3" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+              </Group>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
+              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="64" max="32767" attributes="0"/>
+          </Group>
+          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="1" attributes="0">
+                  <EmptySpace pref="46" max="32767" attributes="0"/>
+                  <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+          <Group type="103" rootIndex="2" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
+                  <Component id="jSeparator1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="263" max="32767" attributes="0"/>
+              </Group>
+          </Group>
+          <Group type="103" rootIndex="3" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="1" attributes="0">
+                  <EmptySpace pref="46" max="32767" attributes="0"/>
+                  <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+              </Group>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JSeparator" name="jSeparator1">
+    </Component>
+    <Container class="javax.swing.JPanel" name="jPanel1">
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jTextArea1" pref="0" max="32767" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="100" max="-2" attributes="0"/>
+                          <Component id="jButton1" min="-2" pref="81" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="87" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
+                  <Component id="jTextArea1" min="-2" pref="93" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="jButton1" min="-2" pref="33" max="-2" attributes="0"/>
+                  <EmptySpace pref="29" max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JTextArea" name="jTextArea1">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="columns" type="int" value="20"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="14" style="0"/>
+            </Property>
+            <Property name="lineWrap" type="boolean" value="true"/>
+            <Property name="rows" type="int" value="5"/>
+            <Property name="text" type="java.lang.String" value="Since this is your first time using i-ncript, you must first agree to our EULA (End User License Agreement) and Terms of Use.&#xa;"/>
+            <Property name="wrapStyleWord" type="boolean" value="true"/>
+            <Property name="opaque" type="boolean" value="false"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="jButton1">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="OKAY"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+          </Events>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Component class="javax.swing.JLabel" name="jLabel1">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Polentical Neon" size="14" style="0"/>
+        </Property>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="I-NCRIPT AGREEMENT"/>
+      </Properties>
+    </Component>
+    <Container class="javax.swing.JPanel" name="jPanel2">
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jScrollPane1" pref="300" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Component id="jButton2" min="-2" pref="127" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jScrollPane1" min="-2" pref="202" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="jButton2" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+          <AuxValues>
+            <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+          </AuxValues>
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+          <SubComponents>
+            <Component class="javax.swing.JTextArea" name="jTextArea2">
+              <Properties>
+                <Property name="columns" type="int" value="20"/>
+                <Property name="lineWrap" type="boolean" value="true"/>
+                <Property name="rows" type="int" value="5"/>
+                <Property name="text" type="java.lang.String" value="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Dis parturient montes nascetur ridiculus mus mauris. A condimentum vitae sapien pellentesque habitant morbi tristique. Viverra justo nec ultrices dui sapien eget. Mattis enim ut tellus elementum sagittis vitae et. Vulputate eu scelerisque felis imperdiet proin fermentum leo vel orci. Hac habitasse platea dictumst quisque sagittis. Aliquam ultrices sagittis orci a scelerisque purus. In aliquam sem fringilla ut morbi tincidunt augue interdum. Sed vulputate mi sit amet mauris commodo quis imperdiet massa. Amet consectetur adipiscing elit pellentesque habitant morbi tristique senectus. Consectetur lorem donec massa sapien faucibus et. Risus nullam eget felis eget nunc lobortis mattis aliquam faucibus. Purus ut faucibus pulvinar elementum. Nullam vehicula ipsum a arcu. Eu augue ut lectus arcu bibendum at. Varius vel pharetra vel turpis nunc. Lorem ipsum dolor sit amet consectetur adipiscing elit. Semper viverra nam libero justo laoreet sit.&#xa;&#xa;Volutpat diam ut venenatis tellus. Adipiscing at in tellus integer feugiat. Lectus nulla at volutpat diam ut venenatis tellus. Volutpat consequat mauris nunc congue nisi vitae suscipit. Enim ut sem viverra aliquet eget. Enim tortor at auctor urna nunc id cursus metus aliquam. Tellus at urna condimentum mattis pellentesque id nibh tortor. Nec ullamcorper sit amet risus nullam eget felis eget. Montes nascetur ridiculus mus mauris vitae ultricies leo. Risus sed vulputate odio ut enim blandit volutpat.&#xa;&#xa;Eros in cursus turpis massa tincidunt dui. Amet aliquam id diam maecenas ultricies. Tortor consequat id porta nibh venenatis cras sed felis eget. Eget felis eget nunc lobortis. Commodo nulla facilisi nullam vehicula ipsum a arcu. Pharetra diam sit amet nisl suscipit adipiscing bibendum. Ultrices tincidunt arcu non sodales neque sodales ut. In fermentum posuere urna nec tincidunt praesent semper. Velit ut tortor pretium viverra suspendisse potenti. Eu mi bibendum neque egestas congue quisque egestas diam. Volutpat commodo sed egestas egestas. Dui sapien eget mi proin. Nisl nisi scelerisque eu ultrices vitae. Est ultricies integer quis auctor. Viverra vitae congue eu consequat ac felis donec et odio.&#xa;&#xa;Vitae nunc sed velit dignissim. Lectus urna duis convallis convallis tellus id. Aliquam vestibulum morbi blandit cursus risus at ultrices. Sed nisi lacus sed viverra tellus in hac. Amet dictum sit amet justo donec. Donec massa sapien faucibus et. Ornare aenean euismod elementum nisi quis. Vitae auctor eu augue ut lectus arcu bibendum at. Velit euismod in pellentesque massa placerat duis ultricies lacus sed. Tincidunt tortor aliquam nulla facilisi cras fermentum odio eu."/>
+                <Property name="toolTipText" type="java.lang.String" value="End User License Agreement"/>
+                <Property name="wrapStyleWord" type="boolean" value="true"/>
+              </Properties>
+            </Component>
+          </SubComponents>
+        </Container>
+        <Component class="javax.swing.JButton" name="jButton2">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Polentical Neon" size="12" style="0"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="I AGREE"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton2ActionPerformed"/>
+          </Events>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPanel" name="jPanel3">
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="jScrollPane2" pref="288" max="32767" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <Component id="jButton3" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Component id="jScrollPane2" min="-2" pref="202" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="jButton3" min="-2" max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Container class="javax.swing.JScrollPane" name="jScrollPane2">
+          <AuxValues>
+            <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+          </AuxValues>
+
+          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+          <SubComponents>
+            <Component class="javax.swing.JTextArea" name="jTextArea3">
+              <Properties>
+                <Property name="columns" type="int" value="20"/>
+                <Property name="lineWrap" type="boolean" value="true"/>
+                <Property name="rows" type="int" value="5"/>
+                <Property name="text" type="java.lang.String" value="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Dis parturient montes nascetur ridiculus mus mauris. A condimentum vitae sapien pellentesque habitant morbi tristique. Viverra justo nec ultrices dui sapien eget. Mattis enim ut tellus elementum sagittis vitae et. Vulputate eu scelerisque felis imperdiet proin fermentum leo vel orci. Hac habitasse platea dictumst quisque sagittis. Aliquam ultrices sagittis orci a scelerisque purus. In aliquam sem fringilla ut morbi tincidunt augue interdum. Sed vulputate mi sit amet mauris commodo quis imperdiet massa. Amet consectetur adipiscing elit pellentesque habitant morbi tristique senectus. Consectetur lorem donec massa sapien faucibus et. Risus nullam eget felis eget nunc lobortis mattis aliquam faucibus. Purus ut faucibus pulvinar elementum. Nullam vehicula ipsum a arcu. Eu augue ut lectus arcu bibendum at. Varius vel pharetra vel turpis nunc. Lorem ipsum dolor sit amet consectetur adipiscing elit. Semper viverra nam libero justo laoreet sit.&#xa;&#xa;Volutpat diam ut venenatis tellus. Adipiscing at in tellus integer feugiat. Lectus nulla at volutpat diam ut venenatis tellus. Volutpat consequat mauris nunc congue nisi vitae suscipit. Enim ut sem viverra aliquet eget. Enim tortor at auctor urna nunc id cursus metus aliquam. Tellus at urna condimentum mattis pellentesque id nibh tortor. Nec ullamcorper sit amet risus nullam eget felis eget. Montes nascetur ridiculus mus mauris vitae ultricies leo. Risus sed vulputate odio ut enim blandit volutpat.&#xa;&#xa;Eros in cursus turpis massa tincidunt dui. Amet aliquam id diam maecenas ultricies. Tortor consequat id porta nibh venenatis cras sed felis eget. Eget felis eget nunc lobortis. Commodo nulla facilisi nullam vehicula ipsum a arcu. Pharetra diam sit amet nisl suscipit adipiscing bibendum. Ultrices tincidunt arcu non sodales neque sodales ut. In fermentum posuere urna nec tincidunt praesent semper. Velit ut tortor pretium viverra suspendisse potenti. Eu mi bibendum neque egestas congue quisque egestas diam. Volutpat commodo sed egestas egestas. Dui sapien eget mi proin. Nisl nisi scelerisque eu ultrices vitae. Est ultricies integer quis auctor. Viverra vitae congue eu consequat ac felis donec et odio.&#xa;&#xa;Vitae nunc sed velit dignissim. Lectus urna duis convallis convallis tellus id. Aliquam vestibulum morbi blandit cursus risus at ultrices. Sed nisi lacus sed viverra tellus in hac. Amet dictum sit amet justo donec. Donec massa sapien faucibus et. Ornare aenean euismod elementum nisi quis. Vitae auctor eu augue ut lectus arcu bibendum at. Velit euismod in pellentesque massa placerat duis ultricies lacus sed. Tincidunt tortor aliquam nulla facilisi cras fermentum odio eu."/>
+                <Property name="toolTipText" type="java.lang.String" value="End User License Agreement"/>
+                <Property name="wrapStyleWord" type="boolean" value="true"/>
+              </Properties>
+            </Component>
+          </SubComponents>
+        </Container>
+        <Component class="javax.swing.JButton" name="jButton3">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Polentical Neon" size="12" style="0"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="I AGREE"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton3ActionPerformed"/>
+          </Events>
+        </Component>
+      </SubComponents>
+    </Container>
+  </SubComponents>
+</Form>

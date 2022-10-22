@@ -4,6 +4,9 @@
  */
 package com.i_comit.windows;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.lang.reflect.Method;
@@ -31,15 +34,15 @@ public class Heap {
         Runtime env = Runtime.getRuntime();
 
         System.out.println("Available Processors " + Runtime.getRuntime().availableProcessors());
-        while (true) {
-
-            System.out.println("Max Heap Size = maxMemory() = " + humanReadableByteCountBin(env.maxMemory())); //max heap size from -Xmx, i.e. is constant during runtime
-//            System.out.println("Available in Current Heap = freeMemory() = " + env.freeMemory()); //current heap will extend if no more freeMemory to a maximum of maxMemory
-//            System.out.println("Currently Used Heap = " + (env.totalMemory() - env.freeMemory()));
-            System.out.println("Current Heap Size = totalMemory() = " + humanReadableByteCountBin(env.totalMemory())); //currently assigned  heap
-//            System.out.println("Unassigned Heap = " + (env.maxMemory() - env.totalMemory()));
-//            System.out.println("Currently Totally Available Heap Space = " + ((env.maxMemory() - env.totalMemory()) + env.freeMemory())); //available=unassigned + free
-        }
+//        while (true) {
+//            System.out.println("Max Heap Size = maxMemory() = " + humanReadableByteCountBin(env.maxMemory())); //max heap size from -Xmx, i.e. is constant during runtime
+////            System.out.println("Available in Current Heap = freeMemory() = " + env.freeMemory()); //current heap will extend if no more freeMemory to a maximum of maxMemory
+////            System.out.println("Currently Used Heap = " + (env.totalMemory() - env.freeMemory()));
+//            System.out.println("Current Heap Size = totalMemory() = " + humanReadableByteCountBin(env.totalMemory())); //currently assigned  heap
+////            System.out.println("Unassigned Heap = " + (env.maxMemory() - env.totalMemory()));
+////            System.out.println("Currently Totally Available Heap Space = " + ((env.maxMemory() - env.totalMemory()) + env.freeMemory())); //available=unassigned + free
+//        }
+        checkDriveType();
     }
 
     public static String humanReadableByteCountBin(long bytes) {
@@ -57,4 +60,33 @@ public class Heap {
         return String.format("%.1f %cB", value / 1024.0, ci.current());
     }
 
+    public static boolean checkDriveType() {
+//        Statics.root = "E:\\";
+        boolean b = false;
+        String command = "wmic logicaldisk where name=" + "\"" + Statics.root.substring(0, 2) + "\"" + " get name, drivetype, description";
+//        System.out.println(command);
+        String s = null;
+        try {
+            Process process = Runtime.getRuntime().exec(command);
+            try ( BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                reader.readLine();
+                while ((s = reader.readLine()) != null) {
+                    if (s.trim().length() != 0) {
+                        String substring = s.substring(0, 14);
+//                    System.out.println(substring);
+                        if (substring.equals("Removable Disk")) {
+                            b = true;
+                            System.out.println("USB FOUND");
+                        } else {
+                            System.out.println("Device Must be a USB");
+                            b = false;
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return b;
+    }
 }

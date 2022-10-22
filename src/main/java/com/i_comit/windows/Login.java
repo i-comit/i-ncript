@@ -21,7 +21,7 @@ public class Login {
             verifyPassword();
         } else {
             Main.jProgressBar1.setVisible(true);
-            GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript", 45, 30, 900);
+            GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript", 30, 30, 600);
             makeKey();
         }
     }

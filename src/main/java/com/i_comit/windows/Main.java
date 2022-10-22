@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -21,39 +22,48 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class Main extends javax.swing.JFrame {
 
     public Main() {
-        initComponents();
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
         Statics.root = s.substring(0, 3);
-        GUI.getGB();
+        if (Heap.checkDriveType()) {
+            if (!keyFile.exists() && !EULA.eulaBool) {
+                if (EULA.eulaBool) {
 
-        jLabel3.setText(root.substring(0, 2) + " | " + GB);
-        System.out.println("Your available Memory Heap is " + Heap.humanReadableByteCountBin(Heap.heapSize));
+                }
+                JFrame eula = new EULA();
+                eula.setVisible(true);
 
-        jTextField1.setText("");
-        jPasswordField1.setText("");
+            } else {
+                initComponents();
+                jUsernameLabel.setText("enter username");
+                jPasswordLabel.setText("enter password");
+                GUI.getGB();
+                jLabel3.setText(root.substring(0, 2) + " | " + GB);
+                System.out.println("Your available Memory Heap is " + Heap.humanReadableByteCountBin(Heap.heapSize));
 
-        if (!keyFile.exists()) {
-            jUsernameLabel.setText("create username");
-            jPasswordLabel.setText("create password");
+                jTextField1.setText("");
+                jPasswordField1.setText("");
+
+                jAlertLabel.setText("");
+
+                File rootFolder = Paths.get(root + folderName).toFile();
+                if (!rootFolder.exists()) {
+                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 60, 50, 1800);
+                    rootFolder.mkdir();
+                } else {
+                    GUI.labelCutterThread(jAlertLabel, "developed by i-comit", 60, 50, 1800);
+
+                }
+                jToolPanel.setVisible(false);
+                jProgressBar1.setVisible(false);
+                jButton2.setVisible(false);
+            }
+
         } else {
-            jUsernameLabel.setText("enter username");
-            jPasswordLabel.setText("enter password");
+            JFrame driveCheck = new DriveCheck();
+            driveCheck.setVisible(true);
         }
 
-        jAlertLabel.setText("");
-
-        File rootFolder = Paths.get(root + folderName).toFile();
-        if (!rootFolder.exists()) {
-            GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 60, 50, 1800);
-            rootFolder.mkdir();
-        } else {
-            GUI.labelCutterThread(jAlertLabel, "developed by i-comit", 60, 50, 1800);
-
-        }
-        jToolPanel.setVisible(false);
-        jProgressBar1.setVisible(false);
-        jButton2.setVisible(false);
     }
 
     /**
@@ -430,17 +440,24 @@ public class Main extends javax.swing.JFrame {
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
-
         Statics.username = jTextField1.getText();
         Statics.password = new String(password);
-        if (!"".equals(Statics.username) && !"".equals(Statics.password)) {
-            if (Statics.username.length() >= 4 && Statics.password.length() >= 4) {
-                Login.Authenticator();
+        if (!"".equals(Statics.username)) {
+            if (!"".equals(Statics.password)) {
+                if (Statics.username.length() >= 4) {
+                    if (Statics.password.length() >= 4) {
+                        Login.Authenticator();
+                    } else {
+                        GUI.labelCutterThread(jAlertLabel, "please make a longer password", 20, 20, 1200);
+                    }
+                } else {
+                    GUI.labelCutterThread(jAlertLabel, "please make a longer username", 20, 20, 1200);
+                }
             } else {
-                GUI.labelCutterThread(jAlertLabel, "please make a longer username and password", 20, 20, 1800);
+                GUI.labelCutterThread(jAlertLabel, "please make a password", 20, 20, 1200);
             }
         } else {
-            GUI.labelCutterThread(jAlertLabel, "please make a username and password", 20, 20, 1800);
+            GUI.labelCutterThread(jAlertLabel, "please make a username", 20, 20, 1200);
         }
         jTextField1.setText("");
         jPasswordField1.setText("");
@@ -498,7 +515,7 @@ public class Main extends javax.swing.JFrame {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_jRadioButton0ActionPerformed
-    
+
     //CLEAR LOG
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         jTextArea1.setText("");
@@ -511,7 +528,7 @@ public class Main extends javax.swing.JFrame {
         jProgressBar1.setValue(Statics.fileIter);
         jProgressBar1.setMaximum(Statics.fileCount);
         jProgressBar1.setStringPainted(false);
-        
+
         jToggleButton1.setEnabled(true);
         jToggleButton2.setEnabled(true);
         jRadioButton1.setEnabled(true);
@@ -568,7 +585,7 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     protected static javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JLabel jPasswordLabel;
+    protected javax.swing.JLabel jPasswordLabel;
     public static javax.swing.JProgressBar jProgressBar1;
     protected static javax.swing.JRadioButton jRadioButton0;
     protected static javax.swing.JRadioButton jRadioButton1;
@@ -581,7 +598,7 @@ public class Main extends javax.swing.JFrame {
     public static javax.swing.JToggleButton jToggleButton1;
     protected static javax.swing.JToggleButton jToggleButton2;
     public static javax.swing.JPanel jToolPanel;
-    private javax.swing.JLabel jUsernameLabel;
+    protected javax.swing.JLabel jUsernameLabel;
     // End of variables declaration//GEN-END:variables
 
 }
