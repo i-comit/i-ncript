@@ -75,8 +75,9 @@ public class Heap {
                         String substring = s.substring(0, 14);
 //                    System.out.println(substring);
                         if (substring.equals("Removable Disk")) {
-                            Path rootPath = Paths.get("").toAbsolutePath().getRoot();
+                            String rootPath = Paths.get("E:\\").toAbsolutePath().getRoot().toString();
                             System.out.println("Root Path: " + rootPath);
+                            System.out.println(Statics.root);
                             if (Statics.root.equals(rootPath)) {
                                 b = true;
                             } else {
