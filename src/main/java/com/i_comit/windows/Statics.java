@@ -33,10 +33,7 @@ public class Statics {
     
     public static File[] contents = directory.listFiles();
 
-
     public static Path path = Paths.get(root + folderName);
-    public static Path zipPath = Paths.get(root + folderName + ".zip");
-    public static Path rootPath = Paths.get(root);
     
     public static String username="";
     public static String password = "";

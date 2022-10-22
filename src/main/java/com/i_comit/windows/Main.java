@@ -22,9 +22,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class Main extends javax.swing.JFrame {
 
     public Main() {
-        Path currentRelativePath = Paths.get("");
-        String s = currentRelativePath.toAbsolutePath().toString();
-        Statics.root = s.substring(0, 3);
+        Statics.root = Paths.get("").toAbsolutePath().getRoot().toString();
         if (Heap.checkDriveType()) {
             if (!keyFile.exists() && !EULA.eulaBool) {
                 EULA eula = new EULA();

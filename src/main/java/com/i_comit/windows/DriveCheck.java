@@ -15,8 +15,21 @@ public class DriveCheck extends javax.swing.JFrame {
     /**
      * Creates new form DriveCheck
      */
+    public static int driveState = 0;
+
     public DriveCheck() {
         initComponents();
+
+        switch (driveState) {
+            case 1 -> {
+                DriveCheck.jLabel1.setText("I-NCRIPT MUST BE RUN");
+                DriveCheck.jLabel2.setText("WITHIN A USB DEVICE.");
+            }
+            case 2 -> {
+                DriveCheck.jLabel1.setText("I-NCRIPT MUST BE IN THE");
+                DriveCheck.jLabel2.setText("ROOT PATH OF THIS USB.");
+            }
+        }
     }
 
     /**
@@ -38,11 +51,11 @@ public class DriveCheck extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Polentical Neon", 0, 14)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("YOU MUST PLACE THE I-NCRIPT APP");
+        jLabel1.setText("I-NCRIPT MUST BE IN THE");
 
         jLabel2.setFont(new java.awt.Font("Polentical Neon", 0, 14)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("IN THE ROOT PATH OF A USB DRIVE.");
+        jLabel2.setText("ROOT PATH OF THIS USB.");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -51,7 +64,7 @@ public class DriveCheck extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -72,36 +85,9 @@ public class DriveCheck extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(DriveCheck.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(DriveCheck.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(DriveCheck.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(DriveCheck.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    protected static javax.swing.JLabel jLabel1;
+    protected static javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
 }

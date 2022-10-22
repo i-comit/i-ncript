@@ -11,6 +11,8 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 
@@ -61,10 +63,8 @@ public class Heap {
     }
 
     public static boolean checkDriveType() {
-//        Statics.root = "E:\\";
         boolean b = false;
         String command = "wmic logicaldisk where name=" + "\"" + Statics.root.substring(0, 2) + "\"" + " get name, drivetype, description";
-//        System.out.println(command);
         String s = null;
         try {
             Process process = Runtime.getRuntime().exec(command);
@@ -75,10 +75,16 @@ public class Heap {
                         String substring = s.substring(0, 14);
 //                    System.out.println(substring);
                         if (substring.equals("Removable Disk")) {
-                            b = true;
-                            System.out.println("USB FOUND");
+                            Path rootPath = Paths.get("").toAbsolutePath().getRoot();
+                            System.out.println("Root Path: " + rootPath);
+                            if (Statics.root.equals(rootPath)) {
+                                b = true;
+                            } else {
+                                DriveCheck.driveState = 2;
+                                b = false;
+                            }
                         } else {
-                            System.out.println("Device Must be a USB");
+                            DriveCheck.driveState = 1;
                             b = false;
                         }
                     }
