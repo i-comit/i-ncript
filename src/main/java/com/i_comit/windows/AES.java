@@ -6,6 +6,7 @@ package com.i_comit.windows;
 
 import static com.i_comit.windows.AES.decrypt;
 import static com.i_comit.windows.AES.encrypt;
+import static com.i_comit.windows.HotFiler_T.folderWatcher;
 import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.jProgressBar1;
 import static com.i_comit.windows.Statics.*;
@@ -29,7 +30,13 @@ public class AES {
     public static Thread t;
 
     public static void AESThread() {
-        t = new Thread(() -> AES_T.AESQuery());
+        t = new Thread(() -> {
+            try {
+                AES_T.AESQuery();
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+        });
         t.start();
     }
 
@@ -43,7 +50,7 @@ public class AES {
                 outputFile = new File(outputFile + ".enc");
                 doCrypto(Cipher.ENCRYPT_MODE, key, inputFile, outputFile);
                 inputFile.delete();
-//                System.out.println("Current encrypted file path: " + outputFile.getPath());
+//                System.out.println("Current encrypted file path: " + outputFile.getPath());                 
                 GUI.loggerThread(outputFile);
             }
         }
@@ -69,13 +76,14 @@ public class AES {
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
             cipher.init(cipherMode, secretKey);
 
-            FileInputStream inputStream = new FileInputStream(inputFile);
-            byte[] inputBytes = new byte[(int) inputFile.length()];
-            inputStream.read(inputBytes);
-            byte[] outputBytes = cipher.doFinal(inputBytes);
-            FileOutputStream outputStream = new FileOutputStream(outputFile);
-            outputStream.write(outputBytes);
-            inputStream.close();
+            FileOutputStream outputStream;
+            try ( FileInputStream inputStream = new FileInputStream(inputFile)) {
+                byte[] inputBytes = new byte[(int) inputFile.length()];
+                inputStream.read(inputBytes);
+                byte[] outputBytes = cipher.doFinal(inputBytes);
+                outputStream = new FileOutputStream(outputFile);
+                outputStream.write(outputBytes);
+            }
             outputStream.close();
             Statics.fileIter++;
             jProgressBar1.setValue(Statics.fileIter);
@@ -112,7 +120,7 @@ class AES_T implements Runnable {
 //        }
     }
 
-    public static void AESQuery() {
+    public static void AESQuery() throws InterruptedException {
         contents = directory.listFiles();
         try {
             List<Path> paths = listAESPaths(path);
@@ -122,6 +130,7 @@ class AES_T implements Runnable {
                         Main.jRadioButton0.setEnabled(false);
                         Main.jRadioButton1.setEnabled(false);
                         Main.jToggleButton2.setEnabled(false);
+                        Main.jButton2.setVisible(true);
 
                         switch (Statics.AESMode) {
                             case 0 -> {
@@ -133,12 +142,12 @@ class AES_T implements Runnable {
                                     } catch (AES.CryptoException ex) {
                                     }
                                 });
-                                Statics.fileIter = Statics.fileCount;
-                                GUI.progressBarThread();
-                                System.out.println("File Encryption Complete " + Main.jToggleButton2.isSelected());
+//                                Statics.fileIter = Statics.fileCount;
+                                Main.jProgressBar1.setValue(100);
+                                Main.jProgressBar1.setMaximum(100);
+                                System.out.println("File Encryption Complete");
                             }
                             case 1 -> {
-
                                 GUI.progressBarThread();
                                 GUI.labelCutterThread(jAlertLabel, "decrypting files...", 0, 15, 300);
                                 paths.forEach(x -> {
@@ -147,8 +156,12 @@ class AES_T implements Runnable {
                                     } catch (AES.CryptoException ex) {
                                     }
                                 });
-                                Statics.fileIter = Statics.fileCount;
-                                System.out.println("File Decryption Complete " + Main.jToggleButton2.isSelected());
+                                Main.jProgressBar1.setValue(100);
+                                Main.jProgressBar1.setMaximum(100);
+                                System.out.println("File Decryption Complete");
+                            }
+                            case 2 -> {
+                                AES.t.interrupt();
                             }
                         }
 

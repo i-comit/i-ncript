@@ -44,15 +44,18 @@ class HotFiler_T implements Runnable {
                     GUI.labelCutterThread(jAlertLabel, "hot filer enabled", 30, 30, 900);
                     folderWatcher();
                 } else {
+                    AES.AESThread();
                     Statics.fileCount = GUI.countFiles2(Statics.path);
                     jProgressBar1.setMaximum(Statics.fileCount);
-                    GUI.progressBarThread();
-                    Thread.sleep(200);
-                    AES.AESThread();
+                    Thread.sleep(100);
                     boolean b = true;
                     //GUI.t1.interrupt();
                     while (b = true) {
                         if (!GUI.t1.isAlive()) {
+                            GUI.labelCutterThread(jAlertLabel, "hot filer enabled", 30, 30, 900);
+                            if (GUI.t.isAlive()) {
+                                GUI.t.interrupt();
+                            }
                             folderWatcher();
                             b = false;
                         }
@@ -111,26 +114,24 @@ class HotFiler_T implements Runnable {
 //                        StandardWatchEventKinds.ENTRY_DELETE,
 //                        StandardWatchEventKinds.ENTRY_MODIFY);
             WatchKey key;
-            boolean b = true;
             while ((key = watchService.take()) != null && Main.jToggleButton1.isSelected()) {
-                GUI.labelCutterThread(jAlertLabel, "hot filer detected new files", 30, 30, 900);
+                GUI.labelCutterThread(jAlertLabel, "hot filer detected new files", 15, 30, 600);
+                Statics.fileCount = 0;
+                System.out.println("Statics.fileCount " + Statics.fileCount);
+                boolean b = true;
+
                 for (WatchEvent<?> event : key.pollEvents()) {
                     while (b) {
                         int paths0 = countRegFiles(Statics.path);
-                        Thread.sleep(2000);
-                        List<Path> paths = listNewPaths(Statics.path);
+                        Thread.sleep(1500);
                         Statics.fileCount = countRegFiles(Statics.path);
-
+//                        System.out.println("Is AESThread active? " +AES.t.isAlive());
                         if (Statics.fileCount == paths0) {
-                            Statics.fileIter = 0;
-                            Main.jProgressBar1.setValue(Statics.fileIter);
-                            Main.jProgressBar1.setMaximum(Statics.fileCount);
                             key.cancel();
-                            GUI.progressBarThread();
-                            Thread.sleep(200);
+                            Main.jProgressBar1.setMaximum(Statics.fileCount);
                             AES.AESThread();
-                            folderWatcher();
                             System.out.println("Hot Filer Called AES");
+                            folderWatcher();
                             b = false;
                         }
                     }

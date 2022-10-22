@@ -67,62 +67,69 @@ class FileHider_T implements Runnable {
         List<Path> paths = listPaths(path);
         File[] contents = directory.listFiles();
         int fileCount = GUI.countFiles(path);
-        if (!Main.jToggleButton1.isSelected()) {
-            if (fileHideBool) {
-                if (contents != null) {
-                    if (contents.length != 0) {
-                        Main.jToggleButton2.setEnabled(false);
-                        paths.forEach(x -> {
-                            try {
-                                Files.setAttribute(x, "dos:hidden", true);
-                                Statics.fileHideIter++;
-                                if (Statics.fileHideIter == fileCount) {
-                                    Main.jToggleButton2.setEnabled(true);
-                                    Main.jToggleButton1.setEnabled(true);
-                                    Thread.sleep(400);
-                                    GUI.labelCutterThread(Main.jAlertLabel, fileCount + " files hidden", 60, 20, 300);
 
-                                }
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                            } catch (InterruptedException ex) {
-                                ex.printStackTrace();
+        Main.jToggleButton1.setEnabled(false);
+        Main.jRadioButton0.setEnabled(false);
+        Main.jRadioButton1.setEnabled(false);
+
+        if (fileHideBool) {
+            if (contents != null) {
+                if (contents.length != 0) {
+//                    Main.jToggleButton2.setEnabled(false);
+                    paths.forEach(x -> {
+                        try {
+                            Files.setAttribute(x, "dos:hidden", true);
+                            Statics.fileHideIter++;
+                            if (Statics.fileHideIter == fileCount) {
+                                Main.jToggleButton2.setEnabled(true);
+                                Main.jToggleButton1.setEnabled(true);
+                                Main.jRadioButton0.setEnabled(true);
+                                Main.jRadioButton1.setEnabled(true);
+                                Thread.sleep(400);
+                                GUI.labelCutterThread(Main.jAlertLabel, fileCount + " files hidden", 40, 20, 400);
+
                             }
-                        });
-                    } else {
-//                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 40, 1000);
-                    }
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
+                        }
+                    });
                 } else {
-//                GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 40, 1000);
+//                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 40, 1000);
                 }
             } else {
-                if (contents != null) {
-                    if (contents.length != 0) {
-                        Main.jToggleButton2.setEnabled(false);
-
-                        paths.forEach(x -> {
-                            try {
-                                Files.setAttribute(x, "dos:hidden", false);
-                                Statics.fileHideIter++;
-                                if (Statics.fileHideIter == fileCount) {
-                                    Main.jToggleButton2.setEnabled(true);
-                                    Main.jToggleButton1.setEnabled(true);
-                                    Thread.sleep(300);
-                                    GUI.labelCutterThread(Main.jAlertLabel, fileCount + " files unhidden", 60, 20, 300);
-                                }
-
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                            } catch (InterruptedException ex) {
-                                ex.printStackTrace();
-                            }
-                        });
-                    } else {
-//                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 40, 1000);
-                    }
-                } else {
 //                GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 40, 1000);
+            }
+        } else {
+            if (contents != null) {
+                if (contents.length != 0) {
+                    Main.jToggleButton2.setEnabled(false);
+
+                    paths.forEach(x -> {
+                        try {
+                            Files.setAttribute(x, "dos:hidden", false);
+                            Statics.fileHideIter++;
+                            if (Statics.fileHideIter == fileCount) {
+                                Main.jToggleButton2.setEnabled(true);
+                                Main.jToggleButton1.setEnabled(true);
+                                Main.jRadioButton0.setEnabled(true);
+                                Main.jRadioButton1.setEnabled(true);
+                                Thread.sleep(400);
+                                GUI.labelCutterThread(Main.jAlertLabel, fileCount + " files unhidden", 40, 20, 400);
+                            }
+
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
+                        }
+                    });
+                } else {
+//                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 40, 1000);
                 }
+            } else {
+//                GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 40, 1000);
             }
         }
     }

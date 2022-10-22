@@ -24,7 +24,7 @@ public class Main extends javax.swing.JFrame {
         initComponents();
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
-        Statics.root = s.substring(0, 3);
+//        Statics.root = s.substring(0, 3);
         GUI.getGB();
 //        KeyListener_C keyListener = new KeyListener_C();
 //        jPasswordField1.addKeyListener(keyListener);
@@ -55,9 +55,7 @@ public class Main extends javax.swing.JFrame {
         }
         jToolPanel.setVisible(false);
         jProgressBar1.setVisible(false);
-
-        long heapMaxSize = Runtime.getRuntime().maxMemory();
-
+        jButton2.setVisible(false);
     }
 
     /**
@@ -75,6 +73,8 @@ public class Main extends javax.swing.JFrame {
         jRadioButton0 = new javax.swing.JRadioButton();
         jToggleButton1 = new javax.swing.JToggleButton();
         jToggleButton2 = new javax.swing.JToggleButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         jLoginPanel = new javax.swing.JPanel();
         jTextField1 = new javax.swing.JTextField();
         jPasswordField1 = new javax.swing.JPasswordField();
@@ -132,9 +132,28 @@ public class Main extends javax.swing.JFrame {
 
         jToggleButton2.setText("HIDE FILE");
         jToggleButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jToggleButton2.setMaximumSize(new java.awt.Dimension(105, 22));
+        jToggleButton2.setMinimumSize(new java.awt.Dimension(105, 22));
+        jToggleButton2.setPreferredSize(new java.awt.Dimension(105, 22));
         jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jToggleButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jButton2.setText("STOP");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jButton3.setText("CLR LOG");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
             }
         });
 
@@ -146,27 +165,33 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jToolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jToolPanelLayout.createSequentialGroup()
+                        .addComponent(jToggleButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 85, Short.MAX_VALUE)
+                        .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jToolPanelLayout.createSequentialGroup()
                         .addComponent(jRadioButton0)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jRadioButton1))
                     .addGroup(jToolPanelLayout.createSequentialGroup()
-                        .addComponent(jToggleButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
-                        .addComponent(jToggleButton2)))
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jToolPanelLayout.setVerticalGroup(
             jToolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jToolPanelLayout.createSequentialGroup()
-                .addGap(7, 7, 7)
                 .addGroup(jToolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jToggleButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
+                    .addComponent(jToggleButton1)
                     .addComponent(jToggleButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(33, 33, 33)
+                .addGap(18, 18, 18)
                 .addGroup(jToolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jRadioButton1)
                     .addComponent(jRadioButton0))
-                .addContainerGap())
+                .addGap(18, 18, 18)
+                .addGroup(jToolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2)
+                    .addComponent(jButton3)))
         );
 
         jLoginPanel.setOpaque(false);
@@ -344,7 +369,7 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(layout.createSequentialGroup()
                     .addGap(47, 47, 47)
                     .addComponent(jToolPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(323, Short.MAX_VALUE)))
+                    .addContainerGap(315, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -475,6 +500,25 @@ public class Main extends javax.swing.JFrame {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_jRadioButton0ActionPerformed
+    
+    //CLEAR LOG
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        jTextArea1.setText("");
+    }//GEN-LAST:event_jButton3ActionPerformed
+    //STOP ENCRYPT/DECRYPT
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        AES.t.stop();
+        Statics.fileCount = 0;
+        Statics.fileIter = 0;
+        jProgressBar1.setValue(Statics.fileIter);
+        jProgressBar1.setMaximum(Statics.fileCount);
+        jProgressBar1.setStringPainted(false);
+        
+        jToggleButton1.setEnabled(true);
+        jToggleButton2.setEnabled(true);
+        jRadioButton1.setEnabled(true);
+        jRadioButton0.setEnabled(true);
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -517,6 +561,8 @@ public class Main extends javax.swing.JFrame {
     public static javax.swing.ButtonGroup buttonGroup1;
     public static javax.swing.JLabel jAlertLabel;
     public javax.swing.JButton jButton1;
+    protected static javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     public static javax.swing.JPanel jLoginPanel;

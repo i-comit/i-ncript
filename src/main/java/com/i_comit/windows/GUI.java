@@ -113,21 +113,20 @@ class progressBar_T implements Runnable {
                     if (Statics.contents != null) {
                         if (Statics.contents.length != 0) {
                             if (!paths.isEmpty()) {
-                                if (Statics.fileIter == Statics.fileCount - 1) {
+                                if (jProgressBar1.getValue() == jProgressBar1.getMaximum() - 1) {
                                     switch (Statics.AESMode) {
                                         case 0 -> {
-                                            jProgressBar1.setMaximum(Statics.fileCount);
-                                            GUI.labelCutterThread(jAlertLabel, "encryption of " + Statics.fileCount + " files complete", 10, 15, 360);
-                                            Thread.sleep(280);
+//                                            jProgressBar1.setMaximum(Statics.fileCount);
+                                            GUI.labelCutterThread(jAlertLabel, "encryption of " + Statics.fileCount + " files complete", 10, 20, 200);
+                                            Thread.sleep(400);
 //                                            FileHider.FileHiderThread(true);
 //                                            jProgressBar1.setValue(100);
                                             for (int x = Statics.fileCount; x >= 0; x--) {
                                                 Thread.sleep(4);
                                                 jProgressBar1.setValue(x);
                                             }
-                                            jProgressBar1.setStringPainted(false);
-                                            Statics.fileIter = 0;
-                                            jProgressBar1.setValue(Statics.fileIter);
+//                                            Statics.fileIter = 0;
+//                                            jProgressBar1.setValue(Statics.fileIter);
                                             if (!Main.jToggleButton1.isSelected()) {
                                                 Main.jRadioButton0.setEnabled(true);
                                                 Main.jRadioButton1.setEnabled(true);
@@ -136,16 +135,21 @@ class progressBar_T implements Runnable {
                                                 Main.jToggleButton1.setSelected(true);
                                                 Main.jRadioButton0.setEnabled(true);
                                                 Main.jRadioButton1.setEnabled(true);
+                                                Main.jRadioButton1.setVisible(true);
                                             }
+                                            jProgressBar1.setStringPainted(false);
                                             Main.jToggleButton2.setEnabled(true);
-                                            Main.jTextArea1.setText("");
+//                                            Main.jTextArea1.setText("");
                                             FileHider.FileHiderThread(Main.jToggleButton2.isSelected());
+                                            Main.jButton2.setVisible(false);
+
                                             GUI.t1.interrupt();
+
                                         }
                                         case 1 -> {
                                             jProgressBar1.setMaximum(Statics.fileCount);
-                                            GUI.labelCutterThread(jAlertLabel, "decryption of " + Statics.fileCount + " files complete", 10, 15, 300);
-                                            Thread.sleep(280);
+                                            GUI.labelCutterThread(jAlertLabel, "decryption of " + Statics.fileCount + " files complete", 10, 20, 200);
+                                            Thread.sleep(400);
 
 //                                            jProgressBar1.setValue(100);
                                             for (int x = Statics.fileCount; x >= 0; x--) {
@@ -153,14 +157,16 @@ class progressBar_T implements Runnable {
                                                 jProgressBar1.setValue(x);
                                             }
                                             jProgressBar1.setStringPainted(false);
-                                            Statics.fileIter = 0;
-                                            jProgressBar1.setValue(Statics.fileIter);
+//                                            Statics.fileIter = 0;
+//                                            jProgressBar1.setValue(Statics.fileIter);
                                             Main.jRadioButton0.setEnabled(true);
                                             Main.jRadioButton1.setEnabled(true);
                                             Main.buttonGroup1.clearSelection();
                                             Main.jToggleButton2.setEnabled(true);
-                                            Main.jTextArea1.setText("");
+//                                            Main.jTextArea1.setText("");
                                             FileHider.FileHiderThread(Main.jToggleButton2.isSelected());
+                                            Main.jButton2.setVisible(false);
+
                                             GUI.t1.interrupt();
                                         }
                                     }
