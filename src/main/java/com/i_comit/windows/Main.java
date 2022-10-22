@@ -7,11 +7,11 @@ package com.i_comit.windows;
 import static com.i_comit.windows.Statics.*;
 import java.awt.Color;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -27,12 +27,8 @@ public class Main extends javax.swing.JFrame {
         Statics.root = s.substring(0, 3);
         if (Heap.checkDriveType()) {
             if (!keyFile.exists() && !EULA.eulaBool) {
-                if (EULA.eulaBool) {
-
-                }
-                JFrame eula = new EULA();
+                EULA eula = new EULA();
                 eula.setVisible(true);
-
             } else {
                 initComponents();
                 jUsernameLabel.setText("enter username");
@@ -60,10 +56,9 @@ public class Main extends javax.swing.JFrame {
             }
 
         } else {
-            JFrame driveCheck = new DriveCheck();
+            DriveCheck driveCheck = new DriveCheck();
             driveCheck.setVisible(true);
         }
-
     }
 
     /**
@@ -217,6 +212,11 @@ public class Main extends javax.swing.JFrame {
         jPasswordField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jPasswordField1ActionPerformed(evt);
+            }
+        });
+        jPasswordField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jPasswordField1KeyPressed(evt);
             }
         });
 
@@ -426,7 +426,6 @@ public class Main extends javax.swing.JFrame {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
 
@@ -435,7 +434,6 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jPasswordField1ActionPerformed
     //LOGIN
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
         char[] password = jPasswordField1.getPassword();
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
@@ -464,7 +462,6 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
     //HOT FILER
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-
         System.out.println(jToggleButton1.isSelected());
         Statics.AESMode = 0;
         //AES.AESThread();
@@ -475,7 +472,6 @@ public class Main extends javax.swing.JFrame {
             GUI.t.interrupt();
         }
         try {
-//            GUI.progressBarThread();
             HotFiler.HotFilerThread();
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -534,6 +530,36 @@ public class Main extends javax.swing.JFrame {
         jRadioButton1.setEnabled(true);
         jRadioButton0.setEnabled(true);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jPasswordField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField1KeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            char[] password = jPasswordField1.getPassword();
+            if (GUI.t.isAlive()) {
+                GUI.t.interrupt();
+            }
+            Statics.username = jTextField1.getText();
+            Statics.password = new String(password);
+            if (!"".equals(Statics.username)) {
+                if (!"".equals(Statics.password)) {
+                    if (Statics.username.length() >= 4) {
+                        if (Statics.password.length() >= 4) {
+                            Login.Authenticator();
+                        } else {
+                            GUI.labelCutterThread(jAlertLabel, "please make a longer password", 20, 20, 1200);
+                        }
+                    } else {
+                        GUI.labelCutterThread(jAlertLabel, "please make a longer username", 20, 20, 1200);
+                    }
+                } else {
+                    GUI.labelCutterThread(jAlertLabel, "please make a password", 20, 20, 1200);
+                }
+            } else {
+                GUI.labelCutterThread(jAlertLabel, "please make a username", 20, 20, 1200);
+            }
+            jTextField1.setText("");
+            jPasswordField1.setText("");
+        }
+    }//GEN-LAST:event_jPasswordField1KeyPressed
 
     /**
      * @param args the command line arguments
