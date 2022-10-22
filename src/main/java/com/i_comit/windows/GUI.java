@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -114,19 +116,17 @@ class progressBar_T implements Runnable {
                         if (Statics.contents.length != 0) {
                             if (!paths.isEmpty()) {
                                 if (jProgressBar1.getValue() == jProgressBar1.getMaximum() - 1) {
+                                    DateTimeFormatter dtf3 = DateTimeFormatter.ofPattern("hh:mm a");
                                     switch (Statics.AESMode) {
                                         case 0 -> {
 //                                            jProgressBar1.setMaximum(Statics.fileCount);
                                             GUI.labelCutterThread(jAlertLabel, "encryption of " + Statics.fileCount + " files complete", 10, 20, 200);
                                             Thread.sleep(400);
-//                                            FileHider.FileHiderThread(true);
-//                                            jProgressBar1.setValue(100);
+                                            Main.jTextArea1.append("Encrypted " + Statics.fileCount + " files at " + LocalTime.now().format(dtf3));
                                             for (int x = Statics.fileCount; x >= 0; x--) {
                                                 Thread.sleep(4);
                                                 jProgressBar1.setValue(x);
                                             }
-//                                            Statics.fileIter = 0;
-//                                            jProgressBar1.setValue(Statics.fileIter);
                                             if (!Main.jToggleButton1.isSelected()) {
                                                 Main.jRadioButton0.setEnabled(true);
                                                 Main.jRadioButton1.setEnabled(true);
@@ -142,23 +142,19 @@ class progressBar_T implements Runnable {
 //                                            Main.jTextArea1.setText("");
                                             FileHider.FileHiderThread(Main.jToggleButton2.isSelected());
                                             Main.jButton2.setVisible(false);
-
                                             GUI.t1.interrupt();
-
                                         }
                                         case 1 -> {
                                             jProgressBar1.setMaximum(Statics.fileCount);
                                             GUI.labelCutterThread(jAlertLabel, "decryption of " + Statics.fileCount + " files complete", 10, 20, 200);
                                             Thread.sleep(400);
-
-//                                            jProgressBar1.setValue(100);
+                                            Main.jTextArea1.append("Decrypted " + Statics.fileCount + " files at " + LocalTime.now().format(dtf3));
                                             for (int x = Statics.fileCount; x >= 0; x--) {
                                                 Thread.sleep(4);
                                                 jProgressBar1.setValue(x);
                                             }
                                             jProgressBar1.setStringPainted(false);
 //                                            Statics.fileIter = 0;
-//                                            jProgressBar1.setValue(Statics.fileIter);
                                             Main.jRadioButton0.setEnabled(true);
                                             Main.jRadioButton1.setEnabled(true);
                                             Main.buttonGroup1.clearSelection();
@@ -166,7 +162,6 @@ class progressBar_T implements Runnable {
 //                                            Main.jTextArea1.setText("");
                                             FileHider.FileHiderThread(Main.jToggleButton2.isSelected());
                                             Main.jButton2.setVisible(false);
-
                                             GUI.t1.interrupt();
                                         }
                                     }

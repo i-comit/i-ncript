@@ -6,7 +6,6 @@ package com.i_comit.windows;
 
 import static com.i_comit.windows.AES.decrypt;
 import static com.i_comit.windows.AES.encrypt;
-import static com.i_comit.windows.HotFiler_T.folderWatcher;
 import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.jProgressBar1;
 import static com.i_comit.windows.Statics.*;
@@ -50,7 +49,6 @@ public class AES {
                 outputFile = new File(outputFile + ".enc");
                 doCrypto(Cipher.ENCRYPT_MODE, key, inputFile, outputFile);
                 inputFile.delete();
-//                System.out.println("Current encrypted file path: " + outputFile.getPath());                 
                 GUI.loggerThread(outputFile);
             }
         }
@@ -63,7 +61,6 @@ public class AES {
                 outputFile = new File(inputFile.toString().replaceAll(".enc", ""));
                 doCrypto(Cipher.DECRYPT_MODE, key, inputFile, outputFile);
                 inputFile.delete();
-//                System.out.println("Current decrypted file path: " + outputFile.getPath());
                 GUI.loggerThread(outputFile);
             }
         }
@@ -92,8 +89,7 @@ public class AES {
                 | IllegalBlockSizeException ex) {
             throw new CryptoException("Error encrypting/decrypting file", ex);
         } catch (IOException | UncheckedIOException ex) {
-            //System.out.println("Last File Was " + inputFile.getName());
-
+            ex.getStackTrace();
         }
     }
 
@@ -142,7 +138,6 @@ class AES_T implements Runnable {
                                     } catch (AES.CryptoException ex) {
                                     }
                                 });
-//                                Statics.fileIter = Statics.fileCount;
                                 Main.jProgressBar1.setValue(100);
                                 Main.jProgressBar1.setMaximum(100);
                                 System.out.println("File Encryption Complete");
