@@ -9,7 +9,6 @@ com\i_comit\windows\AES.class
 com\i_comit\linux\progressBar_T.class
 com\i_comit\linux\FileHider_T.class
 com\i_comit\linux\Main$5.class
-com\i_comit\windows\EULA$1.class
 com\i_comit\windows\Main$2.class
 com\i_comit\windows\AES_T.class
 com\i_comit\windows\dev\AESFolder.class
@@ -25,7 +24,6 @@ com\i_comit\linux\GUI.class
 com\i_comit\linux\labelCutter_T.class
 com\i_comit\linux\Main$6.class
 com\i_comit\windows\Statics.class
-com\i_comit\windows\EULA$3.class
 com\i_comit\windows\Main$7.class
 com\i_comit\linux\Main$4.class
 com\i_comit\windows\dev\ZipFolder.class
@@ -41,7 +39,6 @@ com\i_comit\linux\Hasher.class
 com\i_comit\windows\dev\Authenticator.class
 com\i_comit\linux\logger_T.class
 com\i_comit\linux\HotFiler.class
-com\i_comit\windows\EULA$2.class
 com\i_comit\windows\Main$6.class
 com\i_comit\windows\HotFiler.class
 com\i_comit\windows\Hasher.class
@@ -52,7 +49,6 @@ com\i_comit\windows\DriveCheck.class
 com\i_comit\windows\Heap.class
 com\i_comit\linux\FileHider.class
 com\i_comit\linux\HotFiler_T.class
-com\i_comit\windows\EULA.class
 com\i_comit\windows\GUI.class
 com\i_comit\linux\Main$1.class
 com\i_comit\windows\Main$3.class

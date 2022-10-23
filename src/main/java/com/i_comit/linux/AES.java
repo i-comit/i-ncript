@@ -84,21 +84,24 @@ public class AES {
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
             cipher.init(cipherMode, secretKey);
 
-            FileInputStream inputStream = new FileInputStream(inputFile);
-            byte[] inputBytes = new byte[(int) inputFile.length()];
-            inputStream.read(inputBytes);
-            byte[] outputBytes = cipher.doFinal(inputBytes);
-            FileOutputStream outputStream = new FileOutputStream(outputFile);
-            outputStream.write(outputBytes);
-            inputStream.close();
-            outputStream.close();
+            try ( FileInputStream inputStream = new FileInputStream(inputFile)) {
+                FileOutputStream outputStream = new FileOutputStream(outputFile);
+                byte[] inputBytes = new byte[(int) inputFile.length()];
+                int nread;
+                while ((nread = inputStream.read(inputBytes)) > 0) {
+                    byte[] enc = cipher.update(inputBytes, 0, nread);
+                    outputStream.write(enc);
+                }
+                byte[] enc = cipher.doFinal();
+                outputStream.write(enc);
+                outputStream.close();
+            }
         } catch (NoSuchPaddingException | NoSuchAlgorithmException
                 | InvalidKeyException | BadPaddingException
                 | IllegalBlockSizeException ex) {
             throw new CryptoException("Error encrypting/decrypting file", ex);
         } catch (IOException | UncheckedIOException ex) {
-            //System.out.println("Last File Was " + inputFile.getName());
-
+            System.out.println("Last File Was " + inputFile.getName());
         }
     }
 
@@ -111,6 +114,7 @@ public class AES {
             super(message, throwable);
         }
     }
+
 }
 
 class AES_T implements Runnable {

@@ -24,7 +24,7 @@ public class Main extends javax.swing.JFrame {
         initComponents();
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
-//        Statics.root = s.substring(0, 3);
+        Statics.root = s.substring(0, 3);
         GUI.getGB();
 //        KeyListener_C keyListener = new KeyListener_C();
 //        jPasswordField1.addKeyListener(keyListener);

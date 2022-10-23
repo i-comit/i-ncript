@@ -25,7 +25,6 @@ public class Main extends javax.swing.JFrame {
 
     public Main() {
         root = Paths.get("").toAbsolutePath().getRoot().toString();
-
         if (Heap.checkDriveType()) {
             initComponents();
             if (!Statics.keyFile.exists()) {
@@ -127,6 +126,7 @@ public class Main extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("\ti-ncript");
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti.png")));
+        setResizable(false);
 
         jToolPanel.setOpaque(false);
 
