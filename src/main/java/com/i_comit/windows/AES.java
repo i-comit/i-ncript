@@ -138,8 +138,14 @@ class AES_T implements Runnable {
                                     } catch (AES.CryptoException ex) {
                                     }
                                 });
-                                System.out.println("File Encryption Complete");
-                                progressBar_T.resetProgressBar();
+                                if (Statics.fileIter == 0) {
+                                    GUI.t.interrupt();
+                                    GUI.labelCutterThread(jAlertLabel, "incorrect key", 10, 25, 500);
+                                } else {
+                                    System.out.println("File Encryption Complete");
+                                    progressBar_T.resetProgressBar();
+                                }
+
                             }
                             case 1 -> {
                                 Main.jProgressBar1.setStringPainted(true);
@@ -150,19 +156,27 @@ class AES_T implements Runnable {
                                     } catch (AES.CryptoException ex) {
                                     }
                                 });
-                                System.out.println("File Decryption Complete");
-                                progressBar_T.resetProgressBar();
+                                if (Statics.fileIter == 0) {
+                                    GUI.t.interrupt();
+                                    GUI.labelCutterThread(jAlertLabel, "incorrect key", 10, 25, 500);
+                                } else {
+                                    System.out.println("File Decryption Complete");
+                                    progressBar_T.resetProgressBar();
+                                }
+
                             }
                         }
 
                     } else {
-                        switch (Statics.AESMode) {
-                            case 0 -> {
-                                GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 10, 20, 400);
-                            }
-                            case 1 -> {
-                                GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400);
-                                Main.jToggleButton1.setEnabled(true);
+                        if (!Main.jToggleButton1.isSelected()) {
+                            switch (Statics.AESMode) {
+                                case 0 -> {
+                                    GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 10, 20, 400);
+                                }
+                                case 1 -> {
+                                    GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400);
+                                    Main.jToggleButton1.setEnabled(true);
+                                }
                             }
                         }
                     }

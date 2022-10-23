@@ -64,36 +64,16 @@ public class Heap {
 
     public static boolean checkDriveType() {
         boolean b = false;
-        String command = "wmic logicaldisk where name=" + "\"" + Main.root.substring(0, 2) + "\"" + " get name, drivetype, description";
-        String s;
-        try {
-            Process process = Runtime.getRuntime().exec(command);
-            try ( BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-                reader.readLine();
-                while ((s = reader.readLine()) != null) {
-                    if (s.trim().length() != 0) {
-                        String substring = s.substring(0, 14);
-//                    System.out.println(substring);
-                        if (substring.trim().equals("Removable Disk")) {
-                            String rootPath = Paths.get("").toAbsolutePath().toString();
-                            System.out.println("Root Path: " + rootPath);
-                            System.out.println(Main.root);
-                            if (Main.root.equals(rootPath)) {
-                                b = true;
-                            } else {
-                                DriveCheck.driveState = 2;
-                                b = true;
-                            }
-                        } else {
-                            DriveCheck.driveState = 1;
-                            //Has to be within USB device
-                            b = true;
-                        }
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+
+//        String rootPath = Paths.get("").toAbsolutePath().toString().trim();
+        String rootPath = "Y:\\";
+        System.out.println("Root Path: " + rootPath);
+        if (Main.root.equals(rootPath)) {
+            b = true;
+        } else {
+            new DriveCheck().setVisible(true);
+            b = false;
+
         }
         return b;
     }

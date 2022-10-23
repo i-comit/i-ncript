@@ -15,21 +15,20 @@ public class DriveCheck extends javax.swing.JFrame {
     /**
      * Creates new form DriveCheck
      */
-    public static int driveState = 0;
 
     public DriveCheck() {
         initComponents();
 
-        switch (driveState) {
-            case 1 -> {
-                jLabel1.setText("I-NCRIPT MUST BE RUN");
-                jLabel2.setText("WITHIN A USB DEVICE.");
-            }
-            case 2 -> {
-                jLabel1.setText("I-NCRIPT MUST BE IN THE");
-                jLabel2.setText("ROOT PATH OF THIS USB.");
-            }
-        }
+//        switch (driveState) {
+//            case 1 -> {
+//                jLabel1.setText("I-NCRIPT MUST BE RUN");
+//                jLabel2.setText("WITHIN A USB DEVICE.");
+//            }
+//            case 2 -> {
+//                jLabel1.setText("i-ncript must be in the");
+//                jLabel2.setText("root path of this device.");
+//            }
+//        }
     }
 
     /**
@@ -46,27 +45,22 @@ public class DriveCheck extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti.png")));
-        setUndecorated(true);
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Polentical Neon", 0, 14)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("I-NCRIPT MUST BE IN THE");
+        jLabel1.setText("i-ncript must be in the");
 
         jLabel2.setFont(new java.awt.Font("Polentical Neon", 0, 14)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("ROOT PATH OF THIS USB.");
+        jLabel2.setText(" root path of this drive.");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -6,6 +6,7 @@ package com.i_comit.windows;
 
 import static com.i_comit.windows.Statics.*;
 import java.awt.Color;
+import java.awt.FontFormatException;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -24,8 +25,29 @@ public class Main extends javax.swing.JFrame {
 
     public Main() {
         root = Paths.get("").toAbsolutePath().getRoot().toString();
+
         if (Heap.checkDriveType()) {
             initComponents();
+            if (!Statics.keyFile.exists()) {
+                jToolPanel.setVisible(false);
+                jLoginPanel.setVisible(false);
+                jLabel1.setVisible(false);
+                jLabel3.setVisible(false);
+                jAlertLabel.setVisible(false);
+                jTabbedPane1.setVisible(false);
+                jTextArea3.setCaretPosition(0);
+//                jEULAPanel1.setVisible(false);
+//                jEULAPanel1.setVisible(true);
+            } else {
+                jLoginPanel.setVisible(true);
+                jLabel1.setVisible(true);
+                jLabel3.setVisible(true);
+                jAlertLabel.setVisible(true);
+                jTabbedPane1.setVisible(true);
+                jEULAPanel1.setVisible(false);
+                jEULAPanel.setVisible(false);
+            }
+
             jUsernameLabel.setText("enter username");
             jPasswordLabel.setText("enter password");
             GUI.getGB();
@@ -34,7 +56,6 @@ public class Main extends javax.swing.JFrame {
 
             jTextField1.setText("");
             jPasswordField1.setText("");
-
             jAlertLabel.setText("");
 
             File rootFolder = Paths.get(root + folderName).toFile();
@@ -43,14 +64,12 @@ public class Main extends javax.swing.JFrame {
                 rootFolder.mkdir();
             } else {
                 GUI.labelCutterThread(jAlertLabel, "developed by i-comit", 40, 40, 1200);
-
             }
             jToolPanel.setVisible(false);
             jProgressBar1.setVisible(false);
             jButton2.setVisible(false);
 
         } else {
-//            new DriveCheck().setVisible(true);
 
         }
     }
@@ -90,6 +109,20 @@ public class Main extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
+        jEULAPanel = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextArea3 = new javax.swing.JTextArea();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+        jEULAPanel1 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        jSeparator2 = new javax.swing.JSeparator();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTextArea4 = new javax.swing.JTextArea();
+        jButton6 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("\ti-ncript");
@@ -118,6 +151,7 @@ public class Main extends javax.swing.JFrame {
 
         jToggleButton1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jToggleButton1.setText("HOT FILER");
+        jToggleButton1.setToolTipText("enable to automatically encrypt any file put into the i-ncript folder");
         jToggleButton1.setFocusable(false);
         jToggleButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jToggleButton1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -134,6 +168,7 @@ public class Main extends javax.swing.JFrame {
         jToggleButton2.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
 
         jToggleButton2.setText("HIDE FILE");
+        jToggleButton2.setToolTipText("click to hide or unhide all files, runs after every AES task");
         jToggleButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jToggleButton2.setMaximumSize(new java.awt.Dimension(105, 22));
         jToggleButton2.setMinimumSize(new java.awt.Dimension(105, 22));
@@ -146,6 +181,7 @@ public class Main extends javax.swing.JFrame {
 
         jButton2.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jButton2.setText("STOP");
+        jButton2.setToolTipText("stops current AES task");
         jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton2MouseClicked(evt);
@@ -154,6 +190,7 @@ public class Main extends javax.swing.JFrame {
 
         jButton3.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jButton3.setText("CLR LOG");
+        jButton3.setToolTipText("clear AES output log");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -169,7 +206,7 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(jToolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jToolPanelLayout.createSequentialGroup()
                         .addComponent(jToggleButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 85, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                         .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jToolPanelLayout.createSequentialGroup()
                         .addComponent(jRadioButton0)
@@ -244,35 +281,35 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(jPasswordLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jUsernameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPasswordField1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE))
+                .addGroup(jLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
             .addGroup(jLoginPanelLayout.createSequentialGroup()
                 .addGap(95, 95, 95)
-                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
+                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(95, 95, 95))
         );
         jLoginPanelLayout.setVerticalGroup(
             jLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jLoginPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jUsernameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jUsernameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextField1))
                 .addGap(5, 5, 5)
                 .addGroup(jLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jPasswordLabel)
                     .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         jProgressBar1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jProgressBar1.setForeground(Color.CYAN);
 
-        jLabel1.setFont(new java.awt.Font("Polentical Neon", 0, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Polentical Neon", 0, 21)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("i-ncript");
 
@@ -286,9 +323,9 @@ public class Main extends javax.swing.JFrame {
         jAlertLabel.setText("jLabel2");
 
         jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
+        jTabbedPane1.setFocusable(false);
 
-        jTextArea1.setBackground(Color.darkGray
-        );
+        jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
         jTextArea1.setFont(new java.awt.Font("Polentical Neon", 0, 10)); // NOI18N
         jTextArea1.setForeground(Color.white
@@ -302,13 +339,13 @@ public class Main extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("LOG", jPanel1);
@@ -317,16 +354,16 @@ public class Main extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 237, Short.MAX_VALUE)
+            .addGap(0, 196, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 197, Short.MAX_VALUE)
+            .addGap(0, 189, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("HELP", jPanel2);
 
-        jTextArea2.setBackground(Color.darkGray);
+        jTextArea2.setEditable(false);
         jTextArea2.setColumns(20);
         jTextArea2.setForeground(Color.white);
         jTextArea2.setLineWrap(true);
@@ -334,76 +371,225 @@ public class Main extends javax.swing.JFrame {
         jTextArea2.setText("Copyright 2022 i-comit LLC. All rights reserved.\n\nDeveloped by Khiem Luong - khiemluong@i-comit.com\n\nUser has the right to freely distribute this software. User does not have the right to distribute a modified version of this software.\n\nKhiem Luong or i-comit LLC is not responsible for any data loss from using this software.");
         jTextArea2.setWrapStyleWord(true);
         jTextArea2.setAutoscrolls(false);
+        jTextArea2.setCaretPosition(0);
         jScrollPane2.setViewportView(jTextArea2);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("ABOUT", jPanel3);
+
+        jLabel2.setFont(new java.awt.Font("Polentical Neon", 0, 16)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("END USER LICENSE AGREEMENT");
+
+        jTextArea3.setEditable(false);
+        jTextArea3.setColumns(20);
+        jTextArea3.setLineWrap(true);
+        jTextArea3.setRows(5);
+        jTextArea3.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Dis parturient montes nascetur ridiculus mus mauris. A condimentum vitae sapien pellentesque habitant morbi tristique. Viverra justo nec ultrices dui sapien eget. Mattis enim ut tellus elementum sagittis vitae et. Vulputate eu scelerisque felis imperdiet proin fermentum leo vel orci. Hac habitasse platea dictumst quisque sagittis. Aliquam ultrices sagittis orci a scelerisque purus. In aliquam sem fringilla ut morbi tincidunt augue interdum. Sed vulputate mi sit amet mauris commodo quis imperdiet massa. Amet consectetur adipiscing elit pellentesque habitant morbi tristique senectus. Consectetur lorem donec massa sapien faucibus et. Risus nullam eget felis eget nunc lobortis mattis aliquam faucibus. Purus ut faucibus pulvinar elementum. Nullam vehicula ipsum a arcu. Eu augue ut lectus arcu bibendum at. Varius vel pharetra vel turpis nunc. Lorem ipsum dolor sit amet consectetur adipiscing elit. Semper viverra nam libero justo laoreet sit.\n\nVolutpat diam ut venenatis tellus. Adipiscing at in tellus integer feugiat. Lectus nulla at volutpat diam ut venenatis tellus. Volutpat consequat mauris nunc congue nisi vitae suscipit. Enim ut sem viverra aliquet eget. Enim tortor at auctor urna nunc id cursus metus aliquam. Tellus at urna condimentum mattis pellentesque id nibh tortor. Nec ullamcorper sit amet risus nullam eget felis eget. Montes nascetur ridiculus mus mauris vitae ultricies leo. Risus sed vulputate odio ut enim blandit volutpat.\n\nEros in cursus turpis massa tincidunt dui. Amet aliquam id diam maecenas ultricies. Tortor consequat id porta nibh venenatis cras sed felis eget. Eget felis eget nunc lobortis. Commodo nulla facilisi nullam vehicula ipsum a arcu. Pharetra diam sit amet nisl suscipit adipiscing bibendum. Ultrices tincidunt arcu non sodales neque sodales ut. In fermentum posuere urna nec tincidunt praesent semper. Velit ut tortor pretium viverra suspendisse potenti. Eu mi bibendum neque egestas congue quisque egestas diam. Volutpat commodo sed egestas egestas. Dui sapien eget mi proin. Nisl nisi scelerisque eu ultrices vitae. Est ultricies integer quis auctor. Viverra vitae congue eu consequat ac felis donec et odio.\n\nVitae nunc sed velit dignissim. Lectus urna duis convallis convallis tellus id. Aliquam vestibulum morbi blandit cursus risus at ultrices. Sed nisi lacus sed viverra tellus in hac. Amet dictum sit amet justo donec. Donec massa sapien faucibus et. Ornare aenean euismod elementum nisi quis. Vitae auctor eu augue ut lectus arcu bibendum at. Velit euismod in pellentesque massa placerat duis ultricies lacus sed. Tincidunt tortor aliquam nulla facilisi cras fermentum odio eu.\n");
+        jTextArea3.setWrapStyleWord(true);
+        jScrollPane3.setViewportView(jTextArea3);
+
+        jButton4.setText("I AGREE");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jButton5.setText("I DISAGREE");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jEULAPanelLayout = new javax.swing.GroupLayout(jEULAPanel);
+        jEULAPanel.setLayout(jEULAPanelLayout);
+        jEULAPanelLayout.setHorizontalGroup(
+            jEULAPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jEULAPanelLayout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(jEULAPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 516, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jEULAPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jEULAPanelLayout.createSequentialGroup()
+                            .addComponent(jButton5)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton4))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE)
+                        .addComponent(jSeparator1)))
+                .addContainerGap(28, Short.MAX_VALUE))
+        );
+        jEULAPanelLayout.setVerticalGroup(
+            jEULAPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jEULAPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jEULAPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton4)
+                    .addComponent(jButton5))
+                .addContainerGap(15, Short.MAX_VALUE))
+        );
+
+        jLabel4.setFont(new java.awt.Font("Polentical Neon", 0, 16)); // NOI18N
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("TERMS OF USE");
+
+        jTextArea4.setEditable(false);
+        jTextArea4.setColumns(20);
+        jTextArea4.setLineWrap(true);
+        jTextArea4.setRows(5);
+        jTextArea4.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Dis parturient montes nascetur ridiculus mus mauris. A condimentum vitae sapien pellentesque habitant morbi tristique. Viverra justo nec ultrices dui sapien eget. Mattis enim ut tellus elementum sagittis vitae et. Vulputate eu scelerisque felis imperdiet proin fermentum leo vel orci. Hac habitasse platea dictumst quisque sagittis. Aliquam ultrices sagittis orci a scelerisque purus. In aliquam sem fringilla ut morbi tincidunt augue interdum. Sed vulputate mi sit amet mauris commodo quis imperdiet massa. Amet consectetur adipiscing elit pellentesque habitant morbi tristique senectus. Consectetur lorem donec massa sapien faucibus et. Risus nullam eget felis eget nunc lobortis mattis aliquam faucibus. Purus ut faucibus pulvinar elementum. Nullam vehicula ipsum a arcu. Eu augue ut lectus arcu bibendum at. Varius vel pharetra vel turpis nunc. Lorem ipsum dolor sit amet consectetur adipiscing elit. Semper viverra nam libero justo laoreet sit.\n\nVolutpat diam ut venenatis tellus. Adipiscing at in tellus integer feugiat. Lectus nulla at volutpat diam ut venenatis tellus. Volutpat consequat mauris nunc congue nisi vitae suscipit. Enim ut sem viverra aliquet eget. Enim tortor at auctor urna nunc id cursus metus aliquam. Tellus at urna condimentum mattis pellentesque id nibh tortor. Nec ullamcorper sit amet risus nullam eget felis eget. Montes nascetur ridiculus mus mauris vitae ultricies leo. Risus sed vulputate odio ut enim blandit volutpat.\n\nEros in cursus turpis massa tincidunt dui. Amet aliquam id diam maecenas ultricies. Tortor consequat id porta nibh venenatis cras sed felis eget. Eget felis eget nunc lobortis. Commodo nulla facilisi nullam vehicula ipsum a arcu. Pharetra diam sit amet nisl suscipit adipiscing bibendum. Ultrices tincidunt arcu non sodales neque sodales ut. In fermentum posuere urna nec tincidunt praesent semper. Velit ut tortor pretium viverra suspendisse potenti. Eu mi bibendum neque egestas congue quisque egestas diam. Volutpat commodo sed egestas egestas. Dui sapien eget mi proin. Nisl nisi scelerisque eu ultrices vitae. Est ultricies integer quis auctor. Viverra vitae congue eu consequat ac felis donec et odio.\n\nVitae nunc sed velit dignissim. Lectus urna duis convallis convallis tellus id. Aliquam vestibulum morbi blandit cursus risus at ultrices. Sed nisi lacus sed viverra tellus in hac. Amet dictum sit amet justo donec. Donec massa sapien faucibus et. Ornare aenean euismod elementum nisi quis. Vitae auctor eu augue ut lectus arcu bibendum at. Velit euismod in pellentesque massa placerat duis ultricies lacus sed. Tincidunt tortor aliquam nulla facilisi cras fermentum odio eu.\n");
+        jTextArea4.setWrapStyleWord(true);
+        jTextArea4.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentMoved(java.awt.event.ComponentEvent evt) {
+                jTextArea4ComponentMoved(evt);
+            }
+        });
+        jScrollPane4.setViewportView(jTextArea4);
+
+        jButton6.setText("I AGREE");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ActionjButton6(evt);
+            }
+        });
+
+        jButton7.setText("I DISAGREE");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jEULAPanel1Layout = new javax.swing.GroupLayout(jEULAPanel1);
+        jEULAPanel1.setLayout(jEULAPanel1Layout);
+        jEULAPanel1Layout.setHorizontalGroup(
+            jEULAPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jEULAPanel1Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(jEULAPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 516, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jEULAPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jEULAPanel1Layout.createSequentialGroup()
+                            .addComponent(jButton7)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton6))
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE)
+                        .addComponent(jSeparator2)))
+                .addContainerGap(25, Short.MAX_VALUE))
+        );
+        jEULAPanel1Layout.setVerticalGroup(
+            jEULAPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jEULAPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jEULAPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton6)
+                    .addComponent(jButton7))
+                .addContainerGap(19, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 636, Short.MAX_VALUE)
-                .addGap(10, 10, 10))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(46, 46, 46)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jAlertLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(43, 43, 43))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(46, 46, 46)
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jAlertLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 534, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(23, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(46, 46, 46)
+                    .addGap(38, 38, 38)
                     .addComponent(jLoginPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(323, Short.MAX_VALUE)))
+                    .addContainerGap(274, Short.MAX_VALUE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(47, 47, 47)
+                    .addGap(41, 41, 41)
                     .addComponent(jToolPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(315, Short.MAX_VALUE)))
+                    .addContainerGap(275, Short.MAX_VALUE)))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jEULAPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap()))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jEULAPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGap(9, 9, 9)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGap(19, 19, 19)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel3))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jAlertLabel))
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 26, Short.MAX_VALUE)
-                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jAlertLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)))
+                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                    .addContainerGap(117, Short.MAX_VALUE)
+                    .addContainerGap(76, Short.MAX_VALUE)
                     .addComponent(jLoginPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(95, Short.MAX_VALUE)))
+                    .addContainerGap(91, Short.MAX_VALUE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(108, 108, 108)
+                    .addGap(83, 83, 83)
                     .addComponent(jToolPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(124, Short.MAX_VALUE)))
+                    .addContainerGap(89, Short.MAX_VALUE)))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jEULAPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap()))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jEULAPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGap(2, 2, 2)))
         );
 
         pack();
@@ -566,6 +752,47 @@ public class Main extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jToggleButton1MouseClicked
 
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        jEULAPanel.setVisible(false);
+        jTextArea4.setCaretPosition(0);
+        jEULAPanel1.setVisible(true);
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jTextArea4ComponentMoved(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jTextArea4ComponentMoved
+    }//GEN-LAST:event_jTextArea4ComponentMoved
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void ActionjButton6(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ActionjButton6
+        jEULAPanel1.setVisible(false);
+        jLoginPanel.setVisible(true);
+        jLabel1.setVisible(true);
+        jLabel3.setVisible(true);
+        jAlertLabel.setVisible(true);
+        jTabbedPane1.setVisible(true);
+        jUsernameLabel.setText("create username");
+        jPasswordLabel.setText("create password");
+        File rootFolder = Paths.get(root + folderName).toFile();
+        if(GUI.t.isAlive()){
+            GUI.t.interrupt();
+        }
+        if (!rootFolder.exists()) {
+            GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 40, 40, 1200);
+            rootFolder.mkdir();
+        } else {
+            GUI.labelCutterThread(jAlertLabel, "developed by i-comit", 40, 40, 1200);
+        }
+        jToolPanel.setVisible(false);
+        jProgressBar1.setVisible(false);
+        jButton2.setVisible(false);
+    }//GEN-LAST:event_ActionjButton6
+
     /**
      * @param args the command line arguments
      */
@@ -611,8 +838,16 @@ public class Main extends javax.swing.JFrame {
     public javax.swing.JButton jButton1;
     protected static javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JPanel jEULAPanel;
+    private javax.swing.JPanel jEULAPanel1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     public static javax.swing.JPanel jLoginPanel;
     private javax.swing.JPanel jPanel1;
     protected static javax.swing.JPanel jPanel2;
@@ -624,9 +859,15 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTabbedPane jTabbedPane1;
     protected static javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
+    private javax.swing.JTextArea jTextArea3;
+    private javax.swing.JTextArea jTextArea4;
     protected static javax.swing.JTextField jTextField1;
     public static javax.swing.JToggleButton jToggleButton1;
     protected static javax.swing.JToggleButton jToggleButton2;
