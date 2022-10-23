@@ -22,12 +22,12 @@ public class DriveCheck extends javax.swing.JFrame {
 
         switch (driveState) {
             case 1 -> {
-                DriveCheck.jLabel1.setText("I-NCRIPT MUST BE RUN");
-                DriveCheck.jLabel2.setText("WITHIN A USB DEVICE.");
+                jLabel1.setText("I-NCRIPT MUST BE RUN");
+                jLabel2.setText("WITHIN A USB DEVICE.");
             }
             case 2 -> {
-                DriveCheck.jLabel1.setText("I-NCRIPT MUST BE IN THE");
-                DriveCheck.jLabel2.setText("ROOT PATH OF THIS USB.");
+                jLabel1.setText("I-NCRIPT MUST BE IN THE");
+                jLabel2.setText("ROOT PATH OF THIS USB.");
             }
         }
     }
@@ -46,6 +46,7 @@ public class DriveCheck extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti.png")));
+        setUndecorated(true);
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Polentical Neon", 0, 14)); // NOI18N
@@ -86,7 +87,7 @@ public class DriveCheck extends javax.swing.JFrame {
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    protected static javax.swing.JLabel jLabel1;
-    protected static javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
 }

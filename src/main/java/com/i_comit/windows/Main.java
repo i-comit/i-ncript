@@ -10,7 +10,6 @@ import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -25,8 +24,7 @@ public class Main extends javax.swing.JFrame {
         Statics.root = Paths.get("").toAbsolutePath().getRoot().toString();
         if (Heap.checkDriveType()) {
             if (!keyFile.exists() && !EULA.eulaBool) {
-                EULA eula = new EULA();
-                eula.setVisible(true);
+                new EULA().setVisible(true);
             } else {
                 initComponents();
                 jUsernameLabel.setText("enter username");
@@ -54,8 +52,8 @@ public class Main extends javax.swing.JFrame {
             }
 
         } else {
-            DriveCheck driveCheck = new DriveCheck();
-            driveCheck.setVisible(true);
+            new DriveCheck().setVisible(true);
+
         }
     }
 

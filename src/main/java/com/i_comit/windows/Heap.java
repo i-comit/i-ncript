@@ -74,8 +74,8 @@ public class Heap {
                     if (s.trim().length() != 0) {
                         String substring = s.substring(0, 14);
 //                    System.out.println(substring);
-                        if (substring.equals("Removable Disk")) {
-                            String rootPath = Paths.get("").toAbsolutePath().getRoot().toString();
+                        if (substring.trim().equals("Removable Disk")) {
+                            String rootPath = Paths.get("").toAbsolutePath().toString();
                             System.out.println("Root Path: " + rootPath);
                             System.out.println(Statics.root);
                             if (Statics.root.equals(rootPath)) {
@@ -86,6 +86,7 @@ public class Heap {
                             }
                         } else {
                             DriveCheck.driveState = 1;
+                            //Has to be within USB device
                             b = false;
                         }
                     }
