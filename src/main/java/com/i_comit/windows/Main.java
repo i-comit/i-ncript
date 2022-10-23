@@ -20,39 +20,37 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
+    public static String root = "";
+
     public Main() {
-        Statics.root = Paths.get("").toAbsolutePath().getRoot().toString();
+        root = Paths.get("").toAbsolutePath().getRoot().toString();
         if (Heap.checkDriveType()) {
-            if (!keyFile.exists() && !EULA.eulaBool) {
-                new EULA().setVisible(true);
+            initComponents();
+            jUsernameLabel.setText("enter username");
+            jPasswordLabel.setText("enter password");
+            GUI.getGB();
+            jLabel3.setText(root.substring(0, 2) + " | " + GB);
+            System.out.println("Your available Memory Heap is " + Heap.humanReadableByteCountBin(Heap.heapSize));
+
+            jTextField1.setText("");
+            jPasswordField1.setText("");
+
+            jAlertLabel.setText("");
+
+            File rootFolder = Paths.get(root + folderName).toFile();
+            if (!rootFolder.exists()) {
+                GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 40, 40, 1200);
+                rootFolder.mkdir();
             } else {
-                initComponents();
-                jUsernameLabel.setText("enter username");
-                jPasswordLabel.setText("enter password");
-                GUI.getGB();
-                jLabel3.setText(root.substring(0, 2) + " | " + GB);
-                System.out.println("Your available Memory Heap is " + Heap.humanReadableByteCountBin(Heap.heapSize));
+                GUI.labelCutterThread(jAlertLabel, "developed by i-comit", 40, 40, 1200);
 
-                jTextField1.setText("");
-                jPasswordField1.setText("");
-
-                jAlertLabel.setText("");
-
-                File rootFolder = Paths.get(root + folderName).toFile();
-                if (!rootFolder.exists()) {
-                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 60, 50, 1800);
-                    rootFolder.mkdir();
-                } else {
-                    GUI.labelCutterThread(jAlertLabel, "developed by i-comit", 60, 50, 1800);
-
-                }
-                jToolPanel.setVisible(false);
-                jProgressBar1.setVisible(false);
-                jButton2.setVisible(false);
             }
+            jToolPanel.setVisible(false);
+            jProgressBar1.setVisible(false);
+            jButton2.setVisible(false);
 
         } else {
-            new DriveCheck().setVisible(true);
+//            new DriveCheck().setVisible(true);
 
         }
     }
@@ -120,7 +118,13 @@ public class Main extends javax.swing.JFrame {
 
         jToggleButton1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jToggleButton1.setText("HOT FILER");
+        jToggleButton1.setFocusable(false);
         jToggleButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jToggleButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jToggleButton1MouseClicked(evt);
+            }
+        });
         jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jToggleButton1ActionPerformed(evt);
@@ -142,9 +146,9 @@ public class Main extends javax.swing.JFrame {
 
         jButton2.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jButton2.setText("STOP");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
             }
         });
 
@@ -413,11 +417,11 @@ public class Main extends javax.swing.JFrame {
             GUI.t.interrupt();
         }
         Statics.AESMode = 1;
-        AES.AESThread();
 
         try {
             Statics.fileCount = GUI.countFiles2(Statics.path);
             jProgressBar1.setMaximum(Statics.fileCount);
+            AES.AESThread();
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -458,20 +462,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
     //HOT FILER
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-        System.out.println(jToggleButton1.isSelected());
-        Statics.AESMode = 0;
-        //AES.AESThread();
-        jRadioButton1.setVisible(!jToggleButton1.isSelected());
-        jRadioButton0.setSelected(jToggleButton1.isSelected());
-        jRadioButton0.setEnabled(!jToggleButton1.isSelected());
-        if (GUI.t.isAlive()) {
-            GUI.t.interrupt();
-        }
-        try {
-            HotFiler.HotFilerThread();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+
     }//GEN-LAST:event_jToggleButton1ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -496,12 +487,12 @@ public class Main extends javax.swing.JFrame {
             GUI.t.interrupt();
         }
         Statics.AESMode = 0;
-        AES.AESThread();
 //        jToggleButton1.setEnabled(false);
 
         try {
             Statics.fileCount = GUI.countFiles2(Statics.path);
             jProgressBar1.setMaximum(Statics.fileCount);
+            AES.AESThread();
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -512,20 +503,6 @@ public class Main extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         jTextArea1.setText("");
     }//GEN-LAST:event_jButton3ActionPerformed
-    //STOP ENCRYPT/DECRYPT
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        AES.t.stop();
-        Statics.fileCount = 0;
-        Statics.fileIter = 0;
-        jProgressBar1.setValue(Statics.fileIter);
-        jProgressBar1.setMaximum(Statics.fileCount);
-        jProgressBar1.setStringPainted(false);
-
-        jToggleButton1.setEnabled(true);
-        jToggleButton2.setEnabled(true);
-        jRadioButton1.setEnabled(true);
-        jRadioButton0.setEnabled(true);
-    }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jPasswordField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField1KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -557,6 +534,38 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jPasswordField1KeyPressed
 
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+        AES.t.stop();
+        Statics.fileCount = 0;
+        Statics.fileIter = 0;
+        jProgressBar1.setValue(Statics.fileIter);
+        jProgressBar1.setMaximum(Statics.fileCount);
+        jProgressBar1.setStringPainted(false);
+        buttonGroup1.clearSelection();
+
+        jToggleButton1.setEnabled(true);
+        jToggleButton2.setEnabled(true);
+        jRadioButton1.setEnabled(true);
+        jRadioButton0.setEnabled(true);
+
+    }//GEN-LAST:event_jButton2MouseClicked
+    //HOT FILER 2
+    private void jToggleButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton1MouseClicked
+        Statics.AESMode = 0;
+        try {
+            HotFiler.HotFilerThread();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        jRadioButton1.setVisible(!jToggleButton1.isSelected());
+        jRadioButton0.setSelected(jToggleButton1.isSelected());
+        jRadioButton0.setEnabled(!jToggleButton1.isSelected());
+        if (GUI.t.isAlive()) {
+            GUI.t.interrupt();
+        }
+
+    }//GEN-LAST:event_jToggleButton1MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -571,10 +580,12 @@ public class Main extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Main.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         try {
             //</editor-fold>

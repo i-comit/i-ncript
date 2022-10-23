@@ -85,6 +85,9 @@ class FileHider_T implements Runnable {
                                 Main.jToggleButton1.setEnabled(true);
                                 Main.jRadioButton0.setEnabled(true);
                                 Main.jRadioButton1.setEnabled(true);
+                                Main.jToggleButton1.setSelected(false);
+                                Main.buttonGroup1.clearSelection();
+
                                 Thread.sleep(400);
                                 GUI.labelCutterThread(Main.jAlertLabel, fileCount + " files hidden", 40, 20, 400);
 
@@ -115,6 +118,9 @@ class FileHider_T implements Runnable {
                                 Main.jToggleButton1.setEnabled(true);
                                 Main.jRadioButton0.setEnabled(true);
                                 Main.jRadioButton1.setEnabled(true);
+                                Main.jToggleButton1.setSelected(false);
+                                Main.buttonGroup1.clearSelection();
+
                                 Thread.sleep(400);
                                 GUI.labelCutterThread(Main.jAlertLabel, fileCount + " files unhidden", 40, 20, 400);
                             }

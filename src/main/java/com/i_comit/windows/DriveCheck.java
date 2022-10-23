@@ -87,7 +87,7 @@ public class DriveCheck extends javax.swing.JFrame {
      */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    protected static javax.swing.JLabel jLabel1;
+    protected static javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables
 }

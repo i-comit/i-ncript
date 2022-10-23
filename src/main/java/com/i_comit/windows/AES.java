@@ -82,8 +82,7 @@ public class AES {
                 outputStream.write(outputBytes);
             }
             outputStream.close();
-            Statics.fileIter++;
-            jProgressBar1.setValue(Statics.fileIter);
+            jProgressBar1.setValue(Statics.fileIter++);
         } catch (NoSuchPaddingException | NoSuchAlgorithmException
                 | InvalidKeyException | BadPaddingException
                 | IllegalBlockSizeException ex) {
@@ -127,10 +126,11 @@ class AES_T implements Runnable {
                         Main.jRadioButton1.setEnabled(false);
                         Main.jToggleButton2.setEnabled(false);
                         Main.jButton2.setVisible(true);
-
                         switch (Statics.AESMode) {
                             case 0 -> {
-                                GUI.progressBarThread();
+                                Main.jProgressBar1.setStringPainted(true);
+                                Main.jToggleButton1.setEnabled(false);
+
                                 GUI.labelCutterThread(jAlertLabel, "encrypting files...", 0, 15, 300);
                                 paths.forEach(x -> {
                                     try {
@@ -138,12 +138,11 @@ class AES_T implements Runnable {
                                     } catch (AES.CryptoException ex) {
                                     }
                                 });
-                                Main.jProgressBar1.setValue(100);
-                                Main.jProgressBar1.setMaximum(100);
                                 System.out.println("File Encryption Complete");
+                                progressBar_T.resetProgressBar();
                             }
                             case 1 -> {
-                                GUI.progressBarThread();
+                                Main.jProgressBar1.setStringPainted(true);
                                 GUI.labelCutterThread(jAlertLabel, "decrypting files...", 0, 15, 300);
                                 paths.forEach(x -> {
                                     try {
@@ -151,29 +150,19 @@ class AES_T implements Runnable {
                                     } catch (AES.CryptoException ex) {
                                     }
                                 });
-                                Main.jProgressBar1.setValue(100);
-                                Main.jProgressBar1.setMaximum(100);
                                 System.out.println("File Decryption Complete");
-                            }
-                            case 2 -> {
-                                AES.t.interrupt();
+                                progressBar_T.resetProgressBar();
                             }
                         }
 
                     } else {
-                        if (!Main.jToggleButton1.isSelected()) {
-                            switch (Statics.AESMode) {
-                                case 0 -> {
-                                    GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 10, 20, 400);
-                                    Main.jToggleButton1.setEnabled(true);
-                                    Main.jToggleButton2.setEnabled(true);
-
-                                }
-                                case 1 -> {
-                                    GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400);
-                                    Main.jToggleButton1.setEnabled(true);
-                                    Main.jToggleButton2.setEnabled(true);
-                                }
+                        switch (Statics.AESMode) {
+                            case 0 -> {
+                                GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 10, 20, 400);
+                            }
+                            case 1 -> {
+                                GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400);
+                                Main.jToggleButton1.setEnabled(true);
                             }
                         }
                     }
@@ -204,14 +193,12 @@ class AES_T implements Runnable {
         List<Path> result = null;
         try ( Stream<Path> walk = Files.walk(path)) {
             switch (Statics.AESMode) {
-                case 0:
-                    result = walk.filter(Files::isRegularFile).filter(p -> !p.getFileName().toString().endsWith(".enc"))
+                case 0 ->
+                    result = walk.filter(Files::isRegularFile).filter(p -> !p.getFileName().toString().endsWith(".enc")).filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
                             .collect(Collectors.toList());
-                    break;
-                case 1:
+                case 1 ->
                     result = walk.filter(Files::isRegularFile).filter(p -> p.getFileName().toString().endsWith(".enc"))
                             .collect(Collectors.toList());
-                    break;
             }
         }
         return result;

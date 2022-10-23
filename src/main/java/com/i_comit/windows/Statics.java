@@ -4,6 +4,7 @@
  */
 package com.i_comit.windows;
 
+import static com.i_comit.windows.Main.root;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,9 +15,8 @@ import java.nio.file.Paths;
  */
 public class Statics {
 
-    public static String root = "";
     public static String folderName = "i-ncript";
-    public static String rootFolder = root + folderName;
+    public static String rootFolder = Main.root + folderName;
     public static String keyName = "\\i-ncript.key";
     
     public static int AESMode;

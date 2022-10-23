@@ -7,9 +7,9 @@ package com.i_comit.windows;
 import static com.i_comit.windows.AES_T.listPaths;
 import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.jProgressBar1;
+import static com.i_comit.windows.Main.root;
 import static com.i_comit.windows.Statics.GB;
 import static com.i_comit.windows.Statics.path;
-import static com.i_comit.windows.Statics.root;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -91,96 +91,46 @@ class progressBar_T implements Runnable {
     public int threadIterator;
 
     public void run() {
-        try {
-            progressBar();
-        } catch (InterruptedException ex) {
-            //ex.printStackTrace();
-            System.exit(0);
-        } catch (IOException | UncheckedIOException ex) {
-            System.out.println("USB disconnected");
-        }
+//        try {
+//            progressBar();
+//        } catch (InterruptedException ex) {
+//            //ex.printStackTrace();
+//            System.exit(0);
+//        } catch (IOException | UncheckedIOException ex) {
+//            System.out.println("USB disconnected");
+//        }
     }
 
-    public static void progressBar() throws InterruptedException, IOException {
-        Statics.fileIter = 0;
-        jProgressBar1.setStringPainted(true);
-        Main.jToggleButton1.setEnabled(false);
-        Main.jToggleButton2.setEnabled(false);
-        while (jProgressBar1.isStringPainted()) {
-            try {
-//                jProgressBar1.setMaximum(GUI.countFiles(Statics.path));
-                List<Path> paths = listPaths(path);
-                List<Path> paths2 = AES_T.listAESPaths(path);
-                if (!paths2.isEmpty()) {
-                    if (Statics.contents != null) {
-                        if (Statics.contents.length != 0) {
-                            if (!paths.isEmpty()) {
-                                if (jProgressBar1.getValue() == jProgressBar1.getMaximum() - 1) {
-                                    DateTimeFormatter dtf3 = DateTimeFormatter.ofPattern("hh:mm a");
-                                    switch (Statics.AESMode) {
-                                        case 0 -> {
-//                                            jProgressBar1.setMaximum(Statics.fileCount);
-                                            GUI.labelCutterThread(jAlertLabel, "encryption of " + Statics.fileCount + " files complete", 10, 20, 200);
-                                            Thread.sleep(400);
-                                            Main.jTextArea1.append("Encrypted " + Statics.fileCount + " files at " + LocalTime.now().format(dtf3));
-                                            for (int x = Statics.fileCount; x >= 0; x--) {
-                                                Thread.sleep(4);
-                                                jProgressBar1.setValue(x);
-                                            }
-                                            if (!Main.jToggleButton1.isSelected()) {
-                                                Main.jRadioButton0.setEnabled(true);
-                                                Main.jRadioButton1.setEnabled(true);
-                                                Main.jToggleButton1.setSelected(false);
-                                            } else {
-                                                Main.jToggleButton1.setSelected(true);
-                                                Main.jRadioButton0.setEnabled(true);
-                                                Main.jRadioButton1.setEnabled(true);
-                                                Main.jRadioButton1.setVisible(true);
-                                            }
-                                            jProgressBar1.setStringPainted(false);
-                                            Main.jToggleButton2.setEnabled(true);
-//                                            Main.jTextArea1.setText("");
-                                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected());
-                                            Main.jButton2.setVisible(false);
-                                            GUI.t1.interrupt();
-                                        }
-                                        case 1 -> {
-                                            jProgressBar1.setMaximum(Statics.fileCount);
-                                            GUI.labelCutterThread(jAlertLabel, "decryption of " + Statics.fileCount + " files complete", 10, 20, 200);
-                                            Thread.sleep(400);
-                                            Main.jTextArea1.append("Decrypted " + Statics.fileCount + " files at " + LocalTime.now().format(dtf3));
-                                            for (int x = Statics.fileCount; x >= 0; x--) {
-                                                Thread.sleep(4);
-                                                jProgressBar1.setValue(x);
-                                            }
-                                            jProgressBar1.setStringPainted(false);
-//                                            Statics.fileIter = 0;
-                                            Main.jRadioButton0.setEnabled(true);
-                                            Main.jRadioButton1.setEnabled(true);
-                                            Main.buttonGroup1.clearSelection();
-                                            Main.jToggleButton2.setEnabled(true);
-//                                            Main.jTextArea1.setText("");
-                                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected());
-                                            Main.jButton2.setVisible(false);
-                                            GUI.t1.interrupt();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            } catch (IOException | UncheckedIOException ex) {
-                System.out.println("USB disconnected");
-                System.exit(0);
+    public static void resetProgressBar() {
+        jProgressBar1.setValue(jProgressBar1.getMaximum());
+        try {
+            switch (Statics.AESMode) {
+                case 0:
+                    GUI.labelCutterThread(jAlertLabel, "encryption of " + Statics.fileIter + " files complete", 10, 20, 400);
+                case 1:
+                    GUI.labelCutterThread(jAlertLabel, "decryption of " + Statics.fileIter + " files complete", 10, 20, 400);
+                    Main.jToggleButton1.setSelected(false);
+                    break;
             }
-            if (!jProgressBar1.isStringPainted()) {
-                Main.jToggleButton1.setEnabled(true);
-
-                break;
+            Thread.sleep(400);
+            for (int x = jProgressBar1.getMaximum(); x >= 0; x--) {
+                Thread.sleep(5);
+                jProgressBar1.setValue(x);
             }
+            if (jProgressBar1.getValue() == 0) {
+                Statics.fileIter = 0;
+                Statics.fileCount = 0;
+                jProgressBar1.setStringPainted(false);
+                Main.jToggleButton1.setSelected(true);
+                Main.jRadioButton0.setEnabled(true);
+                Main.jRadioButton1.setEnabled(true);
+                FileHider.FileHiderThread(Main.jToggleButton2.isSelected());
+            }
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
-
     }
 
     public static List<Path> listFiles(Path path) throws IOException {
@@ -238,43 +188,8 @@ class logger_T implements Runnable {
 
     public static void logger_T(File outputFile) throws InterruptedException {
         Thread.sleep(150);
-        Main.jTextArea1.append(outputFile.getAbsolutePath().substring(12, outputFile.getPath().toString().length()) + "\n");
-//        for(int i =0; i<5;i++){
-//            
-//        }
+        Main.jTextArea1.append(outputFile.getAbsolutePath().substring(12, outputFile.getPath().length()) + "\n");
         Thread.sleep(150);
         Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
     }
 }
-
-//class KeyListener_C implements KeyListener {
-//
-//    public KeyListener_C() {
-//
-//    }
-//
-//    @Override
-//    public void keyPressed(KeyEvent ke) {
-////        lbl.setText("You have pressed " + ke.getKeyChar());
-//        switch (ke.getKeyCode()) {
-//            case KeyEvent.VK_ENTER:
-//                System.out.println("Enter");
-//                break;
-//        }
-//    }
-//
-//    @Override
-//    public void keyTyped(KeyEvent ke) {
-////        lbl.setText("You have typed " + ke.getKeyChar());
-//    }
-//
-//    @Override
-//    public void keyReleased(KeyEvent ke) {
-////        lbl.setText("You have released " + ke.getKeyChar());
-//        //System.out.println("amogus 3");
-//    }
-//
-//    public static void main(String args[]) {
-//        new KeyListener_C();
-//    }
-//}
