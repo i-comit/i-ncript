@@ -5,7 +5,6 @@ com\i_comit\windows\Main$5.class
 com\i_comit\windows\Main.class
 com\i_comit\windows\Main$11.class
 com\i_comit\windows\Main$9.class
-com\i_comit\windows\Main$14.class
 com\i_comit\windows\AES.class
 com\i_comit\linux\progressBar_T.class
 com\i_comit\linux\FileHider_T.class
@@ -14,7 +13,6 @@ com\i_comit\windows\Main$2.class
 com\i_comit\windows\AES_T.class
 com\i_comit\windows\dev\AESFolder.class
 com\i_comit\linux\Statics.class
-com\i_comit\windows\Main$12.class
 com\i_comit\linux\Main$3.class
 com\i_comit\windows\dev\AESMessage.class
 com\i_comit\linux\AES$CryptoException.class
@@ -22,7 +20,6 @@ com\i_comit\linux\Login.class
 com\i_comit\windows\Main$1.class
 com\i_comit\windows\labelCutter_T.class
 com\i_comit\windows\Main$8.class
-com\i_comit\windows\Main$15.class
 com\i_comit\linux\GUI.class
 com\i_comit\linux\labelCutter_T.class
 com\i_comit\linux\Main$6.class
@@ -55,8 +52,6 @@ com\i_comit\linux\HotFiler_T.class
 com\i_comit\windows\GUI.class
 com\i_comit\linux\Main$1.class
 com\i_comit\windows\Main$3.class
-com\i_comit\windows\Main$16.class
 com\i_comit\windows\FileHider_T.class
-com\i_comit\windows\Main$13.class
 com\i_comit\windows\FileHider.class
 com\i_comit\windows\dev\ZipFolder$1.class

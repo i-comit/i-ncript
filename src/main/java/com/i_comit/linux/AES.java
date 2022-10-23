@@ -84,7 +84,8 @@ public class AES {
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
             cipher.init(cipherMode, secretKey);
 
-            try ( FileInputStream inputStream = new FileInputStream(inputFile); FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+            try ( FileInputStream inputStream = new FileInputStream(inputFile)) {
+                FileOutputStream outputStream = new FileOutputStream(outputFile);
                 byte[] inputBytes = new byte[(int) inputFile.length()];
                 int nread;
                 while ((nread = inputStream.read(inputBytes)) > 0) {
@@ -93,6 +94,7 @@ public class AES {
                 }
                 byte[] enc = cipher.doFinal();
                 outputStream.write(enc);
+                outputStream.close();
             }
         } catch (NoSuchPaddingException | NoSuchAlgorithmException
                 | InvalidKeyException | BadPaddingException
