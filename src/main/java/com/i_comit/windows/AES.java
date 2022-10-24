@@ -7,7 +7,6 @@ package com.i_comit.windows;
 import static com.i_comit.windows.AES.decrypt;
 import static com.i_comit.windows.AES.encrypt;
 import static com.i_comit.windows.Main.jAlertLabel;
-import static com.i_comit.windows.Main.jProgressBar1;
 import static com.i_comit.windows.Statics.*;
 import java.io.*;
 import java.nio.file.*;
@@ -49,7 +48,6 @@ public class AES {
                 outputFile = new File(outputFile + ".enc");
                 doCrypto(Cipher.ENCRYPT_MODE, key, inputFile, outputFile);
                 inputFile.delete();
-                GUI.loggerThread(outputFile);
             }
         }
     }
@@ -61,7 +59,6 @@ public class AES {
                 outputFile = new File(inputFile.toString().replaceAll(".enc", ""));
                 doCrypto(Cipher.DECRYPT_MODE, key, inputFile, outputFile);
                 inputFile.delete();
-                GUI.loggerThread(outputFile);
             }
         }
     }
@@ -73,22 +70,26 @@ public class AES {
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
             cipher.init(cipherMode, secretKey);
 
-            FileOutputStream outputStream;
-            try ( FileInputStream inputStream = new FileInputStream(inputFile)) {
+            try ( FileInputStream inputStream = new FileInputStream(inputFile);  FileOutputStream outputStream = new FileOutputStream(outputFile)) {
                 byte[] inputBytes = new byte[(int) inputFile.length()];
-                inputStream.read(inputBytes);
-                byte[] outputBytes = cipher.doFinal(inputBytes);
-                outputStream = new FileOutputStream(outputFile);
-                outputStream.write(outputBytes);
+                int nread;
+                while ((nread = inputStream.read(inputBytes)) > 0) {
+                    byte[] enc = cipher.update(inputBytes, 0, nread);
+                    outputStream.write(enc);
+                }
+                byte[] enc = cipher.doFinal();
+                outputStream.write(enc);
+                inputStream.close();
+                outputStream.close();
             }
-            outputStream.close();
-            jProgressBar1.setValue(Statics.fileIter++);
+            Main.jProgressBar1.setValue(Statics.fileIter++);
+            GUI.loggerThread(outputFile);
         } catch (NoSuchPaddingException | NoSuchAlgorithmException
                 | InvalidKeyException | BadPaddingException
                 | IllegalBlockSizeException ex) {
             throw new CryptoException("Error encrypting/decrypting file", ex);
         } catch (IOException | UncheckedIOException ex) {
-            ex.getStackTrace();
+            System.out.println("Last File Was " + inputFile.getName());
         }
     }
 
@@ -163,7 +164,6 @@ class AES_T implements Runnable {
                                     System.out.println("File Decryption Complete");
                                     progressBar_T.resetProgressBar();
                                 }
-
                             }
                         }
 

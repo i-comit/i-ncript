@@ -29,24 +29,6 @@ public class FileHider {
         });
         t.start();
     }
-
-    public static void FileHiderAESThread(boolean fileHideBool, Path outputFile) throws IOException {
-        Thread t1 = new Thread(() -> {
-            try {
-                FileHider_T.FileHiderAES_T(fileHideBool, outputFile);
-            } catch (IOException | InterruptedException ex) {
-                ex.printStackTrace();
-            }
-        });
-        t1.start();
-    }
-
-//    public static void hideFilerPBarThread() {
-//        fileHiderPBar_T fileHiderPBar = new fileHiderPBar_T();
-//        Thread t2 = new Thread(fileHiderPBar);
-//        t2.start();
-//
-//    }
 }
 
 class FileHider_T implements Runnable {
@@ -66,7 +48,7 @@ class FileHider_T implements Runnable {
         Statics.fileHideIter = 0;
         List<Path> paths = listPaths(path);
         File[] contents = directory.listFiles();
-        int fileCount = GUI.countFiles(path);
+        int fileCount = GUI.countAllFiles(path);
 
         Main.jToggleButton1.setEnabled(false);
         Main.jRadioButton0.setEnabled(false);
@@ -87,14 +69,16 @@ class FileHider_T implements Runnable {
                                 Main.jRadioButton1.setEnabled(true);
                                 Main.jToggleButton1.setSelected(false);
                                 Main.buttonGroup1.clearSelection();
+                                switch (Statics.AESMode) {
+                                    case 0 ->Main.jRadioButton0.setSelected(true);
+                                    case 1 ->Main.jRadioButton1.setSelected(true);
+                                }
 
-                                Thread.sleep(400);
-                                GUI.labelCutterThread(Main.jAlertLabel, fileCount + " files hidden", 40, 20, 400);
+                                Thread.sleep(300);
+                                GUI.labelCutterThread(Main.jAlertLabel, fileCount + " files hidden", 30, 25, 300);
 
                             }
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        } catch (InterruptedException ex) {
+                        } catch (IOException | InterruptedException ex) {
                             ex.printStackTrace();
                         }
                     });
@@ -119,15 +103,16 @@ class FileHider_T implements Runnable {
                                 Main.jRadioButton0.setEnabled(true);
                                 Main.jRadioButton1.setEnabled(true);
                                 Main.jToggleButton1.setSelected(false);
-                                Main.buttonGroup1.clearSelection();
+                                switch (Statics.AESMode) {
+                                    case 0 ->Main.jRadioButton0.setSelected(true);
+                                    case 1 ->Main.jRadioButton1.setSelected(true);
+                                }
 
-                                Thread.sleep(400);
-                                GUI.labelCutterThread(Main.jAlertLabel, fileCount + " files unhidden", 40, 20, 400);
+                                Thread.sleep(300);
+                                GUI.labelCutterThread(Main.jAlertLabel, fileCount + " files unhidden", 30, 25, 350);
                             }
 
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        } catch (InterruptedException ex) {
+                        } catch (IOException | InterruptedException ex) {
                             ex.printStackTrace();
                         }
                     });
@@ -139,60 +124,4 @@ class FileHider_T implements Runnable {
             }
         }
     }
-
-    public static void FileHiderAES_T(boolean fileHideBool, Path outputFile) throws IOException, InterruptedException {
-//        List<Path> paths = listPaths(path);
-        File[] contents = directory.listFiles();
-
-        if (fileHideBool) {
-            if (contents != null) {
-                if (contents.length != 0) {
-                    Files.setAttribute(outputFile, "dos:hidden", true);
-                    System.out.println("Hiding current file at: " + outputFile.toAbsolutePath().toString() + "\n");
-//                    paths.forEach(x -> {
-//                        try {
-//                            Files.setAttribute(x, "dos:hidden", true);
-//                        } catch (IOException ex) {
-//                            ex.printStackTrace();
-//                        }
-//                    });
-                } else {
-//                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 40, 1000);
-                }
-            } else {
-//                GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 40, 1000);
-            }
-        } else {
-            if (contents != null) {
-                if (contents.length != 0) {
-                    Files.setAttribute(outputFile, "dos:hidden", false);
-//                    System.out.println("Unhiding current file at: " + outputFile.toAbsolutePath().toString() + "\n");
-
-                } else {
-//                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 40, 1000);
-                }
-            } else {
-//                GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 40, 1000);
-            }
-        }
-    }
 }
-
-//class fileHiderPBar_T implements Runnable {
-//
-//    public void run() {
-//        try {
-//            fileHiderProgressBar();
-//        } catch (IOException ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//    public static void fileHiderProgressBar() throws IOException {
-//        Main.jProgressBar1.setStringPainted(true);
-//        Statics.fileHideIter = 0;
-//        System.out.println(Statics.fileHideIter);
-//        Main.jProgressBar1.setMaximum(GUI.countFiles(Statics.path));
-//        Main.jProgressBar1.setValue(Statics.fileHideIter);
-//    }
-//}

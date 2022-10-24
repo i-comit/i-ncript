@@ -48,7 +48,7 @@ class HotFiler_T implements Runnable {
                     System.out.println("HotFilerPathEmpty");
                 } else {
                     Statics.fileIter = 0;
-                    Statics.fileCount = GUI.countFiles2(Statics.path);
+                    Statics.fileCount = GUI.countFiles(Statics.path);
                     jProgressBar1.setMaximum(Statics.fileCount);
                     AES.AESThread();
                 }

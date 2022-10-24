@@ -4,15 +4,12 @@
  */
 package com.i_comit.windows;
 
-import static com.i_comit.windows.AES_T.listPaths;
 import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.jProgressBar1;
 import static com.i_comit.windows.Main.root;
 import static com.i_comit.windows.Statics.GB;
-import static com.i_comit.windows.Statics.path;
 import java.io.File;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalTime;
@@ -43,11 +40,7 @@ public class GUI {
 
     public static void loggerThread(File outputFile) {
         t = new Thread(() -> {
-            try {
-                logger_T.logger_T(outputFile);
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
+            logger_T.logger_T(outputFile);
         });
         t.start();
     }
@@ -59,7 +52,7 @@ public class GUI {
 
     }
 
-    public static int countFiles(Path path) throws IOException {
+    public static int countAllFiles(Path path) throws IOException {
         int result;
         try ( Stream<Path> walk = Files.walk(path)) {
             result = Math.toIntExact(walk.filter(Files::isRegularFile).count());
@@ -67,13 +60,13 @@ public class GUI {
         return result;
     }
 
-    public static int countFiles2(Path path) throws IOException {
+    public static int countFiles(Path path) throws IOException {
         int result = 0;
         try ( Stream<Path> walk = Files.walk(path)) {
             int result2 = 0;
             switch (Statics.AESMode) {
                 case 0 -> {
-                    result2 = Math.toIntExact(walk.filter(Files::isRegularFile).filter(p -> !p.getFileName().toString().endsWith(".enc")).count());
+                    result2 = Math.toIntExact(walk.filter(Files::isRegularFile).filter(p -> !p.getFileName().toString().endsWith(".enc")).filter(p -> !p.getFileName().toString().startsWith("Thumbs.db")).count());
                     result = result2;
                 }
                 case 1 -> {
@@ -103,16 +96,23 @@ class progressBar_T implements Runnable {
 
     public static void resetProgressBar() {
         jProgressBar1.setValue(jProgressBar1.getMaximum());
+        Main.jButton2.setVisible(false);
         try {
             switch (Statics.AESMode) {
-                case 0:
-                    GUI.labelCutterThread(jAlertLabel, "encryption of " + Statics.fileIter + " files complete", 10, 20, 400);
-                case 1:
-                    GUI.labelCutterThread(jAlertLabel, "decryption of " + Statics.fileIter + " files complete", 10, 20, 400);
-                    Main.jToggleButton1.setSelected(false);
-                    break;
+                case 0 -> {
+                    GUI.labelCutterThread(jAlertLabel, "encrypted " + Statics.fileIter + " files", 10, 25, 400);
+                    Thread.sleep(100);
+                    Main.jTextArea1.append("encrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")));
+
+                }
+                case 1 -> {
+                    GUI.labelCutterThread(jAlertLabel, "decrypted " + Statics.fileIter + " files", 10, 25, 400);
+                    Thread.sleep(100);
+                    Main.jTextArea1.append("decrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")));
+                }
             }
-            Thread.sleep(400);
+            Thread.sleep(150);
+
             for (int x = jProgressBar1.getMaximum(); x >= 0; x--) {
                 Thread.sleep(5);
                 jProgressBar1.setValue(x);
@@ -120,15 +120,11 @@ class progressBar_T implements Runnable {
             if (jProgressBar1.getValue() == 0) {
                 Statics.fileIter = 0;
                 Statics.fileCount = 0;
+                jProgressBar1.setValue(Statics.fileIter);
                 jProgressBar1.setStringPainted(false);
-                Main.jToggleButton1.setSelected(true);
-                Main.jRadioButton0.setEnabled(true);
-                Main.jRadioButton1.setEnabled(true);
                 FileHider.FileHiderThread(Main.jToggleButton2.isSelected());
             }
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        } catch (IOException ex) {
+        } catch (InterruptedException | IOException ex) {
             ex.printStackTrace();
         }
     }
@@ -156,26 +152,22 @@ class labelCutter_T implements Runnable {
         jLabel.setText("");
         int msgL = labelMsg.length();
         try {
-
             Thread.sleep(initSleep);
             for (int i = 0; i <= msgL; i++) {
                 //labelMsg = "";
                 CharSequence cutLabel = labelMsg.subSequence(0, i);
-                //System.out.println(cutLabel.toString());
                 jLabel.setText(cutLabel.toString());
-
                 Thread.sleep(sleep);
             }
             Thread.sleep(pause);
             for (int i = msgL; i >= 0; i--) {
                 CharSequence cutLabel = labelMsg.subSequence(0, i);
-                //System.out.println(cutLabel.toString());
                 jLabel.setText(cutLabel.toString());
                 Thread.sleep(sleep);
             }
         } catch (InterruptedException ex) {
-            //ex.printStackTrace();
-
+//            ex.printStackTrace();
+            System.out.println("label thread interrupted.");
         }
     }
 }
@@ -186,10 +178,15 @@ class logger_T implements Runnable {
 
     }
 
-    public static void logger_T(File outputFile) throws InterruptedException {
-        Thread.sleep(150);
-        Main.jTextArea1.append(outputFile.getAbsolutePath().substring(12, outputFile.getPath().length()) + "\n");
-        Thread.sleep(150);
-        Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
+    public static void logger_T(File outputFile) {
+        try {
+            Thread.sleep(50);
+            Main.jTextArea1.append(outputFile.getAbsolutePath().substring(12, outputFile.getPath().length()) + "\n");
+            Thread.sleep(50);
+            Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
+        } catch (InterruptedException ex) {
+//            ex.printStackTrace();
+            System.out.println("logger thread interrupted.");
+        }
     }
 }

@@ -6,7 +6,6 @@ package com.i_comit.windows;
 
 import static com.i_comit.windows.Statics.*;
 import java.awt.Color;
-import java.awt.FontFormatException;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -605,7 +604,7 @@ public class Main extends javax.swing.JFrame {
         Statics.AESMode = 1;
 
         try {
-            Statics.fileCount = GUI.countFiles2(Statics.path);
+            Statics.fileCount = GUI.countFiles(Statics.path);
             jProgressBar1.setMaximum(Statics.fileCount);
             AES.AESThread();
 
@@ -676,7 +675,7 @@ public class Main extends javax.swing.JFrame {
 //        jToggleButton1.setEnabled(false);
 
         try {
-            Statics.fileCount = GUI.countFiles2(Statics.path);
+            Statics.fileCount = GUI.countFiles(Statics.path);
             jProgressBar1.setMaximum(Statics.fileCount);
             AES.AESThread();
 
@@ -722,6 +721,7 @@ public class Main extends javax.swing.JFrame {
 
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
         AES.t.stop();
+        jButton2.setVisible(false);
         Statics.fileCount = 0;
         Statics.fileIter = 0;
         jProgressBar1.setValue(Statics.fileIter);
