@@ -28,7 +28,7 @@ public class Login {
     }
 
     public static void makeKey() {
-        Path path = Paths.get(root + keyName); //creates Path instance  
+        Path path = Paths.get(root + Main.masterFolder+keyName); //creates Path instance  
         try {
             List<String> lines = Arrays.asList(Hasher.modHash(username), Hasher.modHash(password));
             Path p = Files.createFile(path);//creates file at specified location  
