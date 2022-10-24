@@ -29,7 +29,7 @@ public class Statics {
 
     public static File f = new File(root);
     public static File directory = new File(root + folderName);
-    public static File keyFile = Paths.get(root + Main.masterFolder+keyName).toFile();
+    public static File keyFile = Paths.get(root + keyName).toFile();
     
     public static File[] contents = directory.listFiles();
 
