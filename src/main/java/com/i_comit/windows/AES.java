@@ -71,7 +71,7 @@ public class AES {
             cipher.init(cipherMode, secretKey);
 
             try ( FileInputStream inputStream = new FileInputStream(inputFile);  FileOutputStream outputStream = new FileOutputStream(outputFile)) {
-                byte[] inputBytes = new byte[(int) inputFile.length()];
+                byte[] inputBytes = new byte[0x10000];
                 int nread;
                 while ((nread = inputStream.read(inputBytes)) > 0) {
                     byte[] enc = cipher.update(inputBytes, 0, nread);
@@ -84,6 +84,8 @@ public class AES {
             }
             Main.jProgressBar1.setValue(Statics.fileIter++);
             GUI.loggerThread(outputFile);
+            System.gc();
+            System.runFinalization();
         } catch (NoSuchPaddingException | NoSuchAlgorithmException
                 | InvalidKeyException | BadPaddingException
                 | IllegalBlockSizeException ex) {

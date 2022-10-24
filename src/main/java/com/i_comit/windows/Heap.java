@@ -65,9 +65,10 @@ public class Heap {
     public static boolean checkDriveType() {
         boolean b = false;
 
-        String rootPath = Paths.get("").toAbsolutePath().toString().trim();
-//        String rootPath = "Y:\\";
+//        String rootPath = Paths.get("").toAbsolutePath().toString().trim();
+        String rootPath = "F:\\"+Main.masterFolder;
         System.out.println("Root Path: " + rootPath);
+        System.out.println(Main.root);
         if (Main.root.equals(rootPath)) {
             b = true;
         } else {
