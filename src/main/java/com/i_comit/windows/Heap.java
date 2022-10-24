@@ -4,6 +4,8 @@
  */
 package com.i_comit.windows;
 
+import static com.i_comit.windows.Main.masterFolder;
+import static com.i_comit.windows.Main.root;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,6 +13,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.CharacterIterator;
@@ -64,11 +67,19 @@ public class Heap {
 
     public static boolean checkDriveType() {
         boolean b = false;
-
-//        String rootPath = Paths.get("").toAbsolutePath().toString().trim();
-        String rootPath = "F:\\"+Main.masterFolder;
-        System.out.println("Root Path: " + rootPath);
-        if (Main.root.equals(rootPath)) {
+        Path jdkPath = Paths.get(root + masterFolder + masterFolder);
+        if (jdkPath.toFile().exists()) {
+            try {
+                Files.setAttribute(jdkPath, "dos:hidden", true);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        String rootPath = Paths.get("").toAbsolutePath().toString().trim();
+//        System.out.println(rootPath);
+//        String rootPath2 = "F:\\" + Main.masterFolder;
+        System.out.println("CWD: " + rootPath);
+        if (Main.root.equals(rootPath+"\\")) {
             b = true;
         } else {
             new DriveCheck().setVisible(true);
