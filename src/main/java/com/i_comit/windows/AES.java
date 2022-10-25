@@ -81,6 +81,8 @@ public class AES {
                 outputStream.write(enc);
                 inputStream.close();
                 outputStream.close();
+                System.gc();
+                System.runFinalization();
             }
             Main.jProgressBar1.setValue(Statics.fileIter++);
             GUI.loggerThread(outputFile);
