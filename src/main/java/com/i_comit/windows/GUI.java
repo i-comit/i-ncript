@@ -27,9 +27,10 @@ public class GUI {
 
     public static Thread t;
     public static Thread t1;
+    public static Thread t2;
 
     public static void getGB() {
-        File diskPartition = new File(root);
+        File diskPartition = new File(root).toPath().getRoot().toFile();
         GB = Heap.humanReadableByteCountBin(diskPartition.getUsableSpace());
     }
 
@@ -39,18 +40,17 @@ public class GUI {
     }
 
     public static void loggerThread(File outputFile) {
-        t = new Thread(() -> {
+        t1= new Thread(() -> {
             logger_T.logger_T(outputFile);
         });
-        t.start();
-    }
-
-    public static void progressBarThread() {
-        progressBar_T pgThread = new progressBar_T();
-        t1 = new Thread(pgThread);
         t1.start();
-
     }
+
+//    public static void progressBarThread() {
+//        t2 = new Thread(() -> progressBar_T.resetProgressBar());
+//        t2.start();
+//
+//    }
 
     public static int countAllFiles(Path path) throws IOException {
         int result;
@@ -77,23 +77,7 @@ public class GUI {
         }
         return result;
     }
-};
-
-class progressBar_T implements Runnable {
-
-    public int threadIterator;
-
-    public void run() {
-//        try {
-//            progressBar();
-//        } catch (InterruptedException ex) {
-//            //ex.printStackTrace();
-//            System.exit(0);
-//        } catch (IOException | UncheckedIOException ex) {
-//            System.out.println("USB disconnected");
-//        }
-    }
-
+    
     public static void resetProgressBar() {
         jProgressBar1.setValue(jProgressBar1.getMaximum());
         Main.jButton2.setVisible(false);
@@ -103,7 +87,6 @@ class progressBar_T implements Runnable {
                     GUI.labelCutterThread(jAlertLabel, "encrypted " + Statics.fileIter + " files", 10, 25, 400);
                     Thread.sleep(100);
                     Main.jTextArea1.append("encrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")));
-
                 }
                 case 1 -> {
                     GUI.labelCutterThread(jAlertLabel, "decrypted " + Statics.fileIter + " files", 10, 25, 400);
@@ -127,18 +110,27 @@ class progressBar_T implements Runnable {
         } catch (InterruptedException | IOException ex) {
             ex.printStackTrace();
         }
+    }    
+    
+};
+
+class progressBar_T implements Runnable {
+
+    public int threadIterator;
+
+    public void run() {
+//        try {
+//            progressBar();
+//        } catch (InterruptedException ex) {
+//            //ex.printStackTrace();
+//            System.exit(0);
+//        } catch (IOException | UncheckedIOException ex) {
+//            System.out.println("USB disconnected");
+//        }
     }
 
-    public static List<Path> listFiles(Path path) throws IOException {
 
-        List<Path> result;
-        try ( Stream<Path> walk = Files.walk(path)) {
-            result = walk.filter(Files::isRegularFile)
-                    .collect(Collectors.toList());
-        }
 
-        return result;
-    }
 }
 
 class labelCutter_T implements Runnable {

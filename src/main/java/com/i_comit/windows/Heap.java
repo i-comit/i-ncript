@@ -61,19 +61,28 @@ public class Heap {
 
     public static boolean checkDriveType() {
         boolean b = false;
-        Path jdkPath = Paths.get(root + masterFolder + masterFolder);
-        if (jdkPath.toFile().exists()) {
+        Path runtime = Paths.get(root + "runtime");
+        Path app = Paths.get(root + "app");
+        System.out.println(runtime);
+        if (runtime.toFile().exists()) {
             try {
-                Files.setAttribute(jdkPath, "dos:hidden", true);
+                Files.setAttribute(runtime, "dos:hidden", true);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
-        String rootPath = Paths.get("").toAbsolutePath().toString().trim();
+        if (app.toFile().exists()) {
+            try {
+                Files.setAttribute(app, "dos:hidden", true);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+//        String rootPath = Paths.get("").toAbsolutePath().toString().trim();
 //        System.out.println(rootPath);
-//        String rootPath2 = "F:\\" + Main.masterFolder;
-        System.out.println("CWD: " + rootPath);
-        if (Main.root.equals(rootPath+"\\")) {
+        String rootPath2 = "F:\\" + Main.masterFolder;
+        System.out.println("CWD: " + rootPath2);
+        if (Main.root.equals(rootPath2)) {
             b = true;
         } else {
             new DriveCheck().setVisible(true);

@@ -125,15 +125,11 @@ class AES_T implements Runnable {
             if (contents != null) {
                 if (contents.length != 0) {
                     if (!paths.isEmpty()) {
-                        Main.jRadioButton0.setEnabled(false);
-                        Main.jRadioButton1.setEnabled(false);
-                        Main.jToggleButton2.setEnabled(false);
+                        Main.toolBtnsBool(false);
                         Main.jButton2.setVisible(true);
                         switch (Statics.AESMode) {
                             case 0 -> {
                                 Main.jProgressBar1.setStringPainted(true);
-                                Main.jToggleButton1.setEnabled(false);
-
                                 GUI.labelCutterThread(jAlertLabel, "encrypting files...", 0, 15, 300);
                                 paths.forEach(x -> {
                                     try {
@@ -146,7 +142,7 @@ class AES_T implements Runnable {
                                     GUI.labelCutterThread(jAlertLabel, "incorrect key", 10, 25, 500);
                                 } else {
                                     System.out.println("File Encryption Complete");
-                                    progressBar_T.resetProgressBar();
+                                    GUI.resetProgressBar();
                                 }
 
                             }
@@ -164,7 +160,7 @@ class AES_T implements Runnable {
                                     GUI.labelCutterThread(jAlertLabel, "incorrect key", 10, 25, 500);
                                 } else {
                                     System.out.println("File Decryption Complete");
-                                    progressBar_T.resetProgressBar();
+                                    GUI.resetProgressBar();
                                 }
                             }
                         }

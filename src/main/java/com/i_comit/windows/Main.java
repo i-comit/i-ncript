@@ -21,11 +21,11 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "";
+    public static String root = "F:\\";
     public static String masterFolder = "--------\\";
 
     public Main() {
-        root = Paths.get("").toAbsolutePath().getRoot().toString();
+//        root = Paths.get("").toAbsolutePath().getRoot().toString();
         root = root + masterFolder;
         System.out.println("ROOT: " + root);
         if (Heap.checkDriveType()) {
@@ -70,6 +70,7 @@ public class Main extends javax.swing.JFrame {
                 jButton2.setVisible(false);
             }
             jProgressBar1.setVisible(false);
+            jTextArea5.setVisible(false);
 
         } else {
 
@@ -79,9 +80,19 @@ public class Main extends javax.swing.JFrame {
     public static void dragDropper() {
         DragDrop myDragDropListener = new DragDrop();
         // Connect the label with a drag and drop listener
-        new DropTarget(jPanel2, myDragDropListener);
+        jTextArea5.setVisible(true);
+        new DropTarget(jTextArea5, myDragDropListener);
     }
-
+    
+    public static void toolBtnsBool(boolean bool){
+        jToggleButton1.setEnabled(bool);
+        jToggleButton2.setEnabled(bool);
+        jRadioButton0.setEnabled(bool);
+        jRadioButton1.setEnabled(bool);
+        
+//        jButton2.setEnabled(!bool);
+//        jButton3.setEnabled(!bool);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -114,6 +125,8 @@ public class Main extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jTextArea5 = new javax.swing.JTextArea();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
@@ -216,7 +229,7 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(jToolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jToolPanelLayout.createSequentialGroup()
                         .addComponent(jToggleButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                         .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jToolPanelLayout.createSequentialGroup()
                         .addComponent(jRadioButton0)
@@ -292,8 +305,8 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(jUsernameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
-                    .addComponent(jPasswordField1))
+                    .addComponent(jPasswordField1)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE))
                 .addGap(34, 34, 34))
             .addGroup(jLoginPanelLayout.createSequentialGroup()
                 .addGap(95, 95, 95)
@@ -358,15 +371,26 @@ public class Main extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("LOG", jPanel1);
 
+        jTextArea5.setEditable(false);
+        jTextArea5.setColumns(5);
+        jTextArea5.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jTextArea5.setLineWrap(true);
+        jTextArea5.setRows(3);
+        jTextArea5.setTabSize(2);
+        jTextArea5.setText("DRAG AND DROP FILES HERE FOR AUTOMATIC ENCRYPT & DECRYPT");
+        jTextArea5.setWrapStyleWord(true);
+        jTextArea5.setMargin(new java.awt.Insets(55, 25, 25, 15));
+        jScrollPane5.setViewportView(jTextArea5);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 218, Short.MAX_VALUE)
+            .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 180, Short.MAX_VALUE)
+            .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("DROP", jPanel2);
@@ -553,12 +577,12 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap(16, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(30, 30, 30)
-                    .addComponent(jLoginPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(296, Short.MAX_VALUE)))
+                    .addGap(36, 36, 36)
+                    .addComponent(jLoginPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(298, Short.MAX_VALUE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
-                    .addGap(35, 35, 35)
+                    .addGap(31, 31, 31)
                     .addComponent(jToolPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(294, Short.MAX_VALUE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -701,11 +725,7 @@ public class Main extends javax.swing.JFrame {
         jProgressBar1.setMaximum(Statics.fileCount);
         jProgressBar1.setStringPainted(false);
         buttonGroup1.clearSelection();
-
-        jToggleButton1.setEnabled(true);
-        jToggleButton2.setEnabled(true);
-        jRadioButton1.setEnabled(true);
-        jRadioButton0.setEnabled(true);
+        toolBtnsBool(true);
 
     }//GEN-LAST:event_jButton2MouseClicked
     //HOT FILER 2
@@ -817,7 +837,7 @@ public class Main extends javax.swing.JFrame {
     public static javax.swing.JLabel jAlertLabel;
     public javax.swing.JButton jButton1;
     protected static javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private static javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
@@ -842,6 +862,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JTabbedPane jTabbedPane1;
@@ -849,6 +870,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextArea jTextArea3;
     private javax.swing.JTextArea jTextArea4;
+    private static javax.swing.JTextArea jTextArea5;
     protected static javax.swing.JTextField jTextField1;
     public static javax.swing.JToggleButton jToggleButton1;
     protected static javax.swing.JToggleButton jToggleButton2;

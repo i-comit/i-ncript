@@ -21,7 +21,6 @@ public class Statics {
     
     public static int AESMode;
     
-
     public static String GB;
 
     public static boolean emptyDirectory;
@@ -29,7 +28,7 @@ public class Statics {
 
     public static File f = new File(root);
     public static File directory = new File(root + folderName);
-    public static File keyFile = Paths.get(root + Main.masterFolder+ keyName).toFile();
+    public static File keyFile = Paths.get(root + "app\\"+ keyName).toFile();
     
     public static File[] contents = directory.listFiles();
 

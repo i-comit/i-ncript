@@ -49,10 +49,7 @@ class FileHider_T implements Runnable {
         List<Path> paths = listPaths(path);
         File[] contents = directory.listFiles();
         int fileCount = GUI.countAllFiles(path);
-
-        Main.jToggleButton1.setEnabled(false);
-        Main.jRadioButton0.setEnabled(false);
-        Main.jRadioButton1.setEnabled(false);
+        Main.toolBtnsBool(false);
 
         if (fileHideBool) {
             if (contents != null) {
@@ -63,15 +60,14 @@ class FileHider_T implements Runnable {
                             Files.setAttribute(x, "dos:hidden", true);
                             Statics.fileHideIter++;
                             if (Statics.fileHideIter == fileCount) {
-                                Main.jToggleButton2.setEnabled(true);
-                                Main.jToggleButton1.setEnabled(true);
-                                Main.jRadioButton0.setEnabled(true);
-                                Main.jRadioButton1.setEnabled(true);
+                                Main.toolBtnsBool(true);
                                 Main.jToggleButton1.setSelected(false);
                                 Main.buttonGroup1.clearSelection();
                                 switch (Statics.AESMode) {
-                                    case 0 ->Main.jRadioButton0.setSelected(true);
-                                    case 1 ->Main.jRadioButton1.setSelected(true);
+                                    case 0 ->
+                                        Main.jRadioButton0.setSelected(true);
+                                    case 1 ->
+                                        Main.jRadioButton1.setSelected(true);
                                 }
 
                                 Thread.sleep(300);
@@ -91,21 +87,18 @@ class FileHider_T implements Runnable {
         } else {
             if (contents != null) {
                 if (contents.length != 0) {
-                    Main.jToggleButton2.setEnabled(false);
-
                     paths.forEach(x -> {
                         try {
                             Files.setAttribute(x, "dos:hidden", false);
                             Statics.fileHideIter++;
                             if (Statics.fileHideIter == fileCount) {
-                                Main.jToggleButton2.setEnabled(true);
-                                Main.jToggleButton1.setEnabled(true);
-                                Main.jRadioButton0.setEnabled(true);
-                                Main.jRadioButton1.setEnabled(true);
+                                Main.toolBtnsBool(true);
                                 Main.jToggleButton1.setSelected(false);
                                 switch (Statics.AESMode) {
-                                    case 0 ->Main.jRadioButton0.setSelected(true);
-                                    case 1 ->Main.jRadioButton1.setSelected(true);
+                                    case 0 ->
+                                        Main.jRadioButton0.setSelected(true);
+                                    case 1 ->
+                                        Main.jRadioButton1.setSelected(true);
                                 }
 
                                 Thread.sleep(300);

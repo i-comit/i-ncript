@@ -58,12 +58,10 @@ public class Login {
     }
 
     public static void makeKey() {
-        Path path = Paths.get(root + Main.masterFolder + keyName); //creates Path instance  
+        Path path = keyFile.toPath();//creates Path instance  
         try {
             List<String> lines = Arrays.asList(Hasher.modHash(username), Hasher.modHash(password));
             Path p = Files.createFile(path);//creates file at specified location  
-            //System.out.println("Key generated at: " + p);
-            //Files.writeString(path, st.toString());
             Files.write(path, lines);
             Files.setAttribute(p, "dos:hidden", true);
             Main.jLoginPanel.setVisible(false);
@@ -86,7 +84,6 @@ public class Login {
                     Main.jProgressBar1.setVisible(true);
                     GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript", 45, 30, 900);
                     Main.dragDropper();
-
                 }
             } else {
                 GUI.labelCutterThread(jAlertLabel, "incorrect login info", 45, 30, 900);
