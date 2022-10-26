@@ -19,23 +19,22 @@ public class DriveCheck extends javax.swing.JFrame {
 
     public DriveCheck() {
         initComponents();
-
         switch (driveState) {
             case 1 -> {
-                jLabel1.setText("i-ncript must run");
-                jLabel2.setText("within a USB drive");
+                jLabel1.setText("i-ncript can only run");
+                jLabel2.setText("within a USB device");
             }
             case 2 -> {
-                jLabel1.setText("i-ncript isn't compatible");
+                jLabel1.setText("i-ncript can not run");
                 jLabel2.setText("with this USB drive");
             }
             case 3 -> {
-                jLabel1.setText("i-ncript must run in a");
+                jLabel1.setText("i-ncript must be in a");
                 jLabel2.setText("folder named --------");
             }
             case 4 -> {
-                jLabel1.setText("-------- folder must be");
-                jLabel2.setText("in the drive's root path");
+                jLabel1.setText("the folder with i-ncript");
+                jLabel2.setText("must be placed at root");
             }
         }
     }
@@ -62,13 +61,13 @@ public class DriveCheck extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Polentical Neon", 0, 14)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("folder named --------");
+        jLabel2.setText("the -------- folder must");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(

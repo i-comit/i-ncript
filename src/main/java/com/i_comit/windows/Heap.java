@@ -23,6 +23,7 @@ public class Heap {
 
     static long heapSize = Runtime.getRuntime().totalMemory();
 // Get maximum size of heap in bytes. The heap cannot grow beyond this size.// Any attempt will result in an OutOfMemoryException.
+
     public static String humanReadableByteCountBin(long bytes) {
         long absB = bytes == Long.MIN_VALUE ? Long.MAX_VALUE : Math.abs(bytes);
         if (absB < 1024) {
@@ -56,58 +57,52 @@ public class Heap {
             }
         }
         boolean b = false;
-        boolean b1 = false;
+//        boolean b1 = false;
         String logicaldisk = "wmic logicaldisk where name=" + "\"" + Main.root.substring(0, 2) + "\"" + " get description";
-        String diskdrive = "wmic diskdrive where model=" + "\"" + "SMI USB DISK USB Device" + "\"" + " get mediatype";
+//        String diskdrive = "wmic diskdrive where model=" + "\"" + "SMI USB DISK USB Device" + "\"" + " get mediatype";
         String s;
-        String s1;
+//        String s1;
         try {
             Process process = Runtime.getRuntime().exec(logicaldisk);
-            Process process1 = Runtime.getRuntime().exec(diskdrive);
+//            Process process1 = Runtime.getRuntime().exec(diskdrive);
             try ( BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-                BufferedReader reader1 = new BufferedReader(new InputStreamReader(process1.getInputStream()));
+//                BufferedReader reader1 = new BufferedReader(new InputStreamReader(process1.getInputStream()));
                 reader.readLine();
-                reader1.readLine();
+//                reader1.readLine();
                 while ((s = reader.readLine()) != null) {
                     if (s.trim().length() != 0) {
                         if (s.trim().equals("Removable Disk")) {
-                            while ((s1 = reader1.readLine()) != null && !b1) {
-                                if (s1.trim().length() != 0) {
-//                                    System.out.println("diskdrive result: " + s1);
-                                    if (s1.trim().equals("Removable Media")) {
+//                            while ((s1 = reader1.readLine()) != null && !b1) {
+//                                if (s1.trim().length() != 0) {
+//                                    if (s1.trim().equals("Removable Media")) {
                                         System.out.println("USB MATCH");
                                         String cwdPath = Paths.get("").toAbsolutePath().toString().trim();
                                         String rootPath = Paths.get("").toAbsolutePath().getRoot().toString().trim();
-
-                                        if ((cwdPath + "\\").equals(root)) {
-                                            //------- folder is in root directory
-                                            System.out.println("CWD MATCHES ROOT " + root);
-                                            if (root.equals(rootPath + masterFolder)) {
-                                                b = true;
+                                        if (root.length() > 2) {
+                                            System.out.println(rootPath + masterFolder);
+                                            if (root.length() >= 11 && root.substring(3, 11).equals("--------")) {
+                                                if ((root + "\\").equals(rootPath + masterFolder)) {
+                                                    b = true;
+                                                } else {
+                                                    DriveCheck.driveState = 4;
+                                                    new DriveCheck().setVisible(true);
+                                                    b = false;
+                                                }
                                             } else {
-                                                //-------- folder must be in root path
-                                                System.out.println("ROOT4 " + root);
-                                                System.out.println(cwdPath + "\\" + root + masterFolder + " AND " + rootPath + masterFolder);
-                                                DriveCheck.driveState = 4;
+                                                DriveCheck.driveState = 3;
                                                 new DriveCheck().setVisible(true);
                                                 b = false;
                                             }
-                                        } else {
-                                            //i-ncript must run in a folder named --------
-                                            DriveCheck.driveState = 3;
-                                            new DriveCheck().setVisible(true);
-                                            b = false;
                                         }
-                                        b1 = true;
-
-                                    } else {
-                                        System.out.println("Incompatible USB Device");
-                                        DriveCheck.driveState = 2;
-                                        new DriveCheck().setVisible(true);
-                                        b = false;
-                                    }
-                                }
-                            }
+//                                        b1 = true;
+//                                    } else {
+//                                        System.out.println("Incompatible USB Device");
+//                                        DriveCheck.driveState = 2;
+//                                        new DriveCheck().setVisible(true);
+//                                        b = false;
+//                                    }
+//                                }
+//                            }
                         } else {
                             System.out.println("Drive Must Be A USB");
                             DriveCheck.driveState = 1;
@@ -116,8 +111,8 @@ public class Heap {
                         }
                     }
                 }
-
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }

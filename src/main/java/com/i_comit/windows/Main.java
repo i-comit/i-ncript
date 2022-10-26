@@ -25,7 +25,7 @@ public class Main extends javax.swing.JFrame {
     public static String masterFolder = "--------\\";
 
     public Main() {
-        root = Paths.get("").toAbsolutePath().toString() + "\\";
+        root = Paths.get("").toAbsolutePath().toString();
         System.out.println("ROOT: " + root);
         if (Heap.checkWMIC()) {
             initComponents();
