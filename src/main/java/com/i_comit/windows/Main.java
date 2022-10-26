@@ -52,7 +52,6 @@ public class Main extends javax.swing.JFrame {
                 jUsernameLabel.setText("enter username");
                 jPasswordLabel.setText("enter password");
                 GUI.getGB();
-                jLabel3.setText(root.substring(0, 2) + " | " + GB);
                 System.out.println("Your available Memory Heap is " + Heap.humanReadableByteCountBin(Heap.heapSize));
 
                 jTextField1.setText("");
@@ -846,7 +845,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JPanel jEULAPanel1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
+    protected static javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     public static javax.swing.JPanel jLoginPanel;
     private javax.swing.JPanel jPanel1;

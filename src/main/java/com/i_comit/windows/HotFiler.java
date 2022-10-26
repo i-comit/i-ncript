@@ -53,18 +53,22 @@ class HotFiler_T implements Runnable {
                     AES.AESThread();
                 }
                 jAlertLabel.setText("hot filer enabled");
+                Thread.sleep(1000);
+                jAlertLabel.setText("");
                 Main.jToggleButton1.setBackground(new Color(28, 68, 94));
                 folderWatcher();
 //
 
             } else {
                 jAlertLabel.setText("hot filer disabled");
+                Thread.sleep(1000);
+                jAlertLabel.setText("");
                 Main.buttonGroup1.clearSelection();
 
                 Main.jProgressBar1.setStringPainted(false);
                 Main.jToggleButton1.setBackground(new Color(78, 80, 82));
             }
-        } catch (IOException ex) {
+        } catch (IOException | InterruptedException ex) {
             ex.printStackTrace();
         }
 
@@ -128,6 +132,7 @@ class HotFiler_T implements Runnable {
                                 AES.AESThread();
                                 System.out.println("Hot Filer Called AES");
                                 watchService.close();
+                                GUI.getGB();
                                 folderWatcher();
                                 b = false;
                             }

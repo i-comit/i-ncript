@@ -458,6 +458,9 @@
         <Property name="text" type="java.lang.String" value="jLabel3"/>
         <Property name="horizontalTextPosition" type="int" value="0"/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="12"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="jAlertLabel">
       <Properties>

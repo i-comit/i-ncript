@@ -32,6 +32,8 @@ public class GUI {
     public static void getGB() {
         File diskPartition = new File(root).toPath().getRoot().toFile();
         GB = Heap.humanReadableByteCountBin(diskPartition.getUsableSpace());
+        Main.jLabel3.setText(root.substring(0, 2) + " | " + GB);
+
     }
 
     public static void labelCutterThread(JLabel jLabel, String labelMsg, int initSleep, int sleep, int pause) {
@@ -40,7 +42,7 @@ public class GUI {
     }
 
     public static void loggerThread(File outputFile) {
-        t1= new Thread(() -> {
+        t1 = new Thread(() -> {
             logger_T.logger_T(outputFile);
         });
         t1.start();
@@ -51,7 +53,6 @@ public class GUI {
 //        t2.start();
 //
 //    }
-
     public static int countAllFiles(Path path) throws IOException {
         int result;
         try ( Stream<Path> walk = Files.walk(path)) {
@@ -77,7 +78,7 @@ public class GUI {
         }
         return result;
     }
-    
+
     public static void resetProgressBar() {
         jProgressBar1.setValue(jProgressBar1.getMaximum());
         Main.jButton2.setVisible(false);
@@ -110,8 +111,8 @@ public class GUI {
         } catch (InterruptedException | IOException ex) {
             ex.printStackTrace();
         }
-    }    
-    
+    }
+
 };
 
 class progressBar_T implements Runnable {
@@ -128,8 +129,6 @@ class progressBar_T implements Runnable {
 //            System.out.println("USB disconnected");
 //        }
     }
-
-
 
 }
 
