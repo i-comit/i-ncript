@@ -10,6 +10,7 @@ import static com.i_comit.windows.Statics.path;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -50,29 +51,28 @@ class FileHider_T implements Runnable {
         File[] contents = directory.listFiles();
         int fileCount = GUI.countAllFiles(path);
         Main.toolBtnsBool(false);
+        fileCt = 0;
 
         if (fileHideBool) {
+            Main.jTextArea1.append("hide filer enabled (will hide all files)\n");
             if (contents != null) {
                 if (contents.length != 0) {
 //                    Main.jToggleButton2.setEnabled(false);
                     paths.forEach(x -> {
                         try {
-                            Files.setAttribute(x, "dos:hidden", true);
-                            Statics.fileHideIter++;
+                            getFileAttr(x, fileHideBool);
+//                            Files.setAttribute(x, "dos:hidden", true);
                             if (Statics.fileHideIter == fileCount) {
-                                Main.toolBtnsBool(true);
                                 Main.jToggleButton1.setSelected(false);
                                 Main.buttonGroup1.clearSelection();
-                                switch (Statics.AESMode) {
-                                    case 0 ->
-                                        Main.jRadioButton0.setSelected(true);
-                                    case 1 ->
-                                        Main.jRadioButton1.setSelected(true);
+                                if (fileCt > 0) {
+                                    Thread.sleep(300);
+                                    GUI.labelCutterThread(Main.jAlertLabel, fileCt + " files hidden", 30, 25, 300);
+                                    Main.toolBtnsBool(true);
+
+                                } else {
+                                    Main.toolBtnsBool(true);
                                 }
-
-                                Thread.sleep(300);
-                                GUI.labelCutterThread(Main.jAlertLabel, fileCount + " files hidden", 30, 25, 300);
-
                             }
                         } catch (IOException | InterruptedException ex) {
                             ex.printStackTrace();
@@ -85,24 +85,24 @@ class FileHider_T implements Runnable {
 //                GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 40, 1000);
             }
         } else {
+            Main.jTextArea1.append("hide filer disabled (will reveal all files)\n");
             if (contents != null) {
                 if (contents.length != 0) {
                     paths.forEach(x -> {
                         try {
-                            Files.setAttribute(x, "dos:hidden", false);
-                            Statics.fileHideIter++;
-                            if (Statics.fileHideIter == fileCount) {
-                                Main.toolBtnsBool(true);
-                                Main.jToggleButton1.setSelected(false);
-                                switch (Statics.AESMode) {
-                                    case 0 ->
-                                        Main.jRadioButton0.setSelected(true);
-                                    case 1 ->
-                                        Main.jRadioButton1.setSelected(true);
-                                }
+                            getFileAttr(x, fileHideBool);
 
-                                Thread.sleep(300);
-                                GUI.labelCutterThread(Main.jAlertLabel, fileCount + " files unhidden", 30, 25, 350);
+//                            Files.setAttribute(x, "dos:hidden", false);
+                            if (Statics.fileHideIter == fileCount) {
+                                Main.jToggleButton1.setSelected(false);
+                                Main.buttonGroup1.clearSelection();
+                                if (fileCt > 0) {
+                                    Thread.sleep(300);
+                                    GUI.labelCutterThread(Main.jAlertLabel, fileCt + " files unhidden", 30, 25, 350);
+                                    Main.toolBtnsBool(true);
+                                } else {
+                                    Main.toolBtnsBool(true);
+                                }
                             }
 
                         } catch (IOException | InterruptedException ex) {
@@ -116,5 +116,28 @@ class FileHider_T implements Runnable {
 //                GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 40, 1000);
             }
         }
+    }
+
+    static int fileCt = 0;
+
+    public static void getFileAttr(Path x, boolean fileHideBool) throws IOException {
+        String fileAttr = Files.getAttribute(x, "dos:hidden", LinkOption.NOFOLLOW_LINKS).toString();
+        boolean fileAttrBool = Boolean.parseBoolean(fileAttr);
+
+        if (fileAttrBool == true) {
+            if (!Main.jToggleButton2.isSelected()) {
+                Files.setAttribute(x, "dos:hidden", false);
+                fileCt++;
+            }
+        }
+
+        if (fileAttrBool == false) {
+            if (Main.jToggleButton2.isSelected()) {
+                Files.setAttribute(x, "dos:hidden", true);
+                fileCt++;
+            }
+        }
+        Statics.fileHideIter++;
+
     }
 }

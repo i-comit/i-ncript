@@ -37,8 +37,8 @@ class DragDrop implements DropTargetListener {
 
     public static Thread t;
 
-    public static void progressBarThread() {
-        t = new Thread(() -> progressBar_T2.resetProgressBar());
+    public static void progressBarThread(int encFiles, int decFiles) {
+        t = new Thread(() -> progressBar_T2.resetProgressBar(encFiles, decFiles));
         t.start();
 
     }
@@ -81,6 +81,8 @@ class DragDrop implements DropTargetListener {
         // Inform that the drop is complete
         event.dropComplete(true);
     }
+    static int encFiles = 0;
+    static int decFiles = 0;
 
     public static void listDragDropFiles(List paths) throws IOException {
         Statics.fileIter = 0;
@@ -93,11 +95,11 @@ class DragDrop implements DropTargetListener {
                 String fileStr = x.toString();
                 File file = Paths.get(fileStr).toFile();
                 if (x.toString().endsWith(".enc") || x.toString().startsWith("Thumbs.db")) {
-//                    System.out.println("Encrypted");
+                    encFiles++;
                     AES.decrypt(Hasher.modHash(password), file, file);
                 }
                 if (!x.toString().endsWith(".enc")) {
-                    System.out.println("Not encrypted");
+                    decFiles++;
                     try {
                         AES.encrypt(Hasher.modHash(password), file, file);
                     } catch (AES.CryptoException ex) {
@@ -111,12 +113,8 @@ class DragDrop implements DropTargetListener {
             GUI.t.interrupt();
             GUI.labelCutterThread(Main.jAlertLabel, "incorrect key", 10, 25, 500);
         } else {
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
-            progressBarThread();
+
+            progressBarThread(encFiles, decFiles);
             System.out.println("amogus");
         }
     }
@@ -149,13 +147,19 @@ class progressBar_T2 implements Runnable {
 
     }
 
-    public static void resetProgressBar() {
+    public static void resetProgressBar(int encFiles, int decFiles) {
         jProgressBar1.setMaximum(100);
         jProgressBar1.setValue(jProgressBar1.getMaximum());
         Main.jButton2.setVisible(false);
         try {
-            Thread.sleep(500);
+            if (encFiles > 0) {
+                GUI.labelCutterThread(jAlertLabel, encFiles + " files decrypted", 15, 30, 300);
+            }
+            if (decFiles > 0) {
+                GUI.labelCutterThread(jAlertLabel, decFiles + " files encrypted", 15, 30, 300);
+            }
 
+            Thread.sleep(600);
             for (int x = jProgressBar1.getMaximum(); x >= 0; x--) {
                 Thread.sleep(5);
                 jProgressBar1.setValue(x);
@@ -165,7 +169,10 @@ class progressBar_T2 implements Runnable {
                 Statics.fileCount = 0;
                 jProgressBar1.setValue(Statics.fileIter);
                 jProgressBar1.setStringPainted(false);
+                DragDrop.encFiles = 0;
+                DragDrop.decFiles = 0;
                 FileHider.FileHiderThread(Main.jToggleButton2.isSelected());
+
             }
         } catch (InterruptedException | IOException ex) {
             ex.printStackTrace();
