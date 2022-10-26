@@ -21,14 +21,13 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "F:\\";
+    public static String root = "";
     public static String masterFolder = "--------\\";
 
     public Main() {
-//        root = Paths.get("").toAbsolutePath().getRoot().toString();
-        root = root + masterFolder;
+        root = Paths.get("").toAbsolutePath().toString() + "\\";
         System.out.println("ROOT: " + root);
-        if (Heap.checkDriveType()) {
+        if (Heap.checkWMIC()) {
             initComponents();
             if (!Statics.keyFile.exists()) {
                 jToolPanel.setVisible(false);
@@ -82,16 +81,17 @@ public class Main extends javax.swing.JFrame {
         jTextArea5.setVisible(true);
         new DropTarget(jTextArea5, myDragDropListener);
     }
-    
-    public static void toolBtnsBool(boolean bool){
+
+    public static void toolBtnsBool(boolean bool) {
         jToggleButton1.setEnabled(bool);
         jToggleButton2.setEnabled(bool);
         jRadioButton0.setEnabled(bool);
         jRadioButton1.setEnabled(bool);
-        
+
 //        jButton2.setEnabled(!bool);
 //        jButton3.setEnabled(!bool);
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -329,7 +329,7 @@ public class Main extends javax.swing.JFrame {
         );
 
         jProgressBar1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
-        jProgressBar1.setForeground(Color.CYAN);
+        jProgressBar1.setForeground(Color.WHITE);
 
         jLabel1.setFont(new java.awt.Font("Polentical Neon", 0, 21)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -820,7 +820,8 @@ public class Main extends javax.swing.JFrame {
             //</editor-fold>
             UIManager.setLookAndFeel("com.formdev.flatlaf.FlatDarkLaf");
             //</editor-fold>
-
+            UIManager.put("ProgressBar.selectionForeground", Color.black);
+            UIManager.put("ProgressBar.selectionBackground", Color.white);
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             ex.printStackTrace();
         }

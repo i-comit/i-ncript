@@ -6,7 +6,9 @@ package com.i_comit.windows;
 
 import static com.i_comit.windows.Main.masterFolder;
 import static com.i_comit.windows.Main.root;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -21,29 +23,6 @@ public class Heap {
 
     static long heapSize = Runtime.getRuntime().totalMemory();
 // Get maximum size of heap in bytes. The heap cannot grow beyond this size.// Any attempt will result in an OutOfMemoryException.
-    static long heapMaxSize = Runtime.getRuntime().maxMemory();
-    // Get amount of free memory within the heap in bytes. This size will increase // after garbage collection and decrease as new objects are created.
-    static long heapFreeSize = Runtime.getRuntime().freeMemory();
-
-    public static void main(String[] args) {
-
-        System.out.println(heapSize);
-        System.out.println(heapMaxSize);
-        System.out.println(heapFreeSize);
-        Runtime env = Runtime.getRuntime();
-
-        System.out.println("Available Processors " + Runtime.getRuntime().availableProcessors());
-//        while (true) {
-//            System.out.println("Max Heap Size = maxMemory() = " + humanReadableByteCountBin(env.maxMemory())); //max heap size from -Xmx, i.e. is constant during runtime
-////            System.out.println("Available in Current Heap = freeMemory() = " + env.freeMemory()); //current heap will extend if no more freeMemory to a maximum of maxMemory
-////            System.out.println("Currently Used Heap = " + (env.totalMemory() - env.freeMemory()));
-//            System.out.println("Current Heap Size = totalMemory() = " + humanReadableByteCountBin(env.totalMemory())); //currently assigned  heap
-////            System.out.println("Unassigned Heap = " + (env.maxMemory() - env.totalMemory()));
-////            System.out.println("Currently Totally Available Heap Space = " + ((env.maxMemory() - env.totalMemory()) + env.freeMemory())); //available=unassigned + free
-//        }
-        checkDriveType();
-    }
-
     public static String humanReadableByteCountBin(long bytes) {
         long absB = bytes == Long.MIN_VALUE ? Long.MAX_VALUE : Math.abs(bytes);
         if (absB < 1024) {
@@ -59,11 +38,9 @@ public class Heap {
         return String.format("%.1f %cB", value / 1024.0, ci.current());
     }
 
-    public static boolean checkDriveType() {
-        boolean b = false;
+    public static boolean checkWMIC() {
         Path runtime = Paths.get(root + "runtime");
         Path app = Paths.get(root + "app");
-        System.out.println(runtime);
         if (runtime.toFile().exists()) {
             try {
                 Files.setAttribute(runtime, "dos:hidden", true);
@@ -78,16 +55,71 @@ public class Heap {
                 ex.printStackTrace();
             }
         }
-//        String rootPath = Paths.get("").toAbsolutePath().toString().trim();
-//        System.out.println(rootPath);
-        String rootPath2 = "F:\\" + Main.masterFolder;
-        System.out.println("CWD: " + rootPath2);
-        if (Main.root.equals(rootPath2)) {
-            b = true;
-        } else {
-            new DriveCheck().setVisible(true);
-            b = false;
+        boolean b = false;
+        boolean b1 = false;
+        String logicaldisk = "wmic logicaldisk where name=" + "\"" + Main.root.substring(0, 2) + "\"" + " get description";
+        String diskdrive = "wmic diskdrive where model=" + "\"" + "SMI USB DISK USB Device" + "\"" + " get mediatype";
+        String s;
+        String s1;
+        try {
+            Process process = Runtime.getRuntime().exec(logicaldisk);
+            Process process1 = Runtime.getRuntime().exec(diskdrive);
+            try ( BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                BufferedReader reader1 = new BufferedReader(new InputStreamReader(process1.getInputStream()));
+                reader.readLine();
+                reader1.readLine();
+                while ((s = reader.readLine()) != null) {
+                    if (s.trim().length() != 0) {
+                        if (s.trim().equals("Removable Disk")) {
+                            while ((s1 = reader1.readLine()) != null && !b1) {
+                                if (s1.trim().length() != 0) {
+//                                    System.out.println("diskdrive result: " + s1);
+                                    if (s1.trim().equals("Removable Media")) {
+                                        System.out.println("USB MATCH");
+                                        String cwdPath = Paths.get("").toAbsolutePath().toString().trim();
+                                        String rootPath = Paths.get("").toAbsolutePath().getRoot().toString().trim();
 
+                                        if ((cwdPath + "\\").equals(root)) {
+                                            //------- folder is in root directory
+                                            System.out.println("CWD MATCHES ROOT " + root);
+                                            if (root.equals(rootPath + masterFolder)) {
+                                                b = true;
+                                            } else {
+                                                //-------- folder must be in root path
+                                                System.out.println("ROOT4 " + root);
+                                                System.out.println(cwdPath + "\\" + root + masterFolder + " AND " + rootPath + masterFolder);
+                                                DriveCheck.driveState = 4;
+                                                new DriveCheck().setVisible(true);
+                                                b = false;
+                                            }
+                                        } else {
+                                            //i-ncript must run in a folder named --------
+                                            DriveCheck.driveState = 3;
+                                            new DriveCheck().setVisible(true);
+                                            b = false;
+                                        }
+                                        b1 = true;
+
+                                    } else {
+                                        System.out.println("Incompatible USB Device");
+                                        DriveCheck.driveState = 2;
+                                        new DriveCheck().setVisible(true);
+                                        b = false;
+                                    }
+                                }
+                            }
+                        } else {
+                            System.out.println("Drive Must Be A USB");
+                            DriveCheck.driveState = 1;
+                            new DriveCheck().setVisible(true);
+                            b = false;
+                        }
+                    }
+                }
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return b;
     }

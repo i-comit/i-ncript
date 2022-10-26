@@ -13,6 +13,7 @@ import java.nio.file.*;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -84,7 +85,12 @@ public class AES {
                 System.gc();
                 System.runFinalization();
             }
-            Main.jProgressBar1.setValue(Statics.fileIter++);
+            int iterator = Statics.fileIter++;
+            float percentage = ((float) iterator / AES_T.paths.size() * 100);
+            DecimalFormat format = new DecimalFormat("0.#");
+            String percentageStr =format.format(percentage);
+            Main.jProgressBar1.setValue(iterator);
+            Main.jProgressBar1.setString(percentageStr + "% | " + iterator + "/" + AES_T.paths.size());
             GUI.loggerThread(outputFile);
         } catch (NoSuchPaddingException | NoSuchAlgorithmException
                 | InvalidKeyException | BadPaddingException
@@ -118,10 +124,12 @@ class AES_T implements Runnable {
 //        }
     }
 
+    public static List<Path> paths = null;
+
     public static void AESQuery() throws InterruptedException {
         contents = directory.listFiles();
         try {
-            List<Path> paths = listAESPaths(path);
+            paths = listAESPaths(path);
             if (contents != null) {
                 if (contents.length != 0) {
                     if (!paths.isEmpty()) {

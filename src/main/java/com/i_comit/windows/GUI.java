@@ -80,6 +80,7 @@ public class GUI {
     }
 
     public static void resetProgressBar() {
+        Main.jProgressBar1.setString("100% | " + AES_T.paths.size() + "/" + AES_T.paths.size());
         jProgressBar1.setValue(jProgressBar1.getMaximum());
         Main.jButton2.setVisible(false);
         try {
