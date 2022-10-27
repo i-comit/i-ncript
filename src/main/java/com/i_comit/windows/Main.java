@@ -22,61 +22,61 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "";
+    public static String root = "F:\\";
     public static String masterFolder = "--------\\";
 
     public Main() {
-        root = Paths.get("").toAbsolutePath().toString();
+//        root = Paths.get("").toAbsolutePath().toString();
 //        System.out.println("ROOT: " + root);
-        if (Heap.checkWMIC()) {
-//            root = root + masterFolder;
-            System.out.println(Statics.keyFile);
-            initComponents();
+//        if (Heap.checkWMIC()) {
+        root = root + masterFolder;
+        System.out.println(Statics.keyFile);
+        initComponents();
 
-            if (!Statics.keyFile.exists()) {
-                jToolPanel.setVisible(false);
-                jLoginPanel.setVisible(false);
-                jLabel1.setVisible(false);
-                jLabel3.setVisible(false);
-                jAlertLabel.setVisible(false);
-                jTabbedPane1.setVisible(false);
-                jTextArea3.setCaretPosition(0);
-//                jEULAPanel1.setVisible(false);
-//                jEULAPanel1.setVisible(true);
-            } else {
-                jLoginPanel.setVisible(true);
-                jLabel1.setVisible(true);
-                jLabel3.setVisible(true);
-                jAlertLabel.setVisible(true);
-                jTabbedPane1.setVisible(true);
-                jEULAPanel1.setVisible(false);
-                jEULAPanel.setVisible(false);
-
-                jUsernameLabel.setText("enter username");
-                jPasswordLabel.setText("enter password");
-                GUI.getGB();
-                System.out.println("Your available Memory Heap is " + Heap.humanReadableByteCountBin(Heap.heapSize));
-
-                jTextField1.setText("");
-                jPasswordField1.setText("");
-                jAlertLabel.setText("");
-
-                File rootFolder = Paths.get(root + "\\" + folderName).toFile();
-                if (!rootFolder.exists()) {
-                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 40, 40, 1200);
-                    rootFolder.mkdir();
-                } else {
-                    GUI.labelCutterThread(jAlertLabel, "developed by i-comit", 40, 40, 1200);
-                }
-                jToolPanel.setVisible(false);
-                jButton2.setVisible(false);
-            }
-            jProgressBar1.setVisible(false);
-            jTextArea5.setVisible(false);
-
+        if (!Statics.keyFile.exists()) {
+            jToolPanel.setVisible(false);
+            jLoginPanel.setVisible(false);
+            jLabel1.setVisible(false);
+            jLabel3.setVisible(false);
+            jAlertLabel.setVisible(false);
+            jTabbedPane1.setVisible(false);
+            jTextArea3.setCaretPosition(0);
         } else {
+            jLoginPanel.setVisible(true);
+            jLabel1.setVisible(true);
+            jLabel3.setVisible(true);
+            jAlertLabel.setVisible(true);
+            jTabbedPane1.setVisible(true);
+            jEULAPanel1.setVisible(false);
+            jEULAPanel.setVisible(false);
 
+            jUsernameLabel.setText("enter username");
+            jPasswordLabel.setText("enter password");
+            GUI.getGB();
+            System.out.println("Your available Memory Heap is " + Heap.humanReadableByteCountBin(Heap.heapSize));
+
+            jTextField1.setText("");
+            jPasswordField1.setText("");
+            jAlertLabel.setText("");
+
+            File rootFolder = Paths.get(root + "\\" + folderName).toFile();
+            System.out.println(rootFolder);
+
+            if (!rootFolder.exists()) {
+                GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 40, 40, 1200);
+                rootFolder.mkdir();
+            } else {
+                GUI.labelCutterThread(jAlertLabel, "developed by i-comit", 40, 40, 1200);
+            }
+            jToolPanel.setVisible(false);
+            jButton2.setVisible(false);
         }
+        jProgressBar1.setVisible(false);
+        jTextArea5.setVisible(false);
+
+//        } else {
+//
+//        }
     }
 
     public static void dragDropper() {
@@ -803,35 +803,35 @@ public class Main extends javax.swing.JFrame {
 
 //        try {
 //            new ServerSocket(665);
-            try {
-                for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                    if ("Nimbus".equals(info.getName())) {
-                        javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                        break;
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
 
-                    }
                 }
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-                java.util.logging.Logger.getLogger(Main.class
-                        .getName()).log(java.util.logging.Level.SEVERE, null, ex);
             }
-            try {
-                //</editor-fold>
-                //</editor-fold>
-                //</editor-fold>
-                //</editor-fold>
-                UIManager.setLookAndFeel("com.formdev.flatlaf.FlatDarkLaf");
-                //</editor-fold>
-                UIManager.put("ProgressBar.selectionForeground", Color.black);
-                UIManager.put("ProgressBar.selectionBackground", Color.white);
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-                ex.printStackTrace();
-            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Main.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        try {
+            //</editor-fold>
+            //</editor-fold>
+            //</editor-fold>
+            //</editor-fold>
+            UIManager.setLookAndFeel("com.formdev.flatlaf.FlatDarkLaf");
+            //</editor-fold>
+            UIManager.put("ProgressBar.selectionForeground", Color.black);
+            UIManager.put("ProgressBar.selectionBackground", Color.white);
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+            ex.printStackTrace();
+        }
 
-            /* Create and display the form */
-            java.awt.EventQueue.invokeLater(() -> {
-                new Main().setVisible(true);
-            });
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> {
+            new Main().setVisible(true);
+        });
 //        } catch (IOException x) {
 //            System.out.println("Another instance already running... exit.");
 //        }

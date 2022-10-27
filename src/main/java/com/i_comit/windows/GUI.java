@@ -173,7 +173,7 @@ class logger_T implements Runnable {
     public static void logger_T(File outputFile) {
         try {
             Thread.sleep(50);
-            Main.jTextArea1.append(outputFile.getAbsolutePath().substring(20, outputFile.getPath().length()) + "\n");
+            Main.jTextArea1.append(outputFile.getAbsolutePath().substring(21, outputFile.getPath().length()) + "\n");
             Thread.sleep(50);
             Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
         } catch (InterruptedException ex) {

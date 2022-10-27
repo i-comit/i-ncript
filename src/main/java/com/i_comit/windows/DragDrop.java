@@ -113,9 +113,8 @@ class DragDrop implements DropTargetListener {
             GUI.t.interrupt();
             GUI.labelCutterThread(Main.jAlertLabel, "incorrect key", 10, 25, 500);
         } else {
-
+            GUI.getGB();
             progressBarThread(encFiles, decFiles);
-            System.out.println("amogus");
         }
     }
 

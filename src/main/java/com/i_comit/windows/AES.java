@@ -10,12 +10,13 @@ import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Statics.*;
 import java.io.*;
 import java.nio.file.*;
+import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -66,6 +67,17 @@ public class AES {
         }
     }
 
+    public static void getFileAttr(File inputFile, File outputFile) throws IOException {
+        BasicFileAttributes attr = Files.readAttributes(inputFile.toPath(), BasicFileAttributes.class);
+
+        FileTime time = attr.creationTime();
+        FileTime time2 = attr.lastModifiedTime();
+
+        Files.setAttribute(outputFile.toPath(), "basic:creationTime", time, NOFOLLOW_LINKS);
+        Files.setLastModifiedTime(outputFile.toPath(), time2);
+
+    }
+
     private static void doCrypto(int cipherMode, String key, File inputFile,
             File outputFile) throws CryptoException {
         try {
@@ -74,12 +86,6 @@ public class AES {
             cipher.init(cipherMode, secretKey);
 
             try ( FileInputStream inputStream = new FileInputStream(inputFile);  FileOutputStream outputStream = new FileOutputStream(outputFile)) {
-
-                BasicFileAttributes attr = Files.readAttributes(inputFile.toPath(), BasicFileAttributes.class);
-                System.out.println("creationTime: " + attr.creationTime());
-                System.out.println("lastAccessTime: " + attr.lastAccessTime());
-                System.out.println("lastModifiedTime: " + attr.lastModifiedTime());
-                
                 byte[] inputBytes = new byte[(int) inputFile.length()];
                 int nread;
                 while ((nread = inputStream.read(inputBytes)) > 0) {
@@ -94,6 +100,7 @@ public class AES {
                 System.gc();
                 System.runFinalization();
             }
+
             int iterator = Statics.fileIter++;
             float percentage = ((float) iterator / AES_T.paths.size() * 100);
             DecimalFormat format = new DecimalFormat("0.#");
@@ -101,6 +108,8 @@ public class AES {
             Main.jProgressBar1.setValue(iterator);
             Main.jProgressBar1.setString(percentageStr + "% | " + iterator + "/" + AES_T.paths.size());
             GUI.loggerThread(outputFile);
+            getFileAttr(inputFile, outputFile);
+
         } catch (NoSuchPaddingException | NoSuchAlgorithmException
                 | InvalidKeyException | BadPaddingException
                 | IllegalBlockSizeException ex) {

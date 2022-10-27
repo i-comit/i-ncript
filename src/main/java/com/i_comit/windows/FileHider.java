@@ -54,7 +54,7 @@ class FileHider_T implements Runnable {
         fileCt = 0;
 
         if (fileHideBool) {
-            Main.jTextArea1.append("\nhide filer enabled (will hide all files)\n");
+            Main.jTextArea1.append("\nhide filer enabled (hide all files)\n");
             if (contents != null) {
                 if (contents.length != 0) {
 //                    Main.jToggleButton2.setEnabled(false);
@@ -84,7 +84,7 @@ class FileHider_T implements Runnable {
 //                GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 40, 1000);
             }
         } else {
-            Main.jTextArea1.append("\nhide filer disabled (will reveal all files)\n");
+            Main.jTextArea1.append("\nhide filer disabled (reveal all files)\n");
             if (contents != null) {
                 if (contents.length != 0) {
                     paths.forEach(x -> {
