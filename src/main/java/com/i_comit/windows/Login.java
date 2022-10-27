@@ -66,6 +66,7 @@ public class Login {
             Files.setAttribute(p, "dos:hidden", true);
             Main.jLoginPanel.setVisible(false);
             Main.jToolPanel.setVisible(true);
+            Main.dragDropper();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -40,22 +40,6 @@ public class Heap {
     }
 
     public static boolean checkWMIC() {
-        Path runtime = Paths.get(root + "runtime");
-        Path app = Paths.get(root + "app");
-        if (runtime.toFile().exists()) {
-            try {
-                Files.setAttribute(runtime, "dos:hidden", true);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-        if (app.toFile().exists()) {
-            try {
-                Files.setAttribute(app, "dos:hidden", true);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
         boolean b = false;
 //        boolean b1 = false;
         String logicaldisk = "wmic logicaldisk where name=" + "\"" + Main.root.substring(0, 2) + "\"" + " get description";
@@ -76,7 +60,6 @@ public class Heap {
 //                                if (s1.trim().length() != 0) {
 //                                    if (s1.trim().equals("Removable Media")) {
                             System.out.println("USB MATCH");
-                            String rootPath = Paths.get("").toAbsolutePath().getRoot().toString().trim();
                             if (root.length() > 2) {
                                 if (root.contains("--------")) {
                                     if (root.length() == 11) {

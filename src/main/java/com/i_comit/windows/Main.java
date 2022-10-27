@@ -11,7 +11,8 @@ import java.awt.dnd.DropTarget;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
-import java.net.ServerSocket;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -22,61 +23,74 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "F:\\";
+    public static String root = "";
     public static String masterFolder = "--------\\";
 
     public Main() {
-//        root = Paths.get("").toAbsolutePath().toString();
-//        System.out.println("ROOT: " + root);
-//        if (Heap.checkWMIC()) {
-        root = root + masterFolder;
-        System.out.println(Statics.keyFile);
-        initComponents();
-
-        if (!Statics.keyFile.exists()) {
-            jToolPanel.setVisible(false);
-            jLoginPanel.setVisible(false);
-            jLabel1.setVisible(false);
-            jLabel3.setVisible(false);
-            jAlertLabel.setVisible(false);
-            jTabbedPane1.setVisible(false);
-            jTextArea3.setCaretPosition(0);
-        } else {
-            jLoginPanel.setVisible(true);
-            jLabel1.setVisible(true);
-            jLabel3.setVisible(true);
-            jAlertLabel.setVisible(true);
-            jTabbedPane1.setVisible(true);
-            jEULAPanel1.setVisible(false);
-            jEULAPanel.setVisible(false);
-
-            jUsernameLabel.setText("enter username");
-            jPasswordLabel.setText("enter password");
-            GUI.getGB();
-            System.out.println("Your available Memory Heap is " + Heap.humanReadableByteCountBin(Heap.heapSize));
-
-            jTextField1.setText("");
-            jPasswordField1.setText("");
-            jAlertLabel.setText("");
-
-            File rootFolder = Paths.get(root + "\\" + folderName).toFile();
-            System.out.println(rootFolder);
-
-            if (!rootFolder.exists()) {
-                GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 40, 40, 1200);
-                rootFolder.mkdir();
-            } else {
-                GUI.labelCutterThread(jAlertLabel, "developed by i-comit", 40, 40, 1200);
+        root = Paths.get("").toAbsolutePath().toString();
+        Path runtime = Paths.get(root.substring(0, 3) + masterFolder + "runtime");
+        Path app = Paths.get(root.substring(0, 3) + masterFolder + "app");
+        if (runtime.toFile().exists()) {
+            try {
+                Files.setAttribute(runtime, "dos:hidden", true);
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-            jToolPanel.setVisible(false);
-            jButton2.setVisible(false);
         }
-        jProgressBar1.setVisible(false);
-        jTextArea5.setVisible(false);
+        if (app.toFile().exists()) {
+            try {
+                Files.setAttribute(app, "dos:hidden", true);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        if (Heap.checkWMIC()) {
+//        root = root + masterFolder;
+            initComponents();
 
-//        } else {
-//
-//        }
+            if (!Statics.keyFile.exists()) {
+                jToolPanel.setVisible(false);
+                jLoginPanel.setVisible(false);
+                jLabel1.setVisible(false);
+                jLabel3.setVisible(false);
+                jAlertLabel.setVisible(false);
+                jTabbedPane1.setVisible(false);
+                jTextArea3.setCaretPosition(0);
+            } else {
+                jLoginPanel.setVisible(true);
+                jLabel1.setVisible(true);
+                jLabel3.setVisible(true);
+                jAlertLabel.setVisible(true);
+                jTabbedPane1.setVisible(true);
+                jEULAPanel1.setVisible(false);
+                jEULAPanel.setVisible(false);
+
+                jUsernameLabel.setText("enter username");
+                jPasswordLabel.setText("enter password");
+                GUI.getGB();
+                System.out.println("Your available Memory Heap is " + Heap.humanReadableByteCountBin(Heap.heapSize));
+
+                jTextField1.setText("");
+                jPasswordField1.setText("");
+                jAlertLabel.setText("");
+
+                File rootFolder = Paths.get(root + "\\" + folderName).toFile();
+                System.out.println(rootFolder);
+
+                if (!rootFolder.exists()) {
+                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 40, 40, 1200);
+                    rootFolder.mkdir();
+                } else {
+                    GUI.labelCutterThread(jAlertLabel, "developed by i-comit", 40, 40, 1200);
+                }
+                jToolPanel.setVisible(false);
+                jButton2.setVisible(false);
+            }
+            jProgressBar1.setVisible(false);
+            jTextArea5.setVisible(false);
+        } else {
+
+        }
     }
 
     public static void dragDropper() {
@@ -645,7 +659,6 @@ public class Main extends javax.swing.JFrame {
     //DECRYPT
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
         jToggleButton1.setSelected(false);
-        jToggleButton1.setEnabled(false);
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
@@ -718,7 +731,7 @@ public class Main extends javax.swing.JFrame {
             Login.loginCheck();
         }
     }//GEN-LAST:event_jPasswordField1KeyPressed
-
+    //STOP
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
         AES.t.stop();
         jButton2.setVisible(false);
