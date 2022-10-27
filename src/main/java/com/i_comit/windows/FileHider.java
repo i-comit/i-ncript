@@ -54,7 +54,7 @@ class FileHider_T implements Runnable {
         fileCt = 0;
 
         if (fileHideBool) {
-            Main.jTextArea1.append("hide filer enabled (will hide all files)\n");
+            Main.jTextArea1.append("\nhide filer enabled (will hide all files)\n");
             if (contents != null) {
                 if (contents.length != 0) {
 //                    Main.jToggleButton2.setEnabled(false);
@@ -63,9 +63,8 @@ class FileHider_T implements Runnable {
                             getFileAttr(x, fileHideBool);
 //                            Files.setAttribute(x, "dos:hidden", true);
                             if (Statics.fileHideIter == fileCount) {
-                                Main.jToggleButton1.setSelected(false);
-                                Main.buttonGroup1.clearSelection();
-                                if (fileCt > 0) {
+
+                                if (fileCt > 5) {
                                     Thread.sleep(300);
                                     GUI.labelCutterThread(Main.jAlertLabel, fileCt + " files hidden", 30, 25, 300);
                                     Main.toolBtnsBool(true);
@@ -85,18 +84,15 @@ class FileHider_T implements Runnable {
 //                GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 40, 1000);
             }
         } else {
-            Main.jTextArea1.append("hide filer disabled (will reveal all files)\n");
+            Main.jTextArea1.append("\nhide filer disabled (will reveal all files)\n");
             if (contents != null) {
                 if (contents.length != 0) {
                     paths.forEach(x -> {
                         try {
                             getFileAttr(x, fileHideBool);
-
-//                            Files.setAttribute(x, "dos:hidden", false);
                             if (Statics.fileHideIter == fileCount) {
-                                Main.jToggleButton1.setSelected(false);
-                                Main.buttonGroup1.clearSelection();
-                                if (fileCt > 0) {
+
+                                if (fileCt > 5) {
                                     Thread.sleep(300);
                                     GUI.labelCutterThread(Main.jAlertLabel, fileCt + " files unhidden", 30, 25, 350);
                                     Main.toolBtnsBool(true);

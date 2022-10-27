@@ -75,25 +75,27 @@ public class Heap {
 //                            while ((s1 = reader1.readLine()) != null && !b1) {
 //                                if (s1.trim().length() != 0) {
 //                                    if (s1.trim().equals("Removable Media")) {
-                                        System.out.println("USB MATCH");
-                                        String cwdPath = Paths.get("").toAbsolutePath().toString().trim();
-                                        String rootPath = Paths.get("").toAbsolutePath().getRoot().toString().trim();
-                                        if (root.length() > 2) {
-                                            System.out.println(rootPath + masterFolder);
-                                            if (root.length() >= 11 && root.substring(3, 11).equals("--------")) {
-                                                if ((root + "\\").equals(rootPath + masterFolder)) {
-                                                    b = true;
-                                                } else {
-                                                    DriveCheck.driveState = 4;
-                                                    new DriveCheck().setVisible(true);
-                                                    b = false;
-                                                }
-                                            } else {
-                                                DriveCheck.driveState = 3;
-                                                new DriveCheck().setVisible(true);
-                                                b = false;
-                                            }
-                                        }
+                            System.out.println("USB MATCH");
+                            String rootPath = Paths.get("").toAbsolutePath().getRoot().toString().trim();
+                            if (root.length() > 2) {
+                                if (root.contains("--------")) {
+                                    if (root.length() == 11) {
+                                        b = true;
+                                    } else {
+                                        DriveCheck.driveState = 4;
+                                        new DriveCheck().setVisible(true);
+                                        b = false;
+                                    }
+                                } else {
+                                    DriveCheck.driveState = 3;
+                                    new DriveCheck().setVisible(true);
+                                    b = false;
+                                }
+                            } else {
+                                DriveCheck.driveState = 3;
+                                new DriveCheck().setVisible(true);
+                                b = false;
+                            }
 //                                        b1 = true;
 //                                    } else {
 //                                        System.out.println("Incompatible USB Device");

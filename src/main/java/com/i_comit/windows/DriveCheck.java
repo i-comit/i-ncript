@@ -4,10 +4,16 @@
  */
 package com.i_comit.windows;
 
+import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Toolkit;
-
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import javax.swing.JLabel;
 /**
- *
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
 public class DriveCheck extends javax.swing.JFrame {
@@ -22,7 +28,8 @@ public class DriveCheck extends javax.swing.JFrame {
         switch (driveState) {
             case 1 -> {
                 jLabel1.setText("i-ncript can only run");
-                jLabel2.setText("within a USB device");
+//                jLabel2.setText("within a USB device");
+                goWebsite(jLabel2, "https://i-comit.com", "USB device");
             }
             case 2 -> {
                 jLabel1.setText("i-ncript can not run");
@@ -37,6 +44,21 @@ public class DriveCheck extends javax.swing.JFrame {
                 jLabel2.setText("must be placed at root");
             }
         }
+    }
+
+    private void goWebsite(JLabel website, final String url, String text) {
+        website.setText("<html>within a <a href=\"\">" + text + "</a></html>");
+        website.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        website.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    Desktop.getDesktop().browse(new URI(url));
+                } catch (URISyntaxException | IOException ex) {
+                    //It looks like there's a problem
+                }
+            }
+        });
     }
 
     /**
@@ -87,7 +109,7 @@ public class DriveCheck extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected static javax.swing.JLabel jLabel1;
     protected static javax.swing.JLabel jLabel2;

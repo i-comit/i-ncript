@@ -28,7 +28,7 @@ public class Statics {
 
     public static File f = new File(root);
     public static File directory = new File(root + folderName);
-    public static File keyFile = Paths.get(root + "app\\"+ keyName).toFile();
+    public static File keyFile = Paths.get(root.substring(0,3)+Main.masterFolder + "app\\"+ keyName).toFile();
     
     public static File[] contents = directory.listFiles();
 

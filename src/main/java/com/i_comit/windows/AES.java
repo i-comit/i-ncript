@@ -10,10 +10,12 @@ import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Statics.*;
 import java.io.*;
 import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -72,10 +74,17 @@ public class AES {
             cipher.init(cipherMode, secretKey);
 
             try ( FileInputStream inputStream = new FileInputStream(inputFile);  FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+
+                BasicFileAttributes attr = Files.readAttributes(inputFile.toPath(), BasicFileAttributes.class);
+                System.out.println("creationTime: " + attr.creationTime());
+                System.out.println("lastAccessTime: " + attr.lastAccessTime());
+                System.out.println("lastModifiedTime: " + attr.lastModifiedTime());
+                
                 byte[] inputBytes = new byte[(int) inputFile.length()];
                 int nread;
                 while ((nread = inputStream.read(inputBytes)) > 0) {
                     byte[] enc = cipher.update(inputBytes, 0, nread);
+//                    System.out.println(enc.length);
                     outputStream.write(enc);
                 }
                 byte[] enc = cipher.doFinal();
@@ -88,7 +97,7 @@ public class AES {
             int iterator = Statics.fileIter++;
             float percentage = ((float) iterator / AES_T.paths.size() * 100);
             DecimalFormat format = new DecimalFormat("0.#");
-            String percentageStr =format.format(percentage);
+            String percentageStr = format.format(percentage);
             Main.jProgressBar1.setValue(iterator);
             Main.jProgressBar1.setString(percentageStr + "% | " + iterator + "/" + AES_T.paths.size());
             GUI.loggerThread(outputFile);

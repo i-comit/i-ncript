@@ -11,6 +11,7 @@ import java.awt.dnd.DropTarget;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.nio.file.Paths;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -26,9 +27,12 @@ public class Main extends javax.swing.JFrame {
 
     public Main() {
         root = Paths.get("").toAbsolutePath().toString();
-        System.out.println("ROOT: " + root);
+//        System.out.println("ROOT: " + root);
         if (Heap.checkWMIC()) {
+//            root = root + masterFolder;
+            System.out.println(Statics.keyFile);
             initComponents();
+
             if (!Statics.keyFile.exists()) {
                 jToolPanel.setVisible(false);
                 jLoginPanel.setVisible(false);
@@ -57,7 +61,7 @@ public class Main extends javax.swing.JFrame {
                 jPasswordField1.setText("");
                 jAlertLabel.setText("");
 
-                File rootFolder = Paths.get(root + folderName).toFile();
+                File rootFolder = Paths.get(root + "\\" + folderName).toFile();
                 if (!rootFolder.exists()) {
                     GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 40, 40, 1200);
                     rootFolder.mkdir();
@@ -146,7 +150,7 @@ public class Main extends javax.swing.JFrame {
         jButton7 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("\ti-ncript");
+        setTitle("\ti-ncript™");
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti.png")));
         setResizable(false);
 
@@ -768,8 +772,8 @@ public class Main extends javax.swing.JFrame {
         jLabel3.setVisible(true);
         jAlertLabel.setVisible(true);
         jTabbedPane1.setVisible(true);
-        jUsernameLabel.setText("create username");
-        jPasswordLabel.setText("create password");
+        jUsernameLabel.setText("make username");
+        jPasswordLabel.setText("make password");
 
         GUI.getGB();
         jLabel3.setText(root.substring(0, 2) + " | " + GB);
@@ -779,7 +783,7 @@ public class Main extends javax.swing.JFrame {
         jPasswordField1.setText("");
         jAlertLabel.setText("");
 
-        File rootFolder = Paths.get(root + folderName).toFile();
+        File rootFolder = Paths.get(root + "\\" + folderName).toFile();
         if (!rootFolder.exists()) {
             GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 40, 40, 1200);
             rootFolder.mkdir();
@@ -796,40 +800,41 @@ public class Main extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
 
+//        try {
+//            new ServerSocket(665);
+            try {
+                for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                    if ("Nimbus".equals(info.getName())) {
+                        javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                        break;
+
+                    }
                 }
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+                java.util.logging.Logger.getLogger(Main.class
+                        .getName()).log(java.util.logging.Level.SEVERE, null, ex);
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Main.class
-                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        try {
-            //</editor-fold>
-            //</editor-fold>
-            //</editor-fold>
-            //</editor-fold>
-            UIManager.setLookAndFeel("com.formdev.flatlaf.FlatDarkLaf");
-            //</editor-fold>
-            UIManager.put("ProgressBar.selectionForeground", Color.black);
-            UIManager.put("ProgressBar.selectionBackground", Color.white);
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            ex.printStackTrace();
-        }
+            try {
+                //</editor-fold>
+                //</editor-fold>
+                //</editor-fold>
+                //</editor-fold>
+                UIManager.setLookAndFeel("com.formdev.flatlaf.FlatDarkLaf");
+                //</editor-fold>
+                UIManager.put("ProgressBar.selectionForeground", Color.black);
+                UIManager.put("ProgressBar.selectionBackground", Color.white);
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+                ex.printStackTrace();
+            }
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> {
-            new Main().setVisible(true);
-        });
+            /* Create and display the form */
+            java.awt.EventQueue.invokeLater(() -> {
+                new Main().setVisible(true);
+            });
+//        } catch (IOException x) {
+//            System.out.println("Another instance already running... exit.");
+//        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

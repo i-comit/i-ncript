@@ -103,7 +103,7 @@ class HotFiler_T implements Runnable {
 
     public static void folderWatcher() throws IOException {
         Main.jToggleButton1.setEnabled(true);
-
+        
         System.out.println("Folder Watcher Enabled");
         try {
             WatchService watchService = FileSystems.getDefault().newWatchService();
@@ -128,10 +128,12 @@ class HotFiler_T implements Runnable {
                         if (Statics.fileCount == paths0) {
                             if (paths0 != 0 && Statics.fileCount != 0) {
                                 key.cancel();
+                                Statics.fileIter = 0;
+                                Statics.fileCount = GUI.countFiles(Statics.path);
                                 Main.jProgressBar1.setMaximum(Statics.fileCount);
                                 AES.AESThread();
                                 System.out.println("Hot Filer Called AES");
-                                watchService.close();
+//                                watchService.close();
                                 GUI.getGB();
                                 folderWatcher();
                                 b = false;
