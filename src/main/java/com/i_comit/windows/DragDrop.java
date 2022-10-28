@@ -4,30 +4,18 @@
  */
 package com.i_comit.windows;
 
-import static com.i_comit.windows.AES.decrypt;
-import static com.i_comit.windows.AES_T.listAESPaths;
 import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.jProgressBar1;
 import static com.i_comit.windows.Statics.password;
-import static com.i_comit.windows.Statics.path;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.*;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  *
@@ -40,7 +28,6 @@ class DragDrop implements DropTargetListener {
     public static void progressBarThread(int encFiles, int decFiles) {
         t = new Thread(() -> progressBar_T2.resetProgressBar(encFiles, decFiles));
         t.start();
-
     }
 
     @Override
@@ -70,8 +57,6 @@ class DragDrop implements DropTargetListener {
                             listDragDropFiles(paths);
                         }
                     }
-                    for (Object file : files) {
-                    }
                 }
             } catch (Exception e) {
                 // Print out the error stack
@@ -85,6 +70,7 @@ class DragDrop implements DropTargetListener {
     static int decFiles = 0;
 
     public static void listDragDropFiles(List paths) throws IOException {
+        AES_T.paths = paths;
         Statics.fileIter = 0;
         jProgressBar1.setMaximum(paths.size());
         System.out.println(paths.size());
@@ -113,8 +99,9 @@ class DragDrop implements DropTargetListener {
             GUI.t.interrupt();
             GUI.labelCutterThread(Main.jAlertLabel, "incorrect key", 10, 25, 500);
         } else {
-            GUI.getGB();
             progressBarThread(encFiles, decFiles);
+            GUI.getGB();
+
         }
     }
 
@@ -147,6 +134,7 @@ class progressBar_T2 implements Runnable {
     }
 
     public static void resetProgressBar(int encFiles, int decFiles) {
+        Main.jProgressBar1.setString("100% | " + AES_T.paths.size() + "/" + AES_T.paths.size());
         jProgressBar1.setMaximum(100);
         jProgressBar1.setValue(jProgressBar1.getMaximum());
         Main.jButton2.setVisible(false);
@@ -171,7 +159,7 @@ class progressBar_T2 implements Runnable {
                 DragDrop.encFiles = 0;
                 DragDrop.decFiles = 0;
                 FileHider.FileHiderThread(Main.jToggleButton2.isSelected());
-
+                Main.toolBtnsBool(true);
             }
         } catch (InterruptedException | IOException ex) {
             ex.printStackTrace();

@@ -18,9 +18,6 @@ import javax.swing.JLabel;
  */
 public class DriveCheck extends javax.swing.JFrame {
 
-    /**
-     * Creates new form DriveCheck
-     */
     public static int driveState = 0;
 
     public DriveCheck() {
@@ -74,6 +71,7 @@ public class DriveCheck extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("i-ncript™");
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti.png")));
         setResizable(false);
 
