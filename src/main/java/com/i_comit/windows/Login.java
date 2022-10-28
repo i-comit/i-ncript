@@ -31,10 +31,10 @@ public class Login {
                     if (Statics.password.length() >= 4) {
                         Login.Authenticator();
                     } else {
-                        GUI.labelCutterThread(jAlertLabel, "please make a longer password", 20, 20, 1200);
+                        GUI.labelCutterThread(jAlertLabel, "please have a longer password", 20, 20, 1200);
                     }
                 } else {
-                    GUI.labelCutterThread(jAlertLabel, "please make a longer username", 20, 20, 1200);
+                    GUI.labelCutterThread(jAlertLabel, "please have a longer username", 20, 20, 1200);
                 }
             } else {
                 GUI.labelCutterThread(jAlertLabel, "please make a password", 20, 20, 1200);

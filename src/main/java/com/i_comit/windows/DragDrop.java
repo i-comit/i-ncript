@@ -26,12 +26,14 @@ class DragDrop implements DropTargetListener {
     public static Thread t;
 
     public static void progressBarThread(int encFiles, int decFiles) {
-        t = new Thread(() -> progressBar_T2.resetProgressBar(encFiles, decFiles));
+        t = new Thread(() -> DragDrop_T.resetProgressBar(encFiles, decFiles));
         t.start();
     }
 
     @Override
     public void drop(DropTargetDropEvent event) {
+        Main.toolBtnsBool(false);
+        Main.jTextArea5.setVisible(false);
         // Accept copy drops
         event.acceptDrop(DnDConstants.ACTION_COPY);
         // Get the transfer which can provide the dropped item data
@@ -47,17 +49,23 @@ class DragDrop implements DropTargetListener {
                     // Get all of the dropped files
                     List files = (List) transferable.getTransferData(flavor);
                     List<Path> paths = new ArrayList<>();
-                    // Loop them through
-                    for (int i = 0; i < files.size(); i++) {
-                        String sf = files.get(i).toString();
-                        File filesf = new File(sf);
-                        paths.add(filesf.toPath());
-                        System.out.println("File path is " + filesf);
-                        if (i == files.size() - 1) {
-                            listDragDropFiles(paths);
+
+                    if (files.size() <= 10) {
+                        // Loop them through
+                        for (int i = 0; i < files.size(); i++) {
+                            String sf = files.get(i).toString();
+                            File filesf = new File(sf);
+                            paths.add(filesf.toPath());
+                            if (i >= files.size() - 1) {
+                                listDragDropFiles(paths);
+                            }
                         }
+                    } else {
+                        GUI.labelCutterThread(Main.jAlertLabel, "you can only drop up to 10 files at once", 10, 25, 500);
+                        Main.jTextArea1.append("For security reasons, you can only drop up to 10 files at once\n");
                     }
                 }
+
             } catch (Exception e) {
                 // Print out the error stack
                 e.printStackTrace();
@@ -73,9 +81,9 @@ class DragDrop implements DropTargetListener {
         AES_T.paths = paths;
         Statics.fileIter = 0;
         jProgressBar1.setMaximum(paths.size());
-        System.out.println(paths.size());
         jProgressBar1.setStringPainted(true);
         jProgressBar1.setValue(Statics.fileIter);
+
         paths.forEach(x -> {
             try {
                 String fileStr = x.toString();
@@ -86,28 +94,24 @@ class DragDrop implements DropTargetListener {
                 }
                 if (!x.toString().endsWith(".enc")) {
                     decFiles++;
-                    try {
-                        AES.encrypt(Hasher.modHash(password), file, file);
-                    } catch (AES.CryptoException ex) {
-                    }
+                    AES.encrypt(Hasher.modHash(password), file, file);
                 }
             } catch (AES.CryptoException ex) {
                 ex.printStackTrace();
             }
         });
+
         if (Statics.fileIter == 0) {
             GUI.t.interrupt();
             GUI.labelCutterThread(Main.jAlertLabel, "incorrect key", 10, 25, 500);
         } else {
             progressBarThread(encFiles, decFiles);
             GUI.getGB();
-
         }
     }
 
     @Override
     public void dragEnter(DropTargetDragEvent event) {
-        Main.toolBtnsBool(false);
 
     }
 
@@ -125,7 +129,7 @@ class DragDrop implements DropTargetListener {
 
 }
 
-class progressBar_T2 implements Runnable {
+class DragDrop_T implements Runnable {
 
     public int threadIterator;
 
@@ -138,15 +142,12 @@ class progressBar_T2 implements Runnable {
         jProgressBar1.setMaximum(100);
         jProgressBar1.setValue(jProgressBar1.getMaximum());
         Main.jButton2.setVisible(false);
-        try {
-            if (encFiles > 0) {
-                GUI.labelCutterThread(jAlertLabel, encFiles + " files decrypted", 15, 30, 300);
-            }
-            if (decFiles > 0) {
-                GUI.labelCutterThread(jAlertLabel, decFiles + " files encrypted", 15, 30, 300);
-            }
 
-            Thread.sleep(600);
+        try {
+            Thread.sleep(400);
+            GUI.labelCutterThread(jAlertLabel, decFiles + " encrypted | " + encFiles + " decrypted", 15, 30, 300);
+
+            Thread.sleep(300);
             for (int x = jProgressBar1.getMaximum(); x >= 0; x--) {
                 Thread.sleep(5);
                 jProgressBar1.setValue(x);
@@ -158,10 +159,10 @@ class progressBar_T2 implements Runnable {
                 jProgressBar1.setStringPainted(false);
                 DragDrop.encFiles = 0;
                 DragDrop.decFiles = 0;
-                FileHider.FileHiderThread(Main.jToggleButton2.isSelected());
+                Main.jTextArea5.setVisible(true);
                 Main.toolBtnsBool(true);
             }
-        } catch (InterruptedException | IOException ex) {
+        } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
     }

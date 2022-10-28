@@ -899,7 +899,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextArea jTextArea3;
     private javax.swing.JTextArea jTextArea4;
-    private static javax.swing.JTextArea jTextArea5;
+    protected static javax.swing.JTextArea jTextArea5;
     private javax.swing.JTextArea jTextArea6;
     protected static javax.swing.JTextField jTextField1;
     public static javax.swing.JToggleButton jToggleButton1;

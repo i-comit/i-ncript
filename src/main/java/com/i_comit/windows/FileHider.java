@@ -65,9 +65,11 @@ class FileHider_T implements Runnable {
                                     Thread.sleep(300);
                                     GUI.labelCutterThread(Main.jAlertLabel, fileCt + " files hidden", 30, 25, 300);
                                     Main.toolBtnsBool(true);
+                                    Main.jTextArea5.setVisible(true);
 
                                 } else {
                                     Main.toolBtnsBool(true);
+                                    Main.jTextArea5.setVisible(true);
                                 }
                             }
                         } catch (IOException | InterruptedException ex) {
@@ -93,8 +95,10 @@ class FileHider_T implements Runnable {
                                     Thread.sleep(300);
                                     GUI.labelCutterThread(Main.jAlertLabel, fileCt + " files unhidden", 30, 25, 350);
                                     Main.toolBtnsBool(true);
+                                    Main.jTextArea5.setVisible(true);
                                 } else {
                                     Main.toolBtnsBool(true);
+                                    Main.jTextArea5.setVisible(true);
                                 }
                             }
 

@@ -153,6 +153,7 @@ class AES_T implements Runnable {
                     if (!paths.isEmpty()) {
                         Main.toolBtnsBool(false);
                         Main.jButton2.setVisible(true);
+                        Main.jTextArea5.setVisible(false);
                         switch (Statics.AESMode) {
                             case 0 -> {
                                 Main.jProgressBar1.setStringPainted(true);
