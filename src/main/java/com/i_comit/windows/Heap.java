@@ -4,14 +4,10 @@
  */
 package com.i_comit.windows;
 
-import static com.i_comit.windows.Main.masterFolder;
 import static com.i_comit.windows.Main.root;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 
@@ -22,7 +18,6 @@ import java.text.StringCharacterIterator;
 public class Heap {
 
     static long heapSize = Runtime.getRuntime().totalMemory();
-// Get maximum size of heap in bytes. The heap cannot grow beyond this size.// Any attempt will result in an OutOfMemoryException.
 
     public static String humanReadableByteCountBin(long bytes) {
         long absB = bytes == Long.MIN_VALUE ? Long.MAX_VALUE : Math.abs(bytes);

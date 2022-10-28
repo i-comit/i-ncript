@@ -57,13 +57,10 @@ class FileHider_T implements Runnable {
             Main.jTextArea1.append("\nhide filer enabled (hide all files)\n");
             if (contents != null) {
                 if (contents.length != 0) {
-//                    Main.jToggleButton2.setEnabled(false);
                     paths.forEach(x -> {
                         try {
                             getFileAttr(x, fileHideBool);
-//                            Files.setAttribute(x, "dos:hidden", true);
                             if (Statics.fileHideIter == fileCount) {
-
                                 if (fileCt > 5) {
                                     Thread.sleep(300);
                                     GUI.labelCutterThread(Main.jAlertLabel, fileCt + " files hidden", 30, 25, 300);

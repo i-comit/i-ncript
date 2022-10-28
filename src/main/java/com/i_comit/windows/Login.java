@@ -7,7 +7,6 @@ package com.i_comit.windows;
 import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.jPasswordField1;
 import static com.i_comit.windows.Main.jTextField1;
-import static com.i_comit.windows.Main.root;
 import static com.i_comit.windows.Statics.*;
 import java.io.*;
 import java.nio.file.*;
