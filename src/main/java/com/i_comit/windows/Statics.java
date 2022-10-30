@@ -26,7 +26,7 @@ public class Statics {
     public static boolean fileHiderBool = false;
 
     public static File directory = new File(root.substring(0, 3) + Main.masterFolder + folderName);
-    public static File keyFile = Paths.get(root.substring(0, 3) + Main.masterFolder + "app\\" + keyName).toFile();
+    public static File keyFile = Paths.get(root.substring(0, 3) + Main.masterFolder + keyName).toFile();
 
     public static File[] contents = directory.listFiles();
 

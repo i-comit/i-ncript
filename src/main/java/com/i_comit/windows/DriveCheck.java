@@ -25,7 +25,6 @@ public class DriveCheck extends javax.swing.JFrame {
         switch (driveState) {
             case 1 -> {
                 jLabel1.setText("i-ncript can only run");
-//                jLabel2.setText("within a USB device");
                 goWebsite(jLabel2, "https://i-comit.com", "USB device");
             }
             case 2 -> {

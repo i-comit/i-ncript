@@ -54,16 +54,16 @@ class FileHider_T implements Runnable {
         fileCt = 0;
 
         if (fileHideBool) {
-            Main.jTextArea1.append("\nhide filer enabled (hide all files)\n");
             if (contents != null) {
                 if (contents.length != 0) {
                     paths.forEach(x -> {
                         try {
                             getFileAttr(x, fileHideBool);
                             if (Statics.fileHideIter == fileCount) {
-                                if (fileCt > 5) {
+                                if (fileCt > 10) {
                                     Thread.sleep(300);
                                     GUI.labelCutterThread(Main.jAlertLabel, fileCt + " files hidden", 30, 25, 300);
+                                    Main.jTextArea1.append("\nhide filer enabled (hide all files)\n");
                                     Main.toolBtnsBool(true);
                                     Main.jTextArea5.setVisible(true);
 
@@ -83,7 +83,6 @@ class FileHider_T implements Runnable {
 //                GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 40, 1000);
             }
         } else {
-            Main.jTextArea1.append("\nhide filer disabled (reveal all files)\n");
             if (contents != null) {
                 if (contents.length != 0) {
                     paths.forEach(x -> {
@@ -91,9 +90,11 @@ class FileHider_T implements Runnable {
                             getFileAttr(x, fileHideBool);
                             if (Statics.fileHideIter == fileCount) {
 
-                                if (fileCt > 5) {
+                                if (fileCt > 10) {
                                     Thread.sleep(300);
                                     GUI.labelCutterThread(Main.jAlertLabel, fileCt + " files unhidden", 30, 25, 350);
+                                    Main.jTextArea1.append("\nhide filer disabled (reveal all files)\n");
+
                                     Main.toolBtnsBool(true);
                                     Main.jTextArea5.setVisible(true);
                                 } else {

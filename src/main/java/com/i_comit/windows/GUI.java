@@ -29,7 +29,7 @@ public class GUI {
 
     public static void getGB() {
         File diskPartition = new File(root).toPath().getRoot().toFile();
-        GB = Heap.humanReadableByteCountBin(diskPartition.getUsableSpace());
+        GB = Memory.byteFormatter(diskPartition.getUsableSpace());
         Main.jLabel3.setText(root.substring(0, 2) + " | " + GB);
 
     }
@@ -86,12 +86,12 @@ public class GUI {
                 case 0 -> {
                     GUI.labelCutterThread(jAlertLabel, "encrypted " + Statics.fileIter + " files", 10, 25, 400);
                     Thread.sleep(100);
-                    Main.jTextArea1.append("encrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")));
+                    Main.jTextArea1.append("encrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a"))+"\n");
                 }
                 case 1 -> {
                     GUI.labelCutterThread(jAlertLabel, "decrypted " + Statics.fileIter + " files", 10, 25, 400);
                     Thread.sleep(100);
-                    Main.jTextArea1.append("decrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")));
+                    Main.jTextArea1.append("decrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a"))+"\n");
                 }
             }
             Thread.sleep(150);
@@ -113,23 +113,6 @@ public class GUI {
     }
 
 };
-
-class progressBar_T implements Runnable {
-
-    public int threadIterator;
-
-    public void run() {
-//        try {
-//            progressBar();
-//        } catch (InterruptedException ex) {
-//            //ex.printStackTrace();
-//            System.exit(0);
-//        } catch (IOException | UncheckedIOException ex) {
-//            System.out.println("USB disconnected");
-//        }
-    }
-
-}
 
 class labelCutter_T implements Runnable {
 

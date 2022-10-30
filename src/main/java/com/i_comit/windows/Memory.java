@@ -4,22 +4,27 @@
  */
 package com.i_comit.windows;
 
+import static com.i_comit.windows.Main.jProgressBar2;
 import static com.i_comit.windows.Main.root;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.CharacterIterator;
+import java.text.DecimalFormat;
 import java.text.StringCharacterIterator;
 
 /**
  *
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
-public class Heap {
+public class Memory {
 
     static long heapSize = Runtime.getRuntime().totalMemory();
+    static long currentSize = Runtime.getRuntime().freeMemory();
 
-    public static String humanReadableByteCountBin(long bytes) {
+    public static String byteFormatter(long bytes) {
         long absB = bytes == Long.MIN_VALUE ? Long.MAX_VALUE : Math.abs(bytes);
         if (absB < 1024) {
             return bytes + " B";
@@ -51,9 +56,6 @@ public class Heap {
                 while ((s = reader.readLine()) != null) {
                     if (s.trim().length() != 0) {
                         if (s.trim().equals("Removable Disk")) {
-//                            while ((s1 = reader1.readLine()) != null && !b1) {
-//                                if (s1.trim().length() != 0) {
-//                                    if (s1.trim().equals("Removable Media")) {
                             System.out.println("USB MATCH");
                             if (root.length() > 2) {
                                 if (root.contains("--------")) {
@@ -74,15 +76,6 @@ public class Heap {
                                 new DriveCheck().setVisible(true);
                                 b = false;
                             }
-//                                        b1 = true;
-//                                    } else {
-//                                        System.out.println("Incompatible USB Device");
-//                                        DriveCheck.driveState = 2;
-//                                        new DriveCheck().setVisible(true);
-//                                        b = false;
-//                                    }
-//                                }
-//                            }
                         } else {
                             System.out.println("Drive Must Be A USB");
                             DriveCheck.driveState = 1;
@@ -97,5 +90,36 @@ public class Heap {
             e.printStackTrace();
         }
         return b;
+    }
+
+    public static void byteMonitor(InputStream inputStream, File inputFile) throws IOException {
+        long maxFileSize = inputFile.length();
+        long iterator = maxFileSize - inputStream.available();
+        float percentage = ((float) iterator / maxFileSize * 100);
+        DecimalFormat format = new DecimalFormat("0.#");
+        String percentageStr = format.format(percentage);
+        jProgressBar2.setMaximum((int) maxFileSize);
+        jProgressBar2.setValue((int) iterator);
+        jProgressBar2.setStringPainted(true);
+        jProgressBar2.setString(percentageStr + "% | " + byteFormatter(iterator));
+
+        if (inputStream.available() == 0) {
+            try {
+                Thread.sleep(250);
+                jProgressBar2.setMaximum(100);
+                jProgressBar2.setValue(Main.jProgressBar2.getMaximum());
+                for (int x = jProgressBar2.getMaximum(); x >= 0; x--) {
+                    Thread.sleep(5);
+                    jProgressBar2.setValue(x);
+                }
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+            if (jProgressBar2.getValue() == 0) {
+                jProgressBar2.setStringPainted(false);
+                Main.jAlertLabel.setText("");
+                jProgressBar2.setVisible(false);
+            }
+        }
     }
 }

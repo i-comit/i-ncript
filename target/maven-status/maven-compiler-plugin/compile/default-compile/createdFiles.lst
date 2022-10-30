@@ -13,7 +13,6 @@ com\i_comit\windows\Main$4.class
 com\i_comit\windows\DragDrop_T.class
 com\i_comit\windows\Main$14.class
 com\i_comit\windows\AES.class
-com\i_comit\windows\progressBar_T.class
 com\i_comit\windows\Main$2.class
 com\i_comit\windows\dev\Authenticator.class
 com\i_comit\windows\AES_T.class
@@ -32,7 +31,6 @@ com\i_comit\windows\dev\MakeFolder.class
 com\i_comit\windows\logger_T.class
 com\i_comit\windows\Main$10.class
 com\i_comit\windows\DriveCheck.class
-com\i_comit\windows\Heap.class
 com\i_comit\windows\Main$15.class
 com\i_comit\windows\GUI.class
 com\i_comit\windows\Main$3.class

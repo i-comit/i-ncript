@@ -7,6 +7,7 @@ package com.i_comit.windows;
 import static com.i_comit.windows.AES.decrypt;
 import static com.i_comit.windows.AES.encrypt;
 import static com.i_comit.windows.Main.jAlertLabel;
+import static com.i_comit.windows.Memory.byteFormatter;
 import static com.i_comit.windows.Statics.*;
 import java.io.*;
 import java.nio.file.*;
@@ -86,11 +87,12 @@ public class AES {
             cipher.init(cipherMode, secretKey);
 
             try ( FileInputStream inputStream = new FileInputStream(inputFile);  FileOutputStream outputStream = new FileOutputStream(outputFile)) {
-                byte[] inputBytes = new byte[(int) inputFile.length()];
+                byte[] inputBytes = new byte[1024 * 64];
+
                 int nread;
                 while ((nread = inputStream.read(inputBytes)) > 0) {
                     byte[] enc = cipher.update(inputBytes, 0, nread);
-//                    System.out.println(enc.length);
+                    Memory.byteMonitor(inputStream, inputFile);
                     outputStream.write(enc);
                 }
                 byte[] enc = cipher.doFinal();
@@ -157,9 +159,16 @@ class AES_T implements Runnable {
                         switch (Statics.AESMode) {
                             case 0 -> {
                                 Main.jProgressBar1.setStringPainted(true);
-                                GUI.labelCutterThread(jAlertLabel, "encrypting files...", 0, 15, 300);
+                                GUI.labelCutterThread(jAlertLabel, "encrypting " + paths.size() + " files", 0, 15, 300);
                                 paths.forEach(x -> {
                                     try {
+                                        if (x.toFile().length() > 1024 * 32) {
+                                            if (GUI.t.isAlive()) {
+                                                GUI.t.interrupt();
+                                            }
+                                            Main.jProgressBar2.setVisible(true);
+                                            Main.jAlertLabel.setText("encrypting " + x.toFile().getName());
+                                        }
                                         encrypt(Hasher.modHash(password), x.toFile(), x.toFile());
                                     } catch (AES.CryptoException ex) {
                                     }
@@ -178,6 +187,13 @@ class AES_T implements Runnable {
                                 GUI.labelCutterThread(jAlertLabel, "decrypting files...", 0, 15, 300);
                                 paths.forEach(x -> {
                                     try {
+                                        if (x.toFile().length() > 1024 * 32) {
+                                            if (GUI.t.isAlive()) {
+                                                GUI.t.interrupt();
+                                            }
+                                            Main.jProgressBar2.setVisible(true);
+                                            Main.jAlertLabel.setText("decrypting " + x.toFile().getName());
+                                        }
                                         decrypt(Hasher.modHash(password), x.toFile(), x.toFile());
                                     } catch (AES.CryptoException ex) {
                                     }
