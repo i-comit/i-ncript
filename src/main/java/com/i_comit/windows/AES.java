@@ -6,8 +6,10 @@ package com.i_comit.windows;
 
 import static com.i_comit.windows.AES.decrypt;
 import static com.i_comit.windows.AES.encrypt;
+import static com.i_comit.windows.DragDrop.decFiles;
+import static com.i_comit.windows.DragDrop.encFiles;
 import static com.i_comit.windows.Main.jAlertLabel;
-import static com.i_comit.windows.Memory.byteFormatter;
+import static com.i_comit.windows.Main.jProgressBar1;
 import static com.i_comit.windows.Statics.*;
 import java.io.*;
 import java.nio.file.*;
@@ -32,10 +34,20 @@ public class AES {
 
     public static Thread t;
 
-    public static void AESThread() {
+//    public static void AESThread() {
+//        t = new Thread(() -> {
+//            try {
+//                AES_T.AESQuery();
+//            } catch (InterruptedException ex) {
+//                ex.printStackTrace();
+//            }
+//        });
+//        t.start();
+//    }
+    public static void AESThread(List<Path> paths, boolean AESBool) {
         t = new Thread(() -> {
             try {
-                AES_T.AESQuery();
+                AES_T.AESQuery(paths, AESBool);
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
@@ -81,6 +93,7 @@ public class AES {
 
     private static void doCrypto(int cipherMode, String key, File inputFile,
             File outputFile) throws CryptoException {
+
         try {
             Key secretKey = new SecretKeySpec(key.getBytes(), ALGORITHM);
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
@@ -102,13 +115,12 @@ public class AES {
                 System.gc();
                 System.runFinalization();
             }
-
-            int iterator = Statics.fileIter++;
-            float percentage = ((float) iterator / AES_T.paths.size() * 100);
+            fileIter++;
+            float percentage = ((float) fileIter / AES_T.paths.size() * 100);
             DecimalFormat format = new DecimalFormat("0.#");
             String percentageStr = format.format(percentage);
-            Main.jProgressBar1.setValue(iterator);
-            Main.jProgressBar1.setString(percentageStr + "% | " + iterator + "/" + AES_T.paths.size());
+            Main.jProgressBar1.setString(percentageStr + "% | " + fileIter + "/" + AES_T.paths.size());
+            Main.jProgressBar1.setValue(fileIter);
             GUI.loggerThread(outputFile);
             getFileAttr(inputFile, outputFile);
 
@@ -146,23 +158,25 @@ class AES_T implements Runnable {
 
     public static List<Path> paths = null;
 
-    public static void AESQuery() throws InterruptedException {
-        contents = directory.listFiles();
-        try {
-            paths = listAESPaths(path);
+    public static void AESQuery(List<Path> paths, boolean AESBool) throws InterruptedException {
+        AES_T.paths = paths;
+        Main.jProgressBar1.setString("0% | " + "0/" + AES_T.paths.size());
+        if (AESBool) {
+            contents = directory.listFiles();
+            //                paths = listAESPaths(path);
             if (contents != null) {
                 if (contents.length != 0) {
                     if (!paths.isEmpty()) {
                         Main.toolBtnsBool(false);
                         Main.jButton2.setVisible(true);
                         Main.jTextArea5.setVisible(false);
-                        switch (Statics.AESMode) {
+                        switch (AESMode) {
                             case 0 -> {
                                 Main.jProgressBar1.setStringPainted(true);
                                 GUI.labelCutterThread(jAlertLabel, "encrypting " + paths.size() + " files", 0, 15, 300);
                                 paths.forEach(x -> {
                                     try {
-                                        if (x.toFile().length() > 1024 * 32) {
+                                        if (x.toFile().length() > maxFileBytes) {
                                             if (GUI.t.isAlive()) {
                                                 GUI.t.interrupt();
                                             }
@@ -173,7 +187,7 @@ class AES_T implements Runnable {
                                     } catch (AES.CryptoException ex) {
                                     }
                                 });
-                                if (Statics.fileIter == 0) {
+                                if (fileIter == 0) {
                                     GUI.t.interrupt();
                                     GUI.labelCutterThread(jAlertLabel, "incorrect key", 10, 25, 500);
                                 } else {
@@ -187,7 +201,7 @@ class AES_T implements Runnable {
                                 GUI.labelCutterThread(jAlertLabel, "decrypting files...", 0, 15, 300);
                                 paths.forEach(x -> {
                                     try {
-                                        if (x.toFile().length() > 1024 * 32) {
+                                        if (x.toFile().length() > maxFileBytes) {
                                             if (GUI.t.isAlive()) {
                                                 GUI.t.interrupt();
                                             }
@@ -198,7 +212,7 @@ class AES_T implements Runnable {
                                     } catch (AES.CryptoException ex) {
                                     }
                                 });
-                                if (Statics.fileIter == 0) {
+                                if (fileIter == 0) {
                                     GUI.t.interrupt();
                                     GUI.labelCutterThread(jAlertLabel, "incorrect key", 10, 25, 500);
                                 } else {
@@ -210,7 +224,7 @@ class AES_T implements Runnable {
 
                     } else {
                         if (!Main.jToggleButton1.isSelected()) {
-                            switch (Statics.AESMode) {
+                            switch (AESMode) {
                                 case 0 -> {
                                     GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 10, 20, 400);
                                 }
@@ -229,8 +243,50 @@ class AES_T implements Runnable {
                 GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 20, 40, 800);
                 Main.jToggleButton2.setEnabled(true);
             }
-        } catch (IOException ex) {
-            //ex.printStackTrace();
+        } else {
+            jProgressBar1.setMaximum(paths.size());
+            jProgressBar1.setStringPainted(true);
+            jProgressBar1.setValue(fileIter);
+
+            paths.forEach(x -> {
+                try {
+                    String fileStr = x.toString();
+                    File file = Paths.get(fileStr).toFile();
+                    if (x.toString().endsWith(".enc") || x.toString().startsWith("Thumbs.db")) {
+                        encFiles++;
+                        if (x.toFile().length() > maxFileBytes) {
+                            if (GUI.t.isAlive()) {
+                                GUI.t.interrupt();
+                            }
+                            Main.jProgressBar2.setVisible(true);
+                            Main.jAlertLabel.setText("decrypting " + x.toFile().getName());
+                        }
+                        AES.decrypt(Hasher.modHash(password), file, file);
+                    }
+                    if (!x.toString().endsWith(".enc")) {
+                        decFiles++;
+                        if (x.toFile().length() > maxFileBytes) {
+                            if (GUI.t.isAlive()) {
+                                GUI.t.interrupt();
+                            }
+                            Main.jProgressBar2.setVisible(true);
+                            Main.jAlertLabel.setText("encrypting " + x.toFile().getName());
+                        }
+                        AES.encrypt(Hasher.modHash(password), file, file);
+                    }
+                    System.out.println("ENC " + encFiles + " " + decFiles);
+                } catch (AES.CryptoException ex) {
+                    ex.printStackTrace();
+                }
+            });
+
+            if (fileIter == 0) {
+                GUI.t.interrupt();
+                GUI.labelCutterThread(Main.jAlertLabel, "incorrect key", 10, 25, 500);
+            } else {
+                DragDrop.resetProgressBar(encFiles, decFiles);
+                GUI.getGB();
+            }
         }
     }
 
@@ -247,7 +303,7 @@ class AES_T implements Runnable {
 
         List<Path> result = null;
         try ( Stream<Path> walk = Files.walk(path)) {
-            switch (Statics.AESMode) {
+            switch (AESMode) {
                 case 0 ->
                     result = walk.filter(Files::isRegularFile).filter(p -> !p.getFileName().toString().endsWith(".enc")).filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
                             .collect(Collectors.toList());

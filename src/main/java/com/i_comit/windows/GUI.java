@@ -101,9 +101,6 @@ public class GUI {
                 jProgressBar1.setValue(x);
             }
             if (jProgressBar1.getValue() == 0) {
-                Statics.fileIter = 0;
-                Statics.fileCount = 0;
-                jProgressBar1.setValue(Statics.fileIter);
                 jProgressBar1.setStringPainted(false);
                 FileHider.FileHiderThread(Main.jToggleButton2.isSelected());
             }
@@ -119,15 +116,12 @@ class labelCutter_T implements Runnable {
     public void run() {
 
     }
-
-    //Thread-4
     public static void labelCutter_T(JLabel jLabel, String labelMsg, int initSleep, int sleep, int pause) {
         jLabel.setText("");
         int msgL = labelMsg.length();
         try {
             Thread.sleep(initSleep);
             for (int i = 0; i <= msgL; i++) {
-                //labelMsg = "";
                 CharSequence cutLabel = labelMsg.subSequence(0, i);
                 jLabel.setText(cutLabel.toString());
                 Thread.sleep(sleep);
@@ -139,7 +133,6 @@ class labelCutter_T implements Runnable {
                 Thread.sleep(sleep);
             }
         } catch (InterruptedException ex) {
-//            ex.printStackTrace();
             System.out.println("label thread interrupted.");
         }
     }

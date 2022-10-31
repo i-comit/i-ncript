@@ -6,6 +6,7 @@ package com.i_comit.windows;
 
 import static com.i_comit.windows.Main.jProgressBar2;
 import static com.i_comit.windows.Main.root;
+import static com.i_comit.windows.Memory.byteFormatter;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +23,19 @@ import java.text.StringCharacterIterator;
 public class Memory {
 
     static long heapSize = Runtime.getRuntime().totalMemory();
-    static long currentSize = Runtime.getRuntime().freeMemory();
+
+    public static void byteMonitorThread(InputStream inputStream, File inputFile) {
+        Thread t = new Thread(() -> {
+            try {
+                byteMonitor_T.byteMonitor_T(inputStream, inputFile);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+        if (!t.isAlive()) {
+            t.start();
+        }
+    }
 
     public static String byteFormatter(long bytes) {
         long absB = bytes == Long.MIN_VALUE ? Long.MAX_VALUE : Math.abs(bytes);
@@ -105,8 +118,8 @@ public class Memory {
 
         if (inputStream.available() == 0) {
             try {
-                Thread.sleep(250);
-                jProgressBar2.setMaximum(100);
+                Thread.sleep(50);
+                jProgressBar2.setMaximum(50);
                 jProgressBar2.setValue(Main.jProgressBar2.getMaximum());
                 for (int x = jProgressBar2.getMaximum(); x >= 0; x--) {
                     Thread.sleep(5);
@@ -116,6 +129,50 @@ public class Memory {
                 ex.printStackTrace();
             }
             if (jProgressBar2.getValue() == 0) {
+                maxFileSize = 0;
+                iterator = 0;
+                jProgressBar2.setStringPainted(false);
+                Main.jAlertLabel.setText("");
+                jProgressBar2.setVisible(false);
+            }
+        }
+    }
+}
+
+class byteMonitor_T implements Runnable {
+
+    public void run() {
+
+    }
+
+    //Thread-4
+    public static void byteMonitor_T(InputStream inputStream, File inputFile) throws IOException {
+        long maxFileSize = inputFile.length();
+        long iterator = maxFileSize - inputStream.available();
+        float percentage = ((float) iterator / maxFileSize * 100);
+        DecimalFormat format = new DecimalFormat("0.#");
+        String percentageStr = format.format(percentage);
+        jProgressBar2.setMaximum((int) maxFileSize);
+        jProgressBar2.setValue((int) iterator);
+        jProgressBar2.setStringPainted(true);
+        jProgressBar2.setString(percentageStr + "% | " + byteFormatter(iterator));
+        System.out.println(percentageStr+"%");
+
+        if (inputStream.available() == 0) {
+            try {
+                Thread.sleep(100);
+                jProgressBar2.setMaximum(100);
+                jProgressBar2.setValue(Main.jProgressBar2.getMaximum());
+                for (int x = jProgressBar2.getMaximum(); x >= 0; x--) {
+                    Thread.sleep(4);
+                    jProgressBar2.setValue(x);
+                }
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+            if (jProgressBar2.getValue() == 0) {
+                maxFileSize = 0;
+                iterator = 0;
                 jProgressBar2.setStringPainted(false);
                 Main.jAlertLabel.setText("");
                 jProgressBar2.setVisible(false);

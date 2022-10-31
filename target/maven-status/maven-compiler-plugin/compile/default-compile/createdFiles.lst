@@ -2,6 +2,7 @@ com\i_comit\windows\Statics.class
 com\i_comit\windows\Main$7.class
 com\i_comit\windows\dev\ZipFolder.class
 com\i_comit\windows\Login.class
+com\i_comit\windows\Memory.class
 com\i_comit\windows\AES$CryptoException.class
 com\i_comit\windows\HotFiler_T.class
 com\i_comit\windows\Main$5.class

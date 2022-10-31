@@ -44,7 +44,6 @@ class FileHider_T implements Runnable {
 //            ex.printStackTrace();
 //        }
     }
-
     public static void FileHider_T(boolean fileHideBool) throws IOException {
         Statics.fileHideIter = 0;
         List<Path> paths = listPaths(path);
@@ -52,7 +51,8 @@ class FileHider_T implements Runnable {
         int fileCount = GUI.countAllFiles(path);
         Main.toolBtnsBool(false);
         fileCt = 0;
-
+        Statics.fileIter = 0;
+        Statics.fileCount = 0;
         if (fileHideBool) {
             if (contents != null) {
                 if (contents.length != 0) {
@@ -89,7 +89,6 @@ class FileHider_T implements Runnable {
                         try {
                             getFileAttr(x, fileHideBool);
                             if (Statics.fileHideIter == fileCount) {
-
                                 if (fileCt > 10) {
                                     Thread.sleep(300);
                                     GUI.labelCutterThread(Main.jAlertLabel, fileCt + " files unhidden", 30, 25, 350);

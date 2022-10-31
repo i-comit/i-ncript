@@ -5,6 +5,7 @@
 package com.i_comit.windows;
 
 import static com.i_comit.windows.AES.*;
+import static com.i_comit.windows.AES_T.listAESPaths;
 import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.jProgressBar1;
 import java.awt.Color;
@@ -18,7 +19,6 @@ import java.io.IOException;
 import java.nio.file.*;
 
 /**
- *
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
 public class HotFiler {
@@ -50,7 +50,7 @@ class HotFiler_T implements Runnable {
                     Statics.fileIter = 0;
                     Statics.fileCount = GUI.countFiles(Statics.path);
                     jProgressBar1.setMaximum(Statics.fileCount);
-                    AES.AESThread();
+                    AES.AESThread(listAESPaths(Statics.path), true);
                 }
                 jAlertLabel.setText("hot filer enabled");
                 Thread.sleep(1000);
@@ -103,7 +103,7 @@ class HotFiler_T implements Runnable {
 
     public static void folderWatcher() throws IOException {
         Main.jToggleButton1.setEnabled(true);
-        
+
         System.out.println("Folder Watcher Enabled");
         try {
             WatchService watchService = FileSystems.getDefault().newWatchService();
@@ -131,7 +131,7 @@ class HotFiler_T implements Runnable {
                                 Statics.fileIter = 0;
                                 Statics.fileCount = GUI.countFiles(Statics.path);
                                 Main.jProgressBar1.setMaximum(Statics.fileCount);
-                                AES.AESThread();
+                                AES.AESThread(listAESPaths(Statics.path), true);
                                 System.out.println("Hot Filer Called AES");
 //                                watchService.close();
                                 GUI.getGB();

@@ -4,6 +4,7 @@
  */
 package com.i_comit.windows;
 
+import static com.i_comit.windows.AES_T.listAESPaths;
 import static com.i_comit.windows.Statics.*;
 import java.awt.Color;
 import java.awt.Toolkit;
@@ -23,12 +24,12 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "";
+    public static String root = "F:\\";
     public static String masterFolder = "--------\\";
 
     public Main() {
-        root = Paths.get("").toAbsolutePath().toString();
-//        root = root + masterFolder;
+//        root = Paths.get("").toAbsolutePath().toString();
+        root = root + masterFolder;
         Path runtime = Paths.get(root.substring(0, 3) + masterFolder + "runtime");
         Path app = Paths.get(root.substring(0, 3) + masterFolder + "app");
         if (runtime.toFile().exists()) {
@@ -45,51 +46,51 @@ public class Main extends javax.swing.JFrame {
                 ex.printStackTrace();
             }
         }
-        if (Memory.checkWMIC()) {
-            initComponents();
+//        if (Memory.checkWMIC()) {
+        initComponents();
 
-            if (!Statics.keyFile.exists()) {
-                jToolPanel.setVisible(false);
-                jLoginPanel.setVisible(false);
-                jLabel1.setVisible(false);
-                jLabel3.setVisible(false);
-                jAlertLabel.setVisible(false);
-                jTabbedPane1.setVisible(false);
-                jTextArea3.setCaretPosition(0);
-            } else {
-                jLoginPanel.setVisible(true);
-                jLabel1.setVisible(true);
-                jLabel3.setVisible(true);
-                jAlertLabel.setVisible(true);
-                jTabbedPane1.setVisible(true);
-                jEULAPanel1.setVisible(false);
-                jEULAPanel.setVisible(false);
-
-                jUsernameLabel.setText("enter username");
-                jPasswordLabel.setText("enter password");
-                GUI.getGB();
-                System.out.println("Your available Memory Heap is " + Memory.byteFormatter(Memory.heapSize));
-
-                jTextField1.setText("");
-                jPasswordField1.setText("");
-                jAlertLabel.setText("");
-
-                File rootFolder = Paths.get(root + "\\" + folderName).toFile();
-                if (!rootFolder.exists()) {
-                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 40, 40, 1200);
-                    rootFolder.mkdir();
-                } else {
-                    GUI.labelCutterThread(jAlertLabel, "developed by i-comit", 40, 40, 1200);
-                }
-                jToolPanel.setVisible(false);
-                jButton2.setVisible(false);
-            }
-            jProgressBar1.setVisible(false);
-            jProgressBar2.setVisible(false);
-            jTextArea5.setVisible(false);
+        if (!keyFile.exists()) {
+            jToolPanel.setVisible(false);
+            jLoginPanel.setVisible(false);
+            jLabel1.setVisible(false);
+            jLabel3.setVisible(false);
+            jAlertLabel.setVisible(false);
+            jTabbedPane1.setVisible(false);
+            jTextArea3.setCaretPosition(0);
         } else {
+            jLoginPanel.setVisible(true);
+            jLabel1.setVisible(true);
+            jLabel3.setVisible(true);
+            jAlertLabel.setVisible(true);
+            jTabbedPane1.setVisible(true);
+            jEULAPanel1.setVisible(false);
+            jEULAPanel.setVisible(false);
 
+            jUsernameLabel.setText("enter username");
+            jPasswordLabel.setText("enter password");
+            GUI.getGB();
+            System.out.println("Your available Memory Heap is " + Memory.byteFormatter(Memory.heapSize));
+
+            jTextField1.setText("");
+            jPasswordField1.setText("");
+            jAlertLabel.setText("");
+
+            File rootFolder = Paths.get(root + "\\" + folderName).toFile();
+            if (!rootFolder.exists()) {
+                GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 40, 40, 1200);
+                rootFolder.mkdir();
+            } else {
+                GUI.labelCutterThread(jAlertLabel, "developed by i-comit", 40, 40, 1200);
+            }
+            jToolPanel.setVisible(false);
+            jButton2.setVisible(false);
         }
+        jProgressBar1.setVisible(false);
+        jProgressBar2.setVisible(false);
+        jTextArea5.setVisible(false);
+//        } else {
+//
+//        }
     }
 
     public static void dragDropper() {
@@ -104,7 +105,6 @@ public class Main extends javax.swing.JFrame {
         jToggleButton2.setEnabled(bool);
         jRadioButton0.setEnabled(bool);
         jRadioButton1.setEnabled(bool);
-
 //        jButton2.setEnabled(!bool);
 //        jButton3.setEnabled(!bool);
     }
@@ -688,9 +688,9 @@ public class Main extends javax.swing.JFrame {
         Statics.AESMode = 1;
 
         try {
-            Statics.fileCount = GUI.countFiles(Statics.path);
-            jProgressBar1.setMaximum(Statics.fileCount);
-            AES.AESThread();
+            fileCount = GUI.countFiles(path);
+            jProgressBar1.setMaximum(fileCount);
+            AES.AESThread(listAESPaths(path), true);
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -731,13 +731,11 @@ public class Main extends javax.swing.JFrame {
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
-        Statics.AESMode = 0;
-//        jToggleButton1.setEnabled(false);
-
+        AESMode = 0;
         try {
-            Statics.fileCount = GUI.countFiles(Statics.path);
-            jProgressBar1.setMaximum(Statics.fileCount);
-            AES.AESThread();
+            fileCount = GUI.countFiles(path);
+            jProgressBar1.setMaximum(fileCount);
+            AES.AESThread(listAESPaths(path), true);
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -758,10 +756,10 @@ public class Main extends javax.swing.JFrame {
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
         AES.t.stop();
         jButton2.setVisible(false);
-        Statics.fileCount = 0;
-        Statics.fileIter = 0;
-        jProgressBar1.setValue(Statics.fileIter);
-        jProgressBar1.setMaximum(Statics.fileCount);
+        fileCount = 0;
+        fileIter = 0;
+        jProgressBar1.setValue(fileIter);
+        jProgressBar1.setMaximum(fileCount);
         jProgressBar1.setStringPainted(false);
         buttonGroup1.clearSelection();
         toolBtnsBool(true);
@@ -769,7 +767,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2MouseClicked
     //HOT FILER 2
     private void jToggleButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton1MouseClicked
-        Statics.AESMode = 0;
+        AESMode = 0;
         try {
             HotFiler.HotFilerThread();
         } catch (IOException ex) {
@@ -857,9 +855,7 @@ public class Main extends javax.swing.JFrame {
             //</editor-fold>
             //</editor-fold>
             UIManager.setLookAndFeel("com.formdev.flatlaf.FlatDarkLaf");
-            //</editor-fold>
             UIManager.put("ProgressBar.selectionForeground", Color.black);
-            UIManager.put("ProgressBar.selectionBackground", Color.white);
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             ex.printStackTrace();
         }
