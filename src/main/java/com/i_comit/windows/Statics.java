@@ -21,7 +21,6 @@ public class Statics {
     public static int maxFileBytes = 1024*32;
 
     public static int AESMode;
-
     public static String GB;
 
     public static boolean emptyDirectory;

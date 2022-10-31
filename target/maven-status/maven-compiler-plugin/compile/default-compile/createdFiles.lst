@@ -7,6 +7,7 @@ com\i_comit\windows\AES$CryptoException.class
 com\i_comit\windows\HotFiler_T.class
 com\i_comit\windows\Main$5.class
 com\i_comit\windows\Main.class
+com\i_comit\windows\byteMonitor_T.class
 com\i_comit\windows\Main$11.class
 com\i_comit\windows\Main$9.class
 com\i_comit\windows\dev\Globals.class

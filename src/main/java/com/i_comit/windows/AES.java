@@ -34,16 +34,6 @@ public class AES {
 
     public static Thread t;
 
-//    public static void AESThread() {
-//        t = new Thread(() -> {
-//            try {
-//                AES_T.AESQuery();
-//            } catch (InterruptedException ex) {
-//                ex.printStackTrace();
-//            }
-//        });
-//        t.start();
-//    }
     public static void AESThread(List<Path> paths, boolean AESBool) {
         t = new Thread(() -> {
             try {
@@ -101,7 +91,6 @@ public class AES {
 
             try ( FileInputStream inputStream = new FileInputStream(inputFile);  FileOutputStream outputStream = new FileOutputStream(outputFile)) {
                 byte[] inputBytes = new byte[1024 * 64];
-
                 int nread;
                 while ((nread = inputStream.read(inputBytes)) > 0) {
                     byte[] enc = cipher.update(inputBytes, 0, nread);

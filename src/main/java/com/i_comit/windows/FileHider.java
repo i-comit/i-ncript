@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,6 +21,40 @@ import java.util.List;
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
 public class FileHider {
+
+    public static void cleanUp() {
+        try {
+            List<Path> paths = listPaths(path);
+            List<Path> paths2 = listPaths(path);
+            List<String> duplStr = new ArrayList<>();
+            List<String> duplStr2 = new ArrayList<>();
+            paths.forEach(x -> {
+                String f = x.toFile().getAbsolutePath().replace(".enc", "");
+                duplStr.add(f);
+            });
+            paths2.forEach(x -> {
+                String f = x.toFile().getAbsolutePath();
+                duplStr2.add(f);
+            });
+
+            duplStr.retainAll(duplStr2);
+            if (!duplStr.isEmpty()) {
+                String s = duplStr.get(0) + ".enc";
+                String s1 = duplStr.get(1);
+                long f = Paths.get(s).toFile().length();
+                long f1 = Paths.get(s1).toFile().length();
+                if (f > f1) {
+                    Paths.get(s1).toFile().delete();
+                    System.out.println("cleaned up " + s1);
+                } else {
+                    Paths.get(s).toFile().delete();
+                    System.out.println("cleaned up " + s);
+                }
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
 
     public static void FileHiderThread(boolean fileHideBool) throws IOException {
         Thread t = new Thread(() -> {
@@ -44,6 +80,7 @@ class FileHider_T implements Runnable {
 //            ex.printStackTrace();
 //        }
     }
+
     public static void FileHider_T(boolean fileHideBool) throws IOException {
         Statics.fileHideIter = 0;
         List<Path> paths = listPaths(path);
