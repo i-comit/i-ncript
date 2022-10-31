@@ -21,6 +21,7 @@ import java.text.StringCharacterIterator;
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
 public class Memory {
+
     static long heapSize = Runtime.getRuntime().totalMemory();
 
     public static String byteFormatter(long bytes) {
@@ -92,34 +93,36 @@ public class Memory {
     }
 
     public static void byteMonitor(InputStream inputStream, File inputFile) throws IOException {
-        long maxFileSize = inputFile.length();
-        long iterator = maxFileSize - inputStream.available();
-        float percentage = ((float) iterator / maxFileSize * 100);
-        DecimalFormat format = new DecimalFormat("0.#");
-        String percentageStr = format.format(percentage);
-        jProgressBar2.setMaximum((int) maxFileSize);
-        jProgressBar2.setValue((int) iterator);
-        jProgressBar2.setStringPainted(true);
-        jProgressBar2.setString(percentageStr + "% | " + byteFormatter(iterator));
+        if (inputFile.length() > Statics.maxFileBytes) {
+            long maxFileSize = inputFile.length();
+            long iterator = maxFileSize - inputStream.available();
+            float percentage = ((float) iterator / maxFileSize * 100);
+            DecimalFormat format = new DecimalFormat("0.#");
+            String percentageStr = format.format(percentage);
+            jProgressBar2.setMaximum((int) maxFileSize);
+            jProgressBar2.setValue((int) iterator);
+            jProgressBar2.setStringPainted(true);
+            jProgressBar2.setString(percentageStr + "% | " + byteFormatter(iterator));
 
-        if (inputStream.available() == 0) {
-            try {
-                Thread.sleep(50);
-                jProgressBar2.setMaximum(50);
-                jProgressBar2.setValue(Main.jProgressBar2.getMaximum());
-                for (int x = jProgressBar2.getMaximum(); x >= 0; x--) {
-                    Thread.sleep(5);
-                    jProgressBar2.setValue(x);
+            if (inputStream.available() == 0) {
+                try {
+                    Thread.sleep(50);
+                    jProgressBar2.setMaximum(50);
+                    jProgressBar2.setValue(Main.jProgressBar2.getMaximum());
+                    for (int x = jProgressBar2.getMaximum(); x >= 0; x--) {
+                        Thread.sleep(5);
+                        jProgressBar2.setValue(x);
+                    }
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
                 }
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
-            if (jProgressBar2.getValue() == 0) {
-                maxFileSize = 0;
-                iterator = 0;
-                jProgressBar2.setStringPainted(false);
-                Main.jAlertLabel.setText("");
-                jProgressBar2.setVisible(false);
+                if (jProgressBar2.getValue() == 0) {
+                    maxFileSize = 0;
+                    iterator = 0;
+                    jProgressBar2.setStringPainted(false);
+                    Main.jAlertLabel.setText("");
+                    jProgressBar2.setVisible(false);
+                }
             }
         }
     }
