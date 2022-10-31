@@ -7,7 +7,6 @@ com\i_comit\windows\AES$CryptoException.class
 com\i_comit\windows\HotFiler_T.class
 com\i_comit\windows\Main$5.class
 com\i_comit\windows\Main.class
-com\i_comit\windows\byteMonitor_T.class
 com\i_comit\windows\Main$11.class
 com\i_comit\windows\Main$9.class
 com\i_comit\windows\dev\Globals.class
@@ -33,10 +32,8 @@ com\i_comit\windows\dev\MakeFolder.class
 com\i_comit\windows\logger_T.class
 com\i_comit\windows\Main$10.class
 com\i_comit\windows\DriveCheck.class
-com\i_comit\windows\Main$15.class
 com\i_comit\windows\GUI.class
 com\i_comit\windows\Main$3.class
-com\i_comit\windows\Main$16.class
 com\i_comit\windows\FileHider_T.class
 com\i_comit\windows\Main$13.class
 com\i_comit\windows\FileHider.class

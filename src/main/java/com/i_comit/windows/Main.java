@@ -24,13 +24,12 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "F:\\";
+    public static String root = "";
     public static String masterFolder = "--------\\";
 
     public Main() {
-        FileHider.cleanUp();
-//        root = Paths.get("").toAbsolutePath().toString();
-        root = root + masterFolder;
+        root = Paths.get("").toAbsolutePath().toString();
+//        root = root + masterFolder;
         Path runtime = Paths.get(root.substring(0, 3) + masterFolder + "runtime");
         Path app = Paths.get(root.substring(0, 3) + masterFolder + "app");
         if (runtime.toFile().exists()) {
@@ -47,51 +46,52 @@ public class Main extends javax.swing.JFrame {
                 ex.printStackTrace();
             }
         }
-//        if (Memory.checkWMIC()) {
-        initComponents();
+        if (Memory.checkWMIC()) {
+            FileHider.cleanUp();
+            initComponents();
 
-        if (!keyFile.exists()) {
-            jToolPanel.setVisible(false);
-            jLoginPanel.setVisible(false);
-            jLabel1.setVisible(false);
-            jLabel3.setVisible(false);
-            jAlertLabel.setVisible(false);
-            jTabbedPane1.setVisible(false);
-            jTextArea3.setCaretPosition(0);
-        } else {
-            jLoginPanel.setVisible(true);
-            jLabel1.setVisible(true);
-            jLabel3.setVisible(true);
-            jAlertLabel.setVisible(true);
-            jTabbedPane1.setVisible(true);
-            jEULAPanel1.setVisible(false);
-            jEULAPanel.setVisible(false);
-
-            jUsernameLabel.setText("enter username");
-            jPasswordLabel.setText("enter password");
-            GUI.getGB();
-            System.out.println("Your available Memory Heap is " + Memory.byteFormatter(Memory.heapSize));
-
-            jTextField1.setText("");
-            jPasswordField1.setText("");
-            jAlertLabel.setText("");
-
-            File rootFolder = Paths.get(root + "\\" + folderName).toFile();
-            if (!rootFolder.exists()) {
-                GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 40, 40, 1200);
-                rootFolder.mkdir();
+            if (!keyFile.exists()) {
+                jToolPanel.setVisible(false);
+                jLoginPanel.setVisible(false);
+                jLabel1.setVisible(false);
+                jLabel3.setVisible(false);
+                jAlertLabel.setVisible(false);
+                jTabbedPane1.setVisible(false);
+                jTextArea3.setCaretPosition(0);
             } else {
-                GUI.labelCutterThread(jAlertLabel, "developed by i-comit", 40, 40, 1200);
+                jLoginPanel.setVisible(true);
+                jLabel1.setVisible(true);
+                jLabel3.setVisible(true);
+                jAlertLabel.setVisible(true);
+                jTabbedPane1.setVisible(true);
+                jEULAPanel1.setVisible(false);
+                jEULAPanel.setVisible(false);
+
+                jUsernameLabel.setText("enter username");
+                jPasswordLabel.setText("enter password");
+                GUI.getGB();
+                System.out.println("Your available Memory Heap is " + Memory.byteFormatter(Memory.heapSize));
+
+                jTextField1.setText("");
+                jPasswordField1.setText("");
+                jAlertLabel.setText("");
+
+                File rootFolder = Paths.get(root + "\\" + folderName).toFile();
+                if (!rootFolder.exists()) {
+                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 40, 40, 1200);
+                    rootFolder.mkdir();
+                } else {
+                    GUI.labelCutterThread(jAlertLabel, "developed by i-comit", 40, 40, 1200);
+                }
+                jToolPanel.setVisible(false);
+                jButton2.setVisible(false);
             }
-            jToolPanel.setVisible(false);
-            jButton2.setVisible(false);
+            jProgressBar1.setVisible(false);
+            jProgressBar2.setVisible(false);
+            jTextArea5.setVisible(false);
+        } else {
+
         }
-        jProgressBar1.setVisible(false);
-        jProgressBar2.setVisible(false);
-        jTextArea5.setVisible(false);
-//        } else {
-//
-//        }
     }
 
     public static void dragDropper() {

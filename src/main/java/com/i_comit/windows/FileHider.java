@@ -50,6 +50,8 @@ public class FileHider {
                     Paths.get(s).toFile().delete();
                     System.out.println("cleaned up " + s);
                 }
+            } else {
+                System.out.println("no files to clean up.");
             }
         } catch (IOException ex) {
             ex.printStackTrace();
