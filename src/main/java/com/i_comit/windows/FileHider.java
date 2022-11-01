@@ -38,7 +38,7 @@ public class FileHider {
             });
 
             duplStr.retainAll(duplStr2);
-            if (!duplStr.isEmpty()) {
+            if (duplStr.size() > 1) {
                 String s = duplStr.get(0) + ".enc";
                 String s1 = duplStr.get(1);
                 long f = Paths.get(s).toFile().length();
@@ -52,7 +52,7 @@ public class FileHider {
                     System.out.println("cleaned up " + s);
                 }
             } else {
-                System.out.println("no files to clean up.");
+                System.out.println("no clean up required");
             }
         } catch (IOException ex) {
             ex.printStackTrace();
