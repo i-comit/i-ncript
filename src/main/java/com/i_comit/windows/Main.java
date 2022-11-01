@@ -741,6 +741,9 @@ public class Main extends javax.swing.JFrame {
     //STOP
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
         AES.t.stop();
+        if (GUI.t.isAlive()) {
+            GUI.t.interrupt();
+        }
         jButton2.setVisible(false);
         fileCount = 0;
         fileIter = 0;
@@ -751,6 +754,7 @@ public class Main extends javax.swing.JFrame {
         jProgressBar2.setMaximum(0);
         jProgressBar2.setValue(jProgressBar2.getMaximum());
         jProgressBar2.setStringPainted(false);
+        jProgressBar2.setVisible(false);
         buttonGroup1.clearSelection();
         FileHider.cleanUp();
         toolBtnsBool(true);

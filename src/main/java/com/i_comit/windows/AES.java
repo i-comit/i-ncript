@@ -81,6 +81,20 @@ public class AES {
 
     }
 
+    public static byte[] dynamicBytes(File inputFile) {
+        byte[] inputBytes;
+        if (inputFile.length() > Statics.maxFileBytes) {
+            inputBytes = new byte[1024 * 128];
+        } else if (inputFile.length() > Statics.maxFileBytes * 2) {
+            inputBytes = new byte[1024 * 256];
+        } else if (inputFile.length() > Statics.maxFileBytes / 2) {
+            inputBytes = new byte[1024 * 8];
+        } else {
+            inputBytes = new byte[1024 * 16];
+        }
+        return inputBytes;
+    }
+
     private static void doCrypto(int cipherMode, String key, File inputFile,
             File outputFile) throws CryptoException {
 
@@ -90,7 +104,7 @@ public class AES {
             cipher.init(cipherMode, secretKey);
 
             try ( FileInputStream inputStream = new FileInputStream(inputFile);  FileOutputStream outputStream = new FileOutputStream(outputFile)) {
-                byte[] inputBytes = new byte[(int) inputFile.length()];
+                byte[] inputBytes = dynamicBytes(inputFile);
                 int nread;
                 while ((nread = inputStream.read(inputBytes)) > 0) {
                     byte[] enc = cipher.update(inputBytes, 0, nread);
