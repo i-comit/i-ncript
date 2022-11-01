@@ -87,14 +87,19 @@ public class AES {
             inputBytes = new byte[1024 * 128];
         } else if (inputFile.length() > Statics.maxFileBytes * 2) {
             inputBytes = new byte[1024 * 256];
-        } else if (inputFile.length() > Statics.maxFileBytes / 2) {
-            inputBytes = new byte[1024 * 8];
-        } else {
+        } else if (inputFile.length() > Statics.maxFileBytes * 4) {
+            inputBytes = new byte[1024 * 512];
+        } else if (inputFile.length() < Statics.maxFileBytes / 2) {
+            inputBytes = new byte[1024 * 32];
+        } else if (inputFile.length() < Statics.maxFileBytes / 4) {
             inputBytes = new byte[1024 * 16];
+        } else if (inputFile.length() < Statics.maxFileBytes / 8) {
+            inputBytes = new byte[(int) inputFile.length()];
+        } else {
+            inputBytes = new byte[1024 * 64];
         }
         return inputBytes;
     }
-
     private static void doCrypto(int cipherMode, String key, File inputFile,
             File outputFile) throws CryptoException {
 
