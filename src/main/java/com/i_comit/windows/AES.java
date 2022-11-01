@@ -90,11 +90,13 @@ public class AES {
             cipher.init(cipherMode, secretKey);
 
             try ( FileInputStream inputStream = new FileInputStream(inputFile);  FileOutputStream outputStream = new FileOutputStream(outputFile)) {
-                byte[] inputBytes = new byte[1024 * 64];
+                byte[] inputBytes = new byte[(int) inputFile.length()];
                 int nread;
                 while ((nread = inputStream.read(inputBytes)) > 0) {
                     byte[] enc = cipher.update(inputBytes, 0, nread);
-                    Memory.byteMonitor(inputStream, inputFile);
+                    if (inputFile.length() > Statics.maxFileBytes) {
+                        Memory.byteMonitor(inputStream, inputFile);
+                    }
                     outputStream.write(enc);
                 }
                 byte[] enc = cipher.doFinal();

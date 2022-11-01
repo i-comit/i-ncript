@@ -46,7 +46,8 @@ public class FileHider {
                 if (f > f1) {
                     Paths.get(s1).toFile().delete();
                     System.out.println("cleaned up " + s1);
-                } else {
+                }
+                if (f < f1 || f == f1) {
                     Paths.get(s).toFile().delete();
                     System.out.println("cleaned up " + s);
                 }

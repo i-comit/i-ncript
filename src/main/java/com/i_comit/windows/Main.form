@@ -653,10 +653,9 @@
                     </Property>
                     <Property name="lineWrap" type="boolean" value="true"/>
                     <Property name="rows" type="int" value="5"/>
-                    <Property name="text" type="java.lang.String" value="i-ncript 1.0.0 - Initial Release 10/30/2022&#xa;&#xa;Copyright 2022 i-comit LLC. All rights reserved.&#xa;&#xa;Developed by Khiem Luong - khiemluong@i-comit.com&#xa;&#xa;User has the right to freely distribute this software. User does not have the right to distribute a modified version of this software.&#xa;&#xa;Khiem Luong or i-comit LLC is not responsible for any data loss from using this software.&#xa;"/>
+                    <Property name="text" type="java.lang.String" value="i-ncript 1.0.0 - Initial Release 10/30/2022&#xa;&#xa;Copyright 2022 i-comit LLC. All rights reserved.&#xa;&#xa;User has the right to freely distribute this software. User does not have the right to distribute a modified version of this software.&#xa;&#xa;i-comit LLC is not responsible for any data loss from using this software.&#xa;"/>
                     <Property name="wrapStyleWord" type="boolean" value="true"/>
                     <Property name="autoscrolls" type="boolean" value="false"/>
-                    <Property name="caretPosition" type="int" value="0"/>
                   </Properties>
                 </Component>
               </SubComponents>

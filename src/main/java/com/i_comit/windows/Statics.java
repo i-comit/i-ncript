@@ -18,7 +18,7 @@ public class Statics {
     public static String rootFolder = root.substring(0, 3) + folderName;
     public static String keyName = "\\i-ncript.key";
     
-    public static int maxFileBytes = 1024*32;
+    public static int maxFileBytes = 1048576 * 16;
 
     public static int AESMode;
     public static String GB;
