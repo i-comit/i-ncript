@@ -103,7 +103,7 @@ class FileHider_T implements Runnable {
                                 if (fileCt > 10) {
                                     Thread.sleep(300);
                                     GUI.labelCutterThread(Main.jAlertLabel, fileCt + " files hidden", 30, 25, 300);
-                                    Main.jTextArea1.append("\nhide filer enabled (hide all files)\n");
+                                    Main.jTextArea1.append("hide filer enabled (hide all files)\n");
                                     Main.toolBtnsBool(true);
                                     Main.jTextArea5.setVisible(true);
 
@@ -132,7 +132,7 @@ class FileHider_T implements Runnable {
                                 if (fileCt > 10) {
                                     Thread.sleep(300);
                                     GUI.labelCutterThread(Main.jAlertLabel, fileCt + " files unhidden", 30, 25, 350);
-                                    Main.jTextArea1.append("\nhide filer disabled (reveal all files)\n");
+                                    Main.jTextArea1.append("hide filer disabled (reveal all files)\n");
 
                                     Main.toolBtnsBool(true);
                                     Main.jTextArea5.setVisible(true);
