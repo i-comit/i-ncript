@@ -14,7 +14,9 @@ import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -24,35 +26,48 @@ public class FileHider {
 
     public static void cleanUp() {
         try {
+            Set<String> unique = new HashSet<>();
+            
             List<Path> paths = listPaths(path);
-            List<Path> paths2 = listPaths(path);
+            List<String> duplicates = new ArrayList<>();
             List<String> duplStr = new ArrayList<>();
-            List<String> duplStr2 = new ArrayList<>();
+            int deletedFiles = 0;
+            
             paths.forEach(x -> {
                 String f = x.toFile().getAbsolutePath().replace(".enc", "");
                 duplStr.add(f);
             });
-            paths2.forEach(x -> {
-                String f = x.toFile().getAbsolutePath();
-                duplStr2.add(f);
-            });
-
-            duplStr.retainAll(duplStr2);
-            if (duplStr.size() > 1) {
-                String s = duplStr.get(0) + ".enc";
-                String s1 = duplStr.get(1);
-                long f = Paths.get(s).toFile().length();
-                long f1 = Paths.get(s1).toFile().length();
-                if (f > f1) {
-                    Paths.get(s1).toFile().delete();
-                    System.out.println("cleaned up " + s1);
+            
+            for (String n : duplStr) {
+                if (!unique.add(n)) {
+                    duplicates.add(n);
                 }
-                if (f < f1 || f == f1) {
-                    Paths.get(s).toFile().delete();
-                    System.out.println("cleaned up " + s);
+            }
+            
+            if (!duplicates.isEmpty()) {
+                for (int i = 0; i < duplicates.size(); i++) {
+                    System.out.println(duplicates.get(i));
+                    String enc = duplicates.get(i) + ".enc";
+                    
+                    File decF = Paths.get(duplicates.get(i)).toFile();
+                    File encF = Paths.get(enc).toFile();
+
+//                    System.out.println(decF);
+//                    System.out.println(encF);
+                    if (decF.length() > encF.length()) {
+                        encF.delete();
+                        System.out.println("deleted ENC " + encF);
+                    } else {
+                        decF.delete();
+                        System.out.println("deleted DEC " + decF);
+                    }
+                    deletedFiles++;
                 }
             } else {
-                System.out.println("no clean up required");
+                System.out.println("no files to clean up");
+            }
+            if (deletedFiles > 2) {
+                Main.jTextArea1.append("cleaned up " + deletedFiles + " corrupted files\n");
             }
         } catch (IOException ex) {
             ex.printStackTrace();

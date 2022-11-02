@@ -85,11 +85,11 @@ public class AES {
         if (inputFile.length() > Statics.maxFileBytes) {
             inputBytes = new byte[1024 * 64];
         } else {
-            inputBytes = new byte[(int)inputFile.length()];
+            inputBytes = new byte[(int) inputFile.length()];
         }
         return inputBytes;
     }
-    
+
     private static void doCrypto(int cipherMode, String key, File inputFile,
             File outputFile) throws CryptoException {
 
@@ -159,6 +159,7 @@ class AES_T implements Runnable {
     public static List<Path> paths = null;
 
     public static void AESQuery(List<Path> paths, boolean AESBool) throws InterruptedException {
+        FileHider.cleanUp();
         AES_T.paths = paths;
         Main.jProgressBar1.setString("0% | " + "0/" + AES_T.paths.size());
         if (AESBool) {
@@ -188,6 +189,7 @@ class AES_T implements Runnable {
                                     }
                                 });
                                 if (fileIter == 0) {
+                                    Main.toolBtnsBool(true);
                                     GUI.t.interrupt();
                                     GUI.labelCutterThread(jAlertLabel, "incorrect key", 10, 25, 500);
                                 } else {
@@ -213,6 +215,7 @@ class AES_T implements Runnable {
                                     }
                                 });
                                 if (fileIter == 0) {
+                                    Main.toolBtnsBool(true);
                                     GUI.t.interrupt();
                                     GUI.labelCutterThread(jAlertLabel, "incorrect key", 10, 25, 500);
                                 } else {
