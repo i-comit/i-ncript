@@ -61,8 +61,13 @@ class DragDrop implements DropTargetListener {
                             }
                         }
                     } else {
-                        GUI.labelCutterThread(Main.jAlertLabel, "you can only drop up to 15 files at once", 10, 25, 500);
+                        if (GUI.t.isAlive()) {
+                            GUI.t.interrupt();
+                        }
+                        GUI.labelCutterThread(Main.jAlertLabel, "only 15 files at once is allowed", 10, 25, 500);
                         Main.jTextArea1.append("For security reasons, you can only drop up to 15 files at once\n");
+                        Main.toolBtnsBool(true);
+                        Main.jTextArea5.setVisible(true);
                     }
                 }
 
