@@ -47,8 +47,8 @@ public class Main extends javax.swing.JFrame {
             }
         }
         if (Memory.checkWMIC()) {
-            FileHider.cleanUp();
             initComponents();
+            FileHider.cleanUp();
 
             if (!keyFile.exists()) {
                 jToolPanel.setVisible(false);
