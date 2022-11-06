@@ -29,23 +29,52 @@ public class Folder {
     public static void list1Dir(int toolMode) throws IOException {
         switch (toolMode) {
             case 1:
-//                File sendFolderPack = Statics.sendFolder+Paths.get("\\"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd HHmmss")));
-//                sendFolderPack.mkdir();
+                Folder.unzipFolder(Statics.receiveFolder.toString() + "\\" + Statics.zipFileName + ".zip", Statics.receiveFolder.toString() + "\\" + Statics.zipFileName);
+                System.out.println("Unzip Complete");
+                Main.toolBtnsBool(true);
+                Login.verifySendKey();
                 break;
 
             case 2:
                 //SEND
-                sendFolderStr = Statics.sendFolder + "\\" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMdd-HHmmss"));
+                sendFolderStr = Statics.sendFolder + "\\" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMddHHmmss"));
                 sendKey();
                 zipFolder(Statics.sendFolder);
                 System.out.println("Zip Complete");
-
+                Main.toolBtnsBool(true);
+                deleteDirectory(Statics.sendFolder.toFile());
                 break;
 
         }
     }
 
+    public static void deleteDirectory(File file) {
+        for (File subfile : file.listFiles()) {
+            if (!subfile.toString().endsWith(".zip")) {
+                if (subfile.isDirectory()) {
+                    deleteDirectory(subfile);
+                }
+                subfile.delete();
+            }
+        }
+    }
+
+    public static void listZipFolders() {
+        File folder = new File(Statics.receiveFolder.toString());
+        File[] listOfFiles = folder.listFiles();
+        if (listOfFiles.length != 0) {
+            Main.jComboBox1.removeAllItems();
+            for (File listOfFile : listOfFiles) {
+                if (listOfFile.isFile()) {
+                    System.out.println("File " + listOfFile.getName());
+                    Main.jComboBox1.addItem(listOfFile.getName().replaceAll(".zip", ""));
+                }
+
+            }
+        }
+    }
     // zip a directory, including sub files and sub directories
+
     public static void zipFolder(Path source) throws IOException {
         String zipFileName = sendFolderStr + ".zip";
         System.out.println(zipFileName);

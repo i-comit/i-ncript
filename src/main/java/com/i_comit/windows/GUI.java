@@ -39,9 +39,9 @@ public class GUI {
         t.start();
     }
 
-    public static void loggerThread(File outputFile) {
+    public static void loggerThread(File outputFile, int toolMode) {
         t1 = new Thread(() -> {
-            logger_T.logger_T(outputFile);
+            logger_T.logger_T(outputFile, toolMode);
         });
         t1.start();
     }
@@ -147,10 +147,14 @@ class logger_T implements Runnable {
 
     }
 
-    public static void logger_T(File outputFile) {
+    public static void logger_T(File outputFile, int toolMode) {
         try {
             Thread.sleep(50);
-            Main.jTextArea1.append(outputFile.getAbsolutePath().substring(21, outputFile.getPath().length()) + "\n");
+            switch (toolMode) {
+                case 0 -> Main.jTextArea1.append(outputFile.getAbsolutePath().substring(21, outputFile.getPath().length()) + "\n");
+                case 1 -> Main.jTextArea1.append(outputFile.getAbsolutePath().substring(18, outputFile.getPath().length()) + "\n");
+                case 2 -> Main.jTextArea1.append(outputFile.getAbsolutePath().substring(18, outputFile.getPath().length()) + "\n");
+            }
             Thread.sleep(50);
             Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
         } catch (InterruptedException ex) {

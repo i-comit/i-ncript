@@ -6,6 +6,7 @@ package com.i_comit.windows;
 
 import static com.i_comit.windows.AES_T.listAESPaths;
 import static com.i_comit.windows.Main.jAlertLabel;
+import static com.i_comit.windows.Main.jComboBox1;
 import static com.i_comit.windows.Main.jPasswordField1;
 import static com.i_comit.windows.Main.jProgressBar1;
 import static com.i_comit.windows.Main.jTextField1;
@@ -90,8 +91,6 @@ public class Login {
                         fileCount = GUI.countFiles(sendFolder);
                         jProgressBar1.setMaximum(fileCount);
                         AES.AESThread(listAESPaths(sendFolder), sendFolder.toFile(), true, 2);
-//                        Folder.list1Dir(2);
-//                        Folder.zipFolder(Statics.sendFolder);
                     } else {
                         GUI.labelCutterThread(jAlertLabel, "please have a longer password", 20, 20, 1200);
                     }
@@ -118,6 +117,60 @@ public class Login {
             Files.setAttribute(p, "dos:hidden", true);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void receiveKeyCheck() throws IOException {
+        char[] password = Main.jPasswordField3.getPassword();
+        if (GUI.t.isAlive()) {
+            GUI.t.interrupt();
+        }
+        Statics.zipFileName = jComboBox1.getSelectedItem().toString();
+        Statics.recipientPassword = new String(password);
+        if (!"".equals(Statics.recipientPassword)) {
+            if (Statics.recipientPassword.length() >= 4) {
+                System.out.println(Statics.receiveFolder.toString() + "\\" + Statics.zipFileName);
+                System.out.println(Statics.recipientPassword);
+
+                Folder.list1Dir(1);
+            } else {
+                GUI.labelCutterThread(jAlertLabel, "please have a longer password", 20, 20, 1200);
+            }
+        } else {
+            GUI.labelCutterThread(jAlertLabel, "please make a password", 20, 20, 1200);
+        }
+        Main.jTextField2.setText("");
+        Main.jPasswordField2.setText("");
+    }
+
+    public static void verifySendKey() {
+        try {
+            BufferedReader brTest = new BufferedReader(new FileReader(receiveFolder.toFile() + "\\" + Statics.zipFileName + "\\send.key"));
+            String usernameRead = brTest.readLine();
+            String passwordRead = brTest.readLine();
+//            System.out.println("recipient username hash " + usernameRead);
+//            System.out.println("recipient password hash " + passwordRead);
+//            System.out.println("input password hash " + Hasher.modHash(Statics.recipientPassword));
+
+            BufferedReader brTest1 = new BufferedReader(new FileReader(keyFile));
+            String usernameRead1 = brTest1.readLine();
+            String passwordRead1 = brTest1.readLine();
+//
+//            System.out.println("my username hash " + usernameRead1);
+//            System.out.println("my password hash " + passwordRead1);
+
+            if (usernameRead.equals(usernameRead1)) {
+                System.out.println("USERNAME MATCH");
+                if (passwordRead.equals(Hasher.modHash(Statics.recipientPassword))) {
+                    System.out.println("PASSWORD MATCH");
+                    AESMode = 1;
+                    fileCount = GUI.countFiles(sendFolder);
+                    jProgressBar1.setMaximum(fileCount);
+                    AES.AESThread(listAESPaths(Paths.get(receiveFolder + "\\" + Statics.zipFileName)), Paths.get(receiveFolder + "\\" + Statics.zipFileName).toFile(), true, 1);
+                }
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 

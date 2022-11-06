@@ -121,7 +121,7 @@ public class AES {
             String percentageStr = format.format(percentage);
             Main.jProgressBar1.setString(percentageStr + "% | " + fileIter + "/" + AES_T.paths.size());
             Main.jProgressBar1.setValue(fileIter);
-            GUI.loggerThread(outputFile);
+            GUI.loggerThread(outputFile, 0);
             getFileAttr(inputFile, outputFile);
 
         } catch (NoSuchPaddingException | NoSuchAlgorithmException
@@ -162,7 +162,6 @@ class AES_T implements Runnable {
         FileHider.cleanUp();
         AES_T.paths = paths;
         Main.jProgressBar1.setString("0% | " + "0/" + AES_T.paths.size());
-
         if (AESBool) {
             contents = dirFile.listFiles();
             //                paths = listAESPaths(path);
@@ -210,7 +209,6 @@ class AES_T implements Runnable {
                                         }
                                     }
                                 }
-
                             }
                             case 1 -> {
                                 Main.jProgressBar1.setStringPainted(true);
@@ -240,6 +238,10 @@ class AES_T implements Runnable {
                                 } else {
                                     System.out.println("File Decryption Complete");
                                     GUI.resetProgressBar();
+                                    if (toolMode == 1) {
+                                        new File(Statics.receiveFolder.toString() + "\\" + Statics.zipFileName + ".zip").delete();
+                                        new File(receiveFolder.toFile() + "\\" + Statics.zipFileName + "\\send.key").delete();
+                                    }
                                 }
                             }
                         }
@@ -258,7 +260,12 @@ class AES_T implements Runnable {
                         }
                     }
                 } else {
-                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 20, 40, 800);
+                    switch (toolMode) {
+                        case 0 -> GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 20, 40, 800);
+                        case 1 -> GUI.labelCutterThread(jAlertLabel, "n-box folder has no files", 20, 40, 800);
+                        case 2 -> GUI.labelCutterThread(jAlertLabel, "o-box folder has no files", 20, 40, 800);
+                    }
+//                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 20, 40, 800);
                     Main.jToggleButton2.setEnabled(true);
                 }
             } else {
