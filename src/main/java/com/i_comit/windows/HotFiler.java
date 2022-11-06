@@ -50,7 +50,7 @@ class HotFiler_T implements Runnable {
                     Statics.fileIter = 0;
                     Statics.fileCount = GUI.countFiles(Statics.path);
                     jProgressBar1.setMaximum(Statics.fileCount);
-                    AES.AESThread(listAESPaths(Statics.path), true);
+                    AES.AESThread(listAESPaths(Statics.path), Statics.directory, true, 0);
                 }
                 jAlertLabel.setText("hot filer enabled");
                 Thread.sleep(1000);
@@ -131,7 +131,7 @@ class HotFiler_T implements Runnable {
                                 Statics.fileIter = 0;
                                 Statics.fileCount = GUI.countFiles(Statics.path);
                                 Main.jProgressBar1.setMaximum(Statics.fileCount);
-                                AES.AESThread(listAESPaths(Statics.path), true);
+                                AES.AESThread(listAESPaths(Statics.path), Statics.directory, true, 0);
                                 System.out.println("Hot Filer Called AES");
 //                                watchService.close();
                                 GUI.getGB();

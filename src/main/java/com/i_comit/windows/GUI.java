@@ -81,17 +81,19 @@ public class GUI {
         Main.jProgressBar1.setString("100% | " + AES_T.paths.size() + "/" + AES_T.paths.size());
         jProgressBar1.setValue(jProgressBar1.getMaximum());
         Main.jButton2.setVisible(false);
+        Main.jSwitchMode.setVisible(true);
+
         try {
             switch (Statics.AESMode) {
                 case 0 -> {
                     GUI.labelCutterThread(jAlertLabel, "encrypted " + Statics.fileIter + " files", 10, 25, 400);
                     Thread.sleep(100);
-                    Main.jTextArea1.append("encrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a"))+"\n");
+                    Main.jTextArea1.append("encrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
                 }
                 case 1 -> {
                     GUI.labelCutterThread(jAlertLabel, "decrypted " + Statics.fileIter + " files", 10, 25, 400);
                     Thread.sleep(100);
-                    Main.jTextArea1.append("decrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a"))+"\n");
+                    Main.jTextArea1.append("decrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
                 }
             }
             Thread.sleep(150);
@@ -116,6 +118,7 @@ class labelCutter_T implements Runnable {
     public void run() {
 
     }
+
     public static void labelCutter_T(JLabel jLabel, String labelMsg, int initSleep, int sleep, int pause) {
         jLabel.setText("");
         int msgL = labelMsg.length();

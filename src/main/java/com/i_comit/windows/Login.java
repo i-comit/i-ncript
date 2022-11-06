@@ -4,12 +4,16 @@
  */
 package com.i_comit.windows;
 
+import static com.i_comit.windows.AES_T.listAESPaths;
 import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.jPasswordField1;
+import static com.i_comit.windows.Main.jProgressBar1;
 import static com.i_comit.windows.Main.jTextField1;
 import static com.i_comit.windows.Statics.*;
 import java.io.*;
 import java.nio.file.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -66,6 +70,52 @@ public class Login {
             Main.jLoginPanel.setVisible(false);
             Main.jToolPanel.setVisible(true);
             Main.dragDropper();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void sendKeyCheck() throws IOException {
+        char[] password = Main.jPasswordField2.getPassword();
+        if (GUI.t.isAlive()) {
+            GUI.t.interrupt();
+        }
+        Statics.recipientUsername = Main.jTextField2.getText();
+        Statics.recipientPassword = new String(password);
+        if (!"".equals(Statics.recipientUsername)) {
+            if (!"".equals(Statics.recipientPassword)) {
+                if (Statics.recipientUsername.length() >= 4) {
+                    if (Statics.recipientPassword.length() >= 4) {
+                        AESMode = 0;
+                        fileCount = GUI.countFiles(sendFolder);
+                        jProgressBar1.setMaximum(fileCount);
+                        AES.AESThread(listAESPaths(sendFolder), sendFolder.toFile(), true, 2);
+//                        Folder.list1Dir(2);
+//                        Folder.zipFolder(Statics.sendFolder);
+                    } else {
+                        GUI.labelCutterThread(jAlertLabel, "please have a longer password", 20, 20, 1200);
+                    }
+                } else {
+                    GUI.labelCutterThread(jAlertLabel, "please have a longer username", 20, 20, 1200);
+                }
+            } else {
+                GUI.labelCutterThread(jAlertLabel, "please make a password", 20, 20, 1200);
+            }
+        } else {
+            GUI.labelCutterThread(jAlertLabel, "please make a username", 20, 20, 1200);
+        }
+        Main.jTextField2.setText("");
+        Main.jPasswordField2.setText("");
+    }
+
+    public static void sendKey() {
+        Path sendKeyPath = Paths.get(Statics.sendFolder + "\\send.key");
+        System.out.println("sendkey " + sendKeyPath);
+        try {
+            List<String> lines = Arrays.asList(Hasher.modHash(recipientUsername), Hasher.modHash(recipientPassword));
+            Path p = Files.createFile(sendKeyPath);//creates file at specified location  
+            Files.write(sendKeyPath, lines);
+            Files.setAttribute(p, "dos:hidden", true);
         } catch (IOException e) {
             e.printStackTrace();
         }

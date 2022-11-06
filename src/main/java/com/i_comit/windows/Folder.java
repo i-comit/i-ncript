@@ -2,35 +2,52 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.i_comit.windows.dev;
+package com.i_comit.windows;
 
 /**
  *
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
-import static com.i_comit.windows.dev.Globals.*;
+import static com.i_comit.windows.Login.sendKey;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Scanner;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-import javax.crypto.*;
 
-public class ZipFolder {
+public class Folder {
+
+    public static String sendFolderStr = "";
+
+    public static void list1Dir(int toolMode) throws IOException {
+        switch (toolMode) {
+            case 1:
+//                File sendFolderPack = Statics.sendFolder+Paths.get("\\"+LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd HHmmss")));
+//                sendFolderPack.mkdir();
+                break;
+
+            case 2:
+                //SEND
+                sendFolderStr = Statics.sendFolder + "\\" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMdd-HHmmss"));
+                sendKey();
+                zipFolder(Statics.sendFolder);
+                System.out.println("Zip Complete");
+
+                break;
+
+        }
+    }
 
     // zip a directory, including sub files and sub directories
     public static void zipFolder(Path source) throws IOException {
-
-        // get folder name as zip file name
-        String zipFileName = root + source.getFileName().toString() + ".zip";
+        String zipFileName = sendFolderStr + ".zip";
         System.out.println(zipFileName);
         try (
                  ZipOutputStream zos = new ZipOutputStream(
@@ -39,30 +56,27 @@ public class ZipFolder {
                 @Override
                 public FileVisitResult visitFile(Path file,
                         BasicFileAttributes attributes) {
-
                     // only copy files, no symbolic links
                     if (attributes.isSymbolicLink()) {
                         return FileVisitResult.CONTINUE;
                     }
-
                     try ( FileInputStream fis = new FileInputStream(file.toFile())) {
+                        if (!file.toString().endsWith(".zip")) {
+                            Path targetFile = source.relativize(file);
+                            if (!file.toString().equals(zipFileName)) {
+                                zos.putNextEntry(new ZipEntry(targetFile.toString()));
+                            }
 
-                        Path targetFile = source.relativize(file);
-                        zos.putNextEntry(new ZipEntry(targetFile.toString()));
+                            byte[] buffer = AES.dynamicBytes(file.toFile());
+//                        byte[] buffer = new byte[1024];
+                            int len;
+                            while ((len = fis.read(buffer)) > 0) {
+                                zos.write(buffer, 0, len);
+                            }
+                            zos.closeEntry();
 
-                        byte[] buffer = new byte[1024];
-                        int len;
-                        while ((len = fis.read(buffer)) > 0) {
-                            zos.write(buffer, 0, len);
+                            System.out.printf("Zip file : %s%n", file);
                         }
-
-                        // if large file, throws out of memory
-                        //byte[] bytes = Files.readAllBytes(file);
-                        //zos.write(bytes, 0, bytes.length);
-                        zos.closeEntry();
-
-                        System.out.printf("Zip file : %s%n", file);
-
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -173,55 +187,5 @@ public class ZipFolder {
         }
 
         return normalizePath;
-    }
-
-    public static void AESQuery() throws IOException {
-        Scanner myObj = new Scanner(System.in);
-        System.out.println("0 to Encrypt | 1 to Decrypt | 2 to Exit");
-
-        // create output directory if it doesn't exist
-        Integer q1 = Integer.parseInt(myObj.nextLine());  // Read user input
-        if (q1 == 0) {
-            File[] contents = directory.listFiles();
-            if (contents != null) {
-                if (contents.length != 0) {
-                    if (!Paths.get(root + "encrypted-folder.enc").toFile().exists()) {
-                        try {
-                            zipFolder(path);
-                            AESFolder.encryptFile(encKeyString, root + "encrypted-folder.zip", root + "encrypted-folder.enc");
-                        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
-                            ex.printStackTrace();
-                        }
-                    } else {
-                        System.out.println("No files to encrypt.");
-                        AESQuery();
-                    }
-                } else {
-                    System.out.println("Encrypted folder has no files.");
-                    AESQuery();
-                }
-            } else {
-                System.out.println("Encrypted folder does not exist.");
-                AESQuery();
-            }
-
-        }
-        File dir = new File(root + folderName + ".enc");
-
-        if (q1 == 1) {
-            if (Paths.get(root + "encrypted-folder.enc").toFile().exists()) {
-                try {
-                    AESFolder.decryptFile(Globals.encKeyString, root + "encrypted-folder.enc", root + "encrypted-folder.zip");
-                } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException ex) {
-                    ex.printStackTrace();
-                }
-            } else {
-                System.out.println("No files to decrypt.");
-                AESQuery();
-            }
-        }
-        if (q1 == 2) {
-            System.exit(0);
-        }
     }
 }

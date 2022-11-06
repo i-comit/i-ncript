@@ -14,10 +14,12 @@ import java.nio.file.Paths;
  */
 public class Statics {
 
+    public static int toolMode = 0;
+
     public static String folderName = "i-ncript";
     public static String rootFolder = root.substring(0, 3) + folderName;
     public static String keyName = "\\i-ncript.key";
-    
+
     public static int maxFileBytes = 1048576 * 4;
 
     public static int AESMode;
@@ -29,12 +31,17 @@ public class Statics {
     public static File directory = new File(root.substring(0, 3) + Main.masterFolder + folderName);
     public static File keyFile = Paths.get(root.substring(0, 3) + Main.masterFolder + keyName).toFile();
 
-    public static File[] contents = directory.listFiles();
+    public static File[] contents = null;
 
     public static Path path = Paths.get(root.substring(0, 3) + Main.masterFolder + folderName);
+    public static Path sendFolder = Paths.get(Main.root.substring(0, 3) + Main.masterFolder + "o-box");
+    public static Path receiveFolder = Paths.get(Main.root.substring(0, 3) + Main.masterFolder + "n-box");
 
     public static String username = "";
     public static String password = "";
+
+    public static String recipientUsername = "";
+    public static String recipientPassword = "";
 
     public static int fileCount;
     public static int fileIter;

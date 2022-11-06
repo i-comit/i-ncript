@@ -24,11 +24,11 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "";
+    public static String root = "F:\\";
     public static String masterFolder = "--------\\";
 
     public Main() {
-        root = Paths.get("").toAbsolutePath().toString();
+//        root = Paths.get("").toAbsolutePath().toString();
 //        root = root + masterFolder;
         Path runtime = Paths.get(root.substring(0, 3) + masterFolder + "runtime");
         Path app = Paths.get(root.substring(0, 3) + masterFolder + "app");
@@ -46,52 +46,58 @@ public class Main extends javax.swing.JFrame {
                 ex.printStackTrace();
             }
         }
-        if (Memory.checkWMIC()) {
-            initComponents();
-            FileHider.cleanUp();
+//        if (Memory.checkWMIC()) {
+        initComponents();
+        FileHider.cleanUp();
 
-            if (!keyFile.exists()) {
-                jToolPanel.setVisible(false);
-                jLoginPanel.setVisible(false);
-                jLabel1.setVisible(false);
-                jLabel3.setVisible(false);
-                jAlertLabel.setVisible(false);
-                jTabbedPane1.setVisible(false);
-                jTextArea3.setCaretPosition(0);
-            } else {
-                jLoginPanel.setVisible(true);
-                jLabel1.setVisible(true);
-                jLabel3.setVisible(true);
-                jAlertLabel.setVisible(true);
-                jTabbedPane1.setVisible(true);
-                jEULAPanel1.setVisible(false);
-                jEULAPanel.setVisible(false);
+        jStorePanel.setVisible(true);
+        jSendPanel.setVisible(false);
+        jReceivePanel.setVisible(false);
+        jRadioButton2.setVisible(false);
+        jRadioButton3.setVisible(false);
 
-                jUsernameLabel.setText("enter username");
-                jPasswordLabel.setText("enter password");
-                GUI.getGB();
-                System.out.println("Your available Memory Heap is " + Memory.byteFormatter(Memory.heapSize));
-
-                jTextField1.setText("");
-                jPasswordField1.setText("");
-                jAlertLabel.setText("");
-
-                File rootFolder = Paths.get(root + "\\" + folderName).toFile();
-                if (!rootFolder.exists()) {
-                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 40, 40, 1200);
-                    rootFolder.mkdir();
-                } else {
-                    GUI.labelCutterThread(jAlertLabel, "developed by i-comit", 40, 40, 1200);
-                }
-                jToolPanel.setVisible(false);
-                jButton2.setVisible(false);
-            }
-            jProgressBar1.setVisible(false);
-            jProgressBar2.setVisible(false);
-            jTextArea5.setVisible(false);
+        if (!keyFile.exists()) {
+            jToolPanel.setVisible(false);
+            jLoginPanel.setVisible(false);
+            jLabel1.setVisible(false);
+            jLabel3.setVisible(false);
+            jAlertLabel.setVisible(false);
+            jTabbedPane1.setVisible(false);
+            jTextArea3.setCaretPosition(0);
         } else {
+            jLoginPanel.setVisible(true);
+            jLabel1.setVisible(true);
+            jLabel3.setVisible(true);
+            jAlertLabel.setVisible(true);
+            jTabbedPane1.setVisible(true);
+            jEULAPanel1.setVisible(false);
+            jEULAPanel.setVisible(false);
 
+            jUsernameLabel.setText("enter username");
+            jPasswordLabel.setText("enter password");
+            GUI.getGB();
+            System.out.println("Your available Memory Heap is " + Memory.byteFormatter(Memory.heapSize));
+
+            jTextField1.setText("");
+            jPasswordField1.setText("");
+            jAlertLabel.setText("");
+
+            File rootFolder = Paths.get(root + "\\" + folderName).toFile();
+            if (!rootFolder.exists()) {
+                GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 40, 40, 1200);
+                rootFolder.mkdir();
+            } else {
+                GUI.labelCutterThread(jAlertLabel, "developed by i-comit", 40, 40, 1200);
+            }
+            jToolPanel.setVisible(false);
+            jButton2.setVisible(false);
         }
+        jProgressBar1.setVisible(false);
+        jProgressBar2.setVisible(false);
+        jTextArea5.setVisible(false);
+//        } else {
+//
+//        }
     }
 
     public static void dragDropper() {
@@ -121,13 +127,27 @@ public class Main extends javax.swing.JFrame {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         jToolPanel = new javax.swing.JPanel();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton0 = new javax.swing.JRadioButton();
-        jToggleButton1 = new javax.swing.JToggleButton();
-        jToggleButton2 = new javax.swing.JToggleButton();
         jButton2 = new javax.swing.JButton();
+        jSwitchMode = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jProgressBar2 = new javax.swing.JProgressBar();
+        jStorePanel = new javax.swing.JPanel();
+        jToggleButton1 = new javax.swing.JToggleButton();
+        jToggleButton2 = new javax.swing.JToggleButton();
+        jRadioButton1 = new javax.swing.JRadioButton();
+        jRadioButton0 = new javax.swing.JRadioButton();
+        jSendPanel = new javax.swing.JPanel();
+        jPasswordField2 = new javax.swing.JPasswordField();
+        jTextField2 = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jRadioButton2 = new javax.swing.JRadioButton();
+        jReceivePanel = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jPasswordField3 = new javax.swing.JPasswordField();
+        jRadioButton3 = new javax.swing.JRadioButton();
+        jLabel8 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<>();
         jLoginPanel = new javax.swing.JPanel();
         jTextField1 = new javax.swing.JTextField();
         jPasswordField1 = new javax.swing.JPasswordField();
@@ -172,25 +192,41 @@ public class Main extends javax.swing.JFrame {
         setResizable(false);
 
         jToolPanel.setOpaque(false);
+        jToolPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        buttonGroup1.add(jRadioButton1);
-        jRadioButton1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
-        jRadioButton1.setText("DECRYPT");
-        jRadioButton1.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
-        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton1ActionPerformed(evt);
+        jButton2.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jButton2.setText("STOP");
+        jButton2.setToolTipText("stops current AES task");
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
             }
         });
+        jToolPanel.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 78, 105, -1));
 
-        buttonGroup1.add(jRadioButton0);
-        jRadioButton0.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
-        jRadioButton0.setText("ENCRYPT");
-        jRadioButton0.addActionListener(new java.awt.event.ActionListener() {
+        jSwitchMode.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jSwitchMode.setText("STORE");
+        jSwitchMode.setPreferredSize(new java.awt.Dimension(72, 22));
+        jSwitchMode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton0ActionPerformed(evt);
+                jSwitchModeActionEvt(evt);
             }
         });
+        jToolPanel.add(jSwitchMode, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 78, 105, -1));
+
+        jButton3.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jButton3.setText("CLR LOG");
+        jButton3.setToolTipText("clear AES output log");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        jToolPanel.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(144, 78, 105, -1));
+
+        jProgressBar2.setFont(new java.awt.Font("Polentical Neon", 0, 11)); // NOI18N
+        jProgressBar2.setForeground(Color.white);
+        jToolPanel.add(jProgressBar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 118, 243, 18));
 
         jToggleButton1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jToggleButton1.setText("HOT FILER");
@@ -217,67 +253,127 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
-        jButton2.setText("STOP");
-        jButton2.setToolTipText("stops current AES task");
-        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton2MouseClicked(evt);
-            }
-        });
-
-        jButton3.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
-        jButton3.setText("CLR LOG");
-        jButton3.setToolTipText("clear AES output log");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        buttonGroup1.add(jRadioButton1);
+        jRadioButton1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jRadioButton1.setText("DECRYPT");
+        jRadioButton1.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
+        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                jRadioButton1ActionPerformed(evt);
             }
         });
 
-        jProgressBar2.setFont(new java.awt.Font("Polentical Neon", 0, 11)); // NOI18N
-        jProgressBar2.setForeground(Color.white);
+        buttonGroup1.add(jRadioButton0);
+        jRadioButton0.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jRadioButton0.setText("ENCRYPT");
+        jRadioButton0.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton0ActionPerformed(evt);
+            }
+        });
 
-        javax.swing.GroupLayout jToolPanelLayout = new javax.swing.GroupLayout(jToolPanel);
-        jToolPanel.setLayout(jToolPanelLayout);
-        jToolPanelLayout.setHorizontalGroup(
-            jToolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jToolPanelLayout.createSequentialGroup()
+        javax.swing.GroupLayout jStorePanelLayout = new javax.swing.GroupLayout(jStorePanel);
+        jStorePanel.setLayout(jStorePanelLayout);
+        jStorePanelLayout.setHorizontalGroup(
+            jStorePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jStorePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jToolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jProgressBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jToolPanelLayout.createSequentialGroup()
+                .addGroup(jStorePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jStorePanelLayout.createSequentialGroup()
                         .addComponent(jToggleButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                         .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jToolPanelLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jStorePanelLayout.createSequentialGroup()
                         .addComponent(jRadioButton0)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jRadioButton1))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jToolPanelLayout.createSequentialGroup()
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jRadioButton1)))
                 .addContainerGap())
         );
-        jToolPanelLayout.setVerticalGroup(
-            jToolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jToolPanelLayout.createSequentialGroup()
-                .addGroup(jToolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        jStorePanelLayout.setVerticalGroup(
+            jStorePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jStorePanelLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addGroup(jStorePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jToggleButton1)
                     .addComponent(jToggleButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addGroup(jToolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jStorePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jRadioButton1)
                     .addComponent(jRadioButton0))
-                .addGap(18, 18, 18)
-                .addGroup(jToolPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
-                .addGap(18, 18, 18)
-                .addComponent(jProgressBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(14, 14, 14))
+                .addGap(12, 12, 12))
         );
+
+        jToolPanel.add(jStorePanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
+        jSendPanel.setPreferredSize(new java.awt.Dimension(262, 81));
+        jSendPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPasswordField2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jPasswordField2Evt(evt);
+            }
+        });
+        jSendPanel.add(jPasswordField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(157, 46, 90, -1));
+
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField2ActionPerformed(evt);
+            }
+        });
+        jSendPanel.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(157, 15, 90, -1));
+
+        jLabel5.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jLabel5.setText("recipient username");
+        jSendPanel.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 18, -1, -1));
+
+        jLabel6.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jLabel6.setText("create a password");
+        jSendPanel.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 50, -1, -1));
+
+        jRadioButton2.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jRadioButton2.setText("ENCRYPT");
+        jRadioButton2.setPreferredSize(new java.awt.Dimension(92, 20));
+        jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton2Evt(evt);
+            }
+        });
+        jSendPanel.add(jRadioButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 48, -1, -1));
+
+        jToolPanel.add(jSendPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
+        jReceivePanel.setPreferredSize(new java.awt.Dimension(262, 81));
+        jReceivePanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel7.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jLabel7.setText("enter password");
+        jReceivePanel.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 50, -1, -1));
+
+        jPasswordField3.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jPasswordField3Evt(evt);
+            }
+        });
+        jReceivePanel.add(jPasswordField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 46, 97, -1));
+
+        jRadioButton3.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jRadioButton3.setText("DECRYPT");
+        jRadioButton3.setPreferredSize(new java.awt.Dimension(92, 20));
+        jReceivePanel.add(jRadioButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 48, -1, -1));
+
+        jLabel8.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jLabel8.setText("select a zip file");
+        jReceivePanel.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 18, -1, -1));
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxEvt(evt);
+            }
+        });
+        jReceivePanel.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 15, 97, -1));
+
+        jToolPanel.add(jReceivePanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         jLoginPanel.setOpaque(false);
 
@@ -601,7 +697,7 @@ public class Main extends javax.swing.JFrame {
                                 .addComponent(jAlertLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(26, 26, 26)
                         .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 11, Short.MAX_VALUE))
+                        .addGap(0, 29, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
@@ -610,7 +706,7 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(layout.createSequentialGroup()
                     .addGap(36, 36, 36)
                     .addComponent(jLoginPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(283, Short.MAX_VALUE)))
+                    .addContainerGap(301, Short.MAX_VALUE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(31, 31, 31)
@@ -653,7 +749,7 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(layout.createSequentialGroup()
                     .addGap(60, 60, 60)
                     .addComponent(jToolPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(53, Short.MAX_VALUE)))
+                    .addContainerGap(67, Short.MAX_VALUE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                     .addContainerGap()
@@ -680,7 +776,7 @@ public class Main extends javax.swing.JFrame {
         try {
             fileCount = GUI.countFiles(path);
             jProgressBar1.setMaximum(fileCount);
-            AES.AESThread(listAESPaths(path), true);
+            AES.AESThread(listAESPaths(path), directory, true, 0);
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -721,7 +817,7 @@ public class Main extends javax.swing.JFrame {
         try {
             fileCount = GUI.countFiles(path);
             jProgressBar1.setMaximum(fileCount);
-            AES.AESThread(listAESPaths(path), true);
+            AES.AESThread(listAESPaths(path), directory, true, 0);
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -822,6 +918,79 @@ public class Main extends javax.swing.JFrame {
 
     }//GEN-LAST:event_ActionjButton6
 
+    //SWITCH STORE/SEND/RECEIVE MODE
+    private void jSwitchModeActionEvt(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSwitchModeActionEvt
+        jRadioButton2.setVisible(false);
+
+        switch (toolMode) {
+            case 0 -> {
+
+                jSwitchMode.setText("STORE");
+                jStorePanel.setVisible(true);
+                jSendPanel.setVisible(false);
+                jReceivePanel.setVisible(false);
+                toolMode++;
+
+            }
+            case 1 -> {
+                jSwitchMode.setText("RECEIVE");
+                jStorePanel.setVisible(false);
+                jSendPanel.setVisible(false);
+                jReceivePanel.setVisible(true);
+                toolMode++;
+
+            }
+            case 2 -> {
+                jSwitchMode.setText("SEND");
+                jStorePanel.setVisible(false);
+                jSendPanel.setVisible(true);
+                jReceivePanel.setVisible(false);
+                toolMode = 0;
+            }
+        }
+    }//GEN-LAST:event_jSwitchModeActionEvt
+
+    private void jPasswordField2Evt(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField2Evt
+        if (jPasswordField2.getPassword().length < 4) {
+//            jLabel6.setText("password too short");
+            jLabel6.setVisible(true);
+            jLabel5.setVisible(true);
+            jRadioButton2.setVisible(false);
+        } else {
+            jLabel6.setVisible(false);
+            jLabel5.setVisible(false);
+            jRadioButton2.setVisible(true);
+        }
+    }//GEN-LAST:event_jPasswordField2Evt
+
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2ActionPerformed
+
+    private void jPasswordField3Evt(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField3Evt
+        if (jPasswordField3.getPassword().length < 4) {
+//            jLabel7.setText("password too short");
+            jLabel7.setVisible(true);
+            jRadioButton3.setVisible(false);
+        } else {
+            jLabel7.setVisible(false);
+            jRadioButton3.setVisible(true);
+        }
+    }//GEN-LAST:event_jPasswordField3Evt
+
+    //SEND KEY
+    private void jRadioButton2Evt(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2Evt
+        try {
+            Login.sendKeyCheck();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_jRadioButton2Evt
+
+    private void jComboBoxEvt(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxEvt
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxEvt
+
     /**
      * @param args the command line arguments
      */
@@ -862,43 +1031,57 @@ public class Main extends javax.swing.JFrame {
     public javax.swing.JButton jButton1;
     protected static javax.swing.JButton jButton2;
     private static javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JPanel jEULAPanel;
-    private javax.swing.JPanel jEULAPanel1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    protected static javax.swing.JButton jButton4;
+    protected static javax.swing.JButton jButton5;
+    protected static javax.swing.JButton jButton6;
+    protected static javax.swing.JButton jButton7;
+    protected static javax.swing.JComboBox<String> jComboBox1;
+    protected static javax.swing.JPanel jEULAPanel;
+    protected static javax.swing.JPanel jEULAPanel1;
+    protected static javax.swing.JLabel jLabel1;
+    protected static javax.swing.JLabel jLabel2;
     protected static javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
+    protected static javax.swing.JLabel jLabel4;
+    protected static javax.swing.JLabel jLabel5;
+    protected static javax.swing.JLabel jLabel6;
+    protected static javax.swing.JLabel jLabel7;
+    protected static javax.swing.JLabel jLabel8;
     public static javax.swing.JPanel jLoginPanel;
-    private javax.swing.JPanel jPanel1;
+    protected static javax.swing.JPanel jPanel1;
     protected static javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
+    protected static javax.swing.JPanel jPanel3;
+    protected static javax.swing.JPanel jPanel4;
     protected static javax.swing.JPasswordField jPasswordField1;
+    protected static javax.swing.JPasswordField jPasswordField2;
+    protected static javax.swing.JPasswordField jPasswordField3;
     protected javax.swing.JLabel jPasswordLabel;
     public static javax.swing.JProgressBar jProgressBar1;
     protected static javax.swing.JProgressBar jProgressBar2;
     protected static javax.swing.JRadioButton jRadioButton0;
     protected static javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JTabbedPane jTabbedPane1;
+    protected static javax.swing.JRadioButton jRadioButton2;
+    protected static javax.swing.JRadioButton jRadioButton3;
+    protected static javax.swing.JPanel jReceivePanel;
+    protected static javax.swing.JScrollPane jScrollPane1;
+    protected static javax.swing.JScrollPane jScrollPane2;
+    protected static javax.swing.JScrollPane jScrollPane3;
+    protected static javax.swing.JScrollPane jScrollPane4;
+    protected static javax.swing.JScrollPane jScrollPane5;
+    protected static javax.swing.JScrollPane jScrollPane6;
+    protected static javax.swing.JPanel jSendPanel;
+    protected static javax.swing.JSeparator jSeparator1;
+    protected static javax.swing.JSeparator jSeparator2;
+    protected static javax.swing.JPanel jStorePanel;
+    protected static javax.swing.JButton jSwitchMode;
+    protected static javax.swing.JTabbedPane jTabbedPane1;
     protected static javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
-    private javax.swing.JTextArea jTextArea3;
-    private javax.swing.JTextArea jTextArea4;
+    protected static javax.swing.JTextArea jTextArea2;
+    protected static javax.swing.JTextArea jTextArea3;
+    protected static javax.swing.JTextArea jTextArea4;
     protected static javax.swing.JTextArea jTextArea5;
-    private javax.swing.JTextArea jTextArea6;
+    protected static javax.swing.JTextArea jTextArea6;
     protected static javax.swing.JTextField jTextField1;
+    protected static javax.swing.JTextField jTextField2;
     public static javax.swing.JToggleButton jToggleButton1;
     protected static javax.swing.JToggleButton jToggleButton2;
     public static javax.swing.JPanel jToolPanel;

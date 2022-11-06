@@ -57,7 +57,7 @@ class DragDrop implements DropTargetListener {
                             File filesf = new File(sf);
                             paths.add(filesf.toPath());
                             if (i >= files.size() - 1) {
-                                AES.AESThread(paths, false);
+                                AES.AESThread(paths, Statics.directory, false, 0);
                             }
                         }
                     } else {

@@ -34,10 +34,10 @@ public class AES {
 
     public static Thread t;
 
-    public static void AESThread(List<Path> paths, boolean AESBool) {
+    public static void AESThread(List<Path> paths, File dirFile, boolean AESBool, int toolMode) {
         t = new Thread(() -> {
             try {
-                AES_T.AESQuery(paths, AESBool);
+                AES_T.AESQuery(paths, dirFile, AESBool, toolMode);
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
@@ -158,18 +158,20 @@ class AES_T implements Runnable {
 
     public static List<Path> paths = null;
 
-    public static void AESQuery(List<Path> paths, boolean AESBool) throws InterruptedException {
+    public static void AESQuery(List<Path> paths, File dirFile, boolean AESBool, int toolMode) throws InterruptedException {
         FileHider.cleanUp();
         AES_T.paths = paths;
         Main.jProgressBar1.setString("0% | " + "0/" + AES_T.paths.size());
+
         if (AESBool) {
-            contents = directory.listFiles();
+            contents = dirFile.listFiles();
             //                paths = listAESPaths(path);
             if (contents != null) {
                 if (contents.length != 0) {
                     if (!paths.isEmpty()) {
                         Main.toolBtnsBool(false);
                         Main.jButton2.setVisible(true);
+                        Main.jSwitchMode.setVisible(false);
                         Main.jTextArea5.setVisible(false);
                         switch (AESMode) {
                             case 0 -> {
@@ -184,7 +186,12 @@ class AES_T implements Runnable {
                                             Main.jProgressBar2.setVisible(true);
                                             Main.jAlertLabel.setText("encrypting " + x.toFile().getName());
                                         }
-                                        encrypt(Hasher.modHash(password), x.toFile(), x.toFile());
+                                        if (toolMode == 0) {
+                                            encrypt(Hasher.modHash(password), x.toFile(), x.toFile());
+                                        }
+                                        if (toolMode == 2) {
+                                            encrypt(Hasher.modHash(recipientPassword), x.toFile(), x.toFile());
+                                        }
                                     } catch (AES.CryptoException ex) {
                                     }
                                 });
@@ -195,6 +202,13 @@ class AES_T implements Runnable {
                                 } else {
                                     System.out.println("File Encryption Complete");
                                     GUI.resetProgressBar();
+                                    if (toolMode == 2) {
+                                        try {
+                                            Folder.list1Dir(2);
+                                        } catch (IOException ex) {
+                                            ex.printStackTrace();
+                                        }
+                                    }
                                 }
 
                             }
@@ -210,7 +224,12 @@ class AES_T implements Runnable {
                                             Main.jProgressBar2.setVisible(true);
                                             Main.jAlertLabel.setText("decrypting " + x.toFile().getName());
                                         }
-                                        decrypt(Hasher.modHash(password), x.toFile(), x.toFile());
+                                        if (toolMode == 0) {
+                                            decrypt(Hasher.modHash(password), x.toFile(), x.toFile());
+                                        }
+                                        if (toolMode == 1) {
+                                            decrypt(Hasher.modHash(recipientPassword), x.toFile(), x.toFile());
+                                        }
                                     } catch (AES.CryptoException ex) {
                                     }
                                 });
@@ -250,6 +269,7 @@ class AES_T implements Runnable {
             jProgressBar1.setMaximum(paths.size());
             jProgressBar1.setStringPainted(true);
             jProgressBar1.setValue(fileIter);
+            Main.jSwitchMode.setVisible(false);
 
             paths.forEach(x -> {
                 try {
@@ -296,10 +316,9 @@ class AES_T implements Runnable {
     public static List<Path> listPaths(Path path) throws IOException {
         List<Path> result;
         try ( Stream<Path> walk = Files.walk(path)) {
-            result = walk.filter(Files::isRegularFile).collect(Collectors.toList());
+            result = walk.filter(Files::isRegularFile).filter(p -> !p.getFileName().toString().startsWith("Thumbs.db")).collect(Collectors.toList());
             return result;
         }
-
     }
 
     public static List<Path> listAESPaths(Path path) throws IOException {
@@ -311,7 +330,7 @@ class AES_T implements Runnable {
                     result = walk.filter(Files::isRegularFile).filter(p -> !p.getFileName().toString().endsWith(".enc")).filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
                             .collect(Collectors.toList());
                 case 1 ->
-                    result = walk.filter(Files::isRegularFile).filter(p -> p.getFileName().toString().endsWith(".enc"))
+                    result = walk.filter(Files::isRegularFile).filter(p -> p.getFileName().toString().endsWith(".enc")).filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
                             .collect(Collectors.toList());
             }
         }
