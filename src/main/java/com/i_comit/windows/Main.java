@@ -24,11 +24,11 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "";
+    public static String root = "F:\\";
     public static String masterFolder = "--------\\";
 
     public Main() {
-        root = Paths.get("").toAbsolutePath().toString();
+//        root = Paths.get("").toAbsolutePath().toString();
 //        root = root + masterFolder;
         Path runtime = Paths.get(root.substring(0, 3) + masterFolder + "runtime");
         Path app = Paths.get(root.substring(0, 3) + masterFolder + "app");
@@ -46,7 +46,7 @@ public class Main extends javax.swing.JFrame {
                 ex.printStackTrace();
             }
         }
-        if (Memory.checkWMIC()) {
+//        if (Memory.checkWMIC()) {
         initComponents();
         FileHider.cleanUp();
 
@@ -104,9 +104,9 @@ public class Main extends javax.swing.JFrame {
         jProgressBar1.setVisible(false);
         jProgressBar2.setVisible(false);
         jTextArea5.setVisible(false);
-        } else {
-
-        }
+//        } else {
+//
+//        }
     }
 
     public static void dragDropper() {
@@ -121,6 +121,7 @@ public class Main extends javax.swing.JFrame {
         jToggleButton2.setEnabled(bool);
         jRadioButton0.setEnabled(bool);
         jRadioButton1.setEnabled(bool);
+        jSwitchMode.setVisible(bool);
 //        jButton2.setEnabled(!bool);
 //        jButton3.setEnabled(!bool);
     }
@@ -325,7 +326,7 @@ public class Main extends javax.swing.JFrame {
                 jPasswordField2Evt(evt);
             }
         });
-        jSendPanel.add(jPasswordField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(145, 46, -1, -1));
+        jSendPanel.add(jPasswordField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(146, 46, 100, -1));
 
         jTextField2.setPreferredSize(new java.awt.Dimension(103, 22));
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
@@ -333,14 +334,15 @@ public class Main extends javax.swing.JFrame {
                 jTextField2ActionPerformed(evt);
             }
         });
-        jSendPanel.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(145, 15, -1, -1));
+        jSendPanel.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(146, 15, 100, -1));
 
         jLabel5.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
-        jLabel5.setText("recipient username");
+        jLabel5.setText("set file username");
+        jLabel5.setToolTipText("the name must match your recipient's username");
         jSendPanel.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 18, -1, -1));
 
         jLabel6.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
-        jLabel6.setText("create a password");
+        jLabel6.setText("create password");
         jSendPanel.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 50, -1, -1));
 
         jRadioButton2.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
@@ -367,7 +369,7 @@ public class Main extends javax.swing.JFrame {
                 jPasswordField3Evt(evt);
             }
         });
-        jReceivePanel.add(jPasswordField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(141, 46, 109, -1));
+        jReceivePanel.add(jPasswordField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(146, 46, 100, -1));
 
         jRadioButton3.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jRadioButton3.setText("DECRYPT");
@@ -380,7 +382,8 @@ public class Main extends javax.swing.JFrame {
         jReceivePanel.add(jRadioButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 48, -1, -1));
 
         jLabel8.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
-        jLabel8.setText("select a zip file");
+        jLabel8.setText("select a .i-cc file");
+        jLabel8.setToolTipText("choose a .i-cc file that was made from o-box");
         jReceivePanel.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 18, -1, -1));
 
         jComboBox1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -393,11 +396,11 @@ public class Main extends javax.swing.JFrame {
                 jComboBoxEvt(evt);
             }
         });
-        jReceivePanel.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(141, 15, 109, -1));
+        jReceivePanel.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(146, 15, 100, -1));
 
         jToolPanel.add(jReceivePanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
-        getContentPane().add(jToolPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 50, -1, -1));
+        getContentPane().add(jToolPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 45, -1, -1));
 
         jLoginPanel.setOpaque(false);
 
@@ -445,7 +448,7 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(jLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPasswordLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jUsernameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
@@ -468,28 +471,28 @@ public class Main extends javax.swing.JFrame {
                 .addGap(18, 18, 18))
         );
 
-        getContentPane().add(jLoginPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(22, 60, 240, -1));
+        getContentPane().add(jLoginPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(25, 55, 236, -1));
 
         jProgressBar1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jProgressBar1.setForeground(Color.WHITE);
         jProgressBar1.setBorder(null);
         getContentPane().add(jProgressBar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 216, 516, 16));
 
-        jLabel1.setFont(new java.awt.Font("Polentical Neon", 0, 21)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Polentical Neon", 0, 20)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("i-ncript");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(26, 19, -1, 30));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(26, 16, -1, 30));
 
         jLabel3.setFont(new java.awt.Font("Polentical Neon", 0, 18)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel3.setText("jLabel3");
         jLabel3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(124, 20, 140, 30));
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(124, 17, 140, 30));
 
         jAlertLabel.setFont(new java.awt.Font("Polentical Neon", 0, 13)); // NOI18N
         jAlertLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jAlertLabel.setText("jLabel2");
-        getContentPane().add(jAlertLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(25, 190, 236, 27));
+        getContentPane().add(jAlertLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(25, 185, 236, 27));
 
         jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
         jTabbedPane1.setFocusable(false);
@@ -570,9 +573,8 @@ public class Main extends javax.swing.JFrame {
         jTextArea6.setColumns(20);
         jTextArea6.setLineWrap(true);
         jTextArea6.setRows(5);
-        jTextArea6.setText("i-ncript Basic Tool Overview:\n\nIf this is your first time running i-ncript, create a username and password, which will be stored as a hashed key. It will also create a folder called i-ncript which is the master folder where you will store all your folders and filesthe data that you want to encrypt. You will also need to remember this username and password the next time you open this app.\n\nENCRYPT & DECRYPT\nThese two radio buttons are the primary tools of i-ncript, pressing either buttons will run the respective encryption task, using the AES cipher. \n\nHOT FILER\nHot Filer can be toggled for automatic encryption whenever any new files is dropped into the i-ncript folder. If it detects any new files it will run the Encrypt function the same way as clicking on the Encrypt radio button.\n\nHIDE FILE\nHide File can be toggled to hide or unhide every file in the i-ncript folder. It runs after every crypto task.\n\nSTOP\nThis button only appears during encryption/decryption; click it to stop the current crypto task.\n\nCLR LOG\nThis button will clear the outputs seen in the LOG tab during encryption and decryption.\n\nLOG TAB\nThis tab will output all your files that has finished being encrypted/decrypted during an crypto task. After finishing it will also state how many files were encrypted/decrypted and what time.\n\nDROP TAB\nThe DROP tab, next to the LOG tab, is enabled after login, and you can drag and drop any files into this area and it will encrypt or decrypt that file, without changing its location. This is useful if you want to encrypt or decrypt only a few files to work on.");
+        jTextArea6.setText("i-ncript Main Tool Overview:\n\nENCRYPT & DECRYPT\nThese two radio buttons are the primary tools of i-ncript, pressing either buttons will run the respective encryption task, using the AES cipher. \n\nHOT FILER\nHot Filer can be toggled for automatic encryption whenever any new files is dropped into the i-ncript folder. If it detects any new files it will run the Encrypt function the same way as clicking on the Encrypt radio button.\n\nHIDE FILE\nHide File can be toggled to hide or unhide every file in the i-ncript folder. It runs after every crypto task.\n\nSTOP\nThis button only appears during encryption/decryption; click it to stop the current crypto task.\n\nCLR LOG\nThis button will clear the outputs seen in the LOG tab during encryption and decryption.\n\nLOG TAB\nThis tab will output all your files that has finished being encrypted/decrypted during an crypto task. After finishing it will also state how many files were encrypted/decrypted and what time.\n\nDROP TAB\nThe DROP tab, next to the LOG tab, is enabled after login, and you can drag and drop any files into this area and it will encrypt or decrypt that file, without changing its location. This is useful if you want to encrypt or decrypt only a few files to work on.");
         jTextArea6.setWrapStyleWord(true);
-        jTextArea6.setCaretPosition(0);
         jScrollPane6.setViewportView(jTextArea6);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -588,7 +590,7 @@ public class Main extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("HELP", jPanel4);
 
-        getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 28, 225, 190));
+        getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(288, 23, 225, 190));
 
         jLabel2.setFont(new java.awt.Font("Polentical Neon", 0, 16)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -891,20 +893,34 @@ public class Main extends javax.swing.JFrame {
                 jStorePanel.setVisible(true);
                 jSendPanel.setVisible(false);
                 jReceivePanel.setVisible(false);
+                jTextArea5.setVisible(true);
+
             }
             case 1 -> {
-                jSwitchMode.setText("RECEIVE");
+                jSwitchMode.setText("N-BOX");
                 jStorePanel.setVisible(false);
                 jSendPanel.setVisible(false);
                 jReceivePanel.setVisible(true);
+                jTextArea5.setVisible(false);
+
+                jLabel5.setVisible(false);
+                jLabel6.setVisible(false);
+                jRadioButton2.setVisible(false);
+                Folder.listZipFolders();
+
             }
             case 2 -> {
-                jSwitchMode.setText("SEND");
+                jSwitchMode.setText("O-BOX");
                 jStorePanel.setVisible(false);
                 jSendPanel.setVisible(true);
                 jLabel6.setVisible(true);
                 jLabel5.setVisible(true);
                 jReceivePanel.setVisible(false);
+                jTextArea5.setVisible(false);
+
+                jLabel7.setVisible(false);
+                jLabel8.setVisible(false);
+                jRadioButton3.setVisible(false);
 
             }
             case 3 -> {
@@ -914,12 +930,13 @@ public class Main extends javax.swing.JFrame {
                 jLabel7.setVisible(true);
                 jLabel8.setVisible(true);
                 jReceivePanel.setVisible(false);
+                jTextArea5.setVisible(true);
                 toolMode = 0;
 
             }
         }
     }//GEN-LAST:event_jSwitchModeActionEvt
-
+    //SEND PANEL
     private void jPasswordField2Evt(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField2Evt
         if (jPasswordField2.getPassword().length < 4) {
 //            jLabel6.setText("password too short");
@@ -936,7 +953,7 @@ public class Main extends javax.swing.JFrame {
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2ActionPerformed
-
+    //RECEIVE PANEL
     private void jPasswordField3Evt(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField3Evt
         if (jPasswordField3.getPassword().length < 4) {
 //            jLabel7.setText("password too short");

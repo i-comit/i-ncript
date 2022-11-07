@@ -49,7 +49,7 @@
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="15" y="50" width="-1" height="-1"/>
+          <AbsoluteConstraints x="15" y="45" width="-1" height="-1"/>
         </Constraint>
       </Constraints>
 
@@ -288,7 +288,7 @@
               </Events>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="145" y="46" width="-1" height="-1"/>
+                  <AbsoluteConstraints x="146" y="46" width="100" height="-1"/>
                 </Constraint>
               </Constraints>
             </Component>
@@ -303,7 +303,7 @@
               </Events>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="145" y="15" width="-1" height="-1"/>
+                  <AbsoluteConstraints x="146" y="15" width="100" height="-1"/>
                 </Constraint>
               </Constraints>
             </Component>
@@ -312,7 +312,8 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Polentical Neon" size="12" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="recipient username"/>
+                <Property name="text" type="java.lang.String" value="set file username"/>
+                <Property name="toolTipText" type="java.lang.String" value="the name must match your recipient&apos;s username"/>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -325,7 +326,7 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Polentical Neon" size="12" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="create a password"/>
+                <Property name="text" type="java.lang.String" value="create password"/>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -389,7 +390,7 @@
               </Events>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="141" y="46" width="109" height="-1"/>
+                  <AbsoluteConstraints x="146" y="46" width="100" height="-1"/>
                 </Constraint>
               </Constraints>
             </Component>
@@ -417,7 +418,8 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Polentical Neon" size="12" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="select a zip file"/>
+                <Property name="text" type="java.lang.String" value="select a .i-cc file"/>
+                <Property name="toolTipText" type="java.lang.String" value="choose a .i-cc file that was made from o-box"/>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
@@ -440,7 +442,7 @@
               </AuxValues>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-                  <AbsoluteConstraints x="141" y="15" width="109" height="-1"/>
+                  <AbsoluteConstraints x="146" y="15" width="100" height="-1"/>
                 </Constraint>
               </Constraints>
             </Component>
@@ -457,7 +459,7 @@
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="22" y="60" width="240" height="-1"/>
+          <AbsoluteConstraints x="25" y="55" width="236" height="-1"/>
         </Constraint>
       </Constraints>
 
@@ -470,7 +472,7 @@
                       <Component id="jPasswordLabel" max="32767" attributes="0"/>
                       <Component id="jUsernameLabel" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="jButton1" max="32767" attributes="0"/>
                       <Component id="jTextField1" alignment="0" pref="103" max="32767" attributes="0"/>
@@ -592,14 +594,14 @@
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Polentical Neon" size="21" style="0"/>
+          <Font name="Polentical Neon" size="20" style="0"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="text" type="java.lang.String" value="i-ncript"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="26" y="19" width="-1" height="30"/>
+          <AbsoluteConstraints x="26" y="16" width="-1" height="30"/>
         </Constraint>
       </Constraints>
     </Component>
@@ -617,7 +619,7 @@
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="124" y="20" width="140" height="30"/>
+          <AbsoluteConstraints x="124" y="17" width="140" height="30"/>
         </Constraint>
       </Constraints>
     </Component>
@@ -634,7 +636,7 @@
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="25" y="190" width="236" height="27"/>
+          <AbsoluteConstraints x="25" y="185" width="236" height="27"/>
         </Constraint>
       </Constraints>
     </Component>
@@ -645,7 +647,7 @@
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="290" y="28" width="225" height="190"/>
+          <AbsoluteConstraints x="288" y="23" width="225" height="190"/>
         </Constraint>
       </Constraints>
 
@@ -844,9 +846,8 @@
                     <Property name="columns" type="int" value="20"/>
                     <Property name="lineWrap" type="boolean" value="true"/>
                     <Property name="rows" type="int" value="5"/>
-                    <Property name="text" type="java.lang.String" value="i-ncript Basic Tool Overview:&#xa;&#xa;If this is your first time running i-ncript, create a username and password, which will be stored as a hashed key. It will also create a folder called i-ncript which is the master folder where you will store all your folders and filesthe data that you want to encrypt. You will also need to remember this username and password the next time you open this app.&#xa;&#xa;ENCRYPT &amp; DECRYPT&#xa;These two radio buttons are the primary tools of i-ncript, pressing either buttons will run the respective encryption task, using the AES cipher. &#xa;&#xa;HOT FILER&#xa;Hot Filer can be toggled for automatic encryption whenever any new files is dropped into the i-ncript folder. If it detects any new files it will run the Encrypt function the same way as clicking on the Encrypt radio button.&#xa;&#xa;HIDE FILE&#xa;Hide File can be toggled to hide or unhide every file in the i-ncript folder. It runs after every crypto task.&#xa;&#xa;STOP&#xa;This button only appears during encryption/decryption; click it to stop the current crypto task.&#xa;&#xa;CLR LOG&#xa;This button will clear the outputs seen in the LOG tab during encryption and decryption.&#xa;&#xa;LOG TAB&#xa;This tab will output all your files that has finished being encrypted/decrypted during an crypto task. After finishing it will also state how many files were encrypted/decrypted and what time.&#xa;&#xa;DROP TAB&#xa;The DROP tab, next to the LOG tab, is enabled after login, and you can drag and drop any files into this area and it will encrypt or decrypt that file, without changing its location. This is useful if you want to encrypt or decrypt only a few files to work on."/>
+                    <Property name="text" type="java.lang.String" value="i-ncript Main Tool Overview:&#xa;&#xa;ENCRYPT &amp; DECRYPT&#xa;These two radio buttons are the primary tools of i-ncript, pressing either buttons will run the respective encryption task, using the AES cipher. &#xa;&#xa;HOT FILER&#xa;Hot Filer can be toggled for automatic encryption whenever any new files is dropped into the i-ncript folder. If it detects any new files it will run the Encrypt function the same way as clicking on the Encrypt radio button.&#xa;&#xa;HIDE FILE&#xa;Hide File can be toggled to hide or unhide every file in the i-ncript folder. It runs after every crypto task.&#xa;&#xa;STOP&#xa;This button only appears during encryption/decryption; click it to stop the current crypto task.&#xa;&#xa;CLR LOG&#xa;This button will clear the outputs seen in the LOG tab during encryption and decryption.&#xa;&#xa;LOG TAB&#xa;This tab will output all your files that has finished being encrypted/decrypted during an crypto task. After finishing it will also state how many files were encrypted/decrypted and what time.&#xa;&#xa;DROP TAB&#xa;The DROP tab, next to the LOG tab, is enabled after login, and you can drag and drop any files into this area and it will encrypt or decrypt that file, without changing its location. This is useful if you want to encrypt or decrypt only a few files to work on."/>
                     <Property name="wrapStyleWord" type="boolean" value="true"/>
-                    <Property name="caretPosition" type="int" value="0"/>
                   </Properties>
                 </Component>
               </SubComponents>

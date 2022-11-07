@@ -159,7 +159,7 @@ class AES_T implements Runnable {
     public static List<Path> paths = null;
 
     public static void AESQuery(List<Path> paths, File dirFile, boolean AESBool, int toolMode) throws InterruptedException {
-        FileHider.cleanUp();
+//        FileHider.cleanUp();
         AES_T.paths = paths;
         Main.jProgressBar1.setString("0% | " + "0/" + AES_T.paths.size());
         if (AESBool) {
@@ -204,6 +204,9 @@ class AES_T implements Runnable {
                                     if (toolMode == 2) {
                                         try {
                                             Folder.list1Dir(2);
+                                            Main.jLabel6.setVisible(true);
+                                            Main.jLabel5.setVisible(true);
+                                            Main.jRadioButton2.setVisible(false);
                                         } catch (IOException ex) {
                                             ex.printStackTrace();
                                         }
@@ -239,8 +242,11 @@ class AES_T implements Runnable {
                                     System.out.println("File Decryption Complete");
                                     GUI.resetProgressBar();
                                     if (toolMode == 1) {
-                                        new File(Statics.receiveFolder.toString() + "\\" + Statics.zipFileName + ".zip").delete();
+                                        new File(Statics.receiveFolder.toString() + "\\" + Statics.zipFileName + ".i-cc").delete();
                                         new File(receiveFolder.toFile() + "\\" + Statics.zipFileName + "\\send.key").delete();
+                                        Main.jLabel8.setVisible(true);
+                                        Main.jLabel7.setVisible(true);
+                                        Main.jRadioButton3.setVisible(false);
                                     }
                                 }
                             }
@@ -261,9 +267,14 @@ class AES_T implements Runnable {
                     }
                 } else {
                     switch (toolMode) {
-                        case 0 -> GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 20, 40, 800);
-                        case 1 -> GUI.labelCutterThread(jAlertLabel, "n-box folder has no files", 20, 40, 800);
-                        case 2 -> GUI.labelCutterThread(jAlertLabel, "o-box folder has no files", 20, 40, 800);
+                        case 0 ->
+                            GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 20, 40, 800);
+                        case 1 -> {
+                            GUI.labelCutterThread(jAlertLabel, "n-box folder has no files", 20, 40, 800);
+                        }
+                        case 2 -> {
+                            GUI.labelCutterThread(jAlertLabel, "o-box folder has no files", 20, 40, 800);
+                        }
                     }
 //                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 20, 40, 800);
                     Main.jToggleButton2.setEnabled(true);
@@ -304,7 +315,7 @@ class AES_T implements Runnable {
                         }
                         AES.encrypt(Hasher.modHash(password), file, file);
                     }
-                    System.out.println("ENC " + encFiles + " " + decFiles);
+//                    System.out.println("ENC " + encFiles + " " + decFiles);
                 } catch (AES.CryptoException ex) {
                     ex.printStackTrace();
                 }
@@ -334,7 +345,7 @@ class AES_T implements Runnable {
         try ( Stream<Path> walk = Files.walk(path)) {
             switch (AESMode) {
                 case 0 ->
-                    result = walk.filter(Files::isRegularFile).filter(p -> !p.getFileName().toString().endsWith(".enc")).filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
+                    result = walk.filter(Files::isRegularFile).filter(p -> !p.getFileName().toString().endsWith(".enc")).filter(p -> !p.getFileName().toString().startsWith("Thumbs.db")).filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
                             .collect(Collectors.toList());
                 case 1 ->
                     result = walk.filter(Files::isRegularFile).filter(p -> p.getFileName().toString().endsWith(".enc")).filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))

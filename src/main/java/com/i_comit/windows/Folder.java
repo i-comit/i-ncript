@@ -25,32 +25,40 @@ import java.util.zip.ZipOutputStream;
 public class Folder {
 
     public static String sendFolderStr = "";
+    public static String receiveFolderStr = "";
 
     public static void list1Dir(int toolMode) throws IOException {
         switch (toolMode) {
-            case 1:
-                Folder.unzipFolder(Statics.receiveFolder.toString() + "\\" + Statics.zipFileName + ".zip", Statics.receiveFolder.toString() + "\\" + Statics.zipFileName);
+            case 1 -> {
+                receiveFolderStr = Statics.receiveFolder + "\\" + firstLastChar(Main.jComboBox1.getSelectedItem().toString()) + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMddmmss"));
+                Folder.unzipFolder(Statics.receiveFolder.toString() + "\\" + Statics.zipFileName + ".i-cc", Statics.receiveFolder.toString() + "\\" + Statics.zipFileName);
                 System.out.println("Unzip Complete");
                 Main.toolBtnsBool(true);
                 Login.verifySendKey();
-                break;
+            }
 
-            case 2:
+            case 2 -> {
                 //SEND
-                sendFolderStr = Statics.sendFolder + "\\" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyMMddHHmmss"));
+                sendFolderStr = Statics.sendFolder + "\\" + firstLastChar(Statics.recipientUsername) + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMddmmss"));
                 sendKey();
-                zipFolder(Statics.sendFolder);
+                zipFolder(Statics.sendFolder, ".i-cc", sendFolderStr);
                 System.out.println("Zip Complete");
                 Main.toolBtnsBool(true);
                 deleteDirectory(Statics.sendFolder.toFile());
-                break;
-
+            }
         }
+    }
+
+    public static String firstLastChar(String username) {
+        String a = username.substring(0, 1);
+        String b = username.substring(username.length() - 1, username.length());
+        String c = a + b + "-";
+        return c;
     }
 
     public static void deleteDirectory(File file) {
         for (File subfile : file.listFiles()) {
-            if (!subfile.toString().endsWith(".zip")) {
+            if (!subfile.toString().endsWith(".i-cc")) {
                 if (subfile.isDirectory()) {
                     deleteDirectory(subfile);
                 }
@@ -62,21 +70,24 @@ public class Folder {
     public static void listZipFolders() {
         File folder = new File(Statics.receiveFolder.toString());
         File[] listOfFiles = folder.listFiles();
-        if (listOfFiles.length != 0) {
-            Main.jComboBox1.removeAllItems();
+        if (Main.jComboBox1.getItemCount() < listOfFiles.length) {
             for (File listOfFile : listOfFiles) {
-                if (listOfFile.isFile()) {
-                    System.out.println("File " + listOfFile.getName());
-                    Main.jComboBox1.addItem(listOfFile.getName().replaceAll(".zip", ""));
+                if (listOfFile.getName().endsWith(".i-cc")) {
+                    if (listOfFile.isFile()) {
+                        System.out.println("File " + listOfFile.getAbsolutePath());
+//                    if (!Paths.get(listOfFile.getAbsolutePath().toString()).toFile().exists()) {
+                        System.out.println("amogus");
+                        Main.jComboBox1.addItem(listOfFile.getName().replaceAll(".i-cc", ""));
+//                    }
+                    }
                 }
-
             }
         }
     }
     // zip a directory, including sub files and sub directories
 
-    public static void zipFolder(Path source) throws IOException {
-        String zipFileName = sendFolderStr + ".zip";
+    public static void zipFolder(Path source, String fileExt, String sendFolderPath) throws IOException {
+        String zipFileName = sendFolderStr + fileExt;
         System.out.println(zipFileName);
         try (
                  ZipOutputStream zos = new ZipOutputStream(
@@ -90,7 +101,7 @@ public class Folder {
                         return FileVisitResult.CONTINUE;
                     }
                     try ( FileInputStream fis = new FileInputStream(file.toFile())) {
-                        if (!file.toString().endsWith(".zip")) {
+                        if (!file.toString().endsWith(fileExt)) {
                             Path targetFile = source.relativize(file);
                             if (!file.toString().equals(zipFileName)) {
                                 zos.putNextEntry(new ZipEntry(targetFile.toString()));
@@ -103,8 +114,7 @@ public class Folder {
                                 zos.write(buffer, 0, len);
                             }
                             zos.closeEntry();
-
-                            System.out.printf("Zip file : %s%n", file);
+                            System.out.printf("Send file : %s%n", file);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -157,64 +167,5 @@ public class Folder {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void unzip(Path sourceFolder, Path targetFolder) throws IOException {
-        try ( ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(sourceFolder.toFile()))) {
-
-            // list files in zip
-            ZipEntry zipEntry = zipInputStream.getNextEntry();
-
-            while (zipEntry != null) {
-                // Check for zip slip vulnerability attack
-                Path newUnzipPath = zipSlipVulnerabilityProtect(zipEntry, targetFolder);
-
-                boolean isDirectory = false;
-                //check for files or directory
-                if (zipEntry.getName().endsWith(File.separator)) {
-                    isDirectory = true;
-                }
-
-                if (isDirectory) {
-                    Files.createDirectories(newUnzipPath);
-                } else {
-
-                    if (newUnzipPath.getParent() != null) {
-                        if (Files.notExists(newUnzipPath.getParent())) {
-                            Files.createDirectories(newUnzipPath.getParent());
-                        }
-                    }
-
-                    // copy files using nio
-                    Files.copy(zipInputStream, newUnzipPath, StandardCopyOption.REPLACE_EXISTING);
-                }
-                zipEntry = zipInputStream.getNextEntry();
-            }
-            zipInputStream.closeEntry();
-        }
-    }
-
-    public static Path zipSlipVulnerabilityProtect(ZipEntry zipEntry, Path targetDir)
-            throws IOException {
-
-        /**
-         * resolve(String other) method of java. nio. file.Path used to converts
-         * a given path string to a Path and resolves it against this Path in
-         * the exact same manner as specified by the resolve method
-         */
-        Path dirResolved = targetDir.resolve(zipEntry.getName());
-
-        /**
-         * Normalizing a path involves modifying the string that identifies a
-         * path or file so that it conforms to a valid path on the target
-         * operating system.
-         */
-        //normalize the path on target directory or else throw exception
-        Path normalizePath = dirResolved.normalize();
-        if (!normalizePath.startsWith(targetDir)) {
-            throw new IOException("Invalid zip: " + zipEntry.getName());
-        }
-
-        return normalizePath;
     }
 }

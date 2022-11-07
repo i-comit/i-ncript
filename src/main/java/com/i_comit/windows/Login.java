@@ -7,14 +7,15 @@ package com.i_comit.windows;
 import static com.i_comit.windows.AES_T.listAESPaths;
 import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.jComboBox1;
+import static com.i_comit.windows.Main.jLabel5;
+import static com.i_comit.windows.Main.jLabel6;
 import static com.i_comit.windows.Main.jPasswordField1;
 import static com.i_comit.windows.Main.jProgressBar1;
+import static com.i_comit.windows.Main.jRadioButton2;
 import static com.i_comit.windows.Main.jTextField1;
 import static com.i_comit.windows.Statics.*;
 import java.io.*;
 import java.nio.file.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -87,24 +88,37 @@ public class Login {
             if (!"".equals(Statics.recipientPassword)) {
                 if (Statics.recipientUsername.length() >= 4) {
                     if (Statics.recipientPassword.length() >= 4) {
+                        Main.jTextField2.setText("");
+                        Main.jPasswordField2.setText("");
                         AESMode = 0;
                         fileCount = GUI.countFiles(sendFolder);
                         jProgressBar1.setMaximum(fileCount);
                         AES.AESThread(listAESPaths(sendFolder), sendFolder.toFile(), true, 2);
                     } else {
                         GUI.labelCutterThread(jAlertLabel, "please have a longer password", 20, 20, 1200);
+                        jLabel6.setVisible(true);
+                        jLabel5.setVisible(true);
+                        jRadioButton2.setVisible(false);
                     }
                 } else {
                     GUI.labelCutterThread(jAlertLabel, "please have a longer username", 20, 20, 1200);
+                    jLabel6.setVisible(true);
+                    jLabel5.setVisible(true);
+                    jRadioButton2.setVisible(false);
                 }
             } else {
                 GUI.labelCutterThread(jAlertLabel, "please make a password", 20, 20, 1200);
+                jLabel6.setVisible(true);
+                jLabel5.setVisible(true);
+                jRadioButton2.setVisible(false);
             }
         } else {
             GUI.labelCutterThread(jAlertLabel, "please make a username", 20, 20, 1200);
+            jLabel6.setVisible(true);
+            jLabel5.setVisible(true);
+            jRadioButton2.setVisible(false);
         }
-        Main.jTextField2.setText("");
-        Main.jPasswordField2.setText("");
+
     }
 
     public static void sendKey() {
@@ -112,6 +126,7 @@ public class Login {
         System.out.println("sendkey " + sendKeyPath);
         try {
             List<String> lines = Arrays.asList(Hasher.modHash(recipientUsername), Hasher.modHash(recipientPassword));
+//            List<String> lines = Arrays.asList(Hasher.modHash(recipientPassword));
             Path p = Files.createFile(sendKeyPath);//creates file at specified location  
             Files.write(sendKeyPath, lines);
             Files.setAttribute(p, "dos:hidden", true);
@@ -127,20 +142,33 @@ public class Login {
         }
         Statics.zipFileName = jComboBox1.getSelectedItem().toString();
         Statics.recipientPassword = new String(password);
-        if (!"".equals(Statics.recipientPassword)) {
-            if (Statics.recipientPassword.length() >= 4) {
-                System.out.println(Statics.receiveFolder.toString() + "\\" + Statics.zipFileName);
-                System.out.println(Statics.recipientPassword);
-
-                Folder.list1Dir(1);
+        if (!"".equals(Statics.zipFileName)) {
+            if (!"".equals(Statics.recipientPassword)) {
+                if (Statics.recipientPassword.length() >= 4) {
+                    Main.jPasswordField3.setText("");
+                    System.out.println("recipient pw " + Statics.recipientPassword);
+                    Folder.list1Dir(1);
+                } else {
+                    GUI.labelCutterThread(jAlertLabel, "please have a longer password", 20, 20, 1200);
+                    Main.jLabel8.setVisible(true);
+                    Main.jLabel7.setVisible(true);
+                    Main.jRadioButton3.setVisible(false);
+                    Main.jRadioButton3.setSelected(false);
+                }
             } else {
-                GUI.labelCutterThread(jAlertLabel, "please have a longer password", 20, 20, 1200);
+                GUI.labelCutterThread(jAlertLabel, "please make a password", 20, 20, 1200);
+                Main.jLabel8.setVisible(true);
+                Main.jLabel7.setVisible(true);
+                Main.jRadioButton3.setVisible(false);
+                Main.jRadioButton3.setSelected(false);
             }
         } else {
-            GUI.labelCutterThread(jAlertLabel, "please make a password", 20, 20, 1200);
+            GUI.labelCutterThread(jAlertLabel, "please select a .i-cc file", 20, 20, 1200);
+            Main.jLabel8.setVisible(true);
+            Main.jLabel7.setVisible(true);
+            Main.jRadioButton3.setVisible(false);
+            Main.jRadioButton3.setSelected(false);
         }
-        Main.jTextField2.setText("");
-        Main.jPasswordField2.setText("");
     }
 
     public static void verifySendKey() {
@@ -149,8 +177,8 @@ public class Login {
             String usernameRead = brTest.readLine();
             String passwordRead = brTest.readLine();
 //            System.out.println("recipient username hash " + usernameRead);
-//            System.out.println("recipient password hash " + passwordRead);
-//            System.out.println("input password hash " + Hasher.modHash(Statics.recipientPassword));
+            System.out.println("recipient password hash " + passwordRead);
+            System.out.println("input password hash " + Hasher.modHash(Statics.recipientPassword));
 
             BufferedReader brTest1 = new BufferedReader(new FileReader(keyFile));
             String usernameRead1 = brTest1.readLine();
@@ -164,7 +192,7 @@ public class Login {
                 if (passwordRead.equals(Hasher.modHash(Statics.recipientPassword))) {
                     System.out.println("PASSWORD MATCH");
                     AESMode = 1;
-                    fileCount = GUI.countFiles(sendFolder);
+                    fileCount = GUI.countFiles(receiveFolder);
                     jProgressBar1.setMaximum(fileCount);
                     AES.AESThread(listAESPaths(Paths.get(receiveFolder + "\\" + Statics.zipFileName)), Paths.get(receiveFolder + "\\" + Statics.zipFileName).toFile(), true, 1);
                 }
