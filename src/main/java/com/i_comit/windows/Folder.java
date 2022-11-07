@@ -28,17 +28,30 @@ public class Folder {
     public static String sendFolderStr = "";
     public static String receiveFolderStr = "";
 
-    public static void list1Dir(int toolMode) throws IOException {
+    public static void list1Dir(int toolMode, boolean AESBool) throws IOException {
         switch (toolMode) {
             case 1 -> {
-                receiveFolderStr = Statics.receiveFolder + "\\" + firstLastChar(Main.jList1.getSelectedValue()) + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMddmmss"));
-                System.out.println(receiveFolderStr);
-                System.out.println(Statics.zipFileName + ".i-cc" + "    " + Statics.zipFileName.replaceAll(".i-cc", ""));
+                if (AESBool) {
+                    receiveFolderStr = Statics.receiveFolder + "\\" + first2Char(Main.jList1.getSelectedValue()) + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMddmmss"));
+                    System.out.println("receive Folder Str " + receiveFolderStr);
+                    System.out.println(first2Char(Main.jList1.getSelectedValue()));
 
-                Folder.unzipFolder(Statics.zipFileName + ".i-cc", Statics.zipFileName.replaceAll(".i-cc", ""));
-                System.out.println("Unzip Complete");
-                Main.toolBtnsBool(true);
-                Login.verifySendKey();
+                    System.out.println(Statics.zipFileName + ".i-cc" + "    " + Statics.zipFileName.replaceAll(".i-cc", ""));
+
+                    Folder.unzipFolder(Statics.zipFileName + ".i-cc", Statics.zipFileName.replaceAll(".i-cc", ""));
+                    System.out.println("Unzip Complete");
+                    Main.toolBtnsBool(true);
+                    Login.verifySendKey(true);
+                } else {
+                    receiveFolderStr = DragDrop.filesf.toString();
+                    System.out.println("receive Folder Str " + receiveFolderStr);
+
+                    Folder.unzipFolder(Statics.zipFileName, Statics.zipFileName.replaceAll(".i-cc", ""));
+                    System.out.println("Unzip Complete");
+                    Main.toolBtnsBool(true);
+                    Login.verifySendKey(false);
+                }
+
             }
 
             case 2 -> {
@@ -58,6 +71,12 @@ public class Folder {
         String b = username.substring(username.length() - 1, username.length());
         String c = a + b + "-";
         return c;
+    }
+
+    public static String first2Char(String fileName) {
+        String a = fileName.substring(0, 2);
+        String b = a + "-";
+        return b;
     }
 
     public static void deleteDirectory(File file) {

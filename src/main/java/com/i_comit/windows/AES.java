@@ -159,12 +159,10 @@ class AES_T implements Runnable {
     public static List<Path> paths = null;
 
     public static void AESQuery(List<Path> paths, File dirFile, boolean AESBool, int toolMode) throws InterruptedException {
-//        FileHider.cleanUp();
         AES_T.paths = paths;
         Main.jProgressBar1.setString("0% | " + "0/" + AES_T.paths.size());
         if (AESBool) {
             contents = dirFile.listFiles();
-            //                paths = listAESPaths(path);
             if (contents != null) {
                 if (contents.length != 0) {
                     if (!paths.isEmpty()) {
@@ -203,7 +201,7 @@ class AES_T implements Runnable {
                                     GUI.resetProgressBar();
                                     if (toolMode == 2) {
                                         try {
-                                            Folder.list1Dir(2);
+                                            Folder.list1Dir(2, true);
                                             Main.jLabel6.setVisible(true);
                                             Main.jLabel5.setVisible(true);
                                             Main.jRadioButton2.setVisible(false);
@@ -242,8 +240,13 @@ class AES_T implements Runnable {
                                     System.out.println("File Decryption Complete");
                                     GUI.resetProgressBar();
                                     if (toolMode == 1) {
-                                        new File(Statics.zipFileName + ".i-cc").delete();
-                                        new File(Statics.zipFileName + "\\send.key").delete();
+                                        if (Statics.DragDropBool) {
+                                            new File(Statics.zipFileName).delete();
+                                            new File(Statics.zipFileName.replaceAll(".i-cc", "")+ "\\send.key").delete();
+                                        } else {
+                                            new File(Statics.zipFileName + ".i-cc").delete();
+                                            new File(Statics.zipFileName + "\\send.key").delete();
+                                        }
                                         Main.jList1.clearSelection();
                                         Main.jList1.removeAll();
                                         Folder.listZipFolders();

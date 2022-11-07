@@ -25,7 +25,7 @@ public class Statics {
     public static int AESMode;
     public static String GB;
 
-    public static boolean emptyDirectory;
+    public static boolean DragDropBool = false;
     public static boolean fileHiderBool = false;
 
     public static File directory = new File(root.substring(0, 3) + Main.masterFolder + folderName);
@@ -44,7 +44,6 @@ public class Statics {
     public static String recipientPassword = "";
 
     public static String zipFileName = "";
-    public static int zipFileIndex;
 
     public static int fileCount;
     public static int fileIter;

@@ -25,6 +25,8 @@ class DragDrop implements DropTargetListener {
     static int encFiles = 0;
     static int decFiles = 0;
 
+    public static File filesf;
+
     public static void progressBarThread(int encFiles, int decFiles) {
         t = new Thread(() -> DragDrop_T.resetProgressBar(encFiles, decFiles));
         t.start();
@@ -34,6 +36,7 @@ class DragDrop implements DropTargetListener {
     public void drop(DropTargetDropEvent event) {
         Main.toolBtnsBool(false);
         Main.jTextArea5.setVisible(false);
+        Statics.DragDropBool = true;
         // Accept copy drops
         event.acceptDrop(DnDConstants.ACTION_COPY);
         // Get the transfer which can provide the dropped item data
@@ -54,17 +57,36 @@ class DragDrop implements DropTargetListener {
                         // Loop them through
                         for (int i = 0; i < files.size(); i++) {
                             String sf = files.get(i).toString();
-                            File filesf = new File(sf);
+                            filesf = new File(sf);
                             paths.add(filesf.toPath());
-                            if (i >= files.size() - 1) {
-                                AES.AESThread(paths, Statics.directory, false, 0);
+                            if (Statics.toolMode == 0) {
+                                if (i >= files.size() - 1) {
+                                    AES.AESThread(paths, Statics.directory, false, 0);
+                                    Main.jTabbedPane1.setSelectedIndex(0);
+                                }
+                            }
+                            if (Statics.toolMode == 1) {
+                                if (files.size() <= 1) {
+                                    if (filesf.toString().endsWith(".i-cc")) {
+                                        System.out.println(filesf);
+                                        Login.receiveKeyCheck(filesf.toString(), false);
+                                    } else {
+                                        System.out.println("only .i-cc files allowed");
+                                        Main.toolBtnsBool(true);
+                                        Main.jTextArea5.setVisible(true);
+                                    }
+                                } else {
+                                    GUI.labelCutterThread(Main.jAlertLabel, "only 1 .i-cc file is allowed at once", 10, 25, 500);
+                                    Main.toolBtnsBool(true);
+                                    Main.jTextArea5.setVisible(true);
+                                }
                             }
                         }
                     } else {
                         if (GUI.t.isAlive()) {
                             GUI.t.interrupt();
                         }
-                        GUI.labelCutterThread(Main.jAlertLabel, "only 15 files at once is allowed", 10, 25, 500);
+                        GUI.labelCutterThread(Main.jAlertLabel, "only 15 files is allowed at once", 10, 25, 500);
                         Main.jTextArea1.append("For security reasons, you can only drop up to 15 files at once\n");
                         Main.toolBtnsBool(true);
                         Main.jTextArea5.setVisible(true);
@@ -77,7 +99,9 @@ class DragDrop implements DropTargetListener {
             }
         }
         // Inform that the drop is complete
-        event.dropComplete(true);
+
+        event.dropComplete(
+                true);
     }
 
     public static void resetProgressBar(int encFiles, int decFiles) {
