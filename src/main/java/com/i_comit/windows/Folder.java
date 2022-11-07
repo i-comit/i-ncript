@@ -21,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+import javax.swing.DefaultListModel;
 
 public class Folder {
 
@@ -30,8 +31,11 @@ public class Folder {
     public static void list1Dir(int toolMode) throws IOException {
         switch (toolMode) {
             case 1 -> {
-                receiveFolderStr = Statics.receiveFolder + "\\" + firstLastChar(Main.jComboBox1.getSelectedItem().toString()) + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMddmmss"));
-                Folder.unzipFolder(Statics.receiveFolder.toString() + "\\" + Statics.zipFileName + ".i-cc", Statics.receiveFolder.toString() + "\\" + Statics.zipFileName);
+                receiveFolderStr = Statics.receiveFolder + "\\" + firstLastChar(Main.jList1.getSelectedValue()) + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMddmmss"));
+                System.out.println(receiveFolderStr);
+                System.out.println(Statics.zipFileName + ".i-cc" + "    " + Statics.zipFileName.replaceAll(".i-cc", ""));
+
+                Folder.unzipFolder(Statics.zipFileName + ".i-cc", Statics.zipFileName.replaceAll(".i-cc", ""));
                 System.out.println("Unzip Complete");
                 Main.toolBtnsBool(true);
                 Login.verifySendKey();
@@ -67,19 +71,26 @@ public class Folder {
         }
     }
 
+    public static DefaultListModel zipList = new DefaultListModel();
+
     public static void listZipFolders() {
+        zipList.clear();
+        Main.jList1.removeAll();
         File folder = new File(Statics.receiveFolder.toString());
         File[] listOfFiles = folder.listFiles();
-        if (Main.jComboBox1.getItemCount() < listOfFiles.length) {
-            for (File listOfFile : listOfFiles) {
-                if (listOfFile.getName().endsWith(".i-cc")) {
-                    if (listOfFile.isFile()) {
-                        System.out.println("File " + listOfFile.getAbsolutePath());
-//                    if (!Paths.get(listOfFile.getAbsolutePath().toString()).toFile().exists()) {
-                        System.out.println("amogus");
-                        Main.jComboBox1.addItem(listOfFile.getName().replaceAll(".i-cc", ""));
-//                    }
+        for (File listOfFile : listOfFiles) {
+            if (listOfFile.getName().endsWith(".i-cc")) {
+                if (listOfFile.isFile()) {
+                    String finalF = listOfFile.getName().replaceAll(".i-cc", "").trim();
+                    if (finalF.length() > 12) {
+                        finalF = listOfFile.getName().substring(0, 12).trim() + "..";
+                    } else {
+//                    zipList.addElement(listOfFile.getName().replaceAll(".i-cc", ""));
+                        zipList.addElement(finalF);
+                        Main.jList1.setModel(zipList);
                     }
+
+//                    }
                 }
             }
         }

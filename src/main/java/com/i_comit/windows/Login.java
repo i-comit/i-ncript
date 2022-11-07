@@ -6,7 +6,6 @@ package com.i_comit.windows;
 
 import static com.i_comit.windows.AES_T.listAESPaths;
 import static com.i_comit.windows.Main.jAlertLabel;
-import static com.i_comit.windows.Main.jComboBox1;
 import static com.i_comit.windows.Main.jLabel5;
 import static com.i_comit.windows.Main.jLabel6;
 import static com.i_comit.windows.Main.jPasswordField1;
@@ -140,9 +139,13 @@ public class Login {
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
-        Statics.zipFileName = jComboBox1.getSelectedItem().toString();
+        Statics.zipFileName = Statics.receiveFolder + "\\" + Main.jList1.getSelectedValue();
+        Statics.zipFileIndex = Main.jList1.getSelectedIndex();
+        System.out.println("zipFile Index " + Statics.zipFileIndex);
+        System.out.println(Main.jList1.getSelectedValue());
+
         Statics.recipientPassword = new String(password);
-        if (!"".equals(Statics.zipFileName)) {
+        if (Main.jList1.getSelectedValue() != null) {
             if (!"".equals(Statics.recipientPassword)) {
                 if (Statics.recipientPassword.length() >= 4) {
                     Main.jPasswordField3.setText("");
@@ -154,6 +157,7 @@ public class Login {
                     Main.jLabel7.setVisible(true);
                     Main.jRadioButton3.setVisible(false);
                     Main.jRadioButton3.setSelected(false);
+                    Main.jPasswordField3.setText("");
                 }
             } else {
                 GUI.labelCutterThread(jAlertLabel, "please make a password", 20, 20, 1200);
@@ -161,6 +165,7 @@ public class Login {
                 Main.jLabel7.setVisible(true);
                 Main.jRadioButton3.setVisible(false);
                 Main.jRadioButton3.setSelected(false);
+                Main.jPasswordField3.setText("");
             }
         } else {
             GUI.labelCutterThread(jAlertLabel, "please select a .i-cc file", 20, 20, 1200);
@@ -168,12 +173,13 @@ public class Login {
             Main.jLabel7.setVisible(true);
             Main.jRadioButton3.setVisible(false);
             Main.jRadioButton3.setSelected(false);
+            Main.jPasswordField3.setText("");
         }
     }
 
     public static void verifySendKey() {
         try {
-            BufferedReader brTest = new BufferedReader(new FileReader(receiveFolder.toFile() + "\\" + Statics.zipFileName + "\\send.key"));
+            BufferedReader brTest = new BufferedReader(new FileReader(Statics.zipFileName + "\\send.key"));
             String usernameRead = brTest.readLine();
             String passwordRead = brTest.readLine();
 //            System.out.println("recipient username hash " + usernameRead);
@@ -194,8 +200,32 @@ public class Login {
                     AESMode = 1;
                     fileCount = GUI.countFiles(receiveFolder);
                     jProgressBar1.setMaximum(fileCount);
-                    AES.AESThread(listAESPaths(Paths.get(receiveFolder + "\\" + Statics.zipFileName)), Paths.get(receiveFolder + "\\" + Statics.zipFileName).toFile(), true, 1);
+                    AES.AESThread(listAESPaths(Paths.get(Statics.zipFileName)), Paths.get(Statics.zipFileName).toFile(), true, 1);
+                } else {
+                    brTest.close();
+                    Folder.deleteDirectory(Paths.get(Statics.zipFileName).toFile());
+                    Paths.get(Statics.zipFileName).toFile().delete();
+                    GUI.labelCutterThread(jAlertLabel, "mismatched credentials", 20, 20, 1000);
+                    Main.jList1.clearSelection();
+                    Main.jLabel8.setVisible(true);
+                    Main.jLabel7.setVisible(true);
+                    Main.jRadioButton3.setVisible(false);
+                    Main.jRadioButton3.setSelected(false);
+                    Main.jPasswordField3.setText("");
+
                 }
+            } else {
+                brTest.close();
+                Folder.deleteDirectory(Paths.get(Statics.zipFileName).toFile());
+                Paths.get(Statics.zipFileName).toFile().delete();
+                GUI.labelCutterThread(jAlertLabel, "mismatched credentials", 20, 20, 1000);
+                Main.jLabel8.setVisible(true);
+                Main.jLabel7.setVisible(true);
+                Main.jRadioButton3.setVisible(false);
+                Main.jRadioButton3.setSelected(false);
+                Main.jList1.clearSelection();
+                Main.jPasswordField3.setText("");
+
             }
         } catch (IOException ex) {
             ex.printStackTrace();

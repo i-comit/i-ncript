@@ -44,6 +44,7 @@ public class Statics {
     public static String recipientPassword = "";
 
     public static String zipFileName = "";
+    public static int zipFileIndex;
 
     public static int fileCount;
     public static int fileIter;
