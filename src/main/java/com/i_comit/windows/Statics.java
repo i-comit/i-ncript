@@ -19,13 +19,12 @@ public class Statics {
     public static String folderName = "i-ncript";
     public static String rootFolder = root.substring(0, 3) + folderName;
     public static String keyName = "\\i-ncript.key";
-
+    
     public static int maxFileBytes = 1048576 * 4;
 
     public static int AESMode;
     public static String GB;
 
-    public static boolean DragDropBool = false;
     public static boolean fileHiderBool = false;
 
     public static File directory = new File(root.substring(0, 3) + Main.masterFolder + folderName);
@@ -44,6 +43,8 @@ public class Statics {
     public static String recipientPassword = "";
 
     public static String zipFileName = "";
+    public static int zipFileCount;
+    public static int zipIter;
 
     public static int fileCount;
     public static int fileIter;

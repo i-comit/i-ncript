@@ -9,6 +9,7 @@ package com.i_comit.windows;
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
 import static com.i_comit.windows.Login.sendKey;
+import static com.i_comit.windows.Statics.zipFileCount;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -28,40 +29,25 @@ public class Folder {
     public static String sendFolderStr = "";
     public static String receiveFolderStr = "";
 
-    public static void list1Dir(int toolMode, boolean AESBool) throws IOException {
+    public static void list1Dir(int toolMode) throws IOException {
         switch (toolMode) {
             case 1 -> {
-                if (AESBool) {
-                    receiveFolderStr = Statics.receiveFolder + "\\" + first2Char(Main.jList1.getSelectedValue()) + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMddmmss"));
-                    System.out.println("receive Folder Str " + receiveFolderStr);
-                    System.out.println(first2Char(Main.jList1.getSelectedValue()));
-
-                    System.out.println(Statics.zipFileName + ".i-cc" + "    " + Statics.zipFileName.replaceAll(".i-cc", ""));
-
-                    Folder.unzipFolder(Statics.zipFileName + ".i-cc", Statics.zipFileName.replaceAll(".i-cc", ""));
-                    System.out.println("Unzip Complete");
-                    Main.toolBtnsBool(true);
-                    Login.verifySendKey(true);
-                } else {
-                    receiveFolderStr = DragDrop.filesf.toString();
-                    System.out.println("receive Folder Str " + receiveFolderStr);
-
-                    Folder.unzipFolder(Statics.zipFileName, Statics.zipFileName.replaceAll(".i-cc", ""));
-                    System.out.println("Unzip Complete");
-                    Main.toolBtnsBool(true);
-                    Login.verifySendKey(false);
-                }
-
+                //RECEIVE
+                Main.jRadioButton3.setEnabled(false);
+                receiveFolderStr = Statics.receiveFolder + "\\" + first2Char(Main.jList1.getSelectedValue()) + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMddmmss"));
+                unzipFile(Statics.zipFileName + ".i-cc", Statics.zipFileName.replaceAll(".i-cc", ""));
+                GUI.resetProgressBar(Main.jProgressBar2);
+                Main.toolBtnsBool(true);
+                Login.verifySendKey();
             }
-
             case 2 -> {
                 //SEND
                 sendFolderStr = Statics.sendFolder + "\\" + firstLastChar(Statics.recipientUsername) + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMddmmss"));
-                sendKey();
-                zipFolder(Statics.sendFolder, ".i-cc", sendFolderStr);
-                System.out.println("Zip Complete");
+                zipFile(Statics.sendFolder, ".i-cc", sendFolderStr);
+                GUI.resetProgressBar(Main.jProgressBar2);
                 Main.toolBtnsBool(true);
                 deleteDirectory(Statics.sendFolder.toFile());
+                Main.jRadioButton2.setEnabled(true);
             }
         }
     }
@@ -92,33 +78,35 @@ public class Folder {
 
     public static DefaultListModel zipList = new DefaultListModel();
 
-    public static void listZipFolders() {
+    public static void listZipFiles() {
         zipList.clear();
         Main.jList1.removeAll();
         File folder = new File(Statics.receiveFolder.toString());
         File[] listOfFiles = folder.listFiles();
-        for (File listOfFile : listOfFiles) {
-            if (listOfFile.getName().endsWith(".i-cc")) {
-                if (listOfFile.isFile()) {
-                    String finalF = listOfFile.getName().replaceAll(".i-cc", "").trim();
-                    if (finalF.length() > 12) {
-                        finalF = listOfFile.getName().substring(0, 12).trim() + "..";
-                    } else {
+        if (listOfFiles.length != 0) {
+            for (File listOfFile : listOfFiles) {
+                if (listOfFile.getName().endsWith(".i-cc")) {
+                    if (listOfFile.isFile()) {
+                        String finalF = listOfFile.getName().replaceAll(".i-cc", "").trim();
+                        if (finalF.length() > 12) {
+                            finalF = listOfFile.getName().substring(0, 12).trim() + "..";
+                        } else {
 //                    zipList.addElement(listOfFile.getName().replaceAll(".i-cc", ""));
-                        zipList.addElement(finalF);
-                        Main.jList1.setModel(zipList);
+                            zipList.addElement(finalF);
+                            Main.jList1.setModel(zipList);
+                        }
                     }
-
-//                    }
                 }
             }
+            Main.jList1.setSelectedIndex(0);
         }
     }
     // zip a directory, including sub files and sub directories
 
-    public static void zipFolder(Path source, String fileExt, String sendFolderPath) throws IOException {
+    public static void zipFile(Path source, String fileExt, String sendFolderPath) throws IOException {
         String zipFileName = sendFolderStr + fileExt;
-        System.out.println(zipFileName);
+        Main.jProgressBar2.setStringPainted(true);
+        Main.jProgressBar2.setMaximum(zipFileCount);
         try (
                  ZipOutputStream zos = new ZipOutputStream(
                         new FileOutputStream(zipFileName))) {
@@ -143,8 +131,16 @@ public class Folder {
                             while ((len = fis.read(buffer)) > 0) {
                                 zos.write(buffer, 0, len);
                             }
+
                             zos.closeEntry();
                             System.out.printf("Send file : %s%n", file);
+                            Statics.zipIter++;
+                            Main.jProgressBar2.setString("packing " + Statics.zipIter + " out of " + zipFileCount + " files");
+                            Main.jProgressBar2.setValue(Statics.zipIter);
+                            if (Main.jProgressBar2.getValue() >= zipFileCount - 1) {
+                                Main.jProgressBar2.setValue(zipFileCount);
+                                Main.jProgressBar2.setString("packing key file..");
+                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -161,7 +157,7 @@ public class Folder {
         }
     }
 
-    public static void unzipFolder(String zipFilePath, String destDir) {
+    public static void unzipFile(String zipFilePath, String destDir) {
         File dir = new File(destDir);
         // create output directory if it doesn't exist
         if (!dir.exists()) {
@@ -177,8 +173,7 @@ public class Folder {
             while (ze != null) {
                 String fileName = ze.getName();
                 File newFile = new File(destDir + File.separator + fileName);
-                System.out.println("Unzipping to " + newFile.getAbsolutePath());
-                //create directories for sub directories in zip
+//                System.out.println("Unzipping to " + newFile.getAbsolutePath());
                 new File(newFile.getParent()).mkdirs();
                 FileOutputStream fos = new FileOutputStream(newFile);
                 int len;

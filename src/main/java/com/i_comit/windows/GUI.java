@@ -16,6 +16,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Stream;
 import javax.swing.JLabel;
+import javax.swing.JProgressBar;
 
 /**
  *
@@ -65,11 +66,16 @@ public class GUI {
             int result2 = 0;
             switch (Statics.AESMode) {
                 case 0 -> {
-                    result2 = Math.toIntExact(walk.filter(Files::isRegularFile).filter(p -> !p.getFileName().toString().endsWith(".enc")).filter(p -> !p.getFileName().toString().startsWith("Thumbs.db")).count());
+                    result2 = Math.toIntExact(walk.filter(Files::isRegularFile)
+                            .filter(p -> !p.getFileName().toString().endsWith(".enc"))
+                            .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
+                            .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db")).count());
                     result = result2;
                 }
                 case 1 -> {
-                    result2 = Math.toIntExact(walk.filter(Files::isRegularFile).filter(p -> p.getFileName().toString().endsWith(".enc")).count());
+                    result2 = Math.toIntExact(walk.filter(Files::isRegularFile)
+                            .filter(p -> p.getFileName().toString().endsWith(".enc"))
+                            .filter(p -> !p.getFileName().toString().endsWith(".i-cc")).count());
                     result = result2;
                 }
             }
@@ -77,37 +83,56 @@ public class GUI {
         return result;
     }
 
-    public static void resetProgressBar() {
-        Main.jProgressBar1.setString("100% | " + AES_T.paths.size() + "/" + AES_T.paths.size());
-        jProgressBar1.setValue(jProgressBar1.getMaximum());
+    public static void resetProgressBar(JProgressBar progressBar) {
+        progressBar.setValue(progressBar.getMaximum());
         Main.jButton2.setVisible(false);
         Main.jSwitchMode.setVisible(true);
-
-        try {
-            switch (Statics.AESMode) {
-                case 0 -> {
-                    GUI.labelCutterThread(jAlertLabel, "encrypted " + Statics.fileIter + " files", 10, 25, 400);
-                    Thread.sleep(100);
-                    Main.jTextArea1.append("encrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
+        if (progressBar == Main.jProgressBar1) {
+            progressBar.setString("100% | " + AES_T.paths.size() + "/" + AES_T.paths.size());
+            try {
+                switch (Statics.AESMode) {
+                    case 0 -> {
+                        GUI.labelCutterThread(jAlertLabel, "encrypted " + Statics.fileIter + " files", 10, 25, 400);
+                        Thread.sleep(100);
+                        Main.jTextArea1.append("encrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
+                    }
+                    case 1 -> {
+                        GUI.labelCutterThread(jAlertLabel, "decrypted " + Statics.fileIter + " files", 10, 25, 400);
+                        Thread.sleep(100);
+                        Main.jTextArea1.append("decrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
+                    }
                 }
-                case 1 -> {
-                    GUI.labelCutterThread(jAlertLabel, "decrypted " + Statics.fileIter + " files", 10, 25, 400);
-                    Thread.sleep(100);
-                    Main.jTextArea1.append("decrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
+                Thread.sleep(150);
+                for (int x = progressBar.getMaximum(); x >= 0; x--) {
+                    Thread.sleep(5);
+                    progressBar.setValue(x);
                 }
-            }
-            Thread.sleep(150);
+                if (progressBar.getValue() == 0) {
+                    progressBar.setStringPainted(false);
+                    FileHider.FileHiderThread(Main.jToggleButton2.isSelected());
+                }
 
-            for (int x = jProgressBar1.getMaximum(); x >= 0; x--) {
-                Thread.sleep(5);
-                jProgressBar1.setValue(x);
+            } catch (InterruptedException | IOException ex) {
+                ex.printStackTrace();
             }
-            if (jProgressBar1.getValue() == 0) {
-                jProgressBar1.setStringPainted(false);
-                FileHider.FileHiderThread(Main.jToggleButton2.isSelected());
+        }
+        if (progressBar == Main.jProgressBar2) {
+            try {
+                String fileName = new File(Folder.sendFolderStr).getName();
+                System.out.println(fileName);
+                GUI.labelCutterThread(jAlertLabel, "packaged " + fileName+".i-cc", 10, 25, 500);
+                Main.jTextArea1.append("packaged " + fileName + ".i-cc at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
+                Thread.sleep(1000);
+                for (int x = progressBar.getMaximum(); x >= 0; x--) {
+                    Thread.sleep(5);
+                    progressBar.setValue(x);
+                }
+                if (progressBar.getValue() >= 0) {
+                    progressBar.setStringPainted(false);
+                }
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
             }
-        } catch (InterruptedException | IOException ex) {
-            ex.printStackTrace();
         }
     }
 
@@ -151,9 +176,12 @@ class logger_T implements Runnable {
         try {
             Thread.sleep(50);
             switch (toolMode) {
-                case 0 -> Main.jTextArea1.append(outputFile.getAbsolutePath().substring(21, outputFile.getPath().length()) + "\n");
-                case 1 -> Main.jTextArea1.append(outputFile.getAbsolutePath().substring(18, outputFile.getPath().length()) + "\n");
-                case 2 -> Main.jTextArea1.append(outputFile.getAbsolutePath().substring(18, outputFile.getPath().length()) + "\n");
+                case 0 ->
+                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(21, outputFile.getPath().length()) + "\n");
+                case 1 ->
+                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(18, outputFile.getPath().length()) + "\n");
+                case 2 ->
+                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(18, outputFile.getPath().length()) + "\n");
             }
             Thread.sleep(50);
             Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());

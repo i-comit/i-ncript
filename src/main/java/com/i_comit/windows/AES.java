@@ -8,6 +8,7 @@ import static com.i_comit.windows.AES.decrypt;
 import static com.i_comit.windows.AES.encrypt;
 import static com.i_comit.windows.DragDrop.decFiles;
 import static com.i_comit.windows.DragDrop.encFiles;
+import static com.i_comit.windows.Login.sendKey;
 import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.jProgressBar1;
 import static com.i_comit.windows.Statics.*;
@@ -121,7 +122,7 @@ public class AES {
             String percentageStr = format.format(percentage);
             Main.jProgressBar1.setString(percentageStr + "% | " + fileIter + "/" + AES_T.paths.size());
             Main.jProgressBar1.setValue(fileIter);
-            GUI.loggerThread(outputFile, 0);
+            GUI.loggerThread(outputFile, Statics.toolMode);
             getFileAttr(inputFile, outputFile);
 
         } catch (NoSuchPaddingException | NoSuchAlgorithmException
@@ -160,7 +161,6 @@ class AES_T implements Runnable {
 
     public static void AESQuery(List<Path> paths, File dirFile, boolean AESBool, int toolMode) throws InterruptedException {
         AES_T.paths = paths;
-        Main.jProgressBar1.setString("0% | " + "0/" + AES_T.paths.size());
         if (AESBool) {
             contents = dirFile.listFiles();
             if (contents != null) {
@@ -170,6 +170,10 @@ class AES_T implements Runnable {
                         Main.jButton2.setVisible(true);
                         Main.jSwitchMode.setVisible(false);
                         Main.jTextArea5.setVisible(false);
+
+                        Main.jProgressBar1.setVisible(true);
+                        Main.jProgressBar2.setVisible(false);
+                        Main.jProgressBar1.setString("0% | " + "0/" + AES_T.paths.size());
                         switch (AESMode) {
                             case 0 -> {
                                 Main.jProgressBar1.setStringPainted(true);
@@ -198,10 +202,11 @@ class AES_T implements Runnable {
                                     GUI.labelCutterThread(jAlertLabel, "incorrect key", 10, 25, 500);
                                 } else {
                                     System.out.println("File Encryption Complete");
-                                    GUI.resetProgressBar();
+                                    GUI.resetProgressBar(jProgressBar1);
                                     if (toolMode == 2) {
                                         try {
-                                            Folder.list1Dir(2, true);
+                                            sendKey();
+                                            Folder.list1Dir(2);
                                             Main.jLabel6.setVisible(true);
                                             Main.jLabel5.setVisible(true);
                                             Main.jRadioButton2.setVisible(false);
@@ -212,7 +217,7 @@ class AES_T implements Runnable {
                                 }
                             }
                             case 1 -> {
-                                Main.jProgressBar1.setStringPainted(true);
+                                jProgressBar1.setStringPainted(true);
                                 GUI.labelCutterThread(jAlertLabel, "decrypting files...", 0, 15, 300);
                                 paths.forEach(x -> {
                                     try {
@@ -238,20 +243,16 @@ class AES_T implements Runnable {
                                     GUI.labelCutterThread(jAlertLabel, "incorrect key", 10, 25, 500);
                                 } else {
                                     System.out.println("File Decryption Complete");
-                                    GUI.resetProgressBar();
+                                    GUI.resetProgressBar(jProgressBar1);
                                     if (toolMode == 1) {
-                                        if (Statics.DragDropBool) {
-                                            new File(Statics.zipFileName).delete();
-                                            new File(Statics.zipFileName.replaceAll(".i-cc", "")+ "\\send.key").delete();
-                                        } else {
-                                            new File(Statics.zipFileName + ".i-cc").delete();
-                                            new File(Statics.zipFileName + "\\send.key").delete();
-                                        }
+                                        new File(Statics.zipFileName + ".i-cc").delete();
+                                        new File(Statics.zipFileName + "\\send.key").delete();
                                         Main.jList1.clearSelection();
                                         Main.jList1.removeAll();
-                                        Folder.listZipFolders();
+                                        Folder.listZipFiles();
                                         Main.jLabel8.setVisible(true);
                                         Main.jLabel7.setVisible(true);
+                                        Main.jRadioButton3.setEnabled(true);
                                         Main.jRadioButton3.setVisible(false);
                                     }
                                 }
@@ -346,15 +347,20 @@ class AES_T implements Runnable {
     }
 
     public static List<Path> listAESPaths(Path path) throws IOException {
-
         List<Path> result = null;
         try ( Stream<Path> walk = Files.walk(path)) {
             switch (AESMode) {
                 case 0 ->
-                    result = walk.filter(Files::isRegularFile).filter(p -> !p.getFileName().toString().endsWith(".enc")).filter(p -> !p.getFileName().toString().startsWith("Thumbs.db")).filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
+                    result = walk.filter(Files::isRegularFile)
+                            .filter(p -> !p.getFileName().toString().endsWith(".enc"))
+                            .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
+                            .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
                             .collect(Collectors.toList());
                 case 1 ->
-                    result = walk.filter(Files::isRegularFile).filter(p -> p.getFileName().toString().endsWith(".enc")).filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
+                    result = walk.filter(Files::isRegularFile)
+                            .filter(p -> p.getFileName().toString().endsWith(".enc"))
+                            .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
+                            .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
                             .collect(Collectors.toList());
             }
         }

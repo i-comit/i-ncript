@@ -215,7 +215,7 @@ public class Main extends javax.swing.JFrame {
                 jButton2MouseClicked(evt);
             }
         });
-        jToolPanel.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 78, 105, -1));
+        jToolPanel.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 80, 105, -1));
 
         jSwitchMode.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jSwitchMode.setText("STORE");
@@ -225,7 +225,7 @@ public class Main extends javax.swing.JFrame {
                 jSwitchModeActionEvt(evt);
             }
         });
-        jToolPanel.add(jSwitchMode, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 78, 105, -1));
+        jToolPanel.add(jSwitchMode, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 80, 105, -1));
 
         jButton3.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jButton3.setText("CLR LOG");
@@ -235,11 +235,13 @@ public class Main extends javax.swing.JFrame {
                 jButton3ActionPerformed(evt);
             }
         });
-        jToolPanel.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(144, 78, 105, -1));
+        jToolPanel.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 80, 105, -1));
 
         jProgressBar2.setFont(new java.awt.Font("Polentical Neon", 0, 11)); // NOI18N
         jProgressBar2.setForeground(Color.white);
         jToolPanel.add(jProgressBar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 120, 243, 18));
+
+        jStorePanel.setPreferredSize(new java.awt.Dimension(250, 75));
 
         jToggleButton1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jToggleButton1.setText("HOT FILER");
@@ -294,7 +296,7 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(jStorePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jStorePanelLayout.createSequentialGroup()
                         .addComponent(jToggleButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                         .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jStorePanelLayout.createSequentialGroup()
                         .addComponent(jRadioButton0)
@@ -318,7 +320,7 @@ public class Main extends javax.swing.JFrame {
 
         jToolPanel.add(jStorePanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
-        jSendPanel.setPreferredSize(new java.awt.Dimension(262, 81));
+        jSendPanel.setPreferredSize(new java.awt.Dimension(250, 75));
         jSendPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPasswordField2.setPreferredSize(new java.awt.Dimension(103, 22));
@@ -327,7 +329,7 @@ public class Main extends javax.swing.JFrame {
                 jPasswordField2Evt(evt);
             }
         });
-        jSendPanel.add(jPasswordField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(146, 46, 100, -1));
+        jSendPanel.add(jPasswordField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(144, 46, 100, -1));
 
         jTextField2.setPreferredSize(new java.awt.Dimension(103, 22));
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
@@ -335,7 +337,7 @@ public class Main extends javax.swing.JFrame {
                 jTextField2ActionPerformed(evt);
             }
         });
-        jSendPanel.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(146, 15, 100, -1));
+        jSendPanel.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(144, 15, 100, -1));
 
         jLabel5.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jLabel5.setText("set file username");
@@ -358,7 +360,7 @@ public class Main extends javax.swing.JFrame {
 
         jToolPanel.add(jSendPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
-        jReceivePanel.setPreferredSize(new java.awt.Dimension(262, 81));
+        jReceivePanel.setPreferredSize(new java.awt.Dimension(250, 75));
         jReceivePanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel7.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
@@ -370,7 +372,7 @@ public class Main extends javax.swing.JFrame {
                 jPasswordField3Evt(evt);
             }
         });
-        jReceivePanel.add(jPasswordField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(146, 46, 100, -1));
+        jReceivePanel.add(jPasswordField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(144, 46, 100, -1));
 
         jRadioButton3.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jRadioButton3.setText("DECRYPT");
@@ -392,11 +394,6 @@ public class Main extends javax.swing.JFrame {
         jScrollPane7.setHorizontalScrollBar(null);
 
         jList1.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "no .i-cc file" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
         jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jList1.setToolTipText("select the .i-cc file here");
         jList1.setAutoscrolls(false);
@@ -408,7 +405,7 @@ public class Main extends javax.swing.JFrame {
         });
         jScrollPane7.setViewportView(jList1);
 
-        jReceivePanel.add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(146, 15, 100, 22));
+        jReceivePanel.add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(144, 15, 100, 22));
 
         jToolPanel.add(jReceivePanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
@@ -638,15 +635,18 @@ public class Main extends javax.swing.JFrame {
             .addGroup(jEULAPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jEULAPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 516, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jEULAPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jEULAPanelLayout.createSequentialGroup()
-                            .addComponent(jButton5)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton4))
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE)
-                        .addComponent(jSeparator1)))
-                .addContainerGap(8, Short.MAX_VALUE))
+                    .addGroup(jEULAPanelLayout.createSequentialGroup()
+                        .addGroup(jEULAPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 516, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jEULAPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE)
+                                .addComponent(jSeparator1)))
+                        .addGap(0, 2, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jEULAPanelLayout.createSequentialGroup()
+                        .addComponent(jButton5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton4)))
+                .addContainerGap())
         );
         jEULAPanelLayout.setVerticalGroup(
             jEULAPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -656,12 +656,12 @@ public class Main extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jEULAPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton4)
                     .addComponent(jButton5))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         getContentPane().add(jEULAPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 6, 530, 230));
@@ -717,12 +717,12 @@ public class Main extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jEULAPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton6)
                     .addComponent(jButton7))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         getContentPane().add(jEULAPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 6, 530, 230));
@@ -894,7 +894,6 @@ public class Main extends javax.swing.JFrame {
     //SWITCH STORE/SEND/RECEIVE MODE
     private void jSwitchModeActionEvt(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSwitchModeActionEvt
         jRadioButton2.setVisible(false);
-        Statics.DragDropBool = false;
         toolMode++;
         jTextField2.setText("");
         jPasswordField2.setText("");
@@ -918,7 +917,7 @@ public class Main extends javax.swing.JFrame {
                 jLabel5.setVisible(false);
                 jLabel6.setVisible(false);
                 jRadioButton2.setVisible(false);
-                Folder.listZipFolders();
+                Folder.listZipFiles();
 
             }
             case 2 -> {
@@ -979,18 +978,22 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jPasswordField3Evt
 
-    //SEND KEY
+    //SEND RADIO BUTTON
     private void jRadioButton2Evt(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2Evt
         try {
+            zipFileCount = 0;
+            zipIter = 0;
             Login.sendKeyCheck();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_jRadioButton2Evt
-
+    //RECEIVE RADIO BTN
     private void jRadioButton3Evt(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3Evt
         try {
-            Login.receiveKeyCheck(receiveFolder + "\\" + jList1.getSelectedValue(), true);
+            zipFileCount = 0;
+            zipIter = 0;
+            Login.receiveKeyCheck(receiveFolder + "\\" + jList1.getSelectedValue());
         } catch (IOException ex) {
             ex.printStackTrace();
         }

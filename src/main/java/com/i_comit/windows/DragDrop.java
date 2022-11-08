@@ -10,7 +10,10 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.*;
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +39,6 @@ class DragDrop implements DropTargetListener {
     public void drop(DropTargetDropEvent event) {
         Main.toolBtnsBool(false);
         Main.jTextArea5.setVisible(false);
-        Statics.DragDropBool = true;
         // Accept copy drops
         event.acceptDrop(DnDConstants.ACTION_COPY);
         // Get the transfer which can provide the dropped item data
@@ -68,8 +70,7 @@ class DragDrop implements DropTargetListener {
                             if (Statics.toolMode == 1) {
                                 if (files.size() <= 1) {
                                     if (filesf.toString().endsWith(".i-cc")) {
-                                        System.out.println(filesf);
-                                        Login.receiveKeyCheck(filesf.toString(), false);
+                                        Files.move(filesf.toPath(), Paths.get(Statics.receiveFolder+"\\"+filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
                                     } else {
                                         System.out.println("only .i-cc files allowed");
                                         Main.toolBtnsBool(true);
@@ -98,10 +99,7 @@ class DragDrop implements DropTargetListener {
                 e.printStackTrace();
             }
         }
-        // Inform that the drop is complete
-
-        event.dropComplete(
-                true);
+        event.dropComplete(true);
     }
 
     public static void resetProgressBar(int encFiles, int decFiles) {

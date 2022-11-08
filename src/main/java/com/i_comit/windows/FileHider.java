@@ -27,28 +27,28 @@ public class FileHider {
     public static void cleanUp() {
         try {
             Set<String> unique = new HashSet<>();
-            
+
             List<Path> paths = listPaths(path);
             List<String> duplicates = new ArrayList<>();
             List<String> duplStr = new ArrayList<>();
             int deletedFiles = 0;
-            
+
             paths.forEach(x -> {
                 String f = x.toFile().getAbsolutePath().replace(".enc", "");
                 duplStr.add(f);
             });
-            
+
             for (String n : duplStr) {
                 if (!unique.add(n)) {
                     duplicates.add(n);
                 }
             }
-            
+
             if (!duplicates.isEmpty()) {
                 for (int i = 0; i < duplicates.size(); i++) {
                     System.out.println(duplicates.get(i));
                     String enc = duplicates.get(i) + ".enc";
-                    
+
                     File decF = Paths.get(duplicates.get(i)).toFile();
                     File encF = Paths.get(enc).toFile();
 
@@ -118,13 +118,14 @@ class FileHider_T implements Runnable {
                                 if (fileCt > 10) {
                                     Thread.sleep(300);
                                     GUI.labelCutterThread(Main.jAlertLabel, fileCt + " files hidden", 30, 25, 300);
-                                    Main.jTextArea1.append("hide filer enabled (hide all files)\n");
                                     Main.toolBtnsBool(true);
                                     Main.jTextArea5.setVisible(true);
-
                                 } else {
                                     Main.toolBtnsBool(true);
                                     Main.jTextArea5.setVisible(true);
+
+                                    Main.jProgressBar1.setVisible(false);
+                                    Main.jProgressBar2.setVisible(true);
                                 }
                             }
                         } catch (IOException | InterruptedException ex) {
@@ -147,13 +148,13 @@ class FileHider_T implements Runnable {
                                 if (fileCt > 10) {
                                     Thread.sleep(300);
                                     GUI.labelCutterThread(Main.jAlertLabel, fileCt + " files unhidden", 30, 25, 350);
-                                    Main.jTextArea1.append("hide filer disabled (reveal all files)\n");
-
                                     Main.toolBtnsBool(true);
                                     Main.jTextArea5.setVisible(true);
                                 } else {
                                     Main.toolBtnsBool(true);
                                     Main.jTextArea5.setVisible(true);
+                                    Main.jProgressBar1.setVisible(false);
+                                    Main.jProgressBar2.setVisible(true);
                                 }
                             }
 

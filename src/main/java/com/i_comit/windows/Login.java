@@ -76,6 +76,12 @@ public class Login {
         }
     }
 
+    private static void sendPanelTools() {
+        jLabel6.setVisible(true);
+        jLabel5.setVisible(true);
+        jRadioButton2.setVisible(false);
+    }
+
     public static void sendKeyCheck() throws IOException {
         char[] password = Main.jPasswordField2.getPassword();
         if (GUI.t.isAlive()) {
@@ -86,43 +92,33 @@ public class Login {
         if (!"".equals(Statics.recipientUsername)) {
             if (!"".equals(Statics.recipientPassword)) {
                 if (Statics.recipientUsername.length() >= 4) {
-                    if (Statics.recipientPassword.length() >= 4) {
-                        Main.jTextField2.setText("");
-                        Main.jPasswordField2.setText("");
-                        AESMode = 0;
-                        fileCount = GUI.countFiles(sendFolder);
-                        jProgressBar1.setMaximum(fileCount);
-                        AES.AESThread(listAESPaths(sendFolder), sendFolder.toFile(), true, 2);
-                    } else {
-                        GUI.labelCutterThread(jAlertLabel, "please have a longer password", 20, 20, 1200);
-                        jLabel6.setVisible(true);
-                        jLabel5.setVisible(true);
-                        jRadioButton2.setVisible(false);
-                    }
+                    Main.jRadioButton2.setEnabled(false);
+                    Main.jTextField2.setText("");
+                    Main.jPasswordField2.setText("");
+                    AESMode = 0;
+                    fileCount = GUI.countFiles(sendFolder);
+                    zipFileCount = fileCount;
+                    jProgressBar1.setMaximum(zipFileCount);
+                    System.out.println(Statics.fileCount + " file Count");
+
+                    AES.AESThread(listAESPaths(sendFolder), sendFolder.toFile(), true, 2);
                 } else {
                     GUI.labelCutterThread(jAlertLabel, "please have a longer username", 20, 20, 1200);
-                    jLabel6.setVisible(true);
-                    jLabel5.setVisible(true);
-                    jRadioButton2.setVisible(false);
+                    sendPanelTools();
                 }
             } else {
                 GUI.labelCutterThread(jAlertLabel, "please make a password", 20, 20, 1200);
-                jLabel6.setVisible(true);
-                jLabel5.setVisible(true);
-                jRadioButton2.setVisible(false);
+                sendPanelTools();
             }
         } else {
             GUI.labelCutterThread(jAlertLabel, "please make a username", 20, 20, 1200);
-            jLabel6.setVisible(true);
-            jLabel5.setVisible(true);
-            jRadioButton2.setVisible(false);
+            sendPanelTools();
         }
 
     }
 
     public static void sendKey() {
         Path sendKeyPath = Paths.get(Statics.sendFolder + "\\send.key");
-        System.out.println("sendkey " + sendKeyPath);
         try {
             List<String> lines = Arrays.asList(Hasher.modHash(recipientUsername), Hasher.modHash(recipientPassword));
 //            List<String> lines = Arrays.asList(Hasher.modHash(recipientPassword));
@@ -134,7 +130,14 @@ public class Login {
         }
     }
 
-    public static void receiveKeyCheck(String zipFileN, boolean AESBool) throws IOException {
+    private static void receivePanelTools() {
+        Main.jLabel8.setVisible(true);
+        Main.jLabel7.setVisible(true);
+        Main.jRadioButton3.setVisible(false);
+        Main.jRadioButton3.setSelected(false);
+    }
+
+    public static void receiveKeyCheck(String zipFileN) throws IOException {
         char[] password = Main.jPasswordField3.getPassword();
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
@@ -144,144 +147,57 @@ public class Login {
         System.out.println(Main.jList1.getSelectedValue());
 
         Statics.recipientPassword = new String(password);
-        if (AESBool) {
-            if (Main.jList1.getSelectedValue() != null) {
-                if (!"".equals(Statics.recipientPassword)) {
-                    Main.jPasswordField3.setText("");
-                    System.out.println("recipient pw " + Statics.recipientPassword);
-                    Folder.list1Dir(1, true);
-                } else {
-                    GUI.labelCutterThread(jAlertLabel, "please make a password", 20, 20, 1200);
-                    Main.jLabel8.setVisible(true);
-                    Main.jLabel7.setVisible(true);
-                    Main.jRadioButton3.setVisible(false);
-                    Main.jRadioButton3.setSelected(false);
-                }
-            } else {
-                GUI.labelCutterThread(jAlertLabel, "please select a .i-cc file", 20, 20, 1200);
-                Main.jLabel8.setVisible(true);
-                Main.jLabel7.setVisible(true);
-                Main.jRadioButton3.setVisible(false);
-                Main.jRadioButton3.setSelected(false);
-                Main.jPasswordField3.setText("");
-            }
-        } else {
+        if (Main.jList1.getSelectedValue() != null) {
             if (!"".equals(Statics.recipientPassword)) {
                 Main.jPasswordField3.setText("");
-                System.out.println("recipient pw " + Statics.recipientPassword);
-                Folder.list1Dir(1, false);
+                Folder.list1Dir(1);
             } else {
                 GUI.labelCutterThread(jAlertLabel, "please make a password", 20, 20, 1200);
-                Main.jLabel8.setVisible(true);
-                Main.jLabel7.setVisible(true);
-                Main.jRadioButton3.setVisible(false);
-                Main.jRadioButton3.setSelected(false);
-                Main.jTextArea5.setVisible(true);
+                receivePanelTools();
             }
+        } else {
+            GUI.labelCutterThread(jAlertLabel, "please select a .i-cc file", 20, 20, 1200);
+            receivePanelTools();
+            Main.jPasswordField3.setText("");
         }
+
     }
 
-    public static void verifySendKey(boolean AESBool) {
+    public static void verifySendKey() {
         try {
-            if (AESBool) {
-                BufferedReader brTest = new BufferedReader(new FileReader(Statics.zipFileName + "\\send.key"));
-                String usernameRead = brTest.readLine();
-                String passwordRead = brTest.readLine();
-//            System.out.println("recipient username hash " + usernameRead);
-                System.out.println("recipient password hash " + passwordRead);
-                System.out.println("input password hash " + Hasher.modHash(Statics.recipientPassword));
-                System.out.println("Statics.zipFileName " + Statics.zipFileName);
+            BufferedReader brTest = new BufferedReader(new FileReader(Statics.zipFileName + "\\send.key"));
+            String usernameRead = brTest.readLine();
+            String passwordRead = brTest.readLine();
 
-                BufferedReader brTest1 = new BufferedReader(new FileReader(keyFile));
-                String usernameRead1 = brTest1.readLine();
-                String passwordRead1 = brTest1.readLine();
+            BufferedReader brTest1 = new BufferedReader(new FileReader(keyFile));
+            String usernameRead1 = brTest1.readLine();
 //
-//            System.out.println("my username hash " + usernameRead1);
-//            System.out.println("my password hash " + passwordRead1);
-
-                if (usernameRead.equals(usernameRead1)) {
-                    System.out.println("USERNAME MATCH");
-                    if (passwordRead.equals(Hasher.modHash(Statics.recipientPassword))) {
-                        System.out.println("PASSWORD MATCH");
-                        AESMode = 1;
-                        fileCount = GUI.countFiles(receiveFolder);
-                        jProgressBar1.setMaximum(fileCount);
-                        AES.AESThread(listAESPaths(Paths.get(Statics.zipFileName)), Paths.get(Statics.zipFileName).toFile(), true, 1);
-                    } else {
-                        brTest.close();
-                        Folder.deleteDirectory(Paths.get(Statics.zipFileName).toFile());
-                        Paths.get(Statics.zipFileName).toFile().delete();
-                        GUI.labelCutterThread(jAlertLabel, "mismatched credentials", 20, 20, 1000);
-                        Main.jList1.clearSelection();
-                        Main.jLabel8.setVisible(true);
-                        Main.jLabel7.setVisible(true);
-                        Main.jRadioButton3.setVisible(false);
-                        Main.jRadioButton3.setSelected(false);
-                        Main.jPasswordField3.setText("");
-
-                    }
+            if (usernameRead.equals(usernameRead1)) {
+                System.out.println("USERNAME MATCH");
+                if (passwordRead.equals(Hasher.modHash(Statics.recipientPassword))) {
+                    System.out.println("PASSWORD MATCH");
+                    AESMode = 1;
+                    fileCount = GUI.countFiles(receiveFolder);
+                    zipFileCount = fileCount;
+                    jProgressBar1.setMaximum(fileCount);
+                    AES.AESThread(listAESPaths(Paths.get(Statics.zipFileName)), Paths.get(Statics.zipFileName).toFile(), true, 1);
                 } else {
                     brTest.close();
                     Folder.deleteDirectory(Paths.get(Statics.zipFileName).toFile());
                     Paths.get(Statics.zipFileName).toFile().delete();
                     GUI.labelCutterThread(jAlertLabel, "mismatched credentials", 20, 20, 1000);
-                    Main.jLabel8.setVisible(true);
-                    Main.jLabel7.setVisible(true);
-                    Main.jRadioButton3.setVisible(false);
-                    Main.jRadioButton3.setSelected(false);
                     Main.jList1.clearSelection();
+                    receivePanelTools();
                     Main.jPasswordField3.setText("");
-
                 }
             } else {
-                BufferedReader brTest = new BufferedReader(new FileReader(Statics.zipFileName.replaceAll(".i-cc", "") + "\\send.key"));
-                String usernameRead = brTest.readLine();
-                String passwordRead = brTest.readLine();
-//            System.out.println("recipient username hash " + usernameRead);
-                System.out.println("recipient password hash " + passwordRead);
-                System.out.println("input password hash " + Hasher.modHash(Statics.recipientPassword));
-                System.out.println("Statics.zipFileName " + Statics.zipFileName);
-
-                BufferedReader brTest1 = new BufferedReader(new FileReader(keyFile));
-                String usernameRead1 = brTest1.readLine();
-
-                if (usernameRead.equals(usernameRead1)) {
-                    System.out.println("USERNAME MATCH");
-                    if (passwordRead.equals(Hasher.modHash(Statics.recipientPassword))) {
-                        System.out.println("PASSWORD MATCH");
-                        AESMode = 1;
-                        fileCount = GUI.countFiles(DragDrop.filesf.toPath());
-                        jProgressBar1.setMaximum(fileCount);
-                        AES.AESThread(listAESPaths(Paths.get(Statics.zipFileName.replaceAll(".i-cc", ""))), Paths.get(Statics.zipFileName.replaceAll(".i-cc", "")).toFile(), true, 1);
-                        Main.jTabbedPane1.setSelectedIndex(0);
-
-                    } else {
-                        brTest.close();
-                        Folder.deleteDirectory(Paths.get(Statics.zipFileName.replaceAll(".i-cc", "")).toFile());
-                        Paths.get(Statics.zipFileName.replaceAll(".i-cc", "")).toFile().delete();
-                        GUI.labelCutterThread(jAlertLabel, "mismatched credentials", 20, 20, 1000);
-                        Main.jTextArea5.setVisible(true);
-                        Main.jList1.clearSelection();
-                        Main.jLabel8.setVisible(true);
-                        Main.jLabel7.setVisible(true);
-                        Main.jRadioButton3.setVisible(false);
-                        Main.jRadioButton3.setSelected(false);
-                        Main.jPasswordField3.setText("");
-
-                    }
-                } else {
-                    brTest.close();
-                    Folder.deleteDirectory(Paths.get(Statics.zipFileName).toFile());
-                    Paths.get(Statics.zipFileName).toFile().delete();
-                    GUI.labelCutterThread(jAlertLabel, "mismatched credentials", 20, 20, 1000);
-                    Main.jTextArea5.setVisible(true);
-                    Main.jLabel8.setVisible(true);
-                    Main.jLabel7.setVisible(true);
-                    Main.jRadioButton3.setVisible(false);
-                    Main.jRadioButton3.setSelected(false);
-                    Main.jList1.clearSelection();
-                    Main.jPasswordField3.setText("");
-                }
+                brTest.close();
+                Folder.deleteDirectory(Paths.get(Statics.zipFileName).toFile());
+                Paths.get(Statics.zipFileName).toFile().delete();
+                GUI.labelCutterThread(jAlertLabel, "mismatched credentials", 20, 20, 1000);
+                receivePanelTools();
+                Main.jList1.clearSelection();
+                Main.jPasswordField3.setText("");
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -298,7 +214,7 @@ public class Login {
                 if (passwordRead.equals(Hasher.modHash(password))) {
                     Main.jLoginPanel.setVisible(false);
                     Main.jToolPanel.setVisible(true);
-                    Main.jProgressBar1.setVisible(true);
+                    Main.jProgressBar2.setVisible(true);
                     GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript", 45, 30, 900);
                     Main.dragDropper();
                 }
