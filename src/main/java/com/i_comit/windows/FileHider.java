@@ -99,7 +99,7 @@ class FileHider_T implements Runnable {
 //        }
     }
 
-    private static void fileHiderToolReenable() {
+    public static void fileHiderToolReenable() {
         Main.toolBtnsBool(true);
         Main.dragDrop.setVisible(true);
         Main.jTabbedPane1.setSelectedIndex(0);
@@ -119,7 +119,7 @@ class FileHider_T implements Runnable {
             paths.forEach(x -> {
                 try {
                     getFileAttr(x, fileHideBool);
-                    if (Statics.fileHideIter == fileCount) {
+                    if (Statics.fileHideIter >= fileCount - 1) {
                         if (fileCt > 10) {
                             Thread.sleep(300);
                             GUI.labelCutterThread(Main.jAlertLabel, fileCt + " files hidden", 30, 25, 300);
@@ -136,7 +136,7 @@ class FileHider_T implements Runnable {
             paths.forEach(x -> {
                 try {
                     getFileAttr(x, fileHideBool);
-                    if (Statics.fileHideIter == fileCount) {
+                    if (Statics.fileHideIter >= fileCount - 1) {
                         if (fileCt > 10) {
                             Thread.sleep(300);
                             GUI.labelCutterThread(Main.jAlertLabel, fileCt + " files unhidden", 30, 25, 350);
