@@ -32,7 +32,6 @@ public class Folder {
             case 1 -> {
                 //RECEIVE
                 Main.jRadioButton3.setEnabled(false);
-                GUI.labelCutterThread(Main.jAlertLabel, "unpacking " + Main.jList1.getSelectedValue() + ".i-cc ..", 10, 20, 800);
                 unzipFile(Statics.zipFileName + ".i-cc", Statics.zipFileName.replaceAll(".i-cc", ""));
                 Main.toolBtnsBool(true);
                 Login.verifySendKey();

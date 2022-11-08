@@ -28,7 +28,7 @@ public class Main extends javax.swing.JFrame {
     public static String masterFolder = "--------\\";
 
     public Main() {
-//        root = Paths.get("").toAbsolutePath().toString();
+        root = Paths.get("").toAbsolutePath().toString();
 //        root = root + masterFolder;
         Path runtime = Paths.get(root.substring(0, 3) + masterFolder + "runtime");
         Path app = Paths.get(root.substring(0, 3) + masterFolder + "app");
@@ -46,7 +46,7 @@ public class Main extends javax.swing.JFrame {
                 ex.printStackTrace();
             }
         }
-//        if (Memory.checkWMIC()) {
+        if (Memory.checkWMIC()) {
         initComponents();
         FileHider.cleanUp();
 
@@ -104,9 +104,9 @@ public class Main extends javax.swing.JFrame {
         jProgressBar1.setVisible(false);
         jProgressBar2.setVisible(false);
         dragDrop.setVisible(false);
-//        } else {
-//
-//        }
+        } else {
+
+        }
     }
 
     public static void dragDropper() {
@@ -245,6 +245,7 @@ public class Main extends javax.swing.JFrame {
         jToolPanel.add(jProgressBar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 119, 243, 18));
 
         jStorePanel.setPreferredSize(new java.awt.Dimension(250, 75));
+        jStorePanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jToggleButton1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jToggleButton1.setText("HOT FILER");
@@ -256,6 +257,7 @@ public class Main extends javax.swing.JFrame {
                 jToggleButton1MouseClicked(evt);
             }
         });
+        jStorePanel.add(jToggleButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 15, -1, -1));
 
         jToggleButton2.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
 
@@ -270,6 +272,7 @@ public class Main extends javax.swing.JFrame {
                 jToggleButton2ActionPerformed(evt);
             }
         });
+        jStorePanel.add(jToggleButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(139, 15, -1, -1));
 
         buttonGroup1.add(jRadioButton1);
         jRadioButton1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
@@ -280,6 +283,7 @@ public class Main extends javax.swing.JFrame {
                 jRadioButton1ActionPerformed(evt);
             }
         });
+        jStorePanel.add(jRadioButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(152, 49, -1, -1));
 
         buttonGroup1.add(jRadioButton0);
         jRadioButton0.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
@@ -289,37 +293,7 @@ public class Main extends javax.swing.JFrame {
                 jRadioButton0ActionPerformed(evt);
             }
         });
-
-        javax.swing.GroupLayout jStorePanelLayout = new javax.swing.GroupLayout(jStorePanel);
-        jStorePanel.setLayout(jStorePanelLayout);
-        jStorePanelLayout.setHorizontalGroup(
-            jStorePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jStorePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jStorePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jStorePanelLayout.createSequentialGroup()
-                        .addComponent(jToggleButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
-                        .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jStorePanelLayout.createSequentialGroup()
-                        .addComponent(jRadioButton0)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jRadioButton1)))
-                .addContainerGap())
-        );
-        jStorePanelLayout.setVerticalGroup(
-            jStorePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jStorePanelLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addGroup(jStorePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jToggleButton1)
-                    .addComponent(jToggleButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jStorePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRadioButton1)
-                    .addComponent(jRadioButton0))
-                .addGap(12, 12, 12))
-        );
+        jStorePanel.add(jRadioButton0, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 49, -1, -1));
 
         jToolPanel.add(jStorePanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
@@ -509,8 +483,6 @@ public class Main extends javax.swing.JFrame {
         jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
         jTabbedPane1.setFocusable(false);
 
-        jPanel2.setFocusable(false);
-
         dragDrop.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(75, 110, 175)));
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/download.png"))); // NOI18N
@@ -640,7 +612,7 @@ public class Main extends javax.swing.JFrame {
         jTextArea6.setColumns(20);
         jTextArea6.setLineWrap(true);
         jTextArea6.setRows(5);
-        jTextArea6.setText("i-ncript Standard Operating Procedure (11/08/2022):\n\ni-ncript operates with 3 tool panels connected to their respective folders: STORE, N-BOX, and O-BOX, which you can cycle through via the button on the bottom left. Within these panels are primary tools which are accessible in all 3 panels, and some others which are exclusive to its respective panel.\ni-ncript also has a tabbed pane to the right of its interface, containing panels which displays encryption output, drag&drop, about, and SOP (this tab).\n\n[TOOL PANEL]\n-ENCRYPT & DECRYPT\nThese two radio buttons are the main tools of i-ncript, and pressing either buttons will run the respective encryption task, using the AES cipher. Encrypted files will have an .enc file extension.\n-STOP\nThis button only appears during encryption/decryption; click it to stop the current crypto task.\n-CLR LOG\nThis button will clear the outputs seen in the LOG tab during encryption and decryption.\n\n[TABBED PANEL]\n-LOG\nThe first tab of the pane logs each name of the file being encrypted and decrypted, along with the time that the crypto task was complete.\n-DROP\nThe second tab is only enabled while the STORE panel is active. You can drag and drop any files from your computer into the panel of this tab and it will automatically encrypt or decrypt (dependent on the file type) in its current directory. This is useful if you want to encrypt or decrypt only a few files to work on.\nIf you are on the N-BOX panel, the DROP tab will instead only accept 1 .i-cc file at a time, it will now decrypt that .i-cc if you have the right password instead of encrypting or decrypting individual files.\n-ABOUT\nCopyright information, contact information and liability clauses can be found here.\n-HELP\nThis tab serves to provide more information on the tools and fields offered by i-ncript. This is the tab that you are currently on.\n\nThese components are active throughout all 3 panels, now we will go over some that are exlusive to its tool panel.\n\n[STORE] (i-ncript folder)\nThis panel is connected to the i-ncript folder and the first panel that you will see. It is your personal encryption folder that you can use to store data that only you can access.\n-HOT FILER\nHot Filer can be toggled for automatic encryption whenever any new files is dropped into the i-ncript folder. If it detects any new files it will run the Encrypt function the same way as clicking on the Encrypt radio button.\n-HIDE FILE\nHide File can be toggled to hide or unhide every file in the i-ncript folder. It runs after every crypto task.\n\n[N-BOX]\nThis is the second panel after pressing the STORE button on the bottom left of the UI. This panel is connected to your n-box (inbox) folder, and it has the ability to decrypt .i-cc (specialized encrypted files) files that someone else has sent to you, granted you have the correct credentials.\n1. Rather than buttons, you are presented with a list and a password field. The list lists out all the .i-cc files that it found in the n-box folder, and if there is one, you can select it by clicking on the .i-cc file name.\n2. You then input the password that the sender has provided to you in faith, and as long as its over 4 characters (any less and the DECRYPT button will not appear) and matches the hash inside the .i-cc file, then that file will be decrypted into a folder with all its contents in readable form.\n\n[O-BOX]\nThis is the last panel when you press the N-BOX folder, which was previously STORE, and pressing it again will cycle you back to the STORE panel. This panel is connected to your o-box (outbox) folder, and any files you put in this folder can be encrypted and packaged into a .i-cc file (which you can send to someone else just like outbox mail)\n1. You must first know the username of the recipient's i-ncript account. It must match exactly in order for them to decrypt it. If you do know, then put it in the first text field.\n2. You then create a second password that you will confidentially share with the recipient, and this will be hashed. If there are files in the o-box folder (again, make sure you intend for ALL the files and folders in o-box to go to this person because it will package everything inside this folder) then it will be neatly packaged into a .i-cc file for you to email.");
+        jTextArea6.setText("i-ncript Standard Operating Procedure (11/08/2022):\n\ni-ncript operates with 3 tool panels connected to their respective folders: STORE, N-BOX, and O-BOX, which you can cycle through via the button on the bottom left. Within these panels are primary tools which are accessible in all 3 panels, and some others which are exclusive to its respective panel.\ni-ncript also has a tabbed pane to the right of its interface, containing panels which displays encryption output, drag&drop, about, and SOP (this tab).\n\n[TOOL PANEL]\n-ENCRYPT & DECRYPT\nThese two radio buttons are the main tools of i-ncript, and pressing either buttons will run the respective encryption task, using the AES cipher. Encrypted files will have an .enc file extension.\n-STOP\nThis button only appears during encryption/decryption; click it to stop the current crypto task.\n-CLR LOG\nThis button will clear the outputs seen in the LOG tab during encryption and decryption.\n\n[TABBED PANEL]\n-DROP\nThe second tab is only enabled while the STORE panel is active. You can drag and drop any files from your computer into the panel of this tab and it will automatically encrypt or decrypt (dependent on the file type) in its current directory. This is useful if you want to encrypt or decrypt only a few files to work on.\nIf you are on the N-BOX panel, the DROP tab will instead only accept 1 .i-cc file at a time, and move that file to the n-box folder.\n-LOG\nThe first tab of the pane logs each name of the file being encrypted and decrypted, along with the time that the crypto task was complete.\n-ABOUT\nCopyright information, contact information and liability clauses can be found here.\n-HELP\nThis tab serves to provide more information on the tools and fields offered by i-ncript. This is the tab that you are currently on.\n\nThese components are active throughout all 3 panels, now we will go over some that are exlusive to its tool panel.\n\n[STORE] (i-ncript folder)\nThis panel is connected to the i-ncript folder and the first panel that you will see. It is your personal encryption folder that you can use to store data that only you can access.\n-HOT FILER\nHot Filer can be toggled for automatic encryption whenever any new files is dropped into the i-ncript folder. If it detects any new files it will run the Encrypt function the same way as clicking on the Encrypt radio button.\n-HIDE FILE\nHide File can be toggled to hide or unhide every file in the i-ncript folder. It runs after every crypto task.\n\n[N-BOX]\nThis is the second panel after pressing the STORE button on the bottom left of the UI. This panel is connected to your n-box (inbox) folder, and it has the ability to decrypt .i-cc (specialized encrypted files) files that someone else has sent to you, granted you have the correct credentials.\n1. Rather than buttons, you are presented with a list and a password field. The list lists out all the .i-cc files that it found in the n-box folder, and if there is one, you can select it by clicking on the .i-cc file name.\n2. You then input the password that the sender has provided to you in faith, and as long as its over 4 characters (any less and the DECRYPT button will not appear) and matches the hash inside the .i-cc file, then that file will be decrypted into a folder with all its contents in readable form.\n\n[O-BOX]\nThis is the last panel when you press the N-BOX folder, which was previously STORE, and pressing it again will cycle you back to the STORE panel. This panel is connected to your o-box (outbox) folder, and any files you put in this folder can be encrypted and packaged into a .i-cc file (which you can send to someone else just like outbox mail)\n1. You must first know the username of the recipient's i-ncript account. It must match exactly in order for them to decrypt it. If you do know, then put it in the first text field.\n2. You then create a second password that you will confidentially share with the recipient, and this will be hashed. If there are files in the o-box folder (again, make sure you intend for ALL the files and folders in o-box to go to this person because it will package everything inside this folder) then it will be neatly packaged into a .i-cc file for you to email.");
         jTextArea6.setWrapStyleWord(true);
         jTextArea6.setCaretPosition(0);
         jScrollPane6.setViewportView(jTextArea6);
@@ -658,7 +630,7 @@ public class Main extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("HELP", jPanel4);
 
-        getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(288, 23, 225, 190));
+        getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 23, 225, 190));
 
         jLabel2.setFont(new java.awt.Font("Polentical Neon", 0, 16)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -691,21 +663,18 @@ public class Main extends javax.swing.JFrame {
         jEULAPanel.setLayout(jEULAPanelLayout);
         jEULAPanelLayout.setHorizontalGroup(
             jEULAPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jEULAPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jEULAPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jEULAPanelLayout.createSequentialGroup()
-                        .addGroup(jEULAPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 516, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jEULAPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE)
-                                .addComponent(jSeparator1)))
-                        .addGap(0, 2, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jEULAPanelLayout.createSequentialGroup()
-                        .addComponent(jButton5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton4)))
-                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jEULAPanelLayout.createSequentialGroup()
+                .addGap(8, 8, 8)
+                .addGroup(jEULAPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jSeparator1)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jEULAPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jEULAPanelLayout.createSequentialGroup()
+                            .addComponent(jButton5)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton4))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE))
+                .addGap(6, 6, 6))
         );
         jEULAPanelLayout.setVerticalGroup(
             jEULAPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -713,17 +682,17 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jEULAPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5))
+                .addGroup(jEULAPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton5)
+                    .addComponent(jButton4))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jEULAPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 6, 530, 230));
+        getContentPane().add(jEULAPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 6, 520, 230));
 
         jLabel4.setFont(new java.awt.Font("Polentical Neon", 0, 16)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -735,6 +704,7 @@ public class Main extends javax.swing.JFrame {
         jTextArea4.setRows(5);
         jTextArea4.setText("Last updated: October 28, 2022\n\nPlease read these Terms and Conditions carefully before using Our Service.\n\nINTERPRETATION\nThe words of which the initial letter is capitalized have meanings defined under the following conditions. The following definitions shall have the same meaning regardless of whether they appear in singular or in plural.\nFor the purposes of these Terms and Conditions:\n    • Application means the software program provided by the Company downloaded by You on any electronic device, named i-ncript\n    • Application Store means the digital distribution service operated and developed by Apple Inc. (Apple App Store) or Google Inc. (Google Play Store) in which the Application has been downloaded.\n    • Affiliate means an entity that controls, is controlled by or is under common control with a party, where \"control\" means ownership of 50% or more of the shares, equity interest or other securities entitled to vote for election of directors or other managing authority.\n    • Country refers to: California, United States\n    • Company (referred to as either \"the Company\", \"We\", \"Us\" or \"Our\" in this Agreement) refers to i-comit LLC, 13339 Carriage Rd.\n    • Device means any device that can access the Service such as a computer, a cellphone or a digital tablet.\n    • Feedback means feedback, innovations or suggestions sent by You regarding the attributes, performance or features of our Service.\n    • Service refers to the Application.\n    • Terms and Conditions (also referred as \"Terms\") mean these Terms and Conditions that form the entire agreement between You and the Company regarding the use of the Service.\n    • Third-party Social Media Service means any services or content (including data, information, products or services) provided by a third-party that may be displayed, included or made available by the Service.\n    • You means the individual accessing or using the Service, or the company, or other legal entity on behalf of which such individual is accessing or using the Service, as applicable.\n\nACKNOWLEDGEMENT\nThese are the Terms and Conditions governing the use of this Service and the agreement that operates between You and the Company. These Terms and Conditions set out the rights and obligations of all users regarding the use of the Service.\nYour access to and use of the Service is conditioned on Your acceptance of and compliance with these Terms and Conditions. These Terms and Conditions apply to all visitors, users and others who access or use the Service.\nBy accessing or using the Service You agree to be bound by these Terms and Conditions. If You disagree with any part of these Terms and Conditions then You may not access the Service.\nYou represent that you are over the age of 18. The Company does not permit those under 18 to use the Service.\nYour access to and use of the Service is also conditioned on Your acceptance of and compliance with the Privacy Policy of the Company. Our Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your personal information when You use the Application or the Website and tells You about Your privacy rights and how the law protects You. Please read Our Privacy Policy carefully before using Our Service.\n\nINTELLECTUAL PROPERTY\nThe Service and its original content (excluding Content provided by You or other users), features and functionality are and will remain the exclusive property of the Company and its licensors.\nThe Service is protected by copyright, trademark, and other laws of both the Country and foreign countries.\nOur trademarks and trade dress may not be used in connection with any product or service without the prior written consent of the Company.\n\nYOUR FEEDBACK TO US\nYou assign all rights, title and interest in any Feedback You provide the Company. If for any reason such assignment is ineffective, You agree to grant the Company a non-exclusive, perpetual, irrevocable, royalty free, worldwide right and license to use, reproduce, disclose, sub-license, distribute, modify and exploit such Feedback without restriction.\nLinks to Other Websites\nOur Service contains links to Our own Company website.\nThe Company has no control over, and assumes no responsibility for, the content, privacy policies, or practices of any third party web sites or services. You further acknowledge and agree that the Company shall not be responsible or liable, directly or indirectly, for any damage or loss caused or alleged to be caused by or in connection with the use of or reliance on any such content, goods or services available on or through any such web sites or services.\nWe strongly advise You to read the terms and conditions and privacy policies of any third-party web sites or services that You visit.\n\nTERMINATION\nWe may terminate or suspend Your access immediately, without prior notice or liability, for any reason whatsoever, including without limitation if You breach these Terms and Conditions.\nUpon termination, Your right to use the Service will cease immediately.\n\nLIMITATION OF LIABILITY\nTo the maximum extent permitted by applicable law, in no event shall the Company or its suppliers be liable for any special, incidental, indirect, or consequential damages whatsoever (including, but not limited to, damages for loss of profits, loss of data or other information, for business interruption, for personal injury, loss of privacy arising out of or in any way related to the use of or inability to use the Service, third-party software and/or third-party hardware used with the Service, or otherwise in connection with any provision of this Terms), even if the Company or any supplier has been advised of the possibility of such damages and even if the remedy fails of its essential purpose.\nSome states do not allow the exclusion of implied warranties or limitation of liability for incidental or consequential damages, which means that some of the above limitations may not apply. In these states, each party's liability will be limited to the greatest extent permitted by law.\n\n\"AS IS\" & \"AS AVAILABLE\" DISCLAIMER\nThe Service is provided to You \"AS IS\" and \"AS AVAILABLE\" and with all faults and defects without warranty of any kind. To the maximum extent permitted under applicable law, the Company, on its own behalf and on behalf of its Affiliates and its and their respective licensors and service providers, expressly disclaims all warranties, whether express, implied, statutory or otherwise, with respect to the Service, including all implied warranties of merchantability, fitness for a particular purpose, title and non-infringement, and warranties that may arise out of course of dealing, course of performance, usage or trade practice. Without limitation to the foregoing, the Company provides no warranty or undertaking, and makes no representation of any kind that the Service will meet Your requirements, achieve any intended results, be compatible or work with any other software, applications, systems or services, operate without interruption, meet any performance or reliability standards or be error free or that any errors or defects can or will be corrected.\nWithout limiting the foregoing, neither the Company nor any of the company's provider makes any representation or warranty of any kind, express or implied: (i) as to the operation or availability of the Service, or the information, content, and materials or products included thereon; (ii) that the Service will be uninterrupted or error-free; (iii) as to the accuracy, reliability, or currency of any information or content provided through the Service; or (iv) that the Service, its servers, the content, or e-mails sent from or on behalf of the Company are free of viruses, scripts, trojan horses, worms, malware, timebombs or other harmful components.\nSome jurisdictions do not allow the exclusion of certain types of warranties or limitations on applicable statutory rights of a consumer, so some or all of the above exclusions and limitations may not apply to You. But in such a case the exclusions and limitations set forth in this section shall be applied to the greatest extent enforceable under applicable law.\n\nGOVERNING LAW\nThe laws of the Country, excluding its conflicts of law rules, shall govern this Terms and Your use of the Service. Your use of the Application may also be subject to other local, state, national, or international laws.\n\nDISPUTES RESOLUTION\nIf You have any concern or dispute about the Service, You agree to first try to resolve the dispute informally by contacting the Company.\n\nFOR EUROPEAN UNION (EU) USERS\nIf You are a European Union consumer, you will benefit from any mandatory provisions of the law of the country in which you are resident in.\nUnited States Legal Compliance\nYou represent and warrant that (i) You are not located in a country that is subject to the United States government embargo, or that has been designated by the United States government as a \"terrorist supporting\" country, and (ii) You are not listed on any United States government list of prohibited or restricted parties.\n\nSEVERABILITY\nIf any provision of these Terms is held to be unenforceable or invalid, such provision will be changed and interpreted to accomplish the objectives of such provision to the greatest extent possible under applicable law and the remaining provisions will continue in full force and effect.\n\nWAIVER\nExcept as provided herein, the failure to exercise a right or to require performance of an obligation under these Terms shall not effect a party's ability to exercise such right or require such performance at any time thereafter nor shall the waiver of a breach constitute a waiver of any subsequent breach.\n\nTRANSLATION INTERPRETATION\nThese Terms and Conditions may have been translated if We have made them available to You on our Service. You agree that the original English text shall prevail in the case of a dispute.\n\nCHANGES TO THESE TERMS AND CONDITIONS\nWe reserve the right, at Our sole discretion, to modify or replace these Terms at any time. If a revision is material We will make reasonable efforts to provide at least 30 days' notice prior to any new terms taking effect. What constitutes a material change will be determined at Our sole discretion.\nBy continuing to access or use Our Service after those revisions become effective, You agree to be bound by the revised terms. If You do not agree to the new terms, in whole or in part, please stop using the website and the Service.\n\nCONTACTS\nIf you have any questions about these Terms and Conditions, You can contact us:\n    • By email: info@i-comit.com\n    • By visiting our site: https://i-comit.com/contact/\n    • By phone number: +1(858) 585-7550");
         jTextArea4.setWrapStyleWord(true);
+        jTextArea4.setCaretPosition(0);
         jScrollPane4.setViewportView(jTextArea4);
 
         jButton6.setText("I AGREE");
@@ -755,18 +725,17 @@ public class Main extends javax.swing.JFrame {
         jEULAPanel1.setLayout(jEULAPanel1Layout);
         jEULAPanel1Layout.setHorizontalGroup(
             jEULAPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jEULAPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jEULAPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 516, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jEULAPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jEULAPanel1Layout.createSequentialGroup()
-                            .addComponent(jButton7)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton6))
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE)
-                        .addComponent(jSeparator2)))
-                .addContainerGap(8, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jEULAPanel1Layout.createSequentialGroup()
+                .addGap(8, 8, 8)
+                .addGroup(jEULAPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jSeparator2)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jEULAPanel1Layout.createSequentialGroup()
+                        .addComponent(jButton7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton6))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(6, 6, 6))
         );
         jEULAPanel1Layout.setVerticalGroup(
             jEULAPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -774,17 +743,17 @@ public class Main extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jEULAPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton6)
                     .addComponent(jButton7))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(9, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jEULAPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 6, 530, 230));
+        getContentPane().add(jEULAPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 6, 520, 230));
 
         pack();
         setLocationRelativeTo(null);

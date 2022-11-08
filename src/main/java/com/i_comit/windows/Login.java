@@ -176,6 +176,7 @@ public class Login {
                 System.out.println("USERNAME MATCH");
                 if (passwordRead.equals(Hasher.modHash(Statics.recipientPassword))) {
                     System.out.println("PASSWORD MATCH");
+                    GUI.labelCutterThread(Main.jAlertLabel, "unpacking " + Main.jList1.getSelectedValue() + ".i-cc ..", 10, 20, 800);
                     AESMode = 1;
                     fileCount = GUI.countFiles(receiveFolder);
                     zipFileCount = fileCount;
@@ -189,6 +190,8 @@ public class Login {
                     Main.jList1.clearSelection();
                     receivePanelTools();
                     Main.jPasswordField3.setText("");
+                    Main.jRadioButton3.setEnabled(true);
+                    Folder.listZipFiles();
                 }
             } else {
                 brTest.close();
@@ -198,6 +201,8 @@ public class Login {
                 receivePanelTools();
                 Main.jList1.clearSelection();
                 Main.jPasswordField3.setText("");
+                Main.jRadioButton3.setEnabled(true);
+                Folder.listZipFiles();
             }
         } catch (IOException ex) {
             ex.printStackTrace();
