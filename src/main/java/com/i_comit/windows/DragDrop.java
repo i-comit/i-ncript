@@ -38,7 +38,8 @@ class DragDrop implements DropTargetListener {
     @Override
     public void drop(DropTargetDropEvent event) {
         Main.toolBtnsBool(false);
-        Main.jTextArea5.setVisible(false);
+        Main.dragDrop.setVisible(false);
+        Main.jProgressBar1.setVisible(true);
         // Accept copy drops
         event.acceptDrop(DnDConstants.ACTION_COPY);
         // Get the transfer which can provide the dropped item data
@@ -55,7 +56,7 @@ class DragDrop implements DropTargetListener {
                     List files = (List) transferable.getTransferData(flavor);
                     List<Path> paths = new ArrayList<>();
 
-                    if (files.size() <= 15) {
+                    if (files.size() <= 10) {
                         // Loop them through
                         for (int i = 0; i < files.size(); i++) {
                             String sf = files.get(i).toString();
@@ -64,22 +65,25 @@ class DragDrop implements DropTargetListener {
                             if (Statics.toolMode == 0) {
                                 if (i >= files.size() - 1) {
                                     AES.AESThread(paths, Statics.directory, false, 0);
-                                    Main.jTabbedPane1.setSelectedIndex(0);
                                 }
                             }
                             if (Statics.toolMode == 1) {
                                 if (files.size() <= 1) {
                                     if (filesf.toString().endsWith(".i-cc")) {
-                                        Files.move(filesf.toPath(), Paths.get(Statics.receiveFolder+"\\"+filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
+                                        Files.move(filesf.toPath(), Paths.get(Statics.receiveFolder + "\\" + filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
+                                        Main.jTextArea1.append(filesf.getName() + " has been moved to the n-box folder\n");
+                                        Folder.listZipFiles();
+                                        Main.toolBtnsBool(true);
+                                        Main.dragDrop.setVisible(true);
                                     } else {
                                         System.out.println("only .i-cc files allowed");
                                         Main.toolBtnsBool(true);
-                                        Main.jTextArea5.setVisible(true);
+                                        Main.dragDrop.setVisible(true);
                                     }
                                 } else {
-                                    GUI.labelCutterThread(Main.jAlertLabel, "only 1 .i-cc file is allowed at once", 10, 25, 500);
+                                    GUI.labelCutterThread(Main.jAlertLabel, "only 1 file is allowed at once", 10, 25, 500);
                                     Main.toolBtnsBool(true);
-                                    Main.jTextArea5.setVisible(true);
+                                    Main.dragDrop.setVisible(true);
                                 }
                             }
                         }
@@ -87,10 +91,10 @@ class DragDrop implements DropTargetListener {
                         if (GUI.t.isAlive()) {
                             GUI.t.interrupt();
                         }
-                        GUI.labelCutterThread(Main.jAlertLabel, "only 15 files is allowed at once", 10, 25, 500);
-                        Main.jTextArea1.append("For security reasons, you can only drop up to 15 files at once\n");
+                        GUI.labelCutterThread(Main.jAlertLabel, "only 10 files are allowed at once", 10, 25, 500);
+                        Main.jTextArea1.append("For security reasons, you can only drop up to 10 files at once\n");
                         Main.toolBtnsBool(true);
-                        Main.jTextArea5.setVisible(true);
+                        Main.dragDrop.setVisible(true);
                     }
                 }
 
@@ -124,7 +128,9 @@ class DragDrop implements DropTargetListener {
                 jProgressBar1.setStringPainted(false);
                 DragDrop.encFiles = 0;
                 DragDrop.decFiles = 0;
-                Main.jTextArea5.setVisible(true);
+                Main.dragDrop.setVisible(true);
+                Main.jProgressBar1.setVisible(false);
+                Main.jTabbedPane1.setSelectedIndex(0);
                 Main.toolBtnsBool(true);
             }
         } catch (InterruptedException ex) {
@@ -181,7 +187,7 @@ class DragDrop_T implements Runnable {
                 jProgressBar1.setStringPainted(false);
                 DragDrop.encFiles = 0;
                 DragDrop.decFiles = 0;
-                Main.jTextArea5.setVisible(true);
+                Main.dragDrop.setVisible(true);
                 Main.toolBtnsBool(true);
                 AES_T.paths = null;
             }

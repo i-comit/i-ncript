@@ -217,6 +217,8 @@ public class Login {
                     Main.jProgressBar2.setVisible(true);
                     GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript", 45, 30, 900);
                     Main.dragDropper();
+                    Main.jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
+                    Main.jLabel10.setToolTipText("drop box will encrypt & decrypt any files dropped here");
                 }
             } else {
                 GUI.labelCutterThread(jAlertLabel, "incorrect login info", 45, 30, 900);

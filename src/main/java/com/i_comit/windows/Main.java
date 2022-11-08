@@ -24,7 +24,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "F:\\";
+    public static String root = "";
     public static String masterFolder = "--------\\";
 
     public Main() {
@@ -103,7 +103,7 @@ public class Main extends javax.swing.JFrame {
         }
         jProgressBar1.setVisible(false);
         jProgressBar2.setVisible(false);
-        jTextArea5.setVisible(false);
+        dragDrop.setVisible(false);
 //        } else {
 //
 //        }
@@ -112,8 +112,8 @@ public class Main extends javax.swing.JFrame {
     public static void dragDropper() {
         DragDrop myDragDropListener = new DragDrop();
         // Connect the label with a drag and drop listener
-        jTextArea5.setVisible(true);
-        new DropTarget(jTextArea5, myDragDropListener);
+        dragDrop.setVisible(true);
+        new DropTarget(dragDrop, myDragDropListener);
     }
 
     public static void toolBtnsBool(boolean bool) {
@@ -122,8 +122,6 @@ public class Main extends javax.swing.JFrame {
         jRadioButton0.setEnabled(bool);
         jRadioButton1.setEnabled(bool);
         jSwitchMode.setVisible(bool);
-//        jButton2.setEnabled(!bool);
-//        jButton3.setEnabled(!bool);
     }
 
     /**
@@ -170,12 +168,17 @@ public class Main extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jAlertLabel = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel2 = new javax.swing.JPanel();
+        dragDrop = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
-        jPanel2 = new javax.swing.JPanel();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        jTextArea5 = new javax.swing.JTextArea();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
@@ -239,7 +242,7 @@ public class Main extends javax.swing.JFrame {
 
         jProgressBar2.setFont(new java.awt.Font("Polentical Neon", 0, 11)); // NOI18N
         jProgressBar2.setForeground(Color.white);
-        jToolPanel.add(jProgressBar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 120, 243, 18));
+        jToolPanel.add(jProgressBar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 119, 243, 18));
 
         jStorePanel.setPreferredSize(new java.awt.Dimension(250, 75));
 
@@ -395,7 +398,7 @@ public class Main extends javax.swing.JFrame {
 
         jList1.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jList1.setToolTipText("select the .i-cc file here");
+        jList1.setToolTipText("select one .i-cc file from n-box folder");
         jList1.setAutoscrolls(false);
         jList1.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
         jList1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -506,6 +509,82 @@ public class Main extends javax.swing.JFrame {
         jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
         jTabbedPane1.setFocusable(false);
 
+        jPanel2.setFocusable(false);
+
+        dragDrop.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(75, 110, 175)));
+
+        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/download.png"))); // NOI18N
+
+        jLabel10.setFont(new java.awt.Font("Polentical Neon", 0, 16)); // NOI18N
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel10.setText("STORE MODE");
+
+        jLabel11.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel11.setText("ENCRYPT & DECRYPT");
+
+        jLabel12.setFont(new java.awt.Font("Polentical Neon", 0, 13)); // NOI18N
+        jLabel12.setText("DRAG");
+
+        jLabel13.setFont(new java.awt.Font("Polentical Neon", 0, 13)); // NOI18N
+        jLabel13.setText("AND");
+
+        jLabel14.setFont(new java.awt.Font("Polentical Neon", 0, 13)); // NOI18N
+        jLabel14.setText("DROP");
+
+        javax.swing.GroupLayout dragDropLayout = new javax.swing.GroupLayout(dragDrop);
+        dragDrop.setLayout(dragDropLayout);
+        dragDropLayout.setHorizontalGroup(
+            dragDropLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dragDropLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(dragDropLayout.createSequentialGroup()
+                .addGap(52, 52, 52)
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(dragDropLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel14)
+                    .addComponent(jLabel13))
+                .addContainerGap(52, Short.MAX_VALUE))
+            .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        dragDropLayout.setVerticalGroup(
+            dragDropLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(dragDropLayout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addGroup(dragDropLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(dragDropLayout.createSequentialGroup()
+                        .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(2, 2, 2)
+                        .addComponent(jLabel13)
+                        .addGap(2, 2, 2)
+                        .addComponent(jLabel14))
+                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel10)
+                .addGap(12, 12, 12)
+                .addComponent(jLabel11)
+                .addContainerGap(16, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(dragDrop, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(dragDrop, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("DROP", jPanel2);
+
+        jPanel1.setFocusable(false);
+
         jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
         jTextArea1.setFont(new java.awt.Font("Polentical Neon", 0, 10)); // NOI18N
@@ -529,30 +608,7 @@ public class Main extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("LOG", jPanel1);
 
-        jTextArea5.setEditable(false);
-        jTextArea5.setColumns(5);
-        jTextArea5.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
-        jTextArea5.setLineWrap(true);
-        jTextArea5.setRows(3);
-        jTextArea5.setTabSize(2);
-        jTextArea5.setText("DRAG AND DROP FILES HERE FOR AUTOMATIC ENCRYPT & DECRYPT");
-        jTextArea5.setWrapStyleWord(true);
-        jTextArea5.setCaretPosition(0);
-        jTextArea5.setMargin(new java.awt.Insets(55, 25, 25, 15));
-        jScrollPane5.setViewportView(jTextArea5);
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("DROP", jPanel2);
+        jPanel3.setFocusable(false);
 
         jTextArea2.setEditable(false);
         jTextArea2.setColumns(20);
@@ -578,12 +634,15 @@ public class Main extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("ABOUT", jPanel3);
 
+        jPanel4.setFocusable(false);
+
         jTextArea6.setEditable(false);
         jTextArea6.setColumns(20);
         jTextArea6.setLineWrap(true);
         jTextArea6.setRows(5);
         jTextArea6.setText("i-ncript Standard Operating Procedure (11/08/2022):\n\ni-ncript operates with 3 tool panels connected to their respective folders: STORE, N-BOX, and O-BOX, which you can cycle through via the button on the bottom left. Within these panels are primary tools which are accessible in all 3 panels, and some others which are exclusive to its respective panel.\ni-ncript also has a tabbed pane to the right of its interface, containing panels which displays encryption output, drag&drop, about, and SOP (this tab).\n\n[TOOL PANEL]\n-ENCRYPT & DECRYPT\nThese two radio buttons are the main tools of i-ncript, and pressing either buttons will run the respective encryption task, using the AES cipher. Encrypted files will have an .enc file extension.\n-STOP\nThis button only appears during encryption/decryption; click it to stop the current crypto task.\n-CLR LOG\nThis button will clear the outputs seen in the LOG tab during encryption and decryption.\n\n[TABBED PANEL]\n-LOG\nThe first tab of the pane logs each name of the file being encrypted and decrypted, along with the time that the crypto task was complete.\n-DROP\nThe second tab is only enabled while the STORE panel is active. You can drag and drop any files from your computer into the panel of this tab and it will automatically encrypt or decrypt (dependent on the file type) in its current directory. This is useful if you want to encrypt or decrypt only a few files to work on.\nIf you are on the N-BOX panel, the DROP tab will instead only accept 1 .i-cc file at a time, it will now decrypt that .i-cc if you have the right password instead of encrypting or decrypting individual files.\n-ABOUT\nCopyright information, contact information and liability clauses can be found here.\n-HELP\nThis tab serves to provide more information on the tools and fields offered by i-ncript. This is the tab that you are currently on.\n\nThese components are active throughout all 3 panels, now we will go over some that are exlusive to its tool panel.\n\n[STORE] (i-ncript folder)\nThis panel is connected to the i-ncript folder and the first panel that you will see. It is your personal encryption folder that you can use to store data that only you can access.\n-HOT FILER\nHot Filer can be toggled for automatic encryption whenever any new files is dropped into the i-ncript folder. If it detects any new files it will run the Encrypt function the same way as clicking on the Encrypt radio button.\n-HIDE FILE\nHide File can be toggled to hide or unhide every file in the i-ncript folder. It runs after every crypto task.\n\n[N-BOX]\nThis is the second panel after pressing the STORE button on the bottom left of the UI. This panel is connected to your n-box (inbox) folder, and it has the ability to decrypt .i-cc (specialized encrypted files) files that someone else has sent to you, granted you have the correct credentials.\n1. Rather than buttons, you are presented with a list and a password field. The list lists out all the .i-cc files that it found in the n-box folder, and if there is one, you can select it by clicking on the .i-cc file name.\n2. You then input the password that the sender has provided to you in faith, and as long as its over 4 characters (any less and the DECRYPT button will not appear) and matches the hash inside the .i-cc file, then that file will be decrypted into a folder with all its contents in readable form.\n\n[O-BOX]\nThis is the last panel when you press the N-BOX folder, which was previously STORE, and pressing it again will cycle you back to the STORE panel. This panel is connected to your o-box (outbox) folder, and any files you put in this folder can be encrypted and packaged into a .i-cc file (which you can send to someone else just like outbox mail)\n1. You must first know the username of the recipient's i-ncript account. It must match exactly in order for them to decrypt it. If you do know, then put it in the first text field.\n2. You then create a second password that you will confidentially share with the recipient, and this will be hashed. If there are files in the o-box folder (again, make sure you intend for ALL the files and folders in o-box to go to this person because it will package everything inside this folder) then it will be neatly packaged into a .i-cc file for you to email.");
         jTextArea6.setWrapStyleWord(true);
+        jTextArea6.setCaretPosition(0);
         jScrollPane6.setViewportView(jTextArea6);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -661,7 +720,7 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(jEULAPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton4)
                     .addComponent(jButton5))
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         getContentPane().add(jEULAPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 6, 530, 230));
@@ -722,7 +781,7 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(jEULAPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton6)
                     .addComponent(jButton7))
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         getContentPane().add(jEULAPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 6, 530, 230));
@@ -901,33 +960,43 @@ public class Main extends javax.swing.JFrame {
         switch (toolMode) {
             case 0 -> {
                 jSwitchMode.setText("STORE");
+                jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
                 jStorePanel.setVisible(true);
                 jSendPanel.setVisible(false);
                 jReceivePanel.setVisible(false);
-                jTextArea5.setVisible(true);
+                dragDrop.setVisible(true);
+                jLabel10.setText("STORE MODE");
+                jLabel11.setText("ENCRYPT & DECRYPT");
+                jLabel10.setToolTipText("drop box will encrypt & decrypt any files dropped here");
 
             }
             case 1 -> {
                 jSwitchMode.setText("N-BOX");
+                jSwitchMode.setToolTipText("current panel can decrypt .i-cc files inside n-box (inbox) folder");
                 jStorePanel.setVisible(false);
                 jSendPanel.setVisible(false);
                 jReceivePanel.setVisible(true);
-                jTextArea5.setVisible(true);
+                dragDrop.setVisible(true);
 
                 jLabel5.setVisible(false);
                 jLabel6.setVisible(false);
                 jRadioButton2.setVisible(false);
                 Folder.listZipFiles();
 
+                jLabel10.setText("N-BOX MODE");
+                jLabel11.setText("MOVE .I-CC TO N-BOX");
+                jLabel10.setToolTipText("drop box will move dropped .i-cc file to n-box folder");
+
             }
             case 2 -> {
                 jSwitchMode.setText("O-BOX");
+                jSwitchMode.setToolTipText("current panel can encrypt files for sending from o-box (outbox) folder");
                 jStorePanel.setVisible(false);
                 jSendPanel.setVisible(true);
                 jLabel6.setVisible(true);
                 jLabel5.setVisible(true);
                 jReceivePanel.setVisible(false);
-                jTextArea5.setVisible(false);
+                dragDrop.setVisible(false);
 
                 jLabel7.setVisible(false);
                 jLabel8.setVisible(false);
@@ -936,14 +1005,17 @@ public class Main extends javax.swing.JFrame {
             }
             case 3 -> {
                 jSwitchMode.setText("STORE");
+                jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
                 jStorePanel.setVisible(true);
                 jSendPanel.setVisible(false);
                 jLabel7.setVisible(true);
                 jLabel8.setVisible(true);
                 jReceivePanel.setVisible(false);
-                jTextArea5.setVisible(true);
+                dragDrop.setVisible(true);
                 toolMode = 0;
-
+                jLabel10.setText("STORE MODE");
+                jLabel11.setText("ENCRYPT & DECRYPT");
+                jLabel10.setToolTipText("drop box will encrypt & decrypt any files dropped here");
             }
         }
     }//GEN-LAST:event_jSwitchModeActionEvt
@@ -1038,6 +1110,7 @@ public class Main extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public static javax.swing.ButtonGroup buttonGroup1;
+    protected static javax.swing.JPanel dragDrop;
     public static javax.swing.JLabel jAlertLabel;
     public javax.swing.JButton jButton1;
     protected static javax.swing.JButton jButton2;
@@ -1049,6 +1122,11 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JPanel jEULAPanel;
     protected static javax.swing.JPanel jEULAPanel1;
     protected static javax.swing.JLabel jLabel1;
+    protected static javax.swing.JLabel jLabel10;
+    protected static javax.swing.JLabel jLabel11;
+    protected static javax.swing.JLabel jLabel12;
+    protected static javax.swing.JLabel jLabel13;
+    protected static javax.swing.JLabel jLabel14;
     protected static javax.swing.JLabel jLabel2;
     protected static javax.swing.JLabel jLabel3;
     protected static javax.swing.JLabel jLabel4;
@@ -1056,6 +1134,7 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JLabel jLabel6;
     protected static javax.swing.JLabel jLabel7;
     protected static javax.swing.JLabel jLabel8;
+    protected static javax.swing.JLabel jLabel9;
     protected static javax.swing.JList<String> jList1;
     public static javax.swing.JPanel jLoginPanel;
     protected static javax.swing.JPanel jPanel1;
@@ -1077,7 +1156,6 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JScrollPane jScrollPane2;
     protected static javax.swing.JScrollPane jScrollPane3;
     protected static javax.swing.JScrollPane jScrollPane4;
-    protected static javax.swing.JScrollPane jScrollPane5;
     protected static javax.swing.JScrollPane jScrollPane6;
     protected static javax.swing.JScrollPane jScrollPane7;
     protected static javax.swing.JPanel jSendPanel;
@@ -1090,7 +1168,6 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JTextArea jTextArea2;
     protected static javax.swing.JTextArea jTextArea3;
     protected static javax.swing.JTextArea jTextArea4;
-    protected static javax.swing.JTextArea jTextArea5;
     protected static javax.swing.JTextArea jTextArea6;
     protected static javax.swing.JTextField jTextField1;
     protected static javax.swing.JTextField jTextField2;

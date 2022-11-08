@@ -8,7 +8,6 @@ package com.i_comit.windows;
  *
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
-import static com.i_comit.windows.Login.sendKey;
 import static com.i_comit.windows.Statics.zipFileCount;
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,16 +26,14 @@ import javax.swing.DefaultListModel;
 public class Folder {
 
     public static String sendFolderStr = "";
-    public static String receiveFolderStr = "";
 
     public static void list1Dir(int toolMode) throws IOException {
         switch (toolMode) {
             case 1 -> {
                 //RECEIVE
                 Main.jRadioButton3.setEnabled(false);
-                receiveFolderStr = Statics.receiveFolder + "\\" + first2Char(Main.jList1.getSelectedValue()) + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMddmmss"));
+                GUI.labelCutterThread(Main.jAlertLabel, "unpacking " + Main.jList1.getSelectedValue() + ".i-cc ..", 10, 20, 800);
                 unzipFile(Statics.zipFileName + ".i-cc", Statics.zipFileName.replaceAll(".i-cc", ""));
-                GUI.resetProgressBar(Main.jProgressBar2);
                 Main.toolBtnsBool(true);
                 Login.verifySendKey();
             }
@@ -91,7 +88,6 @@ public class Folder {
                         if (finalF.length() > 12) {
                             finalF = listOfFile.getName().substring(0, 12).trim() + "..";
                         } else {
-//                    zipList.addElement(listOfFile.getName().replaceAll(".i-cc", ""));
                             zipList.addElement(finalF);
                             Main.jList1.setModel(zipList);
                         }
@@ -101,7 +97,6 @@ public class Folder {
             Main.jList1.setSelectedIndex(0);
         }
     }
-    // zip a directory, including sub files and sub directories
 
     public static void zipFile(Path source, String fileExt, String sendFolderPath) throws IOException {
         String zipFileName = sendFolderStr + fileExt;

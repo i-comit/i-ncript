@@ -32,7 +32,6 @@ public class GUI {
         File diskPartition = new File(root).toPath().getRoot().toFile();
         GB = Memory.byteFormatter(diskPartition.getUsableSpace());
         Main.jLabel3.setText(root.substring(0, 2) + " | " + GB);
-
     }
 
     public static void labelCutterThread(JLabel jLabel, String labelMsg, int initSleep, int sleep, int pause) {
@@ -47,11 +46,6 @@ public class GUI {
         t1.start();
     }
 
-//    public static void progressBarThread() {
-//        t2 = new Thread(() -> progressBar_T.resetProgressBar());
-//        t2.start();
-//
-//    }
     public static int countAllFiles(Path path) throws IOException {
         int result;
         try ( Stream<Path> walk = Files.walk(path)) {
@@ -120,8 +114,14 @@ public class GUI {
             try {
                 String fileName = new File(Folder.sendFolderStr).getName();
                 System.out.println(fileName);
-                GUI.labelCutterThread(jAlertLabel, "packaged " + fileName+".i-cc", 10, 25, 500);
-                Main.jTextArea1.append("packaged " + fileName + ".i-cc at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
+                if (Statics.toolMode == 2) {
+                    GUI.labelCutterThread(jAlertLabel, "packaged " + fileName + ".i-cc", 10, 25, 500);
+                    Main.jTextArea1.append("packaged " + fileName + ".i-cc at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
+                }
+                if (Statics.toolMode == 1) {
+                    GUI.labelCutterThread(jAlertLabel, "unpacked " + fileName + ".i-cc", 10, 25, 500);
+                    Main.jTextArea1.append("unpacked " + fileName + ".i-cc at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
+                }
                 Thread.sleep(1000);
                 for (int x = progressBar.getMaximum(); x >= 0; x--) {
                     Thread.sleep(5);
@@ -129,6 +129,7 @@ public class GUI {
                 }
                 if (progressBar.getValue() >= 0) {
                     progressBar.setStringPainted(false);
+                    Main.jTabbedPane1.setSelectedIndex(0);
                 }
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
