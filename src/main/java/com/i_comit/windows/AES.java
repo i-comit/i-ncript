@@ -160,13 +160,13 @@ class AES_T implements Runnable {
     public static List<Path> paths = null;
 
     public static void AESQuery(List<Path> paths, File dirFile, boolean AESBool, int toolMode) throws InterruptedException {
-        Main.jTabbedPane1.setSelectedIndex(1);
         AES_T.paths = paths;
         if (AESBool) {
             contents = dirFile.listFiles();
             if (contents != null) {
                 if (contents.length != 0) {
                     if (!paths.isEmpty()) {
+                        Main.jTabbedPane1.setSelectedIndex(1);
                         Main.toolBtnsBool(false);
                         Main.jButton2.setVisible(true);
                         Main.jSwitchMode.setVisible(false);
@@ -293,6 +293,7 @@ class AES_T implements Runnable {
                 Main.jToggleButton2.setEnabled(true);
             }
         } else {
+            Main.jTabbedPane1.setSelectedIndex(1);
             jProgressBar1.setMaximum(paths.size());
             jProgressBar1.setStringPainted(true);
             jProgressBar1.setValue(fileIter);

@@ -55,7 +55,8 @@ public class Login {
         if (keyFile.exists()) {
             verifyPassword();
         } else {
-            Main.jProgressBar1.setVisible(true);
+            Main.jProgressBar1.setVisible(false);
+            Main.jProgressBar2.setVisible(true);
             GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript", 30, 30, 600);
             makeKey();
         }
