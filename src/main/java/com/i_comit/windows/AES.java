@@ -22,8 +22,6 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -339,34 +337,5 @@ class AES_T implements Runnable {
                 GUI.getGB();
             }
         }
-    }
-
-    public static List<Path> listPaths(Path path) throws IOException {
-        List<Path> result;
-        try ( Stream<Path> walk = Files.walk(path)) {
-            result = walk.filter(Files::isRegularFile).filter(p -> !p.getFileName().toString().startsWith("Thumbs.db")).collect(Collectors.toList());
-            return result;
-        }
-    }
-
-    public static List<Path> listAESPaths(Path path) throws IOException {
-        List<Path> result = null;
-        try ( Stream<Path> walk = Files.walk(path)) {
-            switch (AESMode) {
-                case 0 ->
-                    result = walk.filter(Files::isRegularFile)
-                            .filter(p -> !p.getFileName().toString().endsWith(".enc"))
-                            .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
-                            .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
-                            .collect(Collectors.toList());
-                case 1 ->
-                    result = walk.filter(Files::isRegularFile)
-                            .filter(p -> p.getFileName().toString().endsWith(".enc"))
-                            .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
-                            .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
-                            .collect(Collectors.toList());
-            }
-        }
-        return result;
     }
 }

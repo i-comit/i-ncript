@@ -5,8 +5,8 @@
 package com.i_comit.windows;
 
 import static com.i_comit.windows.Main.jAlertLabel;
-import static com.i_comit.windows.Main.jProgressBar1;
 import static com.i_comit.windows.Main.root;
+import static com.i_comit.windows.Statics.AESMode;
 import static com.i_comit.windows.Statics.GB;
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +14,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
@@ -49,7 +51,10 @@ public class GUI {
     public static int countAllFiles(Path path) throws IOException {
         int result;
         try ( Stream<Path> walk = Files.walk(path)) {
-            result = Math.toIntExact(walk.filter(Files::isRegularFile).count());
+            result = Math.toIntExact(walk.filter(Files::isRegularFile)                            
+                    .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
+                    .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
+                    .count());
         }
         return result;
     }
@@ -63,15 +68,50 @@ public class GUI {
                     result2 = Math.toIntExact(walk.filter(Files::isRegularFile)
                             .filter(p -> !p.getFileName().toString().endsWith(".enc"))
                             .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
-                            .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db")).count());
+                            .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
+                            .count());
                     result = result2;
                 }
                 case 1 -> {
                     result2 = Math.toIntExact(walk.filter(Files::isRegularFile)
                             .filter(p -> p.getFileName().toString().endsWith(".enc"))
-                            .filter(p -> !p.getFileName().toString().endsWith(".i-cc")).count());
+                            .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
+                            .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
+                            .count());
                     result = result2;
                 }
+            }
+        }
+        return result;
+    }
+    
+        public static List<Path> listPaths(Path path) throws IOException {
+        List<Path> result;
+        try ( Stream<Path> walk = Files.walk(path)) {
+            result = walk.filter(Files::isRegularFile)
+                    .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
+                    .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
+                    .collect(Collectors.toList());
+            return result;
+        }
+    }
+
+    public static List<Path> listAESPaths(Path path) throws IOException {
+        List<Path> result = null;
+        try ( Stream<Path> walk = Files.walk(path)) {
+            switch (AESMode) {
+                case 0 ->
+                    result = walk.filter(Files::isRegularFile)
+                            .filter(p -> !p.getFileName().toString().endsWith(".enc"))
+                            .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
+                            .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
+                            .collect(Collectors.toList());
+                case 1 ->
+                    result = walk.filter(Files::isRegularFile)
+                            .filter(p -> p.getFileName().toString().endsWith(".enc"))
+                            .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
+                            .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
+                            .collect(Collectors.toList());
             }
         }
         return result;

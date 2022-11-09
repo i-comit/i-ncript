@@ -4,7 +4,7 @@
  */
 package com.i_comit.windows;
 
-import static com.i_comit.windows.AES_T.listAESPaths;
+import static com.i_comit.windows.GUI.listAESPaths;
 import static com.i_comit.windows.Statics.*;
 import java.awt.Color;
 import java.awt.Toolkit;
@@ -24,11 +24,11 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "";
+    public static String root = "F:\\";
     public static String masterFolder = "--------\\";
 
     public Main() {
-        root = Paths.get("").toAbsolutePath().toString();
+//        root = Paths.get("").toAbsolutePath().toString();
 //        root = root + masterFolder;
         Path runtime = Paths.get(root.substring(0, 3) + masterFolder + "runtime");
         Path app = Paths.get(root.substring(0, 3) + masterFolder + "app");
@@ -46,7 +46,7 @@ public class Main extends javax.swing.JFrame {
                 ex.printStackTrace();
             }
         }
-        if (Memory.checkWMIC()) {
+//        if (Memory.checkWMIC()) {
             initComponents();
             FileHider.cleanUp();
 
@@ -104,7 +104,7 @@ public class Main extends javax.swing.JFrame {
             jProgressBar1.setVisible(false);
             jProgressBar2.setVisible(false);
             dragDrop.setVisible(false);
-        }
+//        }
     }
 
     public static void dragDropper() {
@@ -201,6 +201,7 @@ public class Main extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("\ti-ncript™");
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti.png")));
+        setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -384,9 +385,10 @@ public class Main extends javax.swing.JFrame {
 
         jToolPanel.add(jReceivePanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
-        getContentPane().add(jToolPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 45, -1, -1));
+        getContentPane().add(jToolPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 34, -1, -1));
 
         jLoginPanel.setOpaque(false);
+        jLoginPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jTextField1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jTextField1.setText("jTextField1");
@@ -395,6 +397,7 @@ public class Main extends javax.swing.JFrame {
                 jTextField1ActionPerformed(evt);
             }
         });
+        jLoginPanel.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 6, 103, -1));
 
         jPasswordField1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jPasswordField1.setText("jPasswordField1");
@@ -408,12 +411,15 @@ public class Main extends javax.swing.JFrame {
                 jPasswordField1KeyPressed(evt);
             }
         });
+        jLoginPanel.add(jPasswordField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 32, 103, -1));
 
         jUsernameLabel.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jUsernameLabel.setText("enter username");
+        jLoginPanel.add(jUsernameLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 6, -1, 21));
 
         jPasswordLabel.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jPasswordLabel.setText("enter password");
+        jLoginPanel.add(jPasswordLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 35, -1, -1));
 
         jButton1.setFont(new java.awt.Font("Polentical Neon", 0, 10)); // NOI18N
         jButton1.setText("ENTER");
@@ -422,61 +428,30 @@ public class Main extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-
-        javax.swing.GroupLayout jLoginPanelLayout = new javax.swing.GroupLayout(jLoginPanel);
-        jLoginPanel.setLayout(jLoginPanelLayout);
-        jLoginPanelLayout.setHorizontalGroup(
-            jLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jLoginPanelLayout.createSequentialGroup()
-                .addGap(2, 2, 2)
-                .addGroup(jLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPasswordLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jUsernameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(20, 20, 20)
-                .addGroup(jLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-                    .addComponent(jPasswordField1))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jLoginPanelLayout.setVerticalGroup(
-            jLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jLoginPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jUsernameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1))
-                .addGap(5, 5, 5)
-                .addGroup(jLoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jPasswordLabel)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18))
-        );
+        jLoginPanel.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 71, 103, 25));
 
         getContentPane().add(jLoginPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 55, 242, -1));
 
         jProgressBar1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jProgressBar1.setForeground(Color.WHITE);
         jProgressBar1.setBorder(null);
-        getContentPane().add(jProgressBar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 215, 501, 17));
+        getContentPane().add(jProgressBar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 201, 501, 17));
 
         jLabel1.setFont(new java.awt.Font("Polentical Neon", 0, 20)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("i-ncript");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(23, 16, -1, 30));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(23, 2, -1, 30));
 
         jLabel3.setFont(new java.awt.Font("Polentical Neon", 0, 18)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel3.setText("jLabel3");
         jLabel3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(122, 17, 140, 30));
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(122, 3, 140, 30));
 
         jAlertLabel.setFont(new java.awt.Font("Polentical Neon", 0, 13)); // NOI18N
         jAlertLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jAlertLabel.setText("jLabel2");
-        getContentPane().add(jAlertLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(25, 185, 236, 27));
+        getContentPane().add(jAlertLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(23, 175, 236, 27));
 
         jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
         jTabbedPane1.setFocusable(false);
@@ -628,11 +603,15 @@ public class Main extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("HELP", jPanel4);
 
-        getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 23, 225, 190));
+        getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 12, 225, 190));
+
+        jEULAPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel2.setFont(new java.awt.Font("Polentical Neon", 0, 16)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("END USER LICENSE AGREEMENT");
+        jEULAPanel.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 6, 498, -1));
+        jEULAPanel.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 35, 498, -1));
 
         jTextArea3.setEditable(false);
         jTextArea3.setColumns(20);
@@ -643,12 +622,15 @@ public class Main extends javax.swing.JFrame {
         jTextArea3.setCaretPosition(0);
         jScrollPane3.setViewportView(jTextArea3);
 
+        jEULAPanel.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 44, 498, 143));
+
         jButton4.setText("I AGREE");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
             }
         });
+        jEULAPanel.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(433, 194, -1, -1));
 
         jButton5.setText("I DISAGREE");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -656,44 +638,17 @@ public class Main extends javax.swing.JFrame {
                 jButton5ActionPerformed(evt);
             }
         });
+        jEULAPanel.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 194, -1, -1));
 
-        javax.swing.GroupLayout jEULAPanelLayout = new javax.swing.GroupLayout(jEULAPanel);
-        jEULAPanel.setLayout(jEULAPanelLayout);
-        jEULAPanelLayout.setHorizontalGroup(
-            jEULAPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jEULAPanelLayout.createSequentialGroup()
-                .addGap(8, 8, 8)
-                .addGroup(jEULAPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jSeparator1)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jEULAPanelLayout.createSequentialGroup()
-                        .addComponent(jButton5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton4))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE))
-                .addGap(6, 6, 6))
-        );
-        jEULAPanelLayout.setVerticalGroup(
-            jEULAPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jEULAPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jEULAPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton5)
-                    .addComponent(jButton4))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        getContentPane().add(jEULAPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 0, 520, 230));
 
-        getContentPane().add(jEULAPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 6, 520, 230));
+        jEULAPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel4.setFont(new java.awt.Font("Polentical Neon", 0, 16)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("TERMS OF USE");
+        jEULAPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 6, 498, -1));
+        jEULAPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 35, 498, -1));
 
         jTextArea4.setEditable(false);
         jTextArea4.setColumns(20);
@@ -704,12 +659,15 @@ public class Main extends javax.swing.JFrame {
         jTextArea4.setCaretPosition(0);
         jScrollPane4.setViewportView(jTextArea4);
 
+        jEULAPanel1.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 44, 498, 143));
+
         jButton6.setText("I AGREE");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ActionjButton6(evt);
             }
         });
+        jEULAPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(433, 194, -1, -1));
 
         jButton7.setText("I DISAGREE");
         jButton7.addActionListener(new java.awt.event.ActionListener() {
@@ -717,42 +675,11 @@ public class Main extends javax.swing.JFrame {
                 jButton7ActionPerformed(evt);
             }
         });
+        jEULAPanel1.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 194, -1, -1));
 
-        javax.swing.GroupLayout jEULAPanel1Layout = new javax.swing.GroupLayout(jEULAPanel1);
-        jEULAPanel1.setLayout(jEULAPanel1Layout);
-        jEULAPanel1Layout.setHorizontalGroup(
-            jEULAPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jEULAPanel1Layout.createSequentialGroup()
-                .addGap(8, 8, 8)
-                .addGroup(jEULAPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jSeparator2)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jEULAPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton6))
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(6, 6, 6))
-        );
-        jEULAPanel1Layout.setVerticalGroup(
-            jEULAPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jEULAPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jEULAPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton6)
-                    .addComponent(jButton7))
-                .addContainerGap(9, Short.MAX_VALUE))
-        );
+        getContentPane().add(jEULAPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 0, 520, 230));
 
-        getContentPane().add(jEULAPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 6, 520, 230));
-
-        pack();
+        setSize(new java.awt.Dimension(543, 258));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
     //DECRYPT

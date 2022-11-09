@@ -4,8 +4,7 @@
  */
 package com.i_comit.windows;
 
-import static com.i_comit.windows.AES_T.listPaths;
-import static com.i_comit.windows.Statics.directory;
+import static com.i_comit.windows.GUI.listPaths;
 import static com.i_comit.windows.Statics.path;
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +22,8 @@ import java.util.Set;
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
 public class FileHider {
+
+    static int fileCt = 0;
 
     public static void cleanUp() {
         try {
@@ -105,24 +106,23 @@ class FileHider_T implements Runnable {
         Main.jTabbedPane1.setSelectedIndex(0);
         Main.jProgressBar1.setVisible(false);
         Main.jProgressBar2.setVisible(true);
+        Statics.fileIter = 0;
+        Statics.fileCount = 0;
     }
 
     public static void FileHider_T(boolean fileHideBool) throws IOException {
         Statics.fileHideIter = 0;
         List<Path> paths = listPaths(path);
         int fileCount = GUI.countAllFiles(path);
-        Main.toolBtnsBool(false);
-        fileCt = 0;
-        Statics.fileIter = 0;
-        Statics.fileCount = 0;
         if (fileHideBool) {
             paths.forEach(x -> {
                 try {
                     getFileAttr(x, fileHideBool);
+                    System.out.println(Statics.fileHideIter + " " + FileHider.fileCt + " " + fileCount);
                     if (Statics.fileHideIter >= fileCount - 1) {
-                        if (fileCt > 10) {
+                        if (Statics.fileCount > 10) {
                             Thread.sleep(300);
-                            GUI.labelCutterThread(Main.jAlertLabel, fileCt + " files hidden", 30, 25, 300);
+                            GUI.labelCutterThread(Main.jAlertLabel, Statics.fileCount + " files hidden", 30, 25, 300);
                             fileHiderToolReenable();
                         } else {
                             fileHiderToolReenable();
@@ -136,10 +136,11 @@ class FileHider_T implements Runnable {
             paths.forEach(x -> {
                 try {
                     getFileAttr(x, fileHideBool);
+                    System.out.println(Statics.fileHideIter + " " + FileHider.fileCt + " " + fileCount);
                     if (Statics.fileHideIter >= fileCount - 1) {
-                        if (fileCt > 10) {
+                        if (Statics.fileCount > 10) {
                             Thread.sleep(300);
-                            GUI.labelCutterThread(Main.jAlertLabel, fileCt + " files unhidden", 30, 25, 350);
+                            GUI.labelCutterThread(Main.jAlertLabel, Statics.fileCount + " files unhidden", 30, 25, 350);
                             fileHiderToolReenable();
                         } else {
                             fileHiderToolReenable();
@@ -153,8 +154,6 @@ class FileHider_T implements Runnable {
         }
     }
 
-    static int fileCt = 0;
-
     public static void getFileAttr(Path x, boolean fileHideBool) throws IOException {
         String fileAttr = Files.getAttribute(x, "dos:hidden", LinkOption.NOFOLLOW_LINKS).toString();
         boolean fileAttrBool = Boolean.parseBoolean(fileAttr);
@@ -162,17 +161,16 @@ class FileHider_T implements Runnable {
         if (fileAttrBool == true) {
             if (!Main.jToggleButton2.isSelected()) {
                 Files.setAttribute(x, "dos:hidden", false);
-                fileCt++;
+                ++FileHider.fileCt;
             }
         }
 
         if (fileAttrBool == false) {
             if (Main.jToggleButton2.isSelected()) {
                 Files.setAttribute(x, "dos:hidden", true);
-                fileCt++;
+                ++FileHider.fileCt;
             }
         }
-        Statics.fileHideIter++;
-
+        ++Statics.fileHideIter;
     }
 }

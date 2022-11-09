@@ -5,7 +5,7 @@
 package com.i_comit.windows;
 
 import static com.i_comit.windows.AES.*;
-import static com.i_comit.windows.AES_T.listAESPaths;
+import static com.i_comit.windows.GUI.listAESPaths;
 import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.jProgressBar1;
 import java.awt.Color;
