@@ -24,11 +24,11 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "F:\\";
+    public static String root = "";
     public static String masterFolder = "--------\\";
 
     public Main() {
-//        root = Paths.get("").toAbsolutePath().toString();
+        root = Paths.get("").toAbsolutePath().toString();
 //        root = root + masterFolder;
         Path runtime = Paths.get(root.substring(0, 3) + masterFolder + "runtime");
         Path app = Paths.get(root.substring(0, 3) + masterFolder + "app");
@@ -46,7 +46,7 @@ public class Main extends javax.swing.JFrame {
                 ex.printStackTrace();
             }
         }
-//        if (Memory.checkWMIC()) {
+        if (Memory.checkWMIC()) {
             initComponents();
             FileHider.cleanUp();
 
@@ -104,7 +104,7 @@ public class Main extends javax.swing.JFrame {
             jProgressBar1.setVisible(false);
             jProgressBar2.setVisible(false);
             dragDrop.setVisible(false);
-//        }
+        }
     }
 
     public static void dragDropper() {
@@ -212,12 +212,13 @@ public class Main extends javax.swing.JFrame {
         jButton2.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jButton2.setText("STOP");
         jButton2.setToolTipText("stops current AES task");
+        jButton2.setPreferredSize(new java.awt.Dimension(105, 22));
         jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton2MouseClicked(evt);
             }
         });
-        jToolPanel.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 80, 105, -1));
+        jToolPanel.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 80, -1, -1));
 
         jSwitchMode.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jSwitchMode.setText("STORE");
@@ -232,19 +233,19 @@ public class Main extends javax.swing.JFrame {
         jButton3.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jButton3.setText("CLR LOG");
         jButton3.setToolTipText("clear AES output log");
+        jButton3.setPreferredSize(new java.awt.Dimension(105, 22));
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
-        jToolPanel.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 80, 105, -1));
+        jToolPanel.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 80, -1, -1));
 
         jProgressBar2.setFont(new java.awt.Font("Polentical Neon", 0, 11)); // NOI18N
         jProgressBar2.setForeground(Color.white);
         jToolPanel.add(jProgressBar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 119, 240, 18));
 
         jStorePanel.setPreferredSize(new java.awt.Dimension(250, 75));
-        jStorePanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jToggleButton1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jToggleButton1.setText("HOT FILER");
@@ -256,7 +257,6 @@ public class Main extends javax.swing.JFrame {
                 jToggleButton1MouseClicked(evt);
             }
         });
-        jStorePanel.add(jToggleButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 15, -1, -1));
 
         jToggleButton2.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
 
@@ -271,7 +271,6 @@ public class Main extends javax.swing.JFrame {
                 jToggleButton2ActionPerformed(evt);
             }
         });
-        jStorePanel.add(jToggleButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(139, 15, -1, -1));
 
         buttonGroup1.add(jRadioButton1);
         jRadioButton1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
@@ -282,7 +281,6 @@ public class Main extends javax.swing.JFrame {
                 jRadioButton1ActionPerformed(evt);
             }
         });
-        jStorePanel.add(jRadioButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(152, 49, -1, -1));
 
         buttonGroup1.add(jRadioButton0);
         jRadioButton0.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
@@ -292,7 +290,39 @@ public class Main extends javax.swing.JFrame {
                 jRadioButton0ActionPerformed(evt);
             }
         });
-        jStorePanel.add(jRadioButton0, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 49, -1, -1));
+
+        javax.swing.GroupLayout jStorePanelLayout = new javax.swing.GroupLayout(jStorePanel);
+        jStorePanel.setLayout(jStorePanelLayout);
+        jStorePanelLayout.setHorizontalGroup(
+            jStorePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jStorePanelLayout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addGroup(jStorePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jStorePanelLayout.createSequentialGroup()
+                        .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                        .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jStorePanelLayout.createSequentialGroup()
+                        .addComponent(jRadioButton0)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jRadioButton1)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jStorePanelLayout.setVerticalGroup(
+            jStorePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jStorePanelLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addGroup(jStorePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jStorePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jStorePanelLayout.createSequentialGroup()
+                        .addGap(11, 11, 11)
+                        .addComponent(jRadioButton0))
+                    .addGroup(jStorePanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jRadioButton1))))
+        );
 
         jToolPanel.add(jStorePanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
@@ -446,7 +476,7 @@ public class Main extends javax.swing.JFrame {
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel3.setText("jLabel3");
         jLabel3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(122, 3, 140, 30));
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(125, 3, 135, 30));
 
         jAlertLabel.setFont(new java.awt.Font("Polentical Neon", 0, 13)); // NOI18N
         jAlertLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -816,7 +846,6 @@ public class Main extends javax.swing.JFrame {
 
         GUI.getGB();
         jLabel3.setText(root.substring(0, 2) + " | " + GB);
-        System.out.println("Your available Memory Heap is " + Memory.byteFormatter(Memory.heapSize));
 
         jTextField1.setText("");
         jPasswordField1.setText("");

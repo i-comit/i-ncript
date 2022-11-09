@@ -44,6 +44,7 @@ public class Folder {
                 Main.toolBtnsBool(true);
                 deleteDirectory(Statics.sendFolder.toFile());
                 Main.jRadioButton2.setEnabled(true);
+                GUI.getGB();
             }
         }
     }
@@ -94,6 +95,7 @@ public class Folder {
                 }
             }
             Main.jList1.setSelectedIndex(0);
+            GUI.getGB();
         }
     }
 
