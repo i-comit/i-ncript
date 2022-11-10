@@ -33,19 +33,33 @@ public class Login {
         if (!"".equals(username)) {
             if (!"".equals(Statics.password)) {
                 if (username.length() >= 5) {
-                    if (Statics.password.length() >= 5) {
-                        Login.Authenticator();
+                    if (username.length() <= 10) {
+                        if (Statics.password.length() >= 5) {
+                            if (Statics.password.length() <= 10) {
+                                Login.Authenticator();
+                            } else {
+                                GUI.t.interrupt();
+                                GUI.labelCutterThread(jAlertLabel, "password is too long", 20, 20, 1200);
+                            }
+                        } else {
+                            GUI.t.interrupt();
+                            GUI.labelCutterThread(jAlertLabel, "password is too short", 20, 20, 1200);
+                        }
                     } else {
-                        GUI.labelCutterThread(jAlertLabel, "please have a longer password", 20, 20, 1200);
+                        GUI.t.interrupt();
+                        GUI.labelCutterThread(jAlertLabel, "username is too long", 20, 20, 1200);
                     }
                 } else {
-                    GUI.labelCutterThread(jAlertLabel, "please have a longer username", 20, 20, 1200);
+                    GUI.t.interrupt();
+                    GUI.labelCutterThread(jAlertLabel, "username is too short", 20, 20, 1200);
                 }
             } else {
-                GUI.labelCutterThread(jAlertLabel, "please make a password", 20, 20, 1200);
+                GUI.t.interrupt();
+                GUI.labelCutterThread(jAlertLabel, "enter a password", 20, 20, 1200);
             }
         } else {
-            GUI.labelCutterThread(jAlertLabel, "please make a username", 20, 20, 1200);
+            GUI.t.interrupt();
+            GUI.labelCutterThread(jAlertLabel, "enter a username", 20, 20, 1200);
         }
         jTextField1.setText("");
         jPasswordField1.setText("");
@@ -92,7 +106,7 @@ public class Login {
         recipientPassword = new String(password);
         if (!"".equals(recipientUsername)) {
             if (!"".equals(recipientPassword)) {
-                if (recipientUsername.length() >= 5) {
+                if (recipientUsername.length() >= 5 && recipientUsername.length() <= 10) {
                     Main.jRadioButton2.setEnabled(false);
                     Main.jTextField2.setText("");
                     Main.jPasswordField2.setText("");
@@ -102,7 +116,7 @@ public class Login {
                     jProgressBar1.setMaximum(zipFileCount);
                     AES.AESThread(listAESPaths(sendFolder), sendFolder.toFile(), true, 2);
                 } else {
-                    GUI.labelCutterThread(jAlertLabel, "please have a longer username", 20, 20, 1200);
+                    GUI.labelCutterThread(jAlertLabel, "invalid username", 20, 20, 1200);
                     sendPanelTools();
                 }
             } else {
@@ -213,9 +227,9 @@ public class Login {
     public static void verifyLogin() {
         try {
             BufferedReader brTest = new BufferedReader(new FileReader(keyFile));
-            String usernameRead = brTest.readLine().substring(username.length()*32,(username.length()+1)*32);
+            String usernameRead = brTest.readLine().substring(username.length() * 32, (username.length() + 1) * 32);
             System.out.println("USER " + usernameRead);
-            String passwordRead = brTest.readLine().substring(password.length()*32,(password.length()+1)*32);
+            String passwordRead = brTest.readLine().substring(password.length() * 32, (password.length() + 1) * 32);
 
             if (usernameRead.equals(Hasher.getHash(username, true))) {
                 if (passwordRead.equals(Hasher.getHash(password, false))) {

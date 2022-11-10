@@ -18,55 +18,29 @@ public class Hasher {
     }
 
     public static String finalizeHash(String hash, boolean hashBool) {
-        String s1 = joinHash(hash, hashBool);
-        final int mid = s1.length() / 4; //get the middle of the String
-        String[] parts = {s1.substring(0, mid), s1.substring(mid, mid * 2), s1.substring(mid * 2, mid * 3), s1.substring(mid * 3, mid * 4)};
-        if (hash.length() < 10) {
-            StringBuilder sb = new StringBuilder();
-            //Convert to 32bit
-            for (int i = 0; i < hash.length() * 4; i++) {
-                Random rand = new Random();
-                // Generate random 8bit int
-                int rand_int1 = rand.nextInt(10000000, 99999999);
-                sb.append(String.valueOf(rand_int1));
-            }
-
-            sb.append(joinHash(hash, hashBool));
-
-            int remainder = 15 - hash.length();
+        
+//                final int mid = s1.length() / 4; //get the middle of the String
+//        String[] parts = {s1.substring(0, mid), s1.substring(mid, mid * 2), s1.substring(mid * 2, mid * 3), s1.substring(mid * 3, mid * 4)};
+        StringBuilder sb = new StringBuilder();
+        //Convert to 32bit
+        for (int i = 0; i < hash.length() * 4; i++) {
             Random rand = new Random();
-            if (remainder != 0) {
-                for (int i = 0; i < remainder * rand.nextInt(3, 99); i++) {
-                    Random rand2 = new Random();
-                    // Generate random 8bit int
-                    int rand_int1 = rand2.nextInt(1000000, 9999999);
-                    sb.append(String.valueOf(rand_int1));
-                }
-                Random rand3 = new Random();
-                sb.append(String.valueOf(rand3.nextInt(99, 199)));
-            }
-            return sb.toString().trim();
-        } else {
-            StringBuilder sb = new StringBuilder();
-            //Convert to 32bit
-            for (int i = 0; i < 8 * 4; i++) {
-                Random rand = new Random();
-                // Generate random 8bit int
-                int rand_int1 = rand.nextInt(10000000, 99999999);
-                sb.append(String.valueOf(rand_int1));
-            }
-            sb.append(joinHash(hash, hashBool));
-            Random rand = new Random();
-            for (int i = 0; i < 7 * rand.nextInt(3, 99); i++) {
-                Random rand2 = new Random();
-                // Generate random 8bit int
-                int rand_int1 = rand2.nextInt(1000000, 9999999);
-                sb.append(String.valueOf(rand_int1));
-            }
-            Random rand3 = new Random();
-            sb.append(String.valueOf(rand3.nextInt(99, 199)));
-            return sb.toString().trim();
+            // Generate random 8bit int
+            int rand_int1 = rand.nextInt(10000000, 99999999);
+            sb.append(String.valueOf(rand_int1));
         }
+
+        sb.append(joinHash(hash, hashBool));
+
+        int remainder = 16 - hash.length();
+        for (int i = 0; i < remainder * 4; i++) {
+            Random rand = new Random();
+            // Generate random 8bit int
+            int rand_int1 = rand.nextInt(1000000, 9999999);
+            sb.append(String.valueOf(rand_int1));
+        }
+        return sb.toString().trim();
+
     }
 
     public static String joinHash(String hash, boolean hashBool) {
