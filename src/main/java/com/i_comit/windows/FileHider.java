@@ -118,7 +118,6 @@ class FileHider_T implements Runnable {
             paths.forEach(x -> {
                 try {
                     getFileAttr(x, fileHideBool);
-                    System.out.println(Statics.fileHideIter + " " + FileHider.fileCt + " " + fileCount);
                     if (Statics.fileHideIter >= fileCount - 1) {
                         if (Statics.fileCount > 10) {
                             Thread.sleep(300);
@@ -136,7 +135,6 @@ class FileHider_T implements Runnable {
             paths.forEach(x -> {
                 try {
                     getFileAttr(x, fileHideBool);
-                    System.out.println(Statics.fileHideIter + " " + FileHider.fileCt + " " + fileCount);
                     if (Statics.fileHideIter >= fileCount - 1) {
                         if (Statics.fileCount > 10) {
                             Thread.sleep(300);

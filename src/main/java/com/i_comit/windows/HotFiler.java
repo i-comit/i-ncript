@@ -153,36 +153,4 @@ class HotFiler_T implements Runnable {
             System.out.println("Watch Service Closed");
         }
     }
-
-    public static void getLastModified() throws IOException {
-        List<Path> paths = listNewPaths(Statics.path);
-        File[] contents = Statics.directory.listFiles();
-        if (AES.t.isAlive()) {
-            AES.t.interrupt();
-        }
-
-        if (Main.jToggleButton1.isSelected()) {
-//            AES.AESThread();
-            if (contents != null) {
-                if (contents.length != 0) {
-                    paths.forEach(x -> {
-                        try {
-                            encrypt(Hasher.modHash(Statics.password), x.toFile(), x.toFile());
-                        } catch (AES.CryptoException ex) {
-                            ex.printStackTrace();
-                        }
-                    });
-                } else {
-                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 40, 40, 1000);
-                }
-            } else {
-                GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 40, 40, 100);
-            }
-        } else {
-            AES.t.interrupt();
-
-        }
-
-    }
-
 }

@@ -24,11 +24,11 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "";
+    public static String root = "D:\\";
     public static String masterFolder = "--------\\";
 
     public Main() {
-        root = Paths.get("").toAbsolutePath().toString();
+//        root = Paths.get("").toAbsolutePath().toString();
 //        root = root + masterFolder;
         Path runtime = Paths.get(root.substring(0, 3) + masterFolder + "runtime");
         Path app = Paths.get(root.substring(0, 3) + masterFolder + "app");
@@ -46,10 +46,10 @@ public class Main extends javax.swing.JFrame {
                 ex.printStackTrace();
             }
         }
-        if (Memory.checkWMIC()) {
+//        if (Memory.checkWMIC()) {
             initComponents();
             FileHider.cleanUp();
-
+            
             jStorePanel.setVisible(true);
             jSendPanel.setVisible(false);
             jReceivePanel.setVisible(false);
@@ -104,7 +104,7 @@ public class Main extends javax.swing.JFrame {
             jProgressBar1.setVisible(false);
             jProgressBar2.setVisible(false);
             dragDrop.setVisible(false);
-        }
+//        }
     }
 
     public static void dragDropper() {

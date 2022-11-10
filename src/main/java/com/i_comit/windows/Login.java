@@ -28,12 +28,12 @@ public class Login {
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
-        Statics.username = jTextField1.getText();
+        username = jTextField1.getText();
         Statics.password = new String(password);
-        if (!"".equals(Statics.username)) {
+        if (!"".equals(username)) {
             if (!"".equals(Statics.password)) {
-                if (Statics.username.length() >= 4) {
-                    if (Statics.password.length() >= 4) {
+                if (username.length() >= 5) {
+                    if (Statics.password.length() >= 5) {
                         Login.Authenticator();
                     } else {
                         GUI.labelCutterThread(jAlertLabel, "please have a longer password", 20, 20, 1200);
@@ -53,7 +53,7 @@ public class Login {
 
     public static void Authenticator() {
         if (keyFile.exists()) {
-            verifyPassword();
+            verifyLogin();
         } else {
             Main.jProgressBar1.setVisible(false);
             Main.jProgressBar2.setVisible(true);
@@ -65,7 +65,7 @@ public class Login {
     public static void makeKey() {
         Path path = keyFile.toPath();//creates Path instance  
         try {
-            List<String> lines = Arrays.asList(Hasher.modHash(username), Hasher.modHash(password));
+            List<String> lines = Arrays.asList(Hasher.finalizeHash(username, true), Hasher.finalizeHash(password, false));
             Path p = Files.createFile(path);//creates file at specified location  
             Files.write(path, lines);
             Files.setAttribute(p, "dos:hidden", true);
@@ -88,11 +88,11 @@ public class Login {
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
-        Statics.recipientUsername = Main.jTextField2.getText();
-        Statics.recipientPassword = new String(password);
-        if (!"".equals(Statics.recipientUsername)) {
-            if (!"".equals(Statics.recipientPassword)) {
-                if (Statics.recipientUsername.length() >= 4) {
+        recipientUsername = Main.jTextField2.getText();
+        recipientPassword = new String(password);
+        if (!"".equals(recipientUsername)) {
+            if (!"".equals(recipientPassword)) {
+                if (recipientUsername.length() >= 5) {
                     Main.jRadioButton2.setEnabled(false);
                     Main.jTextField2.setText("");
                     Main.jPasswordField2.setText("");
@@ -100,8 +100,6 @@ public class Login {
                     fileCount = GUI.countFiles(sendFolder);
                     zipFileCount = fileCount;
                     jProgressBar1.setMaximum(zipFileCount);
-                    System.out.println(Statics.fileCount + " file Count");
-
                     AES.AESThread(listAESPaths(sendFolder), sendFolder.toFile(), true, 2);
                 } else {
                     GUI.labelCutterThread(jAlertLabel, "please have a longer username", 20, 20, 1200);
@@ -121,7 +119,7 @@ public class Login {
     public static void sendKey() {
         Path sendKeyPath = Paths.get(Statics.sendFolder + "\\send.key");
         try {
-            List<String> lines = Arrays.asList(Hasher.modHash(recipientUsername), Hasher.modHash(recipientPassword));
+            List<String> lines = Arrays.asList(Hasher.finalizeHash(recipientUsername, true), Hasher.finalizeHash(recipientPassword, false));
 //            List<String> lines = Arrays.asList(Hasher.modHash(recipientPassword));
             Path p = Files.createFile(sendKeyPath);//creates file at specified location  
             Files.write(sendKeyPath, lines);
@@ -144,12 +142,12 @@ public class Login {
             GUI.t.interrupt();
         }
 
-        Statics.zipFileName = zipFileN;
+        zipFileName = zipFileN;
         System.out.println(Main.jList1.getSelectedValue());
 
-        Statics.recipientPassword = new String(password);
+        recipientPassword = new String(password);
         if (Main.jList1.getSelectedValue() != null) {
-            if (!"".equals(Statics.recipientPassword)) {
+            if (!"".equals(recipientPassword)) {
                 Main.jPasswordField3.setText("");
                 Folder.list1Dir(1);
             } else {
@@ -166,7 +164,7 @@ public class Login {
 
     public static void verifySendKey() {
         try {
-            BufferedReader brTest = new BufferedReader(new FileReader(Statics.zipFileName + "\\send.key"));
+            BufferedReader brTest = new BufferedReader(new FileReader(zipFileName + "\\send.key"));
             String usernameRead = brTest.readLine();
             String passwordRead = brTest.readLine();
 
@@ -175,13 +173,13 @@ public class Login {
 //
             if (usernameRead.equals(usernameRead1)) {
                 System.out.println("USERNAME MATCH");
-                if (passwordRead.equals(Hasher.modHash(Statics.recipientPassword))) {
+                if (passwordRead.equals(Hasher.getHash(recipientPassword, false))) {
                     System.out.println("PASSWORD MATCH");
-                    GUI.labelCutterThread(Main.jAlertLabel, "unpacking " + Main.jList1.getSelectedValue() + ".i-cc ..", 10, 20, 800);
                     AESMode = 1;
                     fileCount = GUI.countFiles(receiveFolder);
                     zipFileCount = fileCount;
                     jProgressBar1.setMaximum(fileCount);
+                    Main.jTextArea1.append("unpacking " + Main.jList1.getSelectedValue() + ".i-cc\n");
                     AES.AESThread(listAESPaths(Paths.get(Statics.zipFileName)), Paths.get(Statics.zipFileName).toFile(), true, 1);
                 } else {
                     brTest.close();
@@ -193,6 +191,7 @@ public class Login {
                     Main.jPasswordField3.setText("");
                     Main.jRadioButton3.setEnabled(true);
                     Folder.listZipFiles();
+                    Main.toolBtnsBool(true);
                 }
             } else {
                 brTest.close();
@@ -204,20 +203,22 @@ public class Login {
                 Main.jPasswordField3.setText("");
                 Main.jRadioButton3.setEnabled(true);
                 Folder.listZipFiles();
+                Main.toolBtnsBool(true);
             }
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 
-    public static void verifyPassword() {
+    public static void verifyLogin() {
         try {
             BufferedReader brTest = new BufferedReader(new FileReader(keyFile));
-            String usernameRead = brTest.readLine();
-            String passwordRead = brTest.readLine();
+            String usernameRead = brTest.readLine().substring(username.length()*32,(username.length()+1)*32);
+            System.out.println("USER " + usernameRead);
+            String passwordRead = brTest.readLine().substring(password.length()*32,(password.length()+1)*32);
 
-            if (usernameRead.equals(Hasher.modHash(username))) {
-                if (passwordRead.equals(Hasher.modHash(password))) {
+            if (usernameRead.equals(Hasher.getHash(username, true))) {
+                if (passwordRead.equals(Hasher.getHash(password, false))) {
                     Main.jLoginPanel.setVisible(false);
                     Main.jToolPanel.setVisible(true);
                     Main.jProgressBar2.setVisible(true);

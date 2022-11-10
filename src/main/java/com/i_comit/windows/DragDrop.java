@@ -39,7 +39,6 @@ class DragDrop implements DropTargetListener {
     public void drop(DropTargetDropEvent event) {
         Main.toolBtnsBool(false);
         Main.dragDrop.setVisible(false);
-        Main.jProgressBar1.setVisible(true);
         // Accept copy drops
         event.acceptDrop(DnDConstants.ACTION_COPY);
         // Get the transfer which can provide the dropped item data
@@ -64,6 +63,7 @@ class DragDrop implements DropTargetListener {
                             paths.add(filesf.toPath());
                             if (Statics.toolMode == 0) {
                                 if (i >= files.size() - 1) {
+                                    Main.jProgressBar1.setVisible(true);
                                     AES.AESThread(paths, Statics.directory, false, 0);
                                 }
                             }

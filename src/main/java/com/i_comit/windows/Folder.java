@@ -33,7 +33,7 @@ public class Folder {
                 //RECEIVE
                 Main.jRadioButton3.setEnabled(false);
                 unzipFile(Statics.zipFileName + ".i-cc", Statics.zipFileName.replaceAll(".i-cc", ""));
-                Main.toolBtnsBool(true);
+//                Main.toolBtnsBool(true);
                 Login.verifySendKey();
             }
             case 2 -> {
@@ -133,7 +133,7 @@ public class Folder {
                             Statics.zipIter++;
                             Main.jProgressBar2.setString("packing " + Statics.zipIter + " out of " + zipFileCount + " files");
                             Main.jProgressBar2.setValue(Statics.zipIter);
-                            if (Main.jProgressBar2.getValue() >= zipFileCount - 1) {
+                            if (Main.jProgressBar2.getValue() >= zipFileCount - 1 && zipFileCount >10) {
                                 Main.jProgressBar2.setValue(zipFileCount);
                                 Main.jProgressBar2.setString("packing key file..");
                             }
