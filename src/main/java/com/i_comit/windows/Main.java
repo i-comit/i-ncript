@@ -49,7 +49,7 @@ public class Main extends javax.swing.JFrame {
 //        if (Memory.checkWMIC()) {
             initComponents();
             FileHider.cleanUp();
-            
+
             jStorePanel.setVisible(true);
             jSendPanel.setVisible(false);
             jReceivePanel.setVisible(false);
@@ -481,7 +481,7 @@ public class Main extends javax.swing.JFrame {
         jAlertLabel.setFont(new java.awt.Font("Polentical Neon", 0, 13)); // NOI18N
         jAlertLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jAlertLabel.setText("jLabel2");
-        getContentPane().add(jAlertLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(23, 175, 236, 27));
+        getContentPane().add(jAlertLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(23, 174, 236, 27));
 
         jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
         jTabbedPane1.setFocusable(false);

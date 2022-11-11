@@ -17,12 +17,15 @@ import java.nio.file.*;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.text.DecimalFormat;
 import java.util.List;
 import javax.crypto.*;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
@@ -45,9 +48,9 @@ public class AES {
     }
 
     private static final String ALGORITHM = "AES";
-    private static final String TRANSFORMATION = "AES";
+    private static final String TRANSFORMATION = "AES/CBC/PKCS5Padding";
 
-    public static void encrypt(String key, File inputFile, File outputFile){
+    public static void encrypt(String key, File inputFile, File outputFile) {
         if (inputFile.exists()) {
             if (!inputFile.toString().endsWith(".enc")) {
                 try {
@@ -61,7 +64,7 @@ public class AES {
         }
     }
 
-    public static void decrypt(String key, File inputFile, File outputFile){
+    public static void decrypt(String key, File inputFile, File outputFile) {
         if (inputFile.exists()) {
             if (inputFile.toString().endsWith(".enc")) {
                 try {
@@ -94,6 +97,8 @@ public class AES {
         }
         return inputBytes;
     }
+    static SecureRandom rnd = new SecureRandom();
+    static IvParameterSpec iv = new IvParameterSpec(rnd.generateSeed(16));
 
     private static void doCrypto(int cipherMode, String key, File inputFile,
             File outputFile) throws CryptoException {
@@ -101,7 +106,7 @@ public class AES {
         try {
             Key secretKey = new SecretKeySpec(key.getBytes(), ALGORITHM);
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
-            cipher.init(cipherMode, secretKey);
+            cipher.init(cipherMode, secretKey, iv);
 
             try ( FileInputStream inputStream = new FileInputStream(inputFile);  FileOutputStream outputStream = new FileOutputStream(outputFile)) {
                 byte[] inputBytes = dynamicBytes(inputFile);
@@ -135,6 +140,8 @@ public class AES {
             throw new CryptoException("Error encrypting/decrypting file", ex);
         } catch (IOException | UncheckedIOException ex) {
             System.out.println("Last File Was " + inputFile.getName());
+        } catch (InvalidAlgorithmParameterException ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -192,10 +199,10 @@ class AES_T implements Runnable {
                                         Main.jAlertLabel.setText("encrypting " + x.toFile().getName());
                                     }
                                     if (toolMode == 0) {
-                                        encrypt(Hasher.getHash(password, false), x.toFile(), x.toFile());
+                                        encrypt(Hasher.hashedPassword, x.toFile(), x.toFile());
                                     }
                                     if (toolMode == 2) {
-                                        encrypt(Hasher.getHash(password, false), x.toFile(), x.toFile());
+                                        encrypt(Hasher.hashedPassword, x.toFile(), x.toFile());
                                     }
                                 });
                                 if (fileIter == 0) {
@@ -221,6 +228,7 @@ class AES_T implements Runnable {
                             case 1 -> {
                                 jProgressBar1.setStringPainted(true);
                                 GUI.labelCutterThread(jAlertLabel, "decrypting files...", 0, 15, 300);
+
                                 paths.forEach(x -> {
                                     if (x.toFile().length() > maxFileBytes) {
                                         if (GUI.t.isAlive()) {
@@ -230,10 +238,10 @@ class AES_T implements Runnable {
                                         Main.jAlertLabel.setText("decrypting " + x.toFile().getName());
                                     }
                                     if (toolMode == 0) {
-                                        decrypt(Hasher.getHash(password, false), x.toFile(), x.toFile());
+                                        decrypt(Hasher.hashedPassword, x.toFile(), x.toFile());
                                     }
                                     if (toolMode == 1) {
-                                        decrypt(Hasher.getHash(password, false), x.toFile(), x.toFile());
+                                        decrypt(Hasher.hashedPassword, x.toFile(), x.toFile());
                                     }
                                 });
                                 if (fileIter == 0) {
@@ -263,10 +271,12 @@ class AES_T implements Runnable {
                             switch (AESMode) {
                                 case 0 -> {
                                     GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 10, 20, 400);
+                                    Main.jRadioButton2.setEnabled(true);
                                 }
                                 case 1 -> {
                                     GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400);
                                     Main.jToggleButton1.setEnabled(true);
+                                    Main.jRadioButton3.setEnabled(true);
                                 }
                             }
                         }
@@ -277,13 +287,13 @@ class AES_T implements Runnable {
                             GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 20, 40, 800);
                         case 1 -> {
                             GUI.labelCutterThread(jAlertLabel, "n-box folder has no files", 20, 40, 800);
+                            Main.jRadioButton3.setEnabled(true);
                         }
                         case 2 -> {
                             GUI.labelCutterThread(jAlertLabel, "o-box folder has no files", 20, 40, 800);
                             Main.jRadioButton2.setEnabled(true);
                         }
                     }
-//                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 20, 40, 800);
                     Main.jToggleButton2.setEnabled(true);
                 }
             } else {
@@ -309,9 +319,9 @@ class AES_T implements Runnable {
                         Main.jProgressBar2.setVisible(true);
                         Main.jAlertLabel.setText("decrypting " + x.toFile().getName());
                     }
-                    AES.decrypt(Hasher.getHash(password, false), file, file);
+                    AES.decrypt(Hasher.hashedPassword, file, file);
                 }
-                if (!x.toString().endsWith(".enc")) {
+                if (!x.toString().endsWith(".enc") || x.toString().startsWith("Thumbs.db")) {
                     decFiles++;
                     if (x.toFile().length() > maxFileBytes) {
                         if (GUI.t.isAlive()) {
@@ -320,7 +330,7 @@ class AES_T implements Runnable {
                         Main.jProgressBar2.setVisible(true);
                         Main.jAlertLabel.setText("encrypting " + x.toFile().getName());
                     }
-                    AES.encrypt(Hasher.getHash(password, false), file, file);
+                    AES.encrypt(Hasher.hashedPassword, file, file);
                 }
 //                    System.out.println("ENC " + encFiles + " " + decFiles);
             });

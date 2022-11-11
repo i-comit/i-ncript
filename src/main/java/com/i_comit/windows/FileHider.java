@@ -4,6 +4,7 @@
  */
 package com.i_comit.windows;
 
+import static com.i_comit.windows.FileHider.fileCt;
 import static com.i_comit.windows.GUI.listPaths;
 import static com.i_comit.windows.Statics.path;
 import java.io.File;
@@ -108,6 +109,7 @@ class FileHider_T implements Runnable {
         Main.jProgressBar2.setVisible(true);
         Statics.fileIter = 0;
         Statics.fileCount = 0;
+        fileCt = 0;
     }
 
     public static void FileHider_T(boolean fileHideBool) throws IOException {
@@ -119,10 +121,14 @@ class FileHider_T implements Runnable {
                 try {
                     getFileAttr(x, fileHideBool);
                     if (Statics.fileHideIter >= fileCount - 1) {
-                        if (Statics.fileCount > 10) {
-                            Thread.sleep(300);
-                            GUI.labelCutterThread(Main.jAlertLabel, Statics.fileCount + " files hidden", 30, 25, 300);
-                            fileHiderToolReenable();
+                        if (Statics.fileHideIter != 0) {
+                            if (fileCt > 10) {
+                                Thread.sleep(300);
+                                GUI.labelCutterThread(Main.jAlertLabel, Statics.fileHideIter + " files hidden", 30, 25, 300);
+                                fileHiderToolReenable();
+                            } else {
+                                fileHiderToolReenable();
+                            }
                         } else {
                             fileHiderToolReenable();
                         }
@@ -136,10 +142,15 @@ class FileHider_T implements Runnable {
                 try {
                     getFileAttr(x, fileHideBool);
                     if (Statics.fileHideIter >= fileCount - 1) {
-                        if (Statics.fileCount > 10) {
-                            Thread.sleep(300);
-                            GUI.labelCutterThread(Main.jAlertLabel, Statics.fileCount + " files unhidden", 30, 25, 350);
-                            fileHiderToolReenable();
+                        if (Statics.fileHideIter != 0) {
+                            if (fileCt > 10) {
+                                Thread.sleep(300);
+                                GUI.labelCutterThread(Main.jAlertLabel, Statics.fileHideIter + " files unhidden", 30, 25, 300);
+                                fileHiderToolReenable();
+                            } else {
+                                fileHiderToolReenable();
+                            }
+
                         } else {
                             fileHiderToolReenable();
                         }

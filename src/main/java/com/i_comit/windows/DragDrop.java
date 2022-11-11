@@ -6,6 +6,8 @@ package com.i_comit.windows;
 
 import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.jProgressBar1;
+import static com.i_comit.windows.Statics.recipientPassword;
+import static com.i_comit.windows.Statics.recipientUsername;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.*;

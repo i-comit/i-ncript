@@ -71,6 +71,8 @@ public class Login {
         } else {
             Main.jProgressBar1.setVisible(false);
             Main.jProgressBar2.setVisible(true);
+            Hasher.hashedUsername = Hasher.getHash(username, true);
+            Hasher.hashedPassword = Hasher.getHash(password, false);
             GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript", 30, 30, 600);
             makeKey();
         }
@@ -107,6 +109,8 @@ public class Login {
         if (!"".equals(recipientUsername)) {
             if (!"".equals(recipientPassword)) {
                 if (recipientUsername.length() >= 5 && recipientUsername.length() <= 10) {
+                    Hasher.hashedUsername = Hasher.getHash(recipientUsername, true);
+                    Hasher.hashedPassword = Hasher.getHash(recipientPassword, false);
                     Main.jRadioButton2.setEnabled(false);
                     Main.jTextField2.setText("");
                     Main.jPasswordField2.setText("");
@@ -162,6 +166,8 @@ public class Login {
         recipientPassword = new String(password);
         if (Main.jList1.getSelectedValue() != null) {
             if (!"".equals(recipientPassword)) {
+                Hasher.hashedUsername = Hasher.getHash(username, true);
+                Hasher.hashedPassword = Hasher.getHash(recipientPassword, false);
                 Main.jPasswordField3.setText("");
                 Folder.list1Dir(1);
             } else {
@@ -179,16 +185,20 @@ public class Login {
     public static void verifySendKey() {
         try {
             BufferedReader brTest = new BufferedReader(new FileReader(zipFileName + "\\send.key"));
-            String usernameRead = brTest.readLine();
-            String passwordRead = brTest.readLine();
+            String usernameRead = Hasher.readKey(brTest.readLine(), username);
+            String passwordRead = Hasher.readKey(brTest.readLine(), recipientPassword);
 
             BufferedReader brTest1 = new BufferedReader(new FileReader(keyFile));
-            String usernameRead1 = brTest1.readLine();
+            String usernameRead1 = Hasher.readKey(brTest1.readLine(), username);
 //
             if (usernameRead.equals(usernameRead1)) {
                 System.out.println("USERNAME MATCH");
                 if (passwordRead.equals(Hasher.getHash(recipientPassword, false))) {
                     System.out.println("PASSWORD MATCH");
+                    Statics.fileIter = 0;
+                    Statics.fileCount = 0;
+                    jProgressBar1.setValue(Statics.fileIter);
+                    jProgressBar1.setValue(Statics.fileCount);
                     AESMode = 1;
                     fileCount = GUI.countFiles(receiveFolder);
                     zipFileCount = fileCount;
@@ -227,12 +237,13 @@ public class Login {
     public static void verifyLogin() {
         try {
             BufferedReader brTest = new BufferedReader(new FileReader(keyFile));
-            String usernameRead = brTest.readLine().substring(username.length() * 32, (username.length() + 1) * 32);
-            System.out.println("USER " + usernameRead);
-            String passwordRead = brTest.readLine().substring(password.length() * 32, (password.length() + 1) * 32);
+            String usernameRead = Hasher.readKey(brTest.readLine(), username);
+            String passwordRead = Hasher.readKey(brTest.readLine(), password);
 
             if (usernameRead.equals(Hasher.getHash(username, true))) {
                 if (passwordRead.equals(Hasher.getHash(password, false))) {
+                    Hasher.hashedUsername = Hasher.getHash(username, true);
+                    Hasher.hashedPassword = Hasher.getHash(password, false);
                     Main.jLoginPanel.setVisible(false);
                     Main.jToolPanel.setVisible(true);
                     Main.jProgressBar2.setVisible(true);

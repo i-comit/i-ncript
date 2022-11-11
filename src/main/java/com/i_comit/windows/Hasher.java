@@ -12,46 +12,79 @@ import java.util.Random;
  */
 public class Hasher {
 
+    public static String hashedPassword;
+    public static String hashedUsername;
+
     public static String getHash(String hash, boolean hashBool) {
-        String hash2 = finalizeHash(hash, hashBool).substring(hash.length() * 32, (hash.length() + 1) * 32).trim();
-        return hash2;
+        String hash2 = finalizeHash(hash, hashBool);
+        int firstHashIndex = (hash.length() + 2) * 8;
+
+        int secondHashIndex = (hash.length() + 17) * 8;
+        String[] hashIndices = {hash2.substring(0, 8).trim(),
+            hash2.substring(firstHashIndex, firstHashIndex + 8).trim(),
+            hash2.substring(secondHashIndex, secondHashIndex + 8).trim(),
+            hash2.substring(hash2.length() - 8, hash2.length())};
+
+        String finalHash = hashIndices[0] + hashIndices[1] + hashIndices[2] + hashIndices[3];
+        return finalHash;
+    }
+
+    public static String readKey(String hash, String loginString) {
+        int hashLocateIndex = loginString.length() * 8;
+        System.out.println(hashLocateIndex);
+
+        int firstHashIndex = (loginString.length() + 2) * 8;
+        int secondHashIndex = (loginString.length() + 17) * 8;
+
+        String[] hashIndices = {hash.substring(0, 8).trim(),
+            hash.substring(firstHashIndex, firstHashIndex + 8).trim(),
+            hash.substring(secondHashIndex, secondHashIndex + 8).trim(),
+            hash.substring(hash.length() - 8, hash.length())};
+
+        String finalHash = hashIndices[0] + hashIndices[1] + hashIndices[2] + hashIndices[3];
+        return finalHash;
     }
 
     public static String finalizeHash(String hash, boolean hashBool) {
-        
-//                final int mid = s1.length() / 4; //get the middle of the String
-//        String[] parts = {s1.substring(0, mid), s1.substring(mid, mid * 2), s1.substring(mid * 2, mid * 3), s1.substring(mid * 3, mid * 4)};
         StringBuilder sb = new StringBuilder();
+
+        String s1 = joinHash(hash, hashBool);
+        final int mid = s1.length() / 4; //get the middle of the String
+        String[] parts = {s1.substring(0, mid), s1.substring(mid, mid * 2), s1.substring(mid * 2, mid * 3), s1.substring(mid * 3, mid * 4)};
         //Convert to 32bit
-        for (int i = 0; i < hash.length() * 4; i++) {
+
+        sb.append(parts[0]);
+        for (int i = 0; i < hash.length() * 2; i++) {
             Random rand = new Random();
             // Generate random 8bit int
             int rand_int1 = rand.nextInt(10000000, 99999999);
             sb.append(String.valueOf(rand_int1));
+            if (i == hash.length()) {
+                sb.append(parts[1]);
+            }
         }
-
-        sb.append(joinHash(hash, hashBool));
-
-        int remainder = 16 - hash.length();
-        for (int i = 0; i < remainder * 4; i++) {
+        int remainder = 14 - hash.length();
+        for (int i = 0; i < remainder * 2; i++) {
             Random rand = new Random();
             // Generate random 8bit int
-            int rand_int1 = rand.nextInt(1000000, 9999999);
+            int rand_int1 = rand.nextInt(10000000, 99999999);
             sb.append(String.valueOf(rand_int1));
+            if (i == remainder) {
+                sb.append(parts[2]);
+            }
         }
+        sb.append(parts[3]);
         return sb.toString().trim();
 
     }
 
     public static String joinHash(String hash, boolean hashBool) {
         if (hashBool) {
-            String joiner = hashUsername(hash) + hashUsername(caesarCipher(hash, hash.length()).toString());
-            String finalStr = splitString(joiner, hashBool);
+            String finalStr = hashUsername(caesarCipher(hash, hash.length()).toString()).trim() + hashUsername(hash);
             return finalStr;
 
         } else {
-            String joiner = hashPassword(caesarCipher(hash, hash.length()).toString()) + hashPassword(hash);
-            String finalStr = splitString(joiner, hashBool);
+            String finalStr = hashPassword(hash) + hashPassword(caesarCipher(hash, hash.length() * 2).toString()).trim();
             return finalStr;
         }
     }
