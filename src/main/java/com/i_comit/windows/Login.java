@@ -36,7 +36,12 @@ public class Login {
                     if (username.length() <= 10) {
                         if (Statics.password.length() >= 5) {
                             if (Statics.password.length() <= 10) {
-                                Login.Authenticator();
+                                if (!username.equals(Statics.password)) {
+                                    Login.Authenticator();
+                                } else {
+                                    GUI.t.interrupt();
+                                    GUI.labelCutterThread(jAlertLabel, "password can't be username", 20, 20, 1200);
+                                }
                             } else {
                                 GUI.t.interrupt();
                                 GUI.labelCutterThread(jAlertLabel, "password is too long", 20, 20, 1200);
@@ -109,25 +114,34 @@ public class Login {
         if (!"".equals(recipientUsername)) {
             if (!"".equals(recipientPassword)) {
                 if (recipientUsername.length() >= 5 && recipientUsername.length() <= 10) {
-                    Hasher.hashedUsername = Hasher.getHash(recipientUsername, true);
-                    Hasher.hashedPassword = Hasher.getHash(recipientPassword, false);
-                    Main.jRadioButton2.setEnabled(false);
-                    Main.jTextField2.setText("");
-                    Main.jPasswordField2.setText("");
-                    AESMode = 0;
-                    fileCount = GUI.countFiles(sendFolder);
-                    zipFileCount = fileCount;
-                    jProgressBar1.setMaximum(zipFileCount);
-                    AES.AESThread(listAESPaths(sendFolder), sendFolder.toFile(), true, 2);
+                    if (!username.equals(Statics.password)) {
+                        Hasher.hashedUsername = Hasher.getHash(recipientUsername, true);
+                        Hasher.hashedPassword = Hasher.getHash(recipientPassword, false);
+                        Main.jRadioButton2.setEnabled(false);
+                        Main.jTextField2.setText("");
+                        Main.jPasswordField2.setText("");
+                        AESMode = 0;
+                        fileCount = GUI.countFiles(sendFolder);
+                        zipFileCount = fileCount;
+                        jProgressBar1.setMaximum(zipFileCount);
+                        AES.AESThread(listAESPaths(sendFolder), sendFolder.toFile(), true, 2);
+                    } else {
+                        GUI.t.interrupt();
+                        GUI.labelCutterThread(jAlertLabel, "password can't be username", 20, 20, 1200);
+                        sendPanelTools();
+                    }
                 } else {
+                    GUI.t.interrupt();
                     GUI.labelCutterThread(jAlertLabel, "invalid username", 20, 20, 1200);
                     sendPanelTools();
                 }
             } else {
+                GUI.t.interrupt();
                 GUI.labelCutterThread(jAlertLabel, "please make a password", 20, 20, 1200);
                 sendPanelTools();
             }
         } else {
+            GUI.t.interrupt();
             GUI.labelCutterThread(jAlertLabel, "please make a username", 20, 20, 1200);
             sendPanelTools();
         }

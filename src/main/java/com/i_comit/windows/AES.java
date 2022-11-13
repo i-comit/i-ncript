@@ -177,18 +177,12 @@ class AES_T implements Runnable {
             if (contents != null) {
                 if (contents.length != 0) {
                     if (!paths.isEmpty()) {
-                        Main.jTabbedPane1.setSelectedIndex(1);
-                        Main.toolBtnsBool(false);
-                        Main.jButton2.setVisible(true);
-                        Main.jSwitchMode.setVisible(false);
-                        Main.dragDrop.setVisible(false);
-
-                        Main.jProgressBar1.setVisible(true);
-                        Main.jProgressBar2.setVisible(false);
-                        Main.jProgressBar1.setString("0% | " + "0/" + AES_T.paths.size());
+                        buttonRestart();
                         switch (AESMode) {
                             case 0 -> {
                                 Main.jProgressBar1.setStringPainted(true);
+                                Main.jProgressBar1.setString("0% | " + "0/" + AES_T.paths.size());
+
                                 GUI.labelCutterThread(jAlertLabel, "encrypting " + paths.size() + " files", 0, 15, 300);
                                 paths.forEach(x -> {
                                     if (x.toFile().length() > maxFileBytes) {
@@ -207,8 +201,12 @@ class AES_T implements Runnable {
                                 });
                                 if (fileIter == 0) {
                                     Main.toolBtnsBool(true);
+                                    Main.jProgressBar1.setVisible(false);
+                                    Main.jProgressBar2.setVisible(true);
                                     GUI.t.interrupt();
                                     GUI.labelCutterThread(jAlertLabel, "incorrect key", 10, 25, 500);
+                                    FileHider.cleanUp();
+
                                 } else {
                                     System.out.println("File Encryption Complete");
                                     GUI.resetProgressBar(jProgressBar1);
@@ -246,8 +244,11 @@ class AES_T implements Runnable {
                                 });
                                 if (fileIter == 0) {
                                     Main.toolBtnsBool(true);
+                                    Main.jProgressBar1.setVisible(false);
+                                    Main.jProgressBar2.setVisible(true);
                                     GUI.t.interrupt();
                                     GUI.labelCutterThread(jAlertLabel, "incorrect key", 10, 25, 500);
+                                    FileHider.cleanUp();
                                 } else {
                                     System.out.println("File Decryption Complete");
                                     GUI.resetProgressBar(jProgressBar1);
@@ -260,6 +261,7 @@ class AES_T implements Runnable {
                                         Main.jLabel7.setVisible(true);
                                         Main.jRadioButton3.setEnabled(true);
                                         Main.jRadioButton3.setVisible(false);
+                                        Main.jRadioButton3.setSelected(false);
                                         Main.jTabbedPane1.setSelectedIndex(0);
                                         Main.toolBtnsBool(true);
                                     }
@@ -301,12 +303,10 @@ class AES_T implements Runnable {
                 Main.jToggleButton2.setEnabled(true);
             }
         } else {
-            Main.jTabbedPane1.setSelectedIndex(1);
+            buttonRestart();
             jProgressBar1.setMaximum(paths.size());
             jProgressBar1.setStringPainted(true);
             jProgressBar1.setValue(fileIter);
-            Main.jSwitchMode.setVisible(false);
-
             paths.forEach(x -> {
                 String fileStr = x.toString();
                 File file = Paths.get(fileStr).toFile();
@@ -332,17 +332,30 @@ class AES_T implements Runnable {
                     }
                     AES.encrypt(Hasher.hashedPassword, file, file);
                 }
-//                    System.out.println("ENC " + encFiles + " " + decFiles);
             });
 
             if (fileIter == 0) {
                 Main.toolBtnsBool(true);
+                Main.dragDrop.setVisible(true);
+                Main.jProgressBar1.setVisible(false);
+                Main.jProgressBar2.setVisible(true);
                 GUI.t.interrupt();
                 GUI.labelCutterThread(Main.jAlertLabel, "incorrect key", 10, 25, 500);
+                FileHider.cleanUp();
             } else {
                 DragDrop.resetProgressBar(encFiles, decFiles);
                 GUI.getGB();
             }
         }
+    }
+
+    private static void buttonRestart() {
+        Main.jButton2.setVisible(true);
+        Main.jTabbedPane1.setSelectedIndex(1);
+        Main.toolBtnsBool(false);
+        Main.dragDrop.setVisible(false);
+        Main.jSwitchMode.setVisible(false);
+        Main.jProgressBar1.setVisible(true);
+        Main.jProgressBar2.setVisible(false);
     }
 }

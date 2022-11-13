@@ -44,6 +44,8 @@ public class Folder {
                 Main.toolBtnsBool(true);
                 deleteDirectory(Statics.sendFolder.toFile());
                 Main.jRadioButton2.setEnabled(true);
+                Main.jRadioButton2.setSelected(false);
+                Main.dragDrop.setVisible(false);
                 GUI.getGB();
             }
         }
@@ -133,7 +135,7 @@ public class Folder {
                             Statics.zipIter++;
                             Main.jProgressBar2.setString("packing " + Statics.zipIter + " out of " + zipFileCount + " files");
                             Main.jProgressBar2.setValue(Statics.zipIter);
-                            if (Main.jProgressBar2.getValue() >= zipFileCount - 1 && zipFileCount >10) {
+                            if (Main.jProgressBar2.getValue() >= zipFileCount - 1 && zipFileCount > 10) {
                                 Main.jProgressBar2.setValue(zipFileCount);
                                 Main.jProgressBar2.setString("packing key file..");
                             }

@@ -39,8 +39,6 @@ class DragDrop implements DropTargetListener {
 
     @Override
     public void drop(DropTargetDropEvent event) {
-        Main.toolBtnsBool(false);
-        Main.dragDrop.setVisible(false);
         // Accept copy drops
         event.acceptDrop(DnDConstants.ACTION_COPY);
         // Get the transfer which can provide the dropped item data
@@ -65,7 +63,7 @@ class DragDrop implements DropTargetListener {
                             paths.add(filesf.toPath());
                             if (Statics.toolMode == 0) {
                                 if (i >= files.size() - 1) {
-                                    Main.jProgressBar1.setVisible(true);
+                                    Main.jButton2.setVisible(true);
                                     AES.AESThread(paths, Statics.directory, false, 0);
                                 }
                             }
@@ -75,17 +73,11 @@ class DragDrop implements DropTargetListener {
                                         Files.move(filesf.toPath(), Paths.get(Statics.receiveFolder + "\\" + filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
                                         Main.jTextArea1.append(filesf.getName() + " has been moved to the n-box folder\n");
                                         Folder.listZipFiles();
-                                        Main.toolBtnsBool(true);
-                                        Main.dragDrop.setVisible(true);
                                     } else {
                                         System.out.println("only .i-cc files allowed");
-                                        Main.toolBtnsBool(true);
-                                        Main.dragDrop.setVisible(true);
                                     }
                                 } else {
                                     GUI.labelCutterThread(Main.jAlertLabel, "only 1 file is allowed at once", 10, 25, 500);
-                                    Main.toolBtnsBool(true);
-                                    Main.dragDrop.setVisible(true);
                                 }
                             }
                         }
@@ -95,8 +87,6 @@ class DragDrop implements DropTargetListener {
                         }
                         GUI.labelCutterThread(Main.jAlertLabel, "only 10 files are allowed at once", 10, 25, 500);
                         Main.jTextArea1.append("For security reasons, you can only drop up to 10 files at once\n");
-                        Main.toolBtnsBool(true);
-                        Main.dragDrop.setVisible(true);
                     }
                 }
 

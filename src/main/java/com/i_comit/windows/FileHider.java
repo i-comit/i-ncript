@@ -54,14 +54,15 @@ public class FileHider {
                     File decF = Paths.get(duplicates.get(i)).toFile();
                     File encF = Paths.get(enc).toFile();
 
-//                    System.out.println(decF);
-//                    System.out.println(encF);
                     if (decF.length() > encF.length()) {
                         encF.delete();
-                        System.out.println("deleted ENC " + encF);
+                        System.out.println("deleted " + encF);
+                    } else if (decF.length() == encF.length()) {
+                        encF.delete();
+                        System.out.println("deleted " + encF);
                     } else {
                         decF.delete();
-                        System.out.println("deleted DEC " + decF);
+                        System.out.println("deleted " + decF);
                     }
                     deletedFiles++;
                 }
@@ -150,12 +151,10 @@ class FileHider_T implements Runnable {
                             } else {
                                 fileHiderToolReenable();
                             }
-
                         } else {
                             fileHiderToolReenable();
                         }
                     }
-
                 } catch (IOException | InterruptedException ex) {
                     ex.printStackTrace();
                 }

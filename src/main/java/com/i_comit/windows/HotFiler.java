@@ -102,8 +102,6 @@ class HotFiler_T implements Runnable {
     }
 
     public static void folderWatcher() throws IOException {
-        Main.jToggleButton1.setEnabled(true);
-
         System.out.println("Folder Watcher Enabled");
         try {
             WatchService watchService = FileSystems.getDefault().newWatchService();
