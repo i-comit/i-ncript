@@ -51,7 +51,7 @@ public class GUI {
     public static int countAllFiles(Path path) throws IOException {
         int result;
         try ( Stream<Path> walk = Files.walk(path)) {
-            result = Math.toIntExact(walk.filter(Files::isRegularFile)                            
+            result = Math.toIntExact(walk.filter(Files::isRegularFile)
                     .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
                     .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
                     .count());
@@ -84,8 +84,17 @@ public class GUI {
         }
         return result;
     }
-    
-        public static List<Path> listPaths(Path path) throws IOException {
+
+    public static List<Path> listDirs(Path path) throws IOException {
+        List<Path> result;
+        try ( Stream<Path> walk = Files.walk(path)) {
+            result = walk.filter(Files::isDirectory)
+                    .collect(Collectors.toList());
+            return result;
+        }
+    }
+
+    public static List<Path> listPaths(Path path) throws IOException {
         List<Path> result;
         try ( Stream<Path> walk = Files.walk(path)) {
             result = walk.filter(Files::isRegularFile)

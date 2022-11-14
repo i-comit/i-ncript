@@ -4,12 +4,10 @@
  */
 package com.i_comit.windows;
 
-import static com.i_comit.windows.AES.*;
 import static com.i_comit.windows.GUI.listAESPaths;
 import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.jProgressBar1;
 import java.awt.Color;
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -46,27 +44,23 @@ class HotFiler_T implements Runnable {
 
                 if (path.isEmpty()) {
                     System.out.println("HotFilerPathEmpty");
+
                 } else {
                     Statics.fileIter = 0;
                     Statics.fileCount = GUI.countFiles(Statics.path);
                     jProgressBar1.setMaximum(Statics.fileCount);
                     AES.AESThread(listAESPaths(Statics.path), Statics.directory, true, 0);
                 }
-                jAlertLabel.setText("hot filer enabled");
-                Thread.sleep(1000);
-                jAlertLabel.setText("");
                 Main.jToggleButton1.setBackground(new Color(28, 68, 94));
+                jAlertLabel.setText("hot filer enabled");
+                Thread.sleep(500);
+                jAlertLabel.setText("");
                 folderWatcher();
 //
 
             } else {
-                jAlertLabel.setText("hot filer disabled");
-                Thread.sleep(1000);
-                jAlertLabel.setText("");
-                Main.buttonGroup1.clearSelection();
+                HotFiler.t.stop();
 
-                Main.jProgressBar1.setStringPainted(false);
-                Main.jToggleButton1.setBackground(new Color(78, 80, 82));
             }
         } catch (IOException | InterruptedException ex) {
             ex.printStackTrace();
@@ -101,16 +95,19 @@ class HotFiler_T implements Runnable {
         return result;
     }
 
+    public static WatchService watchService;
+
     public static void folderWatcher() throws IOException {
         System.out.println("Folder Watcher Enabled");
         try {
-            WatchService watchService = FileSystems.getDefault().newWatchService();
-            Path rootPath = Paths.get(Statics.rootFolder);
-            rootPath.register(
-                    watchService,
-                    StandardWatchEventKinds.ENTRY_CREATE);
-//                        StandardWatchEventKinds.ENTRY_DELETE,
-//                        StandardWatchEventKinds.ENTRY_MODIFY);
+            watchService = FileSystems.getDefault().newWatchService();
+            List<Path> directories = GUI.listDirs(Paths.get(Statics.rootFolder));
+            for (int i = 0; i < directories.size(); i++) {
+                directories.get(i).toFile().toPath().register(
+                        watchService,
+                        StandardWatchEventKinds.ENTRY_CREATE);
+                System.out.println("folder watcher attached at " + directories.get(i).toFile().getName());
+            }
             WatchKey key;
             while ((key = watchService.take()) != null && Main.jToggleButton1.isSelected()) {
                 GUI.labelCutterThread(jAlertLabel, "hot filer detected new files", 15, 25, 550);
@@ -133,7 +130,6 @@ class HotFiler_T implements Runnable {
                                 System.out.println("Hot Filer Called AES");
 //                                watchService.close();
                                 GUI.getGB();
-                                folderWatcher();
                                 b = false;
                             }
                         }

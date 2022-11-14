@@ -138,6 +138,9 @@ class FileHider_T implements Runnable {
                     ex.printStackTrace();
                 }
             });
+            if (Main.jToggleButton1.isSelected()) {
+                HotFiler_T.folderWatcher();
+            }
         } else {
             paths.forEach(x -> {
                 try {
@@ -159,6 +162,9 @@ class FileHider_T implements Runnable {
                     ex.printStackTrace();
                 }
             });
+            if (Main.jToggleButton1.isSelected()) {
+                HotFiler_T.folderWatcher();
+            }
         }
     }
 
@@ -169,6 +175,12 @@ class FileHider_T implements Runnable {
         if (fileAttrBool == true) {
             if (!Main.jToggleButton2.isSelected()) {
                 Files.setAttribute(x, "dos:hidden", false);
+
+                if (x.toFile().getName().startsWith(".")) {
+                    String filePath = x.toFile().toString().replaceAll(x.toFile().getName(), "");
+                    File outputFile = new File(filePath + x.toFile().getName().substring(1));
+                    x.toFile().renameTo(outputFile);
+                }
                 ++FileHider.fileCt;
             }
         }
@@ -176,6 +188,13 @@ class FileHider_T implements Runnable {
         if (fileAttrBool == false) {
             if (Main.jToggleButton2.isSelected()) {
                 Files.setAttribute(x, "dos:hidden", true);
+
+                if (!x.toFile().getName().startsWith(".")) {
+                    String filePath = x.toFile().toString().replaceAll(x.toFile().getName(), "");
+                    File outputFile = new File(filePath + "." + x.toFile().getName());
+                    x.toFile().renameTo(outputFile);
+                }
+
                 ++FileHider.fileCt;
             }
         }
