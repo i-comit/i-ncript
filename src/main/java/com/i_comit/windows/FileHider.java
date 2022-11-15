@@ -48,7 +48,6 @@ public class FileHider {
 
             if (!duplicates.isEmpty()) {
                 for (int i = 0; i < duplicates.size(); i++) {
-                    System.out.println(duplicates.get(i));
                     String enc = duplicates.get(i) + ".enc";
 
                     File decF = Paths.get(duplicates.get(i)).toFile();
@@ -103,6 +102,7 @@ class FileHider_T implements Runnable {
     }
 
     public static void fileHiderToolReenable() {
+        Main.jToggleButton2.setEnabled(true);
         Main.toolBtnsBool(true);
         Main.dragDrop.setVisible(true);
         Main.jTabbedPane1.setSelectedIndex(0);

@@ -64,6 +64,7 @@ class DragDrop implements DropTargetListener {
                             if (Statics.toolMode == 0) {
                                 if (i >= files.size() - 1) {
                                     Main.jButton2.setVisible(true);
+                                    Main.jProgressBar1.setMaximum(files.size());
                                     AES.AESThread(paths, Statics.directory, false, 0);
                                 }
                             }

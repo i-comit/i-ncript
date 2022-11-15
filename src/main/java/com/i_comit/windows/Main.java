@@ -745,12 +745,19 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
     //HIDE FILER
     private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
-        buttonGroup1.clearSelection();
+        if (GUI.t.isAlive()) {
+            GUI.t.interrupt();
+        }
         try {
-            if (jToggleButton2.isSelected()) {
-                FileHider.FileHiderThread(true);
+            if (!jToggleButton1.isSelected()) {
+                buttonGroup1.clearSelection();
+                Main.jToggleButton2.setEnabled(false);
+                if (jToggleButton2.isSelected()) {
+                    FileHider.FileHiderThread(true);
+                } else {
+                    FileHider.FileHiderThread(false);
+                }
             } else {
-                FileHider.FileHiderThread(false);
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -791,11 +798,14 @@ public class Main extends javax.swing.JFrame {
         }
         jButton2.setVisible(false);
         switch (AESMode) {
-            case 0 -> jTextArea1.append("encryption of " + fileCount+ " files stopped\n");
-            case 1 -> jTextArea1.append("decryption of " + fileCount+ " files stopped\n");
+            case 0 ->
+                jTextArea1.append("encryption of " + fileCount + " files stopped\n");
+            case 1 ->
+                jTextArea1.append("decryption of " + fileCount + " files stopped\n");
         }
         fileCount = 0;
         fileIter = 0;
+        jTabbedPane1.setSelectedIndex(0);
         jProgressBar1.setValue(fileIter);
         jProgressBar1.setMaximum(fileCount);
         jProgressBar1.setStringPainted(false);
@@ -827,7 +837,6 @@ public class Main extends javax.swing.JFrame {
             try {
                 watchService.close();
                 HotFiler.t.interrupt();
-                Main.jToggleButton1.setBackground(new Color(78, 80, 82));
                 Main.buttonGroup1.clearSelection();
                 Main.jProgressBar1.setStringPainted(false);
             } catch (IOException ex) {

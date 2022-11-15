@@ -8,6 +8,7 @@ import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.root;
 import static com.i_comit.windows.Statics.AESMode;
 import static com.i_comit.windows.Statics.GB;
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,7 +30,7 @@ public class GUI {
     public static Thread t;
     public static Thread t1;
     public static Thread t2;
-
+    
     public static void getGB() {
         File diskPartition = new File(root).toPath().getRoot().toFile();
         GB = Memory.byteFormatter(diskPartition.getUsableSpace());
