@@ -25,11 +25,11 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "";
+    public static String root = "D:\\";
     public static String masterFolder = "--------\\";
 
     public Main() {
-        root = Paths.get("").toAbsolutePath().toString();
+//        root = Paths.get("").toAbsolutePath().toString();
 //        root = root + masterFolder;
         Path runtime = Paths.get(root.substring(0, 3) + masterFolder + "runtime");
         Path app = Paths.get(root.substring(0, 3) + masterFolder + "app");
@@ -47,7 +47,7 @@ public class Main extends javax.swing.JFrame {
                 ex.printStackTrace();
             }
         }
-        if (Memory.checkWMIC()) {
+//        if (Memory.checkWMIC()) {
         initComponents();
         FileHider.cleanUp();
 
@@ -105,7 +105,7 @@ public class Main extends javax.swing.JFrame {
         jProgressBar1.setVisible(false);
         jProgressBar2.setVisible(false);
         dragDrop.setVisible(false);
-        }
+
     }
 
     public static void dragDropper() {
@@ -784,43 +784,52 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jPasswordField1KeyPressed
     //STOP
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+        AES.t.interrupt();
         AES.t.stop();
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
         jButton2.setVisible(false);
+        switch (AESMode) {
+            case 0 -> jTextArea1.append("encryption of " + fileCount+ " files stopped\n");
+            case 1 -> jTextArea1.append("decryption of " + fileCount+ " files stopped\n");
+        }
         fileCount = 0;
         fileIter = 0;
         jProgressBar1.setValue(fileIter);
         jProgressBar1.setMaximum(fileCount);
         jProgressBar1.setStringPainted(false);
+        jProgressBar1.setVisible(false);
 
         jProgressBar2.setMaximum(0);
         jProgressBar2.setValue(jProgressBar2.getMaximum());
         jProgressBar2.setStringPainted(false);
-        jProgressBar2.setVisible(false);
+        jProgressBar2.setVisible(true);
         buttonGroup1.clearSelection();
         FileHider.cleanUp();
+        jAlertLabel.setText("");
+        dragDrop.setVisible(true);
         toolBtnsBool(true);
 
     }//GEN-LAST:event_jButton2MouseClicked
     //HOT FILER
     private void jToggleButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton1MouseClicked
         AESMode = 0;
-        try {
-            HotFiler.HotFilerThread();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
         if (jToggleButton1.isSelected()) {
-
-        } else {
+            dragDrop.setVisible(false);
             try {
+                HotFiler.HotFilerThread();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            dragDrop.setVisible(true);
+            try {
+                watchService.close();
+                HotFiler.t.interrupt();
                 Main.jToggleButton1.setBackground(new Color(78, 80, 82));
                 Main.buttonGroup1.clearSelection();
                 Main.jProgressBar1.setStringPainted(false);
-                watchService.close();
-                HotFiler.t.stop();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }

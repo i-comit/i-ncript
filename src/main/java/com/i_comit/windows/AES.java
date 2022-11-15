@@ -48,7 +48,7 @@ public class AES {
     }
 
     private static final String ALGORITHM = "AES";
-    private static final String TRANSFORMATION = "AES/CBC/PKCS5Padding";
+    private static final String TRANSFORMATION = "AES/ECB/PKCS5Padding";
 
     public static void encrypt(String key, File inputFile, File outputFile) {
         if (inputFile.exists()) {
@@ -97,51 +97,53 @@ public class AES {
         }
         return inputBytes;
     }
-    static SecureRandom rnd = new SecureRandom();
-    static IvParameterSpec iv = new IvParameterSpec(rnd.generateSeed(16));
+//    static SecureRandom rnd = new SecureRandom();
+//    static IvParameterSpec iv = new IvParameterSpec(rnd.generateSeed(16));
 
     private static void doCrypto(int cipherMode, String key, File inputFile,
             File outputFile) throws CryptoException {
+        if (!t.interrupted()) {
 
-        try {
-            Key secretKey = new SecretKeySpec(key.getBytes(), ALGORITHM);
-            Cipher cipher = Cipher.getInstance(TRANSFORMATION);
-            cipher.init(cipherMode, secretKey, iv);
+            try {
+                Key secretKey = new SecretKeySpec(key.getBytes(), ALGORITHM);
+                Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+                cipher.init(cipherMode, secretKey);
 
-            try ( FileInputStream inputStream = new FileInputStream(inputFile);  FileOutputStream outputStream = new FileOutputStream(outputFile)) {
-                byte[] inputBytes = dynamicBytes(inputFile);
-                int nread;
-                while ((nread = inputStream.read(inputBytes)) > 0) {
-                    byte[] enc = cipher.update(inputBytes, 0, nread);
-                    if (inputFile.length() > Statics.maxFileBytes) {
-                        Memory.byteMonitor(inputStream, inputFile);
+                try ( FileInputStream inputStream = new FileInputStream(inputFile);  FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+                    byte[] inputBytes = dynamicBytes(inputFile);
+                    int nread;
+                    while ((nread = inputStream.read(inputBytes)) > 0) {
+                        byte[] enc = cipher.update(inputBytes, 0, nread);
+                        if (inputFile.length() > Statics.maxFileBytes) {
+                            Memory.byteMonitor(inputStream, inputFile);
+                        }
+                        outputStream.write(enc);
                     }
+                    byte[] enc = cipher.doFinal();
                     outputStream.write(enc);
+                    inputStream.close();
+                    outputStream.close();
+                    System.gc();
+                    System.runFinalization();
                 }
-                byte[] enc = cipher.doFinal();
-                outputStream.write(enc);
-                inputStream.close();
-                outputStream.close();
-                System.gc();
-                System.runFinalization();
-            }
-            fileIter++;
-            float percentage = ((float) fileIter / AES_T.paths.size() * 100);
-            DecimalFormat format = new DecimalFormat("0.#");
-            String percentageStr = format.format(percentage);
-            Main.jProgressBar1.setString(percentageStr + "% | " + fileIter + "/" + AES_T.paths.size());
-            Main.jProgressBar1.setValue(fileIter);
-            GUI.loggerThread(outputFile, Statics.toolMode);
-            getFileAttr(inputFile, outputFile);
+                fileIter++;
+                float percentage = ((float) fileIter / AES_T.paths.size() * 100);
+                DecimalFormat format = new DecimalFormat("0.#");
+                String percentageStr = format.format(percentage);
+                Main.jProgressBar1.setString(percentageStr + "% | " + fileIter + "/" + AES_T.paths.size());
+                Main.jProgressBar1.setValue(fileIter);
+                GUI.loggerThread(outputFile, Statics.toolMode);
+                getFileAttr(inputFile, outputFile);
 
-        } catch (NoSuchPaddingException | NoSuchAlgorithmException
-                | InvalidKeyException | BadPaddingException
-                | IllegalBlockSizeException ex) {
-            throw new CryptoException("Error encrypting/decrypting file", ex);
-        } catch (IOException | UncheckedIOException ex) {
-            System.out.println("Last File Was " + inputFile.getName());
-        } catch (InvalidAlgorithmParameterException ex) {
-            ex.printStackTrace();
+            } catch (NoSuchPaddingException | NoSuchAlgorithmException
+                    | InvalidKeyException | BadPaddingException
+                    | IllegalBlockSizeException ex) {
+                throw new CryptoException("Error encrypting/decrypting file", ex);
+            } catch (IOException | UncheckedIOException ex) {
+                System.out.println("Last File Was " + inputFile.getName());
+//        } catch (InvalidAlgorithmParameterException ex) {
+//            ex.printStackTrace();
+            }
         }
     }
 
