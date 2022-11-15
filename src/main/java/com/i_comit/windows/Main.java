@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -105,7 +107,6 @@ public class Main extends javax.swing.JFrame {
         jProgressBar1.setVisible(false);
         jProgressBar2.setVisible(false);
         dragDrop.setVisible(false);
-
     }
 
     public static void dragDropper() {
@@ -198,6 +199,8 @@ public class Main extends javax.swing.JFrame {
         jTextArea4 = new javax.swing.JTextArea();
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jTree1 = new javax.swing.JTree();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("\ti-ncript™");
@@ -710,7 +713,18 @@ public class Main extends javax.swing.JFrame {
 
         getContentPane().add(jEULAPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 0, 520, 230));
 
-        setSize(new java.awt.Dimension(543, 258));
+        jTree1.setModel(TreeView.populateStoreTree());
+        jTree1.setDragEnabled(true);
+        jTree1.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
+            public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
+                jTree1ValueChanged(evt);
+            }
+        });
+        jScrollPane5.setViewportView(jTree1);
+
+        getContentPane().add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 240, 310, 100));
+
+        setSize(new java.awt.Dimension(543, 383));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
     //DECRYPT
@@ -1028,6 +1042,14 @@ public class Main extends javax.swing.JFrame {
     private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
     }//GEN-LAST:event_jList1MouseClicked
 
+    //JTREE
+    private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_jTree1ValueChanged
+        // TODO add your handling code here:
+        treeViewBool = true;
+        TreeView.treeFileFormatter(jTree1.getSelectionPaths());
+
+    }//GEN-LAST:event_jTree1ValueChanged
+
     /**
      * @param args the command line arguments
      */
@@ -1110,6 +1132,7 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JScrollPane jScrollPane2;
     protected static javax.swing.JScrollPane jScrollPane3;
     protected static javax.swing.JScrollPane jScrollPane4;
+    protected static javax.swing.JScrollPane jScrollPane5;
     protected static javax.swing.JScrollPane jScrollPane6;
     protected static javax.swing.JScrollPane jScrollPane7;
     protected static javax.swing.JPanel jSendPanel;
@@ -1128,6 +1151,7 @@ public class Main extends javax.swing.JFrame {
     public static javax.swing.JToggleButton jToggleButton1;
     protected static javax.swing.JToggleButton jToggleButton2;
     public static javax.swing.JPanel jToolPanel;
+    protected static javax.swing.JTree jTree1;
     protected javax.swing.JLabel jUsernameLabel;
     // End of variables declaration//GEN-END:variables
 

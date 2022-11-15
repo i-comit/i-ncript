@@ -6,28 +6,26 @@ package com.i_comit.windows;
 
 import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.jProgressBar1;
-import static com.i_comit.windows.Main.jTree1;
-import static com.i_comit.windows.Main.masterFolder;
-import static com.i_comit.windows.Main.root;
-import static com.i_comit.windows.Statics.recipientPassword;
-import static com.i_comit.windows.Statics.recipientUsername;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
-import java.awt.dnd.*;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  *
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
-class DragDrop implements DropTargetListener {
+class DragDropTree implements DropTargetListener {
 
     public static Thread t;
     public static Thread t2;
@@ -50,80 +48,56 @@ class DragDrop implements DropTargetListener {
         // Get the data formats of the dropped item
         DataFlavor[] flavors = transferable.getTransferDataFlavors();
         // Loop through the flavors
-        if (!Statics.treeViewBool) {
-            for (DataFlavor flavor : flavors) {
-                try {
-                    // If the drop items are files
-                    if (flavor.isFlavorJavaFileListType()) {
-                        // Get all of the dropped files
-                        List files = (List) transferable.getTransferData(flavor);
-                        List<Path> paths = new ArrayList<>();
-                        if (files.size() <= 10) {
-                            // Loop them through
-                            for (int i = 0; i < files.size(); i++) {
-                                String sf = files.get(i).toString();
-                                System.out.println("SF " + sf);
-                                filesf = new File(sf);
-                                paths.add(filesf.toPath());
-                                if (Statics.toolMode == 0) {
-                                    if (i >= files.size() - 1) {
-                                        Main.jButton2.setVisible(true);
-                                        Main.jProgressBar1.setMaximum(files.size());
-                                        AES.AESThread(paths, Statics.directory, false, 0);
-                                    }
+        for (DataFlavor flavor : flavors) {
+            try {
+                // If the drop items are files
+                if (flavor.isFlavorJavaFileListType()) {
+                    // Get all of the dropped files
+                    List files = (List) transferable.getTransferData(flavor);
+                    List<Path> paths = new ArrayList<>();
+
+                    if (files.size() <= 10) {
+                        // Loop them through
+                        for (int i = 0; i < files.size(); i++) {
+                            String sf = files.get(i).toString();
+                            filesf = new File(sf);
+                            paths.add(filesf.toPath());
+                            if (Statics.toolMode == 0) {
+                                if (i >= files.size() - 1) {
+                                    Main.jButton2.setVisible(true);
+                                    Main.jProgressBar1.setMaximum(files.size());
+                                    AES.AESThread(paths, Statics.directory, false, 0);
                                 }
-                                if (Statics.toolMode == 1) {
-                                    if (files.size() <= 1) {
-                                        if (filesf.toString().endsWith(".i-cc")) {
-                                            Files.move(filesf.toPath(), Paths.get(Statics.receiveFolder + "\\" + filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
-                                            Main.jTextArea1.append(filesf.getName() + " has been moved to the n-box folder\n");
-                                            Folder.listZipFiles();
-                                        } else {
-                                            System.out.println("only .i-cc files allowed");
-                                        }
+                            }
+                            if (Statics.toolMode == 1) {
+                                if (files.size() <= 1) {
+                                    if (filesf.toString().endsWith(".i-cc")) {
+                                        Files.move(filesf.toPath(), Paths.get(Statics.receiveFolder + "\\" + filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
+                                        Main.jTextArea1.append(filesf.getName() + " has been moved to the n-box folder\n");
+                                        Folder.listZipFiles();
                                     } else {
-                                        GUI.labelCutterThread(Main.jAlertLabel, "only 1 file is allowed at once", 10, 25, 500);
+                                        System.out.println("only .i-cc files allowed");
                                     }
+                                } else {
+                                    GUI.labelCutterThread(Main.jAlertLabel, "only 1 file is allowed at once", 10, 25, 500);
                                 }
                             }
-                        } else {
-                            if (GUI.t.isAlive()) {
-                                GUI.t.interrupt();
-                            }
-                            GUI.labelCutterThread(Main.jAlertLabel, "only 10 files are allowed at once", 10, 25, 500);
-                            Main.jTextArea1.append("For security reasons, you can only drop up to 10 files at once\n");
                         }
+                    } else {
+                        if (GUI.t.isAlive()) {
+                            GUI.t.interrupt();
+                        }
+                        GUI.labelCutterThread(Main.jAlertLabel, "only 10 files are allowed at once", 10, 25, 500);
+                        Main.jTextArea1.append("For security reasons, you can only drop up to 10 files at once\n");
                     }
-
-                } catch (Exception e) {
-                    // Print out the error stack
-                    e.printStackTrace();
                 }
-            }
-            event.dropComplete(true);
-        } else {
-            List<Path> paths = new ArrayList<>();
-            String path = root + masterFolder + Main.jTree1.getSelectionPaths()[0].toString().substring(1, Main.jTree1.getSelectionPaths()[0].toString().length() - 1).replaceAll(", ", "\\\\");
-            String fileName = new File(root + masterFolder + Main.jTree1.getSelectionPaths()[0].toString().substring(1, Main.jTree1.getSelectionPaths()[0].toString().length() - 1).replaceAll(", ", "\\\\")).getName();
 
-            for (int i = 0; i < Main.jTree1.getSelectionPaths().length; i++) {
-                File fileFormat = new File(root + masterFolder + Main.jTree1.getSelectionPaths()[i].toString().substring(1, Main.jTree1.getSelectionPaths()[i].toString().length() - 1).replaceAll(", ", "\\\\"));
-                if (!fileFormat.isDirectory()) {
-                    System.out.println("files from Drag Drop are " + fileFormat);
-                    paths.add(fileFormat.toPath());
-                }
-            }
-            if (!paths.isEmpty()) {
-                if (paths.size() == 1) {
-                    Main.jButton2.setVisible(true);
-                    Main.jProgressBar1.setMaximum(paths.size());
-                    System.out.println("Path from Drag Drop is " + path.replaceAll(fileName, ""));
-
-                    AES.AESThread(paths, new File(path.replaceAll(fileName, "")), false, 0);
-                    System.out.println(paths);
-                }
+            } catch (Exception e) {
+                // Print out the error stack
+                e.printStackTrace();
             }
         }
+        event.dropComplete(true);
     }
 
     public static void resetProgressBar(int encFiles, int decFiles) {
@@ -177,7 +151,7 @@ class DragDrop implements DropTargetListener {
 
 }
 
-class DragDrop_T implements Runnable {
+class DragDropTree_T implements Runnable {
 
     public int threadIterator;
 

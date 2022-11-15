@@ -26,6 +26,7 @@ public class Statics {
     public static String GB;
 
     public static boolean fileHiderBool = false;
+    public static boolean treeViewBool = false;
 
     public static File directory = new File(root.substring(0, 3) + Main.masterFolder + folderName);
     public static File keyFile = Paths.get(root.substring(0, 3) + Main.masterFolder + keyName).toFile();
