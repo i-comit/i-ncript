@@ -16,9 +16,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.List;
-import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -28,12 +25,13 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "D:\\";
+    public static String root = "";
     public static String masterFolder = "--------\\";
+    public static String version = "1.6.5";
 
     public Main() {
-//        root = Paths.get("").toAbsolutePath().toString();
-        root = root.substring(0, 3);
+        root = Paths.get("").toAbsolutePath().toString();
+//        root = root.substring(0, 3);
         System.out.println("ROOT " + root);
         Path runtime = Paths.get(root + masterFolder + "runtime");
         Path app = Paths.get(root + masterFolder + "app");
@@ -51,69 +49,70 @@ public class Main extends javax.swing.JFrame {
                 ex.printStackTrace();
             }
         }
-//        if (Memory.checkWMIC()) {
-        initComponents();
-        FileHider.cleanUp();
+        if (Memory.checkWMIC()) {
+            initComponents();
+            FileHider.cleanUp();
 
-        jStorePanel.setVisible(true);
-        jSendPanel.setVisible(false);
-        jReceivePanel.setVisible(false);
-        jRadioButton2.setVisible(false);
-        jRadioButton3.setVisible(false);
-        jScrollPane5.setVisible(false);
+            jStorePanel.setVisible(true);
+            jSendPanel.setVisible(false);
+            jReceivePanel.setVisible(false);
+            jRadioButton2.setVisible(false);
+            jRadioButton3.setVisible(false);
+            jScrollPane5.setVisible(false);
 
-        if (!keyFile.exists()) {
-            jToolPanel.setVisible(false);
-            jLoginPanel.setVisible(false);
-            jLabel1.setVisible(false);
-            jLabel3.setVisible(false);
-            jAlertLabel.setVisible(false);
-            jTabbedPane1.setVisible(false);
-            jTextArea3.setCaretPosition(0);
-            this.setSize(540, 245);
-            this.setLocationRelativeTo(null);
-        } else {
-            jLoginPanel.setVisible(true);
-            jLabel1.setVisible(true);
-            jLabel3.setVisible(true);
-            jAlertLabel.setVisible(true);
-            jTabbedPane1.setVisible(true);
-            jEULAPanel1.setVisible(false);
-            jEULAPanel.setVisible(false);
-            this.setSize(120, 245);
-            this.setLocationRelativeTo(null);
-
-            jUsernameLabel.setText("enter username");
-            jPasswordLabel.setText("enter password");
-            GUI.getGB();
-            System.out.println("Your available Memory Heap is " + Memory.byteFormatter(Memory.heapSize));
-
-            jTextField1.setText("");
-            jPasswordField1.setText("");
-            jAlertLabel.setText("");
-
-            File rootFolder = Paths.get(root + "\\" + folderName).toFile();
-            File sendFolderF = Statics.sendFolder.toFile();
-            File receiveFolderF = Statics.receiveFolder.toFile();
-            if (!rootFolder.exists()) {
-                GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 40, 40, 1200);
-                rootFolder.mkdir();
+            if (!keyFile.exists()) {
+                jToolPanel.setVisible(false);
+                jLoginPanel.setVisible(false);
+                jLabel1.setVisible(false);
+                jLabel3.setVisible(false);
+                jAlertLabel.setVisible(false);
+                jTabbedPane1.setVisible(false);
+                jTextArea3.setCaretPosition(0);
+                this.setSize(540, 245);
+                this.setLocationRelativeTo(null);
             } else {
-                GUI.labelCutterThread(jAlertLabel, "developed by i-comit", 40, 40, 1200);
-            }
-            if (!sendFolderF.exists()) {
-                sendFolderF.mkdir();
-            }
-            if (!receiveFolderF.exists()) {
-                receiveFolderF.mkdir();
-            }
+                jLoginPanel.setVisible(true);
+                jLabel1.setVisible(true);
+                jLabel3.setVisible(true);
+                jAlertLabel.setVisible(true);
+                jTabbedPane1.setVisible(true);
+                jEULAPanel1.setVisible(false);
+                jEULAPanel.setVisible(false);
+                this.setSize(120, 245);
+                this.setLocationRelativeTo(null);
 
-            jToolPanel.setVisible(false);
-            jButton2.setVisible(false);
+                jUsernameLabel.setText("enter username");
+                jPasswordLabel.setText("enter password");
+                GUI.getGB();
+                System.out.println("Your available Memory Heap is " + Memory.byteFormatter(Memory.heapSize));
+
+                jTextField1.setText("");
+                jPasswordField1.setText("");
+                jAlertLabel.setText("");
+
+                File rootFolder = Paths.get(root + "\\" + folderName).toFile();
+                File sendFolderF = Statics.sendFolder.toFile();
+                File receiveFolderF = Statics.receiveFolder.toFile();
+                if (!rootFolder.exists()) {
+                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 40, 40, 1200);
+                    rootFolder.mkdir();
+                } else {
+                    GUI.labelCutterThread(jAlertLabel, "developed by i-comit", 40, 40, 1200);
+                }
+                if (!sendFolderF.exists()) {
+                    sendFolderF.mkdir();
+                }
+                if (!receiveFolderF.exists()) {
+                    receiveFolderF.mkdir();
+                }
+
+                jToolPanel.setVisible(false);
+                jButton2.setVisible(false);
+            }
+            jProgressBar1.setVisible(false);
+            jProgressBar2.setVisible(false);
+            dragDrop.setVisible(false);
         }
-        jProgressBar1.setVisible(false);
-        jProgressBar2.setVisible(false);
-        dragDrop.setVisible(false);
     }
 
     public static void dragDropper() {
@@ -485,10 +484,11 @@ public class Main extends javax.swing.JFrame {
         jProgressBar1.setBounds(22, 200, 724, 17);
 
         jLabel1.setFont(new java.awt.Font("Polentical Neon", 0, 20)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("i-ncript");
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel1.setText(Main.version);
+        jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(23, 3, 87, 30);
+        jLabel1.setBounds(23, 3, 149, 30);
 
         jLabel3.setFont(new java.awt.Font("Polentical Neon", 0, 18)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
@@ -674,7 +674,7 @@ public class Main extends javax.swing.JFrame {
         jTextArea3.setCaretPosition(0);
         jScrollPane3.setViewportView(jTextArea3);
 
-        jEULAPanel.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 44, 498, 143));
+        jEULAPanel.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 44, 498, 132));
 
         jButton4.setText("I AGREE");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -682,7 +682,7 @@ public class Main extends javax.swing.JFrame {
                 jButton4ActionPerformed(evt);
             }
         });
-        jEULAPanel.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(433, 194, -1, -1));
+        jEULAPanel.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(433, 180, -1, -1));
 
         jButton5.setText("I DISAGREE");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -690,7 +690,7 @@ public class Main extends javax.swing.JFrame {
                 jButton5ActionPerformed(evt);
             }
         });
-        jEULAPanel.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 194, -1, -1));
+        jEULAPanel.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 180, -1, -1));
 
         getContentPane().add(jEULAPanel);
         jEULAPanel.setBounds(6, 0, 520, 230);
@@ -712,7 +712,7 @@ public class Main extends javax.swing.JFrame {
         jTextArea4.setCaretPosition(0);
         jScrollPane4.setViewportView(jTextArea4);
 
-        jEULAPanel1.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 44, 498, 143));
+        jEULAPanel1.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 44, 498, 132));
 
         jButton6.setText("I AGREE");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
@@ -720,7 +720,7 @@ public class Main extends javax.swing.JFrame {
                 ActionjButton6(evt);
             }
         });
-        jEULAPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(433, 194, -1, -1));
+        jEULAPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(433, 180, -1, -1));
 
         jButton7.setText("I DISAGREE");
         jButton7.addActionListener(new java.awt.event.ActionListener() {
@@ -728,7 +728,7 @@ public class Main extends javax.swing.JFrame {
                 jButton7ActionPerformed(evt);
             }
         });
-        jEULAPanel1.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 194, -1, -1));
+        jEULAPanel1.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 180, -1, -1));
 
         getContentPane().add(jEULAPanel1);
         jEULAPanel1.setBounds(6, 0, 520, 230);
@@ -932,6 +932,8 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void ActionjButton6(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ActionjButton6
+        this.setSize(120, 245);
+        this.setLocationRelativeTo(null);
         jEULAPanel1.setVisible(false);
         jLoginPanel.setVisible(true);
         jLabel1.setVisible(true);
@@ -940,10 +942,7 @@ public class Main extends javax.swing.JFrame {
         jTabbedPane1.setVisible(true);
         jUsernameLabel.setText("make username");
         jPasswordLabel.setText("make password");
-
         GUI.getGB();
-        jLabel3.setText(root.substring(0, 2) + " | " + GB);
-
         jTextField1.setText("");
         jPasswordField1.setText("");
         jAlertLabel.setText("");
@@ -976,7 +975,7 @@ public class Main extends javax.swing.JFrame {
         jTextField2.setText("");
         jPasswordField2.setText("");
         jPasswordField3.setText("");
-        
+
         switch (toolMode) {
 //            case 0 -> {
 //                jSwitchMode.setText("STORE");
