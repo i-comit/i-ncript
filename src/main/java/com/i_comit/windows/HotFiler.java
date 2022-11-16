@@ -103,7 +103,7 @@ class HotFiler_T implements Runnable {
             }
             WatchKey key;
             while ((key = watchService.take()) != null && Main.jToggleButton1.isSelected()) {
-                GUI.labelCutterThread(jAlertLabel, "hot filer detected new files", 15, 25, 550);
+                GUI.labelCutterThread(jAlertLabel, "hot filer detected new files", 15, 25, 550, false);
                 Statics.fileCount = 0;
 
                 for (WatchEvent<?> event : key.pollEvents()) {

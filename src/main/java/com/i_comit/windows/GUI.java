@@ -12,7 +12,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,15 +32,15 @@ public class GUI {
     public static Thread t;
     public static Thread t1;
     public static Thread t2;
-    
+
     public static void getGB() {
         File diskPartition = new File(root).toPath().getRoot().toFile();
         GB = Memory.byteFormatter(diskPartition.getUsableSpace());
         Main.jLabel3.setText(root.substring(0, 2) + " " + GB);
     }
 
-    public static void labelCutterThread(JLabel jLabel, String labelMsg, int initSleep, int sleep, int pause) {
-        t = new Thread(() -> labelCutter_T.labelCutter_T(jLabel, labelMsg, initSleep, sleep, pause));
+    public static void labelCutterThread(JLabel jLabel, String labelMsg, int initSleep, int sleep, int pause, boolean stayAlive) {
+        t = new Thread(() -> labelCutter_T.labelCutter_T(jLabel, labelMsg, initSleep, sleep, pause, stayAlive));
         t.start();
     }
 
@@ -135,12 +138,12 @@ public class GUI {
             try {
                 switch (Statics.AESMode) {
                     case 0 -> {
-                        GUI.labelCutterThread(jAlertLabel, "encrypted " + Statics.fileIter + " files", 10, 25, 400);
+                        GUI.labelCutterThread(jAlertLabel, "encrypted " + Statics.fileIter + " files", 10, 25, 400, false);
                         Thread.sleep(100);
                         Main.jTextArea1.append("encrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
                     }
                     case 1 -> {
-                        GUI.labelCutterThread(jAlertLabel, "decrypted " + Statics.fileIter + " files", 10, 25, 400);
+                        GUI.labelCutterThread(jAlertLabel, "decrypted " + Statics.fileIter + " files", 10, 25, 400, false);
                         Thread.sleep(100);
                         Main.jTextArea1.append("decrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
                     }
@@ -164,11 +167,11 @@ public class GUI {
                 String fileName = new File(Folder.sendFolderStr).getName();
                 System.out.println(fileName);
                 if (Statics.toolMode == 2) {
-                    GUI.labelCutterThread(jAlertLabel, "packaged " + fileName + ".i-cc", 10, 25, 500);
+                    GUI.labelCutterThread(jAlertLabel, "packaged " + fileName + ".i-cc", 10, 25, 500, false);
                     Main.jTextArea1.append("packaged " + fileName + ".i-cc at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
                 }
                 if (Statics.toolMode == 1) {
-                    GUI.labelCutterThread(jAlertLabel, "unpacked " + fileName + ".i-cc", 10, 25, 500);
+                    GUI.labelCutterThread(jAlertLabel, "unpacked " + fileName + ".i-cc", 10, 25, 500, false);
                     Main.jTextArea1.append("unpacked " + fileName + ".i-cc at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
                 }
                 Thread.sleep(1000);
@@ -186,7 +189,15 @@ public class GUI {
         }
     }
 
-};
+    public static String formatDateTime(FileTime fileTime) {
+        LocalDateTime localDateTime = fileTime
+                .toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+
+        return localDateTime.format(DateTimeFormatter.ofPattern("MM/dd/yy HH:mm"));
+    }
+}
 
 class labelCutter_T implements Runnable {
 
@@ -194,7 +205,7 @@ class labelCutter_T implements Runnable {
 
     }
 
-    public static void labelCutter_T(JLabel jLabel, String labelMsg, int initSleep, int sleep, int pause) {
+    public static void labelCutter_T(JLabel jLabel, String labelMsg, int initSleep, int sleep, int pause, boolean stayAlive) {
         jLabel.setText("");
         int msgL = labelMsg.length();
         try {
@@ -204,11 +215,13 @@ class labelCutter_T implements Runnable {
                 jLabel.setText(cutLabel.toString());
                 Thread.sleep(sleep);
             }
-            Thread.sleep(pause);
-            for (int i = msgL; i >= 0; i--) {
-                CharSequence cutLabel = labelMsg.subSequence(0, i);
-                jLabel.setText(cutLabel.toString());
-                Thread.sleep(sleep);
+            if (!stayAlive) {
+                Thread.sleep(pause);
+                for (int i = msgL; i >= 0; i--) {
+                    CharSequence cutLabel = labelMsg.subSequence(0, i);
+                    jLabel.setText(cutLabel.toString());
+                    Thread.sleep(sleep);
+                }
             }
         } catch (InterruptedException ex) {
             System.out.println("label thread interrupted.");

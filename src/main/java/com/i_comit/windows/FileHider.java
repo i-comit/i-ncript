@@ -104,6 +104,7 @@ class FileHider_T implements Runnable {
     public static void fileHiderToolReenable() {
         Main.jToggleButton2.setEnabled(true);
         Main.toolBtnsBool(true);
+        Main.jTree1.setEnabled(true);
         Main.dragDrop.setVisible(true);
         Main.jTabbedPane1.setSelectedIndex(0);
         Main.jProgressBar1.setVisible(false);
@@ -125,7 +126,7 @@ class FileHider_T implements Runnable {
                         if (Statics.fileHideIter != 0) {
                             if (fileCt > 10) {
                                 Thread.sleep(300);
-                                GUI.labelCutterThread(Main.jAlertLabel, Statics.fileHideIter + " files hidden", 30, 25, 300);
+                                GUI.labelCutterThread(Main.jAlertLabel, Statics.fileHideIter + " files hidden", 30, 25, 300,false);
                                 fileHiderToolReenable();
                             } else {
                                 fileHiderToolReenable();
@@ -134,6 +135,7 @@ class FileHider_T implements Runnable {
                             fileHiderToolReenable();
                         }
                     }
+                    TreeView.populateStoreTree(path);
                 } catch (IOException | InterruptedException ex) {
                     ex.printStackTrace();
                 }
@@ -149,7 +151,7 @@ class FileHider_T implements Runnable {
                         if (Statics.fileHideIter != 0) {
                             if (fileCt > 10) {
                                 Thread.sleep(300);
-                                GUI.labelCutterThread(Main.jAlertLabel, Statics.fileHideIter + " files unhidden", 30, 25, 300);
+                                GUI.labelCutterThread(Main.jAlertLabel, Statics.fileHideIter + " files unhidden", 30, 25, 300,false);
                                 fileHiderToolReenable();
                             } else {
                                 fileHiderToolReenable();
@@ -158,6 +160,7 @@ class FileHider_T implements Runnable {
                             fileHiderToolReenable();
                         }
                     }
+                    TreeView.populateStoreTree(path);
                 } catch (IOException | InterruptedException ex) {
                     ex.printStackTrace();
                 }

@@ -182,7 +182,7 @@ class AES_T implements Runnable {
                                 Main.jProgressBar1.setStringPainted(true);
                                 Main.jProgressBar1.setString("0% | " + "0/" + AES_T.paths.size());
 
-                                GUI.labelCutterThread(jAlertLabel, "encrypting " + paths.size() + " files", 0, 15, 300);
+                                GUI.labelCutterThread(jAlertLabel, "encrypting " + paths.size() + " files", 0, 15, 300, true);
                                 paths.forEach(x -> {
                                     if (x.toFile().length() > maxFileBytes) {
                                         if (GUI.t.isAlive()) {
@@ -203,7 +203,7 @@ class AES_T implements Runnable {
                                     Main.jProgressBar1.setVisible(false);
                                     Main.jProgressBar2.setVisible(true);
                                     GUI.t.interrupt();
-                                    GUI.labelCutterThread(jAlertLabel, "incorrect key", 10, 25, 500);
+                                    GUI.labelCutterThread(jAlertLabel, "incorrect key", 10, 25, 500, true);
                                     FileHider.cleanUp();
 
                                 } else {
@@ -225,7 +225,7 @@ class AES_T implements Runnable {
                             }
                             case 1 -> {
                                 jProgressBar1.setStringPainted(true);
-                                GUI.labelCutterThread(jAlertLabel, "decrypting files...", 0, 15, 300);
+                                GUI.labelCutterThread(jAlertLabel, "decrypting " + paths.size() + " files", 0, 15, 300, false);
 
                                 paths.forEach(x -> {
                                     if (x.toFile().length() > maxFileBytes) {
@@ -247,7 +247,7 @@ class AES_T implements Runnable {
                                     Main.jProgressBar1.setVisible(false);
                                     Main.jProgressBar2.setVisible(true);
                                     GUI.t.interrupt();
-                                    GUI.labelCutterThread(jAlertLabel, "incorrect key", 10, 25, 500);
+                                    GUI.labelCutterThread(jAlertLabel, "incorrect key", 10, 25, 500, true);
                                     FileHider.cleanUp();
                                 } else {
                                     System.out.println("File Decryption Complete");
@@ -273,11 +273,11 @@ class AES_T implements Runnable {
                         if (!Main.jToggleButton1.isSelected()) {
                             switch (AESMode) {
                                 case 0 -> {
-                                    GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 10, 20, 400);
+                                    GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 10, 20, 400, false);
                                     Main.jRadioButton2.setEnabled(true);
                                 }
                                 case 1 -> {
-                                    GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400);
+                                    GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400, false);
                                     Main.jToggleButton1.setEnabled(true);
                                     Main.jRadioButton3.setEnabled(true);
                                 }
@@ -287,20 +287,20 @@ class AES_T implements Runnable {
                 } else {
                     switch (toolMode) {
                         case 0 ->
-                            GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 20, 40, 800);
+                            GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 20, 40, 800, false);
                         case 1 -> {
-                            GUI.labelCutterThread(jAlertLabel, "n-box folder has no files", 20, 40, 800);
+                            GUI.labelCutterThread(jAlertLabel, "n-box folder has no files", 20, 40, 800, false);
                             Main.jRadioButton3.setEnabled(true);
                         }
                         case 2 -> {
-                            GUI.labelCutterThread(jAlertLabel, "o-box folder has no files", 20, 40, 800);
+                            GUI.labelCutterThread(jAlertLabel, "o-box folder has no files", 20, 40, 800, false);
                             Main.jRadioButton2.setEnabled(true);
                         }
                     }
                     Main.jToggleButton2.setEnabled(true);
                 }
             } else {
-                GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 20, 40, 800);
+                GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 20, 40, 800, false);
                 Main.jToggleButton2.setEnabled(true);
             }
         } else {
@@ -340,10 +340,10 @@ class AES_T implements Runnable {
                 Main.jProgressBar1.setVisible(false);
                 Main.jProgressBar2.setVisible(true);
                 GUI.t.interrupt();
-                GUI.labelCutterThread(Main.jAlertLabel, "incorrect key", 10, 25, 500);
+                GUI.labelCutterThread(Main.jAlertLabel, "incorrect key", 10, 25, 500, true);
                 FileHider.cleanUp();
             } else {
-                DragDrop.resetProgressBar(encFiles, decFiles);
+                DragDrop_T.resetProgressBar(encFiles, decFiles);
                 GUI.getGB();
                 TreeView.populateStoreTree(Statics.path);
             }

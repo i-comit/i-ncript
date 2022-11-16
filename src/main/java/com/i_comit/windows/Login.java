@@ -42,31 +42,31 @@ public class Login {
                                     b = true;
                                 } else {
                                     GUI.t.interrupt();
-                                    GUI.labelCutterThread(jAlertLabel, "password can't be username", 20, 20, 1200);
+                                    GUI.labelCutterThread(jAlertLabel, "password can't be username", 20, 20, 1200, false);
                                 }
                             } else {
                                 GUI.t.interrupt();
-                                GUI.labelCutterThread(jAlertLabel, "password is too long", 20, 20, 1200);
+                                GUI.labelCutterThread(jAlertLabel, "password is too long", 20, 20, 1200, false);
                             }
                         } else {
                             GUI.t.interrupt();
-                            GUI.labelCutterThread(jAlertLabel, "password is too short", 20, 20, 1200);
+                            GUI.labelCutterThread(jAlertLabel, "password is too short", 20, 20, 1200, false);
                         }
                     } else {
                         GUI.t.interrupt();
-                        GUI.labelCutterThread(jAlertLabel, "username is too long", 20, 20, 1200);
+                        GUI.labelCutterThread(jAlertLabel, "username is too long", 20, 20, 1200, false);
                     }
                 } else {
                     GUI.t.interrupt();
-                    GUI.labelCutterThread(jAlertLabel, "username is too short", 20, 20, 1200);
+                    GUI.labelCutterThread(jAlertLabel, "username is too short", 20, 20, 1200, false);
                 }
             } else {
                 GUI.t.interrupt();
-                GUI.labelCutterThread(jAlertLabel, "enter a password", 20, 20, 1200);
+                GUI.labelCutterThread(jAlertLabel, "enter a password", 20, 20, 1200, false);
             }
         } else {
             GUI.t.interrupt();
-            GUI.labelCutterThread(jAlertLabel, "enter a username", 20, 20, 1200);
+            GUI.labelCutterThread(jAlertLabel, "enter a username", 20, 20, 1200, false);
         }
         jTextField1.setText("");
         jPasswordField1.setText("");
@@ -83,14 +83,14 @@ public class Login {
             Hasher.hashedUsername = Hasher.getHash(username, true);
             Hasher.hashedPassword = Hasher.getHash(password, false);
             GUI.t.interrupt();
-            GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript", 30, 30, 600);
+            GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript", 30, 30, 600, false);
             makeKey();
             b = true;
         }
         return b;
     }
 
-    public static void makeKey() {
+    private static void makeKey() {
         Path path = keyFile.toPath();//creates Path instance  
         try {
             List<String> lines = Arrays.asList(Hasher.finalizeHash(username, true), Hasher.finalizeHash(password, false));
@@ -134,22 +134,22 @@ public class Login {
                         AES.AESThread(listAESPaths(sendFolder), sendFolder.toFile(), true, 2);
                     } else {
                         GUI.t.interrupt();
-                        GUI.labelCutterThread(jAlertLabel, "password can't be username", 20, 20, 1200);
+                        GUI.labelCutterThread(jAlertLabel, "password can't be username", 20, 20, 1200, false);
                         sendPanelTools();
                     }
                 } else {
                     GUI.t.interrupt();
-                    GUI.labelCutterThread(jAlertLabel, "invalid username", 20, 20, 1200);
+                    GUI.labelCutterThread(jAlertLabel, "invalid username", 20, 20, 1200, false);
                     sendPanelTools();
                 }
             } else {
                 GUI.t.interrupt();
-                GUI.labelCutterThread(jAlertLabel, "please make a password", 20, 20, 1200);
+                GUI.labelCutterThread(jAlertLabel, "please make a password", 20, 20, 1200, false);
                 sendPanelTools();
             }
         } else {
             GUI.t.interrupt();
-            GUI.labelCutterThread(jAlertLabel, "please make a username", 20, 20, 1200);
+            GUI.labelCutterThread(jAlertLabel, "please make a username", 20, 20, 1200, false);
             sendPanelTools();
         }
 
@@ -192,11 +192,11 @@ public class Login {
                 Main.jPasswordField3.setText("");
                 Folder.list1Dir(1);
             } else {
-                GUI.labelCutterThread(jAlertLabel, "please make a password", 20, 20, 1200);
+                GUI.labelCutterThread(jAlertLabel, "please make a password", 20, 20, 1200, false);
                 receivePanelTools();
             }
         } else {
-            GUI.labelCutterThread(jAlertLabel, "please select a .i-cc file", 20, 20, 1200);
+            GUI.labelCutterThread(jAlertLabel, "please select a .i-cc file", 20, 20, 1200, false);
             receivePanelTools();
             Main.jPasswordField3.setText("");
         }
@@ -230,7 +230,7 @@ public class Login {
                     brTest.close();
                     Folder.deleteDirectory(Paths.get(Statics.zipFileName).toFile());
                     Paths.get(Statics.zipFileName).toFile().delete();
-                    GUI.labelCutterThread(jAlertLabel, "mismatched credentials", 20, 20, 1000);
+                    GUI.labelCutterThread(jAlertLabel, "mismatched credentials", 20, 20, 1000, false);
                     Main.jList1.clearSelection();
                     receivePanelTools();
                     Main.jPasswordField3.setText("");
@@ -242,7 +242,7 @@ public class Login {
                 brTest.close();
                 Folder.deleteDirectory(Paths.get(Statics.zipFileName).toFile());
                 Paths.get(Statics.zipFileName).toFile().delete();
-                GUI.labelCutterThread(jAlertLabel, "mismatched credentials", 20, 20, 1000);
+                GUI.labelCutterThread(jAlertLabel, "mismatched credentials", 20, 20, 1000, false);
                 receivePanelTools();
                 Main.jList1.clearSelection();
                 Main.jPasswordField3.setText("");
@@ -269,7 +269,7 @@ public class Login {
                     Main.jToolPanel.setVisible(true);
                     Main.jProgressBar2.setVisible(true);
                     GUI.t.interrupt();
-                    GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript", 45, 30, 900);
+                    GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript", 45, 30, 900, false);
                     Main.dragDropper();
                     Main.jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
                     Main.jLabel10.setToolTipText("drop box will encrypt & decrypt any files dropped here");
@@ -277,7 +277,7 @@ public class Login {
                 }
             } else {
                 GUI.t.interrupt();
-                GUI.labelCutterThread(jAlertLabel, "incorrect login info", 45, 30, 900);
+                GUI.labelCutterThread(jAlertLabel, "incorrect login info", 45, 30, 900, false);
 
             }
 

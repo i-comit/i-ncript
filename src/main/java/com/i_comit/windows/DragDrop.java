@@ -71,7 +71,7 @@ class DragDrop implements DropTargetListener {
                 System.out.println(treepaths);
             } else {
                 GUI.t.interrupt();
-                GUI.labelCutterThread(jAlertLabel, "all files must be in same folder", 10, 20, 600);
+                GUI.labelCutterThread(jAlertLabel, "all files must be in same folder", 10, 20, 600, false);
             }
             jTree1.clearSelection();
         }
@@ -87,13 +87,12 @@ class DragDrop implements DropTargetListener {
                         // Loop them through
                         for (int i = 0; i < files.size(); i++) {
                             String sf = files.get(i).toString();
-                            System.out.println("SF " + sf);
                             filesf = new File(sf);
                             paths.add(filesf.toPath());
                             if (Statics.toolMode == 0) {
                                 if (i >= files.size() - 1) {
                                     Main.jButton2.setVisible(true);
-                                    Main.jProgressBar1.setMaximum(files.size());
+                                    Main.jProgressBar1.setMaximum(0);
                                     AES.AESThread(paths, Statics.directory, false, 0);
                                 }
                             }
@@ -104,10 +103,10 @@ class DragDrop implements DropTargetListener {
                                         Main.jTextArea1.append(filesf.getName() + " has been moved to the n-box folder\n");
                                         Folder.listZipFiles();
                                     } else {
-                                        System.out.println("only .i-cc files allowed");
+                                        GUI.labelCutterThread(Main.jAlertLabel, "only .i-cc files are allowed", 10, 25, 500, false);
                                     }
                                 } else {
-                                    GUI.labelCutterThread(Main.jAlertLabel, "only 1 file is allowed at once", 10, 25, 500);
+                                    GUI.labelCutterThread(Main.jAlertLabel, "only 1 file is allowed at once", 10, 25, 500, false);
                                 }
                             }
                         }
@@ -115,7 +114,7 @@ class DragDrop implements DropTargetListener {
                         if (GUI.t.isAlive()) {
                             GUI.t.interrupt();
                         }
-                        GUI.labelCutterThread(Main.jAlertLabel, "only 10 files are allowed at once", 10, 25, 500);
+                        GUI.labelCutterThread(Main.jAlertLabel, "only 10 files are allowed at once", 10, 25, 500, false);
                         Main.jTextArea1.append("For security reasons, you can only drop up to 10 files at once\n");
                     }
                 }
@@ -126,43 +125,6 @@ class DragDrop implements DropTargetListener {
             }
         }
         event.dropComplete(true);
-    }
-
-    public static void resetProgressBar(int encFiles, int decFiles) {
-        Main.jProgressBar1.setString("100% | " + AES_T.paths.size() + "/" + AES_T.paths.size());
-        jProgressBar1.setMaximum(100);
-        jProgressBar1.setValue(jProgressBar1.getMaximum());
-        Main.jButton2.setVisible(false);
-
-        try {
-            Thread.sleep(400);
-            GUI.labelCutterThread(jAlertLabel, decFiles + " encrypted | " + encFiles + " decrypted", 15, 30, 300);
-
-            Thread.sleep(300);
-            for (int x = jProgressBar1.getMaximum(); x >= 0; x--) {
-                Thread.sleep(5);
-                jProgressBar1.setValue(x);
-            }
-            if (jProgressBar1.getValue() == 0) {
-                Statics.fileIter = 0;
-                Statics.fileCount = 0;
-                jProgressBar1.setValue(Statics.fileIter);
-                jProgressBar1.setStringPainted(false);
-                DragDrop.encFiles = 0;
-                DragDrop.decFiles = 0;
-                jProgressBar1.setMaximum(Statics.fileCount);
-                
-                Main.jProgressBar2.setStringPainted(false);
-                Main.jProgressBar2.setVisible(true);
-                
-                Main.dragDrop.setVisible(true);
-                Main.jProgressBar1.setVisible(false);
-                Main.jTabbedPane1.setSelectedIndex(0);
-                Main.toolBtnsBool(true);
-            }
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
     }
 
     @Override
@@ -200,7 +162,7 @@ class DragDrop_T implements Runnable {
 
         try {
             Thread.sleep(400);
-            GUI.labelCutterThread(jAlertLabel, decFiles + " encrypted | " + encFiles + " decrypted", 15, 30, 300);
+            GUI.labelCutterThread(jAlertLabel, decFiles + " encrypted | " + encFiles + " decrypted", 15, 30, 300, false);
 
             Thread.sleep(300);
             for (int x = jProgressBar1.getMaximum(); x >= 0; x--) {
@@ -212,12 +174,16 @@ class DragDrop_T implements Runnable {
                 Statics.fileCount = 0;
                 jProgressBar1.setValue(Statics.fileIter);
                 jProgressBar1.setStringPainted(false);
-                
-                Main.jProgressBar2.setVisible(false);
+                jProgressBar1.setVisible(false);
+
+                Main.jProgressBar2.setStringPainted(false);
+                Main.jProgressBar2.setVisible(true);
+
                 DragDrop.encFiles = 0;
                 DragDrop.decFiles = 0;
                 Main.dragDrop.setVisible(true);
                 Main.toolBtnsBool(true);
+                Main.jTabbedPane1.setSelectedIndex(0);
                 AES_T.paths = null;
             }
         } catch (InterruptedException ex) {
