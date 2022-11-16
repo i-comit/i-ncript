@@ -22,35 +22,35 @@ import javax.swing.UnsupportedLookAndFeelException;
 /**
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
-
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "";
+    public static String root = "D:\\";
     public static String masterFolder = "--------\\";
     public static String version = "1.6.5";
 
     public Main() {
-        root = Paths.get("").toAbsolutePath().toString();
-        Path runtime = Paths.get(root + masterFolder + "runtime");
-        Path app = Paths.get(root + masterFolder + "app");
-        if (runtime.toFile().exists()) {
-            try {
-                Files.setAttribute(runtime, "dos:hidden", true);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-        if (app.toFile().exists()) {
-            try {
-                Files.setAttribute(app, "dos:hidden", true);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-        if (Memory.checkWMIC()) {
+//        root = Paths.get("").toAbsolutePath().toString();
+//        if (Memory.checkWMIC()) {
             root = root.substring(0, 3);
             initComponents();
             FileHider.cleanUp();
+
+            Path runtime = Paths.get(root + masterFolder + "runtime");
+            Path app = Paths.get(root + masterFolder + "app");
+            if (runtime.toFile().exists()) {
+                try {
+                    Files.setAttribute(runtime, "dos:hidden", true);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            if (app.toFile().exists()) {
+                try {
+                    Files.setAttribute(app, "dos:hidden", true);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
 
             jStorePanel.setVisible(true);
             jSendPanel.setVisible(false);
@@ -61,20 +61,12 @@ public class Main extends javax.swing.JFrame {
 
             if (!keyFile.exists()) {
                 jToolPanel.setVisible(false);
-                jLoginPanel.setVisible(false);
-                jLabel1.setVisible(false);
-                jLabel3.setVisible(false);
-                jAlertLabel.setVisible(false);
-                jTabbedPane1.setVisible(false);
+                loginLabelVisibleBool(false);
                 jTextArea3.setCaretPosition(0);
                 this.setSize(540, 245);
                 this.setLocationRelativeTo(null);
             } else {
-                jLoginPanel.setVisible(true);
-                jLabel1.setVisible(true);
-                jLabel3.setVisible(true);
-                jAlertLabel.setVisible(true);
-                jTabbedPane1.setVisible(true);
+                loginLabelVisibleBool(true);
                 jEULAPanel1.setVisible(false);
                 jEULAPanel.setVisible(false);
                 this.setSize(120, 245);
@@ -84,26 +76,10 @@ public class Main extends javax.swing.JFrame {
                 jPasswordLabel.setText("enter password");
                 GUI.getGB();
                 System.out.println("Your available Memory Heap is " + Memory.byteFormatter(Memory.heapSize));
-
+                generateFolders();
                 jTextField1.setText("");
                 jPasswordField1.setText("");
                 jAlertLabel.setText("");
-
-                File rootFolder = Paths.get(root + "\\" + folderName).toFile();
-                File sendFolderF = Statics.sendFolder.toFile();
-                File receiveFolderF = Statics.receiveFolder.toFile();
-                if (!rootFolder.exists()) {
-                    GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 40, 40, 1200);
-                    rootFolder.mkdir();
-                } else {
-                    GUI.labelCutterThread(jAlertLabel, "developed by i-comit", 40, 40, 1200);
-                }
-                if (!sendFolderF.exists()) {
-                    sendFolderF.mkdir();
-                }
-                if (!receiveFolderF.exists()) {
-                    receiveFolderF.mkdir();
-                }
 
                 jToolPanel.setVisible(false);
                 jButton2.setVisible(false);
@@ -111,6 +87,32 @@ public class Main extends javax.swing.JFrame {
             jProgressBar1.setVisible(false);
             jProgressBar2.setVisible(false);
             dragDrop.setVisible(false);
+//        }
+    }
+
+    private void loginLabelVisibleBool(boolean b) {
+        jLoginPanel.setVisible(b);
+        jLabel1.setVisible(b);
+        jLabel3.setVisible(b);
+        jAlertLabel.setVisible(b);
+        jTabbedPane1.setVisible(b);
+    }
+
+    private void generateFolders() {
+        File rootFolder = Paths.get(root + masterFolder + folderName).toFile();
+        File sendFolderF = Statics.sendFolder.toFile();
+        File receiveFolderF = Statics.receiveFolder.toFile();
+        if (!rootFolder.exists()) {
+            GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 40, 40, 1200);
+            rootFolder.mkdir();
+        } else {
+            GUI.labelCutterThread(jAlertLabel, "developed by i-comit", 40, 40, 1200);
+        }
+        if (!sendFolderF.exists()) {
+            sendFolderF.mkdir();
+        }
+        if (!receiveFolderF.exists()) {
+            receiveFolderF.mkdir();
         }
     }
 
@@ -906,33 +908,15 @@ public class Main extends javax.swing.JFrame {
         this.setSize(120, 245);
         this.setLocationRelativeTo(null);
         jEULAPanel1.setVisible(false);
-        jLoginPanel.setVisible(true);
-        jLabel1.setVisible(true);
-        jLabel3.setVisible(true);
-        jAlertLabel.setVisible(true);
-        jTabbedPane1.setVisible(true);
+        loginLabelVisibleBool(true);
         jUsernameLabel.setText("make username");
         jPasswordLabel.setText("make password");
         GUI.getGB();
         jTextField1.setText("");
         jPasswordField1.setText("");
         jAlertLabel.setText("");
+        generateFolders();
 
-        File rootFolder = Paths.get(root + "\\" + folderName).toFile();
-        File sendFolderF = Statics.sendFolder.toFile();
-        File receiveFolderF = Statics.receiveFolder.toFile();
-        if (!rootFolder.exists()) {
-            GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 40, 40, 1200);
-            rootFolder.mkdir();
-        } else {
-            GUI.labelCutterThread(jAlertLabel, "developed by i-comit", 40, 40, 1200);
-        }
-        if (!sendFolderF.exists()) {
-            sendFolderF.mkdir();
-        }
-        if (!receiveFolderF.exists()) {
-            receiveFolderF.mkdir();
-        }
         jToolPanel.setVisible(false);
 //        jProgressBar1.setVisible(false);
         jButton2.setVisible(false);
@@ -1122,9 +1106,6 @@ public class Main extends javax.swing.JFrame {
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         try {
-            //</editor-fold>
-            //</editor-fold>
-            //</editor-fold>
             //</editor-fold>
             UIManager.setLookAndFeel("com.formdev.flatlaf.FlatDarkLaf");
             UIManager.put("ProgressBar.selectionForeground", Color.black);
