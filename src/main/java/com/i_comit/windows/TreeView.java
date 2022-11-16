@@ -37,70 +37,6 @@ public class TreeView {
         try {
             List<Path> directories = GUI.listDirs(path);
             listRoot(directories);
-//            for (int i = 1; i < directories.size(); i++) {
-//                DefaultMutableTreeNode dirNodes = new DefaultMutableTreeNode(directories.get(i).toFile().getName()); // level 1 node
-////                recursiveDir(directories.get(i).toFile());
-//                if (recursiveDir(directories.get(i).toFile()).length != 0) {
-////                    System.out.println("PARENT NODE OF RECURSIVE IS " + directories.get(i).toFile().getName());
-//                    String[] arr = recursiveDir(directories.get(i).toFile());
-////                    System.out.println("SIZE OF RECURSIVE IS " + arr.length);
-//                    for (int a = 0; a < arr.length; a++) {
-//                        String subDirPath = Main.root + Main.masterFolder + Statics.folderName + File.separator + directories.get(i).toFile().getName() + File.separator + arr[a];
-//                        String subDirPath2 = arr[a];
-//                        DefaultMutableTreeNode subDirNodes = new DefaultMutableTreeNode(subDirPath2); // level 1 node
-//
-////                        System.out.println("SUBDIR NAME IS " + subDirPath2);
-//                        File[] files = new File(subDirPath).listFiles();
-////                        System.out.println(Arrays.toString(files));
-//                        if (files != null) {
-//                            dirNodes.add(subDirNodes);
-//                            for (int b = 0; b < files.length; b++) {
-//                                if (!files[b].isDirectory()) {
-////                                    System.out.println("FILES " + files[b]);
-//                                    DefaultMutableTreeNode fileNodes = new DefaultMutableTreeNode(files[b].getName()); // level 2 (leaf) node
-//                                    subDirNodes.add(fileNodes);
-//                                } else {
-//                                    DefaultMutableTreeNode subDirNodes1 = new DefaultMutableTreeNode(files[b].getName()); // level 1 node
-//                                    subDirNodes.add(subDirNodes1);
-//                                    File[] files2 = files[b].listFiles();
-//                                    for (int c = 0; c < files2.length; c++) {
-//                                        if (!files2[c].isDirectory()) {
-////                                            System.out.println("FILES2 " + files2[c]);
-//                                            DefaultMutableTreeNode fileNodes = new DefaultMutableTreeNode(files2[c].getName()); // level 2 (leaf) node
-//                                            subDirNodes1.add(fileNodes);
-//                                        }
-//                                    }
-//                                }
-//
-//                            }
-//                        }
-//                    }
-//                } else {
-//
-//                }
-//                if (i == 1) {
-//                    treeRoot.add(dirNodes);
-//                    System.out.println("CHILD 1 DIR " + directories.get(i).getFileName());
-//                    File[] files1 = directories.get(i).toFile().listFiles();
-//                    for (int x = 0; x < files1.length; x++) {
-//                        DefaultMutableTreeNode fileNodes = new DefaultMutableTreeNode(files1[x].getName()); // level 2 (leaf) node
-//                        dirNodes.add(fileNodes);
-//                        if (files1[x].isDirectory()) {
-////                            dirNodes.remove(fileNodes);
-//                        }
-//                    }
-//                    File[] files0 = directories.get(0).toFile().listFiles();
-//                    System.out.println("CHILD 0 DIR " + directories.get(i).getFileName());
-//                    for (int x = 1; x < files0.length; x++) {
-//                        DefaultMutableTreeNode fileNodes = new DefaultMutableTreeNode(files0[x].getName()); // level 2 (leaf) node
-//                        treeRoot.add(fileNodes);
-//                        if (files0[x].isDirectory()) {
-////                            dirNodes.remove(fileNodes);
-//                        }
-//                    }
-//                    jTree1.expandRow(i);
-//                }
-//            }
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -123,7 +59,6 @@ public class TreeView {
             DefaultMutableTreeNode dirNodes = new DefaultMutableTreeNode(filesArr[x].getName()); // level 2 (leaf) node
 //            treeRoot.add(fileNodes);
             if (filesArr[x].isDirectory()) {
-//                            dirNodes.remove(fileNodes);
 //                System.out.println("directories in root " + filesArr[x]);
                 treeRoot.add(dirNodes);
                 listFiles(filesArr[x], dirNodes);
@@ -138,8 +73,8 @@ public class TreeView {
 
     public static void listFiles(File file, DefaultMutableTreeNode dirNodes) {
         File[] filesArr = file.listFiles();
-        System.out.println("List all files " + Arrays.toString(filesArr));
-        System.out.println("CHILD 2 DIR " + file.getName());
+//        System.out.println("List all files " + Arrays.toString(filesArr));
+//        System.out.println("CHILD 2 DIR " + file.getName());
         for (int x = 0; x < filesArr.length; x++) {
             if (!filesArr[x].isDirectory()) {
                 DefaultMutableTreeNode fileNodes = new DefaultMutableTreeNode(filesArr[x].getName()); // level 2 (leaf) node
@@ -147,14 +82,7 @@ public class TreeView {
 //                System.out.println("files in " + file.getName() + " is " + filesArr[x].getName());
             } else {
 //                listFiles(files0[x], dirNodes);               
-                System.out.println("this is a directory 0 " + filesArr[x].getName());
-                DefaultMutableTreeNode subDirNodes = new DefaultMutableTreeNode(filesArr[x].getName()); // level 2 (leaf) node
-                DefaultMutableTreeNode fileNodes = new DefaultMutableTreeNode("amogus"); // level 2 (leaf) node
-
-//                subDirNodes.add(fileNodes);
-//                dirNodes.add(subDirNodes);
-                listFilesRecursively(filesArr[x], dirNodes, subDirNodes);
-//                listFilesRecursively2(filesArr[x], dirNodes);
+                listFilesRecursively2(filesArr[x], dirNodes);
 
 //                listFiles(filesArr[x], dirNodes);
             }
@@ -172,8 +100,10 @@ public class TreeView {
                 System.out.println("files in recursive root folder is " + filesArr[x].getName());
             } else {
                 System.out.println("this is a recursive directory XXXXXXXXXXX " + filesArr[x].getName());
-
-                listFilesRecursively(filesArr[x], dirNodes, subDirNodes);
+                DefaultMutableTreeNode dirNodes0 = new DefaultMutableTreeNode(file);
+                DefaultMutableTreeNode dirNodes1 = new DefaultMutableTreeNode(filesArr[x]);
+                dirNodes0.add(dirNodes1);
+                listFilesRecursively(filesArr[x], dirNodes0, subDirNodes);
             }
         }
         dirNodes.add(subDirNodes);
@@ -181,50 +111,24 @@ public class TreeView {
 
     public static void listFilesRecursively2(File file, DefaultMutableTreeNode dirNodes) {
         DefaultMutableTreeNode subDirNodes = new DefaultMutableTreeNode(file.getName()); // level 2 (leaf) node
-//        DefaultMutableTreeNode fileNodes = new DefaultMutableTreeNode("amogus"); // level 2 (leaf) node
+        dirNodes.add(subDirNodes);
         File[] filesArr = file.listFiles();
-        System.out.println("Files in listFilesRecursively " + Arrays.toString(filesArr));
+//        System.out.println("Files in listFilesRecursively " + Arrays.toString(filesArr));
         for (int x = 0; x < filesArr.length; x++) {
             if (!filesArr[x].isDirectory()) {
                 DefaultMutableTreeNode fileNodes = new DefaultMutableTreeNode(filesArr[x].getName()); // level 2 (leaf) node
                 subDirNodes.add(fileNodes);
                 subDirNodes.add(fileNodes);
 //                dirNodes.add(fileNodes);
-                System.out.println("files in recursive root folder is " + filesArr[x].getName());
+//                System.out.println("files in recursive root folder is " + filesArr[x].getName());
             } else {
-                System.out.println("this is a directory " + filesArr[x].getName());
-//                listFilesRecursively(filesArr[x], dirNodes);
+//                System.out.println("this is a directory " + filesArr[x].getName());
+                DefaultMutableTreeNode subDirNodes0 = new DefaultMutableTreeNode(filesArr[x].getName()); // level 2 (leaf) node
+                subDirNodes.add(subDirNodes0);
+                listFiles(filesArr[x], subDirNodes0);
             }
         }
         dirNodes.add(subDirNodes);
-    }
-
-    public static String[] recursiveDir(File file) {
-        String[] directories = file.list(new FilenameFilter() {
-            @Override
-            public boolean accept(File current, String name) {
-                return new File(current, name).isDirectory();
-            }
-        });
-        return directories;
-    }
-
-    public static File treeFileFormatter(TreePath[] treePaths) {
-        File fileFormat = null;
-        String path = root + masterFolder + treePaths[0].toString().substring(1, treePaths[0].toString().length() - 1).replaceAll(", ", "\\\\");
-        String fileName = new File(root + masterFolder + treePaths[0].toString().substring(1, treePaths[0].toString().length() - 1).replaceAll(", ", "\\\\")).getName();
-//                .replaceAll(new File(treePaths[0].toString()).getName(), "");
-        if (!new File(path).isDirectory()) {
-            System.out.println("Final path without filename " + path.replaceAll(fileName, ""));
-        }
-        for (int i = 0; i < treePaths.length; i++) {
-            fileFormat = new File(root + masterFolder + treePaths[i].toString().substring(1, treePaths[i].toString().length() - 1).replaceAll(", ", "\\\\"));
-            if (!fileFormat.isDirectory()) {
-                System.out.println("files are " + fileFormat);
-            }
-
-        }
-        return fileFormat;
     }
 
     public static void openFile(TreePath treePath) {

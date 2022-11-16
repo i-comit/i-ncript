@@ -52,7 +52,6 @@ class DragDrop implements DropTargetListener {
         // Loop through the flavors
         if (!jTree1.isSelectionEmpty()) {
 //            jTree1.clearSelection();
-            System.out.println("TREE VIEW " + TreeView.treeFileFormatter(jTree1.getSelectionPaths()));
             List<Path> treepaths = new ArrayList<>();
             String path = root + masterFolder + Main.jTree1.getSelectionPaths()[0].toString().substring(1, Main.jTree1.getSelectionPaths()[0].toString().length() - 1).replaceAll(", ", "\\\\");
             String fileName = new File(root + masterFolder + Main.jTree1.getSelectionPaths()[0].toString().substring(1, Main.jTree1.getSelectionPaths()[0].toString().length() - 1).replaceAll(", ", "\\\\")).getName();

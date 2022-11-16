@@ -24,13 +24,13 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "D:\\";
+    public static String root = "";
     public static String masterFolder = "--------\\";
     public static String version = "1.6.5";
 
     public Main() {
-//        root = Paths.get("").toAbsolutePath().toString();
-//        if (Memory.checkWMIC()) {
+        root = Paths.get("").toAbsolutePath().toString();
+        if (Memory.checkWMIC()) {
             root = root.substring(0, 3);
             initComponents();
             FileHider.cleanUp();
@@ -87,7 +87,7 @@ public class Main extends javax.swing.JFrame {
             jProgressBar1.setVisible(false);
             jProgressBar2.setVisible(false);
             dragDrop.setVisible(false);
-//        }
+        }
     }
 
     private void loginLabelVisibleBool(boolean b) {
