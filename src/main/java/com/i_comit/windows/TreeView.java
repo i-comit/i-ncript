@@ -36,8 +36,6 @@ public class TreeView {
         treeRoot.removeAllChildren();
         try {
             List<Path> directories = GUI.listDirs(path);
-            System.out.println("DIRS " + directories);
-
             for (int i = 1; i < directories.size(); i++) {
                 DefaultMutableTreeNode dirNodes = new DefaultMutableTreeNode(directories.get(i).toFile().getName()); // level 1 node
 
@@ -83,7 +81,6 @@ public class TreeView {
                 if (i == 1) {
                     treeRoot.add(dirNodes);
                     File[] files1 = directories.get(i).toFile().listFiles();
-                    System.out.println(directories.get(i).toFile());
                     for (int x = 0; x < files1.length; x++) {
                         DefaultMutableTreeNode fileNodes = new DefaultMutableTreeNode(files1[x].getName()); // level 2 (leaf) node
                         dirNodes.add(fileNodes);
@@ -91,30 +88,17 @@ public class TreeView {
                             dirNodes.remove(fileNodes);
                         }
                     }
-                    System.out.println("DIR0 " + directories.get(0).toFile());
                     File[] files0 = directories.get(0).toFile().listFiles();
-                    System.out.println(Arrays.toString(files0));
                     for (int x = 1; x < files0.length; x++) {
                         DefaultMutableTreeNode fileNodes = new DefaultMutableTreeNode(files0[x].getName()); // level 2 (leaf) node
-                        System.out.println(files0[x].getName());
                         treeRoot.add(fileNodes);
                         if (files0[x].isDirectory()) {
                             dirNodes.remove(fileNodes);
                         }
                     }
+                    jTree1.expandRow(i);
                 }
             }
-//            DefaultMutableTreeNode dirNodes = new DefaultMutableTreeNode(directories.get(0).toFile().getName()); // level 1 node
-//            treeRoot.add(dirNodes);
-//            File[] files = directories.get(0).toFile().listFiles();
-//            System.out.println(Arrays.toString(files));
-//            for (int x = 0; x < files.length; x++) {
-//                DefaultMutableTreeNode fileNodes = new DefaultMutableTreeNode(files[x].getName()); // level 2 (leaf) node
-//                dirNodes.add(fileNodes);
-//                if (files[x].isDirectory()) {
-//                    dirNodes.remove(fileNodes);
-//                }
-//            }
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -163,19 +147,12 @@ public class TreeView {
         file = new File(root + masterFolder + treePath.toString().substring(1, treePath.toString().length() - 1).replaceAll(", ", "\\\\"));
         if (!file.isDirectory()) {
             System.out.println("file is " + file);
-        }
-        if (!Desktop.isDesktopSupported())//check if Desktop is supported by Platform or not  
-        {
-            System.out.println("not supported");
-            return;
-        }
-        Desktop desktop = Desktop.getDesktop();
-        if (file.exists()) //checks file exists or not  
-        {
-            try {
-                desktop.open(file);              //opens the specified file  
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    Desktop.getDesktop().open(file);
+                } catch (IOException ex) {
+                    // no application registered for PDFs
+                }
             }
         }
     }

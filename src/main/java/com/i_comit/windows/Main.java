@@ -31,8 +31,6 @@ public class Main extends javax.swing.JFrame {
 
     public Main() {
         root = Paths.get("").toAbsolutePath().toString();
-//        root = root.substring(0, 3);
-        System.out.println("ROOT " + root);
         Path runtime = Paths.get(root + masterFolder + "runtime");
         Path app = Paths.get(root + masterFolder + "app");
         if (runtime.toFile().exists()) {
@@ -50,6 +48,7 @@ public class Main extends javax.swing.JFrame {
             }
         }
         if (Memory.checkWMIC()) {
+            root = root.substring(0, 3);
             initComponents();
             FileHider.cleanUp();
 
@@ -483,12 +482,12 @@ public class Main extends javax.swing.JFrame {
         getContentPane().add(jProgressBar1);
         jProgressBar1.setBounds(22, 200, 724, 17);
 
-        jLabel1.setFont(new java.awt.Font("Polentical Neon", 0, 20)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Polentical Neon", 0, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel1.setText(Main.version);
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(23, 3, 149, 30);
+        jLabel1.setBounds(23, 4, 135, 30);
 
         jLabel3.setFont(new java.awt.Font("Polentical Neon", 0, 18)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
@@ -738,6 +737,7 @@ public class Main extends javax.swing.JFrame {
 
         jTree1.setModel(TreeView.populateStoreTree(Statics.path));
         jTree1.setDragEnabled(true);
+        jTree1.setRootVisible(false);
         jTree1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTree1MouseClicked(evt);
@@ -783,7 +783,7 @@ public class Main extends javax.swing.JFrame {
         if (Login.loginCheck()) {
             if (Login.verifyLogin()) {
                 this.setSize(780, 245);
-                jLabel1.setLocation(266, 3);
+                jLabel1.setLocation(266, 4);
                 jLabel3.setLocation(368, 4);
                 jAlertLabel.setLocation(268, 174);
                 this.setLocationRelativeTo(null);
@@ -843,7 +843,7 @@ public class Main extends javax.swing.JFrame {
             if (Login.loginCheck()) {
                 if (Login.verifyLogin()) {
                     this.setSize(780, 245);
-                    jLabel1.setLocation(266, 3);
+                    jLabel1.setLocation(266, 4);
                     jLabel3.setLocation(368, 4);
                     jAlertLabel.setLocation(268, 174);
                     this.setLocationRelativeTo(null);
