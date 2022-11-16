@@ -23,7 +23,8 @@ import java.util.*;
  */
 public class Login {
 
-    public static void loginCheck() {
+    public static boolean loginCheck() {
+        boolean b = false;
         char[] password = jPasswordField1.getPassword();
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
@@ -38,6 +39,7 @@ public class Login {
                             if (Statics.password.length() <= 10) {
                                 if (!username.equals(Statics.password)) {
                                     Login.Authenticator();
+                                    b = true;
                                 } else {
                                     GUI.t.interrupt();
                                     GUI.labelCutterThread(jAlertLabel, "password can't be username", 20, 20, 1200);
@@ -68,9 +70,11 @@ public class Login {
         }
         jTextField1.setText("");
         jPasswordField1.setText("");
+        return b;
     }
 
-    public static void Authenticator() {
+    public static boolean Authenticator() {
+        boolean b = false;
         if (keyFile.exists()) {
             verifyLogin();
         } else {
@@ -78,9 +82,12 @@ public class Login {
             Main.jProgressBar2.setVisible(true);
             Hasher.hashedUsername = Hasher.getHash(username, true);
             Hasher.hashedPassword = Hasher.getHash(password, false);
+            GUI.t.interrupt();
             GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript", 30, 30, 600);
             makeKey();
+            b = true;
         }
+        return b;
     }
 
     public static void makeKey() {
@@ -248,12 +255,12 @@ public class Login {
         }
     }
 
-    public static void verifyLogin() {
+    public static boolean verifyLogin() {
+        boolean b = false;
         try {
             BufferedReader brTest = new BufferedReader(new FileReader(keyFile));
             String usernameRead = Hasher.readKey(brTest.readLine(), username);
             String passwordRead = Hasher.readKey(brTest.readLine(), password);
-
             if (usernameRead.equals(Hasher.getHash(username, true))) {
                 if (passwordRead.equals(Hasher.getHash(password, false))) {
                     Hasher.hashedUsername = Hasher.getHash(username, true);
@@ -261,12 +268,15 @@ public class Login {
                     Main.jLoginPanel.setVisible(false);
                     Main.jToolPanel.setVisible(true);
                     Main.jProgressBar2.setVisible(true);
+                    GUI.t.interrupt();
                     GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript", 45, 30, 900);
                     Main.dragDropper();
                     Main.jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
                     Main.jLabel10.setToolTipText("drop box will encrypt & decrypt any files dropped here");
+                    b = true;
                 }
             } else {
+                GUI.t.interrupt();
                 GUI.labelCutterThread(jAlertLabel, "incorrect login info", 45, 30, 900);
 
             }
@@ -274,5 +284,6 @@ public class Login {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+        return b;
     }
 }

@@ -34,7 +34,7 @@ public class GUI {
     public static void getGB() {
         File diskPartition = new File(root).toPath().getRoot().toFile();
         GB = Memory.byteFormatter(diskPartition.getUsableSpace());
-        Main.jLabel3.setText(root.substring(0, 2) + " | " + GB);
+        Main.jLabel3.setText(root.substring(0, 2) + " " + GB);
     }
 
     public static void labelCutterThread(JLabel jLabel, String labelMsg, int initSleep, int sleep, int pause) {

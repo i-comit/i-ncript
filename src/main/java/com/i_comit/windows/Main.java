@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -32,9 +33,10 @@ public class Main extends javax.swing.JFrame {
 
     public Main() {
 //        root = Paths.get("").toAbsolutePath().toString();
-//        root = root + masterFolder;
-        Path runtime = Paths.get(root.substring(0, 3) + masterFolder + "runtime");
-        Path app = Paths.get(root.substring(0, 3) + masterFolder + "app");
+        root = root.substring(0, 3);
+        System.out.println("ROOT " + root);
+        Path runtime = Paths.get(root + masterFolder + "runtime");
+        Path app = Paths.get(root + masterFolder + "app");
         if (runtime.toFile().exists()) {
             try {
                 Files.setAttribute(runtime, "dos:hidden", true);
@@ -58,6 +60,7 @@ public class Main extends javax.swing.JFrame {
         jReceivePanel.setVisible(false);
         jRadioButton2.setVisible(false);
         jRadioButton3.setVisible(false);
+        jScrollPane5.setVisible(false);
 
         if (!keyFile.exists()) {
             jToolPanel.setVisible(false);
@@ -67,6 +70,8 @@ public class Main extends javax.swing.JFrame {
             jAlertLabel.setVisible(false);
             jTabbedPane1.setVisible(false);
             jTextArea3.setCaretPosition(0);
+            this.setSize(540, 245);
+            this.setLocationRelativeTo(null);
         } else {
             jLoginPanel.setVisible(true);
             jLabel1.setVisible(true);
@@ -75,6 +80,8 @@ public class Main extends javax.swing.JFrame {
             jTabbedPane1.setVisible(true);
             jEULAPanel1.setVisible(false);
             jEULAPanel.setVisible(false);
+            this.setSize(120, 245);
+            this.setLocationRelativeTo(null);
 
             jUsernameLabel.setText("enter username");
             jPasswordLabel.setText("enter password");
@@ -205,9 +212,12 @@ public class Main extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("\ti-ncript™");
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti.png")));
+        setMinimumSize(new java.awt.Dimension(295, 225));
         setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
+        setPreferredSize(new java.awt.Dimension(295, 360));
         setResizable(false);
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        setSize(new java.awt.Dimension(320, 0));
+        getContentPane().setLayout(null);
 
         jToolPanel.setOpaque(false);
         jToolPanel.setPreferredSize(new java.awt.Dimension(252, 150));
@@ -419,7 +429,8 @@ public class Main extends javax.swing.JFrame {
 
         jToolPanel.add(jReceivePanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
-        getContentPane().add(jToolPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 34, -1, -1));
+        getContentPane().add(jToolPanel);
+        jToolPanel.setBounds(258, 34, 252, 150);
 
         jLoginPanel.setOpaque(false);
         jLoginPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -464,31 +475,37 @@ public class Main extends javax.swing.JFrame {
         });
         jLoginPanel.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 71, 103, 25));
 
-        getContentPane().add(jLoginPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 55, 242, -1));
+        getContentPane().add(jLoginPanel);
+        jLoginPanel.setBounds(20, 55, 242, 96);
 
         jProgressBar1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jProgressBar1.setForeground(Color.WHITE);
         jProgressBar1.setBorder(null);
-        getContentPane().add(jProgressBar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 201, 501, 17));
+        getContentPane().add(jProgressBar1);
+        jProgressBar1.setBounds(22, 200, 724, 17);
 
         jLabel1.setFont(new java.awt.Font("Polentical Neon", 0, 20)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("i-ncript");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(23, 2, -1, 30));
+        getContentPane().add(jLabel1);
+        jLabel1.setBounds(23, 3, 87, 30);
 
         jLabel3.setFont(new java.awt.Font("Polentical Neon", 0, 18)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel3.setText("jLabel3");
         jLabel3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(125, 3, 135, 30));
+        getContentPane().add(jLabel3);
+        jLabel3.setBounds(125, 4, 135, 30);
 
         jAlertLabel.setFont(new java.awt.Font("Polentical Neon", 0, 13)); // NOI18N
         jAlertLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jAlertLabel.setText("jLabel2");
-        getContentPane().add(jAlertLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(23, 174, 236, 27));
+        getContentPane().add(jAlertLabel);
+        jAlertLabel.setBounds(23, 174, 236, 27);
 
         jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
         jTabbedPane1.setFocusable(false);
+        jTabbedPane1.setPreferredSize(new java.awt.Dimension(225, 190));
 
         dragDrop.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(75, 110, 175)));
 
@@ -637,7 +654,8 @@ public class Main extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("HELP", jPanel4);
 
-        getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 12, 225, 190));
+        getContentPane().add(jTabbedPane1);
+        jTabbedPane1.setBounds(520, 12, 225, 190);
 
         jEULAPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -674,7 +692,8 @@ public class Main extends javax.swing.JFrame {
         });
         jEULAPanel.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 194, -1, -1));
 
-        getContentPane().add(jEULAPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 0, 520, 230));
+        getContentPane().add(jEULAPanel);
+        jEULAPanel.setBounds(6, 0, 520, 230);
 
         jEULAPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -711,10 +730,19 @@ public class Main extends javax.swing.JFrame {
         });
         jEULAPanel1.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 194, -1, -1));
 
-        getContentPane().add(jEULAPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 0, 520, 230));
+        getContentPane().add(jEULAPanel1);
+        jEULAPanel1.setBounds(6, 0, 520, 230);
 
-        jTree1.setModel(TreeView.populateStoreTree());
+        jScrollPane5.setPreferredSize(new java.awt.Dimension(225, 160));
+        jScrollPane5.setRequestFocusEnabled(false);
+
+        jTree1.setModel(TreeView.populateStoreTree(Statics.path));
         jTree1.setDragEnabled(true);
+        jTree1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTree1MouseClicked(evt);
+            }
+        });
         jTree1.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
             public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
                 jTree1ValueChanged(evt);
@@ -722,9 +750,10 @@ public class Main extends javax.swing.JFrame {
         });
         jScrollPane5.setViewportView(jTree1);
 
-        getContentPane().add(jScrollPane5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 240, 310, 100));
+        getContentPane().add(jScrollPane5);
+        jScrollPane5.setBounds(22, 12, 225, 160);
 
-        setSize(new java.awt.Dimension(543, 383));
+        setSize(new java.awt.Dimension(777, 232));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
     //DECRYPT
@@ -751,7 +780,18 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jPasswordField1ActionPerformed
     //LOGIN
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Login.loginCheck();
+        if (Login.loginCheck()) {
+            if (Login.verifyLogin()) {
+                this.setSize(780, 245);
+                jLabel1.setLocation(266, 3);
+                jLabel3.setLocation(368, 4);
+                jAlertLabel.setLocation(268, 174);
+                this.setLocationRelativeTo(null);
+                this.setSize(780, 260);
+                jScrollPane5.setVisible(true);
+
+            }
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
@@ -800,8 +840,19 @@ public class Main extends javax.swing.JFrame {
 
     private void jPasswordField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField1KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            Login.loginCheck();
+            if (Login.loginCheck()) {
+                if (Login.verifyLogin()) {
+                    this.setSize(780, 245);
+                    jLabel1.setLocation(266, 3);
+                    jLabel3.setLocation(368, 4);
+                    jAlertLabel.setLocation(268, 174);
+                    this.setLocationRelativeTo(null);
+                    this.setSize(780, 260);
+                    jScrollPane5.setVisible(true);
+                }
+            }
         }
+
     }//GEN-LAST:event_jPasswordField1KeyPressed
     //STOP
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
@@ -925,19 +976,22 @@ public class Main extends javax.swing.JFrame {
         jTextField2.setText("");
         jPasswordField2.setText("");
         jPasswordField3.setText("");
+        
         switch (toolMode) {
-            case 0 -> {
-                jSwitchMode.setText("STORE");
-                jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
-                jStorePanel.setVisible(true);
-                jSendPanel.setVisible(false);
-                jReceivePanel.setVisible(false);
-                dragDrop.setVisible(true);
-                jLabel10.setText("STORE MODE");
-                jLabel11.setText("ENCRYPT & DECRYPT");
-                jLabel10.setToolTipText("drop box will encrypt & decrypt any files dropped here");
-
-            }
+//            case 0 -> {
+//                jSwitchMode.setText("STORE");
+//                jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
+//                jStorePanel.setVisible(true);
+//                jSendPanel.setVisible(false);
+//                jReceivePanel.setVisible(false);
+//                dragDrop.setVisible(true);
+//                jLabel10.setText("STORE MODE");
+//                jLabel11.setText("ENCRYPT & DECRYPT");
+//                jLabel10.setToolTipText("drop box will encrypt & decrypt any files dropped here");
+//                TreeView.setRootName("'i-ncript' folder [store]");
+//                TreeView.populateStoreTree(Statics.path);
+//
+//            }
             case 1 -> {
                 jSwitchMode.setText("N-BOX");
                 jSwitchMode.setToolTipText("current panel can decrypt .i-cc files inside n-box (inbox) folder");
@@ -954,6 +1008,8 @@ public class Main extends javax.swing.JFrame {
                 jLabel10.setText("N-BOX MODE");
                 jLabel11.setText("MOVE .I-CC TO N-BOX");
                 jLabel10.setToolTipText("drop box will move dropped .i-cc file to n-box folder");
+                TreeView.setRootName("n-box");
+                TreeView.populateStoreTree(Statics.receiveFolder);
 
             }
             case 2 -> {
@@ -969,6 +1025,8 @@ public class Main extends javax.swing.JFrame {
                 jLabel7.setVisible(false);
                 jLabel8.setVisible(false);
                 jRadioButton3.setVisible(false);
+                TreeView.setRootName("o-box");
+                TreeView.populateStoreTree(Statics.sendFolder);
 
             }
             case 3 -> {
@@ -984,6 +1042,9 @@ public class Main extends javax.swing.JFrame {
                 jLabel10.setText("STORE MODE");
                 jLabel11.setText("ENCRYPT & DECRYPT");
                 jLabel10.setToolTipText("drop box will encrypt & decrypt any files dropped here");
+                TreeView.setRootName("i-ncript");
+                TreeView.populateStoreTree(Statics.path);
+
             }
         }
     }//GEN-LAST:event_jSwitchModeActionEvt
@@ -1045,10 +1106,18 @@ public class Main extends javax.swing.JFrame {
     //JTREE
     private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_jTree1ValueChanged
         // TODO add your handling code here:
-        treeViewBool = true;
-        TreeView.treeFileFormatter(jTree1.getSelectionPaths());
-
+//        if (jTree1.getSelectionPaths() != null) {
+//            TreeView.treeFileFormatter(jTree1.getSelectionPaths());
+//        }
     }//GEN-LAST:event_jTree1ValueChanged
+
+    private void jTree1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MouseClicked
+        if (evt.getClickCount() == 2) {
+            if (jTree1.getSelectionPaths() != null) {
+                TreeView.openFile(jTree1.getSelectionPath());
+            }
+        }
+    }//GEN-LAST:event_jTree1MouseClicked
 
     /**
      * @param args the command line arguments

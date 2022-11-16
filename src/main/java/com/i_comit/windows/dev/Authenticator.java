@@ -103,7 +103,6 @@ public class Authenticator {
             reader.readLine();
             s = reader.readLine();
             while ((s = reader.readLine()) != null) {
-                //System.out.println(s);
                 Integer snInt = noNegatives(s.trim().hashCode());
                 String snStr = snInt.toString();
                 serialNumbers.add(snStr);

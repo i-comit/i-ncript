@@ -212,6 +212,7 @@ class AES_T implements Runnable {
                                 } else {
                                     System.out.println("File Encryption Complete");
                                     GUI.resetProgressBar(jProgressBar1);
+                                    TreeView.populateStoreTree(Statics.path);
                                     if (toolMode == 2) {
                                         try {
                                             sendKey();
@@ -254,6 +255,7 @@ class AES_T implements Runnable {
                                 } else {
                                     System.out.println("File Decryption Complete");
                                     GUI.resetProgressBar(jProgressBar1);
+                                    TreeView.populateStoreTree(Statics.path);
                                     if (toolMode == 1) {
                                         new File(Statics.zipFileName + ".i-cc").delete();
                                         new File(Statics.zipFileName + "\\send.key").delete();
@@ -335,7 +337,6 @@ class AES_T implements Runnable {
                     AES.encrypt(Hasher.hashedPassword, file, file);
                 }
             });
-
             if (fileIter == 0) {
                 Main.toolBtnsBool(true);
                 Main.dragDrop.setVisible(true);
@@ -347,12 +348,12 @@ class AES_T implements Runnable {
             } else {
                 DragDrop.resetProgressBar(encFiles, decFiles);
                 GUI.getGB();
+                TreeView.populateStoreTree(Statics.path);
             }
         }
     }
 
     private static void buttonRestart() {
-        Main.jToggleButton2.setEnabled(false);
         Main.jButton2.setVisible(true);
         Main.jTabbedPane1.setSelectedIndex(1);
         Main.toolBtnsBool(false);

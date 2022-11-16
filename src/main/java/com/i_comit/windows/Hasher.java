@@ -30,9 +30,6 @@ public class Hasher {
     }
 
     public static String readKey(String hash, String loginString) {
-        int hashLocateIndex = loginString.length() * 8;
-        System.out.println(hashLocateIndex);
-
         int firstHashIndex = (loginString.length() + 2) * 8;
         int secondHashIndex = (loginString.length() + 17) * 8;
 
