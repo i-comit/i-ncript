@@ -40,22 +40,21 @@ class HotFiler_T implements Runnable {
         synchronized (this) {
             try {
                 if (Main.jToggleButton1.isSelected()) {
-                List<Path> path = listNewPaths(Statics.path);
+                    List<Path> path = listNewPaths(Statics.path);
+                    if (path.isEmpty()) {
+                        System.out.println("HotFilerPathEmpty");
 
-                if (path.isEmpty()) {
-                    System.out.println("HotFilerPathEmpty");
-
-                } else {
-                    Statics.fileIter = 0;
-                    Statics.fileCount = GUI.countFiles(Statics.path);
-                    jProgressBar1.setMaximum(Statics.fileCount);
-                    AES.AESThread(listAESPaths(Statics.path), Statics.directory, true, 0);
-                }
+                    } else {
+                        Statics.fileIter = 0;
+                        Statics.fileCount = GUI.countFiles(Statics.path);
+                        jProgressBar1.setMaximum(Statics.fileCount);
+                        AES.AESThread(listAESPaths(Statics.path), Statics.directory, true, 0);
+                    }
 //                Main.jToggleButton1.setBackground(new Color(28, 68, 94));
 //                jAlertLabel.setText("hot filer enabled");
 //                Thread.sleep(500);
 //                jAlertLabel.setText("");
-                folderWatcher();
+                    folderWatcher();
 //
 
                 } else {

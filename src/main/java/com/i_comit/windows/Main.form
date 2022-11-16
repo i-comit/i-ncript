@@ -220,7 +220,7 @@
                 <Property name="horizontalTextPosition" type="int" value="0"/>
               </Properties>
               <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jToggleButton1MouseClicked"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jToggleButton1ActionPerformed"/>
               </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
@@ -626,7 +626,7 @@
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="22" y="200" width="724" height="17"/>
+          <AbsoluteConstraints x="21" y="200" width="724" height="17"/>
         </Constraint>
       </Constraints>
     </Component>
@@ -930,7 +930,7 @@
                     </Property>
                     <Property name="lineWrap" type="boolean" value="true"/>
                     <Property name="rows" type="int" value="5"/>
-                    <Property name="text" type="java.lang.String" value="i-ncript 1.1.0 - Send &amp; Receive 11/08/2022&#xa;&#xa;Copyright 2022 i-comit LLC. All rights reserved.&#xa;&#xa;User has the right to freely distribute this software. User does not have the right to distribute a modified version of this software.&#xa;&#xa;i-comit LLC is not responsible for any data loss from using this software.&#xa;"/>
+                    <Property name="text" type="java.lang.String" value="i-ncript 1.6.5 - 11/15/2022&#xa;&#xa;Copyright 2022 i-comit LLC. All rights reserved.&#xa;&#xa;User has the right to freely distribute this software. User does not have the right to distribute a modified version of this software.&#xa;&#xa;i-comit LLC is not responsible for any data loss from using this software.&#xa;"/>
                     <Property name="wrapStyleWord" type="boolean" value="true"/>
                     <Property name="autoscrolls" type="boolean" value="false"/>
                     <Property name="caretPosition" type="int" value="0"/>

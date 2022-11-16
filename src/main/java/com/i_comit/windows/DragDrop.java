@@ -152,6 +152,7 @@ class DragDrop implements DropTargetListener {
                 jProgressBar1.setStringPainted(false);
                 DragDrop.encFiles = 0;
                 DragDrop.decFiles = 0;
+                jProgressBar1.setMaximum(Statics.fileCount);
                 Main.dragDrop.setVisible(true);
                 Main.jProgressBar1.setVisible(false);
                 Main.jTabbedPane1.setSelectedIndex(0);

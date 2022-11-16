@@ -20,9 +20,9 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 /**
- *
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
+
 public class Main extends javax.swing.JFrame {
 
     public static String root = "";
@@ -264,9 +264,9 @@ public class Main extends javax.swing.JFrame {
         jToggleButton1.setToolTipText("enable to automatically encrypt any file put into the i-ncript folder");
         jToggleButton1.setFocusable(false);
         jToggleButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jToggleButton1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jToggleButton1MouseClicked(evt);
+        jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton1ActionPerformed(evt);
             }
         });
 
@@ -480,7 +480,7 @@ public class Main extends javax.swing.JFrame {
         jProgressBar1.setForeground(Color.WHITE);
         jProgressBar1.setBorder(null);
         getContentPane().add(jProgressBar1);
-        jProgressBar1.setBounds(22, 200, 724, 17);
+        jProgressBar1.setBounds(21, 200, 724, 17);
 
         jLabel1.setFont(new java.awt.Font("Polentical Neon", 0, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -610,7 +610,7 @@ public class Main extends javax.swing.JFrame {
         jTextArea2.setForeground(Color.white);
         jTextArea2.setLineWrap(true);
         jTextArea2.setRows(5);
-        jTextArea2.setText("i-ncript 1.1.0 - Send & Receive 11/08/2022\n\nCopyright 2022 i-comit LLC. All rights reserved.\n\nUser has the right to freely distribute this software. User does not have the right to distribute a modified version of this software.\n\ni-comit LLC is not responsible for any data loss from using this software.\n");
+        jTextArea2.setText("i-ncript 1.6.5 - 11/15/2022\n\nCopyright 2022 i-comit LLC. All rights reserved.\n\nUser has the right to freely distribute this software. User does not have the right to distribute a modified version of this software.\n\ni-comit LLC is not responsible for any data loss from using this software.\n");
         jTextArea2.setWrapStyleWord(true);
         jTextArea2.setAutoscrolls(false);
         jTextArea2.setCaretPosition(0);
@@ -887,35 +887,6 @@ public class Main extends javax.swing.JFrame {
         toolBtnsBool(true);
 
     }//GEN-LAST:event_jButton2MouseClicked
-    //HOT FILER
-    private void jToggleButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jToggleButton1MouseClicked
-        AESMode = 0;
-        if (jToggleButton1.isSelected()) {
-            dragDrop.setVisible(false);
-            try {
-                HotFiler.HotFilerThread();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        } else {
-            dragDrop.setVisible(true);
-            try {
-                watchService.close();
-                HotFiler.t.interrupt();
-                Main.buttonGroup1.clearSelection();
-                Main.jProgressBar1.setStringPainted(false);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-
-        }
-        jRadioButton1.setVisible(!jToggleButton1.isSelected());
-        jRadioButton0.setSelected(jToggleButton1.isSelected());
-        jRadioButton0.setEnabled(!jToggleButton1.isSelected());
-        if (GUI.t.isAlive()) {
-            GUI.t.interrupt();
-        }
-    }//GEN-LAST:event_jToggleButton1MouseClicked
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         jEULAPanel.setVisible(false);
@@ -977,20 +948,6 @@ public class Main extends javax.swing.JFrame {
         jPasswordField3.setText("");
 
         switch (toolMode) {
-//            case 0 -> {
-//                jSwitchMode.setText("STORE");
-//                jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
-//                jStorePanel.setVisible(true);
-//                jSendPanel.setVisible(false);
-//                jReceivePanel.setVisible(false);
-//                dragDrop.setVisible(true);
-//                jLabel10.setText("STORE MODE");
-//                jLabel11.setText("ENCRYPT & DECRYPT");
-//                jLabel10.setToolTipText("drop box will encrypt & decrypt any files dropped here");
-//                TreeView.setRootName("'i-ncript' folder [store]");
-//                TreeView.populateStoreTree(Statics.path);
-//
-//            }
             case 1 -> {
                 jSwitchMode.setText("N-BOX");
                 jSwitchMode.setToolTipText("current panel can decrypt .i-cc files inside n-box (inbox) folder");
@@ -1117,6 +1074,35 @@ public class Main extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_jTree1MouseClicked
+
+    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
+        AESMode = 0;
+        if (jToggleButton1.isSelected()) {
+            dragDrop.setVisible(false);
+            try {
+                HotFiler.HotFilerThread();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            dragDrop.setVisible(true);
+            try {
+                watchService.close();
+                HotFiler.t.interrupt();
+                Main.buttonGroup1.clearSelection();
+                Main.jProgressBar1.setStringPainted(false);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+        }
+        jRadioButton1.setVisible(!jToggleButton1.isSelected());
+        jRadioButton0.setSelected(jToggleButton1.isSelected());
+        jRadioButton0.setEnabled(!jToggleButton1.isSelected());
+        if (GUI.t.isAlive()) {
+            GUI.t.interrupt();
+        }
+    }//GEN-LAST:event_jToggleButton1ActionPerformed
 
     /**
      * @param args the command line arguments
