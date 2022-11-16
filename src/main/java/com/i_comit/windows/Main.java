@@ -482,7 +482,7 @@ public class Main extends javax.swing.JFrame {
         jProgressBar1.setForeground(Color.WHITE);
         jProgressBar1.setBorder(null);
         getContentPane().add(jProgressBar1);
-        jProgressBar1.setBounds(21, 200, 724, 17);
+        jProgressBar1.setBounds(22, 200, 724, 17);
 
         jLabel1.setFont(new java.awt.Font("Polentical Neon", 0, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -612,7 +612,7 @@ public class Main extends javax.swing.JFrame {
         jTextArea2.setForeground(Color.white);
         jTextArea2.setLineWrap(true);
         jTextArea2.setRows(5);
-        jTextArea2.setText("i-ncript 1.6.5 - 11/15/2022\n\nCopyright 2022 i-comit LLC. All rights reserved.\n\nUser has the right to freely distribute this software. User does not have the right to distribute a modified version of this software.\n\ni-comit LLC is not responsible for any data loss from using this software.\n");
+        jTextArea2.setText("i-ncript 1.6.6 - 11/15/2022\n\nCopyright 2022 i-comit LLC. All rights reserved.\n\nUser has the right to freely distribute this software. User does not have the right to distribute a modified version of this software.\n\ni-comit LLC is not responsible for any data loss from using this software.\n");
         jTextArea2.setWrapStyleWord(true);
         jTextArea2.setAutoscrolls(false);
         jTextArea2.setCaretPosition(0);

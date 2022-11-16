@@ -140,7 +140,6 @@ public class TreeView {
                 try {
                     Desktop.getDesktop().open(file);
                 } catch (IOException ex) {
-                    // no application registered for PDFs
                 }
             }
         }
