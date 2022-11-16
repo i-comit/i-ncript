@@ -67,19 +67,9 @@ public class Main extends javax.swing.JFrame {
                 this.setLocationRelativeTo(null);
             } else {
                 loginLabelVisibleBool(true);
-                jEULAPanel1.setVisible(false);
-                jEULAPanel.setVisible(false);
-                this.setSize(120, 245);
-                this.setLocationRelativeTo(null);
-
                 jUsernameLabel.setText("enter username");
                 jPasswordLabel.setText("enter password");
-                GUI.getGB();
-                System.out.println("Your available Memory Heap is " + Memory.byteFormatter(Memory.heapSize));
                 generateFolders();
-                jTextField1.setText("");
-                jPasswordField1.setText("");
-                jAlertLabel.setText("");
 
                 jToolPanel.setVisible(false);
                 jButton2.setVisible(false);
@@ -99,6 +89,12 @@ public class Main extends javax.swing.JFrame {
     }
 
     private void generateFolders() {
+        GUI.getGB();
+        jEULAPanel1.setVisible(false);
+        jEULAPanel.setVisible(false);
+        this.setSize(120, 245);
+        this.setLocationRelativeTo(null);
+        System.out.println("Your available Memory Heap is " + Memory.byteFormatter(Memory.heapSize));
         File rootFolder = Paths.get(root + masterFolder + folderName).toFile();
         File sendFolderF = Statics.sendFolder.toFile();
         File receiveFolderF = Statics.receiveFolder.toFile();
@@ -114,6 +110,9 @@ public class Main extends javax.swing.JFrame {
         if (!receiveFolderF.exists()) {
             receiveFolderF.mkdir();
         }
+        jTextField1.setText("");
+        jPasswordField1.setText("");
+        jAlertLabel.setText("");
     }
 
     public static void dragDropper() {
@@ -791,7 +790,6 @@ public class Main extends javax.swing.JFrame {
                 this.setLocationRelativeTo(null);
                 this.setSize(780, 260);
                 jScrollPane5.setVisible(true);
-
             }
         }
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -905,20 +903,13 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void ActionjButton6(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ActionjButton6
-        this.setSize(120, 245);
-        this.setLocationRelativeTo(null);
-        jEULAPanel1.setVisible(false);
         loginLabelVisibleBool(true);
         jUsernameLabel.setText("make username");
         jPasswordLabel.setText("make password");
-        GUI.getGB();
-        jTextField1.setText("");
-        jPasswordField1.setText("");
-        jAlertLabel.setText("");
+
         generateFolders();
 
         jToolPanel.setVisible(false);
-//        jProgressBar1.setVisible(false);
         jButton2.setVisible(false);
 
     }//GEN-LAST:event_ActionjButton6
@@ -950,7 +941,6 @@ public class Main extends javax.swing.JFrame {
                 jLabel10.setToolTipText("drop box will move dropped .i-cc file to n-box folder");
                 TreeView.setRootName("n-box");
                 TreeView.populateStoreTree(Statics.receiveFolder);
-
             }
             case 2 -> {
                 jSwitchMode.setText("O-BOX");
@@ -967,7 +957,6 @@ public class Main extends javax.swing.JFrame {
                 jRadioButton3.setVisible(false);
                 TreeView.setRootName("o-box");
                 TreeView.populateStoreTree(Statics.sendFolder);
-
             }
             case 3 -> {
                 jSwitchMode.setText("STORE");
@@ -984,7 +973,6 @@ public class Main extends javax.swing.JFrame {
                 jLabel10.setToolTipText("drop box will encrypt & decrypt any files dropped here");
                 TreeView.setRootName("i-ncript");
                 TreeView.populateStoreTree(Statics.path);
-
             }
         }
     }//GEN-LAST:event_jSwitchModeActionEvt

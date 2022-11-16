@@ -9,18 +9,17 @@ import static com.i_comit.windows.Main.jProgressBar1;
 import static com.i_comit.windows.Main.jTree1;
 import static com.i_comit.windows.Main.masterFolder;
 import static com.i_comit.windows.Main.root;
-import static com.i_comit.windows.Statics.recipientPassword;
-import static com.i_comit.windows.Statics.recipientUsername;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -121,7 +120,7 @@ class DragDrop implements DropTargetListener {
                     }
                 }
 
-            } catch (Exception e) {
+            } catch (UnsupportedFlavorException | IOException e) {
                 // Print out the error stack
                 e.printStackTrace();
             }
@@ -152,6 +151,10 @@ class DragDrop implements DropTargetListener {
                 DragDrop.encFiles = 0;
                 DragDrop.decFiles = 0;
                 jProgressBar1.setMaximum(Statics.fileCount);
+                
+                Main.jProgressBar2.setStringPainted(false);
+                Main.jProgressBar2.setVisible(true);
+                
                 Main.dragDrop.setVisible(true);
                 Main.jProgressBar1.setVisible(false);
                 Main.jTabbedPane1.setSelectedIndex(0);

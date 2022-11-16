@@ -7,7 +7,6 @@ package com.i_comit.windows;
 import static com.i_comit.windows.GUI.listAESPaths;
 import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.jProgressBar1;
-import java.awt.Color;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -28,7 +27,6 @@ public class HotFiler {
         t = new Thread(hotFilerThread);
         t.start();
     }
-
 }
 
 class HotFiler_T implements Runnable {
@@ -50,12 +48,8 @@ class HotFiler_T implements Runnable {
                         jProgressBar1.setMaximum(Statics.fileCount);
                         AES.AESThread(listAESPaths(Statics.path), Statics.directory, true, 0);
                     }
-//                Main.jToggleButton1.setBackground(new Color(28, 68, 94));
-//                jAlertLabel.setText("hot filer enabled");
-//                Thread.sleep(500);
-//                jAlertLabel.setText("");
+
                     folderWatcher();
-//
 
                 } else {
                     HotFiler.t.stop();
@@ -127,7 +121,6 @@ class HotFiler_T implements Runnable {
                                 Main.jProgressBar1.setMaximum(Statics.fileCount);
                                 AES.AESThread(listAESPaths(Statics.path), Statics.directory, true, 0);
                                 System.out.println("Hot Filer Called AES");
-//                                watchService.close();
                                 GUI.getGB();
                                 b = false;
                             }
