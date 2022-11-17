@@ -275,6 +275,7 @@ public class Login {
                     Main.jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
                     Main.jLabel10.setToolTipText("drop box will encrypt & decrypt any files dropped here");
                     Main.jToolPanel.requestFocus();
+                    Main.jAlertLabel1.setVisible(false);
                     b = true;
                 }
             } else {

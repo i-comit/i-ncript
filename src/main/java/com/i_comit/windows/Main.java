@@ -4,6 +4,7 @@
  */
 package com.i_comit.windows;
 
+import static com.i_comit.windows.DriveCheck.goWebsite;
 import static com.i_comit.windows.Statics.*;
 import java.awt.Color;
 import java.awt.Toolkit;
@@ -27,9 +28,9 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "D:\\";
+    public static String root = "";
     public static String masterFolder = "--------\\";
-    public static String version = "1.6.6";
+    private static final String appVersion = "1.6.6";
 
     public Main() {
         root = Paths.get("").toAbsolutePath().toString();
@@ -54,7 +55,6 @@ public class Main extends javax.swing.JFrame {
                     ex.printStackTrace();
                 }
             }
-            setKeybinding();
             jStorePanel.setVisible(true);
             jSendPanel.setVisible(false);
             jReceivePanel.setVisible(false);
@@ -65,10 +65,10 @@ public class Main extends javax.swing.JFrame {
             if (!keyFile.exists()) {
                 jToolPanel.setVisible(false);
                 loginLabelVisibleBool(false);
-                jTextArea3.setCaretPosition(0);
-                this.setSize(540, 245);
+                this.setSize(540, 241);
                 this.setLocationRelativeTo(null);
             } else {
+                setKeybinding();
                 loginLabelVisibleBool(true);
                 jUsernameLabel.setText("enter username");
                 jPasswordLabel.setText("enter password");
@@ -198,7 +198,7 @@ public class Main extends javax.swing.JFrame {
         GUI.getGB();
         jEULAPanel1.setVisible(false);
         jEULAPanel.setVisible(false);
-        this.setSize(120, 245);
+        this.setSize(120, 241);
         this.setLocationRelativeTo(null);
         System.out.println("Your available Memory Heap is " + Memory.byteFormatter(Memory.heapSize));
         File rootFolder = Paths.get(root + masterFolder + folderName).toFile();
@@ -208,7 +208,7 @@ public class Main extends javax.swing.JFrame {
             GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 40, 40, 1200, false);
             rootFolder.mkdir();
         } else {
-            GUI.labelCutterThread(jAlertLabel, "developed by i-comit LLC", 40, 60, 1200, true);
+            GUI.labelCutterThread(jAlertLabel1, goWebsite(jAlertLabel1, "developed by ", "https://i-comit.com", "i-comit LLC"), 0, 20, 600, true);
         }
         if (!sendFolderF.exists()) {
             sendFolderF.mkdir();
@@ -279,6 +279,7 @@ public class Main extends javax.swing.JFrame {
         jProgressBar1 = new javax.swing.JProgressBar();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        jAlertLabel1 = new javax.swing.JLabel();
         jAlertLabel = new javax.swing.JLabel();
         jCreationDateLabel = new javax.swing.JLabel();
         jFileSizeLabel = new javax.swing.JLabel();
@@ -319,7 +320,7 @@ public class Main extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("\ti-ncript™");
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti1.png")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti.png")));
         setMinimumSize(new java.awt.Dimension(295, 225));
         setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         setResizable(false);
@@ -443,13 +444,10 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(jStorePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
                 .addGroup(jStorePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jStorePanelLayout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(jRadioButton0))
-                    .addGroup(jStorePanelLayout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(jRadioButton1))))
+                    .addComponent(jRadioButton0)
+                    .addComponent(jRadioButton1)))
         );
 
         jToolPanel.add(jStorePanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
@@ -591,12 +589,17 @@ public class Main extends javax.swing.JFrame {
         jProgressBar1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jProgressBar1.setForeground(Color.WHITE);
         jProgressBar1.setBorder(null);
+        jProgressBar1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jProgressBar1StateChanged(evt);
+            }
+        });
         getContentPane().add(jProgressBar1);
-        jProgressBar1.setBounds(22, 200, 724, 17);
+        jProgressBar1.setBounds(22, 204, 724, 17);
 
         jLabel1.setFont(new java.awt.Font("Polentical Neon", 0, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel1.setText(Main.version);
+        jLabel1.setText(Main.appVersion);
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         getContentPane().add(jLabel1);
         jLabel1.setBounds(23, 4, 135, 30);
@@ -608,9 +611,13 @@ public class Main extends javax.swing.JFrame {
         getContentPane().add(jLabel3);
         jLabel3.setBounds(125, 4, 135, 30);
 
+        jAlertLabel1.setFont(new java.awt.Font("Polentical Neon", 0, 13)); // NOI18N
+        jAlertLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        getContentPane().add(jAlertLabel1);
+        jAlertLabel1.setBounds(21, 174, 236, 27);
+
         jAlertLabel.setFont(new java.awt.Font("Polentical Neon", 0, 13)); // NOI18N
         jAlertLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jAlertLabel.setText("jLabel2");
         getContentPane().add(jAlertLabel);
         jAlertLabel.setBounds(21, 174, 236, 27);
 
@@ -627,7 +634,7 @@ public class Main extends javax.swing.JFrame {
 
         jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
         jTabbedPane1.setFocusable(false);
-        jTabbedPane1.setPreferredSize(new java.awt.Dimension(225, 190));
+        jTabbedPane1.setPreferredSize(new java.awt.Dimension(224, 190));
 
         jPanel2.setBackground(new java.awt.Color(57, 57, 57));
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(75, 110, 175)));
@@ -782,7 +789,7 @@ public class Main extends javax.swing.JFrame {
         jTabbedPane1.addTab("HELP", jPanel4);
 
         getContentPane().add(jTabbedPane1);
-        jTabbedPane1.setBounds(520, 12, 225, 190);
+        jTabbedPane1.setBounds(520, 12, 224, 190);
 
         jEULAPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -888,7 +895,7 @@ public class Main extends javax.swing.JFrame {
         getContentPane().add(jScrollPane5);
         jScrollPane5.setBounds(22, 12, 225, 160);
 
-        setSize(new java.awt.Dimension(775, 232));
+        setSize(new java.awt.Dimension(775, 234));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
     //DECRYPT
@@ -904,12 +911,11 @@ public class Main extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (Login.loginCheck()) {
             if (Login.verifyLogin()) {
-                this.setSize(780, 245);
+                this.setSize(780, 241);
                 jLabel1.setLocation(266, 4);
                 jLabel3.setLocation(368, 4);
-                jAlertLabel.setLocation(268, 174);
+                jAlertLabel.setLocation(266, 174);
                 this.setLocationRelativeTo(null);
-                this.setSize(780, 260);
                 jScrollPane5.setVisible(true);
             }
         }
@@ -937,12 +943,11 @@ public class Main extends javax.swing.JFrame {
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             if (Login.loginCheck()) {
                 if (Login.verifyLogin()) {
-                    this.setSize(780, 245);
+                    this.setSize(780, 241);
                     jLabel1.setLocation(266, 4);
                     jLabel3.setLocation(368, 4);
-                    jAlertLabel.setLocation(268, 174);
+                    jAlertLabel.setLocation(266, 174);
                     this.setLocationRelativeTo(null);
-                    this.setSize(780, 260);
                     jScrollPane5.setVisible(true);
                 }
             }
@@ -1070,6 +1075,20 @@ public class Main extends javax.swing.JFrame {
         System.out.println("focus regained");
         jToolPanel.requestFocus();        // TODO add your handling code here:
     }//GEN-LAST:event_formMousePressed
+
+    public boolean progressbarBool = false;
+
+    private void jProgressBar1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jProgressBar1StateChanged
+        if (jProgressBar1.getValue() == 0) {
+            progressbarBool = false;
+            this.setSize(780, 241);
+        } else {
+            if (!progressbarBool) {
+                this.setSize(780, 266);
+                progressbarBool = true;
+            }
+        }
+    }//GEN-LAST:event_jProgressBar1StateChanged
     /**
      * @param args the command line arguments
      */
@@ -1105,6 +1124,7 @@ public class Main extends javax.swing.JFrame {
     public static javax.swing.ButtonGroup buttonGroup1;
     protected static javax.swing.JPanel dragDrop;
     public static javax.swing.JLabel jAlertLabel;
+    public static javax.swing.JLabel jAlertLabel1;
     public javax.swing.JButton jButton1;
     protected static javax.swing.JButton jButton2;
     private static javax.swing.JButton jButton3;

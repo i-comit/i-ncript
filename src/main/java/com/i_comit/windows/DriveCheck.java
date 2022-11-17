@@ -43,7 +43,7 @@ public class DriveCheck extends javax.swing.JFrame {
         }
     }
 
-    public static String goWebsite(JLabel website, final String leadingStr, final String url, String text) {
+    public static final String goWebsite(JLabel website, final String leadingStr, final String url, String text) {
         website.setText("<html>" + leadingStr + "<a href=\"\">" + text + "</a></html>");
         website.setCursor(new Cursor(Cursor.HAND_CURSOR));
         website.addMouseListener(new MouseAdapter() {
@@ -73,7 +73,7 @@ public class DriveCheck extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("i-ncript™");
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti1.png")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti.png")));
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Polentical Neon", 0, 14)); // NOI18N

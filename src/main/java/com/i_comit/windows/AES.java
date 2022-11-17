@@ -178,8 +178,7 @@ class AES_T implements Runnable {
                             case 0 -> {
                                 Main.jProgressBar1.setStringPainted(true);
                                 Main.jProgressBar1.setString("0% | " + "0/" + AES_T.paths.size());
-
-                                GUI.labelCutterThread(jAlertLabel, "encrypting " + paths.size() + " files", 0, 15, 300, true);
+                                GUI.labelCutterThread(jAlertLabel, "encrypting " + paths.size() + " files", 0, 20, 2000, false);
                                 paths.forEach(x -> {
                                     if (x.toFile().length() > maxFileBytes) {
                                         if (GUI.t.isAlive()) {
@@ -221,8 +220,7 @@ class AES_T implements Runnable {
                             }
                             case 1 -> {
                                 jProgressBar1.setStringPainted(true);
-                                GUI.labelCutterThread(jAlertLabel, "decrypting " + paths.size() + " files", 0, 15, 300, false);
-
+                                GUI.labelCutterThread(jAlertLabel, "decrypting " + paths.size() + " files", 0, 20, 2000, false);
                                 paths.forEach(x -> {
                                     if (x.toFile().length() > maxFileBytes) {
                                         if (GUI.t.isAlive()) {
@@ -268,10 +266,12 @@ class AES_T implements Runnable {
                         if (!Main.jToggleButton1.isSelected()) {
                             switch (AESMode) {
                                 case 0 -> {
+                                    GUI.t.interrupt();
                                     GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 10, 20, 400, false);
                                     Main.jRadioButton2.setEnabled(true);
                                 }
                                 case 1 -> {
+                                    GUI.t.interrupt();
                                     GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400, false);
                                     Main.jToggleButton1.setEnabled(true);
                                     Main.jRadioButton3.setEnabled(true);

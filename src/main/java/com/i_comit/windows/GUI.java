@@ -211,7 +211,6 @@ class labelCutter_T implements Runnable {
     }
 
     public static void labelCutter_T(JLabel jLabel, String labelMsg, int initSleep, int sleep, int pause, boolean stayAlive) {
-        jLabel.setVisible(true);
         jLabel.setText("");
         int msgL = labelMsg.length();
         try {
@@ -227,9 +226,6 @@ class labelCutter_T implements Runnable {
                     CharSequence cutLabel = labelMsg.subSequence(0, i);
                     jLabel.setText(cutLabel.toString());
                     Thread.sleep(sleep);
-                    if (i == 0) {
-                        jLabel.setVisible(false);
-                    }
                 }
             }
         } catch (InterruptedException ex) {
