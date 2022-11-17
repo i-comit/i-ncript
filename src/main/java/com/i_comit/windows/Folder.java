@@ -133,7 +133,6 @@ public class Folder {
                             zos.closeEntry();
                             System.out.printf("Send file : %s%n", file);
                             Statics.zipIter++;
-                            Main.jProgressBar2.setString("packing " + Statics.zipIter + " out of " + zipFileCount + " files");
                             Main.jProgressBar2.setValue(Statics.zipIter);
                             if (Main.jProgressBar2.getValue() >= zipFileCount - 1 && zipFileCount > 10) {
                                 Main.jProgressBar2.setValue(zipFileCount);

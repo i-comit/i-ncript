@@ -76,10 +76,10 @@ public class FileHider {
         }
     }
 
-    public static void FileHiderThread(boolean fileHideBool) throws IOException {
+    public static void FileHiderThread(boolean fileHideBool, Path path) throws IOException {
         Thread t = new Thread(() -> {
             try {
-                FileHider_T.FileHider_T(fileHideBool);
+                FileHider_T.FileHider_T(fileHideBool, path);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -114,7 +114,7 @@ class FileHider_T implements Runnable {
         fileCt = 0;
     }
 
-    public static void FileHider_T(boolean fileHideBool) throws IOException {
+    public static void FileHider_T(boolean fileHideBool, Path path) throws IOException {
         Statics.fileHideIter = 0;
         List<Path> paths = listPaths(path);
         int fileCount = GUI.countAllFiles(path);
@@ -126,7 +126,7 @@ class FileHider_T implements Runnable {
                         if (Statics.fileHideIter != 0) {
                             if (fileCt > 10) {
                                 Thread.sleep(300);
-                                GUI.labelCutterThread(Main.jAlertLabel, Statics.fileHideIter + " files hidden", 30, 25, 300,false);
+                                GUI.labelCutterThread(Main.jAlertLabel, Statics.fileHideIter + " files hidden", 30, 25, 300, false);
                                 fileHiderToolReenable();
                             } else {
                                 fileHiderToolReenable();
@@ -135,14 +135,11 @@ class FileHider_T implements Runnable {
                             fileHiderToolReenable();
                         }
                     }
-                    TreeView.populateStoreTree(path);
                 } catch (IOException | InterruptedException ex) {
                     ex.printStackTrace();
                 }
             });
-            if (Main.jToggleButton1.isSelected()) {
-                HotFiler_T.folderWatcher();
-            }
+            TreeView.populateStoreTree(path);
         } else {
             paths.forEach(x -> {
                 try {
@@ -151,7 +148,7 @@ class FileHider_T implements Runnable {
                         if (Statics.fileHideIter != 0) {
                             if (fileCt > 10) {
                                 Thread.sleep(300);
-                                GUI.labelCutterThread(Main.jAlertLabel, Statics.fileHideIter + " files unhidden", 30, 25, 300,false);
+                                GUI.labelCutterThread(Main.jAlertLabel, Statics.fileHideIter + " files unhidden", 30, 25, 300, false);
                                 fileHiderToolReenable();
                             } else {
                                 fileHiderToolReenable();
@@ -160,14 +157,11 @@ class FileHider_T implements Runnable {
                             fileHiderToolReenable();
                         }
                     }
-                    TreeView.populateStoreTree(path);
                 } catch (IOException | InterruptedException ex) {
                     ex.printStackTrace();
                 }
             });
-            if (Main.jToggleButton1.isSelected()) {
-                HotFiler_T.folderWatcher();
-            }
+            TreeView.populateStoreTree(path);
         }
     }
 

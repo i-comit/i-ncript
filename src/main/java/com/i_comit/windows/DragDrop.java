@@ -184,6 +184,7 @@ class DragDrop_T implements Runnable {
                 Main.dragDrop.setVisible(true);
                 Main.toolBtnsBool(true);
                 Main.jTabbedPane1.setSelectedIndex(0);
+                TreeView.populateStoreTree(Statics.path);
                 AES_T.paths = null;
             }
         } catch (InterruptedException ex) {

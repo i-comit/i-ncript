@@ -41,21 +41,30 @@ class HotFiler_T implements Runnable {
                     List<Path> path = listNewPaths(Statics.path);
                     if (path.isEmpty()) {
                         System.out.println("HotFilerPathEmpty");
+                        folderWatcher();
 
                     } else {
                         Statics.fileIter = 0;
                         Statics.fileCount = GUI.countFiles(Statics.path);
                         jProgressBar1.setMaximum(Statics.fileCount);
                         AES.AESThread(listAESPaths(Statics.path), Statics.directory, true, 0);
-                    }
+                        while (AES.t.isAlive()) {
+                            Thread.sleep(100);
+                            if (!AES.t.isAlive()) {
+                                folderWatcher();
+                                break;
+                            }
+                        }
 
-                    folderWatcher();
+                    }
 
                 } else {
                     HotFiler.t.stop();
 
                 }
             } catch (IOException ex) {
+                ex.printStackTrace();
+            } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
         }
@@ -116,6 +125,7 @@ class HotFiler_T implements Runnable {
                         if (Statics.fileCount == paths0) {
                             if (paths0 != 0 && Statics.fileCount != 0) {
                                 key.cancel();
+                                watchService.close();
                                 Statics.fileIter = 0;
                                 Statics.fileCount = GUI.countFiles(Statics.path);
                                 Main.jProgressBar1.setMaximum(Statics.fileCount);

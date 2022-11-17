@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import javax.swing.JLabel;
+
 /**
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
@@ -25,7 +26,7 @@ public class DriveCheck extends javax.swing.JFrame {
         switch (driveState) {
             case 1 -> {
                 jLabel1.setText("i-ncript can only run");
-                goWebsite(jLabel2, "https://i-comit.com", "USB device");
+                goWebsite(jLabel2, "within a ", "https://i-comit.com", "USB device");
             }
             case 2 -> {
                 jLabel1.setText("i-ncript can not run");
@@ -42,8 +43,8 @@ public class DriveCheck extends javax.swing.JFrame {
         }
     }
 
-    private void goWebsite(JLabel website, final String url, String text) {
-        website.setText("<html>within a <a href=\"\">" + text + "</a></html>");
+    public static String goWebsite(JLabel website, final String leadingStr, final String url, String text) {
+        website.setText("<html>" + leadingStr + "<a href=\"\">" + text + "</a></html>");
         website.setCursor(new Cursor(Cursor.HAND_CURSOR));
         website.addMouseListener(new MouseAdapter() {
             @Override
@@ -55,6 +56,7 @@ public class DriveCheck extends javax.swing.JFrame {
                 }
             }
         });
+        return website.getText();
     }
 
     /**
@@ -106,7 +108,7 @@ public class DriveCheck extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected static javax.swing.JLabel jLabel1;
     protected static javax.swing.JLabel jLabel2;

@@ -224,7 +224,6 @@ public class Login {
                     fileCount = GUI.countFiles(receiveFolder);
                     zipFileCount = fileCount;
                     jProgressBar1.setMaximum(fileCount);
-                    Main.jTextArea1.append("unpacking " + Main.jList1.getSelectedValue() + ".i-cc\n");
                     AES.AESThread(listAESPaths(Paths.get(Statics.zipFileName)), Paths.get(Statics.zipFileName).toFile(), true, 1);
                 } else {
                     brTest.close();

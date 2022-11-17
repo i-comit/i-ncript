@@ -209,7 +209,6 @@ class AES_T implements Runnable {
                                 } else {
                                     System.out.println("File Encryption Complete");
                                     GUI.resetProgressBar(jProgressBar1);
-                                    TreeView.populateStoreTree(Statics.path);
                                     if (toolMode == 2) {
                                         try {
                                             sendKey();
@@ -251,8 +250,6 @@ class AES_T implements Runnable {
                                     FileHider.cleanUp();
                                 } else {
                                     System.out.println("File Decryption Complete");
-                                    GUI.resetProgressBar(jProgressBar1);
-                                    TreeView.populateStoreTree(Statics.path);
                                     if (toolMode == 1) {
                                         new File(Statics.zipFileName + ".i-cc").delete();
                                         new File(Statics.zipFileName + "\\send.key").delete();
@@ -266,6 +263,7 @@ class AES_T implements Runnable {
                                         Main.jTabbedPane1.setSelectedIndex(0);
                                         Main.toolBtnsBool(true);
                                     }
+                                    GUI.resetProgressBar(jProgressBar1);
                                 }
                             }
                         }
@@ -345,7 +343,6 @@ class AES_T implements Runnable {
             } else {
                 DragDrop_T.resetProgressBar(encFiles, decFiles);
                 GUI.getGB();
-                TreeView.populateStoreTree(Statics.path);
             }
         }
     }

@@ -4,8 +4,11 @@
  */
 package com.i_comit.windows;
 
+import static com.i_comit.windows.GUI.listAESPaths;
+import static com.i_comit.windows.Main.jProgressBar1;
 import static com.i_comit.windows.Main.root;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -51,4 +54,21 @@ public class Statics {
     public static int fileIter;
 
     public static int fileHideIter;
+
+    public static void encryptFunction() {
+        if (GUI.t.isAlive()) {
+            GUI.t.interrupt();
+        }
+        AESMode = 0;
+        jProgressBar1.setValue(0);
+        jProgressBar1.setMaximum(0);
+        try {
+            fileCount = GUI.countFiles(path);
+            jProgressBar1.setMaximum(fileCount);
+            AES.AESThread(listAESPaths(path), directory, true, 0);
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
 }
