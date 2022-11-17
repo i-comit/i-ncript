@@ -93,7 +93,6 @@ public class Statics {
     public static void switchToolPanels() {
         jRadioButton2.setVisible(false);
         toolMode++;
-        System.out.println("toolMode num " + toolMode);
         jTextField2.setText("");
         jPasswordField2.setText("");
         jPasswordField3.setText("");

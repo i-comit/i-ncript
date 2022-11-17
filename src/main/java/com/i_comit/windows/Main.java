@@ -28,59 +28,59 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "";
+    public static String root = "D:\\";
     public static String masterFolder = "--------\\";
     private static final String appVersion = "1.6.6";
 
     public Main() {
-        root = Paths.get("").toAbsolutePath().toString();
-        if (Memory.checkWMIC()) {
-            root = root.substring(0, 3);
-            initComponents();
-            FileHider.cleanUp();
+//        root = Paths.get("").toAbsolutePath().toString();
+//        if (Memory.checkWMIC()) {
+        root = root.substring(0, 3);
+        initComponents();
+        FileHider.cleanUp();
 
-            Path runtime = Paths.get(root + masterFolder + "runtime");
-            Path app = Paths.get(root + masterFolder + "app");
-            if (runtime.toFile().exists()) {
-                try {
-                    Files.setAttribute(runtime, "dos:hidden", true);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+        Path runtime = Paths.get(root + masterFolder + "runtime");
+        Path app = Paths.get(root + masterFolder + "app");
+        if (runtime.toFile().exists()) {
+            try {
+                Files.setAttribute(runtime, "dos:hidden", true);
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-            if (app.toFile().exists()) {
-                try {
-                    Files.setAttribute(app, "dos:hidden", true);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            }
-            jStorePanel.setVisible(true);
-            jSendPanel.setVisible(false);
-            jReceivePanel.setVisible(false);
-            jRadioButton2.setVisible(false);
-            jRadioButton3.setVisible(false);
-            jScrollPane5.setVisible(false);
-
-            if (!keyFile.exists()) {
-                jToolPanel.setVisible(false);
-                loginLabelVisibleBool(false);
-                this.setSize(540, 241);
-                this.setLocationRelativeTo(null);
-            } else {
-                setKeybinding();
-                loginLabelVisibleBool(true);
-                jUsernameLabel.setText("enter username");
-                jPasswordLabel.setText("enter password");
-                generateFolders();
-
-                jToolPanel.setVisible(false);
-                jButton2.setVisible(false);
-            }
-            jProgressBar1.setVisible(false);
-            jProgressBar2.setVisible(false);
-            dragDrop.setVisible(false);
         }
+        if (app.toFile().exists()) {
+            try {
+                Files.setAttribute(app, "dos:hidden", true);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        jStorePanel.setVisible(true);
+        jSendPanel.setVisible(false);
+        jReceivePanel.setVisible(false);
+        jRadioButton2.setVisible(false);
+        jRadioButton3.setVisible(false);
+        jScrollPane5.setVisible(false);
+
+        if (!keyFile.exists()) {
+            jToolPanel.setVisible(false);
+            loginLabelVisibleBool(false);
+            this.setSize(540, 241);
+            this.setLocationRelativeTo(null);
+        } else {
+            setKeybinding();
+            loginLabelVisibleBool(true);
+            jUsernameLabel.setText("enter username");
+            jPasswordLabel.setText("enter password");
+            generateFolders();
+
+            jToolPanel.setVisible(false);
+            jButton2.setVisible(false);
+        }
+        jProgressBar1.setVisible(false);
+        jProgressBar2.setVisible(false);
+        dragDrop.setVisible(false);
+//        }
     }
 
     private void getKeyBinding(int keyCode, JPanel jPanel, AbstractAction action) {
@@ -90,16 +90,17 @@ public class Main extends javax.swing.JFrame {
                 modifier = InputEvent.SHIFT_DOWN_MASK;
             case KeyEvent.VK_E ->
                 modifier = InputEvent.SHIFT_DOWN_MASK;
-            case KeyEvent.VK_F ->
-                modifier = InputEvent.SHIFT_DOWN_MASK;
-            case KeyEvent.VK_H ->
-                modifier = InputEvent.SHIFT_DOWN_MASK;
-            case KeyEvent.VK_C ->
+            case KeyEvent.VK_X ->
                 modifier = InputEvent.SHIFT_DOWN_MASK;
             case KeyEvent.VK_S ->
                 modifier = InputEvent.SHIFT_DOWN_MASK;
-
+            case KeyEvent.VK_F ->
+                modifier = InputEvent.SHIFT_DOWN_MASK;
+            case KeyEvent.VK_SPACE ->
+                modifier = InputEvent.SHIFT_DOWN_MASK;
             case KeyEvent.VK_ENTER -> {
+            }
+            case KeyEvent.VK_V -> {
             }
         }
         jPanel.getInputMap().put(KeyStroke.getKeyStroke(keyCode, modifier), keyCode);
@@ -107,14 +108,6 @@ public class Main extends javax.swing.JFrame {
     }
 
     private void setKeybinding() {
-        getKeyBinding(KeyEvent.VK_ENTER, jToolPanel, new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (jSwitchMode.isVisible()) {
-                    switchToolPanels();
-                }
-            }
-        });
         getKeyBinding(KeyEvent.VK_Q, jToolPanel, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -137,23 +130,22 @@ public class Main extends javax.swing.JFrame {
                 }
             }
         });
-        getKeyBinding(KeyEvent.VK_C, jToolPanel, new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                jTextArea1.setText("");
-            }
-        });
         //STOP KEYBIND
         getKeyBinding(KeyEvent.VK_S, jToolPanel, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (Statics.fileIter != 0) {
                     stopFunction();
-                } else {
-                    System.out.println("AES not alive");
                 }
             }
         });
+        getKeyBinding(KeyEvent.VK_X, jToolPanel, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jTextArea1.setText("");
+            }
+        });
+
         //HOT FILER KEYBIND
         getKeyBinding(KeyEvent.VK_F, jToolPanel, new AbstractAction() {
             @Override
@@ -163,14 +155,40 @@ public class Main extends javax.swing.JFrame {
                     jToggleButton1.setSelected(hotFilerBool);
                     if (jToggleButton1.isEnabled()) {
                         hotFilerFunction();
-                    } else {
-                        System.out.println("hotFiler is disabled");
+                    }
+                }
+            }
+        });
+        //RELOAD TREEVIEW KEYBIND
+        getKeyBinding(KeyEvent.VK_V, jToolPanel, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                switch (toolMode) {
+                    case 0 -> {
+                        TreeView.populateStoreTree(path);
+                        GUI.t.interrupt();
+                        GUI.labelCutterThread(jAlertLabel, "reloaded " + path.toFile().getName() + " folder", 0, 25, 600, false);
+                    }
+                    case 1 -> {
+                        TreeView.populateStoreTree(receiveFolder);
+                        GUI.t.interrupt();
+                        GUI.labelCutterThread(jAlertLabel, "reloaded " + receiveFolder.toFile().getName() + " folder", 0, 25, 600, false);
+                    }
+                    case 2 -> {
+                        TreeView.populateStoreTree(sendFolder);
+                        GUI.t.interrupt();
+                        GUI.labelCutterThread(jAlertLabel, "reloaded " + sendFolder.toFile().getName() + " folder", 0, 25, 600, false);
+                    }
+                    case 3 -> {
+                        TreeView.populateStoreTree(path);
+                        GUI.t.interrupt();
+                        GUI.labelCutterThread(jAlertLabel, "reloaded " + path.toFile().getName() + " folder", 0, 25, 600, false);
                     }
                 }
             }
         });
         //FILE HIDER KEYBIND
-        getKeyBinding(KeyEvent.VK_H, jToolPanel, new AbstractAction() {
+        getKeyBinding(KeyEvent.VK_SPACE, jToolPanel, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (toolMode == 0 || toolMode == 3) {
@@ -178,9 +196,16 @@ public class Main extends javax.swing.JFrame {
                     jToggleButton2.setSelected(fileHiderBool);
                     if (jToggleButton2.isEnabled()) {
                         fileHiderFunction();
-                    } else {
-                        System.out.println("hideFiler is disabled");
                     }
+                }
+            }
+        });
+        //CYCLE TOOL PANELS
+        getKeyBinding(KeyEvent.VK_ENTER, jToolPanel, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (jSwitchMode.isVisible()) {
+                    switchToolPanels();
                 }
             }
         });
@@ -208,7 +233,7 @@ public class Main extends javax.swing.JFrame {
             GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 40, 40, 1200, false);
             rootFolder.mkdir();
         } else {
-            GUI.labelCutterThread(jAlertLabel1, goWebsite(jAlertLabel1, "developed by ", "https://i-comit.com", "i-comit LLC"), 0, 20, 600, true);
+            GUI.labelCutterThread(jAlertLabel1, goWebsite(jAlertLabel1, "developed by ", "https://i-comit.com", "i-comit LLC"), 0, 20, 60, true);
         }
         if (!sendFolderF.exists()) {
             sendFolderF.mkdir();
@@ -325,6 +350,11 @@ public class Main extends javax.swing.JFrame {
         setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         setResizable(false);
         setSize(new java.awt.Dimension(320, 0));
+        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                formMouseMoved(evt);
+            }
+        });
         addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 formMousePressed(evt);
@@ -753,7 +783,7 @@ public class Main extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -796,8 +826,8 @@ public class Main extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Polentical Neon", 0, 16)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("END USER LICENSE AGREEMENT");
-        jEULAPanel.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 6, 498, -1));
-        jEULAPanel.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 35, 498, -1));
+        jEULAPanel.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 5, 498, -1));
+        jEULAPanel.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 28, 498, -1));
 
         jTextArea3.setEditable(false);
         jTextArea3.setColumns(20);
@@ -808,7 +838,7 @@ public class Main extends javax.swing.JFrame {
         jTextArea3.setCaretPosition(0);
         jScrollPane3.setViewportView(jTextArea3);
 
-        jEULAPanel.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 44, 498, 132));
+        jEULAPanel.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 38, 498, 132));
 
         jButton4.setText("I AGREE");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -816,7 +846,7 @@ public class Main extends javax.swing.JFrame {
                 jButton4ActionPerformed(evt);
             }
         });
-        jEULAPanel.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(433, 180, -1, -1));
+        jEULAPanel.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(433, 176, -1, -1));
 
         jButton5.setText("I DISAGREE");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -824,7 +854,7 @@ public class Main extends javax.swing.JFrame {
                 jButton5ActionPerformed(evt);
             }
         });
-        jEULAPanel.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 180, -1, -1));
+        jEULAPanel.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 176, -1, -1));
 
         getContentPane().add(jEULAPanel);
         jEULAPanel.setBounds(6, 0, 520, 230);
@@ -834,8 +864,8 @@ public class Main extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Polentical Neon", 0, 16)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("TERMS OF USE");
-        jEULAPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 6, 498, -1));
-        jEULAPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 35, 498, -1));
+        jEULAPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 6, 498, -1));
+        jEULAPanel1.add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 28, 498, -1));
 
         jTextArea4.setEditable(false);
         jTextArea4.setColumns(20);
@@ -846,7 +876,7 @@ public class Main extends javax.swing.JFrame {
         jTextArea4.setCaretPosition(0);
         jScrollPane4.setViewportView(jTextArea4);
 
-        jEULAPanel1.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 44, 498, 132));
+        jEULAPanel1.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 38, 498, 132));
 
         jButton6.setText("I AGREE");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
@@ -854,7 +884,7 @@ public class Main extends javax.swing.JFrame {
                 ActionjButton6(evt);
             }
         });
-        jEULAPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(433, 180, -1, -1));
+        jEULAPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(433, 176, -1, -1));
 
         jButton7.setText("I DISAGREE");
         jButton7.addActionListener(new java.awt.event.ActionListener() {
@@ -862,7 +892,7 @@ public class Main extends javax.swing.JFrame {
                 jButton7ActionPerformed(evt);
             }
         });
-        jEULAPanel1.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 180, -1, -1));
+        jEULAPanel1.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 176, -1, -1));
 
         getContentPane().add(jEULAPanel1);
         jEULAPanel1.setBounds(6, 0, 520, 230);
@@ -1072,8 +1102,6 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jTree1MouseExited
 
     private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
-        System.out.println("focus regained");
-        jToolPanel.requestFocus();        // TODO add your handling code here:
     }//GEN-LAST:event_formMousePressed
 
     public boolean progressbarBool = false;
@@ -1089,6 +1117,14 @@ public class Main extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_jProgressBar1StateChanged
+
+    private void formMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseMoved
+        if (!jToolPanel.isFocusOwner() && jToolPanel.isVisible()) {
+            System.out.println("jToolPanel is focused");
+            jToolPanel.requestFocus();
+        }
+//        System.out.println("DD");
+    }//GEN-LAST:event_formMouseMoved
     /**
      * @param args the command line arguments
      */

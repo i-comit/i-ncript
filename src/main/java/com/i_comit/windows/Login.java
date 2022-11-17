@@ -25,10 +25,8 @@ public class Login {
 
     public static boolean loginCheck() {
         boolean b = false;
+        Main.jAlertLabel1.setVisible(false);
         char[] password = jPasswordField1.getPassword();
-        if (GUI.t.isAlive()) {
-            GUI.t.interrupt();
-        }
         username = jTextField1.getText();
         Statics.password = new String(password);
         if (!"".equals(username)) {
@@ -270,7 +268,7 @@ public class Login {
                     Main.jToolPanel.setVisible(true);
                     Main.jProgressBar2.setVisible(true);
                     GUI.t.interrupt();
-                    GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript", 45, 30, 900, false);
+                    GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript, " + username + ".", 20, 40, 1200, false);
                     Main.dragDropper();
                     Main.jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
                     Main.jLabel10.setToolTipText("drop box will encrypt & decrypt any files dropped here");
