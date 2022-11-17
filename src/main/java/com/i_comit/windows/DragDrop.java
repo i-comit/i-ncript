@@ -51,29 +51,35 @@ class DragDrop implements DropTargetListener {
         // Loop through the flavors
         if (!jTree1.isSelectionEmpty()) {
 //            jTree1.clearSelection();
-            List<Path> treepaths = new ArrayList<>();
-            String path = root + masterFolder + Main.jTree1.getSelectionPaths()[0].toString().substring(1, Main.jTree1.getSelectionPaths()[0].toString().length() - 1).replaceAll(", ", "\\\\");
-            String fileName = new File(root + masterFolder + Main.jTree1.getSelectionPaths()[0].toString().substring(1, Main.jTree1.getSelectionPaths()[0].toString().length() - 1).replaceAll(", ", "\\\\")).getName();
+            if (Statics.toolMode == 0 || Statics.toolMode == 3) {
+                List<Path> treepaths = new ArrayList<>();
+                String path = root + masterFolder + Main.jTree1.getSelectionPaths()[0].toString().substring(1, Main.jTree1.getSelectionPaths()[0].toString().length() - 1).replaceAll(", ", "\\\\");
+                String fileName = new File(root + masterFolder + Main.jTree1.getSelectionPaths()[0].toString().substring(1, Main.jTree1.getSelectionPaths()[0].toString().length() - 1).replaceAll(", ", "\\\\")).getName();
 
-            for (int i = 0; i < Main.jTree1.getSelectionPaths().length; i++) {
-                File fileFormat = new File(root + masterFolder + Main.jTree1.getSelectionPaths()[i].toString().substring(1, Main.jTree1.getSelectionPaths()[i].toString().length() - 1).replaceAll(", ", "\\\\"));
-                if (!fileFormat.isDirectory()) {
-                    System.out.println("files from Drag Drop are " + fileFormat);
-                    treepaths.add(fileFormat.toPath());
+                for (int i = 0; i < Main.jTree1.getSelectionPaths().length; i++) {
+                    File fileFormat = new File(root + masterFolder + Main.jTree1.getSelectionPaths()[i].toString().substring(1, Main.jTree1.getSelectionPaths()[i].toString().length() - 1).replaceAll(", ", "\\\\"));
+                    if (!fileFormat.isDirectory()) {
+                        System.out.println("files from Drag Drop are " + fileFormat);
+                        treepaths.add(fileFormat.toPath());
+                    }
                 }
-            }
-            if (TreeView.checkFilesAreFromSameFolder(treepaths)) {
-                Main.jButton2.setVisible(true);
-                Main.jProgressBar1.setMaximum(treepaths.size());
-                System.out.println("Path from Drag Drop is " + path.replaceAll(fileName, ""));
+                if (TreeView.checkFilesAreFromSameFolder(treepaths)) {
+                    Main.jButton2.setVisible(true);
+                    Main.jProgressBar1.setMaximum(treepaths.size());
+                    System.out.println("Path from Drag Drop is " + path.replaceAll(fileName, ""));
 
-                AES.AESThread(treepaths, new File(path.replaceAll(fileName, "")), false, 0);
-                System.out.println(treepaths);
-            } else {
-                GUI.t.interrupt();
-                GUI.labelCutterThread(jAlertLabel, "all files must be in same folder", 10, 20, 600, false);
+                    AES.AESThread(treepaths, new File(path.replaceAll(fileName, "")), false, 0);
+                    System.out.println(treepaths);
+                } else {
+                    GUI.t.interrupt();
+                    GUI.labelCutterThread(jAlertLabel, "all files must be in same folder", 10, 20, 800, false);
+                }
+                jTree1.clearSelection();
             }
-            jTree1.clearSelection();
+            if (Statics.toolMode == 1) {
+                GUI.t.interrupt();
+                GUI.labelCutterThread(Main.jAlertLabel, "only .i-cc files are allowed", 10, 25, 750, false);
+            }
         }
 
         for (DataFlavor flavor : flavors) {
@@ -103,10 +109,10 @@ class DragDrop implements DropTargetListener {
                                         Main.jTextArea1.append(filesf.getName() + " has been moved to the n-box folder\n");
                                         Folder.listZipFiles();
                                     } else {
-                                        GUI.labelCutterThread(Main.jAlertLabel, "only .i-cc files are allowed", 10, 25, 500, false);
+                                        GUI.labelCutterThread(Main.jAlertLabel, "only .i-cc files are allowed", 10, 25, 750, false);
                                     }
                                 } else {
-                                    GUI.labelCutterThread(Main.jAlertLabel, "only 1 file is allowed at once", 10, 25, 500, false);
+                                    GUI.labelCutterThread(Main.jAlertLabel, "only 1 file is allowed at once", 10, 25, 750, false);
                                 }
                             }
                         }
@@ -114,13 +120,12 @@ class DragDrop implements DropTargetListener {
                         if (GUI.t.isAlive()) {
                             GUI.t.interrupt();
                         }
-                        GUI.labelCutterThread(Main.jAlertLabel, "only 10 files are allowed at once", 10, 25, 500, false);
+                        GUI.labelCutterThread(Main.jAlertLabel, "only 10 files are allowed at once", 10, 25, 750, false);
                         Main.jTextArea1.append("For security reasons, you can only drop up to 10 files at once\n");
                     }
                 }
 
             } catch (UnsupportedFlavorException | IOException e) {
-                // Print out the error stack
                 e.printStackTrace();
             }
         }
@@ -128,20 +133,24 @@ class DragDrop implements DropTargetListener {
     }
 
     @Override
-    public void dragEnter(DropTargetDragEvent event) {
+    public void dragEnter(DropTargetDragEvent event
+    ) {
 
     }
 
     @Override
-    public void dragExit(DropTargetEvent event) {
+    public void dragExit(DropTargetEvent event
+    ) {
     }
 
     @Override
-    public void dragOver(DropTargetDragEvent event) {
+    public void dragOver(DropTargetDragEvent event
+    ) {
     }
 
     @Override
-    public void dropActionChanged(DropTargetDragEvent event) {
+    public void dropActionChanged(DropTargetDragEvent event
+    ) {
     }
 
 }

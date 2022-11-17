@@ -10,7 +10,6 @@ import static com.i_comit.windows.Main.jProgressBar1;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.io.IOException;
 import java.nio.file.*;
@@ -38,7 +37,7 @@ class HotFiler_T implements Runnable {
         synchronized (this) {
             try {
                 if (Main.jToggleButton1.isSelected()) {
-                    List<Path> path = listNewPaths(Statics.path);
+                    List<Path> path = listAESPaths(Statics.path);
                     if (path.isEmpty()) {
                         System.out.println("HotFilerPathEmpty");
                         folderWatcher();
@@ -47,15 +46,7 @@ class HotFiler_T implements Runnable {
                         Statics.fileIter = 0;
                         Statics.fileCount = GUI.countFiles(Statics.path);
                         jProgressBar1.setMaximum(Statics.fileCount);
-                        AES.AESThread(listAESPaths(Statics.path), Statics.directory, true, 0);
-                        while (AES.t.isAlive()) {
-                            Thread.sleep(100);
-                            if (!AES.t.isAlive()) {
-                                folderWatcher();
-                                break;
-                            }
-                        }
-
+                        AES.AESThread(path, Statics.directory, true, 0);
                     }
 
                 } else {
@@ -64,29 +55,8 @@ class HotFiler_T implements Runnable {
                 }
             } catch (IOException ex) {
                 ex.printStackTrace();
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
             }
         }
-    }
-
-    public static List<Path> listNewPaths(Path path) throws IOException {
-
-        List<Path> result;
-        try ( Stream<Path> walk = Files.walk(path)) {
-            result = walk.filter(Files::isRegularFile)
-                    .filter(p -> !p.getFileName().toString().endsWith(".enc"))
-                    .collect(Collectors.toList());
-        }
-        return result;
-    }
-
-    public static int countEncFiles(Path path) throws IOException {
-        int result;
-        try ( Stream<Path> walk = Files.walk(path)) {
-            result = Math.toIntExact(walk.filter(Files::isRegularFile).filter(p -> p.getFileName().toString().endsWith(".enc")).count());
-        }
-        return result;
     }
 
     public static int countRegFiles(Path path) throws IOException {
@@ -124,6 +94,7 @@ class HotFiler_T implements Runnable {
                         Statics.fileCount = countRegFiles(Statics.path);
                         if (Statics.fileCount == paths0) {
                             if (paths0 != 0 && Statics.fileCount != 0) {
+                                GUI.getGB();
                                 key.cancel();
                                 watchService.close();
                                 Statics.fileIter = 0;
@@ -131,7 +102,6 @@ class HotFiler_T implements Runnable {
                                 Main.jProgressBar1.setMaximum(Statics.fileCount);
                                 AES.AESThread(listAESPaths(Statics.path), Statics.directory, true, 0);
                                 System.out.println("Hot Filer Called AES");
-                                GUI.getGB();
                                 b = false;
                             }
                         }

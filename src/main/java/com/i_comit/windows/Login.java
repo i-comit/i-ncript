@@ -111,7 +111,8 @@ public class Login {
         jRadioButton2.setVisible(false);
     }
 
-    public static void sendKeyCheck() throws IOException {
+    public static boolean sendKeyCheck() throws IOException {
+        boolean b = false;
         char[] password = Main.jPasswordField2.getPassword();
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
@@ -132,6 +133,7 @@ public class Login {
                         zipFileCount = fileCount;
                         jProgressBar1.setMaximum(zipFileCount);
                         AES.AESThread(listAESPaths(sendFolder), sendFolder.toFile(), true, 2);
+                        b = true;
                     } else {
                         GUI.t.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "password can't be username", 20, 20, 1200, false);
@@ -152,7 +154,7 @@ public class Login {
             GUI.labelCutterThread(jAlertLabel, "please make a username", 20, 20, 1200, false);
             sendPanelTools();
         }
-
+        return b;
     }
 
     public static void sendKey() {
@@ -272,12 +274,12 @@ public class Login {
                     Main.dragDropper();
                     Main.jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
                     Main.jLabel10.setToolTipText("drop box will encrypt & decrypt any files dropped here");
+                    Main.jToolPanel.requestFocus();
                     b = true;
                 }
             } else {
                 GUI.t.interrupt();
                 GUI.labelCutterThread(jAlertLabel, "incorrect login info", 45, 30, 900, false);
-
             }
 
         } catch (IOException ex) {

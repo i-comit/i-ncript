@@ -99,48 +99,45 @@ public class AES {
 
     private static void doCrypto(int cipherMode, String key, File inputFile,
             File outputFile) throws CryptoException {
-        if (!t.interrupted()) {
+        try {
+            Key secretKey = new SecretKeySpec(key.getBytes(), ALGORITHM);
+            Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+            cipher.init(cipherMode, secretKey);
 
-            try {
-                Key secretKey = new SecretKeySpec(key.getBytes(), ALGORITHM);
-                Cipher cipher = Cipher.getInstance(TRANSFORMATION);
-                cipher.init(cipherMode, secretKey);
-
-                try ( FileInputStream inputStream = new FileInputStream(inputFile);  FileOutputStream outputStream = new FileOutputStream(outputFile)) {
-                    byte[] inputBytes = dynamicBytes(inputFile);
-                    int nread;
-                    while ((nread = inputStream.read(inputBytes)) > 0) {
-                        byte[] enc = cipher.update(inputBytes, 0, nread);
-                        if (inputFile.length() > Statics.maxFileBytes) {
-                            Memory.byteMonitor(inputStream, inputFile);
-                        }
-                        outputStream.write(enc);
+            try ( FileInputStream inputStream = new FileInputStream(inputFile);  FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+                byte[] inputBytes = dynamicBytes(inputFile);
+                int nread;
+                while ((nread = inputStream.read(inputBytes)) > 0) {
+                    byte[] enc = cipher.update(inputBytes, 0, nread);
+                    if (inputFile.length() > Statics.maxFileBytes) {
+                        Memory.byteMonitor(inputStream, inputFile);
                     }
-                    byte[] enc = cipher.doFinal();
                     outputStream.write(enc);
-                    inputStream.close();
-                    outputStream.close();
-                    System.gc();
-                    System.runFinalization();
                 }
-                fileIter++;
-                float percentage = ((float) fileIter / AES_T.paths.size() * 100);
-                DecimalFormat format = new DecimalFormat("0.#");
-                String percentageStr = format.format(percentage);
-                Main.jProgressBar1.setString(percentageStr + "% | " + fileIter + "/" + AES_T.paths.size());
-                Main.jProgressBar1.setValue(fileIter);
-                GUI.loggerThread(outputFile, Statics.toolMode);
-                getFileAttr(inputFile, outputFile);
+                byte[] enc = cipher.doFinal();
+                outputStream.write(enc);
+                inputStream.close();
+                outputStream.close();
+                System.gc();
+                System.runFinalization();
+            }
+            fileIter++;
+            float percentage = ((float) fileIter / AES_T.paths.size() * 100);
+            DecimalFormat format = new DecimalFormat("0.#");
+            String percentageStr = format.format(percentage);
+            Main.jProgressBar1.setString(percentageStr + "% | " + fileIter + "/" + AES_T.paths.size());
+            Main.jProgressBar1.setValue(fileIter);
+            GUI.loggerThread(outputFile, Statics.toolMode);
+            getFileAttr(inputFile, outputFile);
 
-            } catch (NoSuchPaddingException | NoSuchAlgorithmException
-                    | InvalidKeyException | BadPaddingException
-                    | IllegalBlockSizeException ex) {
-                throw new CryptoException("Error encrypting/decrypting file", ex);
-            } catch (IOException | UncheckedIOException ex) {
-                System.out.println("Last File Was " + inputFile.getName());
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException
+                | InvalidKeyException | BadPaddingException
+                | IllegalBlockSizeException ex) {
+            throw new CryptoException("Error encrypting/decrypting file", ex);
+        } catch (IOException | UncheckedIOException ex) {
+            System.out.println("Last File Was " + inputFile.getName());
 //        } catch (InvalidAlgorithmParameterException ex) {
 //            ex.printStackTrace();
-            }
         }
     }
 
@@ -208,7 +205,6 @@ class AES_T implements Runnable {
 
                                 } else {
                                     System.out.println("File Encryption Complete");
-                                    GUI.resetProgressBar(jProgressBar1);
                                     if (toolMode == 2) {
                                         try {
                                             sendKey();
@@ -220,6 +216,7 @@ class AES_T implements Runnable {
                                             ex.printStackTrace();
                                         }
                                     }
+                                    GUI.resetProgressBar(jProgressBar1);
                                 }
                             }
                             case 1 -> {

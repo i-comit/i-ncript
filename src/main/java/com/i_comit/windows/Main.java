@@ -4,18 +4,21 @@
  */
 package com.i_comit.windows;
 
-import static com.i_comit.windows.GUI.listAESPaths;
-import static com.i_comit.windows.HotFiler_T.watchService;
 import static com.i_comit.windows.Statics.*;
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.dnd.DropTarget;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import javax.swing.AbstractAction;
+import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -24,60 +27,163 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "";
+    public static String root = "D:\\";
     public static String masterFolder = "--------\\";
     public static String version = "1.6.6";
 
     public Main() {
         root = Paths.get("").toAbsolutePath().toString();
         if (Memory.checkWMIC()) {
-        root = root.substring(0, 3);
-        initComponents();
-        FileHider.cleanUp();
+            root = root.substring(0, 3);
+            initComponents();
+            FileHider.cleanUp();
 
-        Path runtime = Paths.get(root + masterFolder + "runtime");
-        Path app = Paths.get(root + masterFolder + "app");
-        if (runtime.toFile().exists()) {
-            try {
-                Files.setAttribute(runtime, "dos:hidden", true);
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            Path runtime = Paths.get(root + masterFolder + "runtime");
+            Path app = Paths.get(root + masterFolder + "app");
+            if (runtime.toFile().exists()) {
+                try {
+                    Files.setAttribute(runtime, "dos:hidden", true);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            if (app.toFile().exists()) {
+                try {
+                    Files.setAttribute(app, "dos:hidden", true);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            setKeybinding();
+            jStorePanel.setVisible(true);
+            jSendPanel.setVisible(false);
+            jReceivePanel.setVisible(false);
+            jRadioButton2.setVisible(false);
+            jRadioButton3.setVisible(false);
+            jScrollPane5.setVisible(false);
+
+            if (!keyFile.exists()) {
+                jToolPanel.setVisible(false);
+                loginLabelVisibleBool(false);
+                jTextArea3.setCaretPosition(0);
+                this.setSize(540, 245);
+                this.setLocationRelativeTo(null);
+            } else {
+                loginLabelVisibleBool(true);
+                jUsernameLabel.setText("enter username");
+                jPasswordLabel.setText("enter password");
+                generateFolders();
+
+                jToolPanel.setVisible(false);
+                jButton2.setVisible(false);
+            }
+            jProgressBar1.setVisible(false);
+            jProgressBar2.setVisible(false);
+            dragDrop.setVisible(false);
+        }
+    }
+
+    private void getKeyBinding(int keyCode, JPanel jPanel, AbstractAction action) {
+        int modifier = 0;
+        switch (keyCode) {
+            case KeyEvent.VK_Q ->
+                modifier = InputEvent.SHIFT_DOWN_MASK;
+            case KeyEvent.VK_E ->
+                modifier = InputEvent.SHIFT_DOWN_MASK;
+            case KeyEvent.VK_F ->
+                modifier = InputEvent.SHIFT_DOWN_MASK;
+            case KeyEvent.VK_H ->
+                modifier = InputEvent.SHIFT_DOWN_MASK;
+            case KeyEvent.VK_C ->
+                modifier = InputEvent.SHIFT_DOWN_MASK;
+            case KeyEvent.VK_S ->
+                modifier = InputEvent.SHIFT_DOWN_MASK;
+
+            case KeyEvent.VK_ENTER -> {
             }
         }
-        if (app.toFile().exists()) {
-            try {
-                Files.setAttribute(app, "dos:hidden", true);
-            } catch (IOException ex) {
-                ex.printStackTrace();
+        jPanel.getInputMap().put(KeyStroke.getKeyStroke(keyCode, modifier), keyCode);
+        jPanel.getActionMap().put(keyCode, action);
+    }
+
+    private void setKeybinding() {
+        getKeyBinding(KeyEvent.VK_ENTER, jToolPanel, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (jSwitchMode.isVisible()) {
+                    switchToolPanels();
+                }
             }
-        }
-
-        jStorePanel.setVisible(true);
-        jSendPanel.setVisible(false);
-        jReceivePanel.setVisible(false);
-        jRadioButton2.setVisible(false);
-        jRadioButton3.setVisible(false);
-        jScrollPane5.setVisible(false);
-
-        if (!keyFile.exists()) {
-            jToolPanel.setVisible(false);
-            loginLabelVisibleBool(false);
-            jTextArea3.setCaretPosition(0);
-            this.setSize(540, 245);
-            this.setLocationRelativeTo(null);
-        } else {
-            loginLabelVisibleBool(true);
-            jUsernameLabel.setText("enter username");
-            jPasswordLabel.setText("enter password");
-            generateFolders();
-
-            jToolPanel.setVisible(false);
-            jButton2.setVisible(false);
-        }
-        jProgressBar1.setVisible(false);
-        jProgressBar2.setVisible(false);
-        dragDrop.setVisible(false);
-        }
+        });
+        getKeyBinding(KeyEvent.VK_Q, jToolPanel, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jToolPanel.requestFocus();
+                System.out.println("Shift+Q pressed");
+                if (toolMode == 0 || toolMode == 3) {
+                    jRadioButton0.setSelected(true);
+                    encryptFunction();
+                }
+            }
+        });
+        getKeyBinding(KeyEvent.VK_E, jToolPanel, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jToolPanel.requestFocus();
+                System.out.println("Shift+E pressed");
+                if (toolMode == 0 || toolMode == 3) {
+                    jRadioButton1.setSelected(true);
+                    decryptFunction();
+                }
+            }
+        });
+        getKeyBinding(KeyEvent.VK_C, jToolPanel, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jTextArea1.setText("");
+            }
+        });
+        //STOP KEYBIND
+        getKeyBinding(KeyEvent.VK_S, jToolPanel, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (Statics.fileIter != 0) {
+                    stopFunction();
+                } else {
+                    System.out.println("AES not alive");
+                }
+            }
+        });
+        //HOT FILER KEYBIND
+        getKeyBinding(KeyEvent.VK_F, jToolPanel, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (toolMode == 0 || toolMode == 3) {
+                    hotFilerBool ^= true;
+                    jToggleButton1.setSelected(hotFilerBool);
+                    if (jToggleButton1.isEnabled()) {
+                        hotFilerFunction();
+                    } else {
+                        System.out.println("hotFiler is disabled");
+                    }
+                }
+            }
+        });
+        //FILE HIDER KEYBIND
+        getKeyBinding(KeyEvent.VK_H, jToolPanel, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (toolMode == 0 || toolMode == 3) {
+                    fileHiderBool ^= true;
+                    jToggleButton2.setSelected(fileHiderBool);
+                    if (jToggleButton2.isEnabled()) {
+                        fileHiderFunction();
+                    } else {
+                        System.out.println("hideFiler is disabled");
+                    }
+                }
+            }
+        });
     }
 
     private void loginLabelVisibleBool(boolean b) {
@@ -213,11 +319,16 @@ public class Main extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("\ti-ncript™");
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti.png")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti1.png")));
         setMinimumSize(new java.awt.Dimension(295, 225));
         setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         setResizable(false);
         setSize(new java.awt.Dimension(320, 0));
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                formMousePressed(evt);
+            }
+        });
         getContentPane().setLayout(null);
 
         jToolPanel.setOpaque(false);
@@ -598,7 +709,6 @@ public class Main extends javax.swing.JFrame {
         jTextArea1.setEditable(false);
         jTextArea1.setBackground(new java.awt.Color(57, 57, 57));
         jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("Polentical Neon", 0, 10)); // NOI18N
         jTextArea1.setForeground(Color.white);
         jTextArea1.setRows(5);
         jTextArea1.setAutoscrolls(false);
@@ -653,7 +763,7 @@ public class Main extends javax.swing.JFrame {
         jTextArea6.setForeground(Color.WHITE);
         jTextArea6.setLineWrap(true);
         jTextArea6.setRows(5);
-        jTextArea6.setText("i-ncript Standard Operating Procedure (11/16/2022):\n\ni-ncript operates with 3 tool panels connected to their respective folders: STORE, N-BOX, and O-BOX, which you can cycle through via the button on the bottom left. Within these panels are primary tools which are accessible in all 3 panels, and some others which are exclusive to its respective panel.\ni-ncript also has a tabbed pane to the right of its interface, containing panels which displays encryption output, drag&drop, about, and SOP (this tab).\n\n[TOOL PANEL]\n-ENCRYPT & DECRYPT\nThese two radio buttons are the main tools of i-ncript, and pressing either buttons will run the respective encryption task, using the AES cipher. Encrypted files will have an .enc file extension.\n-STOP\nThis button only appears during encryption/decryption; click it to stop the current crypto task.\n-CLR LOG\nThis button will clear the outputs seen in the LOG tab during encryption and decryption.\n\n[FILE TREE]\n- A file tree viewer can be seen to the left of the window after login. This tree recursively lists all your files for its respective tool panel. You can encrypt/decrypt the files from this file tree by selecting the desired files then dragging it to the DROP tab across the GUI, you can also double click on a single file to open it. Single clicking on a file will display its creation date and filesize at the bottom of the file tree panel, and selecting multiple files at once will give the sum of all the selected file sizes.\n\n\n[TABBED PANEL]\n-DROP\nThe second tab is only enabled while the STORE panel is active. You can drag and drop any files from your computer into the panel of this tab and it will automatically encrypt or decrypt (dependent on the file type) in its current directory. This is useful if you want to encrypt or decrypt only a few files to work on.\nIf you are on the N-BOX panel, the DROP tab will instead only accept 1 .i-cc file at a time, and move that file to the n-box folder.\n-LOG\nThe first tab of the pane logs each name of the file being encrypted and decrypted, along with the time that the crypto task was complete.\n-ABOUT\nCopyright information, contact information and liability clauses can be found here.\n-HELP\nThis tab serves to provide more information on the tools and fields offered by i-ncript. This is the tab that you are currently on.\n\nThese components are active throughout all 3 panels, now we will go over some that are exlusive to its tool panel.\n\n[STORE] (i-ncript folder)\nThis panel is connected to the i-ncript folder and the first panel that you will see. It is your personal encryption folder that you can use to store data that only you can access.\n-HOT FILER\nHot Filer can be toggled for automatic encryption whenever any new files is dropped into the i-ncript folder. If it detects any new files it will run the Encrypt function the same way as clicking on the Encrypt radio button.\n-HIDE FILE\nHide File can be toggled to hide or unhide every file in the i-ncript folder. It runs after every crypto task.\n\n[N-BOX]\nThis is the second panel after pressing the STORE button on the bottom left of the UI. This panel is connected to your n-box (inbox) folder, and it has the ability to decrypt .i-cc (specialized encrypted files) files that someone else has sent to you, granted you have the correct credentials.\n1. Rather than buttons, you are presented with a list and a password field. The list lists out all the .i-cc files that it found in the n-box folder, and if there is one, you can select it by clicking on the .i-cc file name.\n2. You then input the password that the sender has provided to you in faith, and as long as its over 4 characters (any less and the DECRYPT button will not appear) and matches the hash inside the .i-cc file, then that file will be decrypted into a folder with all its contents in readable form.\n\n[O-BOX]\nThis is the last panel when you press the N-BOX folder, which was previously STORE, and pressing it again will cycle you back to the STORE panel. This panel is connected to your o-box (outbox) folder, and any files you put in this folder can be encrypted and packaged into a .i-cc file (which you can send to someone else just like outbox mail)\n1. You must first know the username of the recipient's i-ncript account. It must match exactly in order for them to decrypt it. If you do know, then put it in the first text field.\n2. You then create a second password that you will confidentially share with the recipient, and this will be hashed. If there are files in the o-box folder (again, make sure you intend for ALL the files and folders in o-box to go to this person because it will package everything inside this folder) then it will be neatly packaged into a .i-cc file for you to email.");
+        jTextArea6.setText("i-ncript Standard Operating Procedure (11/16/2022):\n\ni-ncript operates with 3 tool panels connected to their respective folders: STORE, N-BOX, and O-BOX, which you can cycle through via the button on the bottom left. Within these panels are primary tools which are accessible in all 3 panels, and some others which are exclusive to its respective panel.\ni-ncript also has a tabbed pane to the right of its interface, containing panels which displays encryption output, drag&drop, about, and SOP (this tab).\n\n[TOOL PANEL]\n-ENCRYPT & DECRYPT\nThese two radio buttons are the main tools of i-ncript, and pressing either buttons will run the respective encryption task, using the AES cipher. Encrypted files will have an .enc file extension.\n-STOP\nThis button only appears during encryption/decryption; click it to stop the current crypto task.\n-CLR LOG\nThis button will clear the outputs seen in the LOG tab during encryption and decryption.\n\n[FILE TREE]\n- A file tree viewer can be seen to the left of the window after login. This tree recursively lists all your files for its respective tool panel. You can encrypt/decrypt the files from this file tree by selecting the desired files then dragging it to the DROP tab across the GUI, you can also double click on a single file to open it. Single clicking on a file will display its creation date and filesize at the bottom of the file tree panel, and selecting multiple files at once will give the sum of all the selected file sizes.\n\n\n[TABBED PANEL]\n-DROP\nThe second tab is only enabled while the STORE panel is active. You can drag and drop any files from your computer into the panel of this tab and it will automatically encrypt or decrypt (dependent on the file type) in its current directory. This is useful if you want to encrypt or decrypt only a few files to work on.\nIf you are on the N-BOX panel, the DROP tab will instead only accept 1 .i-cc file at a time, and move that file to the n-box folder.\n-LOG\nThe first tab of the pane logs each name of the file being encrypted and decrypted, along with the time that the crypto task was complete.\n-ABOUT\nCopyright information, contact information and liability clauses can be found here.\n-HELP\nThis tab serves to provide more information on the tools and fields offered by i-ncript. This is the tab that you are currently on.\n\nThese components are active throughout all 3 panels, now we will go over some that are exlusive to its tool panel.\n\n[STORE] (i-ncript folder)\nThis panel is connected to the i-ncript folder and the first panel that you will see. It is your personal encryption folder that you can use to store data that only you can access.\n-HOT FILER\nHot Filer can be toggled for automatic encryption whenever any new files is dropped into the i-ncript folder. If it detects any new files it will run the Encrypt function the same way as clicking on the Encrypt radio button.\n-HIDE FILE\nHide File can be toggled to hide or unhide every file in the i-ncript folder. It runs after every crypto task.\n\n[N-BOX]\nThis is the second panel after pressing the STORE button on the bottom left of the UI. This panel is connected to your n-box (inbox) folder, and it has the ability to decrypt .i-cc (specialized encrypted files) files that someone else has sent to you, granted you have the correct credentials.\n1. Rather than buttons, you are presented with a list and a password field. The list lists out all the .i-cc files that it found in the n-box folder, and if there is one, you can select it by clicking on the .i-cc file name.\n2. You then input the password that the sender has provided to you in faith, and as long as its over 4 characters (any less and the DECRYPT button will not appear) and matches the hash inside the .i-cc file, then that file will be decrypted into a folder with all its contents in readable form.\n\n[O-BOX]\nThis is the last panel when you press the N-BOX folder, which was previously STORE, and pressing it again will cycle you back to the STORE panel. This panel is connected to your o-box (outbox) folder, and any files you put in this folder can be encrypted and packaged into a .i-cc file (which you can send to someone else just like outbox mail)\n1. You must first know the username of the recipient's i-ncript account. It must match exactly in order for them to decrypt it. If you do know, then put it in the first text field.\n2. You then create a second password that you will confidentially share with the recipient, and this will be hashed. If there are files in the o-box folder (again, make sure you intend for ALL the files and folders in o-box to go to this person because it will package everything inside this folder) then it will be neatly packaged into a .i-cc file for you to email.\n\n[HOTKEYS]\n>ENTER\nThis will cycle through the 3 tool panels, STORE, N-BOX, and O-BOX.\n>SHIFT+Q\nThis will run the encription task on the i-ncript folder, similar to clicking the ENCRYPT radio button.\n>SHIFT+E\nThis will run the decription task on the i-ncript folder, similar to clicking the DECRYPT radio button.\n>SHIFT+C\nThis will clear the output log on the tabbed pane, similar to clicking CLR LOG.\n>SHIFT+S\nThis will stop the active encryption/decryption task, similar to clicking the STOP button.\n>SHIFT+F\nThis will run hot filer function, similar to clicking on the HOT FILER button.\n- SHIFT+H\nThis will run the file hider function, similar to clicking on the HIDE FILE button.");
         jTextArea6.setWrapStyleWord(true);
         jTextArea6.setCaretPosition(0);
         jScrollPane6.setViewportView(jTextArea6);
@@ -759,7 +869,6 @@ public class Main extends javax.swing.JFrame {
         jTree1.setModel(TreeView.populateStoreTree(Statics.path));
         jTree1.setDragEnabled(true);
         jTree1.setFocusCycleRoot(true);
-        jTree1.setFocusTraversalPolicy(null);
         jTree1.setRootVisible(false);
         jTree1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -784,21 +893,7 @@ public class Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     //DECRYPT
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
-        jToggleButton1.setSelected(false);
-        if (GUI.t.isAlive()) {
-            GUI.t.interrupt();
-        }
-        Statics.AESMode = 1;
-        jProgressBar1.setValue(0);
-        jProgressBar1.setMaximum(0);
-        try {
-            fileCount = GUI.countFiles(path);
-            jProgressBar1.setMaximum(fileCount);
-            AES.AESThread(listAESPaths(path), directory, true, 0);
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        decryptFunction();
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
 
@@ -823,26 +918,9 @@ public class Main extends javax.swing.JFrame {
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
-    //HIDE FILER
+    //FILE HIDER
     private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
-        if (GUI.t.isAlive()) {
-            GUI.t.interrupt();
-        }
-        try {
-            if (!jToggleButton1.isSelected()) {
-                buttonGroup1.clearSelection();
-                Main.jToggleButton2.setEnabled(false);
-                jTree1.setEnabled(false);
-                if (jToggleButton2.isSelected()) {
-                    FileHider.FileHiderThread(true, path);
-                } else {
-                    FileHider.FileHiderThread(false, path);
-                }
-            } else {
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        fileHiderFunction();
     }//GEN-LAST:event_jToggleButton2ActionPerformed
     //ENCRYPT
     private void jRadioButton0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton0ActionPerformed
@@ -852,6 +930,7 @@ public class Main extends javax.swing.JFrame {
     //CLEAR LOG
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         jTextArea1.setText("");
+        jButton3.setFocusPainted(false);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jPasswordField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField1KeyPressed
@@ -899,70 +978,11 @@ public class Main extends javax.swing.JFrame {
 
     //SWITCH STORE/SEND/RECEIVE MODE
     private void jSwitchModeActionEvt(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSwitchModeActionEvt
-        jRadioButton2.setVisible(false);
-        toolMode++;
-        jTextField2.setText("");
-        jPasswordField2.setText("");
-        jPasswordField3.setText("");
-
-        switch (toolMode) {
-            case 1 -> {
-                jSwitchMode.setText("N-BOX");
-                jSwitchMode.setToolTipText("current panel can decrypt .i-cc files inside n-box (inbox) folder");
-                jStorePanel.setVisible(false);
-                jSendPanel.setVisible(false);
-                jReceivePanel.setVisible(true);
-                dragDrop.setVisible(true);
-
-                jLabel5.setVisible(false);
-                jLabel6.setVisible(false);
-                jRadioButton2.setVisible(false);
-                Folder.listZipFiles();
-
-                jLabel10.setText("N-BOX MODE");
-                jLabel11.setText("MOVE .I-CC TO N-BOX");
-                jLabel10.setToolTipText("drop box will move dropped .i-cc file to n-box folder");
-                TreeView.setRootName("n-box");
-                TreeView.populateStoreTree(receiveFolder);
-            }
-            case 2 -> {
-                jSwitchMode.setText("O-BOX");
-                jSwitchMode.setToolTipText("current panel can encrypt files for sending from o-box (outbox) folder");
-                jStorePanel.setVisible(false);
-                jSendPanel.setVisible(true);
-                jLabel6.setVisible(true);
-                jLabel5.setVisible(true);
-                jReceivePanel.setVisible(false);
-                dragDrop.setVisible(false);
-
-                jLabel7.setVisible(false);
-                jLabel8.setVisible(false);
-                jRadioButton3.setVisible(false);
-                TreeView.setRootName("o-box");
-                TreeView.populateStoreTree(sendFolder);
-            }
-            case 3 -> {
-                jSwitchMode.setText("STORE");
-                jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
-                jStorePanel.setVisible(true);
-                jSendPanel.setVisible(false);
-                jLabel7.setVisible(true);
-                jLabel8.setVisible(true);
-                jReceivePanel.setVisible(false);
-                dragDrop.setVisible(true);
-                toolMode = 0;
-                jLabel10.setText("STORE MODE");
-                jLabel11.setText("ENCRYPT & DECRYPT");
-                jLabel10.setToolTipText("drop box will encrypt & decrypt any files dropped here");
-                TreeView.setRootName("i-ncript");
-                TreeView.populateStoreTree(path);
-            }
-        }
+        switchToolPanels();
     }//GEN-LAST:event_jSwitchModeActionEvt
     //SEND PANEL
     private void jPasswordField2Evt(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField2Evt
         if (jPasswordField2.getPassword().length < 4) {
-//            jLabel6.setText("password too short");
             jLabel6.setVisible(true);
             jLabel5.setVisible(true);
             jRadioButton2.setVisible(false);
@@ -970,6 +990,7 @@ public class Main extends javax.swing.JFrame {
             jLabel6.setVisible(false);
             jLabel5.setVisible(false);
             jRadioButton2.setVisible(true);
+            jRadioButton2.requestFocus();
         }
     }//GEN-LAST:event_jPasswordField2Evt
 
@@ -1027,66 +1048,13 @@ public class Main extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_jTree1MouseClicked
-
+    //HOT FILER
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-        AESMode = 0;
-        if (jToggleButton1.isSelected()) {
-            dragDrop.setVisible(false);
-            try {
-                HotFiler.HotFilerThread();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        } else {
-            dragDrop.setVisible(true);
-            try {
-                watchService.close();
-                HotFiler.t.interrupt();
-                Main.buttonGroup1.clearSelection();
-                Main.jProgressBar1.setStringPainted(false);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-
-        }
-        jRadioButton1.setVisible(!jToggleButton1.isSelected());
-        jRadioButton0.setSelected(jToggleButton1.isSelected());
-        jRadioButton0.setEnabled(!jToggleButton1.isSelected());
-        if (GUI.t.isAlive()) {
-            GUI.t.interrupt();
-        }
+        hotFilerFunction();
     }//GEN-LAST:event_jToggleButton1ActionPerformed
-
+    //STOP
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        AES.t.interrupt();
-        AES.t.stop();
-        if (GUI.t.isAlive()) {
-            GUI.t.interrupt();
-        }
-        jButton2.setVisible(false);
-        switch (AESMode) {
-            case 0 ->
-                jTextArea1.append("encryption of " + fileCount + " files stopped\n");
-            case 1 ->
-                jTextArea1.append("decryption of " + fileCount + " files stopped\n");
-        }
-        fileCount = 0;
-        fileIter = 0;
-        jTabbedPane1.setSelectedIndex(0);
-        jProgressBar1.setValue(fileIter);
-        jProgressBar1.setMaximum(fileCount);
-        jProgressBar1.setStringPainted(false);
-        jProgressBar1.setVisible(false);
-
-        jProgressBar2.setMaximum(0);
-        jProgressBar2.setValue(jProgressBar2.getMaximum());
-        jProgressBar2.setStringPainted(false);
-        jProgressBar2.setVisible(true);
-        buttonGroup1.clearSelection();
-        FileHider.cleanUp();
-        jAlertLabel.setText("");
-        dragDrop.setVisible(true);
-        toolBtnsBool(true);
+        stopFunction();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jTree1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MouseExited
@@ -1097,6 +1065,11 @@ public class Main extends javax.swing.JFrame {
             jTree1.clearSelection();
         }
     }//GEN-LAST:event_jTree1MouseExited
+
+    private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
+        System.out.println("focus regained");
+        jToolPanel.requestFocus();        // TODO add your handling code here:
+    }//GEN-LAST:event_formMousePressed
     /**
      * @param args the command line arguments
      */

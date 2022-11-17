@@ -6,6 +6,7 @@ package com.i_comit.windows;
 
 import static com.i_comit.windows.FileHider.fileCt;
 import static com.i_comit.windows.GUI.listPaths;
+import static com.i_comit.windows.HotFiler_T.folderWatcher;
 import static com.i_comit.windows.Statics.path;
 import java.io.File;
 import java.io.IOException;
@@ -23,36 +24,36 @@ import java.util.Set;
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
 public class FileHider {
-
+    
     static int fileCt = 0;
-
+    
     public static void cleanUp() {
         try {
             Set<String> unique = new HashSet<>();
-
+            
             List<Path> paths = listPaths(path);
             List<String> duplicates = new ArrayList<>();
             List<String> duplStr = new ArrayList<>();
             int deletedFiles = 0;
-
+            
             paths.forEach(x -> {
                 String f = x.toFile().getAbsolutePath().replace(".enc", "");
                 duplStr.add(f);
             });
-
+            
             for (String n : duplStr) {
                 if (!unique.add(n)) {
                     duplicates.add(n);
                 }
             }
-
+            
             if (!duplicates.isEmpty()) {
                 for (int i = 0; i < duplicates.size(); i++) {
                     String enc = duplicates.get(i) + ".enc";
-
+                    
                     File decF = Paths.get(duplicates.get(i)).toFile();
                     File encF = Paths.get(enc).toFile();
-
+                    
                     if (decF.length() > encF.length()) {
                         encF.delete();
                         System.out.println("deleted " + encF);
@@ -75,7 +76,7 @@ public class FileHider {
             ex.printStackTrace();
         }
     }
-
+    
     public static void FileHiderThread(boolean fileHideBool, Path path) throws IOException {
         Thread t = new Thread(() -> {
             try {
@@ -89,9 +90,9 @@ public class FileHider {
 }
 
 class FileHider_T implements Runnable {
-
+    
     public int threadIterator;
-
+    
     public void run() {
 //
 //        try {
@@ -100,7 +101,7 @@ class FileHider_T implements Runnable {
 //            ex.printStackTrace();
 //        }
     }
-
+    
     public static void fileHiderToolReenable() {
         Main.jToggleButton2.setEnabled(true);
         Main.toolBtnsBool(true);
@@ -113,11 +114,18 @@ class FileHider_T implements Runnable {
         Statics.fileCount = 0;
         fileCt = 0;
     }
-
+    
     public static void FileHider_T(boolean fileHideBool, Path path) throws IOException {
         Statics.fileHideIter = 0;
         List<Path> paths = listPaths(path);
         int fileCount = GUI.countAllFiles(path);
+        if (Main.jToggleButton1.isSelected()) {
+            System.out.println("hot filer is selected");
+            Main.toolBtnsBool(true);
+            Main.jProgressBar1.setValue(0);
+            Main.jProgressBar2.setMaximum(0);
+            folderWatcher();
+        }
         if (fileHideBool) {
             paths.forEach(x -> {
                 try {
@@ -164,15 +172,15 @@ class FileHider_T implements Runnable {
             TreeView.populateStoreTree(path);
         }
     }
-
+    
     public static void getFileAttr(Path x, boolean fileHideBool) throws IOException {
         String fileAttr = Files.getAttribute(x, "dos:hidden", LinkOption.NOFOLLOW_LINKS).toString();
         boolean fileAttrBool = Boolean.parseBoolean(fileAttr);
-
+        
         if (fileAttrBool == true) {
             if (!Main.jToggleButton2.isSelected()) {
                 Files.setAttribute(x, "dos:hidden", false);
-
+                
                 if (x.toFile().getName().startsWith(".")) {
                     String filePath = x.toFile().toString().replaceAll(x.toFile().getName(), "");
                     File outputFile = new File(filePath + x.toFile().getName().substring(1));
@@ -181,17 +189,17 @@ class FileHider_T implements Runnable {
                 ++FileHider.fileCt;
             }
         }
-
+        
         if (fileAttrBool == false) {
             if (Main.jToggleButton2.isSelected()) {
                 Files.setAttribute(x, "dos:hidden", true);
-
+                
                 if (!x.toFile().getName().startsWith(".")) {
                     String filePath = x.toFile().toString().replaceAll(x.toFile().getName(), "");
                     File outputFile = new File(filePath + "." + x.toFile().getName());
                     x.toFile().renameTo(outputFile);
                 }
-
+                
                 ++FileHider.fileCt;
             }
         }
