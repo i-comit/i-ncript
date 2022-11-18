@@ -67,7 +67,6 @@ public class TreeView {
 
     private static void listFiles(File file, DefaultMutableTreeNode dirNodes) {
         File[] filesArr = file.listFiles();
-//        System.out.println("List all files " + Arrays.toString(filesArr));
 //        System.out.println("CHILD 2 DIR " + file.getName());
         for (int x = 0; x < filesArr.length; x++) {
             if (!filesArr[x].isDirectory()) {
@@ -123,8 +122,10 @@ public class TreeView {
 
                 if (!fileFormat.isDirectory()) {
                     BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
-                    Main.jCreationDateLabel.setText(GUI.formatDateTime(attr.lastModifiedTime()));
-                    Main.jFileSizeLabel.setText(Memory.byteFormatter(fileFormat.length()));
+//                    Main.jCreationDateLabel.setText(GUI.formatDateTime(attr.lastModifiedTime()));
+//                    Main.jFileSizeLabel.setText(Memory.byteFormatter(fileFormat.length()));
+                    GUI.labelCutterTreeThread(Main.jCreationDateLabel, GUI.formatDateTime(attr.lastModifiedTime()), 0, 16, 64, true);
+                    GUI.labelCutterTreeThread(Main.jFileSizeLabel, Memory.byteFormatter(fileFormat.length()), 0, 16, 64, true);
                 }
             } else {
                 List<Long> fileSizes = new ArrayList<>();

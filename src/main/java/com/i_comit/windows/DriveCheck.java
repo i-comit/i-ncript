@@ -4,6 +4,7 @@
  */
 package com.i_comit.windows;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Toolkit;
@@ -26,7 +27,7 @@ public class DriveCheck extends javax.swing.JFrame {
         switch (driveState) {
             case 1 -> {
                 jLabel1.setText("i-ncript can only run");
-                goWebsite(jLabel2, "within a ", "https://i-comit.com", "USB device");
+                goWebsite(jLabel2, "within a ", "https://i-comit.com", "USB device", false);
             }
             case 2 -> {
                 jLabel1.setText("i-ncript can not run");
@@ -43,19 +44,26 @@ public class DriveCheck extends javax.swing.JFrame {
         }
     }
 
-    public static final String goWebsite(JLabel website, final String leadingStr, final String url, String text) {
-        website.setText("<html>" + leadingStr + "<a href=\"\">" + text + "</a></html>");
-        website.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        website.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                try {
-                    Desktop.getDesktop().browse(new URI(url));
-                } catch (URISyntaxException | IOException ex) {
-                    //It looks like there's a problem
+    public static final String goWebsite(JLabel website, final String leadingStr, final String url, String text, boolean changeColor) {
+
+        if (changeColor) {
+            website.setText("<html>" + leadingStr + "<a style=\"text-decoration:none\" text=\"rgb(187,187,187)\" href=\"\">" + text + "</a></html>");
+        } else {
+            website.setText("<html>" + leadingStr + "<a style=\"text-decoration:none\" href=\"\">" + text + "</a></html>");
+        }
+        if (!url.equals("")) {
+            website.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            website.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    try {
+                        Desktop.getDesktop().browse(new URI(url));
+                    } catch (URISyntaxException | IOException ex) {
+                        //It looks like there's a problem
+                    }
                 }
-            }
-        });
+            });
+        }
         return website.getText();
     }
 

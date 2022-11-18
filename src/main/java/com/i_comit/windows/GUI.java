@@ -30,6 +30,7 @@ import javax.swing.JProgressBar;
 public class GUI {
 
     public static Thread t;
+    public static Thread tb;
     public static Thread t1;
     public static Thread t2;
 
@@ -42,6 +43,11 @@ public class GUI {
     public static void labelCutterThread(JLabel jLabel, String labelMsg, int initSleep, int sleep, int pause, boolean stayAlive) {
         t = new Thread(() -> labelCutter_T.labelCutter_T(jLabel, labelMsg, initSleep, sleep, pause, stayAlive));
         t.start();
+    }
+
+    public static void labelCutterTreeThread(JLabel jLabel, String labelMsg, int initSleep, int sleep, int pause, boolean stayAlive) {
+        tb = new Thread(() -> labelCutterTree_T.labelCutterTree_T(jLabel, labelMsg, initSleep, sleep, pause, stayAlive));
+        tb.start();
     }
 
     public static void loggerThread(File outputFile, int toolMode) {
@@ -156,10 +162,14 @@ public class GUI {
                 if (progressBar.getValue() == 0) {
                     progressBar.setStringPainted(false);
                     switch (Statics.toolMode) {
-                        case 0 -> FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.path);
-                        case 1 -> FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.receiveFolder);
-                        case 2 -> FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.sendFolder);
-                        case 3 -> FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.path);
+                        case 0 ->
+                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.path);
+                        case 1 ->
+                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.receiveFolder);
+                        case 2 ->
+                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.sendFolder);
+                        case 3 ->
+                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.path);
                     }
                 }
 
@@ -211,6 +221,37 @@ class labelCutter_T implements Runnable {
     }
 
     public static void labelCutter_T(JLabel jLabel, String labelMsg, int initSleep, int sleep, int pause, boolean stayAlive) {
+        jLabel.setText("");
+        int msgL = labelMsg.length();
+        try {
+            Thread.sleep(initSleep);
+            for (int i = 0; i <= msgL; i++) {
+                CharSequence cutLabel = labelMsg.subSequence(0, i);
+                jLabel.setText(cutLabel.toString());
+                Thread.sleep(sleep);
+            }
+            if (!stayAlive) {
+                Thread.sleep(pause);
+                for (int i = msgL; i >= 0; i--) {
+                    CharSequence cutLabel = labelMsg.subSequence(0, i);
+                    jLabel.setText(cutLabel.toString());
+                    Thread.sleep(sleep);
+                }
+            }
+        } catch (InterruptedException ex) {
+            System.out.println("label thread interrupted.");
+        }
+
+    }
+}
+
+class labelCutterTree_T implements Runnable {
+
+    public void run() {
+
+    }
+
+    public static void labelCutterTree_T(JLabel jLabel, String labelMsg, int initSleep, int sleep, int pause, boolean stayAlive) {
         jLabel.setText("");
         int msgL = labelMsg.length();
         try {

@@ -65,6 +65,7 @@ public class Statics {
         jProgressBar1.setMaximum(0);
         try {
             fileCount = GUI.countFiles(path);
+            jProgressBar1.setString("0% | 0/" + fileCount);
             jProgressBar1.setMaximum(fileCount);
             AES.AESThread(listAESPaths(path), directory, true, 0);
         } catch (IOException ex) {
@@ -80,8 +81,10 @@ public class Statics {
         Statics.AESMode = 1;
         jProgressBar1.setValue(0);
         jProgressBar1.setMaximum(0);
+
         try {
             fileCount = GUI.countFiles(path);
+            jProgressBar1.setString("0% | 0/" + fileCount);
             jProgressBar1.setMaximum(fileCount);
             AES.AESThread(listAESPaths(path), directory, true, 0);
 
@@ -142,12 +145,12 @@ public class Statics {
                 jLabel8.setVisible(true);
                 jReceivePanel.setVisible(false);
                 dragDrop.setVisible(true);
-                toolMode = 0;
                 jLabel10.setText("STORE MODE");
                 jLabel11.setText("ENCRYPT & DECRYPT");
                 jLabel10.setToolTipText("drop box will encrypt & decrypt any files dropped here");
                 TreeView.setRootName("i-ncript");
                 TreeView.populateStoreTree(path);
+                toolMode = 0;
             }
         }
     }
@@ -232,6 +235,29 @@ public class Statics {
                     FileHider.FileHiderThread(false, path);
                 }
             } else {
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static void collapseLogin(Main main) {
+        main.setSize(780, 241);
+        jLabel1.setLocation(266, 4);
+        jLabel1b.setLocation(336, 3);
+        jLabel3.setLocation(368, 4);
+        jAlertLabel.setLocation(266, 174);
+        main.setLocationRelativeTo(null);
+        jScrollPane5.setVisible(true);
+    }
+
+    public static void collapseProgressBar(Main main) {
+        try {
+            int count = GUI.countFiles(path);
+            if (count == 0) {
+                main.setSize(780, 241);
+            } else {
+                main.setSize(780, 266);
             }
         } catch (IOException ex) {
             ex.printStackTrace();

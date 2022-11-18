@@ -156,6 +156,7 @@
         </Component>
         <Container class="javax.swing.JPanel" name="jStorePanel">
           <Properties>
+            <Property name="opaque" type="boolean" value="false"/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[250, 75]"/>
             </Property>
@@ -289,6 +290,7 @@
         </Container>
         <Container class="javax.swing.JPanel" name="jSendPanel">
           <Properties>
+            <Property name="opaque" type="boolean" value="false"/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[250, 75]"/>
             </Property>
@@ -383,6 +385,7 @@
         </Container>
         <Container class="javax.swing.JPanel" name="jReceivePanel">
           <Properties>
+            <Property name="opaque" type="boolean" value="false"/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[250, 75]"/>
             </Property>
@@ -504,7 +507,7 @@
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="20" y="55" width="242" height="-1"/>
+          <AbsoluteConstraints x="20" y="44" width="242" height="-1"/>
         </Constraint>
       </Constraints>
 
@@ -601,7 +604,7 @@
           </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="135" y="71" width="103" height="-1"/>
+              <AbsoluteConstraints x="135" y="70" width="103" height="-1"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -638,13 +641,45 @@
         </Property>
         <Property name="horizontalAlignment" type="int" value="2"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="Main.appVersion" type="code"/>
+          <Connection code="goWebsite(jLabel1, &quot;&quot;, &quot;https://i-comit.com&quot;, &quot;i-comit&quot;,true)&#xa;" type="code"/>
         </Property>
         <Property name="horizontalTextPosition" type="int" value="10"/>
       </Properties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
           <AbsoluteConstraints x="23" y="4" width="-1" height="30"/>
+        </Constraint>
+      </Constraints>
+    </Component>
+    <Component class="javax.swing.JLabel" name="appVerLabel">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Polentical Neon" size="16" style="0"/>
+        </Property>
+        <Property name="horizontalAlignment" type="int" value="2"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="&quot;ver &quot; + appVer&#xa;" type="code"/>
+        </Property>
+        <Property name="horizontalTextPosition" type="int" value="10"/>
+      </Properties>
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+          <AbsoluteConstraints x="23" y="110" width="-1" height="30"/>
+        </Constraint>
+      </Constraints>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel1b">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Segoe UI" size="10" style="0"/>
+        </Property>
+        <Property name="horizontalAlignment" type="int" value="11"/>
+        <Property name="text" type="java.lang.String" value="&#xae;"/>
+        <Property name="horizontalTextPosition" type="int" value="10"/>
+      </Properties>
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+          <AbsoluteConstraints x="93" y="3" width="-1" height="30"/>
         </Constraint>
       </Constraints>
     </Component>
@@ -663,22 +698,6 @@
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
           <AbsoluteConstraints x="125" y="4" width="135" height="30"/>
-        </Constraint>
-      </Constraints>
-    </Component>
-    <Component class="javax.swing.JLabel" name="jAlertLabel1">
-      <Properties>
-        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Polentical Neon" size="13" style="0"/>
-        </Property>
-        <Property name="horizontalAlignment" type="int" value="0"/>
-      </Properties>
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
-      </AuxValues>
-      <Constraints>
-        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="21" y="174" width="236" height="27"/>
         </Constraint>
       </Constraints>
     </Component>
@@ -990,7 +1009,7 @@
                     </Property>
                     <Property name="lineWrap" type="boolean" value="true"/>
                     <Property name="rows" type="int" value="5"/>
-                    <Property name="text" type="java.lang.String" value="i-ncript 1.6.6 - 11/15/2022&#xa;&#xa;Copyright 2022 i-comit LLC. All rights reserved.&#xa;&#xa;User has the right to freely distribute this software. User does not have the right to distribute a modified version of this software.&#xa;&#xa;i-comit LLC is not responsible for any data loss from using this software.&#xa;"/>
+                    <Property name="text" type="java.lang.String" value="i-ncript 1.6.7 - 11/17/2022&#xa;&#xa;Copyright 2022 i-comit LLC. All rights reserved.&#xa;&#xa;User has the right to freely distribute this software. User does not have the right to distribute a modified version of this software.&#xa;&#xa;i-comit LLC is not responsible for any data loss from using this software.&#xa;"/>
                     <Property name="wrapStyleWord" type="boolean" value="true"/>
                     <Property name="autoscrolls" type="boolean" value="false"/>
                     <Property name="caretPosition" type="int" value="0"/>
@@ -1044,7 +1063,7 @@
                     </Property>
                     <Property name="lineWrap" type="boolean" value="true"/>
                     <Property name="rows" type="int" value="5"/>
-                    <Property name="text" type="java.lang.String" value="i-ncript Standard Operating Procedure (11/16/2022):&#xa;&#xa;i-ncript operates with 3 tool panels connected to their respective folders: STORE, N-BOX, and O-BOX, which you can cycle through via the button on the bottom left. Within these panels are primary tools which are accessible in all 3 panels, and some others which are exclusive to its respective panel.&#xa;i-ncript also has a tabbed pane to the right of its interface, containing panels which displays encryption output, drag&amp;drop, about, and SOP (this tab).&#xa;&#xa;[TOOL PANEL]&#xa;-ENCRYPT &amp; DECRYPT&#xa;These two radio buttons are the main tools of i-ncript, and pressing either buttons will run the respective encryption task, using the AES cipher. Encrypted files will have an .enc file extension.&#xa;-STOP&#xa;This button only appears during encryption/decryption; click it to stop the current crypto task.&#xa;-CLR LOG&#xa;This button will clear the outputs seen in the LOG tab during encryption and decryption.&#xa;&#xa;[FILE TREE]&#xa;- A file tree viewer can be seen to the left of the window after login. This tree recursively lists all your files for its respective tool panel. You can encrypt/decrypt the files from this file tree by selecting the desired files then dragging it to the DROP tab across the GUI, you can also double click on a single file to open it. Single clicking on a file will display its creation date and filesize at the bottom of the file tree panel, and selecting multiple files at once will give the sum of all the selected file sizes.&#xa;&#xa;&#xa;[TABBED PANEL]&#xa;-DROP&#xa;The second tab is only enabled while the STORE panel is active. You can drag and drop any files from your computer into the panel of this tab and it will automatically encrypt or decrypt (dependent on the file type) in its current directory. This is useful if you want to encrypt or decrypt only a few files to work on.&#xa;If you are on the N-BOX panel, the DROP tab will instead only accept 1 .i-cc file at a time, and move that file to the n-box folder.&#xa;-LOG&#xa;The first tab of the pane logs each name of the file being encrypted and decrypted, along with the time that the crypto task was complete.&#xa;-ABOUT&#xa;Copyright information, contact information and liability clauses can be found here.&#xa;-HELP&#xa;This tab serves to provide more information on the tools and fields offered by i-ncript. This is the tab that you are currently on.&#xa;&#xa;These components are active throughout all 3 panels, now we will go over some that are exlusive to its tool panel.&#xa;&#xa;[STORE] (i-ncript folder)&#xa;This panel is connected to the i-ncript folder and the first panel that you will see. It is your personal encryption folder that you can use to store data that only you can access.&#xa;-HOT FILER&#xa;Hot Filer can be toggled for automatic encryption whenever any new files is dropped into the i-ncript folder. If it detects any new files it will run the Encrypt function the same way as clicking on the Encrypt radio button.&#xa;-HIDE FILE&#xa;Hide File can be toggled to hide or unhide every file in the i-ncript folder. It runs after every crypto task.&#xa;&#xa;[N-BOX]&#xa;This is the second panel after pressing the STORE button on the bottom left of the UI. This panel is connected to your n-box (inbox) folder, and it has the ability to decrypt .i-cc (specialized encrypted files) files that someone else has sent to you, granted you have the correct credentials.&#xa;1. Rather than buttons, you are presented with a list and a password field. The list lists out all the .i-cc files that it found in the n-box folder, and if there is one, you can select it by clicking on the .i-cc file name.&#xa;2. You then input the password that the sender has provided to you in faith, and as long as its over 4 characters (any less and the DECRYPT button will not appear) and matches the hash inside the .i-cc file, then that file will be decrypted into a folder with all its contents in readable form.&#xa;&#xa;[O-BOX]&#xa;This is the last panel when you press the N-BOX folder, which was previously STORE, and pressing it again will cycle you back to the STORE panel. This panel is connected to your o-box (outbox) folder, and any files you put in this folder can be encrypted and packaged into a .i-cc file (which you can send to someone else just like outbox mail)&#xa;1. You must first know the username of the recipient&apos;s i-ncript account. It must match exactly in order for them to decrypt it. If you do know, then put it in the first text field.&#xa;2. You then create a second password that you will confidentially share with the recipient, and this will be hashed. If there are files in the o-box folder (again, make sure you intend for ALL the files and folders in o-box to go to this person because it will package everything inside this folder) then it will be neatly packaged into a .i-cc file for you to email.&#xa;&#xa;[HOTKEYS]&#xa;- SHIFT+Q&#xa;This will run the encryption task on the i-ncript folder, similar to clicking the ENCRYPT radio button.&#xa;- SHIFT+E&#xa;This will run the decryption task on the i-ncript folder, similar to clicking the DECRYPT radio button.&#xa;- SHIFT+S&#xa;This will stop the active encryption/decryption task, similar to clicking the STOP button.&#xa;- SHIFT+X&#xa;This will clear the output log on the tabbed pane, similar to clicking CLR LOG.&#xa;- SHIFT+F&#xa;This will run hot filer function, similar to clicking on the HOT FILER button.&#xa;- SHIFT+SPACE&#xa;This will run the file hider function, similar to clicking on the HIDE FILE button.&#xa;- V&#xa;This will update the active file tree.&#xa;- ENTER&#xa;This will cycle through the 3 tool panels, STORE, N-BOX, and O-BOX."/>
+                    <Property name="text" type="java.lang.String" value="i-ncript Standard Operating Procedure (11/16/2022):&#xa;&#xa;i-ncript operates with 3 tool panels connected to their respective folders: STORE, N-BOX, and O-BOX, which you can cycle through via the button on the bottom left. Within these panels are primary tools which are accessible in all 3 panels, and some others which are exclusive to its respective panel.&#xa;i-ncript also has a tabbed pane to the right of its interface, containing panels which displays encryption output, drag&amp;drop, about, and SOP (this tab).&#xa;&#xa;[TOOL PANEL]&#xa;-ENCRYPT &amp; DECRYPT&#xa;These two radio buttons are the main tools of i-ncript, and pressing either buttons will run the respective encryption task, using the AES cipher. Encrypted files will have an .enc file extension.&#xa;-STOP&#xa;This button only appears during encryption/decryption; click it to stop the current crypto task.&#xa;-CLR LOG&#xa;This button will clear the outputs seen in the LOG tab during encryption and decryption.&#xa;&#xa;[FILE TREE]&#xa;- A file tree viewer can be seen to the left of the window after login. This tree recursively lists all your files for its respective tool panel. You can encrypt/decrypt the files from this file tree by selecting the desired files then dragging it to the DROP tab across the GUI, you can also double click on a single file to open it. Single clicking on a file will display its creation date and filesize at the bottom of the file tree panel, and selecting multiple files at once will give the sum of all the selected file sizes.&#xa;&#xa;&#xa;[TABBED PANEL]&#xa;-DROP&#xa;The second tab is only enabled while the STORE panel is active. You can drag and drop any files from your computer into the panel of this tab and it will automatically encrypt or decrypt (dependent on the file type) in its current directory. This is useful if you want to encrypt or decrypt only a few files to work on.&#xa;If you are on the N-BOX panel, the DROP tab will instead only accept 1 .i-cc file at a time, and move that file to the n-box folder.&#xa;-LOG&#xa;The first tab of the pane logs each name of the file being encrypted and decrypted, along with the time that the crypto task was complete.&#xa;-ABOUT&#xa;Copyright information, contact information and liability clauses can be found here.&#xa;-HELP&#xa;This tab serves to provide more information on the tools and fields offered by i-ncript. This is the tab that you are currently on.&#xa;&#xa;These components are active throughout all 3 panels, now we will go over some that are exlusive to its tool panel.&#xa;&#xa;[STORE] (i-ncript folder)&#xa;This panel is connected to the i-ncript folder and the first panel that you will see. It is your personal encryption folder that you can use to store data that only you can access.&#xa;-HOT FILER&#xa;Hot Filer can be toggled for automatic encryption whenever any new files is dropped into the i-ncript folder. If it detects any new files it will run the Encrypt function the same way as clicking on the Encrypt radio button.&#xa;-HIDE FILE&#xa;Hide File can be toggled to hide or unhide every file in the i-ncript folder. It runs after every crypto task.&#xa;&#xa;[N-BOX]&#xa;This is the second panel after pressing the STORE button on the bottom left of the UI. This panel is connected to your n-box (inbox) folder, and it has the ability to decrypt .i-cc (specialized encrypted files) files that someone else has sent to you, granted you have the correct credentials.&#xa;1. Rather than buttons, you are presented with a list and a password field. The list lists out all the .i-cc files that it found in the n-box folder, and if there is one, you can select it by clicking on the .i-cc file name.&#xa;2. You then input the password that the sender has provided to you in faith, and as long as its over 4 characters (any less and the DECRYPT button will not appear) and matches the hash inside the .i-cc file, then that file will be decrypted into a folder with all its contents in readable form.&#xa;&#xa;[O-BOX]&#xa;This is the last panel when you press the N-BOX folder, which was previously STORE, and pressing it again will cycle you back to the STORE panel. This panel is connected to your o-box (outbox) folder, and any files you put in this folder can be encrypted and packaged into a .i-cc file (which you can send to someone else just like outbox mail)&#xa;1. You must first know the username of the recipient&apos;s i-ncript account. It must match exactly in order for them to decrypt it. If you do know, then put it in the first text field.&#xa;2. You then create a second password that you will confidentially share with the recipient, and this will be hashed. If there are files in the o-box folder (again, make sure you intend for ALL the files and folders in o-box to go to this person because it will package everything inside this folder) then it will be neatly packaged into a .i-cc file for you to email.&#xa;&#xa;[HOTKEYS]&#xa;- SHIFT+E&#xa;This will run the encryption task on the i-ncript folder, similar to clicking the ENCRYPT radio button.&#xa;- SHIFT+D&#xa;This will run the decryption task on the i-ncript folder, similar to clicking the DECRYPT radio button.&#xa;- SHIFT+S&#xa;This will stop the active encryption/decryption task, similar to clicking the STOP button.&#xa;- SHIFT+X&#xa;This will clear the output log on the tabbed pane, similar to clicking CLR LOG.&#xa;- SHIFT+F&#xa;This will run hot filer function, similar to clicking on the HOT FILER button.&#xa;- SHIFT+SPACE&#xa;This will run the file hider function, similar to clicking on the HIDE FILE button.&#xa;- V&#xa;This will update the active file tree.&#xa;- ENTER&#xa;This will cycle through the 3 tool panels, STORE, N-BOX, and O-BOX.&#xa;- 1,2,3, and 4&#xa;These number keys will switch to the corresponding tabbed panel such as DROP, LOG, etc."/>
                     <Property name="wrapStyleWord" type="boolean" value="true"/>
                     <Property name="caretPosition" type="int" value="0"/>
                   </Properties>
@@ -1239,6 +1258,9 @@
         </Property>
         <Property name="requestFocusEnabled" type="boolean" value="false"/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jScrollPane5MouseExited"/>
+      </Events>
       <AuxValues>
         <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
       </AuxValues>
