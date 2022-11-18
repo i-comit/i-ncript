@@ -39,6 +39,17 @@ public class Memory {
         return String.format("%.1f %cB", value / 1024.0, ci.current());
     }
 
+    public static String getDataSizePercentage() {
+        File diskPartition = new File(root).toPath().getRoot().toFile();
+        long totalSpace = diskPartition.getTotalSpace();
+        long remainingSpace = diskPartition.getUsableSpace();
+
+        float percentage = ((float) remainingSpace / totalSpace * 100);
+        DecimalFormat format = new DecimalFormat("0.#");
+        String percentageStr = format.format(percentage) +"% memory left out of "+ byteFormatter(totalSpace);
+        return percentageStr;
+    }
+
     public static boolean checkWMIC() {
         boolean b = false;
 //        boolean b1 = false;

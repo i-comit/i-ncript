@@ -102,6 +102,7 @@ public class Statics {
         jTextField2.setText("");
         jPasswordField2.setText("");
         jPasswordField3.setText("");
+        GUI.getGB();
 
         switch (toolMode) {
             case 1 -> {
@@ -119,7 +120,7 @@ public class Statics {
 
                 jLabel10.setText("N-BOX MODE");
                 jLabel11.setText("MOVE .I-CC TO N-BOX");
-                jLabel10.setToolTipText("drop box will move dropped .i-cc file to n-box folder");
+                dragDrop.setToolTipText("drop box will move dropped .i-cc file to n-box folder");
                 FileHider.cleanUp(receiveFolder);
                 TreeView.setRootName("n-box");
                 TreeView.populateStoreTree(receiveFolder);
@@ -152,7 +153,7 @@ public class Statics {
                 dragDrop.setVisible(true);
                 jLabel10.setText("STORE MODE");
                 jLabel11.setText("ENCRYPT & DECRYPT");
-                jLabel10.setToolTipText("drop box will encrypt & decrypt any files dropped here");
+                dragDrop.setToolTipText("drop box will encrypt & decrypt any files dropped here");
                 FileHider.cleanUp(path);
                 TreeView.setRootName("i-ncript");
                 TreeView.populateStoreTree(path);

@@ -18,6 +18,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.Year;
+import java.time.format.DateTimeFormatter;
 import java.util.Random;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
@@ -34,54 +37,56 @@ public class Main extends javax.swing.JFrame {
     public static String masterFolder = "--------\\";
 
     private static final String appVer = "1.6.8";
+    private static final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:ss a"));
+    private static final int year = Year.now().getValue();
 
     public Main() {
         root = Paths.get("").toAbsolutePath().toString();
         if (Memory.checkWMIC()) {
-        root = root.substring(0, 3);
-        initComponents();
+            root = root.substring(0, 3);
+            initComponents();
 
-        Path runtime = Paths.get(root + masterFolder + "runtime");
-        Path app = Paths.get(root + masterFolder + "app");
-        if (runtime.toFile().exists()) {
-            try {
-                Files.setAttribute(runtime, "dos:hidden", true);
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            Path runtime = Paths.get(root + masterFolder + "runtime");
+            Path app = Paths.get(root + masterFolder + "app");
+            if (runtime.toFile().exists()) {
+                try {
+                    Files.setAttribute(runtime, "dos:hidden", true);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
-        }
-        if (app.toFile().exists()) {
-            try {
-                Files.setAttribute(app, "dos:hidden", true);
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            if (app.toFile().exists()) {
+                try {
+                    Files.setAttribute(app, "dos:hidden", true);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
-        }
-        jStorePanel.setVisible(true);
-        jSendPanel.setVisible(false);
-        jReceivePanel.setVisible(false);
-        jRadioButton2.setVisible(false);
-        jRadioButton3.setVisible(false);
-        jScrollPane5.setVisible(false);
+            jStorePanel.setVisible(true);
+            jSendPanel.setVisible(false);
+            jReceivePanel.setVisible(false);
+            jRadioButton2.setVisible(false);
+            jRadioButton3.setVisible(false);
+            jScrollPane5.setVisible(false);
 
-        if (!keyFile.exists()) {
-            jToolPanel.setVisible(false);
-            loginLabelVisibleBool(false);
-            this.setSize(540, 241);
-            this.setLocationRelativeTo(null);
-        } else {
-            setKeybinding();
-            loginLabelVisibleBool(true);
-            jUsernameLabel.setText("enter username");
-            jPasswordLabel.setText("enter password");
-            generateFolders();
+            if (!keyFile.exists()) {
+                jToolPanel.setVisible(false);
+                loginLabelVisibleBool(false);
+                this.setSize(540, 241);
+                this.setLocationRelativeTo(null);
+            } else {
+                setKeybinding();
+                loginLabelVisibleBool(true);
+                jUsernameLabel.setText("enter username");
+                jPasswordLabel.setText("enter password");
+                generateFolders();
 
-            jToolPanel.setVisible(false);
-            jButton2.setVisible(false);
-        }
-        jProgressBar1.setVisible(false);
-        jProgressBar2.setVisible(false);
-        dragDrop.setVisible(false);
+                jToolPanel.setVisible(false);
+                jButton2.setVisible(false);
+            }
+            jProgressBar1.setVisible(false);
+            jProgressBar2.setVisible(false);
+            dragDrop.setVisible(false);
         }
     }
 
@@ -435,6 +440,7 @@ public class Main extends javax.swing.JFrame {
 
         jSwitchMode.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jSwitchMode.setText("STORE");
+        jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
         jSwitchMode.setPreferredSize(new java.awt.Dimension(72, 22));
         jSwitchMode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -445,7 +451,7 @@ public class Main extends javax.swing.JFrame {
 
         jButton3.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jButton3.setText("CLR LOG");
-        jButton3.setToolTipText("clear AES output log");
+        jButton3.setToolTipText("clear output from LOG tab");
         jButton3.setPreferredSize(new java.awt.Dimension(105, 22));
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -628,7 +634,7 @@ public class Main extends javax.swing.JFrame {
         getContentPane().add(jToolPanel);
         jToolPanel.setBounds(258, 34, 252, 150);
 
-        jLoginPanel.setToolTipText("an offline USB based data encryption app");
+        jLoginPanel.setToolTipText("");
         jLoginPanel.setOpaque(false);
         jLoginPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -692,6 +698,7 @@ public class Main extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel1.setText(goWebsite(jLabel1, "", "https://i-comit.com", "i-comit",true)
         );
+        jLabel1.setToolTipText("go to i-comit.com");
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         getContentPane().add(jLabel1);
         jLabel1.setBounds(22, 8, 90, 22);
@@ -707,6 +714,7 @@ public class Main extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Polentical Neon", 0, 18)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel3.setText("jLabel3");
+        jLabel3.setToolTipText(Memory.getDataSizePercentage());
         jLabel3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         getContentPane().add(jLabel3);
         jLabel3.setBounds(125, 4, 135, 30);
@@ -735,6 +743,7 @@ public class Main extends javax.swing.JFrame {
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(75, 110, 175)));
 
         dragDrop.setBackground(new java.awt.Color(57, 57, 57));
+        dragDrop.setToolTipText("drop box will encrypt & decrypt any files dropped here");
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/drop.png"))); // NOI18N
 
@@ -839,7 +848,7 @@ public class Main extends javax.swing.JFrame {
         jTextArea2.setForeground(Color.WHITE);
         jTextArea2.setLineWrap(true);
         jTextArea2.setRows(5);
-        jTextArea2.setText("i-ncript 1.6.7 - 11/17/2022\n\nCopyright 2022 i-comit LLC. All rights reserved.\n\nUser has the right to freely distribute this software. User does not have the right to distribute a modified version of this software.\n\ni-comit LLC is not responsible for any data loss from using this software.\n");
+        jTextArea2.setText( "i-ncript " + appVer + " - "+ latestDate+ "\n\nCopyright "+ year +" i-comit LLC. All rights reserved.\n\nUser has the right to freely distribute this software. User does not have the right to distribute a modified version of this software.\n\ni-comit LLC is not responsible for any data loss from using this software.");
         jTextArea2.setWrapStyleWord(true);
         jTextArea2.setAutoscrolls(false);
         jTextArea2.setCaretPosition(0);
