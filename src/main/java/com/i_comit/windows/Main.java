@@ -7,7 +7,6 @@ package com.i_comit.windows;
 import static com.i_comit.windows.DriveCheck.goWebsite;
 import static com.i_comit.windows.Statics.*;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.dnd.DropTarget;
 import java.awt.event.ActionEvent;
@@ -25,6 +24,8 @@ import java.util.Random;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
+import static javax.swing.SwingConstants.CENTER;
+import static javax.swing.SwingConstants.LEFT;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -75,6 +76,7 @@ public class Main extends javax.swing.JFrame {
                 this.setSize(540, 241);
                 this.setLocationRelativeTo(null);
             } else {
+                Memory.getHeapSize();
                 setKeybinding();
                 loginLabelVisibleBool(true);
                 jUsernameLabel.setText("enter username");
@@ -126,7 +128,6 @@ public class Main extends javax.swing.JFrame {
         getKeyBinding(KeyEvent.VK_E, jToolPanel, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                jToolPanel.requestFocus();
                 if (toolMode == 0 || toolMode == 3) {
                     jRadioButton0.setSelected(true);
                     if (jRadioButton0.isEnabled()) {
@@ -139,10 +140,9 @@ public class Main extends javax.swing.JFrame {
         getKeyBinding(KeyEvent.VK_D, jToolPanel, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                jToolPanel.requestFocus();
                 if (toolMode == 0 || toolMode == 3) {
                     jRadioButton1.setSelected(true);
-                    if (jRadioButton0.isEnabled()) {
+                    if (jRadioButton1.isEnabled()) {
                         decryptFunction();
                         collapseProgressBar(Main.this);
                     }
@@ -266,12 +266,12 @@ public class Main extends javax.swing.JFrame {
 
     private void generateFolders() {
         GUI.getGB();
-        jAlertLabel.setFont(new Font("Polentical Neon", 0, 15));
+        jAlertLabel.setHorizontalAlignment(LEFT);
         jEULAPanel1.setVisible(false);
         jEULAPanel.setVisible(false);
         this.setSize(120, 241);
         this.setLocationRelativeTo(null);
-        System.out.println("Your available Memory Heap is " + Memory.byteFormatter(Memory.heapSize));
+        System.out.println("Your available Memory Heap is " + Memory.byteFormatter(Memory.totalMemory));
         File rootFolder = Paths.get(root + masterFolder + folderName).toFile();
         File sendFolderF = Statics.sendFolder.toFile();
         File receiveFolderF = Statics.receiveFolder.toFile();
@@ -285,11 +285,11 @@ public class Main extends javax.swing.JFrame {
             System.out.println("random int " + rand_int1);
             switch (rand_int1) {
                 case 0 ->
-                    GUI.labelCutterThread(jAlertLabel, "a data encryption app", 60, 40, 100, true);
+                    GUI.labelCutterThread(jAlertLabel, "a data encryption app.", 80, 80, 100, true);
                 case 1 ->
-                    GUI.labelCutterThread(jAlertLabel, "developed by i-comit LLC", 60, 40, 100, true);
+                    GUI.labelCutterThread(jAlertLabel, "developed by i-comit LLC.", 80, 80, 100, true);
                 case 2 ->
-                    GUI.labelCutterThread(jAlertLabel, "USB drive, reimagined", 60, 40, 100, true);
+                    GUI.labelCutterThread(jAlertLabel, "USB drive, reimagined.", 80, 80, 100, true);
             }
 
         }
@@ -362,9 +362,10 @@ public class Main extends javax.swing.JFrame {
         jUsernameLabel = new javax.swing.JLabel();
         jPasswordLabel = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jSlider1 = new javax.swing.JSlider();
+        jHeapLabel = new javax.swing.JLabel();
         jProgressBar1 = new javax.swing.JProgressBar();
         jLabel1 = new javax.swing.JLabel();
-        appVerLabel = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jAlertLabel = new javax.swing.JLabel();
         jCreationDateLabel = new javax.swing.JLabel();
@@ -678,10 +679,25 @@ public class Main extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jLoginPanel.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 70, 103, -1));
+        jLoginPanel.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 65, 103, -1));
+
+        jSlider1.setMaximum(8);
+        jSlider1.setMinimum(1);
+        jSlider1.setSnapToTicks(true);
+        jSlider1.setValue(1);
+        jSlider1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSlider1StateChanged(evt);
+            }
+        });
+        jLoginPanel.add(jSlider1, new org.netbeans.lib.awtextra.AbsoluteConstraints(84, 98, 163, -1));
+
+        jHeapLabel.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jHeapLabel.setText("set heap");
+        jLoginPanel.add(jHeapLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 100, -1, -1));
 
         getContentPane().add(jLoginPanel);
-        jLoginPanel.setBounds(20, 44, 242, 92);
+        jLoginPanel.setBounds(20, 44, 250, 120);
 
         jProgressBar1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jProgressBar1.setForeground(Color.WHITE);
@@ -703,26 +719,26 @@ public class Main extends javax.swing.JFrame {
         getContentPane().add(jLabel1);
         jLabel1.setBounds(22, 8, 90, 22);
 
-        appVerLabel.setFont(new java.awt.Font("Polentical Neon", 0, 15)); // NOI18N
-        appVerLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        appVerLabel.setText("ver " + appVer
-        );
-        appVerLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
-        getContentPane().add(appVerLabel);
-        appVerLabel.setBounds(22, 112, 110, 30);
-
-        jLabel3.setFont(new java.awt.Font("Polentical Neon", 0, 18)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Polentical Neon", 0, 17)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel3.setText("jLabel3");
         jLabel3.setToolTipText(Memory.getDataSizePercentage());
         jLabel3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jLabel3MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabel3MouseExited(evt);
+            }
+        });
         getContentPane().add(jLabel3);
         jLabel3.setBounds(125, 4, 135, 30);
 
         jAlertLabel.setFont(new java.awt.Font("Polentical Neon", 0, 13)); // NOI18N
         jAlertLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         getContentPane().add(jAlertLabel);
-        jAlertLabel.setBounds(21, 174, 236, 27);
+        jAlertLabel.setBounds(22, 174, 235, 27);
 
         jCreationDateLabel.setFont(new java.awt.Font("Polentical Neon", 0, 13)); // NOI18N
         jCreationDateLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
@@ -1021,10 +1037,18 @@ public class Main extends javax.swing.JFrame {
 
 //LOGIN
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if (Login.loginCheck()) {
-            if (Login.verifyLogin()) {
-                collapseLogin(this);
+        if (jButton1.getText().equals("ENTER")) {
+            if (Login.loginCheck()) {
+                if (Login.verifyLogin()) {
+                    collapseLogin(this);
+                }
             }
+            jAlertLabel.setHorizontalAlignment(CENTER);
+        }
+        if (jButton1.getText().equals("RESTART")) {
+            System.out.println("AMosu");
+            Memory.changeHeapSize();
+            System.exit(0);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -1054,6 +1078,7 @@ public class Main extends javax.swing.JFrame {
                     collapseLogin(this);
                 }
             }
+            jAlertLabel.setHorizontalAlignment(CENTER);
         }
 
     }//GEN-LAST:event_jPasswordField1KeyPressed
@@ -1201,6 +1226,29 @@ public class Main extends javax.swing.JFrame {
     private void jScrollPane5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jScrollPane5MouseExited
         // TODO add your handling code here:
     }//GEN-LAST:event_jScrollPane5MouseExited
+
+    private void jLabel3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseEntered
+        jLabel3.setText("VER " + appVer);
+    }//GEN-LAST:event_jLabel3MouseEntered
+
+    private void jLabel3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseExited
+        jLabel3.setText(root.substring(0, 2) + " " + GB);
+    }//GEN-LAST:event_jLabel3MouseExited
+
+    private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
+        Memory.selectedHeap = jSlider1.getValue();
+        System.out.println(jSlider1.getValue());
+        jHeapLabel.setText(Memory.selectedHeap + "GB heap");
+        if (Memory.selectedHeap == Memory.currentHeap) {
+            jButton1.setText("ENTER");
+            jTextField1.setEnabled(true);
+            jPasswordField1.setEnabled(true);
+        } else {
+            jButton1.setText("RESTART");
+            jTextField1.setEnabled(false);
+            jPasswordField1.setEnabled(false);
+        }
+    }//GEN-LAST:event_jSlider1StateChanged
     /**
      * @param args the command line arguments
      */
@@ -1233,7 +1281,6 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    protected static javax.swing.JLabel appVerLabel;
     public static javax.swing.ButtonGroup buttonGroup1;
     protected static javax.swing.JPanel dragDrop;
     public static javax.swing.JLabel jAlertLabel;
@@ -1248,6 +1295,7 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JPanel jEULAPanel;
     protected static javax.swing.JPanel jEULAPanel1;
     public static javax.swing.JLabel jFileSizeLabel;
+    protected static javax.swing.JLabel jHeapLabel;
     protected static javax.swing.JLabel jLabel1;
     protected static javax.swing.JLabel jLabel10;
     protected static javax.swing.JLabel jLabel11;
@@ -1289,6 +1337,7 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JPanel jSendPanel;
     protected static javax.swing.JSeparator jSeparator1;
     protected static javax.swing.JSeparator jSeparator2;
+    protected static javax.swing.JSlider jSlider1;
     protected static javax.swing.JPanel jStorePanel;
     protected static javax.swing.JButton jSwitchMode;
     protected static javax.swing.JTabbedPane jTabbedPane1;

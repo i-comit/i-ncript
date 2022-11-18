@@ -280,7 +280,7 @@ public class Statics {
     public static void collapseLogin(Main main) {
         main.setSize(780, 241);
         jLabel1.setLocation(265, 8);
-        jLabel3.setLocation(368, 4);
+        jLabel3.setLocation(367, 4);
         jAlertLabel.setLocation(265, 174);
         main.setLocationRelativeTo(null);
         jScrollPane5.setVisible(true);
