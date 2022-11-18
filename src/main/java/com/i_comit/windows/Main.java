@@ -33,7 +33,7 @@ public class Main extends javax.swing.JFrame {
     public static String root = "";
     public static String masterFolder = "--------\\";
 
-    private static String appVer = "1.6.7";
+    private static final String appVer = "1.6.8";
 
     public Main() {
         root = Paths.get("").toAbsolutePath().toString();
@@ -69,7 +69,6 @@ public class Main extends javax.swing.JFrame {
             loginLabelVisibleBool(false);
             this.setSize(540, 241);
             this.setLocationRelativeTo(null);
-            jLabel1b.setVisible(false);
         } else {
             setKeybinding();
             loginLabelVisibleBool(true);
@@ -79,8 +78,6 @@ public class Main extends javax.swing.JFrame {
 
             jToolPanel.setVisible(false);
             jButton2.setVisible(false);
-            jLabel1b.setVisible(true);
-
         }
         jProgressBar1.setVisible(false);
         jProgressBar2.setVisible(false);
@@ -125,11 +122,12 @@ public class Main extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 jToolPanel.requestFocus();
-                System.out.println("Shift+Q pressed");
                 if (toolMode == 0 || toolMode == 3) {
                     jRadioButton0.setSelected(true);
-                    encryptFunction();
-                    collapseProgressBar(Main.this);
+                    if (jRadioButton0.isEnabled()) {
+                        encryptFunction();
+                        collapseProgressBar(Main.this);
+                    }
                 }
             }
         });
@@ -137,11 +135,12 @@ public class Main extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 jToolPanel.requestFocus();
-                System.out.println("Shift+E pressed");
                 if (toolMode == 0 || toolMode == 3) {
                     jRadioButton1.setSelected(true);
-                    decryptFunction();
-                    collapseProgressBar(Main.this);
+                    if (jRadioButton0.isEnabled()) {
+                        decryptFunction();
+                        collapseProgressBar(Main.this);
+                    }
                 }
             }
         });
@@ -167,9 +166,10 @@ public class Main extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (toolMode == 0 || toolMode == 3) {
                     hotFilerBool ^= true;
-                    jToggleButton1.setSelected(hotFilerBool);
                     if (jToggleButton1.isEnabled()) {
-                        hotFilerFunction();
+                        jToggleButton1.setSelected(hotFilerBool);
+                        jRadioButton0.setSelected(hotFilerBool);
+                        hotFilerFunction(Main.this);
                         collapseProgressBar(Main.this);
                     }
                 }
@@ -360,7 +360,6 @@ public class Main extends javax.swing.JFrame {
         jProgressBar1 = new javax.swing.JProgressBar();
         jLabel1 = new javax.swing.JLabel();
         appVerLabel = new javax.swing.JLabel();
-        jLabel1b = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jAlertLabel = new javax.swing.JLabel();
         jCreationDateLabel = new javax.swing.JLabel();
@@ -676,7 +675,7 @@ public class Main extends javax.swing.JFrame {
         jLoginPanel.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 70, 103, -1));
 
         getContentPane().add(jLoginPanel);
-        jLoginPanel.setBounds(20, 44, 242, 93);
+        jLoginPanel.setBounds(20, 44, 242, 92);
 
         jProgressBar1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jProgressBar1.setForeground(Color.WHITE);
@@ -695,7 +694,7 @@ public class Main extends javax.swing.JFrame {
         );
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(23, 4, 135, 30);
+        jLabel1.setBounds(22, 8, 90, 22);
 
         appVerLabel.setFont(new java.awt.Font("Polentical Neon", 0, 15)); // NOI18N
         appVerLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -703,14 +702,7 @@ public class Main extends javax.swing.JFrame {
         );
         appVerLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         getContentPane().add(appVerLabel);
-        appVerLabel.setBounds(23, 111, 110, 30);
-
-        jLabel1b.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
-        jLabel1b.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel1b.setText("®");
-        jLabel1b.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
-        getContentPane().add(jLabel1b);
-        jLabel1b.setBounds(93, 3, 9, 30);
+        appVerLabel.setBounds(22, 112, 110, 30);
 
         jLabel3.setFont(new java.awt.Font("Polentical Neon", 0, 18)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
@@ -744,9 +736,9 @@ public class Main extends javax.swing.JFrame {
 
         dragDrop.setBackground(new java.awt.Color(57, 57, 57));
 
-        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/download.png"))); // NOI18N
+        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/drop.png"))); // NOI18N
 
-        jLabel10.setFont(new java.awt.Font("Polentical Neon", 0, 16)); // NOI18N
+        jLabel10.setFont(new java.awt.Font("Polentical Neon", 0, 15)); // NOI18N
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel10.setText("STORE MODE");
 
@@ -754,51 +746,52 @@ public class Main extends javax.swing.JFrame {
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel11.setText("ENCRYPT & DECRYPT");
 
-        jLabel12.setFont(new java.awt.Font("Polentical Neon", 0, 13)); // NOI18N
+        jLabel12.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jLabel12.setText("DRAG");
 
-        jLabel13.setFont(new java.awt.Font("Polentical Neon", 0, 13)); // NOI18N
+        jLabel13.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jLabel13.setText("AND");
 
-        jLabel14.setFont(new java.awt.Font("Polentical Neon", 0, 13)); // NOI18N
+        jLabel14.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jLabel14.setText("DROP");
 
         javax.swing.GroupLayout dragDropLayout = new javax.swing.GroupLayout(dragDrop);
         dragDrop.setLayout(dragDropLayout);
         dragDropLayout.setHorizontalGroup(
             dragDropLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, dragDropLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(dragDropLayout.createSequentialGroup()
-                .addGap(52, 52, 52)
-                .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(dragDropLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel12)
-                    .addComponent(jLabel14)
-                    .addComponent(jLabel13))
-                .addContainerGap(52, Short.MAX_VALUE))
             .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(dragDropLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(dragDropLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(dragDropLayout.createSequentialGroup()
+                        .addGap(0, 55, Short.MAX_VALUE)
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(dragDropLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel12)
+                            .addComponent(jLabel14)
+                            .addComponent(jLabel13))
+                        .addGap(0, 56, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         dragDropLayout.setVerticalGroup(
             dragDropLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(dragDropLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addGroup(dragDropLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(29, 29, 29)
+                .addGroup(dragDropLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(dragDropLayout.createSequentialGroup()
                         .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(2, 2, 2)
+                        .addGap(1, 1, 1)
                         .addComponent(jLabel13)
-                        .addGap(2, 2, 2)
+                        .addGap(1, 1, 1)
                         .addComponent(jLabel14))
-                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jLabel10)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(12, 12, 12)
+                .addComponent(jLabel10)
+                .addGap(4, 4, 4)
                 .addComponent(jLabel11)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -1079,8 +1072,6 @@ public class Main extends javax.swing.JFrame {
 
         jToolPanel.setVisible(false);
         jButton2.setVisible(false);
-        jLabel1b.setVisible(true);
-
     }//GEN-LAST:event_ActionjButton6
 
     //SWITCH STORE/SEND/RECEIVE MODE
@@ -1157,17 +1148,8 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jTree1MouseClicked
     //HOT FILER
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-        hotFilerFunction();
-        try {
-            int count = GUI.countFiles(path);
-            if (count == 0) {
-                this.setSize(780, 241);
-            } else {
-                this.setSize(780, 266);
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        hotFilerFunction(this);
+        collapseProgressBar(this);
     }//GEN-LAST:event_jToggleButton1ActionPerformed
     //STOP
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -1263,7 +1245,6 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JLabel jLabel12;
     protected static javax.swing.JLabel jLabel13;
     protected static javax.swing.JLabel jLabel14;
-    protected static javax.swing.JLabel jLabel1b;
     protected static javax.swing.JLabel jLabel2;
     protected static javax.swing.JLabel jLabel3;
     protected static javax.swing.JLabel jLabel4;

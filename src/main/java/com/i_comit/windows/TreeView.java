@@ -146,7 +146,7 @@ public class TreeView {
                     }
                 }
                 long sum = fileSizes.stream().mapToLong(Long::longValue).sum();
-                Main.jFileSizeLabel.setText(Memory.byteFormatter(sum));
+                GUI.labelCutterTreeThread(Main.jFileSizeLabel, Memory.byteFormatter(sum), 0, 16, 64, true);
             }
         }
     }

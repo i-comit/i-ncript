@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import javax.swing.JLabel;
 
 /**
@@ -45,9 +46,10 @@ public class DriveCheck extends javax.swing.JFrame {
     }
 
     public static final String goWebsite(JLabel website, final String leadingStr, final String url, String text, boolean changeColor) {
-
         if (changeColor) {
-            website.setText("<html>" + leadingStr + "<a style=\"text-decoration:none\" text=\"rgb(187,187,187)\" href=\"\">" + text + "</a></html>");
+            website.setText("<html>" 
+                    + leadingStr + "<a style=\"text-decoration:none\" text=\"rgb(187,187,187)\" href=\"\">"
+                    + text + "</a><span text=\"rgb(187,187,187)\" style=\"white-space: nowrap\"><font size=\"2\">" + "®" + "</font></span></html>");
         } else {
             website.setText("<html>" + leadingStr + "<a style=\"text-decoration:none\" href=\"\">" + text + "</a></html>");
         }
@@ -60,6 +62,23 @@ public class DriveCheck extends javax.swing.JFrame {
                         Desktop.getDesktop().browse(new URI(url));
                     } catch (URISyntaxException | IOException ex) {
                         //It looks like there's a problem
+                    }
+                }
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    if (changeColor) {
+                        website.setText("<html>" 
+                                + leadingStr + "<a style=\"text-decoration:none\" text=\"rgb(107,107,107)\" href=\"\">"
+                                + text + "</a><span text=\"rgb(107,107,107)\" style=\"white-space: nowrap\"><font size=\"2\">" + "®" + "</font></span></html>");
+                    }
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    if (changeColor) {
+                        website.setText("<html>" 
+                                + leadingStr + "<a style=\"text-decoration:none\" text=\"rgb(187,187,187)\" href=\"\">"
+                                + text + "</a><span text=\"rgb(187,187,187)\" style=\"white-space: nowrap\"><font size=\"2\">" + "®" + "</font></span></html>");
                     }
                 }
             });

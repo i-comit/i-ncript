@@ -63,6 +63,8 @@ public class Statics {
         AESMode = 0;
         jProgressBar1.setValue(0);
         jProgressBar1.setMaximum(0);
+        jProgressBar1.setVisible(true);
+
         try {
             fileCount = GUI.countFiles(path);
             jProgressBar1.setString("0% | 0/" + fileCount);
@@ -81,6 +83,7 @@ public class Statics {
         Statics.AESMode = 1;
         jProgressBar1.setValue(0);
         jProgressBar1.setMaximum(0);
+        jProgressBar1.setVisible(true);
 
         try {
             fileCount = GUI.countFiles(path);
@@ -117,6 +120,7 @@ public class Statics {
                 jLabel10.setText("N-BOX MODE");
                 jLabel11.setText("MOVE .I-CC TO N-BOX");
                 jLabel10.setToolTipText("drop box will move dropped .i-cc file to n-box folder");
+                FileHider.cleanUp(receiveFolder);
                 TreeView.setRootName("n-box");
                 TreeView.populateStoreTree(receiveFolder);
             }
@@ -133,6 +137,7 @@ public class Statics {
                 jLabel7.setVisible(false);
                 jLabel8.setVisible(false);
                 jRadioButton3.setVisible(false);
+                FileHider.cleanUp(sendFolder);
                 TreeView.setRootName("o-box");
                 TreeView.populateStoreTree(sendFolder);
             }
@@ -148,6 +153,7 @@ public class Statics {
                 jLabel10.setText("STORE MODE");
                 jLabel11.setText("ENCRYPT & DECRYPT");
                 jLabel10.setToolTipText("drop box will encrypt & decrypt any files dropped here");
+                FileHider.cleanUp(path);
                 TreeView.setRootName("i-ncript");
                 TreeView.populateStoreTree(path);
                 toolMode = 0;
@@ -156,24 +162,32 @@ public class Statics {
     }
 
     public static void stopFunction() {
-        fileIter = 0;
-        fileHideIter = 0;
-        FileHider.fileCt = 0;
-
+        if (jToggleButton1.isSelected()) {
+            jToggleButton1.setSelected(false);
+            jRadioButton1.setVisible(true);
+            HotFiler.t.interrupt();
+            GUI.labelCutterThread(jAlertLabel, "hot filer disabled", 0, 25, 1000, false);
+        }
         AES.t.interrupt();
         AES.t.stop();
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
-        jButton2.setVisible(false);
+
         switch (AESMode) {
-            case 0 ->
-                jTextArea1.append("encryption of " + fileCount + " files stopped\n");
+            case 0 -> {
+                jTextArea1.append("encryption of " + fileCount + " files stopped.\n");
+            }
             case 1 ->
-                jTextArea1.append("decryption of " + fileCount + " files stopped\n");
+                jTextArea1.append("decryption of " + fileCount + " files stopped.\n");
         }
+
+        fileIter = 0;
+        fileHideIter = 0;
+        FileHider.fileCt = 0;
         fileCount = 0;
 
+        jButton2.setVisible(false);
         jTabbedPane1.setSelectedIndex(0);
         jProgressBar1.setValue(fileIter);
         jProgressBar1.setMaximum(fileCount);
@@ -209,8 +223,14 @@ public class Statics {
         }
     }
 
-    public static void hotFilerFunction() {
+    public static void hotFilerFunction(Main main) {
+        if (GUI.t.isAlive()) {
+            GUI.t.interrupt();
+            jAlertLabel.setText("");
+        }
         AESMode = 0;
+        fileIter = 0;
+        fileCount = 0;
         if (jToggleButton1.isSelected()) {
             dragDrop.setVisible(false);
             try {
@@ -225,17 +245,14 @@ public class Statics {
                 HotFiler.t.interrupt();
                 Main.buttonGroup1.clearSelection();
                 Main.jProgressBar1.setStringPainted(false);
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            } catch (NullPointerException | IOException ex) {
+                GUI.labelCutterThread(jAlertLabel, "press hot filer one more time", 0, 25, 500, false);
             }
 
         }
         jRadioButton1.setVisible(!jToggleButton1.isSelected());
         jRadioButton0.setSelected(jToggleButton1.isSelected());
         jRadioButton0.setEnabled(!jToggleButton1.isSelected());
-        if (GUI.t.isAlive()) {
-            GUI.t.interrupt();
-        }
     }
 
     public static void fileHiderFunction() {
@@ -261,10 +278,9 @@ public class Statics {
 
     public static void collapseLogin(Main main) {
         main.setSize(780, 241);
-        jLabel1.setLocation(266, 4);
-        jLabel1b.setLocation(336, 3);
+        jLabel1.setLocation(265, 8);
         jLabel3.setLocation(368, 4);
-        jAlertLabel.setLocation(266, 174);
+        jAlertLabel.setLocation(265, 174);
         main.setLocationRelativeTo(null);
         jScrollPane5.setVisible(true);
     }
@@ -275,7 +291,11 @@ public class Statics {
             if (count == 0) {
                 main.setSize(780, 241);
             } else {
-                main.setSize(780, 266);
+                if (jToggleButton1.isSelected()) {
+                    main.setSize(780, 266);
+                } else {
+                    jProgressBar1.setVisible(true);
+                }
             }
         } catch (IOException ex) {
             ex.printStackTrace();

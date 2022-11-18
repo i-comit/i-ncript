@@ -78,8 +78,8 @@ class HotFiler_T implements Runnable {
                 directories.get(i).toFile().toPath().register(
                         watchService,
                         StandardWatchEventKinds.ENTRY_CREATE);
-                System.out.println("folder watcher attached at " + directories.get(i).toFile().getName());
             }
+            System.out.println("folder watcher attached at " + directories.size() + " folders");
             WatchKey key;
             while ((key = watchService.take()) != null && Main.jToggleButton1.isSelected()) {
                 GUI.labelCutterThread(jAlertLabel, "hot filer detected new files", 15, 25, 550, false);

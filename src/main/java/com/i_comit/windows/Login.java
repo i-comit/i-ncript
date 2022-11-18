@@ -71,7 +71,7 @@ public class Login {
         return b;
     }
     
-    public static boolean Authenticator() {
+    private static boolean Authenticator() {
         boolean b = false;
         if (keyFile.exists()) {
             verifyLogin();
