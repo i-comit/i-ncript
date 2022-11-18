@@ -276,7 +276,7 @@ public class Main extends javax.swing.JFrame {
         File sendFolderF = Statics.sendFolder.toFile();
         File receiveFolderF = Statics.receiveFolder.toFile();
         if (!rootFolder.exists()) {
-            GUI.labelCutterThread(jAlertLabel, "i-ncript folder created", 40, 40, 1200, false);
+            GUI.labelCutterThread(jAlertLabel, "i-ncript folders created.", 60, 60, 1800, false);
             rootFolder.mkdir();
         } else {
             Random rand = new Random();
@@ -646,7 +646,7 @@ public class Main extends javax.swing.JFrame {
                 jTextField1ActionPerformed(evt);
             }
         });
-        jLoginPanel.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 6, 103, -1));
+        jLoginPanel.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(137, 6, 103, -1));
 
         jPasswordField1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jPasswordField1.setText("jPasswordField1");
@@ -660,15 +660,15 @@ public class Main extends javax.swing.JFrame {
                 jPasswordField1KeyPressed(evt);
             }
         });
-        jLoginPanel.add(jPasswordField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 32, 103, -1));
+        jLoginPanel.add(jPasswordField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(137, 32, 103, -1));
 
         jUsernameLabel.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jUsernameLabel.setText("enter username");
-        jLoginPanel.add(jUsernameLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 6, -1, 21));
+        jLoginPanel.add(jUsernameLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 6, -1, 21));
 
         jPasswordLabel.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jPasswordLabel.setText("enter password");
-        jLoginPanel.add(jPasswordLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 35, -1, -1));
+        jLoginPanel.add(jPasswordLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 35, -1, -1));
 
         jButton1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jButton1.setText("ENTER");
@@ -679,25 +679,27 @@ public class Main extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jLoginPanel.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 65, 103, -1));
+        jLoginPanel.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(137, 65, 103, -1));
 
         jSlider1.setMaximum(8);
         jSlider1.setMinimum(1);
         jSlider1.setSnapToTicks(true);
+        jSlider1.setToolTipText("set a new heap size if needed");
         jSlider1.setValue(1);
         jSlider1.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 jSlider1StateChanged(evt);
             }
         });
-        jLoginPanel.add(jSlider1, new org.netbeans.lib.awtextra.AbsoluteConstraints(84, 98, 163, -1));
+        jLoginPanel.add(jSlider1, new org.netbeans.lib.awtextra.AbsoluteConstraints(71, 98, 180, -1));
 
         jHeapLabel.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jHeapLabel.setText("set heap");
-        jLoginPanel.add(jHeapLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 100, -1, -1));
+        jHeapLabel.setToolTipText("currently selected heap size");
+        jLoginPanel.add(jHeapLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 100, -1, -1));
 
         getContentPane().add(jLoginPanel);
-        jLoginPanel.setBounds(20, 44, 250, 120);
+        jLoginPanel.setBounds(20, 44, 250, 118);
 
         jProgressBar1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jProgressBar1.setForeground(Color.WHITE);
@@ -738,7 +740,7 @@ public class Main extends javax.swing.JFrame {
         jAlertLabel.setFont(new java.awt.Font("Polentical Neon", 0, 13)); // NOI18N
         jAlertLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         getContentPane().add(jAlertLabel);
-        jAlertLabel.setBounds(22, 174, 235, 27);
+        jAlertLabel.setBounds(21, 174, 236, 27);
 
         jCreationDateLabel.setFont(new java.awt.Font("Polentical Neon", 0, 13)); // NOI18N
         jCreationDateLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
@@ -1046,7 +1048,7 @@ public class Main extends javax.swing.JFrame {
             jAlertLabel.setHorizontalAlignment(CENTER);
         }
         if (jButton1.getText().equals("RESTART")) {
-            System.out.println("AMosu");
+            jButton1.setToolTipText("apply heap size by closing");
             Memory.changeHeapSize();
             System.exit(0);
         }
@@ -1101,7 +1103,7 @@ public class Main extends javax.swing.JFrame {
         loginLabelVisibleBool(true);
         jUsernameLabel.setText("make username");
         jPasswordLabel.setText("make password");
-
+        Memory.getHeapSize();
         generateFolders();
 
         jToolPanel.setVisible(false);
@@ -1240,11 +1242,13 @@ public class Main extends javax.swing.JFrame {
         System.out.println(jSlider1.getValue());
         jHeapLabel.setText(Memory.selectedHeap + "GB heap");
         if (Memory.selectedHeap == Memory.currentHeap) {
+            jButton1.setToolTipText("log into i-ncript");
             jButton1.setText("ENTER");
             jTextField1.setEnabled(true);
             jPasswordField1.setEnabled(true);
         } else {
             jButton1.setText("RESTART");
+            jButton1.setToolTipText("apply heap size by closing");
             jTextField1.setEnabled(false);
             jPasswordField1.setEnabled(false);
         }
