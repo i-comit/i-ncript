@@ -38,51 +38,53 @@ public class Main extends javax.swing.JFrame {
     public Main() {
         root = Paths.get("").toAbsolutePath().toString();
         if (Memory.checkWMIC()) {
-            root = root.substring(0, 3);
-            initComponents();
-            FileHider.cleanUp();
+        root = root.substring(0, 3);
+        initComponents();
 
-            Path runtime = Paths.get(root + masterFolder + "runtime");
-            Path app = Paths.get(root + masterFolder + "app");
-            if (runtime.toFile().exists()) {
-                try {
-                    Files.setAttribute(runtime, "dos:hidden", true);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+        Path runtime = Paths.get(root + masterFolder + "runtime");
+        Path app = Paths.get(root + masterFolder + "app");
+        if (runtime.toFile().exists()) {
+            try {
+                Files.setAttribute(runtime, "dos:hidden", true);
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-            if (app.toFile().exists()) {
-                try {
-                    Files.setAttribute(app, "dos:hidden", true);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+        }
+        if (app.toFile().exists()) {
+            try {
+                Files.setAttribute(app, "dos:hidden", true);
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-            jStorePanel.setVisible(true);
-            jSendPanel.setVisible(false);
-            jReceivePanel.setVisible(false);
-            jRadioButton2.setVisible(false);
-            jRadioButton3.setVisible(false);
-            jScrollPane5.setVisible(false);
+        }
+        jStorePanel.setVisible(true);
+        jSendPanel.setVisible(false);
+        jReceivePanel.setVisible(false);
+        jRadioButton2.setVisible(false);
+        jRadioButton3.setVisible(false);
+        jScrollPane5.setVisible(false);
 
-            if (!keyFile.exists()) {
-                jToolPanel.setVisible(false);
-                loginLabelVisibleBool(false);
-                this.setSize(540, 241);
-                this.setLocationRelativeTo(null);
-            } else {
-                setKeybinding();
-                loginLabelVisibleBool(true);
-                jUsernameLabel.setText("enter username");
-                jPasswordLabel.setText("enter password");
-                generateFolders();
+        if (!keyFile.exists()) {
+            jToolPanel.setVisible(false);
+            loginLabelVisibleBool(false);
+            this.setSize(540, 241);
+            this.setLocationRelativeTo(null);
+            jLabel1b.setVisible(false);
+        } else {
+            setKeybinding();
+            loginLabelVisibleBool(true);
+            jUsernameLabel.setText("enter username");
+            jPasswordLabel.setText("enter password");
+            generateFolders();
 
-                jToolPanel.setVisible(false);
-                jButton2.setVisible(false);
-            }
-            jProgressBar1.setVisible(false);
-            jProgressBar2.setVisible(false);
-            dragDrop.setVisible(false);
+            jToolPanel.setVisible(false);
+            jButton2.setVisible(false);
+            jLabel1b.setVisible(true);
+
+        }
+        jProgressBar1.setVisible(false);
+        jProgressBar2.setVisible(false);
+        dragDrop.setVisible(false);
         }
     }
 
@@ -292,6 +294,9 @@ public class Main extends javax.swing.JFrame {
         if (!receiveFolderF.exists()) {
             receiveFolderF.mkdir();
         }
+        FileHider.cleanUp(path);
+        FileHider.cleanUp(sendFolder);
+        FileHider.cleanUp(receiveFolder);
         jTextField1.setText("");
         jPasswordField1.setText("");
         jAlertLabel.setText("");
@@ -624,6 +629,7 @@ public class Main extends javax.swing.JFrame {
         getContentPane().add(jToolPanel);
         jToolPanel.setBounds(258, 34, 252, 150);
 
+        jLoginPanel.setToolTipText("an offline USB based data encryption app");
         jLoginPanel.setOpaque(false);
         jLoginPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -658,8 +664,9 @@ public class Main extends javax.swing.JFrame {
         jPasswordLabel.setText("enter password");
         jLoginPanel.add(jPasswordLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 35, -1, -1));
 
-        jButton1.setFont(new java.awt.Font("Polentical Neon", 0, 10)); // NOI18N
+        jButton1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jButton1.setText("ENTER");
+        jButton1.setToolTipText("log into i-ncript");
         jButton1.setPreferredSize(new java.awt.Dimension(73, 22));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -690,13 +697,13 @@ public class Main extends javax.swing.JFrame {
         getContentPane().add(jLabel1);
         jLabel1.setBounds(23, 4, 135, 30);
 
-        appVerLabel.setFont(new java.awt.Font("Polentical Neon", 0, 16)); // NOI18N
+        appVerLabel.setFont(new java.awt.Font("Polentical Neon", 0, 15)); // NOI18N
         appVerLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         appVerLabel.setText("ver " + appVer
         );
         appVerLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         getContentPane().add(appVerLabel);
-        appVerLabel.setBounds(23, 110, 118, 30);
+        appVerLabel.setBounds(23, 111, 110, 30);
 
         jLabel1b.setFont(new java.awt.Font("Segoe UI", 0, 10)); // NOI18N
         jLabel1b.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
@@ -1072,6 +1079,7 @@ public class Main extends javax.swing.JFrame {
 
         jToolPanel.setVisible(false);
         jButton2.setVisible(false);
+        jLabel1b.setVisible(true);
 
     }//GEN-LAST:event_ActionjButton6
 

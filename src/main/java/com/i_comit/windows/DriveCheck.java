@@ -38,7 +38,7 @@ public class DriveCheck extends javax.swing.JFrame {
                 jLabel2.setText("folder named --------");
             }
             case 4 -> {
-                jLabel1.setText("the folder with i-ncript");
+                goWebsite(jLabel1, "the folder with ", "https://i-comit.com/i-ncript/", "i-ncript", false);
                 jLabel2.setText("must be placed at root");
             }
         }

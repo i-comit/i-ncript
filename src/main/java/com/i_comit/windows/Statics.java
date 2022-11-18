@@ -185,10 +185,28 @@ public class Statics {
         jProgressBar2.setStringPainted(false);
         jProgressBar2.setVisible(true);
         buttonGroup1.clearSelection();
-        FileHider.cleanUp();
         jAlertLabel.setText("");
         dragDrop.setVisible(true);
         toolBtnsBool(true);
+
+        switch (toolMode) {
+            case 0:
+                FileHider.cleanUp(path);
+                TreeView.populateStoreTree(path);
+                break;
+            case 1:
+                FileHider.cleanUp(receiveFolder);
+                TreeView.populateStoreTree(receiveFolder);
+                break;
+            case 2:
+                FileHider.cleanUp(sendFolder);
+                TreeView.populateStoreTree(sendFolder);
+                break;
+            case 3:
+                FileHider.cleanUp(path);
+                TreeView.populateStoreTree(path);
+                break;
+        }
     }
 
     public static void hotFilerFunction() {

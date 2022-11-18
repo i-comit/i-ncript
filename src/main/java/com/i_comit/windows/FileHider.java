@@ -7,7 +7,6 @@ package com.i_comit.windows;
 import static com.i_comit.windows.FileHider.fileCt;
 import static com.i_comit.windows.GUI.listPaths;
 import static com.i_comit.windows.HotFiler_T.folderWatcher;
-import static com.i_comit.windows.Statics.path;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,7 +26,7 @@ public class FileHider {
     
     static int fileCt = 0;
     
-    public static void cleanUp() {
+    public static void cleanUp(Path path) {
         try {
             Set<String> unique = new HashSet<>();
             
@@ -67,7 +66,7 @@ public class FileHider {
                     deletedFiles++;
                 }
             } else {
-                System.out.println("no files to clean up");
+                System.out.println("no files to clean up in "+ path.toFile().getName() + " folder");
             }
             if (deletedFiles > 2) {
                 Main.jTextArea1.append("cleaned up " + deletedFiles + " corrupted files\n");

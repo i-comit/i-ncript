@@ -200,7 +200,7 @@ class AES_T implements Runnable {
                                     Main.jProgressBar2.setVisible(true);
                                     GUI.t.interrupt();
                                     GUI.labelCutterThread(jAlertLabel, "incorrect key", 10, 25, 500, true);
-                                    FileHider.cleanUp();
+                                    FileHider.cleanUp(path);
 
                                 } else {
                                     System.out.println("File Encryption Complete");
@@ -242,7 +242,7 @@ class AES_T implements Runnable {
                                     Main.jProgressBar2.setVisible(true);
                                     GUI.t.interrupt();
                                     GUI.labelCutterThread(jAlertLabel, "incorrect key", 10, 25, 500, true);
-                                    FileHider.cleanUp();
+                                    FileHider.cleanUp(path);
                                 } else {
                                     System.out.println("File Decryption Complete");
                                     if (toolMode == 1) {
@@ -336,7 +336,7 @@ class AES_T implements Runnable {
                 Main.jProgressBar2.setVisible(true);
                 GUI.t.interrupt();
                 GUI.labelCutterThread(Main.jAlertLabel, "incorrect key", 10, 25, 500, true);
-                FileHider.cleanUp();
+                FileHider.cleanUp(path);
             } else {
                 DragDrop_T.resetProgressBar(encFiles, decFiles);
                 GUI.getGB();
