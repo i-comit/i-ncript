@@ -37,7 +37,7 @@ public class Main extends javax.swing.JFrame {
     public static String root = "";
     public static String masterFolder = "--------\\";
 
-    private static final String appVer = "1.6.8";
+    private static final String appVer = "1.7.0";
     private static final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:ss a"));
     private static final int year = Year.now().getValue();
 
@@ -46,7 +46,6 @@ public class Main extends javax.swing.JFrame {
         if (Memory.checkWMIC()) {
             root = root.substring(0, 3);
             initComponents();
-
             Path runtime = Paths.get(root + masterFolder + "runtime");
             Path app = Paths.get(root + masterFolder + "app");
             if (runtime.toFile().exists()) {
@@ -406,7 +405,7 @@ public class Main extends javax.swing.JFrame {
         jTree1 = new javax.swing.JTree();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("\ti-ncript™");
+        setTitle("i-ncript™");
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti.png")));
         setMinimumSize(new java.awt.Dimension(295, 225));
         setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
@@ -1043,7 +1042,11 @@ public class Main extends javax.swing.JFrame {
             if (Login.loginCheck()) {
                 if (Login.verifyLogin()) {
                     collapseLogin(this);
+                } else {
+                    AudioPlayer.audioPlayerThread("stop-sfx.wav");
                 }
+            } else {
+                AudioPlayer.audioPlayerThread("stop-sfx.wav");
             }
             jAlertLabel.setHorizontalAlignment(CENTER);
         }
@@ -1078,7 +1081,11 @@ public class Main extends javax.swing.JFrame {
             if (Login.loginCheck()) {
                 if (Login.verifyLogin()) {
                     collapseLogin(this);
+                } else {
+                    AudioPlayer.audioPlayerThread("stop-sfx.wav");
                 }
+            } else {
+                AudioPlayer.audioPlayerThread("stop-sfx.wav");
             }
             jAlertLabel.setHorizontalAlignment(CENTER);
         }

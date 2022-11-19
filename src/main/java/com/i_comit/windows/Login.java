@@ -13,7 +13,6 @@ import static com.i_comit.windows.Main.jProgressBar1;
 import static com.i_comit.windows.Main.jRadioButton2;
 import static com.i_comit.windows.Main.jTextField1;
 import static com.i_comit.windows.Statics.*;
-import java.awt.Font;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
@@ -23,7 +22,7 @@ import java.util.*;
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
 public class Login {
-    
+
     public static boolean loginCheck() {
         boolean b = false;
         char[] password = jPasswordField1.getPassword();
@@ -70,7 +69,7 @@ public class Login {
         jPasswordField1.setText("");
         return b;
     }
-    
+
     private static boolean Authenticator() {
         boolean b = false;
         if (keyFile.exists()) {
@@ -87,7 +86,7 @@ public class Login {
         }
         return b;
     }
-    
+
     private static void makeKey() {
         Path path = keyFile.toPath();//creates Path instance  
         try {
@@ -102,13 +101,13 @@ public class Login {
             e.printStackTrace();
         }
     }
-    
+
     private static void sendPanelTools() {
         jLabel6.setVisible(true);
         jLabel5.setVisible(true);
         jRadioButton2.setVisible(false);
     }
-    
+
     public static boolean sendKeyCheck() throws IOException {
         boolean b = false;
         char[] password = Main.jPasswordField2.getPassword();
@@ -154,7 +153,7 @@ public class Login {
         }
         return b;
     }
-    
+
     public static void sendKey() {
         Path sendKeyPath = Paths.get(Statics.sendFolder + "\\send.key");
         try {
@@ -167,23 +166,23 @@ public class Login {
             e.printStackTrace();
         }
     }
-    
+
     private static void receivePanelTools() {
         Main.jLabel8.setVisible(true);
         Main.jLabel7.setVisible(true);
         Main.jRadioButton3.setVisible(false);
         Main.jRadioButton3.setSelected(false);
     }
-    
+
     public static void receiveKeyCheck(String zipFileN) throws IOException {
         char[] password = Main.jPasswordField3.getPassword();
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
-        
+
         zipFileName = zipFileN;
         System.out.println(Main.jList1.getSelectedValue());
-        
+
         recipientPassword = new String(password);
         if (Main.jList1.getSelectedValue() != null) {
             if (!"".equals(recipientPassword)) {
@@ -200,15 +199,15 @@ public class Login {
             receivePanelTools();
             Main.jPasswordField3.setText("");
         }
-        
+
     }
-    
+
     public static void verifySendKey() {
         try {
             BufferedReader brTest = new BufferedReader(new FileReader(zipFileName + "\\send.key"));
             String usernameRead = Hasher.readKey(brTest.readLine(), username);
             String passwordRead = Hasher.readKey(brTest.readLine(), recipientPassword);
-            
+
             BufferedReader brTest1 = new BufferedReader(new FileReader(keyFile));
             String usernameRead1 = Hasher.readKey(brTest1.readLine(), username);
 //
@@ -253,7 +252,7 @@ public class Login {
             ex.printStackTrace();
         }
     }
-    
+
     public static boolean verifyLogin() {
         boolean b = false;
         try {
@@ -279,7 +278,7 @@ public class Login {
                 GUI.t.interrupt();
                 GUI.labelCutterThread(jAlertLabel, "incorrect login info", 45, 30, 900, false);
             }
-            
+
         } catch (IOException ex) {
             ex.printStackTrace();
         }

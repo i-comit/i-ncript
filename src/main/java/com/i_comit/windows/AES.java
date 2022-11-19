@@ -200,6 +200,7 @@ class AES_T implements Runnable {
                                     Main.jProgressBar2.setVisible(true);
                                     GUI.t.interrupt();
                                     GUI.labelCutterThread(jAlertLabel, "incorrect key", 10, 25, 500, true);
+                                    AudioPlayer.audioPlayerThread("fail-sfx.wav");
                                     FileHider.cleanUp(path);
 
                                 } else {
@@ -242,6 +243,7 @@ class AES_T implements Runnable {
                                     Main.jProgressBar2.setVisible(true);
                                     GUI.t.interrupt();
                                     GUI.labelCutterThread(jAlertLabel, "incorrect key", 10, 25, 500, true);
+                                    AudioPlayer.audioPlayerThread("fail-sfx.wav");
                                     FileHider.cleanUp(path);
                                 } else {
                                     System.out.println("File Decryption Complete");
@@ -268,11 +270,13 @@ class AES_T implements Runnable {
                                 case 0 -> {
                                     GUI.t.interrupt();
                                     GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 10, 20, 400, false);
+                                    AudioPlayer.audioPlayerThread("fail-sfx.wav");
                                     Main.jRadioButton2.setEnabled(true);
                                 }
                                 case 1 -> {
                                     GUI.t.interrupt();
                                     GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400, false);
+                                    AudioPlayer.audioPlayerThread("fail-sfx.wav");
                                     Main.jToggleButton1.setEnabled(true);
                                     Main.jRadioButton3.setEnabled(true);
                                 }
@@ -281,14 +285,18 @@ class AES_T implements Runnable {
                     }
                 } else {
                     switch (toolMode) {
-                        case 0 ->
+                        case 0 -> {
                             GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 20, 40, 800, false);
+                            AudioPlayer.audioPlayerThread("fail-sfx.wav");
+                        }
                         case 1 -> {
                             GUI.labelCutterThread(jAlertLabel, "n-box folder has no files", 20, 40, 800, false);
+                            AudioPlayer.audioPlayerThread("fail-sfx.wav");
                             Main.jRadioButton3.setEnabled(true);
                         }
                         case 2 -> {
                             GUI.labelCutterThread(jAlertLabel, "o-box folder has no files", 20, 40, 800, false);
+                            AudioPlayer.audioPlayerThread("fail-sfx.wav");
                             Main.jRadioButton2.setEnabled(true);
                         }
                     }
@@ -336,6 +344,7 @@ class AES_T implements Runnable {
                 Main.jProgressBar2.setVisible(true);
                 GUI.t.interrupt();
                 GUI.labelCutterThread(Main.jAlertLabel, "incorrect key", 10, 25, 500, true);
+                AudioPlayer.audioPlayerThread("fail-sfx.wav");
                 FileHider.cleanUp(path);
             } else {
                 DragDrop_T.resetProgressBar(encFiles, decFiles);

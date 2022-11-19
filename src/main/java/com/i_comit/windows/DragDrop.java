@@ -67,9 +67,9 @@ class DragDrop implements DropTargetListener {
                     Main.jButton2.setVisible(true);
                     Main.jProgressBar1.setMaximum(treepaths.size());
                     System.out.println("Path from Drag Drop is " + path.replaceAll(fileName, ""));
-
+                    AudioPlayer.audioPlayerThread("drop-sfx.wav");
                     AES.AESThread(treepaths, new File(path.replaceAll(fileName, "")), false, 0);
-                    System.out.println(treepaths);
+
                 } else {
                     GUI.t.interrupt();
                     GUI.labelCutterThread(jAlertLabel, "all files must be in same folder", 10, 20, 800, false);
@@ -99,6 +99,7 @@ class DragDrop implements DropTargetListener {
                                 if (i >= files.size() - 1) {
                                     Main.jButton2.setVisible(true);
                                     Main.jProgressBar1.setMaximum(0);
+                                    AudioPlayer.audioPlayerThread("drop-sfx.wav");
                                     AES.AESThread(paths, Statics.directory, false, 0);
                                 }
                             }
@@ -168,9 +169,9 @@ class DragDrop_T implements Runnable {
         jProgressBar1.setMaximum(100);
         jProgressBar1.setValue(jProgressBar1.getMaximum());
         Main.jButton2.setVisible(false);
-
         try {
             Thread.sleep(400);
+            AudioPlayer.audioPlayerThread("aes-sfx.wav");
             GUI.labelCutterThread(jAlertLabel, decFiles + " encrypted | " + encFiles + " decrypted", 15, 30, 300, false);
 
             Thread.sleep(300);
