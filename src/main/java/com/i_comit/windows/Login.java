@@ -16,6 +16,7 @@ import static com.i_comit.windows.Statics.*;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
+import static javax.swing.SwingConstants.CENTER;
 
 /**
  *
@@ -65,6 +66,7 @@ public class Login {
             GUI.t.interrupt();
             GUI.labelCutterThread(jAlertLabel, "enter a username", 20, 20, 1200, false);
         }
+        jAlertLabel.setHorizontalAlignment(CENTER);
         jTextField1.setText("");
         jPasswordField1.setText("");
         return b;
@@ -235,7 +237,6 @@ public class Login {
                     Main.jRadioButton3.setEnabled(true);
                     Folder.listZipFiles();
                     Main.toolBtnsBool(true);
-                    AudioPlayer.audioPlayerThread("fail-sfx.wav");
                 }
             } else {
                 brTest.close();
@@ -248,7 +249,6 @@ public class Login {
                 Main.jRadioButton3.setEnabled(true);
                 Folder.listZipFiles();
                 Main.toolBtnsBool(true);
-                AudioPlayer.audioPlayerThread("fail-sfx.wav");
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -277,8 +277,7 @@ public class Login {
                     b = true;
                 }
             } else {
-                GUI.t.interrupt();
-                GUI.labelCutterThread(jAlertLabel, "incorrect login info", 45, 30, 900, false);
+
             }
 
         } catch (IOException ex) {

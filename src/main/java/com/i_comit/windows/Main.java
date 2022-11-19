@@ -37,7 +37,7 @@ public class Main extends javax.swing.JFrame {
     public static String root = "";
     public static String masterFolder = "--------\\";
 
-    private static final String appVer = "1.7.0";
+    private static final String appVer = "1.7.2";
     private static final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:ss a"));
     private static final int year = Year.now().getValue();
 
@@ -1044,13 +1044,11 @@ public class Main extends javax.swing.JFrame {
                     collapseLogin(this);
                 } else {
                     jAlertLabel.setHorizontalAlignment(CENTER);
-                    AudioPlayer.audioPlayerThread("fail-sfx.wav");
-                    jAlertLabel.setText("");
+                    GUI.t.interrupt();
+                    GUI.labelCutterThread(jAlertLabel, "incorrect login info", 45, 30, 900, false);
                 }
             } else {
                 jAlertLabel.setHorizontalAlignment(CENTER);
-                AudioPlayer.audioPlayerThread("fail-sfx.wav");
-                jAlertLabel.setText("");
             }
         }
         if (jButton1.getText().equals("RESTART")) {
@@ -1086,17 +1084,13 @@ public class Main extends javax.swing.JFrame {
                     collapseLogin(this);
                 } else {
                     jAlertLabel.setHorizontalAlignment(CENTER);
-                    AudioPlayer.audioPlayerThread("fail-sfx.wav");
-                    jAlertLabel.setText("");
+                    GUI.t.interrupt();
+                    GUI.labelCutterThread(jAlertLabel, "incorrect login info", 45, 30, 900, false);
                 }
             } else {
                 jAlertLabel.setHorizontalAlignment(CENTER);
-                AudioPlayer.audioPlayerThread("fail-sfx.wav");
-                jAlertLabel.setText("");
             }
-            jAlertLabel.setHorizontalAlignment(CENTER);
         }
-
     }//GEN-LAST:event_jPasswordField1KeyPressed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
