@@ -67,7 +67,6 @@ class DragDrop implements DropTargetListener {
                     Main.jButton2.setVisible(true);
                     Main.jProgressBar1.setMaximum(treepaths.size());
                     System.out.println("Path from Drag Drop is " + path.replaceAll(fileName, ""));
-                    AudioPlayer.audioPlayerThread("drop-sfx.wav");
                     AES.AESThread(treepaths, new File(path.replaceAll(fileName, "")), false, 0);
 
                 } else {
@@ -99,7 +98,6 @@ class DragDrop implements DropTargetListener {
                                 if (i >= files.size() - 1) {
                                     Main.jButton2.setVisible(true);
                                     Main.jProgressBar1.setMaximum(0);
-                                    AudioPlayer.audioPlayerThread("drop-sfx.wav");
                                     AES.AESThread(paths, Statics.directory, false, 0);
                                 }
                             }

@@ -1043,12 +1043,15 @@ public class Main extends javax.swing.JFrame {
                 if (Login.verifyLogin()) {
                     collapseLogin(this);
                 } else {
-                    AudioPlayer.audioPlayerThread("stop-sfx.wav");
+                    jAlertLabel.setHorizontalAlignment(CENTER);
+                    AudioPlayer.audioPlayerThread("fail-sfx.wav");
+                    jAlertLabel.setText("");
                 }
             } else {
-                AudioPlayer.audioPlayerThread("stop-sfx.wav");
+                jAlertLabel.setHorizontalAlignment(CENTER);
+                AudioPlayer.audioPlayerThread("fail-sfx.wav");
+                jAlertLabel.setText("");
             }
-            jAlertLabel.setHorizontalAlignment(CENTER);
         }
         if (jButton1.getText().equals("RESTART")) {
             jButton1.setToolTipText("apply heap size by closing");
@@ -1082,10 +1085,14 @@ public class Main extends javax.swing.JFrame {
                 if (Login.verifyLogin()) {
                     collapseLogin(this);
                 } else {
-                    AudioPlayer.audioPlayerThread("stop-sfx.wav");
+                    jAlertLabel.setHorizontalAlignment(CENTER);
+                    AudioPlayer.audioPlayerThread("fail-sfx.wav");
+                    jAlertLabel.setText("");
                 }
             } else {
-                AudioPlayer.audioPlayerThread("stop-sfx.wav");
+                jAlertLabel.setHorizontalAlignment(CENTER);
+                AudioPlayer.audioPlayerThread("fail-sfx.wav");
+                jAlertLabel.setText("");
             }
             jAlertLabel.setHorizontalAlignment(CENTER);
         }

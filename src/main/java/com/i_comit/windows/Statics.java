@@ -222,7 +222,7 @@ public class Statics {
                 TreeView.populateStoreTree(path);
                 break;
         }
-        AudioPlayer.audioPlayerThread("stop-sfx.wav");
+        AudioPlayer.audioPlayerThread("fail-sfx.wav");
     }
 
     public static void hotFilerFunction(Main main) {

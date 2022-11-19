@@ -142,19 +142,18 @@ public class GUI {
         if (progressBar == Main.jProgressBar1) {
             progressBar.setString("100% | " + AES_T.paths.size() + "/" + AES_T.paths.size());
             try {
-                Thread.sleep(150);
                 AudioPlayer.audioPlayerThread("aes-sfx.wav");
                 switch (Statics.AESMode) {
                     case 0 -> {
-                        GUI.labelCutterThread(jAlertLabel, "encrypted " + Statics.fileIter + " files", 10, 25, 400, false);
+                        GUI.labelCutterThread(jAlertLabel, "encrypted " + Statics.fileIter + " files", 10, 20, 400, false);
                         Main.jTextArea1.append("encrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
                     }
                     case 1 -> {
-                        GUI.labelCutterThread(jAlertLabel, "decrypted " + Statics.fileIter + " files", 10, 25, 400, false);
+                        GUI.labelCutterThread(jAlertLabel, "decrypted " + Statics.fileIter + " files", 10, 20, 400, false);
                         Main.jTextArea1.append("decrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
                     }
                 }
-                Thread.sleep(150);
+                Thread.sleep(200);
                 for (int x = progressBar.getMaximum(); x >= 0; x--) {
                     Thread.sleep(5);
                     progressBar.setValue(x);
@@ -180,7 +179,6 @@ public class GUI {
         if (progressBar == Main.jProgressBar2) {
             try {
                 String fileName = new File(Folder.sendFolderStr).getName();
-                Thread.sleep(150);
                 AudioPlayer.audioPlayerThread("aes-sfx.wav");
                 if (Statics.toolMode == 2) {
                     GUI.labelCutterThread(jAlertLabel, "packaged " + fileName + ".i-cc", 10, 25, 500, false);

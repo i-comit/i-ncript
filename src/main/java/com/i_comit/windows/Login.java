@@ -235,6 +235,7 @@ public class Login {
                     Main.jRadioButton3.setEnabled(true);
                     Folder.listZipFiles();
                     Main.toolBtnsBool(true);
+                    AudioPlayer.audioPlayerThread("fail-sfx.wav");
                 }
             } else {
                 brTest.close();
@@ -247,6 +248,7 @@ public class Login {
                 Main.jRadioButton3.setEnabled(true);
                 Folder.listZipFiles();
                 Main.toolBtnsBool(true);
+                AudioPlayer.audioPlayerThread("fail-sfx.wav");
             }
         } catch (IOException ex) {
             ex.printStackTrace();
