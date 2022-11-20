@@ -2,11 +2,11 @@
 ![image](https://i-comit.com/wp-content/uploads/2022/11/Screenshot_20221118_052656.png)
 
 ### i-ncript is an offline & portable (no installation) USB based data encryption application
-Current Version: 1.6.8
+Current Version: 1.7.2
 
 Copyright 2022 [i-comit LLC](https://i-comit.com/). All rights reserved.
 
-## __I-NCRIPT STANDARD OPERATING PROCEDURE 11/16/2022__
+## __I-NCRIPT STANDARD OPERATING PROCEDURE 11/19/2022__
 
 i-ncript operates with 3 tool panels connected to their respective folders: STORE, N-BOX, and O-BOX, which you can cycle through via the button on the bottom left. Within these panels are primary tools which are accessible in all 3 panels, and some others which are exclusive to its respective panel.
 It also has a tabbed pane to the right of its interface, containing panels which contains a drop box, output log, and supplementary information about the APP, including this SOP.
