@@ -6,7 +6,6 @@ package com.i_comit.windows;
 
 import static com.i_comit.windows.GUI.listAESPaths;
 import static com.i_comit.windows.Main.jAlertLabel;
-import static com.i_comit.windows.Main.jProgressBar1;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -43,9 +42,6 @@ class HotFiler_T implements Runnable {
                         folderWatcher();
 
                     } else {
-                        Statics.fileIter = 0;
-                        Statics.fileCount = GUI.countFiles(Statics.path);
-                        jProgressBar1.setMaximum(Statics.fileCount);
                         AES.AESThread(path, Statics.directory, true, 0);
                     }
 

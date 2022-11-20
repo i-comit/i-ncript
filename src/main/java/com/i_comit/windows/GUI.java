@@ -157,7 +157,11 @@ public class GUI {
                 for (int x = progressBar.getMaximum(); x >= 0; x--) {
                     Thread.sleep(5);
                     progressBar.setValue(x);
+                    if (x <= 1) {
+                        Main.progressbarBool = true;
+                    }
                 }
+
                 if (progressBar.getValue() == 0) {
                     progressBar.setStringPainted(false);
                     switch (Statics.toolMode) {
@@ -192,6 +196,9 @@ public class GUI {
                 for (int x = progressBar.getMaximum(); x >= 0; x--) {
                     Thread.sleep(5);
                     progressBar.setValue(x);
+                    if (x <= 1) {
+                        Main.progressbarBool = true;
+                    }
                 }
                 if (progressBar.getValue() >= 0) {
                     progressBar.setStringPainted(false);

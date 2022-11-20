@@ -56,7 +56,7 @@ public class Statics {
 
     public static int fileHideIter;
 
-    public static void encryptFunction() {
+    public static void encryptFunction(Main main) {
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
@@ -67,6 +67,11 @@ public class Statics {
 
         try {
             fileCount = GUI.countFiles(path);
+            if (fileCount != 0) {
+                main.setSize(780, 266);
+            } else {
+                main.setSize(780, 241);
+            }
             jProgressBar1.setString("0% | 0/" + fileCount);
             jProgressBar1.setMaximum(fileCount);
             AES.AESThread(listAESPaths(path), directory, true, 0);
@@ -75,7 +80,7 @@ public class Statics {
         }
     }
 
-    public static void decryptFunction() {
+    public static void decryptFunction(Main main) {
         jToggleButton1.setSelected(false);
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
@@ -87,6 +92,11 @@ public class Statics {
 
         try {
             fileCount = GUI.countFiles(path);
+            if (fileCount != 0) {
+                main.setSize(780, 266);
+            } else {
+                main.setSize(780, 241);
+            }
             jProgressBar1.setString("0% | 0/" + fileCount);
             jProgressBar1.setMaximum(fileCount);
             AES.AESThread(listAESPaths(path), directory, true, 0);
@@ -235,6 +245,13 @@ public class Statics {
         if (jToggleButton1.isSelected()) {
             dragDrop.setVisible(false);
             try {
+                fileCount = GUI.countFiles(path);
+                if (fileCount != 0) {
+                    main.setSize(780, 266);
+                } else {
+                    main.setSize(780, 241);
+                }
+                jProgressBar1.setMaximum(fileCount);
                 HotFiler.HotFilerThread();
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -284,22 +301,5 @@ public class Statics {
         jAlertLabel.setLocation(265, 174);
         main.setLocationRelativeTo(null);
         jScrollPane5.setVisible(true);
-    }
-
-    public static void collapseProgressBar(Main main) {
-        try {
-            int count = GUI.countFiles(path);
-            if (count == 0) {
-                main.setSize(780, 241);
-            } else {
-                if (jToggleButton1.isSelected()) {
-                    main.setSize(780, 266);
-                } else {
-                    jProgressBar1.setVisible(true);
-                }
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
     }
 }
