@@ -207,7 +207,7 @@ class AES_T implements Runnable {
                                     if (toolMode == 2) {
                                         try {
                                             sendKey();
-                                            Folder.list1Dir(2);
+                                            Folder.prepareZipFile();
                                             Main.jLabel6.setVisible(true);
                                             Main.jLabel5.setVisible(true);
                                             Main.jRadioButton2.setVisible(false);
@@ -261,8 +261,7 @@ class AES_T implements Runnable {
                                     if (Login.sendKeyCheckBool) {
                                         try {
                                             AESMode = 0;
-                                            Statics.fileIter = 0;
-                                            Statics.fileCount = 0;
+                                            resetStaticInts();
                                             paths = GUI.listAESPaths(sendFolder);
                                             fileCount = GUI.countFiles(sendFolder);
                                             zipFileCount = fileCount;
@@ -287,15 +286,12 @@ class AES_T implements Runnable {
                                     Main.jRadioButton2.setEnabled(true);
                                 }
                                 case 1 -> {
-                                    GUI.t.interrupt();
-                                    GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400, false);
                                     Main.jToggleButton1.setEnabled(true);
                                     Main.jRadioButton3.setEnabled(true);
                                     if (Login.sendKeyCheckBool) {
                                         try {
                                             AESMode = 0;
-                                            Statics.fileIter = 0;
-                                            Statics.fileCount = 0;
+                                            resetStaticInts();
                                             paths = GUI.listAESPaths(sendFolder);
                                             fileCount = GUI.countFiles(sendFolder);
                                             zipFileCount = fileCount;
@@ -305,6 +301,9 @@ class AES_T implements Runnable {
                                             ex.printStackTrace();
                                         }
                                         Login.sendKeyCheckBool = false;
+                                    } else {
+                                        GUI.t.interrupt();
+                                        GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400, false);
                                     }
                                 }
                             }

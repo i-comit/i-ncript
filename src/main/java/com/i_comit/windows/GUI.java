@@ -145,10 +145,12 @@ public class GUI {
                 AudioPlayer.audioPlayerThread("aes-sfx.wav");
                 switch (Statics.AESMode) {
                     case 0 -> {
+                        GUI.t.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "encrypted " + Statics.fileIter + " files", 10, 20, 400, false);
                         Main.jTextArea1.append("encrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
                     }
                     case 1 -> {
+                        GUI.t.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "decrypted " + Statics.fileIter + " files", 10, 20, 400, false);
                         Main.jTextArea1.append("decrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
                     }
@@ -184,10 +186,12 @@ public class GUI {
             try {
                 String fileName = new File(Folder.sendFolderStr).getName();
                 if (Statics.toolMode == 2) {
+                    GUI.t.interrupt();
                     GUI.labelCutterThread(jAlertLabel, "packaged " + fileName + ".i-cc", 10, 25, 500, false);
                     Main.jTextArea1.append("packaged " + fileName + ".i-cc at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
                 }
                 if (Statics.toolMode == 1) {
+                    GUI.t.interrupt();
                     GUI.labelCutterThread(jAlertLabel, "unpacked " + fileName + ".i-cc", 10, 25, 500, false);
                     Main.jTextArea1.append("unpacked " + fileName + ".i-cc at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
                 }

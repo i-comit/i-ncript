@@ -56,6 +56,13 @@ public class Statics {
 
     public static int fileHideIter;
 
+    public static void resetStaticInts() {
+        fileIter = 0;
+        fileCount = 0;
+        FileHider.fileCt = 0;
+        fileHideIter = 0;
+    }
+
     public static void encryptFunction(Main main) {
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
@@ -184,7 +191,7 @@ public class Statics {
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
-
+        resetStaticInts();
         switch (AESMode) {
             case 0 -> {
                 jTextArea1.append("encryption of " + fileCount + " files stopped.\n");
@@ -192,11 +199,6 @@ public class Statics {
             case 1 ->
                 jTextArea1.append("decryption of " + fileCount + " files stopped.\n");
         }
-
-        fileIter = 0;
-        fileHideIter = 0;
-        FileHider.fileCt = 0;
-        fileCount = 0;
 
         jButton2.setVisible(false);
         jTabbedPane1.setSelectedIndex(0);
@@ -302,5 +304,5 @@ public class Statics {
         main.setLocationRelativeTo(null);
         jScrollPane5.setVisible(true);
     }
-    
+
 }

@@ -27,28 +27,17 @@ public class Folder {
 
     public static String sendFolderStr = "";
 
-    public static void list1Dir(int toolMode) throws IOException {
-        switch (toolMode) {
-            case 1 -> {
-                //RECEIVE
-//                Main.jRadioButton3.setEnabled(false);
-//                unzipFile(Statics.zipFileName + ".i-cc", Statics.zipFileName.replaceAll(".i-cc", ""));
-//                Main.toolBtnsBool(true);
-//                Login.verifySendKey();
-            }
-            case 2 -> {
-                //SEND
-                sendFolderStr = Statics.sendFolder + "\\" + firstLastChar(Statics.recipientUsername) + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMddmmss"));
-                zipFile(Statics.sendFolder, ".i-cc", sendFolderStr);
-                GUI.resetProgressBar(Main.jProgressBar2);
-                Main.toolBtnsBool(true);
-                deleteDirectory(Statics.sendFolder.toFile());
-                Main.jRadioButton2.setEnabled(true);
-                Main.jRadioButton2.setSelected(false);
-                Main.dragDrop.setVisible(false);
-                GUI.getGB();
-            }
-        }
+    public static void prepareZipFile() throws IOException {
+        //SEND
+        sendFolderStr = Statics.sendFolder + "\\" + firstLastChar(Statics.recipientUsername) + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMddmmss"));
+        zipFile(Statics.sendFolder, ".i-cc", sendFolderStr);
+        GUI.resetProgressBar(Main.jProgressBar2);
+        Main.toolBtnsBool(true);
+        deleteDirectory(Statics.sendFolder.toFile());
+        Main.jRadioButton2.setEnabled(true);
+        Main.jRadioButton2.setSelected(false);
+        Main.dragDrop.setVisible(false);
+        GUI.getGB();
     }
 
     public static String firstLastChar(String username) {

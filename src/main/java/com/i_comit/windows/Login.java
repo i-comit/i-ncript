@@ -125,6 +125,7 @@ public class Login {
             if (!"".equals(recipientPassword)) {
                 if (recipientUsername.length() >= 5 && recipientUsername.length() <= 10) {
                     if (!recipientUsername.equals(Statics.recipientPassword)) {
+                        resetStaticInts();
                         Hasher.hashedUsername = Hasher.getHash(recipientUsername, true);
                         Hasher.hashedPassword = Hasher.getHash(recipientPassword, false);
                         Main.jRadioButton2.setEnabled(false);
@@ -180,41 +181,12 @@ public class Login {
         Main.jRadioButton3.setSelected(false);
     }
 
-    public static boolean receiveKeyCheck(String zipFileN) throws IOException {
-        char[] password = Main.jPasswordField3.getPassword();
-        if (GUI.t.isAlive()) {
-            GUI.t.interrupt();
-        }
-
-        zipFileName = zipFileN;
-        System.out.println(Main.jList1.getSelectedValue());
-
-        recipientPassword = new String(password);
-        if (Main.jList1.getSelectedValue() != null) {
-            if (!"".equals(recipientPassword)) {
-                Hasher.hashedUsername = Hasher.getHash(username, true);
-                Hasher.hashedPassword = Hasher.getHash(recipientPassword, false);
-                Main.jPasswordField3.setText("");
-                Folder.list1Dir(1);
-            } else {
-                GUI.labelCutterThread(jAlertLabel, "please make a password", 20, 20, 1200, false);
-                receivePanelTools();
-            }
-        } else {
-            GUI.labelCutterThread(jAlertLabel, "please select a .i-cc file", 20, 20, 1200, false);
-            receivePanelTools();
-            Main.jPasswordField3.setText("");
-        }
-        return false;
-    }
-
     public static boolean verifySendKey(String zipFileN) {
-
+        boolean b = false;
         char[] password = Main.jPasswordField3.getPassword();
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
-
         zipFileName = zipFileN;
         System.out.println(Main.jList1.getSelectedValue());
 
@@ -227,6 +199,57 @@ public class Login {
                 Main.jRadioButton3.setEnabled(false);
                 unzipFile(Statics.zipFileName + ".i-cc", Statics.zipFileName.replaceAll(".i-cc", ""));
                 Main.toolBtnsBool(true);
+                try {
+                    BufferedReader brTest = new BufferedReader(new FileReader(zipFileName + "\\send.key"));
+                    String usernameRead = Hasher.readKey(brTest.readLine(), username);
+                    String passwordRead = Hasher.readKey(brTest.readLine(), recipientPassword);
+
+                    BufferedReader brTest1 = new BufferedReader(new FileReader(keyFile));
+                    String usernameRead1 = Hasher.readKey(brTest1.readLine(), username);
+//
+                    if (usernameRead.equals(usernameRead1)) {
+                        System.out.println("USERNAME MATCH");
+                        if (passwordRead.equals(Hasher.getHash(recipientPassword, false))) {
+                            System.out.println("PASSWORD MATCH");
+                            resetStaticInts();
+                            jProgressBar1.setValue(Statics.fileIter);
+                            jProgressBar1.setValue(Statics.fileCount);
+                            AESMode = 1;
+                            fileCount = GUI.countFiles(receiveFolder);
+                            zipFileCount = fileCount;
+                            jProgressBar1.setMaximum(fileCount);
+                            AES.AESThread(listAESPaths(Paths.get(Statics.zipFileName)), Paths.get(Statics.zipFileName).toFile(), true, 1);
+                            Main.progressbarBool = false;
+                            b = true;
+                        } else {
+                            resetStaticInts();
+                            brTest.close();
+                            Folder.deleteDirectory(Paths.get(Statics.zipFileName).toFile());
+                            Paths.get(Statics.zipFileName).toFile().delete();
+                            GUI.labelCutterThread(jAlertLabel, "mismatched credentials", 20, 20, 1000, false);
+                            Main.jList1.clearSelection();
+                            receivePanelTools();
+                            Main.jPasswordField3.setText("");
+                            Main.jRadioButton3.setEnabled(true);
+                            Folder.listZipFiles();
+                            Main.toolBtnsBool(true);
+                        }
+                    } else {
+                        resetStaticInts();
+                        brTest.close();
+                        Folder.deleteDirectory(Paths.get(Statics.zipFileName).toFile());
+                        Paths.get(Statics.zipFileName).toFile().delete();
+                        GUI.labelCutterThread(jAlertLabel, "mismatched credentials", 20, 20, 1000, false);
+                        receivePanelTools();
+                        Main.jList1.clearSelection();
+                        Main.jPasswordField3.setText("");
+                        Main.jRadioButton3.setEnabled(true);
+                        Folder.listZipFiles();
+                        Main.toolBtnsBool(true);
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
 
             } else {
                 GUI.labelCutterThread(jAlertLabel, "please make a password", 20, 20, 1200, false);
@@ -237,57 +260,7 @@ public class Login {
             receivePanelTools();
             Main.jPasswordField3.setText("");
         }
-
-        try {
-            BufferedReader brTest = new BufferedReader(new FileReader(zipFileName + "\\send.key"));
-            String usernameRead = Hasher.readKey(brTest.readLine(), username);
-            String passwordRead = Hasher.readKey(brTest.readLine(), recipientPassword);
-
-            BufferedReader brTest1 = new BufferedReader(new FileReader(keyFile));
-            String usernameRead1 = Hasher.readKey(brTest1.readLine(), username);
-//
-            if (usernameRead.equals(usernameRead1)) {
-                System.out.println("USERNAME MATCH");
-                if (passwordRead.equals(Hasher.getHash(recipientPassword, false))) {
-                    System.out.println("PASSWORD MATCH");
-                    Statics.fileIter = 0;
-                    Statics.fileCount = 0;
-                    jProgressBar1.setValue(Statics.fileIter);
-                    jProgressBar1.setValue(Statics.fileCount);
-                    AESMode = 1;
-                    fileCount = GUI.countFiles(receiveFolder);
-                    zipFileCount = fileCount;
-                    jProgressBar1.setMaximum(fileCount);
-                    AES.AESThread(listAESPaths(Paths.get(Statics.zipFileName)), Paths.get(Statics.zipFileName).toFile(), true, 1);
-                    return true;
-                } else {
-                    brTest.close();
-                    Folder.deleteDirectory(Paths.get(Statics.zipFileName).toFile());
-                    Paths.get(Statics.zipFileName).toFile().delete();
-                    GUI.labelCutterThread(jAlertLabel, "mismatched credentials", 20, 20, 1000, false);
-                    Main.jList1.clearSelection();
-                    receivePanelTools();
-                    Main.jPasswordField3.setText("");
-                    Main.jRadioButton3.setEnabled(true);
-                    Folder.listZipFiles();
-                    Main.toolBtnsBool(true);
-                }
-            } else {
-                brTest.close();
-                Folder.deleteDirectory(Paths.get(Statics.zipFileName).toFile());
-                Paths.get(Statics.zipFileName).toFile().delete();
-                GUI.labelCutterThread(jAlertLabel, "mismatched credentials", 20, 20, 1000, false);
-                receivePanelTools();
-                Main.jList1.clearSelection();
-                Main.jPasswordField3.setText("");
-                Main.jRadioButton3.setEnabled(true);
-                Folder.listZipFiles();
-                Main.toolBtnsBool(true);
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        return false;
+        return b;
     }
 
     public static boolean verifyLogin() {

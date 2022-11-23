@@ -1154,6 +1154,8 @@ public class Main extends javax.swing.JFrame {
             zipIter = 0;
             if (Login.sendKeyCheck()) {
                 this.setSize(780, 266);
+            } else {
+                this.setSize(780, 241);
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -1161,12 +1163,12 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButton2Evt
     //RECEIVE RADIO BTN
     private void jRadioButton3Evt(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3Evt
-        try {
-            zipFileCount = 0;
-            zipIter = 0;
-            Login.receiveKeyCheck(receiveFolder + "\\" + jList1.getSelectedValue());
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        zipFileCount = 0;
+        zipIter = 0;
+        if (Login.verifySendKey(receiveFolder + "\\" + jList1.getSelectedValue())) {
+            this.setSize(780, 266);
+        } else {
+            this.setSize(780, 241);
         }
     }//GEN-LAST:event_jRadioButton3Evt
 
