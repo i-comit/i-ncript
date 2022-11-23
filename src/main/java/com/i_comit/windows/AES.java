@@ -258,7 +258,23 @@ class AES_T implements Runnable {
                                         Main.jTabbedPane1.setSelectedIndex(0);
                                         Main.toolBtnsBool(true);
                                     }
-                                    GUI.resetProgressBar(jProgressBar1);
+                                    if (Login.sendKeyCheckBool) {
+                                        try {
+                                            AESMode = 0;
+                                            Statics.fileIter = 0;
+                                            Statics.fileCount = 0;
+                                            paths = GUI.listAESPaths(sendFolder);
+                                            fileCount = GUI.countFiles(sendFolder);
+                                            zipFileCount = fileCount;
+                                            jProgressBar1.setMaximum(zipFileCount);
+                                            AESQuery(GUI.listAESPaths(sendFolder), sendFolder.toFile(), true, 2);
+                                        } catch (IOException ex) {
+                                            ex.printStackTrace();
+                                        }
+                                        Login.sendKeyCheckBool = false;
+                                    } else {
+                                        GUI.resetProgressBar(jProgressBar1);
+                                    }
                                 }
                             }
                         }
@@ -275,6 +291,21 @@ class AES_T implements Runnable {
                                     GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400, false);
                                     Main.jToggleButton1.setEnabled(true);
                                     Main.jRadioButton3.setEnabled(true);
+                                    if (Login.sendKeyCheckBool) {
+                                        try {
+                                            AESMode = 0;
+                                            Statics.fileIter = 0;
+                                            Statics.fileCount = 0;
+                                            paths = GUI.listAESPaths(sendFolder);
+                                            fileCount = GUI.countFiles(sendFolder);
+                                            zipFileCount = fileCount;
+                                            jProgressBar1.setMaximum(zipFileCount);
+                                            AESQuery(GUI.listAESPaths(sendFolder), sendFolder.toFile(), true, 2);
+                                        } catch (IOException ex) {
+                                            ex.printStackTrace();
+                                        }
+                                        Login.sendKeyCheckBool = false;
+                                    }
                                 }
                             }
                         }

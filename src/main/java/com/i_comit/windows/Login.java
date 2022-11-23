@@ -4,6 +4,7 @@
  */
 package com.i_comit.windows;
 
+import static com.i_comit.windows.Folder.unzipFile;
 import static com.i_comit.windows.GUI.listAESPaths;
 import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.jLabel5;
@@ -110,6 +111,8 @@ public class Login {
         jRadioButton2.setVisible(false);
     }
 
+    public static boolean sendKeyCheckBool = false;
+
     public static boolean sendKeyCheck() throws IOException {
         boolean b = false;
         char[] password = Main.jPasswordField2.getPassword();
@@ -121,17 +124,18 @@ public class Login {
         if (!"".equals(recipientUsername)) {
             if (!"".equals(recipientPassword)) {
                 if (recipientUsername.length() >= 5 && recipientUsername.length() <= 10) {
-                    if (!username.equals(Statics.password)) {
+                    if (!recipientUsername.equals(Statics.recipientPassword)) {
                         Hasher.hashedUsername = Hasher.getHash(recipientUsername, true);
                         Hasher.hashedPassword = Hasher.getHash(recipientPassword, false);
                         Main.jRadioButton2.setEnabled(false);
                         Main.jTextField2.setText("");
                         Main.jPasswordField2.setText("");
-                        AESMode = 0;
+                        AESMode = 1;
                         fileCount = GUI.countFiles(sendFolder);
                         zipFileCount = fileCount;
                         jProgressBar1.setMaximum(zipFileCount);
-                        AES.AESThread(listAESPaths(sendFolder), sendFolder.toFile(), true, 2);
+                        AES.AESThread(listAESPaths(sendFolder), sendFolder.toFile(), true, 0);
+                        sendKeyCheckBool = true;
                         b = true;
                     } else {
                         GUI.t.interrupt();
@@ -176,7 +180,7 @@ public class Login {
         Main.jRadioButton3.setSelected(false);
     }
 
-    public static void receiveKeyCheck(String zipFileN) throws IOException {
+    public static boolean receiveKeyCheck(String zipFileN) throws IOException {
         char[] password = Main.jPasswordField3.getPassword();
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
@@ -201,10 +205,39 @@ public class Login {
             receivePanelTools();
             Main.jPasswordField3.setText("");
         }
-
+        return false;
     }
 
-    public static void verifySendKey() {
+    public static boolean verifySendKey(String zipFileN) {
+
+        char[] password = Main.jPasswordField3.getPassword();
+        if (GUI.t.isAlive()) {
+            GUI.t.interrupt();
+        }
+
+        zipFileName = zipFileN;
+        System.out.println(Main.jList1.getSelectedValue());
+
+        recipientPassword = new String(password);
+        if (Main.jList1.getSelectedValue() != null) {
+            if (!"".equals(recipientPassword)) {
+                Hasher.hashedUsername = Hasher.getHash(username, true);
+                Hasher.hashedPassword = Hasher.getHash(recipientPassword, false);
+                Main.jPasswordField3.setText("");
+                Main.jRadioButton3.setEnabled(false);
+                unzipFile(Statics.zipFileName + ".i-cc", Statics.zipFileName.replaceAll(".i-cc", ""));
+                Main.toolBtnsBool(true);
+
+            } else {
+                GUI.labelCutterThread(jAlertLabel, "please make a password", 20, 20, 1200, false);
+                receivePanelTools();
+            }
+        } else {
+            GUI.labelCutterThread(jAlertLabel, "please select a .i-cc file", 20, 20, 1200, false);
+            receivePanelTools();
+            Main.jPasswordField3.setText("");
+        }
+
         try {
             BufferedReader brTest = new BufferedReader(new FileReader(zipFileName + "\\send.key"));
             String usernameRead = Hasher.readKey(brTest.readLine(), username);
@@ -226,6 +259,7 @@ public class Login {
                     zipFileCount = fileCount;
                     jProgressBar1.setMaximum(fileCount);
                     AES.AESThread(listAESPaths(Paths.get(Statics.zipFileName)), Paths.get(Statics.zipFileName).toFile(), true, 1);
+                    return true;
                 } else {
                     brTest.close();
                     Folder.deleteDirectory(Paths.get(Statics.zipFileName).toFile());
@@ -253,6 +287,7 @@ public class Login {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+        return false;
     }
 
     public static boolean verifyLogin() {

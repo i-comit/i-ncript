@@ -183,7 +183,6 @@ public class GUI {
         if (progressBar == Main.jProgressBar2) {
             try {
                 String fileName = new File(Folder.sendFolderStr).getName();
-                AudioPlayer.audioPlayerThread("aes-sfx.wav");
                 if (Statics.toolMode == 2) {
                     GUI.labelCutterThread(jAlertLabel, "packaged " + fileName + ".i-cc", 10, 25, 500, false);
                     Main.jTextArea1.append("packaged " + fileName + ".i-cc at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
@@ -203,6 +202,7 @@ public class GUI {
                 if (progressBar.getValue() >= 0) {
                     progressBar.setStringPainted(false);
                     Main.jTabbedPane1.setSelectedIndex(0);
+                    Main.jProgressBar2.setVisible(true);
                 }
             } catch (InterruptedException ex) {
                 ex.printStackTrace();

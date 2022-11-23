@@ -302,4 +302,5 @@ public class Statics {
         main.setLocationRelativeTo(null);
         jScrollPane5.setVisible(true);
     }
+    
 }
