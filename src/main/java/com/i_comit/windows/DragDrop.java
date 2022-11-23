@@ -20,7 +20,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -85,8 +84,16 @@ class DragDrop implements DropTargetListener {
                             filesf = new File(sf);
                             paths.add(filesf.toPath());
                             if (Statics.toolMode == 0) {
-                                if (i >= files.size() - 1) {
+                                if (i >= paths.size() - 1) {
                                     if (!filesf.isDirectory()) {
+                                        Main.jButton2.setVisible(true);
+                                        jProgressBar1.setString("0% | 0/" + files.size());
+                                        Main.jProgressBar1.setMaximum(0);
+                                        AES.AESThread(paths, Statics.directory, false, 0);
+                                    } else {
+                                        Folder.getFileDropCount(filesf);
+                                        recursiveFileDrop_T.recursiveFileStoreDrop(filesf, Statics.path, paths);
+                                        paths.remove(0);
                                         Main.jButton2.setVisible(true);
                                         jProgressBar1.setString("0% | 0/" + files.size());
                                         Main.jProgressBar1.setMaximum(0);
@@ -110,7 +117,7 @@ class DragDrop implements DropTargetListener {
                             if (Statics.toolMode == 2) {
                                 if (filesf.isDirectory()) {
                                     Folder.getFileDropCount(filesf);
-                                    Folder.recursiveFileDropThread(filesf, Statics.sendFolder);
+                                    Folder.recursiveFileDropSendThread(filesf, Statics.sendFolder);
                                 } else {
                                     Files.move(filesf.toPath(), Paths.get(Statics.sendFolder + File.separator + filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
                                 }

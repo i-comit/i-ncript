@@ -20,8 +20,6 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
@@ -36,60 +34,60 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "D:\\";
+    public static String root = "";
     public static String masterFolder = "--------" + File.separator;
 
-    private static final String appVer = "1.7.3";
+    private static final String appVer = "1.7.5";
     private static final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:ss a"));
     private static final int year = Year.now().getValue();
 
     public Main() {
-//        root = Paths.get("").toAbsolutePath().toString();
-//        if (Memory.checkWMIC()) {
-        root = root.substring(0, 3);
-        initComponents();
-        Path runtime = Paths.get(root + masterFolder + "runtime");
-        Path app = Paths.get(root + masterFolder + "app");
-        if (runtime.toFile().exists()) {
-            try {
-                Files.setAttribute(runtime, "dos:hidden", true);
-            } catch (IOException ex) {
-                ex.printStackTrace();
+        root = Paths.get("").toAbsolutePath().toString();
+        if (Memory.checkWMIC()) {
+            root = root.substring(0, 3);
+            initComponents();
+            Path runtime = Paths.get(root + masterFolder + "runtime");
+            Path app = Paths.get(root + masterFolder + "app");
+            if (runtime.toFile().exists()) {
+                try {
+                    Files.setAttribute(runtime, "dos:hidden", true);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
-        }
-        if (app.toFile().exists()) {
-            try {
-                Files.setAttribute(app, "dos:hidden", true);
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            if (app.toFile().exists()) {
+                try {
+                    Files.setAttribute(app, "dos:hidden", true);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
-        }
-        jStorePanel.setVisible(true);
-        jSendPanel.setVisible(false);
-        jReceivePanel.setVisible(false);
-        jRadioButton2.setVisible(false);
-        jRadioButton3.setVisible(false);
-        jScrollPane5.setVisible(false);
+            jStorePanel.setVisible(true);
+            jSendPanel.setVisible(false);
+            jReceivePanel.setVisible(false);
+            jRadioButton2.setVisible(false);
+            jRadioButton3.setVisible(false);
+            jScrollPane5.setVisible(false);
 
-        if (!keyFile.exists()) {
-            jToolPanel.setVisible(false);
-            loginLabelVisibleBool(false);
-            this.setSize(540, 241);
-            this.setLocationRelativeTo(null);
-        } else {
-            Memory.getHeapSize();
-            setKeybinding();
-            loginLabelVisibleBool(true);
-            jUsernameLabel.setText("enter username");
-            jPasswordLabel.setText("enter password");
-            generateFolders();
+            if (!keyFile.exists()) {
+                jToolPanel.setVisible(false);
+                loginLabelVisibleBool(false);
+                this.setSize(540, 241);
+                this.setLocationRelativeTo(null);
+            } else {
+                Memory.getHeapSize();
+                setKeybinding();
+                loginLabelVisibleBool(true);
+                jUsernameLabel.setText("enter username");
+                jPasswordLabel.setText("enter password");
+                generateFolders();
 
-            jToolPanel.setVisible(false);
-            jButton2.setVisible(false);
+                jToolPanel.setVisible(false);
+                jButton2.setVisible(false);
+            }
+            jProgressBar2.setVisible(false);
+            dragDrop.setVisible(false);
         }
-        jProgressBar2.setVisible(false);
-        dragDrop.setVisible(false);
-//        }
     }
 
     private void getKeyBinding(int keyCode, JPanel jPanel, AbstractAction action) {

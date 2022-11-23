@@ -158,7 +158,7 @@ public class Statics {
                 jRadioButton3.setVisible(false);
                 jLabel10.setText("O-BOX MODE");
                 jLabel11.setText("MOVE FILES TO O-BOX");
-                dragDrop.setToolTipText("drop box will move dropped files into o-box folder");
+                dragDrop.setToolTipText("drop box will move 10 files or 1 folder into o-box folder");
                 FileHider.cleanUp(sendFolder);
                 TreeView.setRootName("o-box");
                 TreeView.populateStoreTree(sendFolder);

@@ -18,6 +18,7 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -180,11 +181,15 @@ public class Folder {
         }
     }
 
-    public static void recursiveFileDropThread(File filesf, Path path) {
-        Thread t = new Thread(() -> recursiveFileDrop_T.recursiveFileDrop(filesf, path));
+    public static void recursiveFileDropSendThread(File filesf, Path path) {
+        Thread t = new Thread(() -> recursiveFileDrop_T.recursiveFileSendDrop(filesf, path));
         t.start();
     }
 
+    public static void recursiveFileDropStoreThread(File filesf, Path path, List<Path> paths) {
+        Thread t = new Thread(() -> recursiveFileDrop_T.recursiveFileStoreDrop(filesf, path, paths));
+        t.start();
+    }
     public static int fileDropCount;
 
     public static int getFileDropCount(File filesf) {
@@ -194,6 +199,7 @@ public class Folder {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+        System.out.println("Drop Count " + fileDropCount);
         return fileDropCount;
     }
 
@@ -206,7 +212,7 @@ class recursiveFileDrop_T implements Runnable {
     }
     public static int fileDropIter;
 
-    public static void recursiveFileDrop(File filesf, Path path) {
+    public static void recursiveFileSendDrop(File filesf, Path path) {
         Paths.get(path + File.separator + filesf.getName()).toFile().mkdir();
         File[] filesArr = filesf.listFiles();
         for (int x = 0; x < filesArr.length; x++) {
@@ -225,9 +231,7 @@ class recursiveFileDrop_T implements Runnable {
                 System.out.println(Paths.get(path + File.separator + filesArr[x].getName()));
                 String parentStr = filesArr[x].getParent();
                 String parentFile = Paths.get(parentStr).toFile().getName();
-//                System.out.println("W PARENT " + Paths.get(path + File.separator + parentFile + File.separator + filesArr[x].getName()));
-//                System.out.println("W PARENT 2 " + parentFile);
-                recursiveFileDrop(filesArr[x], Paths.get(path + File.separator + parentFile));
+                recursiveFileSendDrop(filesArr[x], Paths.get(path + File.separator + parentFile));
             }
         }
         if (fileDropIter == Folder.fileDropCount) {
@@ -237,4 +241,21 @@ class recursiveFileDrop_T implements Runnable {
         }
         filesf.delete();
     }
+
+    public static void recursiveFileStoreDrop(File filesf, Path path, List<Path> recursiveStorePaths) {
+        File[] filesArr = filesf.listFiles();
+        for (int x = 0; x < filesArr.length; x++) {
+            if (!filesArr[x].isDirectory()) {
+                if (!filesArr[x].getName().endsWith("Thumbs.db")) {
+                    recursiveStorePaths.add(filesArr[x].toPath());
+                }
+            } else {
+                System.out.println(filesArr[x]);
+                String parentStr = filesArr[x].getParent();
+                String parentFile = Paths.get(parentStr).toFile().getName();
+                recursiveFileStoreDrop(filesArr[x], path, recursiveStorePaths);
+            }
+        }
+    }
+
 }
