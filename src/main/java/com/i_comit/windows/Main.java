@@ -20,6 +20,8 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
@@ -35,7 +37,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class Main extends javax.swing.JFrame {
 
     public static String root = "D:\\";
-    public static String masterFolder = "--------\\";
+    public static String masterFolder = "--------" + File.separator;
 
     private static final String appVer = "1.7.3";
     private static final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:ss a"));
@@ -757,6 +759,11 @@ public class Main extends javax.swing.JFrame {
 
         dragDrop.setBackground(new java.awt.Color(57, 57, 57));
         dragDrop.setToolTipText("drop box will encrypt & decrypt any files dropped here");
+        dragDrop.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                dragDropMouseReleased(evt);
+            }
+        });
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/drop.png"))); // NOI18N
 
@@ -1165,7 +1172,7 @@ public class Main extends javax.swing.JFrame {
     private void jRadioButton3Evt(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3Evt
         zipFileCount = 0;
         zipIter = 0;
-        if (Login.verifySendKey(receiveFolder + "\\" + jList1.getSelectedValue())) {
+        if (Login.verifySendKey(receiveFolder + File.separator + jList1.getSelectedValue())) {
             this.setSize(780, 266);
         } else {
             this.setSize(780, 241);
@@ -1215,6 +1222,8 @@ public class Main extends javax.swing.JFrame {
         if (progressbarBool) {
             this.setSize(780, 241);
             progressbarBool = false;
+        } else {
+            this.setSize(780, 266);
         }
     }//GEN-LAST:event_jProgressBar1StateChanged
 
@@ -1253,6 +1262,20 @@ public class Main extends javax.swing.JFrame {
             jPasswordField1.setEnabled(false);
         }
     }//GEN-LAST:event_jSlider1StateChanged
+
+    private void dragDropMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dragDropMouseReleased
+//        List<Path> paths = new ArrayList<>();
+//        paths.add(DragDrop.filesf.toPath());
+////        System.out.println("amog");
+//        if (DragDrop.filesf == null) {
+//        }
+
+//        if (!jTree1.isSelectionEmpty() || DragDrop.filesf != null) {
+        this.setSize(780, 266);
+//        } else {
+//            this.setSize(780, 241);
+//        }
+    }//GEN-LAST:event_dragDropMouseReleased
     /**
      * @param args the command line arguments
      */

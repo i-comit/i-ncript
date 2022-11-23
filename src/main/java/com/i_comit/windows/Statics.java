@@ -128,7 +128,7 @@ public class Statics {
                 jStorePanel.setVisible(false);
                 jSendPanel.setVisible(false);
                 jReceivePanel.setVisible(true);
-                dragDrop.setVisible(true);
+                jTree1.setDragEnabled(true);
 
                 jLabel5.setVisible(false);
                 jLabel6.setVisible(false);
@@ -150,11 +150,15 @@ public class Statics {
                 jLabel6.setVisible(true);
                 jLabel5.setVisible(true);
                 jReceivePanel.setVisible(false);
-                dragDrop.setVisible(false);
+                jTree1.setDragEnabled(false);
+//                dragDrop.setVisible(false);
 
                 jLabel7.setVisible(false);
                 jLabel8.setVisible(false);
                 jRadioButton3.setVisible(false);
+                jLabel10.setText("O-BOX MODE");
+                jLabel11.setText("MOVE FILES TO O-BOX");
+                dragDrop.setToolTipText("drop box will move dropped files into o-box folder");
                 FileHider.cleanUp(sendFolder);
                 TreeView.setRootName("o-box");
                 TreeView.populateStoreTree(sendFolder);
@@ -167,7 +171,8 @@ public class Statics {
                 jLabel7.setVisible(true);
                 jLabel8.setVisible(true);
                 jReceivePanel.setVisible(false);
-                dragDrop.setVisible(true);
+                jTree1.setDragEnabled(true);
+
                 jLabel10.setText("STORE MODE");
                 jLabel11.setText("ENCRYPT & DECRYPT");
                 dragDrop.setToolTipText("drop box will encrypt & decrypt any files dropped here");

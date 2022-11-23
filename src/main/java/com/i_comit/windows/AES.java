@@ -247,7 +247,7 @@ class AES_T implements Runnable {
                                     System.out.println("File Decryption Complete");
                                     if (toolMode == 1) {
                                         new File(Statics.zipFileName + ".i-cc").delete();
-                                        new File(Statics.zipFileName + "\\send.key").delete();
+                                        new File(Statics.zipFileName + File.separator + "send.key").delete();
                                         Main.jList1.clearSelection();
                                         Folder.listZipFiles();
                                         Main.jLabel8.setVisible(true);

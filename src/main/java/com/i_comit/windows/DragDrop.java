@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -28,17 +29,10 @@ import java.util.List;
  */
 class DragDrop implements DropTargetListener {
 
-    public static Thread t;
-    public static Thread t2;
     static int encFiles = 0;
     static int decFiles = 0;
 
     public static File filesf;
-
-    public static void progressBarThread(int encFiles, int decFiles) {
-        t = new Thread(() -> DragDrop_T.resetProgressBar(encFiles, decFiles));
-        t.start();
-    }
 
     @Override
     public void drop(DropTargetDropEvent event) {
@@ -75,10 +69,6 @@ class DragDrop implements DropTargetListener {
                 }
                 jTree1.clearSelection();
             }
-            if (Statics.toolMode == 1) {
-                GUI.t.interrupt();
-                GUI.labelCutterThread(Main.jAlertLabel, "only .i-cc files are allowed", 10, 25, 750, false);
-            }
         }
 
         for (DataFlavor flavor : flavors) {
@@ -96,15 +86,18 @@ class DragDrop implements DropTargetListener {
                             paths.add(filesf.toPath());
                             if (Statics.toolMode == 0) {
                                 if (i >= files.size() - 1) {
-                                    Main.jButton2.setVisible(true);
-                                    Main.jProgressBar1.setMaximum(0);
-                                    AES.AESThread(paths, Statics.directory, false, 0);
+                                    if (!filesf.isDirectory()) {
+                                        Main.jButton2.setVisible(true);
+                                        jProgressBar1.setString("0% | 0/" + files.size());
+                                        Main.jProgressBar1.setMaximum(0);
+                                        AES.AESThread(paths, Statics.directory, false, 0);
+                                    }
                                 }
                             }
                             if (Statics.toolMode == 1) {
                                 if (files.size() <= 1) {
                                     if (filesf.toString().endsWith(".i-cc")) {
-                                        Files.move(filesf.toPath(), Paths.get(Statics.receiveFolder + "\\" + filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
+                                        Files.move(filesf.toPath(), Paths.get(Statics.receiveFolder + File.separator + filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
                                         Main.jTextArea1.append(filesf.getName() + " has been moved to the n-box folder\n");
                                         Folder.listZipFiles();
                                     } else {
@@ -114,6 +107,15 @@ class DragDrop implements DropTargetListener {
                                     GUI.labelCutterThread(Main.jAlertLabel, "only 1 file is allowed at once", 10, 25, 750, false);
                                 }
                             }
+                            if (Statics.toolMode == 2) {
+                                if (filesf.isDirectory()) {
+                                    Folder.getFileDropCount(filesf);
+                                    Folder.recursiveFileDropThread(filesf, Statics.sendFolder);
+                                } else {
+                                    Files.move(filesf.toPath(), Paths.get(Statics.sendFolder + File.separator + filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
+                                }
+                            }
+                            GUI.t.interrupt();
                         }
                     } else {
                         if (GUI.t.isAlive()) {
@@ -176,6 +178,9 @@ class DragDrop_T implements Runnable {
             for (int x = jProgressBar1.getMaximum(); x >= 0; x--) {
                 Thread.sleep(5);
                 jProgressBar1.setValue(x);
+                if (x <= 1) {
+                    Main.progressbarBool = true;
+                }
             }
             if (jProgressBar1.getValue() == 0) {
                 Statics.fileIter = 0;

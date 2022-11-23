@@ -122,15 +122,11 @@ public class TreeView {
 
                 if (!fileFormat.isDirectory()) {
                     BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
-//                    Main.jCreationDateLabel.setText(GUI.formatDateTime(attr.lastModifiedTime()));
-//                    Main.jFileSizeLabel.setText(Memory.byteFormatter(fileFormat.length()));
                     GUI.labelCutterTreeThread(Main.jCreationDateLabel, GUI.formatDateTime(attr.lastModifiedTime()), 0, 16, 64, true);
                     GUI.labelCutterTreeThread(Main.jFileSizeLabel, Memory.byteFormatter(fileFormat.length()), 0, 16, 64, true);
                 }
             } else {
                 List<Long> fileSizes = new ArrayList<>();
-//            long sum = list.stream().mapToInt(Integer::intValue).sum();
-
                 for (int i = 0; i < Main.jTree1.getSelectionPaths().length; i++) {
                     File fileFormat = new File(root + masterFolder + Main.jTree1.getSelectionPaths()[i].toString().substring(1, Main.jTree1.getSelectionPaths()[i].toString().length() - 1).replaceAll(", ", "\\\\"));
 

@@ -162,7 +162,7 @@ public class Login {
     }
 
     public static void sendKey() {
-        Path sendKeyPath = Paths.get(Statics.sendFolder + "\\send.key");
+        Path sendKeyPath = Paths.get(Statics.sendFolder + File.separator + "send.key");
         try {
             List<String> lines = Arrays.asList(Hasher.finalizeHash(recipientUsername, true), Hasher.finalizeHash(recipientPassword, false));
 //            List<String> lines = Arrays.asList(Hasher.modHash(recipientPassword));
@@ -200,7 +200,7 @@ public class Login {
                 unzipFile(Statics.zipFileName + ".i-cc", Statics.zipFileName.replaceAll(".i-cc", ""));
                 Main.toolBtnsBool(true);
                 try {
-                    BufferedReader brTest = new BufferedReader(new FileReader(zipFileName + "\\send.key"));
+                    BufferedReader brTest = new BufferedReader(new FileReader(zipFileName + File.separator + "send.key"));
                     String usernameRead = Hasher.readKey(brTest.readLine(), username);
                     String passwordRead = Hasher.readKey(brTest.readLine(), recipientPassword);
 
@@ -280,7 +280,6 @@ public class Login {
                     GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript, " + username + ".", 20, 40, 1200, false);
                     Main.dragDropper();
                     Main.jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
-                    Main.jLabel10.setToolTipText("drop box will encrypt & decrypt any files dropped here");
                     Main.jToolPanel.requestFocus();
                     b = true;
                 }

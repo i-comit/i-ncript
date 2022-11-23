@@ -29,7 +29,7 @@ public class Folder {
 
     public static void prepareZipFile() throws IOException {
         //SEND
-        sendFolderStr = Statics.sendFolder + "\\" + firstLastChar(Statics.recipientUsername) + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMddmmss"));
+        sendFolderStr = Statics.sendFolder + File.separator + firstLastChar(Statics.recipientUsername) + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMddmmss"));
         zipFile(Statics.sendFolder, ".i-cc", sendFolderStr);
         GUI.resetProgressBar(Main.jProgressBar2);
         Main.toolBtnsBool(true);
@@ -178,5 +178,63 @@ public class Folder {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void recursiveFileDropThread(File filesf, Path path) {
+        Thread t = new Thread(() -> recursiveFileDrop_T.recursiveFileDrop(filesf, path));
+        t.start();
+    }
+
+    public static int fileDropCount;
+
+    public static int getFileDropCount(File filesf) {
+        fileDropCount = 0;
+        try {
+            fileDropCount = GUI.countAllFiles(filesf.toPath());
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return fileDropCount;
+    }
+
+}
+
+class recursiveFileDrop_T implements Runnable {
+
+    public void run() {
+
+    }
+    public static int fileDropIter;
+
+    public static void recursiveFileDrop(File filesf, Path path) {
+        Paths.get(path + File.separator + filesf.getName()).toFile().mkdir();
+        File[] filesArr = filesf.listFiles();
+        for (int x = 0; x < filesArr.length; x++) {
+            if (!filesArr[x].isDirectory()) {
+                if (!filesArr[x].getName().endsWith("Thumbs.db")) {
+                    try {
+                        Files.move(filesArr[x].toPath(), Paths.get(path + File.separator + filesf.getName() + File.separator + filesArr[x].getName()), StandardCopyOption.REPLACE_EXISTING);
+                        fileDropIter++;
+                        Main.jAlertLabel.setText("moved " + fileDropIter + " files");
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            } else {
+                System.out.println(filesArr[x]);
+                System.out.println(Paths.get(path + File.separator + filesArr[x].getName()));
+                String parentStr = filesArr[x].getParent();
+                String parentFile = Paths.get(parentStr).toFile().getName();
+//                System.out.println("W PARENT " + Paths.get(path + File.separator + parentFile + File.separator + filesArr[x].getName()));
+//                System.out.println("W PARENT 2 " + parentFile);
+                recursiveFileDrop(filesArr[x], Paths.get(path + File.separator + parentFile));
+            }
+        }
+        if (fileDropIter == Folder.fileDropCount) {
+            GUI.labelCutterThread(Main.jAlertLabel, recursiveFileDrop_T.fileDropIter + " files moved to o-box", 10, 25, 750, false);
+            Main.jTextArea1.append(recursiveFileDrop_T.fileDropIter + " files moved to o-box\n");
+            TreeView.populateStoreTree(Statics.sendFolder);
+        }
+        filesf.delete();
     }
 }
