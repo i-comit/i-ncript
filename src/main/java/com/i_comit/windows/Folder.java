@@ -37,7 +37,7 @@ public class Folder {
         deleteDirectory(Statics.sendFolder.toFile());
         Main.jRadioButton2.setEnabled(true);
         Main.jRadioButton2.setSelected(false);
-        Main.dragDrop.setVisible(false);
+        Main.dragDrop.setVisible(true);
         GUI.getGB();
     }
 
@@ -87,6 +87,7 @@ public class Folder {
                 }
             }
             Main.jList1.setSelectedIndex(0);
+            TreeView.populateStoreTree(Statics.receiveFolder);
             GUI.getGB();
         }
     }
@@ -227,19 +228,24 @@ class recursiveFileDrop_T implements Runnable {
                     }
                 }
             } else {
-                System.out.println(filesArr1);
-                System.out.println(Paths.get(path + File.separator + filesArr1.getName()));
+//                System.out.println(filesArr1);
+//                System.out.println(Paths.get(path + File.separator + filesArr1.getName()));
                 String parentStr = filesArr1.getParent();
                 String parentFile = Paths.get(parentStr).toFile().getName();
                 recursiveFileSendDrop(filesArr1, Paths.get(path + File.separator + parentFile));
             }
         }
         if (fileDropIter == Folder.fileDropCount) {
+            GUI.t.interrupt();
             GUI.labelCutterThread(Main.jAlertLabel, recursiveFileDrop_T.fileDropIter + " files moved to o-box", 10, 25, 750, false);
             Main.jTextArea1.append(recursiveFileDrop_T.fileDropIter + " files moved to o-box\n");
             TreeView.populateStoreTree(Statics.sendFolder);
         }
         filesf.delete();
+    }
+    
+    public static void recursiveFolderDelete(File filesf){
+        
     }
 
     public static void recursiveFileStoreDrop(File filesf, Path path, List<Path> recursiveStorePaths) {
@@ -251,7 +257,6 @@ class recursiveFileDrop_T implements Runnable {
                 }
             } else {
                 System.out.println(filesArr1);
-                String parentStr = filesArr1.getParent();
                 recursiveFileStoreDrop(filesArr1, path, recursiveStorePaths);
             }
         }

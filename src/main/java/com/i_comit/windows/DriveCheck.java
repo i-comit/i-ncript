@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import javax.swing.JLabel;
 
 /**
@@ -20,6 +21,7 @@ import javax.swing.JLabel;
 public class DriveCheck extends javax.swing.JFrame {
 
     public static int driveState = 0;
+    private URL fontFile = getClass().getResource("/polentical-neon.ttf");
 
     public DriveCheck() {
         initComponents();
@@ -101,11 +103,11 @@ public class DriveCheck extends javax.swing.JFrame {
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti.png")));
         setResizable(false);
 
-        jLabel1.setFont(new java.awt.Font("Polentical Neon", 0, 14)); // NOI18N
+        jLabel1.setFont(Statics.registerCustomFont(14, fontFile));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("i-ncript must be in a");
 
-        jLabel2.setFont(new java.awt.Font("Polentical Neon", 0, 14)); // NOI18N
+        jLabel2.setFont(Statics.registerCustomFont(14, fontFile));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("the -------- folder must");
 

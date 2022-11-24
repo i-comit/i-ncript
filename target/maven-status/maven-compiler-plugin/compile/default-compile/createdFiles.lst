@@ -12,6 +12,7 @@ com\i_comit\windows\Main.class
 com\i_comit\windows\Main$11.class
 com\i_comit\windows\Main$9.class
 com\i_comit\windows\Main$34.class
+com\i_comit\windows\Miscellaneous.class
 com\i_comit\windows\DragDrop_T.class
 com\i_comit\windows\Main$14.class
 com\i_comit\windows\AES.class
@@ -65,6 +66,7 @@ com\i_comit\windows\DriveCheck.class
 com\i_comit\windows\Main$39.class
 com\i_comit\windows\Main$25.class
 com\i_comit\windows\GUI.class
+com\i_comit\windows\Statics$OS.class
 com\i_comit\windows\Main$3.class
 com\i_comit\windows\Main$16.class
 com\i_comit\windows\FileHider_T.class
