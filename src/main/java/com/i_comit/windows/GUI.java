@@ -73,22 +73,22 @@ public class GUI {
         try ( Stream<Path> walk = Files.walk(path)) {
             int result2 = 0;
             switch (Statics.AESMode) {
-                case 0 -> {
+                case 0:
                     result2 = Math.toIntExact(walk.filter(Files::isRegularFile)
                             .filter(p -> !p.getFileName().toString().endsWith(".enc"))
                             .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
                             .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
                             .count());
                     result = result2;
-                }
-                case 1 -> {
+                break;
+                case 1:
                     result2 = Math.toIntExact(walk.filter(Files::isRegularFile)
                             .filter(p -> p.getFileName().toString().endsWith(".enc"))
                             .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
                             .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
                             .count());
                     result = result2;
-                }
+                break;
             }
         }
         return result;
@@ -118,18 +118,18 @@ public class GUI {
         List<Path> result = null;
         try ( Stream<Path> walk = Files.walk(path)) {
             switch (AESMode) {
-                case 0 ->
+                case 0:
                     result = walk.filter(Files::isRegularFile)
                             .filter(p -> !p.getFileName().toString().endsWith(".enc"))
                             .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
                             .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
-                            .collect(Collectors.toList());
-                case 1 ->
+                            .collect(Collectors.toList());break;
+                case 1:
                     result = walk.filter(Files::isRegularFile)
                             .filter(p -> p.getFileName().toString().endsWith(".enc"))
                             .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
                             .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
-                            .collect(Collectors.toList());
+                            .collect(Collectors.toList());break;
             }
         }
         return result;
@@ -144,16 +144,16 @@ public class GUI {
             try {
                 AudioPlayer.audioPlayerThread("ding-sfx.wav");
                 switch (Statics.AESMode) {
-                    case 0 -> {
+                    case 0:
                         GUI.t.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "encrypted " + Statics.fileIter + " files", 10, 20, 400, false);
                         Main.jTextArea1.append("encrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
-                    }
-                    case 1 -> {
+                    break;
+                    case 1:
                         GUI.t.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "decrypted " + Statics.fileIter + " files", 10, 20, 400, false);
                         Main.jTextArea1.append("decrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
-                    }
+                    break;
                 }
                 Thread.sleep(200);
                 for (int x = progressBar.getMaximum(); x >= 0; x--) {
@@ -167,14 +167,14 @@ public class GUI {
                 if (progressBar.getValue() == 0) {
                     progressBar.setStringPainted(false);
                     switch (Statics.toolMode) {
-                        case 0 ->
-                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.path);
-                        case 1 ->
-                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.receiveFolder);
-                        case 2 ->
-                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.sendFolder);
-                        case 3 ->
-                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.path);
+                        case 0:
+                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.path);break;
+                        case 1:
+                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.receiveFolder);break;
+                        case 2:
+                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.sendFolder);break;
+                        case 3:
+                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.path);break;
                     }
                 }
 
@@ -296,12 +296,12 @@ class logger_T implements Runnable {
         try {
             Thread.sleep(50);
             switch (toolMode) {
-                case 0 ->
-                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(21, outputFile.getPath().length()) + "\n");
-                case 1 ->
-                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(18, outputFile.getPath().length()) + "\n");
-                case 2 ->
-                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(18, outputFile.getPath().length()) + "\n");
+                case 0:
+                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(21, outputFile.getPath().length()) + "\n");break;
+                case 1:
+                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(18, outputFile.getPath().length()) + "\n");break;
+                case 2:
+                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(18, outputFile.getPath().length()) + "\n");break;
             }
             Thread.sleep(50);
             Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());

@@ -88,38 +88,38 @@ public class Memory {
             lines.remove(6);
             lines.add(6, "java-options=-Xms" + selectedHeap + "g");
             switch (selectedHeap) {
-                case 1 -> {
+                case 1:
                     lines.remove(7);
                     lines.add(7, "java-options=-Xmx" + 2 + "g");
-                }
-                case 2 -> {
+                    break;
+                case 2:
                     lines.remove(7);
                     lines.add(7, "java-options=-Xmx" + 4 + "g");
-                }
-                case 3 -> {
+                    break;
+                case 3:
                     lines.remove(7);
                     lines.add(7, "java-options=-Xmx" + 6 + "g");
-                }
-                case 4 -> {
+                    break;
+                case 4:
                     lines.remove(7);
                     lines.add(7, "java-options=-Xmx" + 8 + "g");
-                }
-                case 5 -> {
+                    break;
+                case 5:
                     lines.remove(7);
                     lines.add(7, "java-options=-Xmx" + 10 + "g");
-                }
-                case 6 -> {
+                    break;
+                case 6:
                     lines.remove(7);
                     lines.add(7, "java-options=-Xmx" + 12 + "g");
-                }
-                case 7 -> {
+                    break;
+                case 7:
                     lines.remove(7);
                     lines.add(7, "java-options=-Xmx" + 14 + "g");
-                }
-                case 8 -> {
+                    break;
+                case 8:
                     lines.remove(7);
                     lines.add(7, "java-options=-Xmx" + 16 + "g");
-                }
+                    break;
 
             }
             Files.write(Paths.get(root + Main.masterFolder + "\\app\\i-ncript.cfg"), lines, StandardCharsets.UTF_8);

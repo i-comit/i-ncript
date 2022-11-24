@@ -34,7 +34,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "";
+    public static String root = "D:\\";
     public static String masterFolder = "--------" + File.separator;
 
     private static final String appVer = "1.7.5";
@@ -42,81 +42,91 @@ public class Main extends javax.swing.JFrame {
     private static final int year = Year.now().getValue();
 
     public Main() {
-        root = Paths.get("").toAbsolutePath().toString();
-        if (Memory.checkWMIC()) {
-            root = root.substring(0, 3);
-            initComponents();
-            Path runtime = Paths.get(root + masterFolder + "runtime");
-            Path app = Paths.get(root + masterFolder + "app");
-            if (runtime.toFile().exists()) {
-                try {
-                    Files.setAttribute(runtime, "dos:hidden", true);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            }
-            if (app.toFile().exists()) {
-                try {
-                    Files.setAttribute(app, "dos:hidden", true);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            }
-            jStorePanel.setVisible(true);
-            jSendPanel.setVisible(false);
-            jReceivePanel.setVisible(false);
-            jRadioButton2.setVisible(false);
-            jRadioButton3.setVisible(false);
-            jScrollPane5.setVisible(false);
-
-            if (!keyFile.exists()) {
-                jToolPanel.setVisible(false);
-                loginLabelVisibleBool(false);
-                this.setSize(540, 241);
-                this.setLocationRelativeTo(null);
-            } else {
-                Memory.getHeapSize();
-                setKeybinding();
-                loginLabelVisibleBool(true);
-                jUsernameLabel.setText("enter username");
-                jPasswordLabel.setText("enter password");
-                generateFolders();
-
-                jToolPanel.setVisible(false);
-                jButton2.setVisible(false);
-            }
-            jProgressBar2.setVisible(false);
-            dragDrop.setVisible(false);
+        Statics.getOS();
+        if (Statics.os == OS.WINDOWS) {
+            System.out.println("amogus");
         }
+//        root = Paths.get("").toAbsolutePath().toString();
+//        if (Memory.checkWMIC()) {
+        root = root.substring(0, 3);
+        initComponents();
+        Path runtime = Paths.get(root + masterFolder + "runtime");
+        Path app = Paths.get(root + masterFolder + "app");
+        if (runtime.toFile().exists()) {
+            try {
+                Files.setAttribute(runtime, "dos:hidden", true);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        if (app.toFile().exists()) {
+            try {
+                Files.setAttribute(app, "dos:hidden", true);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        jStorePanel.setVisible(true);
+        jSendPanel.setVisible(false);
+        jReceivePanel.setVisible(false);
+        jRadioButton2.setVisible(false);
+        jRadioButton3.setVisible(false);
+        jScrollPane5.setVisible(false);
+
+        if (!keyFile.exists()) {
+            jToolPanel.setVisible(false);
+            loginLabelVisibleBool(false);
+            this.setSize(540, 241);
+            this.setLocationRelativeTo(null);
+        } else {
+            Memory.getHeapSize();
+            setKeybinding();
+            loginLabelVisibleBool(true);
+            jUsernameLabel.setText("enter username");
+            jPasswordLabel.setText("enter password");
+            generateFolders();
+
+            jToolPanel.setVisible(false);
+            jButton2.setVisible(false);
+        }
+        jProgressBar2.setVisible(false);
+        dragDrop.setVisible(false);
+//        }
     }
 
     private void getKeyBinding(int keyCode, JPanel jPanel, AbstractAction action) {
         int modifier = 0;
         switch (keyCode) {
-            case KeyEvent.VK_E ->
+            case KeyEvent.VK_E:
                 modifier = InputEvent.SHIFT_DOWN_MASK;
-            case KeyEvent.VK_D ->
+                break;
+            case KeyEvent.VK_D:
                 modifier = InputEvent.SHIFT_DOWN_MASK;
-            case KeyEvent.VK_S ->
+                break;
+            case KeyEvent.VK_S:
                 modifier = InputEvent.SHIFT_DOWN_MASK;
-            case KeyEvent.VK_X ->
+                break;
+            case KeyEvent.VK_X:
                 modifier = InputEvent.SHIFT_DOWN_MASK;
-            case KeyEvent.VK_F ->
+                break;
+            case KeyEvent.VK_F:
                 modifier = InputEvent.SHIFT_DOWN_MASK;
-            case KeyEvent.VK_SPACE ->
+                break;
+            case KeyEvent.VK_SPACE:
                 modifier = InputEvent.SHIFT_DOWN_MASK;
-            case KeyEvent.VK_V -> {
-            }
-            case KeyEvent.VK_ENTER -> {
-            }
-            case KeyEvent.VK_1 -> {
-            }
-            case KeyEvent.VK_2 -> {
-            }
-            case KeyEvent.VK_3 -> {
-            }
-            case KeyEvent.VK_4 -> {
-            }
+                break;
+            case KeyEvent.VK_V:
+                break;
+            case KeyEvent.VK_ENTER:
+                break;
+            case KeyEvent.VK_1:
+                break;
+            case KeyEvent.VK_2:
+                break;
+            case KeyEvent.VK_3:
+                break;
+            case KeyEvent.VK_4:
+                break;
         }
         jPanel.getInputMap().put(KeyStroke.getKeyStroke(keyCode, modifier), keyCode);
         jPanel.getActionMap().put(keyCode, action);
@@ -193,26 +203,27 @@ public class Main extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 switch (toolMode) {
-                    case 0 -> {
+                    case 0:
                         TreeView.populateStoreTree(path);
                         GUI.t.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "reloaded " + path.toFile().getName() + " folder", 0, 25, 600, false);
-                    }
-                    case 1 -> {
+                        break;
+                    case 1:
                         TreeView.populateStoreTree(receiveFolder);
                         GUI.t.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "reloaded " + receiveFolder.toFile().getName() + " folder", 0, 25, 600, false);
-                    }
-                    case 2 -> {
+                        break;
+                    case 2:
                         TreeView.populateStoreTree(sendFolder);
                         GUI.t.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "reloaded " + sendFolder.toFile().getName() + " folder", 0, 25, 600, false);
-                    }
-                    case 3 -> {
+                        break;
+                    case 3:
                         TreeView.populateStoreTree(path);
                         GUI.t.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "reloaded " + path.toFile().getName() + " folder", 0, 25, 600, false);
-                    }
+                        break;
+
                 }
             }
         });
@@ -276,7 +287,7 @@ public class Main extends javax.swing.JFrame {
         } else {
             Random rand = new Random();
             //0 to 2
-            int rand_int1 = rand.nextInt(0, 3);
+            int rand_int1 = rand.nextInt(3);
             System.out.println("random int " + rand_int1);
             switch (rand_int1) {
                 case 0 ->
