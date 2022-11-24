@@ -1,6 +1,7 @@
 com\i_comit\windows\Main$18.class
 com\i_comit\windows\Main$21.class
 com\i_comit\windows\Main$31.class
+com\i_comit\windows\Main$41.class
 com\i_comit\windows\Memory.class
 com\i_comit\windows\Main$28.class
 com\i_comit\windows\Main$38.class
@@ -48,6 +49,7 @@ com\i_comit\windows\dev\Authenticator.class
 com\i_comit\windows\Main$17.class
 com\i_comit\windows\Main$27.class
 com\i_comit\windows\Main$37.class
+com\i_comit\windows\recursiveFileDrop_T.class
 com\i_comit\windows\Main$6.class
 com\i_comit\windows\DragDrop.class
 com\i_comit\windows\DriveCheck$1.class

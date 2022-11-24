@@ -1054,7 +1054,6 @@ public class Main extends javax.swing.JFrame {
         if (jButton1.getText().equals("RESTART")) {
             jButton1.setToolTipText("apply heap size by closing");
             Memory.changeHeapSize();
-            System.exit(0);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -1259,20 +1258,11 @@ public class Main extends javax.swing.JFrame {
             jTextField1.setEnabled(false);
             jPasswordField1.setEnabled(false);
         }
+        String cwd = root + masterFolder;
+        System.out.println(cwd);
     }//GEN-LAST:event_jSlider1StateChanged
 
     private void dragDropMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dragDropMouseReleased
-//        List<Path> paths = new ArrayList<>();
-//        paths.add(DragDrop.filesf.toPath());
-////        System.out.println("amog");
-//        if (DragDrop.filesf == null) {
-//        }
-
-//        if (!jTree1.isSelectionEmpty() || DragDrop.filesf != null) {
-        this.setSize(780, 266);
-//        } else {
-//            this.setSize(780, 241);
-//        }
     }//GEN-LAST:event_dragDropMouseReleased
     /**
      * @param args the command line arguments

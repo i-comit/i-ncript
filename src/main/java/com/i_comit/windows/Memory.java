@@ -20,6 +20,7 @@ import java.nio.file.Paths;
 import java.text.CharacterIterator;
 import java.text.DecimalFormat;
 import java.text.StringCharacterIterator;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -75,7 +76,7 @@ public class Memory {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-        }else{
+        } else {
             Main.jHeapLabel.setVisible(false);
             Main.jSlider1.setVisible(false);
         }
@@ -122,6 +123,9 @@ public class Memory {
 
             }
             Files.write(Paths.get(root + Main.masterFolder + "\\app\\i-ncript.cfg"), lines, StandardCharsets.UTF_8);
+            Runtime.getRuntime().exec("cmd /c " + root + Main.masterFolder + "i-ncript.exe");
+            System.exit(0);
+
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -129,18 +133,12 @@ public class Memory {
 
     public static boolean checkWMIC() {
         boolean b = false;
-//        boolean b1 = false;
         String logicaldisk = "wmic logicaldisk where name=" + "\"" + Main.root.substring(0, 2) + "\"" + " get description";
-//        String diskdrive = "wmic diskdrive where model=" + "\"" + "SMI USB DISK USB Device" + "\"" + " get mediatype";
         String s;
-//        String s1;
         try {
             Process process = Runtime.getRuntime().exec(logicaldisk);
-//            Process process1 = Runtime.getRuntime().exec(diskdrive);
             try ( BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-//                BufferedReader reader1 = new BufferedReader(new InputStreamReader(process1.getInputStream()));
                 reader.readLine();
-//                reader1.readLine();
                 while ((s = reader.readLine()) != null) {
                     if (s.trim().length() != 0) {
                         if (s.trim().equals("Removable Disk")) {

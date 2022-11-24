@@ -47,20 +47,16 @@ public class TreeView {
 
     private static void listRoot(List<Path> directories) {
         File[] filesArr = directories.get(0).toFile().listFiles();
-//        System.out.println("CHILD 0 DIR " + directories.get(0).getFileName());
-        for (int x = 0; x < filesArr.length; x++) {
-            DefaultMutableTreeNode dirNodes = new DefaultMutableTreeNode(filesArr[x].getName()); // level 2 (leaf) node
-//            treeRoot.add(fileNodes);
-            if (!filesArr[x].isDirectory()) {
-//                System.out.println("directories in root " + filesArr[x]);
-                if (!filesArr[x].getName().endsWith("Thumbs.db")) {
-                    DefaultMutableTreeNode fileNodes = new DefaultMutableTreeNode(filesArr[x].getName()); // level 2 (leaf) node
+        for (File filesArr1 : filesArr) {
+            DefaultMutableTreeNode dirNodes = new DefaultMutableTreeNode(filesArr1.getName()); // level 2 (leaf) node
+            if (!filesArr1.isDirectory()) {
+                if (!filesArr1.getName().endsWith("Thumbs.db")) {
+                    DefaultMutableTreeNode fileNodes = new DefaultMutableTreeNode(filesArr1.getName()); // level 2 (leaf) node
                     treeRoot.add(fileNodes);
                 }
             } else {
-//                System.out.println("files in root " + filesArr[x]);
                 treeRoot.add(dirNodes);
-                listFiles(filesArr[x], dirNodes);
+                listFiles(filesArr1, dirNodes);
             }
         }
     }
@@ -68,14 +64,14 @@ public class TreeView {
     private static void listFiles(File file, DefaultMutableTreeNode dirNodes) {
         File[] filesArr = file.listFiles();
 //        System.out.println("CHILD 2 DIR " + file.getName());
-        for (int x = 0; x < filesArr.length; x++) {
-            if (!filesArr[x].isDirectory()) {
-                if (!filesArr[x].getName().endsWith("Thumbs.db")) {
-                    DefaultMutableTreeNode fileNodes = new DefaultMutableTreeNode(filesArr[x].getName()); // level 2 (leaf) node
+        for (File filesArr1 : filesArr) {
+            if (!filesArr1.isDirectory()) {
+                if (!filesArr1.getName().endsWith("Thumbs.db")) {
+                    DefaultMutableTreeNode fileNodes = new DefaultMutableTreeNode(filesArr1.getName()); // level 2 (leaf) node
                     dirNodes.add(fileNodes);
                 }
             } else {
-                listFilesRecursively(filesArr[x], dirNodes);
+                listFilesRecursively(filesArr1, dirNodes);
             }
         }
     }
@@ -84,18 +80,16 @@ public class TreeView {
         DefaultMutableTreeNode subDirNodes = new DefaultMutableTreeNode(file.getName()); // level 2 (leaf) node
         dirNodes.add(subDirNodes);
         File[] filesArr = file.listFiles();
-//        System.out.println("Files in listFilesRecursively " + Arrays.toString(filesArr));
-        for (int x = 0; x < filesArr.length; x++) {
-            if (!filesArr[x].isDirectory()) {
-                if (!filesArr[x].getName().endsWith("Thumbs.db")) {
-                    DefaultMutableTreeNode fileNodes = new DefaultMutableTreeNode(filesArr[x].getName()); // level 2 (leaf) node
+        for (File filesArr1 : filesArr) {
+            if (!filesArr1.isDirectory()) {
+                if (!filesArr1.getName().endsWith("Thumbs.db")) {
+                    DefaultMutableTreeNode fileNodes = new DefaultMutableTreeNode(filesArr1.getName()); // level 2 (leaf) node
                     subDirNodes.add(fileNodes);
                 }
-//                System.out.println("files in recursive root folder is " + filesArr[x].getName());
             } else {
-                DefaultMutableTreeNode subDirNodes0 = new DefaultMutableTreeNode(filesArr[x].getName()); // level 2 (leaf) node
+                DefaultMutableTreeNode subDirNodes0 = new DefaultMutableTreeNode(filesArr1.getName()); // level 2 (leaf) node
                 subDirNodes.add(subDirNodes0);
-                listFiles(filesArr[x], subDirNodes0);
+                listFiles(filesArr1, subDirNodes0);
             }
         }
         dirNodes.add(subDirNodes);

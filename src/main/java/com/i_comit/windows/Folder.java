@@ -215,23 +215,23 @@ class recursiveFileDrop_T implements Runnable {
     public static void recursiveFileSendDrop(File filesf, Path path) {
         Paths.get(path + File.separator + filesf.getName()).toFile().mkdir();
         File[] filesArr = filesf.listFiles();
-        for (int x = 0; x < filesArr.length; x++) {
-            if (!filesArr[x].isDirectory()) {
-                if (!filesArr[x].getName().endsWith("Thumbs.db")) {
+        for (File filesArr1 : filesArr) {
+            if (!filesArr1.isDirectory()) {
+                if (!filesArr1.getName().endsWith("Thumbs.db")) {
                     try {
-                        Files.move(filesArr[x].toPath(), Paths.get(path + File.separator + filesf.getName() + File.separator + filesArr[x].getName()), StandardCopyOption.REPLACE_EXISTING);
+                        Files.move(filesArr1.toPath(), Paths.get(path + File.separator + filesf.getName() + File.separator + filesArr1.getName()), StandardCopyOption.REPLACE_EXISTING);
                         fileDropIter++;
                         Main.jAlertLabel.setText("moved " + fileDropIter + " files");
-                    } catch (IOException ex) {
+                    }catch (IOException ex) {
                         ex.printStackTrace();
                     }
                 }
             } else {
-                System.out.println(filesArr[x]);
-                System.out.println(Paths.get(path + File.separator + filesArr[x].getName()));
-                String parentStr = filesArr[x].getParent();
+                System.out.println(filesArr1);
+                System.out.println(Paths.get(path + File.separator + filesArr1.getName()));
+                String parentStr = filesArr1.getParent();
                 String parentFile = Paths.get(parentStr).toFile().getName();
-                recursiveFileSendDrop(filesArr[x], Paths.get(path + File.separator + parentFile));
+                recursiveFileSendDrop(filesArr1, Paths.get(path + File.separator + parentFile));
             }
         }
         if (fileDropIter == Folder.fileDropCount) {
@@ -244,16 +244,15 @@ class recursiveFileDrop_T implements Runnable {
 
     public static void recursiveFileStoreDrop(File filesf, Path path, List<Path> recursiveStorePaths) {
         File[] filesArr = filesf.listFiles();
-        for (int x = 0; x < filesArr.length; x++) {
-            if (!filesArr[x].isDirectory()) {
-                if (!filesArr[x].getName().endsWith("Thumbs.db")) {
-                    recursiveStorePaths.add(filesArr[x].toPath());
+        for (File filesArr1 : filesArr) {
+            if (!filesArr1.isDirectory()) {
+                if (!filesArr1.getName().endsWith("Thumbs.db")) {
+                    recursiveStorePaths.add(filesArr1.toPath());
                 }
             } else {
-                System.out.println(filesArr[x]);
-                String parentStr = filesArr[x].getParent();
-                String parentFile = Paths.get(parentStr).toFile().getName();
-                recursiveFileStoreDrop(filesArr[x], path, recursiveStorePaths);
+                System.out.println(filesArr1);
+                String parentStr = filesArr1.getParent();
+                recursiveFileStoreDrop(filesArr1, path, recursiveStorePaths);
             }
         }
     }
