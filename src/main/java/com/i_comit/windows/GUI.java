@@ -142,7 +142,7 @@ public class GUI {
         if (progressBar == Main.jProgressBar1) {
             progressBar.setString("100% | " + AES_T.paths.size() + "/" + AES_T.paths.size());
             try {
-                AudioPlayer.audioPlayerThread("aes-sfx.wav");
+                AudioPlayer.audioPlayerThread("ding-sfx.wav");
                 switch (Statics.AESMode) {
                     case 0 -> {
                         GUI.t.interrupt();

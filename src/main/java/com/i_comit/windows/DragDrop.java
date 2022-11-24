@@ -178,7 +178,7 @@ class DragDrop_T implements Runnable {
         Main.jButton2.setVisible(false);
         try {
             Thread.sleep(400);
-            AudioPlayer.audioPlayerThread("aes-sfx.wav");
+            AudioPlayer.audioPlayerThread("ding-sfx.wav");
             GUI.labelCutterThread(jAlertLabel, decFiles + " encrypted | " + encFiles + " decrypted", 15, 30, 300, false);
 
             Thread.sleep(300);
