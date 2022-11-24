@@ -108,21 +108,28 @@ class DragDrop implements DropTargetListener {
                                         Main.jTextArea1.append(filesf.getName() + " has been moved to the n-box folder\n");
                                         Folder.listZipFiles();
                                     } else {
+                                        GUI.t.interrupt();
                                         GUI.labelCutterThread(Main.jAlertLabel, "only .i-cc files are allowed", 10, 25, 750, false);
                                     }
                                 } else {
+                                    GUI.t.interrupt();
                                     GUI.labelCutterThread(Main.jAlertLabel, "only 1 file is allowed at once", 10, 25, 750, false);
                                 }
                             }
                             if (Statics.toolMode == 2) {
-                                if (filesf.isDirectory()) {
-                                    Folder.getFileDropCount(filesf);
-                                    Folder.recursiveFileDropSendThread(filesf, Statics.sendFolder);
+                                if (!filesf.getParent().equals(Statics.sendFolder.toString())) {
+                                    if (filesf.isDirectory()) {
+                                        Folder.getFileDropCount(filesf);
+                                        Folder.recursiveFileDropSendThread(filesf, Statics.sendFolder);
+                                        filesf.delete();
+                                    } else {
+                                        Files.move(filesf.toPath(), Paths.get(Statics.sendFolder + File.separator + filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
+                                    }
                                 } else {
-                                    Files.move(filesf.toPath(), Paths.get(Statics.sendFolder + File.separator + filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
+                                    GUI.t.interrupt();
+                                    GUI.labelCutterThread(Main.jAlertLabel, "files/folders already in o-box", 10, 25, 750, false);
                                 }
                             }
-                            GUI.t.interrupt();
                         }
                     } else {
                         if (GUI.t.isAlive()) {

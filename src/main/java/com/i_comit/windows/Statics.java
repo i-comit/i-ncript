@@ -7,8 +7,12 @@ package com.i_comit.windows;
 import static com.i_comit.windows.GUI.listAESPaths;
 import static com.i_comit.windows.HotFiler_T.watchService;
 import static com.i_comit.windows.Main.*;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -101,6 +105,22 @@ public class Statics {
         }
         System.out.println(os);
     }
+    public static Font customFont;
+
+    public static Font registerCustomFont(float fontSize, URL fontFile) {
+        try {
+            //create the font to use. Specify the size!
+            customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile.openStream()).deriveFont(fontSize);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            //register the font
+            ge.registerFont(customFont);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (FontFormatException e) {
+            e.printStackTrace();
+        }
+        return customFont;
+    }
 
     public static void resetStaticInts() {
         fileIter = 0;
@@ -174,7 +194,7 @@ public class Statics {
                 jStorePanel.setVisible(false);
                 jSendPanel.setVisible(false);
                 jReceivePanel.setVisible(true);
-                jTree1.setDragEnabled(true);
+                jTree1.setDragEnabled(false);
 
                 jLabel5.setVisible(false);
                 jLabel6.setVisible(false);
@@ -197,14 +217,13 @@ public class Statics {
                 jLabel5.setVisible(true);
                 jReceivePanel.setVisible(false);
                 jTree1.setDragEnabled(false);
-//                dragDrop.setVisible(false);
 
                 jLabel7.setVisible(false);
                 jLabel8.setVisible(false);
                 jRadioButton3.setVisible(false);
                 jLabel10.setText("O-BOX MODE");
                 jLabel11.setText("MOVE FILES TO O-BOX");
-                dragDrop.setToolTipText("drop box will move 10 files or 1 folder into o-box folder");
+                dragDrop.setToolTipText("drop box will move files or folder into o-box folder");
                 FileHider.cleanUp(sendFolder);
                 TreeView.setRootName("o-box");
                 TreeView.populateStoreTree(sendFolder);
@@ -349,7 +368,7 @@ public class Statics {
 
     public static void collapseLogin(Main main) {
         main.setSize(780, 241);
-        jLabel1.setLocation(265, 8);
+        jLabel1.setLocation(265, 10);
         jLabel3.setLocation(367, 4);
         jAlertLabel.setLocation(265, 174);
         main.setLocationRelativeTo(null);
