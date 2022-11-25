@@ -291,16 +291,16 @@ public class Main extends javax.swing.JFrame {
             int rand_int1 = rand.nextInt(5);
             if (!Miscellaneous.holidayCheck()) {
                 switch (rand_int1) {
-                    case 0 ->
-                        GUI.labelCutterThread(jAlertLabel, "a data encryption app.", 80, 80, 100, true);
-                    case 1 ->
-                        GUI.labelCutterThread(jAlertLabel, "developed by i-comit LLC.", 80, 80, 100, true);
-                    case 2 ->
-                        GUI.labelCutterThread(jAlertLabel, "USB drive, reimagined.", 80, 80, 100, true);
-                    case 3 ->
-                        GUI.labelCutterThread(jAlertLabel, "also available on mac os.", 80, 80, 100, true);
-                    case 4 ->
-                        GUI.labelCutterThread(jAlertLabel, "also available on linux.", 80, 80, 100, true);
+                    case 0:
+                        GUI.labelCutterThread(jAlertLabel, "a data encryption app.", 80, 80, 100, true);break;
+                    case 1:
+                        GUI.labelCutterThread(jAlertLabel, "developed by i-comit LLC.", 80, 80, 100, true);break;
+                    case 2:
+                        GUI.labelCutterThread(jAlertLabel, "USB drive, reimagined.", 80, 80, 100, true);break;
+                    case 3:
+                        GUI.labelCutterThread(jAlertLabel, "also available on mac os.", 80, 80, 100, true);break;
+                    case 4:
+                        GUI.labelCutterThread(jAlertLabel, "also available on linux.", 80, 80, 100, true);break;
 
                 }
             }
