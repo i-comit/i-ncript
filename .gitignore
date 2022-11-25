@@ -26,3 +26,4 @@ hs_err_pid*
 
 src/test/java/**
 src/main/java/com/i_comit/windows/Test.java
+nbactions.xml
