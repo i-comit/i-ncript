@@ -188,7 +188,7 @@ public class Statics {
         GUI.getGB();
 
         switch (toolMode) {
-            case 1 -> {
+            case 1:
                 jSwitchMode.setText("N-BOX");
                 jSwitchMode.setToolTipText("current panel can decrypt .i-cc files inside n-box (inbox) folder");
                 jStorePanel.setVisible(false);
@@ -207,8 +207,8 @@ public class Statics {
                 FileHider.cleanUp(receiveFolder);
                 TreeView.setRootName("n-box");
                 TreeView.populateStoreTree(receiveFolder);
-            }
-            case 2 -> {
+                break;
+            case 2:
                 jSwitchMode.setText("O-BOX");
                 jSwitchMode.setToolTipText("current panel can encrypt files for sending from o-box (outbox) folder");
                 jStorePanel.setVisible(false);
@@ -227,8 +227,8 @@ public class Statics {
                 FileHider.cleanUp(sendFolder);
                 TreeView.setRootName("o-box");
                 TreeView.populateStoreTree(sendFolder);
-            }
-            case 3 -> {
+                break;
+            case 3:
                 jSwitchMode.setText("STORE");
                 jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
                 jStorePanel.setVisible(true);
@@ -245,7 +245,7 @@ public class Statics {
                 TreeView.setRootName("i-ncript");
                 TreeView.populateStoreTree(path);
                 toolMode = 0;
-            }
+                break;
         }
     }
 
@@ -263,11 +263,12 @@ public class Statics {
         }
         resetStaticInts();
         switch (AESMode) {
-            case 0 -> {
+            case 0:
                 jTextArea1.append("encryption of " + fileCount + " files stopped.\n");
-            }
-            case 1 ->
+                break;
+            case 1:
                 jTextArea1.append("decryption of " + fileCount + " files stopped.\n");
+                break;
         }
 
         jButton2.setVisible(false);

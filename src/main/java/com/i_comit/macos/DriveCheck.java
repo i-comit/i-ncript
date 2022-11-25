@@ -101,6 +101,7 @@ public class DriveCheck extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("i-ncript™");
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti.icns")));
+        setMaximumSize(new java.awt.Dimension(222, 60));
         setResizable(false);
 
         jLabel1.setFont(Statics.registerCustomFont(14, fontFile));

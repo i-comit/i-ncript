@@ -97,7 +97,7 @@ public class Hasher {
         StringBuilder sb = new StringBuilder();
 
         switch (length) {
-            case 7 -> {
+            case 7:
                 hashTrimmer = pw / 1000;
                 //Trims to 4 digits
                 sb.append(numReverser(hashTrimmer));
@@ -106,31 +106,30 @@ public class Hasher {
                 sb.append(numReverser(sbInt));
                 sb.append(sbInt);
                 username = sb.toString();
-            }
-            case 8 -> {
+            break;
+            case 8:
                 hashTrimmer = pw / 1;
                 sbInt = (int) Math.sqrt(hashTrimmer);
                 sb.append(sbInt);
                 sb.append(numReverser(sbInt));
                 sb.append(numReverser(hashTrimmer));
                 username = sb.toString();
-            }
-            case 9 -> {
+            break;
+            case 9:
                 hashTrimmer = pw / 10;
                 sbInt = (int) Math.sqrt(hashTrimmer);
                 sb.append(hashTrimmer);
                 sb.append(sbInt);
                 sb.append(numReverser(sbInt));
                 username = sb.toString();
-            }
-            case 10 -> {
+            break;
+            case 10:
                 hashTrimmer = pw / 100;
                 sb.append(hashTrimmer);
                 sb.append(numReverser(hashTrimmer));
                 username = sb.toString();
-            }
-            default -> {
-            }
+            break;
+            default:break;
         }
         return numPadder(username);
     }
@@ -144,7 +143,7 @@ public class Hasher {
         StringBuilder sb = new StringBuilder();
 
         switch (length) {
-            case 7 -> {
+            case 7:
                 hashTrimmer = pw / 1000;
                 //Trims to 4 digits
                 sb.append(hashTrimmer);
@@ -153,31 +152,30 @@ public class Hasher {
                 sb.append(sbInt);
                 sb.append(numReverser(sbInt));
                 password = sb.toString();
-            }
-            case 8 -> {
+            break;
+            case 8:
                 hashTrimmer = pw / 1;
                 sbInt = (int) Math.sqrt(hashTrimmer);
                 sb.append(sbInt);
                 sb.append(numReverser(hashTrimmer));
                 sb.append(numReverser(sbInt));
                 password = sb.toString();
-            }
-            case 9 -> {
+            break;
+            case 9:
                 hashTrimmer = pw / 10;
                 sbInt = (int) Math.sqrt(hashTrimmer);
                 sb.append(numReverser(sbInt));
                 sb.append(hashTrimmer);
                 sb.append(sbInt);
                 password = sb.toString();
-            }
-            case 10 -> {
+            break;
+            case 10:
                 hashTrimmer = pw / 100;
                 sb.append(numReverser(hashTrimmer));
                 sb.append(hashTrimmer);
                 password = sb.toString();
-            }
-            default -> {
-            }
+            break;
+            default: break;
         }
         return numPadder(password);
     }

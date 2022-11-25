@@ -140,27 +140,56 @@ public class Memory {
                 reader.readLine();
                 while ((s = reader.readLine()) != null) {
                     if (s.trim().length() != 0) {
-                        String driveDir = s.trim().substring(68);
+                        String driveDir = s.substring(68).trim();
                         if (driveDir.contains(Main.root)) {
                             System.out.println("driveDir " + driveDir);
                             String devPath = s.substring(0, 10).trim();
                             System.out.println("DEVPATH " + devPath);
                             String cwd = Paths.get("").toAbsolutePath().toString();
-                            System.out.println("CWD "+ cwd);
+                            System.out.println("CWD " + cwd);
+                            //This means that /the root has to be /Volumes/NO NAMES
 
                             //Check if device is an external USB
                             if (checkBash2(devPath)) {
                                 System.out.println("is external USB");
+                                //This means that the app is running inside a USB
+
+                                String temp = "/Volumes/NO NAME/sus--------/";
+                                String replacer = temp.replaceAll(driveDir, "");
+                                System.out.println("REPLACER " + replacer);
+//                                System.out.println("TEMP " + temp.substring(16, 26));
+                                System.out.println(Main.masterFolder);
+                                if (Main.root.contains(Main.masterFolder)) {
+                                    //The app has the masterFolder somewhere in it, next we will check if the masterFolder is in the right path
+                                    if (replacer.equals(Main.masterFolder)) {
+                                        Main.root = driveDir;
+                                        b = true;
+
+                                    } else {
+                                        System.out.println("-------- folder needs to be at USB root");
+                                        DriveCheck.driveState = 4;
+                                        new DriveCheck().setVisible(true);
+                                        return b;
+                                    }
+
+                                } else {
+                                    System.out.println("App needs to be in a folder called -------- ");
+                                    DriveCheck.driveState = 3;
+                                    new DriveCheck().setVisible(true);
+                                    return b;
+                                }
+
+                            } else {
+                                System.out.println("Drive Must Be A USB");
                                 DriveCheck.driveState = 1;
                                 new DriveCheck().setVisible(true);
-                                b = true;
-                            } else {
-                                System.out.println("is not external USB");
-                                System.out.println("Drive Must Be A USB");
-
-                                b = false;
+                                return b;
                             }
                             break;
+                        } else {
+                            DriveCheck.driveState = 1;
+                            new DriveCheck().setVisible(true);
+                            return b;
                         }
                     }
                 }

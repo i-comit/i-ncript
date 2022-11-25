@@ -33,7 +33,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "/Volumes/NO NAME";
+    public static String root = "";
     public static String masterFolder = File.separator + "--------" + File.separator;
 
     private static final String appVer = "1.7.7";
@@ -43,40 +43,38 @@ public class Main extends javax.swing.JFrame {
     private final URL fontFile = getClass().getResource("/polentical-neon.ttf");
 
     public Main() {
+        root = Paths.get("").toAbsolutePath().toString();
         Statics.getOS();
 
-//        root = Paths.get("").toAbsolutePath().toString();Í
-//        if (Memory.checkBash()) {
-//        root = root.substring(0, 3);
-//        Memory.checkBash();
-        initComponents();
+        if (Memory.checkBash()) {
+            initComponents();
 
-        jStorePanel.setVisible(true);
-        jSendPanel.setVisible(false);
-        jReceivePanel.setVisible(false);
-        jRadioButton2.setVisible(false);
-        jRadioButton3.setVisible(false);
-        jScrollPane5.setVisible(false);
+            jStorePanel.setVisible(true);
+            jSendPanel.setVisible(false);
+            jReceivePanel.setVisible(false);
+            jRadioButton2.setVisible(false);
+            jRadioButton3.setVisible(false);
+            jScrollPane5.setVisible(false);
 
-        if (!keyFile.exists()) {
-            jToolPanel.setVisible(false);
-            loginLabelVisibleBool(false);
-            this.setSize(520, 241);
-            this.setLocationRelativeTo(null);
-        } else {
-            Memory.getHeapSize();
-            setKeybinding();
-            loginLabelVisibleBool(true);
-            jUsernameLabel.setText("enter username");
-            jPasswordLabel.setText("enter password");
-            generateFolders();
+            if (!keyFile.exists()) {
+                jToolPanel.setVisible(false);
+                loginLabelVisibleBool(false);
+                this.setSize(518, 241);
+                this.setLocationRelativeTo(null);
+            } else {
+                Memory.getHeapSize();
+                setKeybinding();
+                loginLabelVisibleBool(true);
+                jUsernameLabel.setText("enter username");
+                jPasswordLabel.setText("enter password");
+                generateFolders();
 
-            jToolPanel.setVisible(false);
-            jButton2.setVisible(false);
+                jToolPanel.setVisible(false);
+                jButton2.setVisible(false);
+            }
+            jProgressBar2.setVisible(false);
+            dragDrop.setVisible(false);
         }
-        jProgressBar2.setVisible(false);
-        dragDrop.setVisible(false);
-//        }
     }
 
     private void getKeyBinding(int keyCode, JPanel jPanel, AbstractAction action) {
@@ -260,7 +258,7 @@ public class Main extends javax.swing.JFrame {
         jAlertLabel.setHorizontalAlignment(LEFT);
         jEULAPanel1.setVisible(false);
         jEULAPanel.setVisible(false);
-        this.setSize(284, 224);
+        this.setSize(282, 224);
         this.setLocationRelativeTo(null);
         System.out.println("Your available Memory Heap is " + Memory.byteFormatter(Memory.totalMemory));
         File rootFolder = Paths.get(root + masterFolder + folderName).toFile();

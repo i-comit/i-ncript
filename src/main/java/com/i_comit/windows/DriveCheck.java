@@ -26,22 +26,22 @@ public class DriveCheck extends javax.swing.JFrame {
     public DriveCheck() {
         initComponents();
         switch (driveState) {
-            case 1 -> {
+            case 1:
                 jLabel1.setText("i-ncript can only run");
                 goWebsite(jLabel2, "within a ", "https://i-comit.com", "USB device", false);
-            }
-            case 2 -> {
+            break;
+            case 2:
                 jLabel1.setText("i-ncript can not run");
                 jLabel2.setText("with this USB drive");
-            }
-            case 3 -> {
+            break;
+            case 3:
                 jLabel1.setText("i-ncript must be in a");
                 jLabel2.setText("folder named --------");
-            }
-            case 4 -> {
+            break;
+            case 4:
                 goWebsite(jLabel1, "the folder with ", "https://i-comit.com/i-ncript/", "i-ncript", false);
                 jLabel2.setText("must be placed at root");
-            }
+            break;
         }
     }
 
