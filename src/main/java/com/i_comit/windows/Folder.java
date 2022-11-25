@@ -18,6 +18,7 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -27,11 +28,13 @@ import javax.swing.DefaultListModel;
 public class Folder {
 
     public static String sendFolderStr = "";
+        private static final List<String> zipFileList = new ArrayList<>();
+
 
     public static void prepareZipFile() throws IOException {
         //SEND
         sendFolderStr = Statics.sendFolder + File.separator + firstLastChar(Statics.recipientUsername) + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMddmmss"));
-        zipFile(Statics.sendFolder, ".i-cc", sendFolderStr);
+        zipFile(Statics.sendFolder.toString(), sendFolderStr);
         GUI.resetProgressBar(Main.jProgressBar2);
         Main.toolBtnsBool(true);
         deleteDirectory(Statics.sendFolder.toFile());
@@ -92,57 +95,57 @@ public class Folder {
         }
     }
 
-    public static void zipFile(Path source, String fileExt, String sendFolderPath) throws IOException {
-        String zipFileName = sendFolderStr + fileExt;
+    public static void zipFile(String dir, String zipFile) {
+        zipFile = sendFolderStr + ".i-cc";
         Main.jProgressBar2.setStringPainted(true);
         Main.jProgressBar2.setMaximum(zipFileCount);
-        try (
-                 ZipOutputStream zos = new ZipOutputStream(
-                        new FileOutputStream(zipFileName))) {
-            Files.walkFileTree(source, new SimpleFileVisitor<>() {
-                @Override
-                public FileVisitResult visitFile(Path file,
-                        BasicFileAttributes attributes) {
-                    // only copy files, no symbolic links
-                    if (attributes.isSymbolicLink()) {
-                        return FileVisitResult.CONTINUE;
+        File directory = new File(dir);
+        zipFileList(directory);
+
+        try ( FileOutputStream fos = new FileOutputStream(zipFile);  ZipOutputStream zos = new ZipOutputStream(fos)) {
+
+            for (String filePath : zipFileList) {
+                System.out.println("Compressing: " + filePath);
+                String name = filePath.substring(directory.getAbsolutePath().length() + 1);
+                ZipEntry zipEntry = new ZipEntry(name);
+                zos.putNextEntry(zipEntry);
+
+                // Read file content and write to zip output stream.
+                try ( FileInputStream fis = new FileInputStream(filePath)) {
+                    byte[] buffer = new byte[1024];
+                    int length;
+                    while ((length = fis.read(buffer)) > 0) {
+                        zos.write(buffer, 0, length);
                     }
-                    try ( FileInputStream fis = new FileInputStream(file.toFile())) {
-                        if (!file.toString().endsWith(fileExt)) {
-                            Path targetFile = source.relativize(file);
-                            if (!file.toString().equals(zipFileName)) {
-                                zos.putNextEntry(new ZipEntry(targetFile.toString()));
-                            }
 
-                            byte[] buffer = AES.dynamicBytes(file.toFile());
-//                        byte[] buffer = new byte[1024];
-                            int len;
-                            while ((len = fis.read(buffer)) > 0) {
-                                zos.write(buffer, 0, len);
-                            }
-
-                            zos.closeEntry();
-                            System.out.printf("Send file : %s%n", file);
-                            Statics.zipIter++;
-                            Main.jProgressBar2.setValue(Statics.zipIter);
-//                            if (Main.jProgressBar2.getValue() >= zipFileCount - 1 && zipFileCount > 10) {
-//                                Main.jProgressBar2.setValue(zipFileCount);
-//                                Main.jProgressBar2.setString("packing key file..");
-//                            }
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    return FileVisitResult.CONTINUE;
+                    // Close the zip entry.
+                    zos.closeEntry();
+                    Statics.zipIter++;
+                    Main.jProgressBar2.setValue(Statics.zipIter);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
-                @Override
-                public FileVisitResult visitFileFailed(Path file, IOException exc) {
-                    System.err.printf("Unable to zip : %s%n%s%n", file, exc);
-                    return FileVisitResult.CONTINUE;
-                }
-            });
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
+
+    /**
+     * Get files list from the directory recursive to the subdirectory.
+     */
+    private static void zipFileList(File directory) {
+        File[] files = directory.listFiles();
+        if (files != null && files.length > 0) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    zipFileList.add(file.getAbsolutePath());
+                } else {
+                    zipFileList(file);
+                }
+            }
+        }
+
     }
 
     public static void unzipFile(String zipFilePath, String destDir) {
@@ -223,7 +226,7 @@ class recursiveFileDrop_T implements Runnable {
                         Files.move(filesArr1.toPath(), Paths.get(path + File.separator + filesf.getName() + File.separator + filesArr1.getName()), StandardCopyOption.REPLACE_EXISTING);
                         fileDropIter++;
                         Main.jAlertLabel.setText("moved " + fileDropIter + " files");
-                    }catch (IOException ex) {
+                    } catch (IOException ex) {
                         ex.printStackTrace();
                     }
                 }
@@ -243,9 +246,9 @@ class recursiveFileDrop_T implements Runnable {
         }
         filesf.delete();
     }
-    
-    public static void recursiveFolderDelete(File filesf){
-        
+
+    public static void recursiveFolderDelete(File filesf) {
+
     }
 
     public static void recursiveFileStoreDrop(File filesf, Path path, List<Path> recursiveStorePaths) {

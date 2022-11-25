@@ -35,19 +35,19 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "D:\\";
+    public static String root = "";
     public static String masterFolder = "--------" + File.separator;
 
-    private static final String appVer = "1.7.6";
+    private static final String appVer = "1.7.7";
     private static final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:ss a"));
     public static final int year = Year.now().getValue();
 
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
 
     public Main() {
-//        root = Paths.get("").toAbsolutePath().toString();
-//        Statics.getOS();
-//        if (Memory.checkWMIC()) {
+        root = Paths.get("").toAbsolutePath().toString();
+        Statics.getOS();
+        if (Memory.checkWMIC()) {
             root = root.substring(0, 3);
             initComponents();
             Path runtime = Paths.get(root + masterFolder + "runtime");
@@ -92,7 +92,7 @@ public class Main extends javax.swing.JFrame {
             }
             jProgressBar2.setVisible(false);
             dragDrop.setVisible(false);
-//        }
+        }
     }
 
     private void getKeyBinding(int keyCode, JPanel jPanel, AbstractAction action) {
@@ -1141,7 +1141,6 @@ public class Main extends javax.swing.JFrame {
             jLabel6.setVisible(false);
             jLabel5.setVisible(false);
             jRadioButton2.setVisible(true);
-            jRadioButton2.requestFocus();
         }
     }//GEN-LAST:event_jPasswordField2Evt
 
@@ -1151,7 +1150,6 @@ public class Main extends javax.swing.JFrame {
     //RECEIVE PANEL
     private void jPasswordField3Evt(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField3Evt
         if (jPasswordField3.getPassword().length < 4) {
-//            jLabel7.setText("password too short");
             jLabel7.setVisible(true);
             jLabel8.setVisible(true);
             jRadioButton3.setVisible(false);
@@ -1269,8 +1267,6 @@ public class Main extends javax.swing.JFrame {
             jTextField1.setEnabled(false);
             jPasswordField1.setEnabled(false);
         }
-        String cwd = root + masterFolder;
-        System.out.println(cwd);
     }//GEN-LAST:event_jSlider1StateChanged
 
     private void dragDropMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dragDropMouseReleased

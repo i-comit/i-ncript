@@ -80,7 +80,7 @@ public class GUI {
                             .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
                             .count());
                     result = result2;
-                break;
+                    break;
                 case 1:
                     result2 = Math.toIntExact(walk.filter(Files::isRegularFile)
                             .filter(p -> p.getFileName().toString().endsWith(".enc"))
@@ -88,7 +88,7 @@ public class GUI {
                             .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
                             .count());
                     result = result2;
-                break;
+                    break;
             }
         }
         return result;
@@ -123,16 +123,35 @@ public class GUI {
                             .filter(p -> !p.getFileName().toString().endsWith(".enc"))
                             .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
                             .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
-                            .collect(Collectors.toList());break;
+                            .collect(Collectors.toList());
+                    break;
                 case 1:
                     result = walk.filter(Files::isRegularFile)
                             .filter(p -> p.getFileName().toString().endsWith(".enc"))
                             .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
                             .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
-                            .collect(Collectors.toList());break;
+                            .collect(Collectors.toList());
+                    break;
             }
         }
         return result;
+    }
+
+    public static void resetIncorrectKeyProgressBar(JProgressBar progressBar) {
+        progressBar.setMaximum(2);
+        progressBar.setValue(progressBar.getMaximum());
+        for (int x = progressBar.getMaximum(); x >= 0; x--) {
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+            progressBar.setValue(x);
+            if (x <= 1) {
+                Main.progressbarBool = true;
+            }
+        }
+
     }
 
     public static void resetProgressBar(JProgressBar progressBar) {
@@ -148,12 +167,12 @@ public class GUI {
                         GUI.t.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "encrypted " + Statics.fileIter + " files", 10, 20, 400, false);
                         Main.jTextArea1.append("encrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
-                    break;
+                        break;
                     case 1:
                         GUI.t.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "decrypted " + Statics.fileIter + " files", 10, 20, 400, false);
                         Main.jTextArea1.append("decrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
-                    break;
+                        break;
                 }
                 Thread.sleep(200);
                 for (int x = progressBar.getMaximum(); x >= 0; x--) {
@@ -168,13 +187,17 @@ public class GUI {
                     progressBar.setStringPainted(false);
                     switch (Statics.toolMode) {
                         case 0:
-                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.path);break;
+                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.path);
+                            break;
                         case 1:
-                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.receiveFolder);break;
+                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.receiveFolder);
+                            break;
                         case 2:
-                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.sendFolder);break;
+                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.sendFolder);
+                            break;
                         case 3:
-                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.path);break;
+                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.path);
+                            break;
                     }
                 }
 
@@ -297,11 +320,14 @@ class logger_T implements Runnable {
             Thread.sleep(50);
             switch (toolMode) {
                 case 0:
-                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(21, outputFile.getPath().length()) + "\n");break;
+                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(21, outputFile.getPath().length()) + "\n");
+                    break;
                 case 1:
-                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(18, outputFile.getPath().length()) + "\n");break;
+                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(18, outputFile.getPath().length()) + "\n");
+                    break;
                 case 2:
-                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(18, outputFile.getPath().length()) + "\n");break;
+                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(18, outputFile.getPath().length()) + "\n");
+                    break;
             }
             Thread.sleep(50);
             Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());

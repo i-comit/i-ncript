@@ -11,11 +11,11 @@
             </goals>
             <properties>
                 <exec.vmArgs></exec.vmArgs>
-                <exec.args>-classpath %classpath com.i_comit.macos.Main ${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
                 <exec.appArgs></exec.appArgs>
                 <exec.mainClass>com.i_comit.windows.Main</exec.mainClass>
                 <exec.executable>java</exec.executable>
-                <exec.workingdir>/Users/khiemluong/Documents/GitHub/i-ncript</exec.workingdir>
+                <exec.workingdir>Y:\CODE\java\i-ncript</exec.workingdir>
             </properties>
         </action>
         <action>
@@ -29,12 +29,12 @@
             </goals>
             <properties>
                 <exec.vmArgs>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</exec.vmArgs>
-                <exec.args>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath com.i_comit.macos.Main ${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
                 <exec.appArgs></exec.appArgs>
                 <exec.mainClass>com.i_comit.windows.Main</exec.mainClass>
                 <exec.executable>java</exec.executable>
                 <jpda.listen>true</jpda.listen>
-                <exec.workingdir>/Users/khiemluong/Documents/GitHub/i-ncript</exec.workingdir>
+                <exec.workingdir>Y:\CODE\java\i-ncript</exec.workingdir>
             </properties>
         </action>
         <action>
@@ -48,11 +48,11 @@
             </goals>
             <properties>
                 <exec.vmArgs></exec.vmArgs>
-                <exec.args>-classpath %classpath com.i_comit.macos.Main ${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
                 <exec.mainClass>com.i_comit.windows.Main</exec.mainClass>
                 <exec.executable>java</exec.executable>
                 <exec.appArgs></exec.appArgs>
-                <exec.workingdir>/Users/khiemluong/Documents/GitHub/i-ncript</exec.workingdir>
+                <exec.workingdir>Y:\CODE\java\i-ncript</exec.workingdir>
             </properties>
         </action>
     </actions>

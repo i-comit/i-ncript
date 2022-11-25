@@ -14,8 +14,8 @@ public class Hasher {
 
     public static String hashedPassword;
     public static String hashedUsername;
-    private static int min = 10000000;
-    private static int max = 99999999;
+    private static final int min = 10000000;
+    private static final int max = 99999999;
 
     public static String getHash(String hash, boolean hashBool) {
         String hash2 = finalizeHash(hash, hashBool);
