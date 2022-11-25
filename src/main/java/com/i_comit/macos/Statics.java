@@ -7,10 +7,16 @@ package com.i_comit.macos;
 import static com.i_comit.macos.GUI.listAESPaths;
 import static com.i_comit.macos.HotFiler_T.watchService;
 import static com.i_comit.macos.Main.*;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Khiem Luong <khiemluong@i-comit.com>
@@ -33,11 +39,11 @@ public class Statics {
     public static boolean treeViewBool = false;
 
     public static File directory = new File(root + Main.masterFolder + folderName);
-    public static File keyFile = Paths.get(root+ Main.masterFolder + keyName).toFile();
+    public static File keyFile = Paths.get(root + Main.masterFolder + keyName).toFile();
 
     public static File[] contents = null;
 
-    public static Path path = Paths.get(root+ Main.masterFolder + folderName);
+    public static Path path = Paths.get(root + Main.masterFolder + folderName);
     public static Path sendFolder = Paths.get(root + Main.masterFolder + "o-box");
     public static Path receiveFolder = Paths.get(root + Main.masterFolder + "n-box");
 
@@ -101,6 +107,21 @@ public class Statics {
         }
         System.out.println(os);
     }
+    
+    public static Font customFont;
+
+    public static Font registerCustomFont(float fontSize, URL fontFile) {
+        try {
+            //create the font to use. Specify the size!
+            customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile.openStream()).deriveFont(fontSize);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            //register the font
+            ge.registerFont(customFont);
+        } catch (IOException | FontFormatException e) {
+            e.printStackTrace();
+        }
+        return customFont;
+    }
 
     public static void resetStaticInts() {
         fileIter = 0;
@@ -121,9 +142,9 @@ public class Statics {
         try {
             fileCount = GUI.countFiles(path);
             if (fileCount != 0) {
-                main.setSize(780, 266);
+                main.setSize(768, 249);
             } else {
-                main.setSize(780, 241);
+                main.setSize(768, 224);
             }
             jProgressBar1.setString("0% | 0/" + fileCount);
             jProgressBar1.setMaximum(fileCount);
@@ -146,9 +167,9 @@ public class Statics {
         try {
             fileCount = GUI.countFiles(path);
             if (fileCount != 0) {
-                main.setSize(780, 266);
+                main.setSize(768, 249);
             } else {
-                main.setSize(780, 241);
+                main.setSize(768, 224);
             }
             jProgressBar1.setString("0% | 0/" + fileCount);
             jProgressBar1.setMaximum(fileCount);
@@ -187,7 +208,7 @@ public class Statics {
                 FileHider.cleanUp(receiveFolder);
                 TreeView.setRootName("n-box");
                 TreeView.populateStoreTree(receiveFolder);
-            break;
+                break;
             case 2:
                 jSwitchMode.setText("O-BOX");
                 jSwitchMode.setToolTipText("current panel can encrypt files for sending from o-box (outbox) folder");
@@ -208,7 +229,7 @@ public class Statics {
                 FileHider.cleanUp(sendFolder);
                 TreeView.setRootName("o-box");
                 TreeView.populateStoreTree(sendFolder);
-            break;
+                break;
             case 3:
                 jSwitchMode.setText("STORE");
                 jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
@@ -226,7 +247,7 @@ public class Statics {
                 TreeView.setRootName("i-ncript");
                 TreeView.populateStoreTree(path);
                 toolMode = 0;
-            break;
+                break;
         }
     }
 
@@ -246,7 +267,7 @@ public class Statics {
         switch (AESMode) {
             case 0:
                 jTextArea1.append("encryption of " + fileCount + " files stopped.\n");
-            break;
+                break;
             case 1:
                 jTextArea1.append("decryption of " + fileCount + " files stopped.\n");
                 break;
@@ -301,9 +322,9 @@ public class Statics {
             try {
                 fileCount = GUI.countFiles(path);
                 if (fileCount != 0) {
-                    main.setSize(780, 266);
+                    main.setSize(768, 249);
                 } else {
-                    main.setSize(780, 241);
+                    main.setSize(768, 224);
                 }
                 jProgressBar1.setMaximum(fileCount);
                 HotFiler.HotFilerThread();
@@ -349,7 +370,7 @@ public class Statics {
     }
 
     public static void collapseLogin(Main main) {
-        main.setSize(780, 241);
+        main.setSize(768, 224);
         jLabel1.setLocation(265, 8);
         jLabel3.setLocation(367, 4);
         jAlertLabel.setLocation(265, 174);

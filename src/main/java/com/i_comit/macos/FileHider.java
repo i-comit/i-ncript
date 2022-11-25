@@ -173,13 +173,7 @@ class FileHider_T implements Runnable {
     }
     
     public static void getFileAttr(Path x, boolean fileHideBool) throws IOException {
-        String fileAttr = Files.getAttribute(x, "dos:hidden", LinkOption.NOFOLLOW_LINKS).toString();
-        boolean fileAttrBool = Boolean.parseBoolean(fileAttr);
-        
-        if (fileAttrBool == true) {
             if (!Main.jToggleButton2.isSelected()) {
-                Files.setAttribute(x, "dos:hidden", false);
-                
                 if (x.toFile().getName().startsWith(".")) {
                     String filePath = x.toFile().toString().replaceAll(x.toFile().getName(), "");
                     File outputFile = new File(filePath + x.toFile().getName().substring(1));
@@ -187,12 +181,8 @@ class FileHider_T implements Runnable {
                 }
                 ++FileHider.fileCt;
             }
-        }
         
-        if (fileAttrBool == false) {
             if (Main.jToggleButton2.isSelected()) {
-                Files.setAttribute(x, "dos:hidden", true);
-                
                 if (!x.toFile().getName().startsWith(".")) {
                     String filePath = x.toFile().toString().replaceAll(x.toFile().getName(), "");
                     File outputFile = new File(filePath + "." + x.toFile().getName());
@@ -201,7 +191,6 @@ class FileHider_T implements Runnable {
                 
                 ++FileHider.fileCt;
             }
-        }
         ++Statics.fileHideIter;
     }
 }

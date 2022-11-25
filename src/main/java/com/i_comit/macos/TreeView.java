@@ -97,7 +97,7 @@ public class TreeView {
 
     public static void openFile(TreePath treePath) {
         File file = null;
-        file = new File(root + masterFolder + treePath.toString().substring(1, treePath.toString().length() - 1).replaceAll(", ", "\\\\"));
+        file = new File(root + masterFolder + treePath.toString().substring(1, treePath.toString().length() - 1).replaceAll(", ", "/"));
         if (!file.isDirectory()) {
             if (Desktop.isDesktopSupported()) {
                 try {
@@ -111,7 +111,7 @@ public class TreeView {
     public static void getFileCreationNSize() throws IOException {
         if (Main.jTree1.getSelectionPaths() != null) {
             if (Main.jTree1.getSelectionPaths().length <= 1) {
-                File fileFormat = new File(root + masterFolder + Main.jTree1.getSelectionPaths()[0].toString().substring(1, Main.jTree1.getSelectionPaths()[0].toString().length() - 1).replaceAll(", ", "\\\\"));
+                File fileFormat = new File(root + masterFolder + Main.jTree1.getSelectionPaths()[0].toString().substring(1, Main.jTree1.getSelectionPaths()[0].toString().length() - 1).replaceAll(", ", File.separator));
                 Path file = fileFormat.toPath();
 
                 if (!fileFormat.isDirectory()) {
@@ -122,7 +122,7 @@ public class TreeView {
             } else {
                 List<Long> fileSizes = new ArrayList<>();
                 for (int i = 0; i < Main.jTree1.getSelectionPaths().length; i++) {
-                    File fileFormat = new File(root + masterFolder + Main.jTree1.getSelectionPaths()[i].toString().substring(1, Main.jTree1.getSelectionPaths()[i].toString().length() - 1).replaceAll(", ", "\\\\"));
+                    File fileFormat = new File(root + masterFolder + Main.jTree1.getSelectionPaths()[i].toString().substring(1, Main.jTree1.getSelectionPaths()[i].toString().length() - 1).replaceAll(", ", File.separator));
 
                     if (i == Main.jTree1.getSelectionPaths().length) {
                         Path file = fileFormat.toPath();

@@ -14,7 +14,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -37,9 +37,11 @@ public class Main extends javax.swing.JFrame {
     public static String root = "/Volumes/NO NAME/";
     public static String masterFolder = "--------" + File.separator;
 
-    private static final String appVer = "1.7.5";
+    private static final String appVer = "1.7.6";
     private static final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:ss a"));
-    private static final int year = Year.now().getValue();
+    public static final int year = Year.now().getValue();
+
+    private final URL fontFile = getClass().getResource("/polentical-neon.ttf");
 
     public Main() {
         Statics.getOS();
@@ -74,7 +76,7 @@ public class Main extends javax.swing.JFrame {
         if (!keyFile.exists()) {
             jToolPanel.setVisible(false);
             loginLabelVisibleBool(false);
-            this.setSize(540, 241);
+            this.setSize(520, 241);
             this.setLocationRelativeTo(null);
         } else {
             Memory.getHeapSize();
@@ -273,7 +275,7 @@ public class Main extends javax.swing.JFrame {
         jAlertLabel.setHorizontalAlignment(LEFT);
         jEULAPanel1.setVisible(false);
         jEULAPanel.setVisible(false);
-        this.setSize(120, 241);
+        this.setSize(284, 224);
         this.setLocationRelativeTo(null);
         System.out.println("Your available Memory Heap is " + Memory.byteFormatter(Memory.totalMemory));
         File rootFolder = Paths.get(root + masterFolder + folderName).toFile();
@@ -415,7 +417,7 @@ public class Main extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("i-ncript™");
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti.png")));
-        setMinimumSize(new java.awt.Dimension(295, 225));
+        setMinimumSize(new java.awt.Dimension(280, 150));
         setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         setResizable(false);
         setSize(new java.awt.Dimension(320, 0));
@@ -435,7 +437,7 @@ public class Main extends javax.swing.JFrame {
         jToolPanel.setPreferredSize(new java.awt.Dimension(252, 150));
         jToolPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jButton2.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jButton2.setFont(Statics.registerCustomFont(12, fontFile));
         jButton2.setText("STOP");
         jButton2.setToolTipText("stops current AES task");
         jButton2.setPreferredSize(new java.awt.Dimension(105, 22));
@@ -446,7 +448,7 @@ public class Main extends javax.swing.JFrame {
         });
         jToolPanel.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 80, -1, -1));
 
-        jSwitchMode.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jSwitchMode.setFont(Statics.registerCustomFont(12, fontFile));
         jSwitchMode.setText("STORE");
         jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
         jSwitchMode.setPreferredSize(new java.awt.Dimension(72, 22));
@@ -457,7 +459,7 @@ public class Main extends javax.swing.JFrame {
         });
         jToolPanel.add(jSwitchMode, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 80, 105, -1));
 
-        jButton3.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jButton3.setFont(Statics.registerCustomFont(12, fontFile));
         jButton3.setText("CLR LOG");
         jButton3.setToolTipText("clear output from LOG tab");
         jButton3.setPreferredSize(new java.awt.Dimension(105, 22));
@@ -468,15 +470,15 @@ public class Main extends javax.swing.JFrame {
         });
         jToolPanel.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 80, -1, -1));
 
-        jProgressBar2.setFont(new java.awt.Font("Polentical Neon", 0, 11)); // NOI18N
+        jProgressBar2.setFont(Statics.registerCustomFont(11, fontFile));
         jProgressBar2.setForeground(Color.white);
         jToolPanel.add(jProgressBar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 119, 240, 18));
 
         jStorePanel.setOpaque(false);
         jStorePanel.setPreferredSize(new java.awt.Dimension(250, 75));
 
-        jToggleButton1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
-        jToggleButton1.setText("HOT FILER");
+        jToggleButton1.setFont(Statics.registerCustomFont(12, fontFile));
+        jToggleButton1.setText("HOT FILE");
         jToggleButton1.setToolTipText("enable to automatically encrypt any file put into the i-ncript folder");
         jToggleButton1.setFocusable(false);
         jToggleButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -486,7 +488,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        jToggleButton2.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jToggleButton2.setFont(Statics.registerCustomFont(12, fontFile));
 
         jToggleButton2.setText("HIDE FILE");
         jToggleButton2.setToolTipText("click to hide or unhide all files, runs after every AES task");
@@ -501,7 +503,7 @@ public class Main extends javax.swing.JFrame {
         });
 
         buttonGroup1.add(jRadioButton1);
-        jRadioButton1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jRadioButton1.setFont(Statics.registerCustomFont(12, fontFile));
         jRadioButton1.setText("DECRYPT");
         jRadioButton1.setFocusable(false);
         jRadioButton1.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
@@ -512,7 +514,7 @@ public class Main extends javax.swing.JFrame {
         });
 
         buttonGroup1.add(jRadioButton0);
-        jRadioButton0.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jRadioButton0.setFont(Statics.registerCustomFont(12, fontFile));
         jRadioButton0.setText("ENCRYPT");
         jRadioButton0.setFocusable(false);
         jRadioButton0.addActionListener(new java.awt.event.ActionListener() {
@@ -565,6 +567,7 @@ public class Main extends javax.swing.JFrame {
         });
         jSendPanel.add(jPasswordField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(144, 46, 100, -1));
 
+        jTextField2.setFont(Statics.registerCustomFont(12, fontFile));
         jTextField2.setPreferredSize(new java.awt.Dimension(103, 22));
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -573,16 +576,16 @@ public class Main extends javax.swing.JFrame {
         });
         jSendPanel.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(144, 15, 100, -1));
 
-        jLabel5.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jLabel5.setFont(Statics.registerCustomFont(12, fontFile));
         jLabel5.setText("set file username");
         jLabel5.setToolTipText("the name must match your recipient's username");
         jSendPanel.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 18, -1, -1));
 
-        jLabel6.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jLabel6.setFont(Statics.registerCustomFont(12, fontFile));
         jLabel6.setText("create password");
         jSendPanel.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 50, -1, -1));
 
-        jRadioButton2.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jRadioButton2.setFont(Statics.registerCustomFont(12, fontFile));
         jRadioButton2.setText("ENCRYPT");
         jRadioButton2.setPreferredSize(new java.awt.Dimension(92, 20));
         jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -598,7 +601,7 @@ public class Main extends javax.swing.JFrame {
         jReceivePanel.setPreferredSize(new java.awt.Dimension(250, 75));
         jReceivePanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel7.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jLabel7.setFont(Statics.registerCustomFont(12, fontFile));
         jLabel7.setText("enter password");
         jReceivePanel.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 50, -1, -1));
 
@@ -609,7 +612,7 @@ public class Main extends javax.swing.JFrame {
         });
         jReceivePanel.add(jPasswordField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(144, 46, 100, -1));
 
-        jRadioButton3.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jRadioButton3.setFont(Statics.registerCustomFont(12, fontFile));
         jRadioButton3.setText("DECRYPT");
         jRadioButton3.setPreferredSize(new java.awt.Dimension(92, 20));
         jRadioButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -619,7 +622,7 @@ public class Main extends javax.swing.JFrame {
         });
         jReceivePanel.add(jRadioButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 48, -1, -1));
 
-        jLabel8.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jLabel8.setFont(Statics.registerCustomFont(12, fontFile));
         jLabel8.setText("select a .i-cc file");
         jLabel8.setToolTipText("choose a .i-cc file that was made from o-box");
         jReceivePanel.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 18, -1, -1));
@@ -646,7 +649,7 @@ public class Main extends javax.swing.JFrame {
         jLoginPanel.setOpaque(false);
         jLoginPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jTextField1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jTextField1.setFont(Statics.registerCustomFont(12, fontFile));
         jTextField1.setText("jTextField1");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -655,7 +658,6 @@ public class Main extends javax.swing.JFrame {
         });
         jLoginPanel.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(137, 6, 103, -1));
 
-        jPasswordField1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
         jPasswordField1.setText("jPasswordField1");
         jPasswordField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -669,15 +671,15 @@ public class Main extends javax.swing.JFrame {
         });
         jLoginPanel.add(jPasswordField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(137, 32, 103, -1));
 
-        jUsernameLabel.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jUsernameLabel.setFont(Statics.registerCustomFont(12, fontFile));
         jUsernameLabel.setText("enter username");
         jLoginPanel.add(jUsernameLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 6, -1, 21));
 
-        jPasswordLabel.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jPasswordLabel.setFont(Statics.registerCustomFont(12, fontFile));
         jPasswordLabel.setText("enter password");
         jLoginPanel.add(jPasswordLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 35, -1, -1));
 
-        jButton1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jButton1.setFont(Statics.registerCustomFont(12, fontFile));
         jButton1.setText("ENTER");
         jButton1.setToolTipText("log into i-ncript");
         jButton1.setPreferredSize(new java.awt.Dimension(73, 22));
@@ -700,15 +702,15 @@ public class Main extends javax.swing.JFrame {
         });
         jLoginPanel.add(jSlider1, new org.netbeans.lib.awtextra.AbsoluteConstraints(71, 98, 180, -1));
 
-        jHeapLabel.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jHeapLabel.setFont(Statics.registerCustomFont(12, fontFile));
         jHeapLabel.setText("set heap");
         jHeapLabel.setToolTipText("currently selected heap size");
         jLoginPanel.add(jHeapLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 100, -1, -1));
 
         getContentPane().add(jLoginPanel);
-        jLoginPanel.setBounds(20, 44, 250, 115);
+        jLoginPanel.setBounds(20, 44, 250, 116);
 
-        jProgressBar1.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jProgressBar1.setFont(Statics.registerCustomFont(12, fontFile));
         jProgressBar1.setForeground(Color.WHITE);
         jProgressBar1.setBorder(null);
         jProgressBar1.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -719,17 +721,19 @@ public class Main extends javax.swing.JFrame {
         getContentPane().add(jProgressBar1);
         jProgressBar1.setBounds(22, 204, 722, 17);
 
-        jLabel1.setFont(new java.awt.Font("Polentical Neon", 0, 18)); // NOI18N
+        jLabel1.setFont(Statics.registerCustomFont(18, fontFile));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel1.setText(goWebsite(jLabel1, "", "https://i-comit.com", "i-comit",true)
         );
         jLabel1.setToolTipText("go to i-comit.com");
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(22, 8, 90, 22);
+        jLabel1.setBounds(22, 10, 90, 16);
 
-        jLabel3.setFont(new java.awt.Font("Polentical Neon", 0, 17)); // NOI18N
+        jLabel3.setFont(Statics.registerCustomFont(17, fontFile)
+        );
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel3.setText("jLabel3");
         jLabel3.setToolTipText(Memory.getDataSizePercentage());
         jLabel3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -743,17 +747,17 @@ public class Main extends javax.swing.JFrame {
         getContentPane().add(jLabel3);
         jLabel3.setBounds(125, 4, 135, 30);
 
-        jAlertLabel.setFont(new java.awt.Font("Polentical Neon", 0, 13)); // NOI18N
+        jAlertLabel.setFont(Statics.registerCustomFont(12, fontFile));
         jAlertLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         getContentPane().add(jAlertLabel);
         jAlertLabel.setBounds(21, 174, 236, 27);
 
-        jCreationDateLabel.setFont(new java.awt.Font("Polentical Neon", 0, 13)); // NOI18N
+        jCreationDateLabel.setFont(Statics.registerCustomFont(13, fontFile));
         jCreationDateLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         getContentPane().add(jCreationDateLabel);
         jCreationDateLabel.setBounds(22, 172, 130, 27);
 
-        jFileSizeLabel.setFont(new java.awt.Font("Polentical Neon", 0, 13)); // NOI18N
+        jFileSizeLabel.setFont(Statics.registerCustomFont(13, fontFile));
         jFileSizeLabel.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jFileSizeLabel.setFocusable(false);
         getContentPane().add(jFileSizeLabel);
@@ -777,21 +781,21 @@ public class Main extends javax.swing.JFrame {
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/drop.png"))); // NOI18N
 
-        jLabel10.setFont(new java.awt.Font("Polentical Neon", 0, 15)); // NOI18N
+        jLabel10.setFont(Statics.registerCustomFont(15, fontFile));
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel10.setText("STORE MODE");
 
-        jLabel11.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jLabel11.setFont(Statics.registerCustomFont(12, fontFile));
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel11.setText("ENCRYPT & DECRYPT");
 
-        jLabel12.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jLabel12.setFont(Statics.registerCustomFont(12, fontFile));
         jLabel12.setText("DRAG");
 
-        jLabel13.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jLabel13.setFont(Statics.registerCustomFont(12, fontFile));
         jLabel13.setText("AND");
 
-        jLabel14.setFont(new java.awt.Font("Polentical Neon", 0, 12)); // NOI18N
+        jLabel14.setFont(Statics.registerCustomFont(12, fontFile));
         jLabel14.setText("DROP");
 
         javax.swing.GroupLayout dragDropLayout = new javax.swing.GroupLayout(dragDrop);
@@ -804,14 +808,14 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(dragDropLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(dragDropLayout.createSequentialGroup()
-                        .addGap(0, 55, Short.MAX_VALUE)
+                        .addGap(0, 59, Short.MAX_VALUE)
                         .addComponent(jLabel9)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(dragDropLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel12)
                             .addComponent(jLabel14)
                             .addComponent(jLabel13))
-                        .addGap(0, 56, Short.MAX_VALUE)))
+                        .addGap(0, 59, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         dragDropLayout.setVerticalGroup(
@@ -861,7 +865,7 @@ public class Main extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -878,17 +882,16 @@ public class Main extends javax.swing.JFrame {
         jTextArea2.setForeground(Color.WHITE);
         jTextArea2.setLineWrap(true);
         jTextArea2.setRows(5);
-        jTextArea2.setText( "i-ncript " + appVer + " - "+ latestDate+ "\n\nCopyright "+ year +" i-comit LLC. All rights reserved.\n\nUser has the right to freely distribute this software. User does not have the right to distribute a modified version of this software.\n\ni-comit LLC is not responsible for any data loss from using this software.");
+        jTextArea2.setText( "i-ncript " + appVer + " - "+ latestDate+ "\n\nCopyright "+ year +" i-comit LLC. All rights reserved.\n\nUser has the right to freely distribute this software. User does not have the right to distribute a modified version of this software.\n\ni-comit LLC is not responsible for any data loss from using this software.\n\nCustom font used is called Polentical Neon, developed by Jayvee Enaguas © Grand Chaos Productions. Some Rights Reserved. Licensed Under Creative Commons (CC-BY-SA 3.0).");
         jTextArea2.setWrapStyleWord(true);
         jTextArea2.setAutoscrolls(false);
-        jTextArea2.setCaretPosition(0);
         jScrollPane2.setViewportView(jTextArea2);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -928,7 +931,7 @@ public class Main extends javax.swing.JFrame {
 
         jEULAPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel2.setFont(new java.awt.Font("Polentical Neon", 0, 16)); // NOI18N
+        jLabel2.setFont(Statics.registerCustomFont(16, fontFile));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("END USER LICENSE AGREEMENT");
         jEULAPanel.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 5, 498, -1));
@@ -966,7 +969,7 @@ public class Main extends javax.swing.JFrame {
 
         jEULAPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel4.setFont(new java.awt.Font("Polentical Neon", 0, 16)); // NOI18N
+        jLabel4.setFont(Statics.registerCustomFont(16, fontFile));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("TERMS OF USE");
         jEULAPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 6, 498, -1));
@@ -1035,14 +1038,14 @@ public class Main extends javax.swing.JFrame {
         getContentPane().add(jScrollPane5);
         jScrollPane5.setBounds(22, 12, 225, 160);
 
-        setSize(new java.awt.Dimension(775, 234));
+        setSize(new java.awt.Dimension(750, 234));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
     //DECRYPT
+
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
         decryptFunction(this);
     }//GEN-LAST:event_jRadioButton1ActionPerformed
-
 
     private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
         // TODO add your handling code here:
@@ -1073,10 +1076,12 @@ public class Main extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
     //FILE HIDER
+
     private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
         fileHiderFunction();
     }//GEN-LAST:event_jToggleButton2ActionPerformed
     //ENCRYPT
+
     private void jRadioButton0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton0ActionPerformed
         encryptFunction(this);
     }//GEN-LAST:event_jRadioButton0ActionPerformed
@@ -1133,6 +1138,7 @@ public class Main extends javax.swing.JFrame {
         switchToolPanels();
     }//GEN-LAST:event_jSwitchModeActionEvt
     //SEND PANEL
+
     private void jPasswordField2Evt(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField2Evt
         if (jPasswordField2.getPassword().length < 4) {
             jLabel6.setVisible(true);
@@ -1150,6 +1156,7 @@ public class Main extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2ActionPerformed
     //RECEIVE PANEL
+
     private void jPasswordField3Evt(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField3Evt
         if (jPasswordField3.getPassword().length < 4) {
 //            jLabel7.setText("password too short");
@@ -1169,22 +1176,23 @@ public class Main extends javax.swing.JFrame {
             zipFileCount = 0;
             zipIter = 0;
             if (Login.sendKeyCheck()) {
-                this.setSize(780, 266);
+                this.setSize(768, 249);
             } else {
-                this.setSize(780, 241);
+                this.setSize(768, 224);
             }
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_jRadioButton2Evt
     //RECEIVE RADIO BTN
+
     private void jRadioButton3Evt(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3Evt
         zipFileCount = 0;
         zipIter = 0;
         if (Login.verifySendKey(receiveFolder + File.separator + jList1.getSelectedValue())) {
-            this.setSize(780, 266);
+            this.setSize(768, 241);
         } else {
-            this.setSize(780, 241);
+            this.setSize(768, 229);
         }
     }//GEN-LAST:event_jRadioButton3Evt
 
@@ -1205,10 +1213,12 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jTree1MouseClicked
     //HOT FILER
+
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
         hotFilerFunction(this);
     }//GEN-LAST:event_jToggleButton1ActionPerformed
     //STOP
+
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         stopFunction();
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -1229,10 +1239,10 @@ public class Main extends javax.swing.JFrame {
 
     private void jProgressBar1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jProgressBar1StateChanged
         if (progressbarBool) {
-            this.setSize(780, 241);
+            this.setSize(768, 224);
             progressbarBool = false;
         } else {
-            this.setSize(780, 266);
+            this.setSize(768, 249);
         }
     }//GEN-LAST:event_jProgressBar1StateChanged
 
@@ -1276,6 +1286,7 @@ public class Main extends javax.swing.JFrame {
 
     private void dragDropMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dragDropMouseReleased
     }//GEN-LAST:event_dragDropMouseReleased
+
     /**
      * @param args the command line arguments
      */
