@@ -48,7 +48,7 @@ public class Main extends javax.swing.JFrame {
 //        root = Paths.get("").toAbsolutePath().toString();Í
 //        if (Memory.checkBash()) {
 //        root = root.substring(0, 3);
-        Memory.checkBash();
+//        Memory.checkBash();
         initComponents();
 
         jStorePanel.setVisible(true);
@@ -405,7 +405,7 @@ public class Main extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("i-ncript™");
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti.png")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti.icns")));
         setMinimumSize(new java.awt.Dimension(280, 150));
         setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         setResizable(false);
