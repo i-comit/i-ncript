@@ -34,7 +34,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class Main extends javax.swing.JFrame {
 
     public static String root = "/Volumes/NO NAME";
-    public static String masterFolder = File.separator+ "--------" + File.separator;
+    public static String masterFolder = File.separator + "--------" + File.separator;
 
     private static final String appVer = "1.7.6";
     private static final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:ss a"));
@@ -272,8 +272,7 @@ public class Main extends javax.swing.JFrame {
         } else {
             Random rand = new Random();
             //0 to 2
-            int rand_int1 = rand.nextInt(3);
-            System.out.println("random int " + rand_int1);
+            int rand_int1 = rand.nextInt(4);
             if (!Miscellaneous.holidayCheck()) {
                 switch (rand_int1) {
                     case 0:
@@ -284,6 +283,9 @@ public class Main extends javax.swing.JFrame {
                         break;
                     case 2:
                         GUI.labelCutterThread(jAlertLabel, "USB drive, reimagined.", 80, 80, 100, true);
+                        break;
+                    case 3:
+                        GUI.labelCutterThread(jAlertLabel, "bundled using jar2app.", 80, 80, 100, true);
                         break;
                 }
             }

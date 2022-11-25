@@ -54,8 +54,8 @@ public class Hasher {
         for (int i = 0; i < hash.length() * 2; i++) {
             Random rand = new Random();
             // Generate random 8bit int
-            int rand_int1 = rand.nextInt(10000000, 99999999);
-            sb.append(String.valueOf(rand_int1));
+//            int rand_int1 = rand.nextInt(10000000, 99999999);
+//            sb.append(String.valueOf(rand_int1));
             if (i == hash.length()) {
                 sb.append(parts[1]);
             }
@@ -64,8 +64,8 @@ public class Hasher {
         for (int i = 0; i < remainder * 2; i++) {
             Random rand = new Random();
             // Generate random 8bit int
-            int rand_int1 = rand.nextInt(10000000, 99999999);
-            sb.append(String.valueOf(rand_int1));
+//            int rand_int1 = rand.nextInt(10000000, 99999999);
+//            sb.append(String.valueOf(rand_int1));
             if (i == remainder) {
                 sb.append(parts[2]);
             }

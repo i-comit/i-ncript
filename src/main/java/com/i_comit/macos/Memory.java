@@ -20,7 +20,6 @@ import java.nio.file.Paths;
 import java.text.CharacterIterator;
 import java.text.DecimalFormat;
 import java.text.StringCharacterIterator;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -143,17 +142,20 @@ public class Memory {
                     if (s.trim().length() != 0) {
                         String driveDir = s.trim().substring(68);
                         if (driveDir.contains(Main.root)) {
-                            System.out.println("found matched drive");
+                            System.out.println("driveDir " + driveDir);
                             String devPath = s.substring(0, 10).trim();
                             System.out.println("DEVPATH " + devPath);
+                            String cwd = Paths.get("").toAbsolutePath().toString();
+                            System.out.println("CWD "+ cwd);
+
+                            //Check if device is an external USB
                             if (checkBash2(devPath)) {
-                                System.out.println("is good");
-                                b = true;
+                                System.out.println("is external USB");
                                 DriveCheck.driveState = 1;
                                 new DriveCheck().setVisible(true);
-                                b = false;
+                                b = true;
                             } else {
-                                System.out.println("is bad");
+                                System.out.println("is not external USB");
                                 System.out.println("Drive Must Be A USB");
 
                                 b = false;
