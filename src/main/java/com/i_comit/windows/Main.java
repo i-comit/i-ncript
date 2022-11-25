@@ -288,8 +288,7 @@ public class Main extends javax.swing.JFrame {
         } else {
             Random rand = new Random();
             //0 to 2
-            int rand_int1 = rand.nextInt(3);
-            System.out.println("random int " + rand_int1);
+            int rand_int1 = rand.nextInt(5);
             if (!Miscellaneous.holidayCheck()) {
                 switch (rand_int1) {
                     case 0 ->
@@ -298,6 +297,11 @@ public class Main extends javax.swing.JFrame {
                         GUI.labelCutterThread(jAlertLabel, "developed by i-comit LLC.", 80, 80, 100, true);
                     case 2 ->
                         GUI.labelCutterThread(jAlertLabel, "USB drive, reimagined.", 80, 80, 100, true);
+                    case 3 ->
+                        GUI.labelCutterThread(jAlertLabel, "also available on mac os.", 80, 80, 100, true);
+                    case 4 ->
+                        GUI.labelCutterThread(jAlertLabel, "also available on linux.", 80, 80, 100, true);
+
                 }
             }
         }
