@@ -23,36 +23,36 @@ import java.util.Set;
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
 public class FileHider {
-    
+
     static int fileCt = 0;
-    
+
     public static void cleanUp(Path path) {
         try {
             Set<String> unique = new HashSet<>();
-            
+
             List<Path> paths = listPaths(path);
             List<String> duplicates = new ArrayList<>();
             List<String> duplStr = new ArrayList<>();
             int deletedFiles = 0;
-            
+
             paths.forEach(x -> {
                 String f = x.toFile().getAbsolutePath().replace(".enc", "");
                 duplStr.add(f);
             });
-            
+
             for (String n : duplStr) {
                 if (!unique.add(n)) {
                     duplicates.add(n);
                 }
             }
-            
+
             if (!duplicates.isEmpty()) {
                 for (int i = 0; i < duplicates.size(); i++) {
                     String enc = duplicates.get(i) + ".enc";
-                    
+
                     File decF = Paths.get(duplicates.get(i)).toFile();
                     File encF = Paths.get(enc).toFile();
-                    
+
                     if (decF.length() > encF.length()) {
                         encF.delete();
                         System.out.println("deleted " + encF);
@@ -66,7 +66,7 @@ public class FileHider {
                     deletedFiles++;
                 }
             } else {
-                System.out.println("no files to clean up in "+ path.toFile().getName() + " folder");
+                System.out.println("no files to clean up in " + path.toFile().getName() + " folder");
             }
             if (deletedFiles > 2) {
                 Main.jTextArea1.append("cleaned up " + deletedFiles + " corrupted files\n");
@@ -75,7 +75,7 @@ public class FileHider {
             ex.printStackTrace();
         }
     }
-    
+
     public static void FileHiderThread(boolean fileHideBool, Path path) throws IOException {
         Thread t = new Thread(() -> {
             try {
@@ -89,9 +89,9 @@ public class FileHider {
 }
 
 class FileHider_T implements Runnable {
-    
+
     public int threadIterator;
-    
+
     public void run() {
 //
 //        try {
@@ -100,7 +100,7 @@ class FileHider_T implements Runnable {
 //            ex.printStackTrace();
 //        }
     }
-    
+
     public static void fileHiderToolReenable() {
         Main.jToggleButton2.setEnabled(true);
         Main.toolBtnsBool(true);
@@ -113,7 +113,7 @@ class FileHider_T implements Runnable {
         Statics.fileCount = 0;
         fileCt = 0;
     }
-    
+
     public static void FileHider_T(boolean fileHideBool, Path path) throws IOException {
         Statics.fileHideIter = 0;
         List<Path> paths = listPaths(path);
@@ -171,26 +171,25 @@ class FileHider_T implements Runnable {
             TreeView.populateStoreTree(path);
         }
     }
-    
+
     public static void getFileAttr(Path x, boolean fileHideBool) throws IOException {
-            if (!Main.jToggleButton2.isSelected()) {
-                if (x.toFile().getName().startsWith(".")) {
-                    String filePath = x.toFile().toString().replaceAll(x.toFile().getName(), "");
-                    File outputFile = new File(filePath + x.toFile().getName().substring(1));
-                    x.toFile().renameTo(outputFile);
-                }
+        if (!Main.jToggleButton2.isSelected()) {
+            if (x.toFile().getName().startsWith(".")) {
+                String filePath = x.toFile().toString().replaceAll(x.toFile().getName(), "");
+                File outputFile = new File(filePath + x.toFile().getName().substring(1));
+                x.toFile().renameTo(outputFile);
                 ++FileHider.fileCt;
             }
-        
-            if (Main.jToggleButton2.isSelected()) {
-                if (!x.toFile().getName().startsWith(".")) {
-                    String filePath = x.toFile().toString().replaceAll(x.toFile().getName(), "");
-                    File outputFile = new File(filePath + "." + x.toFile().getName());
-                    x.toFile().renameTo(outputFile);
-                }
-                
+        }
+
+        if (Main.jToggleButton2.isSelected()) {
+            if (!x.toFile().getName().startsWith(".")) {
+                String filePath = x.toFile().toString().replaceAll(x.toFile().getName(), "");
+                File outputFile = new File(filePath + "." + x.toFile().getName());
+                x.toFile().renameTo(outputFile);
                 ++FileHider.fileCt;
             }
+        }
         ++Statics.fileHideIter;
     }
 }

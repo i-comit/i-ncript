@@ -15,7 +15,6 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.Year;
@@ -34,8 +33,8 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "/Volumes/NO NAME/";
-    public static String masterFolder = "--------" + File.separator;
+    public static String root = "/Volumes/NO NAME";
+    public static String masterFolder = File.separator+ "--------" + File.separator;
 
     private static final String appVer = "1.7.6";
     private static final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:ss a"));
@@ -47,25 +46,11 @@ public class Main extends javax.swing.JFrame {
         Statics.getOS();
 
 //        root = Paths.get("").toAbsolutePath().toString();Í
-//        if (Memory.checkWMIC()) {
+//        if (Memory.checkBash()) {
 //        root = root.substring(0, 3);
+        Memory.checkBash();
         initComponents();
-        Path runtime = Paths.get(root + masterFolder + "runtime");
-        Path app = Paths.get(root + masterFolder + "app");
-//        if (runtime.toFile().exists()) {
-//            try {
-//                Files.setAttribute(runtime, "dos:hidden", true);
-//            } catch (IOException ex) {
-//                ex.printStackTrace();
-//            }
-//        }
-//        if (app.toFile().exists()) {
-//            try {
-//                Files.setAttribute(app, "dos:hidden", true);
-//            } catch (IOException ex) {
-//                ex.printStackTrace();
-//            }
-//        }
+
         jStorePanel.setVisible(true);
         jSendPanel.setVisible(false);
         jReceivePanel.setVisible(false);
@@ -289,16 +274,18 @@ public class Main extends javax.swing.JFrame {
             //0 to 2
             int rand_int1 = rand.nextInt(3);
             System.out.println("random int " + rand_int1);
-            switch (rand_int1) {
-                case 0:
-                    GUI.labelCutterThread(jAlertLabel, "a data encryption app.", 80, 80, 100, true);
-                    break;
-                case 1:
-                    GUI.labelCutterThread(jAlertLabel, "developed by i-comit LLC.", 80, 80, 100, true);
-                    break;
-                case 2:
-                    GUI.labelCutterThread(jAlertLabel, "USB drive, reimagined.", 80, 80, 100, true);
-                    break;
+            if (!Miscellaneous.holidayCheck()) {
+                switch (rand_int1) {
+                    case 0:
+                        GUI.labelCutterThread(jAlertLabel, "a data encryption app.", 80, 80, 100, true);
+                        break;
+                    case 1:
+                        GUI.labelCutterThread(jAlertLabel, "developed by i-comit LLC.", 80, 80, 100, true);
+                        break;
+                    case 2:
+                        GUI.labelCutterThread(jAlertLabel, "USB drive, reimagined.", 80, 80, 100, true);
+                        break;
+                }
             }
 
         }
@@ -806,7 +793,7 @@ public class Main extends javax.swing.JFrame {
             .addGroup(dragDropLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(dragDropLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
                     .addGroup(dragDropLayout.createSequentialGroup()
                         .addGap(0, 59, Short.MAX_VALUE)
                         .addComponent(jLabel9)
@@ -865,7 +852,7 @@ public class Main extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -891,7 +878,7 @@ public class Main extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1038,7 +1025,7 @@ public class Main extends javax.swing.JFrame {
         getContentPane().add(jScrollPane5);
         jScrollPane5.setBounds(22, 12, 225, 160);
 
-        setSize(new java.awt.Dimension(750, 234));
+        setSize(new java.awt.Dimension(754, 234));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
     //DECRYPT

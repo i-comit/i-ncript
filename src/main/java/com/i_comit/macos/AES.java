@@ -178,7 +178,7 @@ class AES_T implements Runnable {
                             case 0:
                                 Main.jProgressBar1.setStringPainted(true);
                                 Main.jProgressBar1.setString("0% | " + "0/" + AES_T.paths.size());
-                                GUI.labelCutterThread(jAlertLabel, "encrypting " + paths.size() + " files", 0, 20, 2000, false);
+                                GUI.labelCutterThread(jAlertLabel, "encrypting " + paths.size() + " files", 0, 15, 1500, false);
                                 paths.forEach(x -> {
                                     if (x.toFile().length() > maxFileBytes) {
                                         if (GUI.t.isAlive()) {
@@ -220,7 +220,7 @@ class AES_T implements Runnable {
                             break;
                             case 1:
                                 jProgressBar1.setStringPainted(true);
-                                GUI.labelCutterThread(jAlertLabel, "decrypting " + paths.size() + " files", 0, 20, 2000, false);
+                                GUI.labelCutterThread(jAlertLabel, "decrypting " + paths.size() + " files", 0, 15, 1500, false);
                                 paths.forEach(x -> {
                                     if (x.toFile().length() > maxFileBytes) {
                                         if (GUI.t.isAlive()) {

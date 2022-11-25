@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.i_comit.macos"},{"l":"com.i_comit.windows"},{"l":"com.i_comit.windows.dev"}];updateSearchResults();
