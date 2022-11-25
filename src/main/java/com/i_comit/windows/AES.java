@@ -94,8 +94,6 @@ public class AES {
         }
         return inputBytes;
     }
-//    static SecureRandom rnd = new SecureRandom();
-//    static IvParameterSpec iv = new IvParameterSpec(rnd.generateSeed(16));
 
     private static void doCrypto(int cipherMode, String key, File inputFile,
             File outputFile) throws CryptoException {
@@ -104,7 +102,7 @@ public class AES {
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
             cipher.init(cipherMode, secretKey);
 
-            try ( FileInputStream inputStream = new FileInputStream(inputFile);  FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+            try (FileInputStream inputStream = new FileInputStream(inputFile); FileOutputStream outputStream = new FileOutputStream(outputFile)) {
                 byte[] inputBytes = dynamicBytes(inputFile);
                 int nread;
                 while ((nread = inputStream.read(inputBytes)) > 0) {
@@ -136,8 +134,6 @@ public class AES {
             throw new CryptoException("Error encrypting/decrypting file", ex);
         } catch (IOException | UncheckedIOException ex) {
             System.out.println("Last File Was " + inputFile.getName());
-//        } catch (InvalidAlgorithmParameterException ex) {
-//            ex.printStackTrace();
         }
     }
 
@@ -178,7 +174,9 @@ class AES_T implements Runnable {
                             case 0:
                                 Main.jProgressBar1.setStringPainted(true);
                                 Main.jProgressBar1.setString("0% | " + "0/" + AES_T.paths.size());
-                                GUI.labelCutterThread(jAlertLabel, "encrypting " + paths.size() + " files", 0, 15, 1500, false);
+                                if (paths.size() >= 30) {
+                                    GUI.labelCutterThread(jAlertLabel, "encrypting " + paths.size() + " files", 0, 15, 1500, false);
+                                }
                                 paths.forEach(x -> {
                                     if (x.toFile().length() > maxFileBytes) {
                                         if (GUI.t.isAlive()) {
@@ -240,7 +238,7 @@ class AES_T implements Runnable {
                                     System.out.println("File Decryption Complete");
                                     if (toolMode == 1) {
                                         new File(Statics.zipFileName + ".i-cc").delete();
-                                        new File(Statics.zipFileName + File.separator + "send.key").delete();
+                                        new File(Statics.zipFileName + File.separator + ".send.key").delete();
                                         Main.jList1.clearSelection();
                                         Folder.listZipFiles();
                                         Main.jLabel8.setVisible(true);

@@ -96,7 +96,6 @@ public class Login {
             List<String> lines = Arrays.asList(Hasher.finalizeHash(username, true), Hasher.finalizeHash(password, false));
             Path p = Files.createFile(path);//creates file at specified location  
             Files.write(path, lines);
-//            Files.setAttribute(p, "dos:hidden", true);
             Main.jLoginPanel.setVisible(false);
             Main.jToolPanel.setVisible(true);
             Main.dragDropper();
@@ -110,8 +109,6 @@ public class Login {
         jLabel5.setVisible(true);
         jRadioButton2.setVisible(false);
     }
-
-    public static boolean sendKeyCheckBool = false;
 
     public static boolean sendKeyCheck() throws IOException {
         boolean b = false;
@@ -133,10 +130,19 @@ public class Login {
                         Main.jPasswordField2.setText("");
                         AESMode = 1;
                         fileCount = GUI.countFiles(sendFolder);
-                        zipFileCount = fileCount;
-                        jProgressBar1.setMaximum(zipFileCount);
-                        AES.AESThread(listAESPaths(sendFolder), sendFolder.toFile(), true, 0);
-                        sendKeyCheckBool = true;
+                        if (fileCount == 0) {
+                            AESMode = 0;
+                            fileCount = GUI.countFiles(sendFolder);
+                            zipFileCount = fileCount;
+                            jProgressBar1.setMaximum(zipFileCount);
+                            AES.AESThread(listAESPaths(sendFolder), sendFolder.toFile(), true, 2);
+                            b = true;
+                        } else {
+                            GUI.t.interrupt();
+                            GUI.labelCutterThread(jAlertLabel, "o-box can't contain .enc files", 20, 20, 1200, false);
+                            sendPanelTools();
+                            jRadioButton2.setEnabled(true);
+                        }
                         b = true;
                     } else {
                         GUI.t.interrupt();
@@ -162,13 +168,11 @@ public class Login {
     }
 
     public static void sendKey() {
-        Path sendKeyPath = Paths.get(Statics.sendFolder + File.separator + "send.key");
+        Path sendKeyPath = Paths.get(Statics.sendFolder + File.separator + ".send.key");
         try {
             List<String> lines = Arrays.asList(Hasher.finalizeHash(recipientUsername, true), Hasher.finalizeHash(recipientPassword, false));
-//            List<String> lines = Arrays.asList(Hasher.modHash(recipientPassword));
-            Path p = Files.createFile(sendKeyPath);//creates file at specified location  
+            Files.createFile(sendKeyPath);//creates file at specified location  
             Files.write(sendKeyPath, lines);
-            Files.setAttribute(p, "dos:hidden", true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -200,7 +204,7 @@ public class Login {
                 unzipFile(Statics.zipFileName + ".i-cc", Statics.zipFileName.replaceAll(".i-cc", ""));
                 Main.toolBtnsBool(true);
                 try {
-                    BufferedReader brTest = new BufferedReader(new FileReader(zipFileName + File.separator + "send.key"));
+                    BufferedReader brTest = new BufferedReader(new FileReader(zipFileName + File.separator + ".send.key"));
                     String usernameRead = Hasher.readKey(brTest.readLine(), username);
                     String passwordRead = Hasher.readKey(brTest.readLine(), recipientPassword);
 

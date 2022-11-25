@@ -138,6 +138,22 @@ public class GUI {
         return result;
     }
 
+    public static void resetIncorrectKeyProgressBar(JProgressBar progressBar) {
+        progressBar.setMaximum(2);
+        progressBar.setValue(progressBar.getMaximum());
+        for (int x = progressBar.getMaximum(); x >= 0; x--) {
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+            progressBar.setValue(x);
+            if (x <= 1) {
+                Main.progressbarBool = true;
+            }
+        }
+    }
+
     public static void resetProgressBar(JProgressBar progressBar) {
         progressBar.setValue(progressBar.getMaximum());
         Main.jButton2.setVisible(false);

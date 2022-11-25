@@ -15,7 +15,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -28,11 +27,10 @@ import javax.swing.DefaultListModel;
 public class Folder {
 
     public static String sendFolderStr = "";
-        private static final List<String> zipFileList = new ArrayList<>();
-
+    private static final List<String> zipFileList = new ArrayList<>();
 
     public static void prepareZipFile() throws IOException {
-        //SEND
+        zipFileList.clear();
         sendFolderStr = Statics.sendFolder + File.separator + firstLastChar(Statics.recipientUsername) + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMddmmss"));
         zipFile(Statics.sendFolder.toString(), sendFolderStr);
         GUI.resetProgressBar(Main.jProgressBar2);
@@ -102,7 +100,7 @@ public class Folder {
         File directory = new File(dir);
         zipFileList(directory);
 
-        try ( FileOutputStream fos = new FileOutputStream(zipFile);  ZipOutputStream zos = new ZipOutputStream(fos)) {
+        try (FileOutputStream fos = new FileOutputStream(zipFile); ZipOutputStream zos = new ZipOutputStream(fos)) {
 
             for (String filePath : zipFileList) {
                 System.out.println("Compressing: " + filePath);
@@ -111,7 +109,7 @@ public class Folder {
                 zos.putNextEntry(zipEntry);
 
                 // Read file content and write to zip output stream.
-                try ( FileInputStream fis = new FileInputStream(filePath)) {
+                try (FileInputStream fis = new FileInputStream(filePath)) {
                     byte[] buffer = new byte[1024];
                     int length;
                     while ((length = fis.read(buffer)) > 0) {
@@ -131,9 +129,6 @@ public class Folder {
         }
     }
 
-    /**
-     * Get files list from the directory recursive to the subdirectory.
-     */
     private static void zipFileList(File directory) {
         File[] files = directory.listFiles();
         if (files != null && files.length > 0) {
@@ -145,7 +140,6 @@ public class Folder {
                 }
             }
         }
-
     }
 
     public static void unzipFile(String zipFilePath, String destDir) {

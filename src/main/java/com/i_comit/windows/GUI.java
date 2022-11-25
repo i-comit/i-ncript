@@ -151,7 +151,6 @@ public class GUI {
                 Main.progressbarBool = true;
             }
         }
-
     }
 
     public static void resetProgressBar(JProgressBar progressBar) {

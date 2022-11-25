@@ -36,7 +36,7 @@ public class Main extends javax.swing.JFrame {
     public static String root = "/Volumes/NO NAME";
     public static String masterFolder = File.separator + "--------" + File.separator;
 
-    private static final String appVer = "1.7.6";
+    private static final String appVer = "1.7.7";
     private static final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:ss a"));
     public static final int year = Year.now().getValue();
 
@@ -272,7 +272,7 @@ public class Main extends javax.swing.JFrame {
         } else {
             Random rand = new Random();
             //0 to 2
-            int rand_int1 = rand.nextInt(4);
+            int rand_int1 = rand.nextInt(6);
             if (!Miscellaneous.holidayCheck()) {
                 switch (rand_int1) {
                     case 0:
@@ -286,6 +286,12 @@ public class Main extends javax.swing.JFrame {
                         break;
                     case 3:
                         GUI.labelCutterThread(jAlertLabel, "bundled using jar2app.", 80, 80, 100, true);
+                        break;
+                    case 4:
+                        GUI.labelCutterThread(jAlertLabel, "also available on windows.", 80, 80, 100, true);
+                        break;
+                    case 5:
+                        GUI.labelCutterThread(jAlertLabel, "also available on linux.", 80, 80, 100, true);
                         break;
                 }
             }
@@ -467,10 +473,13 @@ public class Main extends javax.swing.JFrame {
         jStorePanel.setPreferredSize(new java.awt.Dimension(250, 75));
 
         jToggleButton1.setFont(Statics.registerCustomFont(12, fontFile));
-        jToggleButton1.setText("HOT FILE");
+        jToggleButton1.setText("HOT FILER");
         jToggleButton1.setToolTipText("enable to automatically encrypt any file put into the i-ncript folder");
         jToggleButton1.setFocusable(false);
         jToggleButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jToggleButton1.setMargin(new java.awt.Insets(2, 12, 2, 12));
+        jToggleButton1.setMaximumSize(new java.awt.Dimension(105, 22));
+        jToggleButton1.setMinimumSize(new java.awt.Dimension(105, 22));
         jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jToggleButton1ActionPerformed(evt);
@@ -576,6 +585,9 @@ public class Main extends javax.swing.JFrame {
 
         jRadioButton2.setFont(Statics.registerCustomFont(12, fontFile));
         jRadioButton2.setText("ENCRYPT");
+        jRadioButton2.setMargin(new java.awt.Insets(2, 2, 2, 0));
+        jRadioButton2.setMaximumSize(new java.awt.Dimension(92, 20));
+        jRadioButton2.setMinimumSize(new java.awt.Dimension(87, 20));
         jRadioButton2.setPreferredSize(new java.awt.Dimension(92, 20));
         jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -603,6 +615,8 @@ public class Main extends javax.swing.JFrame {
 
         jRadioButton3.setFont(Statics.registerCustomFont(12, fontFile));
         jRadioButton3.setText("DECRYPT");
+        jRadioButton3.setMargin(new java.awt.Insets(2, 2, 2, 0));
+        jRadioButton3.setMaximumSize(new java.awt.Dimension(92, 20));
         jRadioButton3.setPreferredSize(new java.awt.Dimension(92, 20));
         jRadioButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1137,7 +1151,6 @@ public class Main extends javax.swing.JFrame {
             jLabel6.setVisible(false);
             jLabel5.setVisible(false);
             jRadioButton2.setVisible(true);
-            jRadioButton2.requestFocus();
         }
     }//GEN-LAST:event_jPasswordField2Evt
 
@@ -1269,8 +1282,6 @@ public class Main extends javax.swing.JFrame {
             jTextField1.setEnabled(false);
             jPasswordField1.setEnabled(false);
         }
-        String cwd = root + masterFolder;
-        System.out.println(cwd);
     }//GEN-LAST:event_jSlider1StateChanged
 
     private void dragDropMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dragDropMouseReleased
