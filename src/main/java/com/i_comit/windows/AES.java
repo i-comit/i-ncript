@@ -102,7 +102,7 @@ public class AES {
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
             cipher.init(cipherMode, secretKey);
 
-            try (FileInputStream inputStream = new FileInputStream(inputFile); FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+            try ( FileInputStream inputStream = new FileInputStream(inputFile);  FileOutputStream outputStream = new FileOutputStream(outputFile)) {
                 byte[] inputBytes = dynamicBytes(inputFile);
                 int nread;
                 while ((nread = inputStream.read(inputBytes)) > 0) {
