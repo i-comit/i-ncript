@@ -35,7 +35,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "D:\\";
+    public static String root = "";
     public static String masterFolder = "--------" + File.separator;
 
     private static final String appVer = "1.7.6";
