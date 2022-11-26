@@ -213,10 +213,13 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection code="Statics.registerCustomFont(12, fontFile)" type="code"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="HOT FILE" noResource="true"/>
+                <Property name="text" type="java.lang.String" value="HOT FILER" noResource="true"/>
                 <Property name="toolTipText" type="java.lang.String" value="enable to automatically encrypt any file put into the i-ncript folder"/>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
+                <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
+                  <Insets value="[2, 13, 3, 13]"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jToggleButton1ActionPerformed"/>

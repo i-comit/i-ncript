@@ -481,10 +481,11 @@ public class Main extends javax.swing.JFrame {
         jStorePanel.setPreferredSize(new java.awt.Dimension(250, 75));
 
         jToggleButton1.setFont(Statics.registerCustomFont(12, fontFile));
-        jToggleButton1.setText("HOT FILE"); // NOI18N
+        jToggleButton1.setText("HOT FILER"); // NOI18N
         jToggleButton1.setToolTipText("enable to automatically encrypt any file put into the i-ncript folder");
         jToggleButton1.setFocusable(false);
         jToggleButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jToggleButton1.setMargin(new java.awt.Insets(2, 13, 3, 13));
         jToggleButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jToggleButton1ActionPerformed(evt);
