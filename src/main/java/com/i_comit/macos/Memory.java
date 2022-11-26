@@ -131,8 +131,7 @@ public class Memory {
     }
 
     public static void getHeapSize() {
-        File cfgFile = new File(root+File.separator+Main.appBundle+File.separator+"Info.plist");
-        System.out.println("CFG FILE " + cfgFile);
+        File cfgFile = new File(root + File.separator + masterFolder + File.separator + Main.appBundle + File.separator + "Info.plist");
         if (cfgFile.exists()) {
             try (BufferedReader br = new BufferedReader(new FileReader(cfgFile))) {
                 String line = "";
@@ -141,10 +140,10 @@ public class Memory {
                     System.out.println(line);
                 }
                 System.out.println("LAST LINE " + line);
-//                String gb = line.substring(line.length() - 11, line.length() - 10);
-//                System.out.println("GB S " + gb);
-//                currentHeap = Integer.parseInt(gb);
-//                System.out.println("current heap is " + currentHeap);
+                String gb = line.substring(line.length() - 11, line.length() - 10);
+                System.out.println("GB S " + gb);
+                currentHeap = Integer.parseInt(gb);
+                System.out.println("current heap is " + currentHeap);
                 Main.jSlider1.setValue(currentHeap);
                 Main.jHeapLabel.setText(currentHeap + "GB heap");
             } catch (FileNotFoundException ex) {
@@ -160,47 +159,65 @@ public class Memory {
 
     public static void changeHeapSize() {
         try {
-            List<String> lines = Files.readAllLines(Paths.get(root + Main.masterFolder + "\\app\\i-ncript.cfg"), StandardCharsets.UTF_8);
-            lines.remove(6);
-            lines.add(6, "java-options=-Xms" + selectedHeap + "g");
-            switch (selectedHeap) {
-                case 1:
-                    lines.remove(7);
-                    lines.add(7, "java-options=-Xmx" + 2 + "g");
-                    break;
-                case 2:
-                    lines.remove(7);
-                    lines.add(7, "java-options=-Xmx" + 4 + "g");
-                    break;
-                case 3:
-                    lines.remove(7);
-                    lines.add(7, "java-options=-Xmx" + 6 + "g");
-                    break;
-                case 4:
-                    lines.remove(7);
-                    lines.add(7, "java-options=-Xmx" + 8 + "g");
-                    break;
-                case 5:
-                    lines.remove(7);
-                    lines.add(7, "java-options=-Xmx" + 10 + "g");
-                    break;
-                case 6:
-                    lines.remove(7);
-                    lines.add(7, "java-options=-Xmx" + 12 + "g");
-                    break;
-                case 7:
-                    lines.remove(7);
-                    lines.add(7, "java-options=-Xmx" + 14 + "g");
-                    break;
-                case 8:
-                    lines.remove(7);
-                    lines.add(7, "java-options=-Xmx" + 16 + "g");
-                    break;
-
+            List<String> lines = Files.readAllLines(Paths.get(root + File.separator + masterFolder + File.separator + Main.appBundle + File.separator + "Info.plist"), StandardCharsets.UTF_8);
+            for (String line : lines) {
+                System.out.println(line);
             }
-            Files.write(Paths.get(root + Main.masterFolder + "\\app\\i-ncript.cfg"), lines, StandardCharsets.UTF_8);
-            Runtime.getRuntime().exec("cmd /c " + root + Main.masterFolder + "i-ncript.exe");
-            System.exit(0);
+            System.out.println("LINE AT " + lines.get(56));
+            lines.remove(56);
+
+            lines.add(56, "\t\t<string>-Xms" + selectedHeap + "g</string>");
+//            switch (selectedHeap) {
+//                case 1:
+//                    lines.remove(7);
+//                    lines.add(7, "java-options=-Xmx" + 2 + "g");
+//                    break;
+//                case 2:
+//                    lines.remove(7);
+//                    lines.add(7, "java-options=-Xmx" + 4 + "g");
+//                    break;
+//                case 3:
+//                    lines.remove(7);
+//                    lines.add(7, "java-options=-Xmx" + 6 + "g");
+//                    break;
+//                case 4:
+//                    lines.remove(7);
+//                    lines.add(7, "java-options=-Xmx" + 8 + "g");
+//                    break;
+//                case 5:
+//                    lines.remove(7);
+//                    lines.add(7, "java-options=-Xmx" + 10 + "g");
+//                    break;
+//                case 6:
+//                    lines.remove(7);
+//                    lines.add(7, "java-options=-Xmx" + 12 + "g");
+//                    break;
+//                case 7:
+//                    lines.remove(7);
+//                    lines.add(7, "java-options=-Xmx" + 14 + "g");
+//                    break;
+//                case 8:
+//                    lines.remove(7);
+//                    lines.add(7, "java-options=-Xmx" + 16 + "g");
+//                    break;
+//
+//            }
+//            Files.write(Paths.get(root + File.separator + masterFolder + File.separator + Main.appBundle + File.separator + "Info.plist"), lines, StandardCharsets.UTF_8);
+            try {
+                ProcessBuilder pb = new ProcessBuilder("/bin/bash", "-l", "cd /Volumes", "ls");
+                pb.redirectError();
+                String s = "";
+                Process sh = pb.start();
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(sh.getInputStream()))) {
+                    while ((s = reader.readLine()) != null) {
+                        System.out.println(s);
+                    }
+                }
+                System.out.println("???");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+//            System.exit(0);
 
         } catch (IOException ex) {
             ex.printStackTrace();

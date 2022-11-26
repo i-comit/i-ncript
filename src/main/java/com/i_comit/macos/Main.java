@@ -61,7 +61,9 @@ public class Main extends javax.swing.JFrame {
                 this.setSize(528, 224);
                 this.setLocationRelativeTo(null);
             } else {
-                Memory.getHeapSize();
+//                Memory.getHeapSize();
+                Main.jHeapLabel.setVisible(false);
+                Main.jSlider1.setVisible(false);
                 setKeybinding();
                 loginLabelVisibleBool(true);
                 jUsernameLabel.setText("enter username");
@@ -1068,7 +1070,7 @@ public class Main extends javax.swing.JFrame {
         }
         if (jButton1.getText().equals("RESTART")) {
             jButton1.setToolTipText("apply heap size by closing");
-            Memory.changeHeapSize();
+//            Memory.changeHeapSize();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
