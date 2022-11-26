@@ -33,7 +33,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "/Volumes/NO NAME";
+    public static String root = "/Volumes/NO NAME/--------/";
     public static String masterFolder = File.separator + "--------" + File.separator;
 
     private static final String appVer = "1.7.7";
@@ -43,7 +43,7 @@ public class Main extends javax.swing.JFrame {
     private final URL fontFile = getClass().getResource("/polentical-neon.ttf");
 
     public Main() {
-        root = Paths.get("").toAbsolutePath().toString();
+//        root = Paths.get("").toAbsolutePath().toString();
         System.out.println("ROOT "+ root);
 
         if (Memory.checkBash()) {
@@ -59,7 +59,7 @@ public class Main extends javax.swing.JFrame {
             if (!keyFile.exists()) {
                 jToolPanel.setVisible(false);
                 loginLabelVisibleBool(false);
-                this.setSize(518, 241);
+                this.setSize(528, 224);
                 this.setLocationRelativeTo(null);
             } else {
                 Memory.getHeapSize();
@@ -955,7 +955,7 @@ public class Main extends javax.swing.JFrame {
                 jButton4ActionPerformed(evt);
             }
         });
-        jEULAPanel.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(433, 176, -1, -1));
+        jEULAPanel.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(424, 176, -1, -1));
 
         jButton5.setText("I DISAGREE");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -993,7 +993,7 @@ public class Main extends javax.swing.JFrame {
                 ActionjButton6(evt);
             }
         });
-        jEULAPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(433, 176, -1, -1));
+        jEULAPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(424, 176, -1, -1));
 
         jButton7.setText("I DISAGREE");
         jButton7.addActionListener(new java.awt.event.ActionListener() {
