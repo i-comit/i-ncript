@@ -320,13 +320,13 @@ class logger_T implements Runnable {
             Thread.sleep(50);
             switch (toolMode) {
                 case 0:
-                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(21, outputFile.getPath().length()) + "\n");
+                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(35, outputFile.getPath().length()) + "\n");
                     break;
                 case 1:
-                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(18, outputFile.getPath().length()) + "\n");
+                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(21, outputFile.getPath().length()) + "\n");
                     break;
                 case 2:
-                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(18, outputFile.getPath().length()) + "\n");
+                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(21, outputFile.getPath().length()) + "\n");
                     break;
             }
             Thread.sleep(50);

@@ -102,7 +102,7 @@ public class AES {
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
             cipher.init(cipherMode, secretKey);
 
-            try ( FileInputStream inputStream = new FileInputStream(inputFile);  FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+            try (FileInputStream inputStream = new FileInputStream(inputFile); FileOutputStream outputStream = new FileOutputStream(outputFile)) {
                 byte[] inputBytes = dynamicBytes(inputFile);
                 int nread;
                 while ((nread = inputStream.read(inputBytes)) > 0) {
@@ -249,6 +249,7 @@ class AES_T implements Runnable {
                                         Main.jTabbedPane1.setSelectedIndex(0);
                                         Main.toolBtnsBool(true);
                                     }
+                                    GUI.resetProgressBar(jProgressBar1);
                                 }
                                 break;
                         }
@@ -261,6 +262,8 @@ class AES_T implements Runnable {
                                     Main.jRadioButton2.setEnabled(true);
                                     break;
                                 case 1:
+                                    GUI.t.interrupt();
+                                    GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400, false);
                                     Main.jToggleButton1.setEnabled(true);
                                     Main.jRadioButton3.setEnabled(true);
                                     break;
