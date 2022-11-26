@@ -175,7 +175,7 @@ public class GUI {
                 }
                 Thread.sleep(200);
                 for (int x = progressBar.getMaximum(); x >= 0; x--) {
-                    Thread.sleep(5);
+                    Thread.sleep(4);
                     progressBar.setValue(x);
                     if (x <= 1) {
                         Main.progressbarBool = true;
@@ -219,7 +219,7 @@ public class GUI {
                 }
                 Thread.sleep(800);
                 for (int x = progressBar.getMaximum(); x >= 0; x--) {
-                    Thread.sleep(5);
+                    Thread.sleep(4);
                     progressBar.setValue(x);
                     if (x <= 1) {
                         Main.progressbarBool = true;
@@ -316,7 +316,7 @@ class logger_T implements Runnable {
 
     public static void logger_T(File outputFile, int toolMode) {
         try {
-            Thread.sleep(50);
+            Thread.sleep(40);
             switch (toolMode) {
                 case 0:
                     Main.jTextArea1.append(outputFile.getAbsolutePath().substring(21, outputFile.getPath().length()) + "\n");
@@ -328,7 +328,7 @@ class logger_T implements Runnable {
                     Main.jTextArea1.append(outputFile.getAbsolutePath().substring(18, outputFile.getPath().length()) + "\n");
                     break;
             }
-            Thread.sleep(50);
+            Thread.sleep(40);
             Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
         } catch (InterruptedException ex) {
 //            ex.printStackTrace();

@@ -93,12 +93,7 @@ class FileHider_T implements Runnable {
     public int threadIterator;
     
     public void run() {
-//
-//        try {
-//            FileHider.fileHider();
-//        } catch (IOException ex) {
-//            ex.printStackTrace();
-//        }
+
     }
     
     public static void fileHiderToolReenable() {
@@ -119,7 +114,6 @@ class FileHider_T implements Runnable {
         List<Path> paths = listPaths(path);
         int fileCount = GUI.countAllFiles(path);
         if (Main.jToggleButton1.isSelected()) {
-            System.out.println("hot filer is selected");
             Main.toolBtnsBool(true);
             Main.jProgressBar1.setValue(0);
             Main.jProgressBar2.setMaximum(0);

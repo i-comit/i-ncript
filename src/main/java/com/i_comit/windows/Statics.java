@@ -319,13 +319,8 @@ public class Statics {
             dragDrop.setVisible(false);
             try {
                 fileCount = GUI.countFiles(path);
-                if (fileCount != 0) {
-                    main.setSize(780, 266);
-                } else {
-                    main.setSize(780, 241);
-                }
                 jProgressBar1.setMaximum(fileCount);
-                HotFiler.HotFilerThread();
+                HotFiler.HotFilerThread(main);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -375,5 +370,4 @@ public class Statics {
         main.setLocationRelativeTo(null);
         jScrollPane5.setVisible(true);
     }
-
 }
