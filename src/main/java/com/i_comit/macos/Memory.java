@@ -5,6 +5,7 @@
 package com.i_comit.macos;
 
 import static com.i_comit.macos.Main.jProgressBar2;
+import static com.i_comit.macos.Main.masterFolder;
 import static com.i_comit.macos.Main.root;
 import static com.i_comit.macos.Memory.byteFormatter;
 import java.io.BufferedReader;
@@ -58,16 +59,92 @@ public class Memory {
         return percentageStr;
     }
 
+    public static boolean checkBash() {
+        DriveCheck driveCheck = new DriveCheck();
+        boolean b = false;
+        String logicaldisk = "df -Hl";
+        String s;
+        try {
+            Process process = Runtime.getRuntime().exec(logicaldisk);
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                reader.readLine();
+                while ((s = reader.readLine()) != null) {
+                    if (s.trim().length() != 0) {
+                        String driveDir = s.substring(68).trim();
+                        if (root.startsWith(driveDir)) {
+                            System.out.println("driveDir " + driveDir);
+                            String devPath = s.substring(0, 10).trim();
+                            System.out.println("DEVPATH " + devPath);
+                            //Check if device is an external USB
+                            if (checkBash2(devPath)) {
+                                //This means that the app is running inside a USB
+                                String replacer = Main.root.replaceAll(driveDir, "");
+                                String replacer2 = replacer.substring(0, 10);
+                                Main.appBundle = replacer.substring(10);
+                                System.out.println("REPLACER " + replacer);
+                                System.out.println("REPLACER2 " + replacer2);
+                                System.out.println("APP BUNDLE " + Main.appBundle);
+//                                System.out.println("TEMP " + temp.substring(16, 26));
+                                if (Main.root.contains(masterFolder)) {
+                                    //The app has the masterFolder somewhere in it, next we will check if the masterFolder is in the right path
+                                    if (replacer2.equals(masterFolder)) {
+                                        root = driveDir;
+                                        Statics.directory = new File(root + masterFolder + Statics.folderName);
+                                        Statics.keyFile = Paths.get(root + masterFolder + Statics.keyName).toFile();
+                                        Statics.path = Paths.get(root + masterFolder + Statics.folderName);
+                                        Statics.sendFolder = Paths.get(root + Main.masterFolder + "o-box");
+                                        Statics.receiveFolder = Paths.get(root + Main.masterFolder + "n-box");
+                                        System.out.println("MAIN ROOT " + root);
+                                        System.out.println("CWD " + Paths.get("").toAbsolutePath().toString());
+                                        driveCheck.dispose();
+                                        b = true;
+
+                                    } else {
+                                        System.out.println("-------- folder needs to be at USB root");
+                                        driveCheck.setVisible(true);
+                                        driveCheck.setDriveCheckText(4);
+                                    }
+
+                                } else {
+                                    System.out.println("App needs to be in a folder called -------- ");
+                                    driveCheck.setVisible(true);
+                                    driveCheck.setDriveCheckText(3);
+                                }
+                                break;
+
+                            } else {
+                                driveCheck.setVisible(true);
+                                driveCheck.setDriveCheckText(1);
+                            }
+                        } else {
+                            driveCheck.setVisible(true);
+                            driveCheck.setDriveCheckText(1);
+                        }
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return b;
+    }
+
     public static void getHeapSize() {
-        File cfgFile = new File(root + Main.masterFolder + "\\app\\i-ncript.cfg");
+        File cfgFile = new File(root+File.separator+Main.appBundle+File.separator+"Info.plist");
+        System.out.println("CFG FILE " + cfgFile);
         if (cfgFile.exists()) {
             try (BufferedReader br = new BufferedReader(new FileReader(cfgFile))) {
                 String line = "";
-                for (int i = 0; i < 7; i++) {
+                for (int i = 0; i <= 56; i++) {
                     line = br.readLine();
+                    System.out.println(line);
                 }
-                currentHeap = Integer.parseInt(line.substring(line.length() - 2, line.length() - 1));
-                System.out.println("current heap is " + currentHeap);
+                System.out.println("LAST LINE " + line);
+//                String gb = line.substring(line.length() - 11, line.length() - 10);
+//                System.out.println("GB S " + gb);
+//                currentHeap = Integer.parseInt(gb);
+//                System.out.println("current heap is " + currentHeap);
                 Main.jSlider1.setValue(currentHeap);
                 Main.jHeapLabel.setText(currentHeap + "GB heap");
             } catch (FileNotFoundException ex) {
@@ -128,67 +205,6 @@ public class Memory {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-    }
-
-    public static boolean checkBash() {
-        DriveCheck driveCheck = new DriveCheck();
-        boolean b = false;
-        String logicaldisk = "df -Hl";
-        String s;
-        try {
-            Process process = Runtime.getRuntime().exec(logicaldisk);
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-                reader.readLine();
-                while ((s = reader.readLine()) != null) {
-                    if (s.trim().length() != 0) {
-                        String driveDir = s.substring(68).trim();
-                        if (Main.root.startsWith(driveDir)) {
-                            System.out.println("driveDir " + driveDir);
-                            String devPath = s.substring(0, 10).trim();
-                            System.out.println("DEVPATH " + devPath);
-                            //Check if device is an external USB
-                            if (checkBash2(devPath)) {
-                                //This means that the app is running inside a USB
-                                String replacer = Main.root.replaceAll(driveDir, "");
-                                System.out.println("REPLACER " + replacer);
-//                                System.out.println("TEMP " + temp.substring(16, 26));
-                                if (Main.root.contains(Main.masterFolder)) {
-                                    //The app has the masterFolder somewhere in it, next we will check if the masterFolder is in the right path
-                                    if (replacer.equals(Main.masterFolder)) {
-                                        Main.root = driveDir;
-                                        System.out.println("MAIN ROOT "+Main.root);
-                                        driveCheck.dispose();
-                                        b = true;
-
-                                    } else {
-                                        System.out.println("-------- folder needs to be at USB root");
-                                        driveCheck.setVisible(true);
-                                        driveCheck.setDriveCheckText(4);
-                                    }
-
-                                } else {
-                                    System.out.println("App needs to be in a folder called -------- ");
-                                    driveCheck.setVisible(true);
-                                    driveCheck.setDriveCheckText(3);
-                                }
-                                break;
-
-                            } else {
-                                driveCheck.setVisible(true);
-                                driveCheck.setDriveCheckText(1);
-                            }
-                        } else {
-                            driveCheck.setVisible(true);
-                            driveCheck.setDriveCheckText(1);
-                        }
-                    }
-                }
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return b;
     }
 
     private static boolean checkBash2(String devPath) {

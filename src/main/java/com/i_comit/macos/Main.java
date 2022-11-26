@@ -33,8 +33,9 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "/Volumes/NO NAME/--------/";
-    public static String masterFolder = File.separator + "--------" + File.separator;
+    public static String root = "/Volumes/NO NAME/--------/i-ncript.app/Contents";
+    public static String appBundle = "";
+    public static final String masterFolder = File.separator + "--------" + File.separator;
 
     private static final String appVer = "1.7.7";
     private static final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:ss a"));
@@ -44,8 +45,6 @@ public class Main extends javax.swing.JFrame {
 
     public Main() {
 //        root = Paths.get("").toAbsolutePath().toString();
-        System.out.println("ROOT "+ root);
-
         if (Memory.checkBash()) {
             initComponents();
 

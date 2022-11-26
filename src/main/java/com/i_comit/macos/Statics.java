@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 /**
  * @author Khiem Luong <khiemluong@i-comit.com>
@@ -23,9 +22,9 @@ public class Statics {
 
     public static int toolMode = 0;
 
-    public static String folderName = "i-ncript";
-    public static String rootFolder = root.substring(0, 5) + Main.masterFolder + folderName;
-    public static String keyName = ".i-ncript.key";
+    public static final String folderName = "i-ncript";
+    public static String rootFolder = root + Main.masterFolder + folderName;
+    public static final String keyName = ".i-ncript.key";
 
     public static int maxFileBytes = 1048576 * 4;
 
@@ -36,14 +35,14 @@ public class Statics {
     public static boolean fileHiderBool = false;
     public static boolean treeViewBool = false;
 
-    public static File directory = new File(root + Main.masterFolder + folderName);
-    public static File keyFile = Paths.get(root + Main.masterFolder + keyName).toFile();
+    public static File directory = null;
+    public static File keyFile = null;
 
     public static File[] contents = null;
 
-    public static Path path = Paths.get(root + Main.masterFolder + folderName);
-    public static Path sendFolder = Paths.get(root + Main.masterFolder + "o-box");
-    public static Path receiveFolder = Paths.get(root + Main.masterFolder + "n-box");
+    public static Path path = null;
+    public static Path sendFolder = null;
+    public static Path receiveFolder = null;
 
     public static String username = "";
     public static String password = "";
