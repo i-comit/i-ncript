@@ -597,7 +597,7 @@ public class Main extends javax.swing.JFrame {
                 jRadioButton2Evt(evt);
             }
         });
-        jSendPanel.add(jRadioButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 48, -1, -1));
+        jSendPanel.add(jRadioButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 49, -1, -1));
 
         jToolPanel.add(jSendPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
@@ -624,7 +624,7 @@ public class Main extends javax.swing.JFrame {
                 jRadioButton3Evt(evt);
             }
         });
-        jReceivePanel.add(jRadioButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 48, -1, -1));
+        jReceivePanel.add(jRadioButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 49, -1, -1));
 
         jLabel8.setFont(Statics.registerCustomFont(12, fontFile));
         jLabel8.setText("select a .i-cc file");
