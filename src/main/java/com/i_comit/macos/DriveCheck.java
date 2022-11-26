@@ -25,29 +25,33 @@ public class DriveCheck extends javax.swing.JFrame {
 
     public DriveCheck() {
         initComponents();
+
+    }
+
+    public void setDriveCheckText(int driveState) {
         switch (driveState) {
             case 1:
                 jLabel1.setText("i-ncript can only run");
                 goWebsite(jLabel2, "within a ", "https://i-comit.com", "USB device", false);
-            break;
+                break;
             case 2:
                 jLabel1.setText("i-ncript can not run");
                 jLabel2.setText("with this USB drive");
-            break;
+                break;
             case 3:
                 jLabel1.setText("i-ncript must be in a");
                 jLabel2.setText("folder named --------");
-            break;
+                break;
             case 4:
                 goWebsite(jLabel1, "the folder with ", "https://i-comit.com/i-ncript/", "i-ncript", false);
                 jLabel2.setText("must be placed at root");
-            break;
+                break;
         }
     }
 
     public static final String goWebsite(JLabel website, final String leadingStr, final String url, String text, boolean changeColor) {
         if (changeColor) {
-            website.setText("<html>" 
+            website.setText("<html>"
                     + leadingStr + "<a style=\"text-decoration:none\" text=\"rgb(187,187,187)\" href=\"\">"
                     + text + "</a><span text=\"rgb(187,187,187)\" style=\"white-space: nowrap\"><font size=\"2\">" + "®" + "</font></span></html>");
         } else {
@@ -64,10 +68,11 @@ public class DriveCheck extends javax.swing.JFrame {
                         //It looks like there's a problem
                     }
                 }
+
                 @Override
                 public void mouseEntered(MouseEvent e) {
                     if (changeColor) {
-                        website.setText("<html>" 
+                        website.setText("<html>"
                                 + leadingStr + "<a style=\"text-decoration:none\" text=\"rgb(107,107,107)\" href=\"\">"
                                 + text + "</a><span text=\"rgb(107,107,107)\" style=\"white-space: nowrap\"><font size=\"2\">" + "®" + "</font></span></html>");
                     }
@@ -76,7 +81,7 @@ public class DriveCheck extends javax.swing.JFrame {
                 @Override
                 public void mouseExited(MouseEvent e) {
                     if (changeColor) {
-                        website.setText("<html>" 
+                        website.setText("<html>"
                                 + leadingStr + "<a style=\"text-decoration:none\" text=\"rgb(187,187,187)\" href=\"\">"
                                 + text + "</a><span text=\"rgb(187,187,187)\" style=\"white-space: nowrap\"><font size=\"2\">" + "®" + "</font></span></html>");
                     }

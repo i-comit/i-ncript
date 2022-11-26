@@ -33,7 +33,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "";
+    public static String root = "/Volumes/NO NAME";
     public static String masterFolder = File.separator + "--------" + File.separator;
 
     private static final String appVer = "1.7.7";
@@ -44,7 +44,7 @@ public class Main extends javax.swing.JFrame {
 
     public Main() {
         root = Paths.get("").toAbsolutePath().toString();
-        Statics.getOS();
+        System.out.println("ROOT "+ root);
 
         if (Memory.checkBash()) {
             initComponents();
