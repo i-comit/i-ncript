@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -38,14 +39,20 @@ public class TreeView {
 
         model.reload(treeRoot);
         jTree1.revalidate();
+        testTree2();
+        asdsa();
+        System.out.println("DIR NODE LIST " + dirNodeList);
         return model;
     }
+
+    private static List<DefaultMutableTreeNode> dirNodeList = new ArrayList<>();
 
     public static void setRootName(String rootName) {
         treeRoot.setUserObject(rootName);
     }
 
     private static void listRoot(List<Path> directories) {
+        dirNodeList.clear();
         File[] filesArr = directories.get(0).toFile().listFiles();
         for (File filesArr1 : filesArr) {
             DefaultMutableTreeNode dirNodes = new DefaultMutableTreeNode(filesArr1.getName()); // level 2 (leaf) node
@@ -55,15 +62,59 @@ public class TreeView {
                     treeRoot.add(fileNodes);
                 }
             } else {
+                dirNodeList.add(dirNodes);
+
                 treeRoot.add(dirNodes);
                 listFiles(filesArr1, dirNodes);
             }
         }
     }
 
+    private static List<TreePath> expandedTreePaths = new ArrayList<>();
+
+    public static void testTree2() {
+        DefaultMutableTreeNode expandedNode = new DefaultMutableTreeNode(jTree1.getSelectionPath()); // level 2 (leaf) node
+        System.out.println(expandedNode);
+        System.out.println("");
+        
+//                System.out.println("PATH GET PATH " + treePath.getParentPath());
+//        DefaultMutableTreeNode selectedNode = new DefaultMutableTreeNode(treePath.getPath()); // level 2 (leaf) node
+//        System.out.println("Parent of node = " + selectedNode);
+        System.out.println("is node expanded? " + jTree1.isExpanded(jTree1.getSelectionPath()));
+
+        for (DefaultMutableTreeNode treePath : dirNodeList) {
+            TreePath path = new TreePath(treePath.getPath());
+            if (jTree1.isExpanded(path)) {
+                if (!expandedTreePaths.contains(path)) {
+                    expandedTreePaths.add(path);
+                    dirNodeList.add(new DefaultMutableTreeNode(path));
+
+                }
+            } else {
+                expandedTreePaths.remove(path);
+            }
+        }
+        System.out.println(expandedTreePaths + "EXPANDED TREE PATHS");
+    }
+
+    public static void asdsa() {
+        System.out.println(" DirNodeList " + dirNodeList);
+        for (DefaultMutableTreeNode pathx : dirNodeList) {
+            System.out.println(pathx);
+            TreePath path2 = new TreePath(pathx.getPath());
+            jTree1.expandPath(path2);
+        }
+        
+//        for(TreePath treePath: expandedTreePaths){
+//            jTree1.expandPath(treePath);
+//        }
+//        jTree1.expandPath(path);
+//        jTree1.setSelectionPath(path);
+//        jTree1.scrollPathToVisible(path);
+    }
+
     private static void listFiles(File file, DefaultMutableTreeNode dirNodes) {
         File[] filesArr = file.listFiles();
-//        System.out.println("CHILD 2 DIR " + file.getName());
         for (File filesArr1 : filesArr) {
             if (!filesArr1.isDirectory()) {
                 if (!filesArr1.getName().endsWith("Thumbs.db")) {
@@ -89,9 +140,12 @@ public class TreeView {
             } else {
                 DefaultMutableTreeNode subDirNodes0 = new DefaultMutableTreeNode(filesArr1.getName()); // level 2 (leaf) node
                 subDirNodes.add(subDirNodes0);
+                dirNodeList.add(subDirNodes0);
+
                 listFiles(filesArr1, subDirNodes0);
             }
         }
+        dirNodeList.add(subDirNodes);
         dirNodes.add(subDirNodes);
     }
 
