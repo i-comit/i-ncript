@@ -46,7 +46,6 @@ public class Main extends javax.swing.JFrame {
 
     public Main() {
 //        root = Paths.get("").toAbsolutePath().toString();
-//        Statics.getOS();
 //        if (Memory.checkWMIC()) {
         root = root.substring(0, 3);
         initComponents();
@@ -1263,8 +1262,9 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jTree1ValueChanged
 
     private void jTree1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MouseClicked
-        if (evt.getClickCount() == 3) {
+        if (evt.getClickCount() == 2) {
             if (jTree1.getSelectionPaths() != null) {
+                GUI.t.interrupt();
                 TreeView.openFile(jTree1.getSelectionPath());
             }
         }
@@ -1295,7 +1295,6 @@ public class Main extends javax.swing.JFrame {
 
     private void jProgressBar1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jProgressBar1StateChanged
         if (progressbarBool) {
-//            TreeView.populateStoreTree(path);
             this.setSize(780, 241);
             progressbarBool = false;
         } else {

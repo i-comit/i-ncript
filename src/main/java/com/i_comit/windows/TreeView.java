@@ -270,11 +270,15 @@ public class TreeView {
         File file = null;
         file = new File(root + masterFolder + treePath.toString().substring(1, treePath.toString().length() - 1).replaceAll(", ", "\\\\"));
         if (!file.isDirectory()) {
-            if (Desktop.isDesktopSupported()) {
-                try {
-                    Desktop.getDesktop().open(file);
-                } catch (IOException ex) {
+            if (!file.getName().endsWith(".enc")) {
+                if (Desktop.isDesktopSupported()) {
+                    try {
+                        Desktop.getDesktop().open(file);
+                    } catch (IOException ex) {
+                    }
                 }
+            } else {
+                GUI.labelCutterTreeThread(Main.jAlertLabel, "you can't open encrypted files", 0, 20, 600, false);
             }
         }
     }
