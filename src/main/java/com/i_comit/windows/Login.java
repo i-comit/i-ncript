@@ -61,11 +61,11 @@ public class Login {
                 }
             } else {
                 GUI.t.interrupt();
-                GUI.labelCutterThread(jAlertLabel, "enter a password", 20, 20, 1200, false);
+                GUI.labelCutterThread(jAlertLabel, "please enter a password", 20, 20, 1200, false);
             }
         } else {
             GUI.t.interrupt();
-            GUI.labelCutterThread(jAlertLabel, "enter a username", 20, 20, 1200, false);
+            GUI.labelCutterThread(jAlertLabel, "please enter a username", 20, 20, 1200, false);
         }
         jAlertLabel.setHorizontalAlignment(CENTER);
         jTextField1.setText("");

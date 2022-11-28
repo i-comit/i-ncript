@@ -307,50 +307,44 @@ public class Main extends javax.swing.JFrame {
         File rootFolder = Paths.get(root + masterFolder + folderName).toFile();
         File sendFolderF = Statics.sendFolder.toFile();
         File receiveFolderF = Statics.receiveFolder.toFile();
-        if (keyFile.exists()) {
-            if (!rootFolder.exists()) {
-                GUI.t.interrupt();
-                GUI.labelCutterThread(jAlertLabel, "i-ncript folders created.", 60, 60, 1800, false);
-                rootFolder.mkdir();
-            } else {
-                Random rand = new Random();
-                int rand_int1 = rand.nextInt(5);
-                if (!Miscellaneous.holidayCheck()) {
-                    switch (rand_int1) {
-                        case 0:
-                            GUI.labelCutterThread(jAlertLabel, "a data encryption app.", 80, 80, 100, true);
-                            break;
-                        case 1:
-                            GUI.labelCutterThread(jAlertLabel, "developed by i-comit LLC.", 80, 80, 100, true);
-                            break;
-                        case 2:
-                            GUI.labelCutterThread(jAlertLabel, "USB drive, reimagined.", 80, 80, 100, true);
-                            break;
-                        case 3:
-                            GUI.labelCutterThread(jAlertLabel, "also available on mac os.", 80, 80, 100, true);
-                            break;
-                        case 4:
-                            GUI.labelCutterThread(jAlertLabel, "also available on linux.", 80, 80, 100, true);
-                            break;
+        if (!rootFolder.exists()) {
+            rootFolder.mkdir();
+        }
+        if (!sendFolderF.exists()) {
+            sendFolderF.mkdir();
+        }
+        if (!receiveFolderF.exists()) {
+            receiveFolderF.mkdir();
+        }
+        if (!keyFile.exists()) {
+            GUI.labelCutterThread(jAlertLabel, "please create an account.", 60, 80, 100, true);
+        } else {
+            Random rand = new Random();
+            int rand_int1 = rand.nextInt(5);
+            if (!Miscellaneous.holidayCheck()) {
+                switch (rand_int1) {
+                    case 0:
+                        GUI.labelCutterThread(jAlertLabel, "a data encryption app.", 80, 80, 100, true);
+                        break;
+                    case 1:
+                        GUI.labelCutterThread(jAlertLabel, "developed by i-comit LLC.", 80, 80, 100, true);
+                        break;
+                    case 2:
+                        GUI.labelCutterThread(jAlertLabel, "USB drive, reimagined.", 60, 80, 100, true);
+                        break;
+                    case 3:
+                        GUI.labelCutterThread(jAlertLabel, "also available on mac os.", 60, 80, 100, true);
+                        break;
+                    case 4:
+                        GUI.labelCutterThread(jAlertLabel, "also available on linux.", 60, 80, 100, true);
+                        break;
 
-                    }
                 }
             }
-            if (!sendFolderF.exists()) {
-                sendFolderF.mkdir();
-            }
-            if (!receiveFolderF.exists()) {
-                receiveFolderF.mkdir();
-            }
-        } else {
-            GUI.labelCutterThread(jAlertLabel, "please create an account.", 20, 40, 100, true);
+            FileHider.cleanUp(path);
+            FileHider.cleanUp(sendFolder);
+            FileHider.cleanUp(receiveFolder);
         }
-        FileHider.cleanUp(path);
-        FileHider.cleanUp(sendFolder);
-        FileHider.cleanUp(receiveFolder);
-        jTextField1.setText("");
-        jPasswordField1.setText("");
-        jAlertLabel.setText("");
     }
 
     public static void dragDropper() {
@@ -461,11 +455,6 @@ public class Main extends javax.swing.JFrame {
         addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseMoved(java.awt.event.MouseEvent evt) {
                 formMouseMoved(evt);
-            }
-        });
-        addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                formMousePressed(evt);
             }
         });
         getContentPane().setLayout(null);
@@ -688,7 +677,6 @@ public class Main extends javax.swing.JFrame {
         jLoginPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jTextField1.setFont(Statics.registerCustomFont(12, fontFile));
-        jTextField1.setText("jTextField1");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
@@ -696,7 +684,6 @@ public class Main extends javax.swing.JFrame {
         });
         jLoginPanel.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(137, 6, 103, -1));
 
-        jPasswordField1.setText("jPasswordField1");
         jPasswordField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jPasswordField1ActionPerformed(evt);
@@ -1045,11 +1032,6 @@ public class Main extends javax.swing.JFrame {
         jScrollPane5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(75, 110, 175)));
         jScrollPane5.setPreferredSize(new java.awt.Dimension(225, 160));
         jScrollPane5.setRequestFocusEnabled(false);
-        jScrollPane5.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
-            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
-                jScrollPane5MouseWheelMoved(evt);
-            }
-        });
 
         jTree1.setBackground(new java.awt.Color(57, 57, 57));
         jTree1.setForeground(Color.WHITE);
@@ -1280,16 +1262,14 @@ public class Main extends javax.swing.JFrame {
 
     private void jTree1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MouseExited
         TreeView.storeExpandedNodes(toolMode);
-        TreeView.storeNodeCaretPos(toolMode);
+        TreeView.storeNodeCaretPos(Statics.toolMode);
+
         jCreationDateLabel.setText("");
         jFileSizeLabel.setText("");
         if (jTree1.getSelectionPaths() != null) {
             jTree1.clearSelection();
         }
     }//GEN-LAST:event_jTree1MouseExited
-
-    private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
-    }//GEN-LAST:event_formMousePressed
 
     public static boolean progressbarBool = false;
 
@@ -1333,10 +1313,6 @@ public class Main extends javax.swing.JFrame {
             jPasswordField1.setEnabled(false);
         }
     }//GEN-LAST:event_jSlider1StateChanged
-
-    private void jScrollPane5MouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_jScrollPane5MouseWheelMoved
-        TreeView.storeNodeCaretPos(toolMode);
-    }//GEN-LAST:event_jScrollPane5MouseWheelMoved
     /**
      * @param args the command line arguments
      */

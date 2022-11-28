@@ -141,6 +141,7 @@ class FileHider_T implements Runnable {
                 }
             });
             TreeView.populateStoreTree(path);
+            TreeView.storeNodeCaretPos(Statics.toolMode);
             TreeView.expandTreeNode(path);
         } else {
             paths.forEach(x -> {
@@ -164,6 +165,7 @@ class FileHider_T implements Runnable {
                 }
             });
             TreeView.populateStoreTree(path);
+            TreeView.storeNodeCaretPos(Statics.toolMode);
             TreeView.expandTreeNode(path);
         }
     }

@@ -175,6 +175,8 @@ public class TreeView {
                 }
                 rect = new Rectangle(0, nodeCaretPos, 1, jTree1.getRowCount());
                 Main.jScrollPane5.getViewport().scrollRectToVisible(rect);
+                Main.jScrollPane5.getVerticalScrollBar().setValue(nodeCaretPos);
+                Main.jScrollPane5.updateUI();
                 break;
             case "n-box":
                 for (DefaultMutableTreeNode pathx : receiveNodeList) {
@@ -285,6 +287,7 @@ public class TreeView {
 
     public static void getFileCreationNSize() throws IOException {
         if (Main.jTree1.getSelectionPaths() != null) {
+            Main.jAlertLabel.setText("");
             if (Main.jTree1.getSelectionPaths().length <= 1) {
                 File fileFormat = new File(root + masterFolder + Main.jTree1.getSelectionPaths()[0].toString().substring(1, Main.jTree1.getSelectionPaths()[0].toString().length() - 1).replaceAll(", ", "\\\\"));
                 Path file = fileFormat.toPath();
@@ -301,8 +304,7 @@ public class TreeView {
                         long fileSize = xf.length();
                         fileSizes.add(fileSize);
                     });
-                    BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
-                    GUI.labelCutterTreeThread(Main.jCreationDateLabel, GUI.formatDateTime(attr.creationTime()), 0, 16, 64, true);
+                    GUI.labelCutterTreeThread(Main.jCreationDateLabel, fileSizes.size()+" files", 0, 16, 64, true);
 
                     long sum = fileSizes.stream().mapToLong(Long::longValue).sum();
                     GUI.labelCutterTreeThread(Main.jFileSizeLabel, Memory.byteFormatter(sum), 0, 16, 64, true);

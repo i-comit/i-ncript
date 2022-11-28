@@ -38,14 +38,14 @@ public class Statics {
     public static boolean fileHiderBool = false;
     public static boolean treeViewBool = false;
 
-    public static File directory = new File(root.substring(0, 3) + Main.masterFolder + folderName);
-    public static File keyFile = Paths.get(root.substring(0, 3) + Main.masterFolder + keyName).toFile();
+    public static File directory = new File(root + Main.masterFolder + folderName);
+    public static File keyFile = Paths.get(root + Main.masterFolder + keyName).toFile();
 
     public static File[] contents = null;
 
-    public static Path path = Paths.get(root.substring(0, 3) + Main.masterFolder + folderName);
-    public static Path sendFolder = Paths.get(root.substring(0, 3) + Main.masterFolder + "o-box");
-    public static Path receiveFolder = Paths.get(root.substring(0, 3) + Main.masterFolder + "n-box");
+    public static Path path = Paths.get(root + Main.masterFolder + folderName);
+    public static Path sendFolder = Paths.get(root+ Main.masterFolder + "o-box");
+    public static Path receiveFolder = Paths.get(root + Main.masterFolder + "n-box");
 
     public static String username = "";
     public static String password = "";
