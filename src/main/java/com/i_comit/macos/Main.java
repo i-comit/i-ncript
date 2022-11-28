@@ -39,7 +39,7 @@ public class Main extends javax.swing.JFrame {
     public static String appBundle = "";
     public static final String masterFolder = File.separator + "--------" + File.separator;
 
-    private static final String appVer = "1.7.7";
+    private static final String appVer = "1.7.9";
     private static final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:ss a"));
     public static final int year = Year.now().getValue();
 
@@ -274,7 +274,7 @@ public class Main extends javax.swing.JFrame {
         });
     }
 
-    private void refreshTreeView(Path path, int caretPos) {
+    public static void refreshTreeView(Path path, int caretPos) {
         TreeView.populateStoreTree(path);
         caretPos = jScrollPane5.getVerticalScrollBar().getValue();
         TreeView.expandTreeNode(path);
@@ -722,7 +722,7 @@ public class Main extends javax.swing.JFrame {
         jLoginPanel.add(jHeapLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 100, -1, -1));
 
         getContentPane().add(jLoginPanel);
-        jLoginPanel.setBounds(20, 44, 250, 118);
+        jLoginPanel.setBounds(20, 44, 250, 116);
 
         jProgressBar1.setFont(Statics.registerCustomFont(12, fontFile));
         jProgressBar1.setForeground(Color.WHITE);
@@ -929,7 +929,7 @@ public class Main extends javax.swing.JFrame {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1058,12 +1058,12 @@ public class Main extends javax.swing.JFrame {
             AESMode = 1;
             fileCount = GUI.countFiles(path);
             if (fileCount != 0) {
-                this.setSize(780, 266);
+                this.setSize(768, 241);
                 decryptFunction(this);
             } else {
                 GUI.t.interrupt();
                 GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400, false);
-                this.setSize(780, 241);
+                this.setSize(768, 224);
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -1104,12 +1104,12 @@ public class Main extends javax.swing.JFrame {
             AESMode = 0;
             fileCount = GUI.countFiles(path);
             if (fileCount != 0) {
-                this.setSize(780, 266);
+                this.setSize(768, 241);
                 encryptFunction(this);
             } else {
                 GUI.t.interrupt();
                 GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 10, 20, 400, false);
-                this.setSize(780, 241);
+                this.setSize(768, 224);
             }
         } catch (IOException ex) {
             ex.printStackTrace();

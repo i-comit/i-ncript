@@ -249,7 +249,21 @@ public class Statics {
                 TreeView.populateStoreTree(path);
                 break;
         }
-        main.setSize(780, 241);
+        switch (toolMode) {
+            case 0:
+                refreshTreeView(path, TreeView.nodeCaretPos);
+                break;
+            case 1:
+                refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
+                break;
+            case 2:
+                refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                break;
+            case 3:
+                refreshTreeView(path, TreeView.nodeCaretPos);
+                break;
+        }
+        main.setSize(768, 224);
     }
 
     public static void hotFilerFunction(Main main) {

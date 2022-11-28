@@ -198,7 +198,7 @@ public class TreeView {
         }
     }
 
-    private static void setCaretPos(int caretPos) {
+    public static void setCaretPos(int caretPos) {
         Rectangle rect = new Rectangle(0, caretPos, 1, jTree1.getRowCount());
         Main.jScrollPane5.getViewport().scrollRectToVisible(rect);
         Main.jScrollPane5.getVerticalScrollBar().setValue(caretPos);
