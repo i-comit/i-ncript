@@ -53,19 +53,15 @@ public class TreeView {
     public static void expandedNodesSwitch(int toolMode, DefaultMutableTreeNode treeNode) {
         switch (toolMode) {
             case 0:
-                System.out.println("I-NCRIPT");
                 dirNodeList.add(treeNode);
                 break;
             case 1:
-                System.out.println("N-BOX");
                 receiveNodeList.add(treeNode);
                 break;
             case 2:
-                System.out.println("O-BOX");
                 sendNodeList.add(treeNode);
                 break;
             case 3:
-                System.out.println("I-NCRIPT");
                 dirNodeList.add(treeNode);
                 break;
         }
@@ -87,8 +83,6 @@ public class TreeView {
                         }
                     }
                 }
-//                System.out.println("DirNodeList " + dirNodeList);
-                System.out.println("StoreTreePaths " + treePaths);
                 break;
             case 1:
                 for (DefaultMutableTreeNode singleNode : receiveNodeList) {
@@ -104,7 +98,6 @@ public class TreeView {
                         }
                     }
                 }
-//                System.out.println("ReceiveNodeList " + receiveNodeList);
                 System.out.println("receiveTreePaths " + receiveTreePaths);
                 break;
             case 2:
@@ -121,7 +114,6 @@ public class TreeView {
                         }
                     }
                 }
-//                System.out.println("SendNodeList " + sendNodeList);
                 System.out.println("sendTreePaths " + sendTreePaths);
                 break;
             case 3:
@@ -138,7 +130,6 @@ public class TreeView {
                         }
                     }
                 }
-//                System.out.println("DirNodeList " + dirNodeList);
                 System.out.println("StoreTreePaths " + treePaths);
                 break;
         }

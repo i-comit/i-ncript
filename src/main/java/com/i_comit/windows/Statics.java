@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * @author Khiem Luong <khiemluong@i-comit.com>
@@ -133,18 +135,11 @@ public class Statics {
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
-        AESMode = 0;
         jProgressBar1.setValue(0);
         jProgressBar1.setMaximum(0);
         jProgressBar1.setVisible(true);
 
         try {
-            fileCount = GUI.countFiles(path);
-            if (fileCount != 0) {
-                main.setSize(780, 266);
-            } else {
-                main.setSize(780, 241);
-            }
             jProgressBar1.setString("0% | 0/" + fileCount);
             jProgressBar1.setMaximum(fileCount);
             AES.AESThread(listAESPaths(path), directory, true, 0);
@@ -158,18 +153,11 @@ public class Statics {
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
-        Statics.AESMode = 1;
         jProgressBar1.setValue(0);
         jProgressBar1.setMaximum(0);
         jProgressBar1.setVisible(true);
 
         try {
-            fileCount = GUI.countFiles(path);
-            if (fileCount != 0) {
-                main.setSize(780, 266);
-            } else {
-                main.setSize(780, 241);
-            }
             jProgressBar1.setString("0% | 0/" + fileCount);
             jProgressBar1.setMaximum(fileCount);
             AES.AESThread(listAESPaths(path), directory, true, 0);
@@ -251,7 +239,7 @@ public class Statics {
         }
     }
 
-    public static void stopFunction() {
+    public static void stopFunction(Main main) {
         if (jToggleButton1.isSelected()) {
             jToggleButton1.setSelected(false);
             jRadioButton1.setVisible(true);
@@ -263,15 +251,15 @@ public class Statics {
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
-        resetStaticInts();
         switch (AESMode) {
             case 0:
-                jTextArea1.append("encryption of " + fileCount + " files stopped.\n");
+                jTextArea1.append("encryption of " + fileCount + " files stopped at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
                 break;
             case 1:
-                jTextArea1.append("decryption of " + fileCount + " files stopped.\n");
+                jTextArea1.append("decryption of " + fileCount + " files stopped at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
                 break;
         }
+        resetStaticInts();
 
         jButton2.setVisible(false);
         jTabbedPane1.setSelectedIndex(0);
@@ -307,6 +295,7 @@ public class Statics {
                 TreeView.populateStoreTree(path);
                 break;
         }
+        main.setSize(780, 241);
     }
 
     public static void hotFilerFunction(Main main) {
