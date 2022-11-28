@@ -87,18 +87,12 @@ public class Statics {
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
-        AESMode = 0;
+        jAlertLabel.setText("");
         jProgressBar1.setValue(0);
         jProgressBar1.setMaximum(0);
         jProgressBar1.setVisible(true);
 
         try {
-            fileCount = GUI.countFiles(path);
-            if (fileCount != 0) {
-                main.setSize(768, 249);
-            } else {
-                main.setSize(768, 224);
-            }
             jProgressBar1.setString("0% | 0/" + fileCount);
             jProgressBar1.setMaximum(fileCount);
             AES.AESThread(listAESPaths(path), directory, true, 0);
@@ -112,22 +106,15 @@ public class Statics {
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
-        Statics.AESMode = 1;
+        jAlertLabel.setText("");
         jProgressBar1.setValue(0);
         jProgressBar1.setMaximum(0);
         jProgressBar1.setVisible(true);
 
         try {
-            fileCount = GUI.countFiles(path);
-            if (fileCount != 0) {
-                main.setSize(768, 249);
-            } else {
-                main.setSize(768, 224);
-            }
             jProgressBar1.setString("0% | 0/" + fileCount);
             jProgressBar1.setMaximum(fileCount);
             AES.AESThread(listAESPaths(path), directory, true, 0);
-
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -161,6 +148,7 @@ public class Statics {
                 FileHider.cleanUp(receiveFolder);
                 TreeView.setRootName("n-box");
                 TreeView.populateStoreTree(receiveFolder);
+                TreeView.expandTreeNode(receiveFolder);
                 break;
             case 2:
                 jSwitchMode.setText("O-BOX");
@@ -171,7 +159,6 @@ public class Statics {
                 jLabel5.setVisible(true);
                 jReceivePanel.setVisible(false);
                 jTree1.setDragEnabled(false);
-//                dragDrop.setVisible(false);
 
                 jLabel7.setVisible(false);
                 jLabel8.setVisible(false);
@@ -182,6 +169,7 @@ public class Statics {
                 FileHider.cleanUp(sendFolder);
                 TreeView.setRootName("o-box");
                 TreeView.populateStoreTree(sendFolder);
+                TreeView.expandTreeNode(sendFolder);
                 break;
             case 3:
                 jSwitchMode.setText("STORE");
@@ -199,6 +187,7 @@ public class Statics {
                 FileHider.cleanUp(path);
                 TreeView.setRootName("i-ncript");
                 TreeView.populateStoreTree(path);
+                TreeView.expandTreeNode(path);
                 toolMode = 0;
                 break;
         }
@@ -275,11 +264,6 @@ public class Statics {
             dragDrop.setVisible(false);
             try {
                 fileCount = GUI.countFiles(path);
-                if (fileCount != 0) {
-                    main.setSize(768, 249);
-                } else {
-                    main.setSize(768, 224);
-                }
                 jProgressBar1.setMaximum(fileCount);
                 HotFiler.HotFilerThread();
             } catch (IOException ex) {
