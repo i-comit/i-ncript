@@ -288,8 +288,6 @@ public class Login {
                     Main.dragDropper();
                     Main.jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
                     Main.jToolPanel.requestFocus();
-//                            TreeView.asdsa();
-
                     b = true;
                 }
             } else {

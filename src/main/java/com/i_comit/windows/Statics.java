@@ -228,7 +228,6 @@ public class Statics {
                 TreeView.setRootName("o-box");
                 TreeView.populateStoreTree(sendFolder);
                 TreeView.expandTreeNode(sendFolder);
-
                 break;
             case 3:
                 jSwitchMode.setText("STORE");
@@ -247,7 +246,6 @@ public class Statics {
                 TreeView.setRootName("i-ncript");
                 TreeView.populateStoreTree(path);
                 TreeView.expandTreeNode(path);
-
                 toolMode = 0;
                 break;
         }

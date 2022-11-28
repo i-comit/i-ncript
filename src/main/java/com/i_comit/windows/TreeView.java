@@ -8,24 +8,16 @@ import static com.i_comit.windows.Main.jTree1;
 import static com.i_comit.windows.Main.masterFolder;
 import static com.i_comit.windows.Main.root;
 import java.awt.Desktop;
+import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 /**
@@ -150,52 +142,76 @@ public class TreeView {
                 System.out.println("StoreTreePaths " + treePaths);
                 break;
         }
-
-//        System.out.println("storeExpandedNodes treePaths " + treePaths);
     }
+    public static int nodeCaretPos;
+    public static int receiveCaretPos;
+    public static int sendCaretPos;
+
+    public static void storeNodeCaretPos(int toolMode) {
+        switch (toolMode) {
+            case 0:
+                nodeCaretPos = Main.jScrollPane5.getVerticalScrollBar().getValue();
+                System.out.println("CARET POS " + nodeCaretPos);
+                break;
+            case 1:
+                receiveCaretPos = Main.jScrollPane5.getVerticalScrollBar().getValue();
+//                caretPos = receiveCaretPos;
+                System.out.println("RECEIVE CARET POS " + receiveCaretPos);
+                break;
+            case 2:
+                sendCaretPos = Main.jScrollPane5.getVerticalScrollBar().getValue();
+//                caretPos = sendCaretPos;
+                System.out.println("SEND CARET POS " + sendCaretPos);
+                break;
+            case 3:
+                nodeCaretPos = Main.jScrollPane5.getVerticalScrollBar().getValue();
+                System.out.println("CARET POS " + nodeCaretPos);
+                break;
+        }
+    }
+
+    private static Rectangle rect;
 
     public static void expandTreeNode(Path path) {
         String fileName = path.toFile().getName();
-        System.out.println("expandTreeNode fileName " + fileName);
         switch (fileName) {
             case "i-ncript":
                 for (DefaultMutableTreeNode pathx : dirNodeList) {
                     TreePath path2 = new TreePath(pathx.getPath());
                     for (TreePath treePath : treePaths) {
                         if (treePath.toString().equals(path2.toString())) {
-                            System.out.println("MATCH");
                             jTree1.expandPath(path2);
                         }
                     }
                 }
+                rect = new Rectangle(0, nodeCaretPos, 1, jTree1.getHeight());
+                Main.jScrollPane5.getViewport().scrollRectToVisible(rect);
                 break;
             case "n-box":
                 for (DefaultMutableTreeNode pathx : receiveNodeList) {
                     TreePath path2 = new TreePath(pathx.getPath());
                     for (TreePath treePath : receiveTreePaths) {
                         if (treePath.toString().equals(path2.toString())) {
-                            System.out.println("MATCH");
                             jTree1.expandPath(path2);
                         }
                     }
                 }
+                rect = new Rectangle(0, receiveCaretPos, 1, jTree1.getHeight());
+                Main.jScrollPane5.getViewport().scrollRectToVisible(rect);
                 break;
             case "o-box":
                 for (DefaultMutableTreeNode pathx : sendNodeList) {
                     TreePath path2 = new TreePath(pathx.getPath());
                     for (TreePath treePath : sendTreePaths) {
                         if (treePath.toString().equals(path2.toString())) {
-                            System.out.println("MATCH");
                             jTree1.expandPath(path2);
                         }
                     }
                 }
+                rect = new Rectangle(0, sendCaretPos, 1, jTree1.getHeight());
+                Main.jScrollPane5.getViewport().scrollRectToVisible(rect);
                 break;
         }
-
-//        dirNodeList.clear();
-//        receiveNodeList.clear();
-//        sendNodeList.clear();
     }
 
     public static void setRootName(String rootName) {
@@ -209,17 +225,15 @@ public class TreeView {
 
         File[] filesArr = directories.get(0).toFile().listFiles();
         for (File filesArr1 : filesArr) {
-            DefaultMutableTreeNode dirNodes = new DefaultMutableTreeNode(filesArr1.getName()); // level 2 (leaf) node
+            DefaultMutableTreeNode dirNodes = new DefaultMutableTreeNode(filesArr1.getName());
             if (!filesArr1.isDirectory()) {
                 if (!filesArr1.getName().endsWith("Thumbs.db")) {
-                    DefaultMutableTreeNode fileNodes = new DefaultMutableTreeNode(filesArr1.getName()); // level 2 (leaf) node
+                    DefaultMutableTreeNode fileNodes = new DefaultMutableTreeNode(filesArr1.getName());
                     treeRoot.add(fileNodes);
                 }
             } else {
-//                dirNodeList.add(dirNodes);
                 treeRoot.add(dirNodes);
                 listFiles(filesArr1, dirNodes);
-//                System.out.println("dirNode name " + directories.get(0).toFile().getName());
                 expandedNodesSwitch(Statics.toolMode, dirNodes);
             }
         }
@@ -230,7 +244,7 @@ public class TreeView {
         for (File filesArr1 : filesArr) {
             if (!filesArr1.isDirectory()) {
                 if (!filesArr1.getName().endsWith("Thumbs.db")) {
-                    DefaultMutableTreeNode fileNodes = new DefaultMutableTreeNode(filesArr1.getName()); // level 2 (leaf) node
+                    DefaultMutableTreeNode fileNodes = new DefaultMutableTreeNode(filesArr1.getName());
                     dirNodes.add(fileNodes);
                 }
             } else {
@@ -240,17 +254,17 @@ public class TreeView {
     }
 
     private static void listFilesRecursively(File file, DefaultMutableTreeNode dirNodes) {
-        DefaultMutableTreeNode subDirNodes = new DefaultMutableTreeNode(file.getName()); // level 2 (leaf) node
+        DefaultMutableTreeNode subDirNodes = new DefaultMutableTreeNode(file.getName());
         dirNodes.add(subDirNodes);
         File[] filesArr = file.listFiles();
         for (File filesArr1 : filesArr) {
             if (!filesArr1.isDirectory()) {
                 if (!filesArr1.getName().endsWith("Thumbs.db")) {
-                    DefaultMutableTreeNode fileNodes = new DefaultMutableTreeNode(filesArr1.getName()); // level 2 (leaf) node
+                    DefaultMutableTreeNode fileNodes = new DefaultMutableTreeNode(filesArr1.getName());
                     subDirNodes.add(fileNodes);
                 }
             } else {
-                DefaultMutableTreeNode subDirNodes0 = new DefaultMutableTreeNode(filesArr1.getName()); // level 2 (leaf) node
+                DefaultMutableTreeNode subDirNodes0 = new DefaultMutableTreeNode(filesArr1.getName());
                 subDirNodes.add(subDirNodes0);
 //                dirNodeList.add(subDirNodes0);
                 expandedNodesSwitch(Statics.toolMode, subDirNodes0);

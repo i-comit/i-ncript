@@ -1224,6 +1224,8 @@ public class Main extends javax.swing.JFrame {
 
     private void jTree1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MouseExited
         TreeView.storeExpandedNodes(toolMode);
+        TreeView.storeNodeCaretPos(toolMode);
+
         if (jTree1.getSelectionPaths() != null) {
             jCreationDateLabel.setText("");
             jFileSizeLabel.setText("");
