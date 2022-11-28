@@ -135,6 +135,7 @@ public class Statics {
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
+        jAlertLabel.setText("");
         jProgressBar1.setValue(0);
         jProgressBar1.setMaximum(0);
         jProgressBar1.setVisible(true);
@@ -153,6 +154,7 @@ public class Statics {
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
+        jAlertLabel.setText("");
         jProgressBar1.setValue(0);
         jProgressBar1.setMaximum(0);
         jProgressBar1.setVisible(true);

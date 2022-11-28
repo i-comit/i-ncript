@@ -1263,7 +1263,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jTree1ValueChanged
 
     private void jTree1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MouseClicked
-        if (evt.getClickCount() == 2) {
+        if (evt.getClickCount() == 3) {
             if (jTree1.getSelectionPaths() != null) {
                 TreeView.openFile(jTree1.getSelectionPath());
             }
@@ -1281,10 +1281,9 @@ public class Main extends javax.swing.JFrame {
     private void jTree1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MouseExited
         TreeView.storeExpandedNodes(toolMode);
         TreeView.storeNodeCaretPos(toolMode);
-
+        jCreationDateLabel.setText("");
+        jFileSizeLabel.setText("");
         if (jTree1.getSelectionPaths() != null) {
-            jCreationDateLabel.setText("");
-            jFileSizeLabel.setText("");
             jTree1.clearSelection();
         }
     }//GEN-LAST:event_jTree1MouseExited

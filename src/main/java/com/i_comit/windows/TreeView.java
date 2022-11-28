@@ -286,10 +286,22 @@ public class TreeView {
                 Path file = fileFormat.toPath();
 
                 if (!fileFormat.isDirectory()) {
-                    BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class
-                    );
+                    BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
                     GUI.labelCutterTreeThread(Main.jCreationDateLabel, GUI.formatDateTime(attr.lastModifiedTime()), 0, 16, 64, true);
                     GUI.labelCutterTreeThread(Main.jFileSizeLabel, Memory.byteFormatter(fileFormat.length()), 0, 16, 64, true);
+                } else {
+                    List<Long> fileSizes = new ArrayList<>();
+                    List<Path> paths = GUI.listPaths(fileFormat.toPath());
+                    paths.forEach(x -> {
+                        File xf = x.toFile();
+                        long fileSize = xf.length();
+                        fileSizes.add(fileSize);
+                    });
+                    BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
+                    GUI.labelCutterTreeThread(Main.jCreationDateLabel, GUI.formatDateTime(attr.creationTime()), 0, 16, 64, true);
+
+                    long sum = fileSizes.stream().mapToLong(Long::longValue).sum();
+                    GUI.labelCutterTreeThread(Main.jFileSizeLabel, Memory.byteFormatter(sum), 0, 16, 64, true);
                 }
             } else {
                 List<Long> fileSizes = new ArrayList<>();
@@ -298,8 +310,7 @@ public class TreeView {
 
                     if (i == Main.jTree1.getSelectionPaths().length) {
                         Path file = fileFormat.toPath();
-                        BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class
-                        );
+                        BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
                         Main.jCreationDateLabel.setText(GUI.formatDateTime(attr.lastModifiedTime()));
                     }
 

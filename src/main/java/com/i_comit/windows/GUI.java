@@ -174,11 +174,21 @@ public class GUI {
                         break;
                 }
                 Thread.sleep(200);
-                for (int x = progressBar.getMaximum(); x >= 0; x--) {
-                    Thread.sleep(4);
-                    progressBar.setValue(x);
-                    if (x <= 1) {
-                        Main.progressbarBool = true;
+                if (Statics.fileIter <= 100) {
+                    for (int x = progressBar.getMaximum(); x >= 0; x--) {
+                        Thread.sleep(4);
+                        progressBar.setValue(x);
+                        if (x <= 1) {
+                            Main.progressbarBool = true;
+                        }
+                    }
+                } else {
+                    for (int x = progressBar.getMaximum(); x >= 0; x--) {
+                        Thread.sleep(2);
+                        progressBar.setValue(x);
+                        if (x <= 1) {
+                            Main.progressbarBool = true;
+                        }
                     }
                 }
 
