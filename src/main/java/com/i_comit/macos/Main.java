@@ -490,7 +490,7 @@ public class Main extends javax.swing.JFrame {
 
         jProgressBar2.setFont(Statics.registerCustomFont(11, fontFile));
         jProgressBar2.setForeground(Color.white);
-        jToolPanel.add(jProgressBar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 119, 240, 18));
+        jToolPanel.add(jProgressBar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 118, 240, 18));
 
         jStorePanel.setOpaque(false);
         jStorePanel.setPreferredSize(new java.awt.Dimension(250, 75));
@@ -1046,7 +1046,7 @@ public class Main extends javax.swing.JFrame {
         jScrollPane5.setViewportView(jTree1);
 
         getContentPane().add(jScrollPane5);
-        jScrollPane5.setBounds(22, 12, 225, 160);
+        jScrollPane5.setBounds(22, 12, 225, 158);
 
         setSize(new java.awt.Dimension(754, 234));
         setLocationRelativeTo(null);

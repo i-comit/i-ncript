@@ -35,63 +35,65 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "D:\\";
+    public static String root = "";
     public static String masterFolder = "--------" + File.separator;
 
-    private static final String appVer = "1.7.8";
+    private static final String appVer = "1.7.9";
     private static final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:ss a"));
     public static final int year = Year.now().getValue();
 
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
 
     public Main() {
-//        root = Paths.get("").toAbsolutePath().toString();
-//        if (Memory.checkWMIC()) {
-            root = root.substring(0, 3);
-            initComponents();
-            Path runtime = Paths.get(root + masterFolder + "runtime");
-            Path app = Paths.get(root + masterFolder + "app");
-            if (runtime.toFile().exists()) {
-                try {
-                    Files.setAttribute(runtime, "dos:hidden", true);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            }
-            if (app.toFile().exists()) {
-                try {
-                    Files.setAttribute(app, "dos:hidden", true);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            }
+        root = Paths.get("").toAbsolutePath().toString();
+        if (Memory.checkWMIC()) {
+        root = root.substring(0, 3);
+        initComponents();
+        Memory.getUSBName(this);
 
-            jStorePanel.setVisible(true);
-            jSendPanel.setVisible(false);
-            jReceivePanel.setVisible(false);
-            jRadioButton2.setVisible(false);
-            jRadioButton3.setVisible(false);
-            jScrollPane5.setVisible(false);
-
-            if (!keyFile.exists()) {
-                jToolPanel.setVisible(false);
-                loginLabelVisibleBool(false);
-                this.setSize(540, 241);
-                this.setLocationRelativeTo(null);
-            } else {
-                Memory.getHeapSize();
-                setKeybinding();
-                loginLabelVisibleBool(true);
-                jUsernameLabel.setText("enter username");
-                jPasswordLabel.setText("enter password");
-                generateFolders();
-
-                jToolPanel.setVisible(false);
-                jButton2.setVisible(false);
+        Path runtime = Paths.get(root + masterFolder + "runtime");
+        Path app = Paths.get(root + masterFolder + "app");
+        if (runtime.toFile().exists()) {
+            try {
+                Files.setAttribute(runtime, "dos:hidden", true);
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-            jProgressBar2.setVisible(false);
-            dragDrop.setVisible(false);
-//        }
+        }
+        if (app.toFile().exists()) {
+            try {
+                Files.setAttribute(app, "dos:hidden", true);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        jStorePanel.setVisible(true);
+        jSendPanel.setVisible(false);
+        jReceivePanel.setVisible(false);
+        jRadioButton2.setVisible(false);
+        jRadioButton3.setVisible(false);
+        jScrollPane5.setVisible(false);
+
+        if (!keyFile.exists()) {
+            jToolPanel.setVisible(false);
+            loginLabelVisibleBool(false);
+            this.setSize(540, 241);
+            this.setLocationRelativeTo(null);
+        } else {
+            Memory.getHeapSize();
+            setKeybinding();
+            loginLabelVisibleBool(true);
+            jUsernameLabel.setText("enter username");
+            jPasswordLabel.setText("enter password");
+            generateFolders();
+
+            jToolPanel.setVisible(false);
+            jButton2.setVisible(false);
+        }
+        jProgressBar2.setVisible(false);
+        dragDrop.setVisible(false);
+        }
     }
 
     private void getKeyBinding(int keyCode, JPanel jPanel, AbstractAction action) {
@@ -452,7 +454,7 @@ public class Main extends javax.swing.JFrame {
         jTree1 = new javax.swing.JTree();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("i-ncript™");
+        setTitle("i-ncript™"); // NOI18N
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti.png")));
         setMinimumSize(new java.awt.Dimension(295, 225));
         setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
@@ -504,7 +506,7 @@ public class Main extends javax.swing.JFrame {
 
         jProgressBar2.setFont(Statics.registerCustomFont(11, fontFile));
         jProgressBar2.setForeground(Color.white);
-        jToolPanel.add(jProgressBar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 119, 240, 18));
+        jToolPanel.add(jProgressBar2, new org.netbeans.lib.awtextra.AbsoluteConstraints(5, 118, 240, 18));
 
         jStorePanel.setOpaque(false);
         jStorePanel.setPreferredSize(new java.awt.Dimension(250, 75));
@@ -937,7 +939,7 @@ public class Main extends javax.swing.JFrame {
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1054,7 +1056,7 @@ public class Main extends javax.swing.JFrame {
         jScrollPane5.setViewportView(jTree1);
 
         getContentPane().add(jScrollPane5);
-        jScrollPane5.setBounds(22, 12, 225, 160);
+        jScrollPane5.setBounds(22, 12, 225, 158);
 
         setSize(new java.awt.Dimension(775, 234));
         setLocationRelativeTo(null);

@@ -130,6 +130,27 @@ public class Memory {
         }
     }
 
+    public static void getUSBName(Main main) {
+        String usbName = "wmic logicaldisk where name=" + "\"" + Main.root.substring(0, 2) + "\"" + " get VolumeName";
+        String s = "";
+        try {
+            Process process = Runtime.getRuntime().exec(usbName);
+            try ( BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                reader.readLine();
+                while ((s = reader.readLine()) != null) {
+                    if (s.trim().length() != 0) {
+                        System.out.println(s);
+                        if (!s.equals("")) {
+                            main.setTitle("i-ncript™ - " + s.trim().toLowerCase());
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static boolean checkWMIC() {
         boolean b = false;
         String logicaldisk = "wmic logicaldisk where name=" + "\"" + Main.root.substring(0, 2) + "\"" + " get description";

@@ -1,4 +1,3 @@
-com\i_comit\macos\Main$38.class
 com\i_comit\macos\GUI.class
 com\i_comit\windows\Main$21.class
 com\i_comit\windows\Main$31.class
@@ -48,10 +47,8 @@ com\i_comit\windows\labelCutterTree_T.class
 com\i_comit\macos\Main$20.class
 com\i_comit\macos\Main$30.class
 com\i_comit\macos\Main$7.class
-com\i_comit\windows\Main$37.class
 com\i_comit\windows\recursiveFileDrop_T.class
 com\i_comit\windows\Main$6.class
-com\i_comit\macos\Main$37.class
 com\i_comit\windows\Hasher.class
 com\i_comit\windows\Main$19.class
 com\i_comit\windows\Main$30.class
@@ -77,7 +74,6 @@ com\i_comit\windows\AudioPlayer_T.class
 com\i_comit\windows\Main$5.class
 com\i_comit\windows\Main.class
 com\i_comit\macos\Main$31.class
-com\i_comit\macos\Main$41.class
 com\i_comit\windows\Miscellaneous.class
 com\i_comit\windows\AES.class
 com\i_comit\windows\Main$2.class
@@ -86,7 +82,6 @@ com\i_comit\windows\AES_T.class
 com\i_comit\windows\Main$12.class
 com\i_comit\macos\recursiveFileDrop_T.class
 com\i_comit\macos\Main$19.class
-com\i_comit\macos\Main$39.class
 com\i_comit\windows\Main$8.class
 com\i_comit\windows\Main$20.class
 com\i_comit\windows\Main$35.class
@@ -104,7 +99,6 @@ com\i_comit\macos\Main$16.class
 com\i_comit\windows\Main$4.class
 com\i_comit\macos\labelCutterTree_T.class
 com\i_comit\macos\Main$10.class
-com\i_comit\macos\Main$40.class
 com\i_comit\macos\Main$33.class
 com\i_comit\windows\Main$32.class
 com\i_comit\macos\Main$23.class
