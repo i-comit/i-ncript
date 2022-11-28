@@ -7,6 +7,7 @@ package com.i_comit.windows;
 import static com.i_comit.windows.FileHider.fileCt;
 import static com.i_comit.windows.GUI.listPaths;
 import static com.i_comit.windows.HotFiler_T.folderWatcher;
+import static com.i_comit.windows.Main.refreshTreeView;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -140,9 +141,20 @@ class FileHider_T implements Runnable {
                     ex.printStackTrace();
                 }
             });
-            TreeView.populateStoreTree(path);
-            TreeView.storeNodeCaretPos(Statics.toolMode);
-            TreeView.expandTreeNode(path);
+            switch (Statics.toolMode) {
+                case 0:
+                    refreshTreeView(Statics.path, TreeView.nodeCaretPos);
+                    break;
+                case 1:
+                    refreshTreeView(Statics.receiveFolder, TreeView.receiveCaretPos);
+                    break;
+                case 2:
+                    refreshTreeView(Statics.sendFolder, TreeView.sendCaretPos);
+                    break;
+                case 3:
+                    refreshTreeView(Statics.path, TreeView.nodeCaretPos);
+                    break;
+            }
         } else {
             paths.forEach(x -> {
                 try {
@@ -164,9 +176,20 @@ class FileHider_T implements Runnable {
                     ex.printStackTrace();
                 }
             });
-            TreeView.populateStoreTree(path);
-            TreeView.storeNodeCaretPos(Statics.toolMode);
-            TreeView.expandTreeNode(path);
+            switch (Statics.toolMode) {
+                case 0:
+                    refreshTreeView(Statics.path, TreeView.nodeCaretPos);
+                    break;
+                case 1:
+                    refreshTreeView(Statics.receiveFolder, TreeView.receiveCaretPos);
+                    break;
+                case 2:
+                    refreshTreeView(Statics.sendFolder, TreeView.sendCaretPos);
+                    break;
+                case 3:
+                    refreshTreeView(Statics.path, TreeView.nodeCaretPos);
+                    break;
+            }
         }
     }
 

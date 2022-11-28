@@ -44,7 +44,7 @@ public class Statics {
     public static File[] contents = null;
 
     public static Path path = Paths.get(root + Main.masterFolder + folderName);
-    public static Path sendFolder = Paths.get(root+ Main.masterFolder + "o-box");
+    public static Path sendFolder = Paths.get(root + Main.masterFolder + "o-box");
     public static Path receiveFolder = Paths.get(root + Main.masterFolder + "n-box");
 
     public static String username = "";
@@ -293,6 +293,20 @@ public class Statics {
             case 3:
                 FileHider.cleanUp(path);
                 TreeView.populateStoreTree(path);
+                break;
+        }
+        switch (toolMode) {
+            case 0:
+                refreshTreeView(path, TreeView.nodeCaretPos);
+                break;
+            case 1:
+                refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
+                break;
+            case 2:
+                refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                break;
+            case 3:
+                refreshTreeView(path, TreeView.nodeCaretPos);
                 break;
         }
         main.setSize(780, 241);
