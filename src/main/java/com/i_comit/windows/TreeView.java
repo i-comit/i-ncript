@@ -146,12 +146,10 @@ public class TreeView {
                 break;
             case 1:
                 receiveCaretPos = Main.jScrollPane5.getVerticalScrollBar().getValue();
-//                caretPos = receiveCaretPos;
                 System.out.println("RECEIVE CARET POS " + receiveCaretPos);
                 break;
             case 2:
                 sendCaretPos = Main.jScrollPane5.getVerticalScrollBar().getValue();
-//                caretPos = sendCaretPos;
                 System.out.println("SEND CARET POS " + sendCaretPos);
                 break;
             case 3:
@@ -175,7 +173,7 @@ public class TreeView {
                         }
                     }
                 }
-                rect = new Rectangle(0, nodeCaretPos, 1, jTree1.getHeight());
+                rect = new Rectangle(0, nodeCaretPos, 1, jTree1.getRowCount());
                 Main.jScrollPane5.getViewport().scrollRectToVisible(rect);
                 break;
             case "n-box":
@@ -187,7 +185,7 @@ public class TreeView {
                         }
                     }
                 }
-                rect = new Rectangle(0, receiveCaretPos, 1, jTree1.getHeight());
+                rect = new Rectangle(0, receiveCaretPos, 1, jTree1.getRowCount());
                 Main.jScrollPane5.getViewport().scrollRectToVisible(rect);
                 break;
             case "o-box":
@@ -199,7 +197,7 @@ public class TreeView {
                         }
                     }
                 }
-                rect = new Rectangle(0, sendCaretPos, 1, jTree1.getHeight());
+                rect = new Rectangle(0, sendCaretPos, 1, jTree1.getRowCount());
                 Main.jScrollPane5.getViewport().scrollRectToVisible(rect);
                 break;
         }

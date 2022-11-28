@@ -48,7 +48,6 @@ class HotFiler_T implements Runnable {
 
             } else {
                 HotFiler.t.stop();
-
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -97,7 +96,6 @@ class HotFiler_T implements Runnable {
                                 Statics.fileCount = GUI.countFiles(Statics.path);
                                 Main.jProgressBar1.setMaximum(Statics.fileCount);
                                 AES.AESThread(listAESPaths(Statics.path), Statics.directory, true, 0);
-                                System.out.println("Hot Filer Called AES");
                                 b = false;
                             }
                         }

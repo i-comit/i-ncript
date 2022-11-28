@@ -825,9 +825,6 @@
                 <Property name="toolTipText" type="java.lang.String" value="drop box will encrypt &amp; decrypt any files dropped here"/>
                 <Property name="focusable" type="boolean" value="false"/>
               </Properties>
-              <Events>
-                <EventHandler event="mouseReleased" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="dragDropMouseReleased"/>
-              </Events>
 
               <Layout>
                 <DimensionLayout dim="0">
@@ -1285,7 +1282,7 @@
         <Property name="requestFocusEnabled" type="boolean" value="false"/>
       </Properties>
       <Events>
-        <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jScrollPane5MouseExited"/>
+        <EventHandler event="mouseWheelMoved" listener="java.awt.event.MouseWheelListener" parameters="java.awt.event.MouseWheelEvent" handler="jScrollPane5MouseWheelMoved"/>
       </Events>
       <AuxValues>
         <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
