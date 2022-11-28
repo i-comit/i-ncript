@@ -17,11 +17,15 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 /**
@@ -43,9 +47,8 @@ public class TreeView {
 
         model.reload(treeRoot);
         jTree1.revalidate();
-        testTree2();
-        asdsa();
-        System.out.println("DIR NODE LIST " + dirNodeList);
+        System.out.println("DIR NODE LSIT 2 " + dirNodeList2);
+//        asdsa();
         return model;
     }
 
@@ -53,7 +56,7 @@ public class TreeView {
     private static List<DefaultMutableTreeNode> dirNodeList2 = new ArrayList<>();
 
     private static Map<Integer, DefaultMutableTreeNode> map = new HashMap<Integer, DefaultMutableTreeNode>();
-
+    private static List<TreePath> treePaths = new ArrayList<>();
     private static int keyIter = 0;
 
     public static void setRootName(String rootName) {
@@ -71,8 +74,6 @@ public class TreeView {
                     treeRoot.add(fileNodes);
                 }
             } else {
-//                arrayList.add(new AbstractMap.SimpleEntry(keyIter, dirNodes));
-
                 dirNodeList.add(dirNodes);
                 map.put(keyIter, dirNodes);
                 ++keyIter;
@@ -82,17 +83,14 @@ public class TreeView {
         }
     }
 
-    public static void testTree2() {
-
-//                System.out.println("PATH GET PATH " + treePath.getParentPath());
-        System.out.println(jTree1.getSelectionPath());
+    public static void storeExpandedNodes() {
         System.out.println(jTree1.getRowForPath(jTree1.getSelectionPath()));
-
         for (DefaultMutableTreeNode singleNode : dirNodeList) {
             TreePath path = new TreePath(singleNode.getPath());
             if (jTree1.isExpanded(path)) {
                 if (!dirNodeList2.contains(singleNode)) {
                     System.out.println("is node expanded? " + jTree1.isExpanded(jTree1.getSelectionPath()));
+                    treePaths.add(path);
                     dirNodeList2.add(singleNode);
                 }
 //                System.out.println("DIR NODE LSIT EXPANDED " + dirNodeList2);
@@ -100,29 +98,70 @@ public class TreeView {
             if (jTree1.isCollapsed(path)) {
                 if (dirNodeList2.contains(singleNode)) {
                     System.out.println("is node expanded? " + jTree1.isExpanded(jTree1.getSelectionPath()));
+                    treePaths.remove(path);
                     dirNodeList2.remove(singleNode);
                 }
             }
 
         }
-            System.out.println(" DirNodeList FINAL" + dirNodeList2);
+
+//        System.out.println(" DirNodeList FINAL " + dirNodeList2);
+//        if (dirNodeList2.get(0).equals(dirNodeList.get(0))) {
+//            System.out.println("Equal");
+//        } else {
+//            System.out.println("Not equal");
+//        }
+        System.out.println("storeExpandedNodes treePaths " + treePaths);
+        System.out.println(jTree1.getRowHeight());
 
     }
 
     public static void asdsa() {
-//        System.out.println(" DirNodeList " + dirNodeList);
+//        for (DefaultMutableTreeNode pathx : dirNodeList2) {
+//            jTree1.expandRow(0);
+//            TreePath path2 = new TreePath(pathx.getPath());
+//            jTree1.expandRow(pathx.getIndex(pathx));
+//            System.out.println("Exapdn " + path2);
+//        }
+//        dirNodeList.remove(3);
+//        dirNodeList.remove(2);
+//        dirNodeList.remove(1);
+        System.out.println("collapsed " + treePaths);
+        List<DefaultMutableTreeNode> dirNodeList3 = new ArrayList<>();
+
         for (DefaultMutableTreeNode pathx : dirNodeList) {
-            System.out.println(pathx);
             TreePath path2 = new TreePath(pathx.getPath());
-            jTree1.expandPath(path2);
+            if (treePaths.get(0).toString().equals(path2.toString())) {
+                System.out.println("MATCH");
+//                jTree1.collapsePath(path2);
+                jTree1.expandPath(path2);
+                System.out.println("Exapdn2 " + path2);
+
+                dirNodeList3.add(pathx);
+            }
         }
-//        dirNodeList.remove(keyIter);
 
-        System.out.println("ArrayList " + map);
-//        DefaultMutableTreeNode expandableNode = map.get(2);
-//        dirNodeList.remove(expandableNode);
-        System.out.println("NEW DIR NODE " + dirNodeList);
+        for (TreePath treePath : treePaths) {
+            System.out.println("treePath" + treePath);
+        }
 
+//        System.out.println("dirNodeList3 " + dirNodeList3);
+//        for (DefaultMutableTreeNode x : dirNodeList3) {
+//            TreePath path2 = new TreePath(x.getPath());
+//            jTree1.collapsePath(path2);
+//            System.out.println("x " + x);
+//        }
+//        System.out.println(jTree1.getRowForPath(jTree1.getPathForRow(2)));
+//        jTree1.collapseRow(4);
+//        System.out.println(jTree1.getPathForRow(4));
+//        System.out.println(jTree1.getRowForPath(treePaths.get(1)));
+//        jTree1.collapsePath(treePaths.get(3));
+//        for (TreePath treePath : treePaths) {
+//            jTree1.collapsePath(treePath);
+//        }
+        System.out.println("row height " + jTree1.getLeadSelectionRow());
+
+        System.out.println("total row count " + jTree1.getRowCount());
     }
 
     private static void listFiles(File file, DefaultMutableTreeNode dirNodes) {
@@ -153,14 +192,14 @@ public class TreeView {
                 DefaultMutableTreeNode subDirNodes0 = new DefaultMutableTreeNode(filesArr1.getName()); // level 2 (leaf) node
                 subDirNodes.add(subDirNodes0);
                 dirNodeList.add(subDirNodes0);
-                map.put(keyIter, subDirNodes0);
-                ++keyIter;
+//                map.put(keyIter, subDirNodes0);
+//                ++keyIter;
                 listFiles(filesArr1, subDirNodes0);
             }
         }
         dirNodeList.add(subDirNodes);
-        map.put(keyIter, subDirNodes);
-        ++keyIter;
+//        map.put(keyIter, subDirNodes);
+//        ++keyIter;
         dirNodes.add(subDirNodes);
     }
 
@@ -184,7 +223,8 @@ public class TreeView {
                 Path file = fileFormat.toPath();
 
                 if (!fileFormat.isDirectory()) {
-                    BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
+                    BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class
+                    );
                     GUI.labelCutterTreeThread(Main.jCreationDateLabel, GUI.formatDateTime(attr.lastModifiedTime()), 0, 16, 64, true);
                     GUI.labelCutterTreeThread(Main.jFileSizeLabel, Memory.byteFormatter(fileFormat.length()), 0, 16, 64, true);
                 }
@@ -195,7 +235,8 @@ public class TreeView {
 
                     if (i == Main.jTree1.getSelectionPaths().length) {
                         Path file = fileFormat.toPath();
-                        BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
+                        BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class
+                        );
                         Main.jCreationDateLabel.setText(GUI.formatDateTime(attr.lastModifiedTime()));
                     }
 

@@ -148,7 +148,6 @@ public class Statics {
             jProgressBar1.setString("0% | 0/" + fileCount);
             jProgressBar1.setMaximum(fileCount);
             AES.AESThread(listAESPaths(path), directory, true, 0);
-            TreeView.testTree2();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -174,8 +173,6 @@ public class Statics {
             jProgressBar1.setString("0% | 0/" + fileCount);
             jProgressBar1.setMaximum(fileCount);
             AES.AESThread(listAESPaths(path), directory, true, 0);
-            TreeView.testTree2();
-
         } catch (IOException ex) {
             ex.printStackTrace();
         }

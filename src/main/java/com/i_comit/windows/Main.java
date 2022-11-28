@@ -1096,8 +1096,6 @@ public class Main extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         jTextArea1.setText("");
         jButton3.setFocusPainted(false);
-        TreeView.testTree2();
-
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jPasswordField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField1KeyPressed
@@ -1202,7 +1200,7 @@ public class Main extends javax.swing.JFrame {
     //JTREE
     private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_jTree1ValueChanged
         try {
-            TreeView.testTree2();
+            TreeView.storeExpandedNodes();
             TreeView.getFileCreationNSize();
         } catch (IOException ex) {
             ex.printStackTrace();
