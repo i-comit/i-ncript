@@ -47,17 +47,156 @@ public class TreeView {
 
         model.reload(treeRoot);
         jTree1.revalidate();
-        System.out.println("DIR NODE LSIT 2 " + dirNodeList2);
-//        asdsa();
         return model;
     }
 
     private static List<DefaultMutableTreeNode> dirNodeList = new ArrayList<>();
-    private static List<DefaultMutableTreeNode> dirNodeList2 = new ArrayList<>();
+    private static List<DefaultMutableTreeNode> receiveNodeList = new ArrayList<>();
+    private static List<DefaultMutableTreeNode> sendNodeList = new ArrayList<>();
 
-    private static Map<Integer, DefaultMutableTreeNode> map = new HashMap<Integer, DefaultMutableTreeNode>();
     private static List<TreePath> treePaths = new ArrayList<>();
-    private static int keyIter = 0;
+    private static List<TreePath> receiveTreePaths = new ArrayList<>();
+    private static List<TreePath> sendTreePaths = new ArrayList<>();
+
+    public static void expandedNodesSwitch(int toolMode, DefaultMutableTreeNode treeNode) {
+        switch (toolMode) {
+            case 0:
+                System.out.println("I-NCRIPT");
+                dirNodeList.add(treeNode);
+                break;
+            case 1:
+                System.out.println("N-BOX");
+                receiveNodeList.add(treeNode);
+                break;
+            case 2:
+                System.out.println("O-BOX");
+                sendNodeList.add(treeNode);
+                break;
+            case 3:
+                System.out.println("I-NCRIPT");
+                dirNodeList.add(treeNode);
+                break;
+        }
+    }
+
+    public static void storeExpandedNodes(int toolMode) {
+        switch (toolMode) {
+            case 0:
+                for (DefaultMutableTreeNode singleNode : dirNodeList) {
+                    TreePath path = new TreePath(singleNode.getPath());
+                    if (jTree1.isExpanded(path)) {
+                        if (!treePaths.contains(path)) {
+                            treePaths.add(path);
+                        }
+                    }
+                    if (jTree1.isCollapsed(path)) {
+                        if (treePaths.contains(path)) {
+                            treePaths.remove(path);
+                        }
+                    }
+                }
+//                System.out.println("DirNodeList " + dirNodeList);
+                System.out.println("StoreTreePaths " + treePaths);
+                break;
+            case 1:
+                for (DefaultMutableTreeNode singleNode : receiveNodeList) {
+                    TreePath path = new TreePath(singleNode.getPath());
+                    if (jTree1.isExpanded(path)) {
+                        if (!receiveTreePaths.contains(path)) {
+                            receiveTreePaths.add(path);
+                        }
+                    }
+                    if (jTree1.isCollapsed(path)) {
+                        if (receiveTreePaths.contains(path)) {
+                            receiveTreePaths.remove(path);
+                        }
+                    }
+                }
+//                System.out.println("ReceiveNodeList " + receiveNodeList);
+                System.out.println("receiveTreePaths " + receiveTreePaths);
+                break;
+            case 2:
+                for (DefaultMutableTreeNode singleNode : sendNodeList) {
+                    TreePath path = new TreePath(singleNode.getPath());
+                    if (jTree1.isExpanded(path)) {
+                        if (!sendTreePaths.contains(path)) {
+                            sendTreePaths.add(path);
+                        }
+                    }
+                    if (jTree1.isCollapsed(path)) {
+                        if (sendTreePaths.contains(path)) {
+                            sendTreePaths.remove(path);
+                        }
+                    }
+                }
+//                System.out.println("SendNodeList " + sendNodeList);
+                System.out.println("sendTreePaths " + sendTreePaths);
+                break;
+            case 3:
+                for (DefaultMutableTreeNode singleNode : dirNodeList) {
+                    TreePath path = new TreePath(singleNode.getPath());
+                    if (jTree1.isExpanded(path)) {
+                        if (!treePaths.contains(path)) {
+                            treePaths.add(path);
+                        }
+                    }
+                    if (jTree1.isCollapsed(path)) {
+                        if (treePaths.contains(path)) {
+                            treePaths.remove(path);
+                        }
+                    }
+                }
+//                System.out.println("DirNodeList " + dirNodeList);
+                System.out.println("StoreTreePaths " + treePaths);
+                break;
+        }
+
+//        System.out.println("storeExpandedNodes treePaths " + treePaths);
+    }
+
+    public static void expandTreeNode(Path path) {
+        String fileName = path.toFile().getName();
+        System.out.println("expandTreeNode fileName " + fileName);
+        switch (fileName) {
+            case "i-ncript":
+                for (DefaultMutableTreeNode pathx : dirNodeList) {
+                    TreePath path2 = new TreePath(pathx.getPath());
+                    for (TreePath treePath : treePaths) {
+                        if (treePath.toString().equals(path2.toString())) {
+                            System.out.println("MATCH");
+                            jTree1.expandPath(path2);
+                        }
+                    }
+                }
+                break;
+            case "n-box":
+                for (DefaultMutableTreeNode pathx : receiveNodeList) {
+                    TreePath path2 = new TreePath(pathx.getPath());
+                    for (TreePath treePath : receiveTreePaths) {
+                        if (treePath.toString().equals(path2.toString())) {
+                            System.out.println("MATCH");
+                            jTree1.expandPath(path2);
+                        }
+                    }
+                }
+                break;
+            case "o-box":
+                for (DefaultMutableTreeNode pathx : sendNodeList) {
+                    TreePath path2 = new TreePath(pathx.getPath());
+                    for (TreePath treePath : sendTreePaths) {
+                        if (treePath.toString().equals(path2.toString())) {
+                            System.out.println("MATCH");
+                            jTree1.expandPath(path2);
+                        }
+                    }
+                }
+                break;
+        }
+
+//        dirNodeList.clear();
+//        receiveNodeList.clear();
+//        sendNodeList.clear();
+    }
 
     public static void setRootName(String rootName) {
         treeRoot.setUserObject(rootName);
@@ -65,6 +204,9 @@ public class TreeView {
 
     private static void listRoot(List<Path> directories) {
         dirNodeList.clear();
+        receiveNodeList.clear();
+        sendNodeList.clear();
+
         File[] filesArr = directories.get(0).toFile().listFiles();
         for (File filesArr1 : filesArr) {
             DefaultMutableTreeNode dirNodes = new DefaultMutableTreeNode(filesArr1.getName()); // level 2 (leaf) node
@@ -74,94 +216,13 @@ public class TreeView {
                     treeRoot.add(fileNodes);
                 }
             } else {
-                dirNodeList.add(dirNodes);
-                map.put(keyIter, dirNodes);
-                ++keyIter;
+//                dirNodeList.add(dirNodes);
                 treeRoot.add(dirNodes);
                 listFiles(filesArr1, dirNodes);
+//                System.out.println("dirNode name " + directories.get(0).toFile().getName());
+                expandedNodesSwitch(Statics.toolMode, dirNodes);
             }
         }
-    }
-
-    public static void storeExpandedNodes() {
-        System.out.println(jTree1.getRowForPath(jTree1.getSelectionPath()));
-        for (DefaultMutableTreeNode singleNode : dirNodeList) {
-            TreePath path = new TreePath(singleNode.getPath());
-            if (jTree1.isExpanded(path)) {
-                if (!dirNodeList2.contains(singleNode)) {
-                    System.out.println("is node expanded? " + jTree1.isExpanded(jTree1.getSelectionPath()));
-                    treePaths.add(path);
-                    dirNodeList2.add(singleNode);
-                }
-//                System.out.println("DIR NODE LSIT EXPANDED " + dirNodeList2);
-            }
-            if (jTree1.isCollapsed(path)) {
-                if (dirNodeList2.contains(singleNode)) {
-                    System.out.println("is node expanded? " + jTree1.isExpanded(jTree1.getSelectionPath()));
-                    treePaths.remove(path);
-                    dirNodeList2.remove(singleNode);
-                }
-            }
-
-        }
-
-//        System.out.println(" DirNodeList FINAL " + dirNodeList2);
-//        if (dirNodeList2.get(0).equals(dirNodeList.get(0))) {
-//            System.out.println("Equal");
-//        } else {
-//            System.out.println("Not equal");
-//        }
-        System.out.println("storeExpandedNodes treePaths " + treePaths);
-        System.out.println(jTree1.getRowHeight());
-
-    }
-
-    public static void asdsa() {
-//        for (DefaultMutableTreeNode pathx : dirNodeList2) {
-//            jTree1.expandRow(0);
-//            TreePath path2 = new TreePath(pathx.getPath());
-//            jTree1.expandRow(pathx.getIndex(pathx));
-//            System.out.println("Exapdn " + path2);
-//        }
-//        dirNodeList.remove(3);
-//        dirNodeList.remove(2);
-//        dirNodeList.remove(1);
-        System.out.println("collapsed " + treePaths);
-        List<DefaultMutableTreeNode> dirNodeList3 = new ArrayList<>();
-
-        for (DefaultMutableTreeNode pathx : dirNodeList) {
-            TreePath path2 = new TreePath(pathx.getPath());
-            if (treePaths.get(0).toString().equals(path2.toString())) {
-                System.out.println("MATCH");
-//                jTree1.collapsePath(path2);
-                jTree1.expandPath(path2);
-                System.out.println("Exapdn2 " + path2);
-
-                dirNodeList3.add(pathx);
-            }
-        }
-
-        for (TreePath treePath : treePaths) {
-            System.out.println("treePath" + treePath);
-        }
-
-//        System.out.println("dirNodeList3 " + dirNodeList3);
-//        for (DefaultMutableTreeNode x : dirNodeList3) {
-//            TreePath path2 = new TreePath(x.getPath());
-//            jTree1.collapsePath(path2);
-//            System.out.println("x " + x);
-//        }
-//        System.out.println(jTree1.getRowForPath(jTree1.getPathForRow(2)));
-//        jTree1.collapseRow(4);
-//        System.out.println(jTree1.getPathForRow(4));
-//        System.out.println(jTree1.getRowForPath(treePaths.get(1)));
-//        jTree1.collapsePath(treePaths.get(3));
-//        for (TreePath treePath : treePaths) {
-//            jTree1.collapsePath(treePath);
-//        }
-        System.out.println("row height " + jTree1.getLeadSelectionRow());
-
-        System.out.println("total row count " + jTree1.getRowCount());
     }
 
     private static void listFiles(File file, DefaultMutableTreeNode dirNodes) {
@@ -191,15 +252,14 @@ public class TreeView {
             } else {
                 DefaultMutableTreeNode subDirNodes0 = new DefaultMutableTreeNode(filesArr1.getName()); // level 2 (leaf) node
                 subDirNodes.add(subDirNodes0);
-                dirNodeList.add(subDirNodes0);
-//                map.put(keyIter, subDirNodes0);
-//                ++keyIter;
+//                dirNodeList.add(subDirNodes0);
+                expandedNodesSwitch(Statics.toolMode, subDirNodes0);
                 listFiles(filesArr1, subDirNodes0);
             }
         }
-        dirNodeList.add(subDirNodes);
-//        map.put(keyIter, subDirNodes);
-//        ++keyIter;
+//        dirNodeList.add(subDirNodes);
+        expandedNodesSwitch(Statics.toolMode, subDirNodes);
+
         dirNodes.add(subDirNodes);
     }
 

@@ -34,16 +34,16 @@ import javax.swing.UnsupportedLookAndFeelException;
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
 public class Main extends javax.swing.JFrame {
-    
+
     public static String root = "D:\\";
     public static String masterFolder = "--------" + File.separator;
-    
+
     private static final String appVer = "1.7.7";
     private static final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:ss a"));
     public static final int year = Year.now().getValue();
-    
+
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
-    
+
     public Main() {
 //        root = Paths.get("").toAbsolutePath().toString();
 //        Statics.getOS();
@@ -66,14 +66,14 @@ public class Main extends javax.swing.JFrame {
                 ex.printStackTrace();
             }
         }
-        
+
         jStorePanel.setVisible(true);
         jSendPanel.setVisible(false);
         jReceivePanel.setVisible(false);
         jRadioButton2.setVisible(false);
         jRadioButton3.setVisible(false);
         jScrollPane5.setVisible(false);
-        
+
         if (!keyFile.exists()) {
             jToolPanel.setVisible(false);
             loginLabelVisibleBool(false);
@@ -86,7 +86,7 @@ public class Main extends javax.swing.JFrame {
             jUsernameLabel.setText("enter username");
             jPasswordLabel.setText("enter password");
             generateFolders();
-            
+
             jToolPanel.setVisible(false);
             jButton2.setVisible(false);
         }
@@ -94,7 +94,7 @@ public class Main extends javax.swing.JFrame {
         dragDrop.setVisible(false);
 //        }
     }
-    
+
     private void getKeyBinding(int keyCode, JPanel jPanel, AbstractAction action) {
         int modifier = 0;
         switch (keyCode) {
@@ -132,7 +132,7 @@ public class Main extends javax.swing.JFrame {
         jPanel.getInputMap().put(KeyStroke.getKeyStroke(keyCode, modifier), keyCode);
         jPanel.getActionMap().put(keyCode, action);
     }
-    
+
     private void setKeybinding() {
         getKeyBinding(KeyEvent.VK_E, jToolPanel, new AbstractAction() {
             @Override
@@ -224,7 +224,7 @@ public class Main extends javax.swing.JFrame {
                         GUI.t.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "reloaded " + path.toFile().getName() + " folder", 0, 25, 600, false);
                         break;
-                    
+
                 }
             }
         });
@@ -262,7 +262,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
     }
-    
+
     private void loginLabelVisibleBool(boolean b) {
         jLoginPanel.setVisible(b);
         jLabel1.setVisible(b);
@@ -270,7 +270,7 @@ public class Main extends javax.swing.JFrame {
         jAlertLabel.setVisible(b);
         jTabbedPane1.setVisible(b);
     }
-    
+
     private void generateFolders() {
         GUI.getGB();
         jAlertLabel.setHorizontalAlignment(LEFT);
@@ -306,7 +306,7 @@ public class Main extends javax.swing.JFrame {
                     case 4:
                         GUI.labelCutterThread(jAlertLabel, "also available on linux.", 80, 80, 100, true);
                         break;
-                    
+
                 }
             }
         }
@@ -323,14 +323,14 @@ public class Main extends javax.swing.JFrame {
         jPasswordField1.setText("");
         jAlertLabel.setText("");
     }
-    
+
     public static void dragDropper() {
         DragDrop myDragDropListener = new DragDrop();
         // Connect the label with a drag and drop listener
         dragDrop.setVisible(true);
         new DropTarget(dragDrop, myDragDropListener);
     }
-    
+
     public static void toolBtnsBool(boolean bool) {
         jToggleButton1.setEnabled(bool);
         jToggleButton2.setEnabled(bool);
@@ -1053,7 +1053,7 @@ public class Main extends javax.swing.JFrame {
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
         decryptFunction(this);
     }//GEN-LAST:event_jRadioButton1ActionPerformed
-    
+
 
     private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
         // TODO add your handling code here:
@@ -1134,7 +1134,7 @@ public class Main extends javax.swing.JFrame {
         jPasswordLabel.setText("make password");
         Memory.getHeapSize();
         generateFolders();
-        
+
         jToolPanel.setVisible(false);
         jButton2.setVisible(false);
     }//GEN-LAST:event_ActionjButton6
@@ -1200,7 +1200,6 @@ public class Main extends javax.swing.JFrame {
     //JTREE
     private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_jTree1ValueChanged
         try {
-            TreeView.storeExpandedNodes();
             TreeView.getFileCreationNSize();
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -1224,7 +1223,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jTree1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MouseExited
-        // TODO add your handling code here:
+        TreeView.storeExpandedNodes(toolMode);
         if (jTree1.getSelectionPaths() != null) {
             jCreationDateLabel.setText("");
             jFileSizeLabel.setText("");
@@ -1234,7 +1233,7 @@ public class Main extends javax.swing.JFrame {
 
     private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
     }//GEN-LAST:event_formMousePressed
-    
+
     public static boolean progressbarBool = false;
 
     private void jProgressBar1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jProgressBar1StateChanged
@@ -1249,7 +1248,7 @@ public class Main extends javax.swing.JFrame {
 
     private void formMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseMoved
         if (!jToolPanel.isFocusOwner() && jToolPanel.isVisible() && jStorePanel.isVisible()) {
-            System.out.println("jToolPanel is focused");
+//            System.out.println("jToolPanel is focused");
             jToolPanel.requestFocus();
         }
     }//GEN-LAST:event_formMouseMoved
@@ -1289,13 +1288,13 @@ public class Main extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        
+
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-                    
+
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
