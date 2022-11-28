@@ -35,7 +35,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "";
+    public static String root = "D:\\";
     public static String masterFolder = "--------" + File.separator;
 
     private static final String appVer = "1.7.8";
@@ -45,53 +45,53 @@ public class Main extends javax.swing.JFrame {
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
 
     public Main() {
-        root = Paths.get("").toAbsolutePath().toString();
-        if (Memory.checkWMIC()) {
-            root = root.substring(0, 3);
-            initComponents();
-            Path runtime = Paths.get(root + masterFolder + "runtime");
-            Path app = Paths.get(root + masterFolder + "app");
-            if (runtime.toFile().exists()) {
-                try {
-                    Files.setAttribute(runtime, "dos:hidden", true);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+//        root = Paths.get("").toAbsolutePath().toString();
+//        if (Memory.checkWMIC()) {
+        root = root.substring(0, 3);
+        initComponents();
+        Path runtime = Paths.get(root + masterFolder + "runtime");
+        Path app = Paths.get(root + masterFolder + "app");
+        if (runtime.toFile().exists()) {
+            try {
+                Files.setAttribute(runtime, "dos:hidden", true);
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-            if (app.toFile().exists()) {
-                try {
-                    Files.setAttribute(app, "dos:hidden", true);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            }
-
-            jStorePanel.setVisible(true);
-            jSendPanel.setVisible(false);
-            jReceivePanel.setVisible(false);
-            jRadioButton2.setVisible(false);
-            jRadioButton3.setVisible(false);
-            jScrollPane5.setVisible(false);
-
-            if (!keyFile.exists()) {
-                jToolPanel.setVisible(false);
-                loginLabelVisibleBool(false);
-                this.setSize(540, 241);
-                this.setLocationRelativeTo(null);
-            } else {
-                Memory.getHeapSize();
-                setKeybinding();
-                loginLabelVisibleBool(true);
-                jUsernameLabel.setText("enter username");
-                jPasswordLabel.setText("enter password");
-                generateFolders();
-
-                jToolPanel.setVisible(false);
-                jButton2.setVisible(false);
-            }
-            jProgressBar2.setVisible(false);
-            dragDrop.setVisible(false);
         }
+        if (app.toFile().exists()) {
+            try {
+                Files.setAttribute(app, "dos:hidden", true);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        jStorePanel.setVisible(true);
+        jSendPanel.setVisible(false);
+        jReceivePanel.setVisible(false);
+        jRadioButton2.setVisible(false);
+        jRadioButton3.setVisible(false);
+        jScrollPane5.setVisible(false);
+
+        if (!keyFile.exists()) {
+            jToolPanel.setVisible(false);
+            loginLabelVisibleBool(false);
+            this.setSize(540, 241);
+            this.setLocationRelativeTo(null);
+        } else {
+            Memory.getHeapSize();
+            setKeybinding();
+            loginLabelVisibleBool(true);
+            jUsernameLabel.setText("enter username");
+            jPasswordLabel.setText("enter password");
+            generateFolders();
+
+            jToolPanel.setVisible(false);
+            jButton2.setVisible(false);
+        }
+        jProgressBar2.setVisible(false);
+        dragDrop.setVisible(false);
+//        }
     }
 
     private void getKeyBinding(int keyCode, JPanel jPanel, AbstractAction action) {
@@ -230,30 +230,22 @@ public class Main extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e) {
                 switch (toolMode) {
                     case 0:
-                        TreeView.populateStoreTree(path);
-                        TreeView.nodeCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
-                        TreeView.expandTreeNode(path);
+                        refreshTreeView(path, TreeView.nodeCaretPos);
                         GUI.t.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "reloaded " + path.toFile().getName() + " folder", 0, 25, 600, false);
                         break;
                     case 1:
-                        TreeView.populateStoreTree(receiveFolder);
-                        TreeView.receiveCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
-                        TreeView.expandTreeNode(receiveFolder);
+                        refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
                         GUI.t.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "reloaded " + receiveFolder.toFile().getName() + " folder", 0, 25, 600, false);
                         break;
                     case 2:
-                        TreeView.populateStoreTree(sendFolder);
-                        TreeView.sendCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
-                        TreeView.expandTreeNode(sendFolder);
+                        refreshTreeView(sendFolder, TreeView.sendCaretPos);
                         GUI.t.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "reloaded " + sendFolder.toFile().getName() + " folder", 0, 25, 600, false);
                         break;
                     case 3:
-                        TreeView.populateStoreTree(path);
-                        TreeView.nodeCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
-                        TreeView.expandTreeNode(path);
+                        refreshTreeView(path, TreeView.nodeCaretPos);
                         GUI.t.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "reloaded " + path.toFile().getName() + " folder", 0, 25, 600, false);
                         break;
@@ -294,6 +286,12 @@ public class Main extends javax.swing.JFrame {
                 jTabbedPane1.setSelectedIndex(3);
             }
         });
+    }
+
+    private void refreshTreeView(Path path, int caretPos) {
+        TreeView.populateStoreTree(path);
+        caretPos = jScrollPane5.getVerticalScrollBar().getValue();
+        TreeView.expandTreeNode(path);
     }
 
     private void loginLabelVisibleBool(boolean b) {
@@ -1317,28 +1315,25 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jSlider1StateChanged
 
     private void jTree1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MouseEntered
-        switch (toolMode) {
-            case 0:
-                TreeView.populateStoreTree(path);
-                TreeView.nodeCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
-                TreeView.expandTreeNode(path);
-                break;
-            case 1:
-                TreeView.populateStoreTree(receiveFolder);
-                TreeView.receiveCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
-                TreeView.expandTreeNode(receiveFolder);
-                break;
-            case 2:
-                TreeView.populateStoreTree(sendFolder);
-                TreeView.sendCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
-                TreeView.expandTreeNode(sendFolder);
-                break;
-            case 3:
-                TreeView.populateStoreTree(path);
-                TreeView.nodeCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
-                TreeView.expandTreeNode(path);
-                break;
+        if (jTree1.isEnabled()) {
+            switch (toolMode) {
+                case 0:
+                    refreshTreeView(path, TreeView.nodeCaretPos);
+                    break;
+                case 1:
+                    refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
+                    break;
+                case 2:
+                    refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                    break;
+                case 3:
+                    refreshTreeView(path, TreeView.nodeCaretPos);
+                    break;
+            }
+        } else {
+            System.out.println("TreeView is disabled");
         }
+
     }//GEN-LAST:event_jTree1MouseEntered
     /**
      * @param args the command line arguments

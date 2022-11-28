@@ -159,8 +159,6 @@ public class TreeView {
         }
     }
 
-    private static Rectangle rect;
-
     public static void expandTreeNode(Path path) {
         String fileName = path.toFile().getName();
         switch (fileName) {
@@ -173,10 +171,7 @@ public class TreeView {
                         }
                     }
                 }
-                rect = new Rectangle(0, nodeCaretPos, 1, jTree1.getRowCount());
-                Main.jScrollPane5.getViewport().scrollRectToVisible(rect);
-                Main.jScrollPane5.getVerticalScrollBar().setValue(nodeCaretPos);
-                Main.jScrollPane5.updateUI();
+                setCaretPos(nodeCaretPos);
                 break;
             case "n-box":
                 for (DefaultMutableTreeNode pathx : receiveNodeList) {
@@ -187,8 +182,7 @@ public class TreeView {
                         }
                     }
                 }
-                rect = new Rectangle(0, receiveCaretPos, 1, jTree1.getRowCount());
-                Main.jScrollPane5.getViewport().scrollRectToVisible(rect);
+                setCaretPos(receiveCaretPos);
                 break;
             case "o-box":
                 for (DefaultMutableTreeNode pathx : sendNodeList) {
@@ -199,10 +193,16 @@ public class TreeView {
                         }
                     }
                 }
-                rect = new Rectangle(0, sendCaretPos, 1, jTree1.getRowCount());
-                Main.jScrollPane5.getViewport().scrollRectToVisible(rect);
+                setCaretPos(sendCaretPos);
                 break;
         }
+    }
+
+    private static void setCaretPos(int caretPos) {
+        Rectangle rect = new Rectangle(0, caretPos, 1, jTree1.getRowCount());
+        Main.jScrollPane5.getViewport().scrollRectToVisible(rect);
+        Main.jScrollPane5.getVerticalScrollBar().setValue(caretPos);
+        Main.jScrollPane5.updateUI();
     }
 
     public static void setRootName(String rootName) {
@@ -304,7 +304,7 @@ public class TreeView {
                         long fileSize = xf.length();
                         fileSizes.add(fileSize);
                     });
-                    GUI.labelCutterTreeThread(Main.jCreationDateLabel, fileSizes.size()+" files", 0, 16, 64, true);
+                    GUI.labelCutterTreeThread(Main.jCreationDateLabel, fileSizes.size() + " files", 0, 16, 64, true);
 
                     long sum = fileSizes.stream().mapToLong(Long::longValue).sum();
                     GUI.labelCutterTreeThread(Main.jFileSizeLabel, Memory.byteFormatter(sum), 0, 16, 64, true);
