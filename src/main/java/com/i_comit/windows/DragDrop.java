@@ -58,8 +58,8 @@ class DragDrop implements DropTargetListener {
                 if (TreeView.checkFilesAreFromSameFolder(treepaths)) {
                     Main.jButton2.setVisible(true);
                     Main.jProgressBar1.setMaximum(treepaths.size());
-                    Statics.dragDropBool = false;
                     jProgressBar1.setString("0% | 0/" + treepaths.size());
+                    Statics.dragDropBool = false;
                     AES.AESThread(treepaths, new File(path.replaceAll(fileName, "")), false, 0);
 
                 } else {

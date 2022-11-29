@@ -46,11 +46,11 @@ class DragDrop implements DropTargetListener {
 //            jTree1.clearSelection();
             if (Statics.toolMode == 0 || Statics.toolMode == 3) {
                 List<Path> treepaths = new ArrayList<>();
-                String path = root + masterFolder + Main.jTree1.getSelectionPaths()[0].toString().substring(1, Main.jTree1.getSelectionPaths()[0].toString().length() - 1).replaceAll(", ", "\\\\");
-                String fileName = new File(root + masterFolder + Main.jTree1.getSelectionPaths()[0].toString().substring(1, Main.jTree1.getSelectionPaths()[0].toString().length() - 1).replaceAll(", ", "\\\\")).getName();
+                String path = root + masterFolder + Main.jTree1.getSelectionPaths()[0].toString().substring(1, Main.jTree1.getSelectionPaths()[0].toString().length() - 1).replaceAll(", ", File.separator);
+                String fileName = new File(root + masterFolder + Main.jTree1.getSelectionPaths()[0].toString().substring(1, Main.jTree1.getSelectionPaths()[0].toString().length() - 1).replaceAll(", ", File.separator)).getName();
 
                 for (int i = 0; i < Main.jTree1.getSelectionPaths().length; i++) {
-                    File fileFormat = new File(root + masterFolder + Main.jTree1.getSelectionPaths()[i].toString().substring(1, Main.jTree1.getSelectionPaths()[i].toString().length() - 1).replaceAll(", ", "\\\\"));
+                    File fileFormat = new File(root + masterFolder + Main.jTree1.getSelectionPaths()[i].toString().substring(1, Main.jTree1.getSelectionPaths()[i].toString().length() - 1).replaceAll(", ", File.separator));
                     if (!fileFormat.isDirectory()) {
                         treepaths.add(fileFormat.toPath());
                     }
@@ -58,8 +58,8 @@ class DragDrop implements DropTargetListener {
                 if (TreeView.checkFilesAreFromSameFolder(treepaths)) {
                     Main.jButton2.setVisible(true);
                     Main.jProgressBar1.setMaximum(treepaths.size());
-                    Statics.dragDropBool = false;
                     jProgressBar1.setString("0% | 0/" + treepaths.size());
+                    Statics.dragDropBool = false;
                     AES.AESThread(treepaths, new File(path.replaceAll(fileName, "")), false, 0);
 
                 } else {
@@ -215,7 +215,9 @@ class DragDrop_T implements Runnable {
                 Main.dragDrop.setVisible(true);
                 Main.toolBtnsBool(true);
                 Main.jTabbedPane1.setSelectedIndex(0);
-                TreeView.populateStoreTree(Statics.path);
+                if (!Statics.dragDropBool) {
+                    Main.refreshTreeView(Statics.path, TreeView.nodeCaretPos);
+                }
                 AES_T.paths = null;
             }
         } catch (InterruptedException ex) {
