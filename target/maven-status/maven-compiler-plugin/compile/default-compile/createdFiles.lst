@@ -1,6 +1,6 @@
 com\i_comit\macos\GUI.class
-com\i_comit\windows\Main$31.class
 com\i_comit\windows\Main$21.class
+com\i_comit\windows\Main$31.class
 com\i_comit\macos\Main.class
 com\i_comit\windows\AudioPlayer.class
 com\i_comit\macos\Folder.class
@@ -15,8 +15,8 @@ com\i_comit\macos\logger_T.class
 com\i_comit\macos\Main$15.class
 com\i_comit\windows\DragDrop_T.class
 com\i_comit\windows\Main$14.class
-com\i_comit\windows\Main$24.class
 com\i_comit\windows\Folder.class
+com\i_comit\windows\Main$24.class
 com\i_comit\macos\labelCutter_T.class
 com\i_comit\macos\DragDrop.class
 com\i_comit\windows\TreeView.class
@@ -29,8 +29,8 @@ com\i_comit\macos\Main$32.class
 com\i_comit\macos\Main$9.class
 com\i_comit\macos\Main$12.class
 com\i_comit\windows\Main$1.class
-com\i_comit\windows\Main$29.class
 com\i_comit\windows\labelCutter_T.class
+com\i_comit\windows\Main$29.class
 com\i_comit\macos\FileHider_T.class
 com\i_comit\macos\Hasher.class
 com\i_comit\macos\Main$3.class
@@ -73,8 +73,8 @@ com\i_comit\macos\AudioPlayer_T.class
 com\i_comit\macos\Main$11.class
 com\i_comit\macos\Main$21.class
 com\i_comit\windows\AudioPlayer_T.class
-com\i_comit\windows\Main.class
 com\i_comit\windows\Main$5.class
+com\i_comit\windows\Main.class
 com\i_comit\macos\Main$31.class
 com\i_comit\windows\Miscellaneous.class
 com\i_comit\windows\AES.class
@@ -109,11 +109,11 @@ com\i_comit\windows\Main$27.class
 com\i_comit\macos\Main$22.class
 com\i_comit\windows\DragDrop.class
 com\i_comit\windows\DriveCheck$1.class
-com\i_comit\windows\Main$22.class
 com\i_comit\windows\HotFiler.class
+com\i_comit\windows\Main$22.class
 com\i_comit\macos\Main$29.class
-com\i_comit\windows\Main$10.class
 com\i_comit\windows\logger_T.class
+com\i_comit\windows\Main$10.class
 com\i_comit\windows\DriveCheck.class
 com\i_comit\windows\Statics$OS.class
 com\i_comit\macos\FileHider.class

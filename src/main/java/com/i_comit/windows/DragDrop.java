@@ -62,6 +62,7 @@ class DragDrop implements DropTargetListener {
                     Main.jProgressBar1.setMaximum(treepaths.size());
 //                    System.out.println("Path from Drag Drop is " + path.replaceAll(fileName, ""));
                     Statics.dragDropBool = false;
+                    jProgressBar1.setString("0% | 0/" + treepaths.size());
                     AES.AESThread(treepaths, new File(path.replaceAll(fileName, "")), false, 0);
 
                 } else {
@@ -90,16 +91,16 @@ class DragDrop implements DropTargetListener {
                                         Statics.dragDropBool = true;
                                         if (!filesf.isDirectory()) {
                                             Main.jButton2.setVisible(true);
-                                            jProgressBar1.setString("0% | 0/" + files.size());
                                             Main.jProgressBar1.setMaximum(0);
+                                            jProgressBar1.setString("0% | 0/" + files.size());
                                             AES.AESThread(paths, Statics.directory, false, 0);
                                         } else {
                                             Folder.getFileDropCount(filesf);
                                             recursiveFileDrop_T.recursiveFileStoreDrop(filesf, Statics.path, paths);
                                             paths.remove(0);
                                             Main.jButton2.setVisible(true);
-                                            jProgressBar1.setString("0% | 0/" + files.size());
                                             Main.jProgressBar1.setMaximum(0);
+                                            jProgressBar1.setString("0% | 0/" + files.size());
                                             AES.AESThread(paths, Statics.directory, false, 0);
                                         }
                                         b = true;

@@ -140,8 +140,8 @@ public class Statics {
         Statics.dragDropBool = false;
 
         try {
-            jProgressBar1.setString("0% | 0/" + fileCount);
             jProgressBar1.setMaximum(fileCount);
+            jProgressBar1.setString("0% | 0/" + fileCount);
             AES.AESThread(listAESPaths(path), directory, true, 0);
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -160,8 +160,8 @@ public class Statics {
         Statics.dragDropBool = false;
 
         try {
-            jProgressBar1.setString("0% | 0/" + fileCount);
             jProgressBar1.setMaximum(fileCount);
+            jProgressBar1.setString("0% | 0/" + fileCount);
             AES.AESThread(listAESPaths(path), directory, true, 0);
         } catch (IOException ex) {
             ex.printStackTrace();
