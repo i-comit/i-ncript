@@ -1055,7 +1055,6 @@ public class Main extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(754, 234));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
     //DECRYPT
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
         try {
@@ -1196,10 +1195,37 @@ public class Main extends javax.swing.JFrame {
         try {
             zipFileCount = 0;
             zipIter = 0;
-            if (Login.sendKeyCheck()) {
-                this.setSize(760, 249);
+
+            AESMode = 1;
+            fileCount = GUI.countFiles(sendFolder);
+            if (fileCount == 0) {
+                AESMode = 0;
+                fileCount = GUI.countFiles(sendFolder);
+                zipFileCount = fileCount;
+                jProgressBar1.setMaximum(zipFileCount);
+                contents = sendFolder.toFile().listFiles();
+                if (contents != null) {
+                    if (contents.length != 0) {
+                        Login.sendKeyCheck();
+                        this.setSize(756, 249);
             } else {
-                this.setSize(760, 224);
+                        GUI.t.interrupt();
+                        GUI.labelCutterThread(jAlertLabel, "o-box folder has no files", 20, 40, 800, false);
+                        Main.jRadioButton2.setEnabled(true);
+                        this.setSize(756, 224);
+            }
+                } else {
+                    GUI.t.interrupt();
+                    GUI.labelCutterThread(jAlertLabel, "o-box folder does not exist", 20, 40, 800, false);
+                    Main.jRadioButton2.setEnabled(true);
+                    this.setSize(756, 224);
+                }
+            } else {
+                GUI.t.interrupt();
+                GUI.labelCutterThread(jAlertLabel, "o-box can't contain .enc files", 20, 20, 1200, false);
+                jRadioButton2.setEnabled(true);
+                this.setSize(756, 224);
+
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -1210,9 +1236,9 @@ public class Main extends javax.swing.JFrame {
         zipFileCount = 0;
         zipIter = 0;
         if (Login.verifySendKey(receiveFolder + File.separator + jList1.getSelectedValue())) {
-            this.setSize(768, 249);
+            this.setSize(756, 249);
         } else {
-            this.setSize(768, 229);
+            this.setSize(756, 224);
         }
     }//GEN-LAST:event_jRadioButton3Evt
 
@@ -1258,6 +1284,17 @@ public class Main extends javax.swing.JFrame {
     private void jProgressBar1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jProgressBar1StateChanged
         if (progressbarBool) {
             this.setSize(756, 224);
+            switch (Statics.toolMode) {
+                case 0:
+                    refreshTreeView(path, TreeView.nodeCaretPos);
+                    break;
+                case 1:
+                    refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
+                    break;
+                case 2:
+                    refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                    break;
+            }
             progressbarBool = false;
         } else {
             this.setSize(756, 249);

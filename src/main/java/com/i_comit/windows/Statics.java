@@ -142,6 +142,7 @@ public class Statics {
                 jLabel5.setVisible(false);
                 jLabel6.setVisible(false);
                 jRadioButton2.setVisible(false);
+                jRadioButton2.setSelected(false);
                 Folder.listZipFiles();
 
                 jLabel10.setText("N-BOX MODE");
@@ -165,6 +166,8 @@ public class Statics {
                 jLabel7.setVisible(false);
                 jLabel8.setVisible(false);
                 jRadioButton3.setVisible(false);
+                jRadioButton3.setSelected(false);
+                
                 jLabel10.setText("O-BOX MODE");
                 jLabel11.setText("MOVE FILES TO O-BOX");
                 dragDrop.setToolTipText("drop box will move files or folder into o-box folder");

@@ -186,7 +186,6 @@ class DragDrop_T implements Runnable {
         Main.jProgressBar1.setString("100% | " + AES_T.paths.size() + "/" + AES_T.paths.size());
         jProgressBar1.setMaximum(100);
         jProgressBar1.setValue(jProgressBar1.getMaximum());
-        Main.jButton2.setVisible(false);
         try {
             Thread.sleep(400);
             AudioPlayer.audioPlayerThread("ding-sfx.wav");
@@ -194,7 +193,7 @@ class DragDrop_T implements Runnable {
 
             Thread.sleep(300);
             for (int x = jProgressBar1.getMaximum(); x >= 0; x--) {
-                Thread.sleep(5);
+                Thread.sleep(4);
                 jProgressBar1.setValue(x);
                 if (x <= 1) {
                     Main.progressbarBool = true;
@@ -214,6 +213,7 @@ class DragDrop_T implements Runnable {
                 DragDrop.decFiles = 0;
                 Main.dragDrop.setVisible(true);
                 Main.toolBtnsBool(true);
+                Main.jButton2.setVisible(false);
                 Main.jTabbedPane1.setSelectedIndex(0);
                 if (!Statics.dragDropBool) {
                     Main.refreshTreeView(Statics.path, TreeView.nodeCaretPos);

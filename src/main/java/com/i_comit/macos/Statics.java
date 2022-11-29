@@ -21,49 +21,49 @@ import java.time.format.DateTimeFormatter;
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
 public class Statics {
-
+    
     public static int toolMode = 0;
-
+    
     public static final String folderName = "i-ncript";
     public static String rootFolder = root + Main.masterFolder + folderName;
     public static final String keyName = ".i-ncript.key";
-
+    
     public static int maxFileBytes = 1048576 * 4;
-
+    
     public static int AESMode;
     public static String GB;
-
+    
     public static boolean hotFilerBool = false;
     public static boolean fileHiderBool = false;
     public static boolean dragDropBool = false;
     public static boolean fileTreeBool = false;
-
+    
     public static File directory = null;
     public static File keyFile = null;
-
+    
     public static File[] contents = null;
-
+    
     public static Path path = null;
     public static Path sendFolder = null;
     public static Path receiveFolder = null;
-
+    
     public static String username = "";
     public static String password = "";
-
+    
     public static String recipientUsername = "";
     public static String recipientPassword = "";
-
+    
     public static String zipFileName = "";
     public static int zipFileCount;
     public static int zipIter;
-
+    
     public static int fileCount;
     public static int fileIter;
-
+    
     public static int fileHideIter;
-
+    
     public static Font customFont;
-
+    
     public static Font registerCustomFont(float fontSize, URL fontFile) {
         try {
             customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile.openStream()).deriveFont(fontSize);
@@ -74,14 +74,14 @@ public class Statics {
         }
         return customFont;
     }
-
+    
     public static void resetStaticInts() {
         fileIter = 0;
         fileCount = 0;
         FileHider.fileCt = 0;
         fileHideIter = 0;
     }
-
+    
     public static void encryptFunction(Main main) {
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
@@ -91,7 +91,7 @@ public class Statics {
         jProgressBar1.setMaximum(0);
         jProgressBar1.setVisible(true);
         Statics.dragDropBool = false;
-
+        
         try {
             jProgressBar1.setMaximum(fileCount);
             jProgressBar1.setString("0% | 0/" + fileCount);
@@ -100,7 +100,7 @@ public class Statics {
             ex.printStackTrace();
         }
     }
-
+    
     public static void decryptFunction(Main main) {
         jToggleButton1.setSelected(false);
         if (GUI.t.isAlive()) {
@@ -111,7 +111,7 @@ public class Statics {
         jProgressBar1.setMaximum(0);
         jProgressBar1.setVisible(true);
         Statics.dragDropBool = false;
-
+        
         try {
             jProgressBar1.setMaximum(fileCount);
             jProgressBar1.setString("0% | 0/" + fileCount);
@@ -120,7 +120,7 @@ public class Statics {
             ex.printStackTrace();
         }
     }
-
+    
     public static void switchToolPanels() {
         jRadioButton2.setVisible(false);
         toolMode++;
@@ -128,7 +128,7 @@ public class Statics {
         jPasswordField2.setText("");
         jPasswordField3.setText("");
         GUI.getGB();
-
+        
         switch (toolMode) {
             case 1:
                 jSwitchMode.setText("N-BOX");
@@ -137,12 +137,13 @@ public class Statics {
                 jSendPanel.setVisible(false);
                 jReceivePanel.setVisible(true);
                 jTree1.setDragEnabled(false);
-
+                
                 jLabel5.setVisible(false);
                 jLabel6.setVisible(false);
                 jRadioButton2.setVisible(false);
+                jRadioButton2.setSelected(false);
                 Folder.listZipFiles();
-
+                
                 jLabel10.setText("N-BOX MODE");
                 jLabel11.setText("MOVE .I-CC TO N-BOX");
                 dragDrop.setToolTipText("drop box will move dropped .i-cc file to n-box folder");
@@ -160,10 +161,12 @@ public class Statics {
                 jLabel5.setVisible(true);
                 jReceivePanel.setVisible(false);
                 jTree1.setDragEnabled(false);
-
+                
                 jLabel7.setVisible(false);
                 jLabel8.setVisible(false);
                 jRadioButton3.setVisible(false);
+                jRadioButton3.setSelected(false);
+                
                 jLabel10.setText("O-BOX MODE");
                 jLabel11.setText("MOVE FILES TO O-BOX");
                 dragDrop.setToolTipText("drop box will move files or folder into o-box folder");
@@ -181,7 +184,7 @@ public class Statics {
                 jLabel8.setVisible(true);
                 jReceivePanel.setVisible(false);
                 jTree1.setDragEnabled(true);
-
+                
                 jLabel10.setText("STORE MODE");
                 jLabel11.setText("ENCRYPT & DECRYPT");
                 dragDrop.setToolTipText("drop box will encrypt & decrypt any files dropped here");
@@ -193,7 +196,7 @@ public class Statics {
                 break;
         }
     }
-
+    
     public static void stopFunction(Main main) {
         if (jToggleButton1.isSelected()) {
             jToggleButton1.setSelected(false);
@@ -212,7 +215,7 @@ public class Statics {
         jProgressBar1.setMaximum(fileCount);
         jProgressBar1.setStringPainted(false);
         jProgressBar1.setVisible(false);
-
+        
         jProgressBar2.setMaximum(0);
         jProgressBar2.setValue(jProgressBar2.getMaximum());
         jProgressBar2.setStringPainted(false);
@@ -221,7 +224,7 @@ public class Statics {
         jAlertLabel.setText("");
         dragDrop.setVisible(true);
         toolBtnsBool(true);
-
+        
         switch (toolMode) {
             case 0:
                 FileHider.cleanUp(path);
@@ -241,7 +244,7 @@ public class Statics {
                 break;
         }
         main.setSize(756, 224);
-
+        
         try {
             Thread.sleep(100);
         } catch (InterruptedException ex) {
@@ -259,7 +262,7 @@ public class Statics {
         }
         resetStaticInts();
     }
-
+    
     public static void hotFilerFunction(Main main) {
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
@@ -287,13 +290,13 @@ public class Statics {
             } catch (NullPointerException | IOException ex) {
                 GUI.labelCutterThread(jAlertLabel, "press hot filer one more time", 0, 25, 500, false);
             }
-
+            
         }
         jRadioButton1.setVisible(!jToggleButton1.isSelected());
         jRadioButton0.setSelected(jToggleButton1.isSelected());
         jRadioButton0.setEnabled(!jToggleButton1.isSelected());
     }
-
+    
     public static void fileHiderFunction() {
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
@@ -314,7 +317,7 @@ public class Statics {
             ex.printStackTrace();
         }
     }
-
+    
     public static void collapseLogin(Main main) {
         main.setSize(756, 224);
         jLabel1.setLocation(259, 8);
