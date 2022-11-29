@@ -15,7 +15,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -89,6 +88,7 @@ public class Folder {
                 }
             }
             Main.jList1.setSelectedIndex(0);
+            Main.refreshTreeView(Statics.receiveFolder, TreeView.receiveCaretPos);
             GUI.getGB();
         }
     }
@@ -141,35 +141,35 @@ public class Folder {
             }
         }
     }
-    
+
     public static void addDirToZipArchive(ZipOutputStream zos, File fileToZip, String parrentDirectoryName) throws Exception {
-    if (fileToZip == null || !fileToZip.exists()) {
-        return;
-    }
-
-    String zipEntryName = fileToZip.getName();
-    if (parrentDirectoryName!=null && !parrentDirectoryName.isEmpty()) {
-        zipEntryName = parrentDirectoryName + "/" + fileToZip.getName();
-    }
-
-    if (fileToZip.isDirectory()) {
-        System.out.println("+" + zipEntryName);
-        for (File file : fileToZip.listFiles()) {
-            addDirToZipArchive(zos, file, zipEntryName);
+        if (fileToZip == null || !fileToZip.exists()) {
+            return;
         }
-    } else {
-        System.out.println("   " + zipEntryName);
-        byte[] buffer = new byte[1024];
-        FileInputStream fis = new FileInputStream(fileToZip);
-        zos.putNextEntry(new ZipEntry(zipEntryName));
-        int length;
-        while ((length = fis.read(buffer)) > 0) {
-            zos.write(buffer, 0, length);
+
+        String zipEntryName = fileToZip.getName();
+        if (parrentDirectoryName != null && !parrentDirectoryName.isEmpty()) {
+            zipEntryName = parrentDirectoryName + "/" + fileToZip.getName();
         }
-        zos.closeEntry();
-        fis.close();
+
+        if (fileToZip.isDirectory()) {
+            System.out.println("+" + zipEntryName);
+            for (File file : fileToZip.listFiles()) {
+                addDirToZipArchive(zos, file, zipEntryName);
+            }
+        } else {
+            System.out.println("   " + zipEntryName);
+            byte[] buffer = new byte[1024];
+            FileInputStream fis = new FileInputStream(fileToZip);
+            zos.putNextEntry(new ZipEntry(zipEntryName));
+            int length;
+            while ((length = fis.read(buffer)) > 0) {
+                zos.write(buffer, 0, length);
+            }
+            zos.closeEntry();
+            fis.close();
+        }
     }
-}
 
     public static void unzipFile(String zipFilePath, String destDir) {
         File dir = new File(destDir);
@@ -249,19 +249,18 @@ class recursiveFileDrop_T implements Runnable {
                         Files.move(filesArr1.toPath(), Paths.get(path + File.separator + filesf.getName() + File.separator + filesArr1.getName()), StandardCopyOption.REPLACE_EXISTING);
                         fileDropIter++;
                         Main.jAlertLabel.setText("moved " + fileDropIter + " files");
-                    }catch (IOException ex) {
+                    } catch (IOException ex) {
                         ex.printStackTrace();
                     }
                 }
             } else {
-                System.out.println(filesArr1);
-                System.out.println(Paths.get(path + File.separator + filesArr1.getName()));
                 String parentStr = filesArr1.getParent();
                 String parentFile = Paths.get(parentStr).toFile().getName();
                 recursiveFileSendDrop(filesArr1, Paths.get(path + File.separator + parentFile));
             }
         }
         if (fileDropIter == Folder.fileDropCount) {
+            GUI.t.interrupt();
             GUI.labelCutterThread(Main.jAlertLabel, recursiveFileDrop_T.fileDropIter + " files moved to o-box", 10, 25, 750, false);
             Main.jTextArea1.append(recursiveFileDrop_T.fileDropIter + " files moved to o-box\n");
             TreeView.populateStoreTree(Statics.sendFolder);
@@ -278,7 +277,6 @@ class recursiveFileDrop_T implements Runnable {
                 }
             } else {
                 System.out.println(filesArr1);
-                String parentStr = filesArr1.getParent();
                 recursiveFileStoreDrop(filesArr1, path, recursiveStorePaths);
             }
         }

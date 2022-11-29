@@ -275,9 +275,11 @@ public class Main extends javax.swing.JFrame {
     }
 
     public static void refreshTreeView(Path path, int caretPos) {
-        TreeView.populateStoreTree(path);
-        caretPos = jScrollPane5.getVerticalScrollBar().getValue();
-        TreeView.expandTreeNode(path);
+        if (!dragDropBool) {
+            TreeView.populateStoreTree(path);
+            caretPos = jScrollPane5.getVerticalScrollBar().getValue();
+            TreeView.expandTreeNode(path);
+        }
     }
 
     private void loginLabelVisibleBool(boolean b) {
@@ -1317,8 +1319,6 @@ public class Main extends javax.swing.JFrame {
                     refreshTreeView(path, TreeView.nodeCaretPos);
                     break;
             }
-        } else {
-            System.out.println("TreeView is disabled");
         }
     }//GEN-LAST:event_jTree1MouseEntered
 

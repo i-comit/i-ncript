@@ -10,18 +10,13 @@ import static com.i_comit.macos.Main.root;
 import static com.i_comit.macos.Memory.byteFormatter;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.CharacterIterator;
 import java.text.DecimalFormat;
 import java.text.StringCharacterIterator;
-import java.util.List;
 
 /**
  *

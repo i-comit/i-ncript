@@ -224,8 +224,6 @@ class recursiveFileDrop_T implements Runnable {
                     }
                 }
             } else {
-//                System.out.println(filesArr1);
-//                System.out.println(Paths.get(path + File.separator + filesArr1.getName()));
                 String parentStr = filesArr1.getParent();
                 String parentFile = Paths.get(parentStr).toFile().getName();
                 recursiveFileSendDrop(filesArr1, Paths.get(path + File.separator + parentFile));
@@ -238,10 +236,6 @@ class recursiveFileDrop_T implements Runnable {
             TreeView.populateStoreTree(Statics.sendFolder);
         }
         filesf.delete();
-    }
-
-    public static void recursiveFolderDelete(File filesf) {
-
     }
 
     public static void recursiveFileStoreDrop(File filesf, Path path, List<Path> recursiveStorePaths) {

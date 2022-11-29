@@ -35,6 +35,7 @@ public class Statics {
 
     public static boolean hotFilerBool = false;
     public static boolean fileHiderBool = false;
+    public static boolean dragDropBool = false;
 
     public static File directory = null;
     public static File keyFile = null;
@@ -90,10 +91,11 @@ public class Statics {
         jProgressBar1.setValue(0);
         jProgressBar1.setMaximum(0);
         jProgressBar1.setVisible(true);
+        Statics.dragDropBool = false;
 
         try {
-            jProgressBar1.setString("0% | 0/" + fileCount);
             jProgressBar1.setMaximum(fileCount);
+            jProgressBar1.setString("0% | 0/" + fileCount);
             AES.AESThread(listAESPaths(path), directory, true, 0);
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -109,10 +111,11 @@ public class Statics {
         jProgressBar1.setValue(0);
         jProgressBar1.setMaximum(0);
         jProgressBar1.setVisible(true);
+        Statics.dragDropBool = false;
 
         try {
-            jProgressBar1.setString("0% | 0/" + fileCount);
             jProgressBar1.setMaximum(fileCount);
+            jProgressBar1.setString("0% | 0/" + fileCount);
             AES.AESThread(listAESPaths(path), directory, true, 0);
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -314,5 +317,4 @@ public class Statics {
         main.setLocationRelativeTo(null);
         jScrollPane5.setVisible(true);
     }
-
 }

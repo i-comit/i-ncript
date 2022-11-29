@@ -52,15 +52,12 @@ class DragDrop implements DropTargetListener {
                 for (int i = 0; i < Main.jTree1.getSelectionPaths().length; i++) {
                     File fileFormat = new File(root + masterFolder + Main.jTree1.getSelectionPaths()[i].toString().substring(1, Main.jTree1.getSelectionPaths()[i].toString().length() - 1).replaceAll(", ", "\\\\"));
                     if (!fileFormat.isDirectory()) {
-//                        System.out.println("files from Drag Drop are " + fileFormat);
                         treepaths.add(fileFormat.toPath());
                     }
                 }
                 if (TreeView.checkFilesAreFromSameFolder(treepaths)) {
-                    Statics.dragDropBool = false;
                     Main.jButton2.setVisible(true);
                     Main.jProgressBar1.setMaximum(treepaths.size());
-//                    System.out.println("Path from Drag Drop is " + path.replaceAll(fileName, ""));
                     Statics.dragDropBool = false;
                     jProgressBar1.setString("0% | 0/" + treepaths.size());
                     AES.AESThread(treepaths, new File(path.replaceAll(fileName, "")), false, 0);
