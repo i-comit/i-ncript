@@ -7,7 +7,6 @@ package com.i_comit.macos;
 import static com.i_comit.macos.FileHider.fileCt;
 import static com.i_comit.macos.GUI.listPaths;
 import static com.i_comit.macos.HotFiler_T.folderWatcher;
-import static com.i_comit.macos.Main.refreshTreeView;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -147,20 +146,7 @@ class FileHider_T implements Runnable {
                     ex.printStackTrace();
                 }
             });
-            switch (Statics.toolMode) {
-                case 0:
-                    refreshTreeView(Statics.path, TreeView.nodeCaretPos);
-                    break;
-                case 1:
-                    refreshTreeView(Statics.receiveFolder, TreeView.receiveCaretPos);
-                    break;
-                case 2:
-                    refreshTreeView(Statics.sendFolder, TreeView.sendCaretPos);
-                    break;
-                case 3:
-                    refreshTreeView(Statics.path, TreeView.nodeCaretPos);
-                    break;
-            }
+            Statics.treeViewBool = true;
         } else {
             paths.forEach(x -> {
                 try {
@@ -182,20 +168,7 @@ class FileHider_T implements Runnable {
                     ex.printStackTrace();
                 }
             });
-            switch (Statics.toolMode) {
-                case 0:
-                    refreshTreeView(Statics.path, TreeView.nodeCaretPos);
-                    break;
-                case 1:
-                    refreshTreeView(Statics.receiveFolder, TreeView.receiveCaretPos);
-                    break;
-                case 2:
-                    refreshTreeView(Statics.sendFolder, TreeView.sendCaretPos);
-                    break;
-                case 3:
-                    refreshTreeView(Statics.path, TreeView.nodeCaretPos);
-                    break;
-            }
+            Statics.treeViewBool = true;
         }
     }
 

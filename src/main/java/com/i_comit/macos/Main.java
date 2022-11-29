@@ -22,6 +22,8 @@ import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
@@ -325,10 +327,10 @@ public class Main extends javax.swing.JFrame {
                         GUI.labelCutterThread(jAlertLabel, "USB drive, reimagined.", 60, 80, 100, true);
                         break;
                     case 3:
-                        GUI.labelCutterThread(jAlertLabel, "also available on mac os.", 60, 80, 100, true);
+                        GUI.labelCutterThread(jAlertLabel, "also available on windows.", 60, 80, 100, true);
                         break;
                     case 4:
-                        GUI.labelCutterThread(jAlertLabel, "also available on linux.", 60, 80, 100, true);
+                        GUI.labelCutterThread(jAlertLabel, "also available on mac os.", 60, 80, 100, true);
                         break;
 
                 }
@@ -1043,6 +1045,11 @@ public class Main extends javax.swing.JFrame {
                 jTree1ValueChanged(evt);
             }
         });
+        jTree1.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jTree1PropertyChange(evt);
+            }
+        });
         jScrollPane5.setViewportView(jTree1);
 
         getContentPane().add(jScrollPane5);
@@ -1316,6 +1323,30 @@ public class Main extends javax.swing.JFrame {
             System.out.println("TreeView is disabled");
         }
     }//GEN-LAST:event_jTree1MouseEntered
+
+    private void jTree1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTree1PropertyChange
+        // TODO add your handling code here:
+        if(evt.getPropertyName().equals("enabled")){
+            System.out.println("jTree1 enabled or not " +jTree1.isEnabled());
+         if (treeViewBool) {
+            switch (toolMode) {
+                case 0:
+                    refreshTreeView(path, TreeView.nodeCaretPos);
+                    break;
+                case 1:
+                    refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
+                    break;
+                case 2:
+                    refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                    break;
+                case 3:
+                    refreshTreeView(path, TreeView.nodeCaretPos);
+                    break;
+            }
+            treeViewBool = false;
+        }
+        }
+    }//GEN-LAST:event_jTree1PropertyChange
     /**
      * @param args the command line arguments
      */

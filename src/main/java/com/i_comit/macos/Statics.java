@@ -234,32 +234,18 @@ public class Statics {
         switch (toolMode) {
             case 0:
                 FileHider.cleanUp(path);
-                TreeView.populateStoreTree(path);
-                break;
-            case 1:
-                FileHider.cleanUp(receiveFolder);
-                TreeView.populateStoreTree(receiveFolder);
-                break;
-            case 2:
-                FileHider.cleanUp(sendFolder);
-                TreeView.populateStoreTree(sendFolder);
-                break;
-            case 3:
-                FileHider.cleanUp(path);
-                TreeView.populateStoreTree(path);
-                break;
-        }
-        switch (toolMode) {
-            case 0:
                 refreshTreeView(path, TreeView.nodeCaretPos);
                 break;
             case 1:
+                FileHider.cleanUp(receiveFolder);
                 refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
                 break;
             case 2:
+                FileHider.cleanUp(sendFolder);
                 refreshTreeView(sendFolder, TreeView.sendCaretPos);
                 break;
             case 3:
+                FileHider.cleanUp(path);
                 refreshTreeView(path, TreeView.nodeCaretPos);
                 break;
         }
