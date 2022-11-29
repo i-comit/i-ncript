@@ -20,9 +20,8 @@ public class HotFiler {
 
     public static Thread t;
 
-    public static void HotFilerThread() throws IOException {
-        HotFiler_T hotFilerThread = new HotFiler_T();
-        t = new Thread(hotFilerThread);
+    public static void HotFilerThread(Main main) {
+        t = new Thread(() -> HotFiler_T.startFolderWatcher(main));
         t.start();
     }
 }
@@ -31,29 +30,29 @@ class HotFiler_T implements Runnable {
 
     public int threadIterator;
 
-    @Override
+//    @Override
     public void run() {
-        synchronized (this) {
+
+    }
+
+    public static void startFolderWatcher(Main main) {
             try {
                 if (Main.jToggleButton1.isSelected()) {
                     List<Path> path = listAESPaths(Statics.path);
                     if (path.isEmpty()) {
-                        System.out.println("HotFilerPathEmpty");
+                    main.setSize(756, 249);
                         folderWatcher();
-
                     } else {
                         AES.AESThread(path, Statics.directory, true, 0);
                     }
 
                 } else {
                     HotFiler.t.stop();
-
                 }
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
-    }
 
     public static int countRegFiles(Path path) throws IOException {
         int result;
@@ -86,7 +85,7 @@ class HotFiler_T implements Runnable {
                     boolean b = true;
                     while (b) {
                         int paths0 = countRegFiles(Statics.path);
-                        Thread.sleep(1200);
+                        Thread.sleep(2000);
                         Statics.fileCount = countRegFiles(Statics.path);
                         if (Statics.fileCount == paths0) {
                             if (paths0 != 0 && Statics.fileCount != 0) {
@@ -97,7 +96,6 @@ class HotFiler_T implements Runnable {
                                 Statics.fileCount = GUI.countFiles(Statics.path);
                                 Main.jProgressBar1.setMaximum(Statics.fileCount);
                                 AES.AESThread(listAESPaths(Statics.path), Statics.directory, true, 0);
-                                System.out.println("Hot Filer Called AES");
                                 b = false;
                             }
                         }

@@ -38,8 +38,8 @@ public class Main extends javax.swing.JFrame {
     public static String appBundle = "";
     public static final String masterFolder = File.separator + "--------" + File.separator;
 
-    private static final String appVer = "1.7.9";
-    private static final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:ss a"));
+    private final String appVer = "1.7.9";
+    private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:ss a"));
     public static final int year = Year.now().getValue();
 
     private final URL fontFile = getClass().getResource("/polentical-neon.ttf");

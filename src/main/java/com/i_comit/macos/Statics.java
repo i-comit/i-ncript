@@ -267,7 +267,7 @@ public class Statics {
             try {
                 fileCount = GUI.countFiles(path);
                 jProgressBar1.setMaximum(fileCount);
-                HotFiler.HotFilerThread();
+                HotFiler.HotFilerThread(main);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
