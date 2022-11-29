@@ -274,11 +274,11 @@ public class Main extends javax.swing.JFrame {
         });
     }
 
-    public static void refreshTreeView(Path path, int caretPos) {
+    public static void refreshTreeView(Path path) {
         if (!dragDropBool) {
             TreeView.populateStoreTree(path);
-            caretPos = jScrollPane5.getVerticalScrollBar().getValue();
-            TreeView.expandTreeNode(path);
+            TreeView.storeExpandedNodes(toolMode);
+//            TreeView.storeNodeCaretPos(toolMode);
         }
     }
 
@@ -675,11 +675,6 @@ public class Main extends javax.swing.JFrame {
         jTextField1.setFont(Statics.registerCustomFont(12, fontFile));
         jLoginPanel.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(137, 6, 103, -1));
 
-        jPasswordField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jPasswordField1ActionPerformed(evt);
-            }
-        });
         jPasswordField1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jPasswordField1KeyPressed(evt);
@@ -724,7 +719,7 @@ public class Main extends javax.swing.JFrame {
         jLoginPanel.add(jHeapLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 100, -1, -1));
 
         getContentPane().add(jLoginPanel);
-        jLoginPanel.setBounds(14, 44, 250, 116);
+        jLoginPanel.setBounds(14, 44, 250, 118);
 
         jProgressBar1.setFont(Statics.registerCustomFont(12, fontFile));
         jProgressBar1.setForeground(Color.WHITE);
@@ -1077,10 +1072,6 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
-    private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jPasswordField1ActionPerformed
-
 //LOGIN
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (jButton1.getText().equals("ENTER")) {
@@ -1251,7 +1242,7 @@ public class Main extends javax.swing.JFrame {
 
     private void jTree1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MouseExited
         TreeView.storeExpandedNodes(toolMode);
-        TreeView.storeNodeCaretPos(Statics.toolMode);
+//        TreeView.storeNodeCaretPos(Statics.toolMode);
 
         jCreationDateLabel.setText("");
         jFileSizeLabel.setText("");
@@ -1307,16 +1298,16 @@ public class Main extends javax.swing.JFrame {
         if (jTree1.isEnabled()) {
             switch (toolMode) {
                 case 0:
-                    refreshTreeView(path, TreeView.nodeCaretPos);
+                    refreshTreeView(path);
                     break;
                 case 1:
-                    refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
+                    refreshTreeView(receiveFolder);
                     break;
                 case 2:
-                    refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                    refreshTreeView(sendFolder);
                     break;
                 case 3:
-                    refreshTreeView(path, TreeView.nodeCaretPos);
+                    refreshTreeView(path);
                     break;
             }
         }
@@ -1326,16 +1317,16 @@ public class Main extends javax.swing.JFrame {
         if (evt.getPropertyName().equals("enabled")) {
             switch (toolMode) {
                 case 0:
-                    refreshTreeView(path, TreeView.nodeCaretPos);
+                    refreshTreeView(path);
                     break;
                 case 1:
-                    refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
+                    refreshTreeView(receiveFolder);
                     break;
                 case 2:
-                    refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                    refreshTreeView(sendFolder);
                     break;
                 case 3:
-                    refreshTreeView(path, TreeView.nodeCaretPos);
+                    refreshTreeView(path);
                     break;
             }
         }

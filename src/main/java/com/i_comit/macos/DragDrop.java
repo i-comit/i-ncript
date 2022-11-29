@@ -127,7 +127,7 @@ class DragDrop implements DropTargetListener {
                                         filesf.delete();
                                     } else {
                                         Files.move(filesf.toPath(), Paths.get(Statics.sendFolder + File.separator + filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
-                                        Main.refreshTreeView(Statics.sendFolder, TreeView.sendCaretPos);
+                                        Main.refreshTreeView(Statics.sendFolder);
                                     }
                                 } else {
                                     GUI.t.interrupt();
@@ -216,7 +216,7 @@ class DragDrop_T implements Runnable {
                 Main.toolBtnsBool(true);
                 Main.jTabbedPane1.setSelectedIndex(0);
                 if (!Statics.dragDropBool) {
-                    Main.refreshTreeView(Statics.path, TreeView.nodeCaretPos);
+                    Main.refreshTreeView(Statics.path);
                 }
                 AES_T.paths = null;
             }

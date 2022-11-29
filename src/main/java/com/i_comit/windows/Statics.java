@@ -25,9 +25,9 @@ public class Statics {
 
     public static int toolMode = 0;
 
-    public static String folderName = "i-ncript";
+    public static final String folderName = "i-ncript";
     public static String rootFolder = root.substring(0, 3) + Main.masterFolder + folderName;
-    public static String keyName = "\\.i-ncript.key";
+    public static final String keyName = "\\.i-ncript.key";
 
     public static int maxFileBytes = 1048576 * 4;
 
@@ -129,7 +129,6 @@ public class Statics {
         jTextField2.setText("");
         jPasswordField2.setText("");
         jPasswordField3.setText("");
-        System.out.println("statics tooldmode "+toolMode);
         GUI.getGB();
 
         switch (toolMode) {

@@ -88,7 +88,7 @@ public class Folder {
                 }
             }
             Main.jList1.setSelectedIndex(0);
-            Main.refreshTreeView(Statics.receiveFolder, TreeView.receiveCaretPos);
+            Main.refreshTreeView(Statics.receiveFolder);
             GUI.getGB();
         }
     }
@@ -116,7 +116,6 @@ public class Folder {
                         zos.write(buffer, 0, length);
                     }
 
-                    // Close the zip entry.
                     zos.closeEntry();
                     Statics.zipIter++;
                     Main.jProgressBar2.setValue(Statics.zipIter);

@@ -150,7 +150,7 @@ public class Statics {
                 FileHider.cleanUp(receiveFolder);
                 TreeView.setRootName("n-box");
                 TreeView.populateStoreTree(receiveFolder);
-                TreeView.expandTreeNode(receiveFolder);
+                Main.refreshTreeView(receiveFolder);
                 break;
             case 2:
                 jSwitchMode.setText("O-BOX");
@@ -167,11 +167,11 @@ public class Statics {
                 jRadioButton3.setVisible(false);
                 jLabel10.setText("O-BOX MODE");
                 jLabel11.setText("MOVE FILES TO O-BOX");
-                dragDrop.setToolTipText("drop box will move 10 files or 1 folder into o-box folder");
+                dragDrop.setToolTipText("drop box will move files or folder into o-box folder");
                 FileHider.cleanUp(sendFolder);
                 TreeView.setRootName("o-box");
                 TreeView.populateStoreTree(sendFolder);
-                TreeView.expandTreeNode(sendFolder);
+                Main.refreshTreeView(sendFolder);
                 break;
             case 3:
                 jSwitchMode.setText("STORE");
@@ -188,8 +188,7 @@ public class Statics {
                 dragDrop.setToolTipText("drop box will encrypt & decrypt any files dropped here");
                 FileHider.cleanUp(path);
                 TreeView.setRootName("i-ncript");
-                TreeView.populateStoreTree(path);
-                TreeView.expandTreeNode(path);
+                Main.refreshTreeView(path);
                 toolMode = 0;
                 break;
         }
@@ -236,19 +235,19 @@ public class Statics {
         switch (toolMode) {
             case 0:
                 FileHider.cleanUp(path);
-                refreshTreeView(path, TreeView.nodeCaretPos);
+                refreshTreeView(path);
                 break;
             case 1:
                 FileHider.cleanUp(receiveFolder);
-                refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
+                refreshTreeView(receiveFolder);
                 break;
             case 2:
                 FileHider.cleanUp(sendFolder);
-                refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                refreshTreeView(sendFolder);
                 break;
             case 3:
                 FileHider.cleanUp(path);
-                refreshTreeView(path, TreeView.nodeCaretPos);
+                refreshTreeView(path);
                 break;
         }
         main.setSize(756, 224);
@@ -267,7 +266,7 @@ public class Statics {
             try {
                 fileCount = GUI.countFiles(path);
                 jProgressBar1.setMaximum(fileCount);
-                HotFiler.HotFilerThread();
+                HotFiler.HotFilerThread(main);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
