@@ -96,12 +96,11 @@ class FileHider_T implements Runnable {
 
     public static void fileHiderToolReenable() {
         Main.jToggleButton2.setEnabled(true);
-        Main.toolBtnsBool(true);
-        Main.jTree1.setEnabled(true);
         Main.dragDrop.setVisible(true);
         Main.jTabbedPane1.setSelectedIndex(0);
         Main.jProgressBar1.setVisible(false);
         Main.jProgressBar2.setVisible(true);
+        Main.toolBtnsBool(true);
         Statics.fileIter = 0;
         Statics.fileCount = 0;
         fileCt = 0;

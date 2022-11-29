@@ -1324,19 +1324,21 @@ public class Main extends javax.swing.JFrame {
 
     private void jTree1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTree1PropertyChange
         if (evt.getPropertyName().equals("enabled")) {
-            switch (toolMode) {
-                case 0:
-                    refreshTreeView(path, TreeView.nodeCaretPos);
-                    break;
-                case 1:
-                    refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
-                    break;
-                case 2:
-                    refreshTreeView(sendFolder, TreeView.sendCaretPos);
-                    break;
-                case 3:
-                    refreshTreeView(path, TreeView.nodeCaretPos);
-                    break;
+            if (fileIter != 0) {
+                switch (toolMode) {
+                    case 0:
+                        refreshTreeView(path, TreeView.nodeCaretPos);
+                        break;
+                    case 1:
+                        refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
+                        break;
+                    case 2:
+                        refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                        break;
+                    case 3:
+                        refreshTreeView(path, TreeView.nodeCaretPos);
+                        break;
+                }
             }
         }
     }//GEN-LAST:event_jTree1PropertyChange
