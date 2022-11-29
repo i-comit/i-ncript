@@ -136,8 +136,6 @@ public class AES {
             throw new CryptoException("Error encrypting/decrypting file", ex);
         } catch (IOException | UncheckedIOException ex) {
             System.out.println("Last File Was " + inputFile.getName());
-//        } catch (InvalidAlgorithmParameterException ex) {
-//            ex.printStackTrace();
         }
     }
 

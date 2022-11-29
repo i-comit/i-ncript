@@ -95,7 +95,6 @@ class FileHider_T implements Runnable {
     }
 
     public static void fileHiderToolReenable() {
-        AES.t.stop();
         Main.jToggleButton2.setEnabled(true);
         Main.dragDrop.setVisible(true);
         Main.jTabbedPane1.setSelectedIndex(0);
@@ -163,7 +162,6 @@ class FileHider_T implements Runnable {
             });
             Main.toolBtnsBool(true);
             Statics.fileTreeBool = true;
-
         }
     }
 

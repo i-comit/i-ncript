@@ -208,16 +208,6 @@ public class Statics {
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
-        switch (AESMode) {
-            case 0:
-                jTextArea1.append("encryption of " + fileCount + " files stopped at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
-                break;
-            case 1:
-                jTextArea1.append("decryption of " + fileCount + " files stopped at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
-                break;
-        }
-        resetStaticInts();
-
         jButton2.setVisible(false);
         jTabbedPane1.setSelectedIndex(0);
         jProgressBar1.setValue(fileIter);
@@ -253,6 +243,23 @@ public class Statics {
                 break;
         }
         main.setSize(756, 224);
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+        if (!AES.t.isAlive()) {
+            switch (AESMode) {
+                case 0:
+                    jTextArea1.append("encryption of " + fileIter + " files stopped at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
+                    break;
+                case 1:
+                    jTextArea1.append("decryption of " + fileIter + " files stopped at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
+                    break;
+            }
+        }
+        resetStaticInts();
     }
 
     public static void hotFilerFunction(Main main) {

@@ -38,7 +38,7 @@ public class Main extends javax.swing.JFrame {
     public static String appBundle = "";
     public static final String masterFolder = File.separator + "--------" + File.separator;
 
-    private final String appVer = "1.7.9";
+    private final String appVer = "1.8.0";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:ss a"));
     public static final int year = Year.now().getValue();
 
@@ -819,14 +819,14 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(dragDropLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
                     .addGroup(dragDropLayout.createSequentialGroup()
-                        .addGap(0, 59, Short.MAX_VALUE)
+                        .addGap(0, 56, Short.MAX_VALUE)
                         .addComponent(jLabel9)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(dragDropLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel12)
                             .addComponent(jLabel14)
                             .addComponent(jLabel13))
-                        .addGap(0, 59, Short.MAX_VALUE)))
+                        .addGap(0, 55, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         dragDropLayout.setVerticalGroup(
@@ -865,7 +865,7 @@ public class Main extends javax.swing.JFrame {
 
         jTextArea1.setEditable(false);
         jTextArea1.setBackground(new java.awt.Color(57, 57, 57));
-        jTextArea1.setColumns(20);
+        jTextArea1.setColumns(16);
         jTextArea1.setForeground(Color.white);
         jTextArea1.setRows(5);
         jTextArea1.setAutoscrolls(false);
