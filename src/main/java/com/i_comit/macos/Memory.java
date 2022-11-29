@@ -203,20 +203,7 @@ public class Memory {
 //
 //            }
 //            Files.write(Paths.get(root + File.separator + masterFolder + File.separator + Main.appBundle + File.separator + "Info.plist"), lines, StandardCharsets.UTF_8);
-            try {
-                ProcessBuilder pb = new ProcessBuilder("/bin/bash", "-l", "cd /Volumes", "ls");
-                pb.redirectError();
-                String s = "";
-                Process sh = pb.start();
-                try (BufferedReader reader = new BufferedReader(new InputStreamReader(sh.getInputStream()))) {
-                    while ((s = reader.readLine()) != null) {
-                        System.out.println(s);
-                    }
-                }
-                System.out.println("???");
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+
 //            System.exit(0);
 
         } catch (IOException ex) {

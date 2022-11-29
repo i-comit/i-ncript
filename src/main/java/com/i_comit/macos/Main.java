@@ -15,15 +15,12 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
@@ -62,7 +59,7 @@ public class Main extends javax.swing.JFrame {
             if (!keyFile.exists()) {
                 jToolPanel.setVisible(false);
                 loginLabelVisibleBool(false);
-                this.setSize(528, 224);
+                this.setSize(520, 224);
                 this.setLocationRelativeTo(null);
             } else {
 //                Memory.getHeapSize();
@@ -131,12 +128,12 @@ public class Main extends javax.swing.JFrame {
                             AESMode = 0;
                             fileCount = GUI.countFiles(path);
                             if (fileCount != 0) {
-                                Main.this.setSize(768, 249);
+                                Main.this.setSize(756, 249);
                                 encryptFunction(Main.this);
                             } else {
                                 GUI.t.interrupt();
                                 GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 10, 20, 400, false);
-                                Main.this.setSize(768, 224);
+                                Main.this.setSize(756, 224);
                             }
                         } catch (IOException ex) {
                             ex.printStackTrace();
@@ -155,12 +152,12 @@ public class Main extends javax.swing.JFrame {
                             AESMode = 1;
                             fileCount = GUI.countFiles(path);
                             if (fileCount != 0) {
-                                Main.this.setSize(768, 249);
+                                Main.this.setSize(756, 249);
                                 decryptFunction(Main.this);
                             } else {
                                 GUI.t.interrupt();
                                 GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400, false);
-                                Main.this.setSize(768, 224);
+                                Main.this.setSize(756, 224);
                             }
                         } catch (IOException ex) {
                             ex.printStackTrace();
@@ -295,7 +292,7 @@ public class Main extends javax.swing.JFrame {
         jAlertLabel.setHorizontalAlignment(LEFT);
         jEULAPanel1.setVisible(false);
         jEULAPanel.setVisible(false);
-        this.setSize(282, 224);
+        this.setSize(274, 224);
         this.setLocationRelativeTo(null);
         System.out.println("Your available Memory Heap is " + Memory.byteFormatter(Memory.totalMemory));
         File rootFolder = Paths.get(root + masterFolder + folderName).toFile();
@@ -440,9 +437,9 @@ public class Main extends javax.swing.JFrame {
         jTree1 = new javax.swing.JTree();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("i-ncript™");
+        setTitle("i-ncript™ NO NAME");
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti.icns")));
-        setMinimumSize(new java.awt.Dimension(280, 150));
+        setMinimumSize(new java.awt.Dimension(270, 150));
         setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         setResizable(false);
         setSize(new java.awt.Dimension(320, 0));
@@ -666,7 +663,7 @@ public class Main extends javax.swing.JFrame {
         jToolPanel.add(jReceivePanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         getContentPane().add(jToolPanel);
-        jToolPanel.setBounds(258, 34, 252, 150);
+        jToolPanel.setBounds(252, 34, 252, 150);
 
         jLoginPanel.setToolTipText("");
         jLoginPanel.setOpaque(false);
@@ -724,7 +721,7 @@ public class Main extends javax.swing.JFrame {
         jLoginPanel.add(jHeapLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 100, -1, -1));
 
         getContentPane().add(jLoginPanel);
-        jLoginPanel.setBounds(20, 44, 250, 116);
+        jLoginPanel.setBounds(14, 44, 250, 116);
 
         jProgressBar1.setFont(Statics.registerCustomFont(12, fontFile));
         jProgressBar1.setForeground(Color.WHITE);
@@ -735,7 +732,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jProgressBar1);
-        jProgressBar1.setBounds(22, 204, 722, 17);
+        jProgressBar1.setBounds(16, 204, 722, 17);
 
         jLabel1.setFont(Statics.registerCustomFont(18, fontFile));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -744,7 +741,7 @@ public class Main extends javax.swing.JFrame {
         jLabel1.setToolTipText("go to i-comit.com");
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(22, 10, 90, 16);
+        jLabel1.setBounds(16, 10, 90, 16);
 
         jLabel3.setFont(Statics.registerCustomFont(17, fontFile)
         );
@@ -761,23 +758,23 @@ public class Main extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(125, 4, 135, 30);
+        jLabel3.setBounds(119, 4, 135, 30);
 
         jAlertLabel.setFont(Statics.registerCustomFont(12, fontFile));
         jAlertLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         getContentPane().add(jAlertLabel);
-        jAlertLabel.setBounds(21, 174, 236, 27);
+        jAlertLabel.setBounds(15, 174, 236, 27);
 
         jCreationDateLabel.setFont(Statics.registerCustomFont(13, fontFile));
         jCreationDateLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         getContentPane().add(jCreationDateLabel);
-        jCreationDateLabel.setBounds(22, 172, 130, 27);
+        jCreationDateLabel.setBounds(16, 172, 130, 27);
 
         jFileSizeLabel.setFont(Statics.registerCustomFont(13, fontFile));
         jFileSizeLabel.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jFileSizeLabel.setFocusable(false);
         getContentPane().add(jFileSizeLabel);
-        jFileSizeLabel.setBounds(146, 172, 100, 27);
+        jFileSizeLabel.setBounds(140, 172, 100, 27);
 
         jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
         jTabbedPane1.setFocusable(false);
@@ -941,7 +938,7 @@ public class Main extends javax.swing.JFrame {
         jTabbedPane1.addTab("HELP", jPanel4);
 
         getContentPane().add(jTabbedPane1);
-        jTabbedPane1.setBounds(520, 12, 224, 190);
+        jTabbedPane1.setBounds(514, 12, 224, 190);
 
         jEULAPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -979,7 +976,7 @@ public class Main extends javax.swing.JFrame {
         jEULAPanel.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 176, -1, -1));
 
         getContentPane().add(jEULAPanel);
-        jEULAPanel.setBounds(6, 0, 520, 230);
+        jEULAPanel.setBounds(2, 0, 520, 210);
 
         jEULAPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -1017,7 +1014,7 @@ public class Main extends javax.swing.JFrame {
         jEULAPanel1.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 176, -1, -1));
 
         getContentPane().add(jEULAPanel1);
-        jEULAPanel1.setBounds(6, 0, 520, 230);
+        jEULAPanel1.setBounds(2, 0, 520, 210);
 
         jScrollPane5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(75, 110, 175)));
         jScrollPane5.setPreferredSize(new java.awt.Dimension(225, 160));
@@ -1053,7 +1050,7 @@ public class Main extends javax.swing.JFrame {
         jScrollPane5.setViewportView(jTree1);
 
         getContentPane().add(jScrollPane5);
-        jScrollPane5.setBounds(22, 12, 225, 158);
+        jScrollPane5.setBounds(16, 12, 225, 158);
 
         setSize(new java.awt.Dimension(754, 234));
         setLocationRelativeTo(null);
@@ -1065,12 +1062,12 @@ public class Main extends javax.swing.JFrame {
             AESMode = 1;
             fileCount = GUI.countFiles(path);
             if (fileCount != 0) {
-                this.setSize(768, 241);
+                this.setSize(756, 249);
                 decryptFunction(this);
             } else {
                 GUI.t.interrupt();
                 GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400, false);
-                this.setSize(768, 224);
+                this.setSize(756, 224);
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -1111,12 +1108,12 @@ public class Main extends javax.swing.JFrame {
             AESMode = 0;
             fileCount = GUI.countFiles(path);
             if (fileCount != 0) {
-                this.setSize(768, 241);
+                this.setSize(756, 249);
                 encryptFunction(this);
             } else {
                 GUI.t.interrupt();
                 GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 10, 20, 400, false);
-                this.setSize(768, 224);
+                this.setSize(756, 224);
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -1204,9 +1201,9 @@ public class Main extends javax.swing.JFrame {
             zipFileCount = 0;
             zipIter = 0;
             if (Login.sendKeyCheck()) {
-                this.setSize(768, 249);
+                this.setSize(760, 249);
             } else {
-                this.setSize(768, 224);
+                this.setSize(760, 224);
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -1217,7 +1214,7 @@ public class Main extends javax.swing.JFrame {
         zipFileCount = 0;
         zipIter = 0;
         if (Login.verifySendKey(receiveFolder + File.separator + jList1.getSelectedValue())) {
-            this.setSize(768, 241);
+            this.setSize(768, 249);
         } else {
             this.setSize(768, 229);
         }
@@ -1264,10 +1261,10 @@ public class Main extends javax.swing.JFrame {
 
     private void jProgressBar1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jProgressBar1StateChanged
         if (progressbarBool) {
-            this.setSize(768, 224);
+            this.setSize(756, 224);
             progressbarBool = false;
         } else {
-            this.setSize(768, 249);
+            this.setSize(756, 249);
         }
     }//GEN-LAST:event_jProgressBar1StateChanged
 
@@ -1326,25 +1323,24 @@ public class Main extends javax.swing.JFrame {
 
     private void jTree1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTree1PropertyChange
         // TODO add your handling code here:
-        if(evt.getPropertyName().equals("enabled")){
-            System.out.println("jTree1 enabled or not " +jTree1.isEnabled());
-         if (treeViewBool) {
-            switch (toolMode) {
-                case 0:
-                    refreshTreeView(path, TreeView.nodeCaretPos);
-                    break;
-                case 1:
-                    refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
-                    break;
-                case 2:
-                    refreshTreeView(sendFolder, TreeView.sendCaretPos);
-                    break;
-                case 3:
-                    refreshTreeView(path, TreeView.nodeCaretPos);
-                    break;
+        if (evt.getPropertyName().equals("enabled")) {
+            if (treeViewBool) {
+                switch (toolMode) {
+                    case 0:
+                        refreshTreeView(path, TreeView.nodeCaretPos);
+                        break;
+                    case 1:
+                        refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
+                        break;
+                    case 2:
+                        refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                        break;
+                    case 3:
+                        refreshTreeView(path, TreeView.nodeCaretPos);
+                        break;
+                }
+                treeViewBool = false;
             }
-            treeViewBool = false;
-        }
         }
     }//GEN-LAST:event_jTree1PropertyChange
     /**
