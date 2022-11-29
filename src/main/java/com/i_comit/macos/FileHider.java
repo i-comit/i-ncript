@@ -9,8 +9,6 @@ import static com.i_comit.macos.GUI.listPaths;
 import static com.i_comit.macos.HotFiler_T.folderWatcher;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -93,12 +91,7 @@ class FileHider_T implements Runnable {
     public int threadIterator;
 
     public void run() {
-//
-//        try {
-//            FileHider.fileHider();
-//        } catch (IOException ex) {
-//            ex.printStackTrace();
-//        }
+
     }
 
     public static void fileHiderToolReenable() {
@@ -119,7 +112,6 @@ class FileHider_T implements Runnable {
         List<Path> paths = listPaths(path);
         int fileCount = GUI.countAllFiles(path);
         if (Main.jToggleButton1.isSelected()) {
-            System.out.println("hot filer is selected");
             Main.toolBtnsBool(true);
             Main.jProgressBar1.setValue(0);
             Main.jProgressBar2.setMaximum(0);
@@ -146,7 +138,6 @@ class FileHider_T implements Runnable {
                     ex.printStackTrace();
                 }
             });
-            Statics.treeViewBool = true;
         } else {
             paths.forEach(x -> {
                 try {
@@ -168,7 +159,6 @@ class FileHider_T implements Runnable {
                     ex.printStackTrace();
                 }
             });
-            Statics.treeViewBool = true;
         }
     }
 

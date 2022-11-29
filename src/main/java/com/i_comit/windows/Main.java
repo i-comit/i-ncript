@@ -47,52 +47,52 @@ public class Main extends javax.swing.JFrame {
     public Main() {
         root = Paths.get("").toAbsolutePath().toString();
         if (Memory.checkWMIC()) {
-            root = root.substring(0, 3);
-            initComponents();
-            Memory.getUSBName(this);
+        root = root.substring(0, 3);
+        initComponents();
+        Memory.getUSBName(this);
 
-            Path runtime = Paths.get(root + masterFolder + "runtime");
-            Path app = Paths.get(root + masterFolder + "app");
-            if (runtime.toFile().exists()) {
-                try {
-                    Files.setAttribute(runtime, "dos:hidden", true);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+        Path runtime = Paths.get(root + masterFolder + "runtime");
+        Path app = Paths.get(root + masterFolder + "app");
+        if (runtime.toFile().exists()) {
+            try {
+                Files.setAttribute(runtime, "dos:hidden", true);
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-            if (app.toFile().exists()) {
-                try {
-                    Files.setAttribute(app, "dos:hidden", true);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+        }
+        if (app.toFile().exists()) {
+            try {
+                Files.setAttribute(app, "dos:hidden", true);
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
+        }
 
-            jStorePanel.setVisible(true);
-            jSendPanel.setVisible(false);
-            jReceivePanel.setVisible(false);
-            jRadioButton2.setVisible(false);
-            jRadioButton3.setVisible(false);
-            jScrollPane5.setVisible(false);
+        jStorePanel.setVisible(true);
+        jSendPanel.setVisible(false);
+        jReceivePanel.setVisible(false);
+        jRadioButton2.setVisible(false);
+        jRadioButton3.setVisible(false);
+        jScrollPane5.setVisible(false);
 
-            if (!keyFile.exists()) {
-                jToolPanel.setVisible(false);
-                loginLabelVisibleBool(false);
-                this.setSize(540, 241);
-                this.setLocationRelativeTo(null);
-            } else {
-                Memory.getHeapSize();
-                setKeybinding();
-                loginLabelVisibleBool(true);
-                jUsernameLabel.setText("enter username");
-                jPasswordLabel.setText("enter password");
-                generateFolders();
+        if (!keyFile.exists()) {
+            jToolPanel.setVisible(false);
+            loginLabelVisibleBool(false);
+            this.setSize(540, 241);
+            this.setLocationRelativeTo(null);
+        } else {
+            Memory.getHeapSize(this);
+            setKeybinding();
+            loginLabelVisibleBool(true);
+            jUsernameLabel.setText("enter username");
+            jPasswordLabel.setText("enter password");
+            generateFolders();
 
-                jToolPanel.setVisible(false);
-                jButton2.setVisible(false);
-            }
-            jProgressBar2.setVisible(false);
-            dragDrop.setVisible(false);
+            jToolPanel.setVisible(false);
+            jButton2.setVisible(false);
+        }
+        jProgressBar2.setVisible(false);
+        dragDrop.setVisible(false);
         }
     }
 
@@ -309,7 +309,6 @@ public class Main extends javax.swing.JFrame {
         jAlertLabel.setHorizontalAlignment(LEFT);
         jEULAPanel1.setVisible(false);
         jEULAPanel.setVisible(false);
-        this.setSize(120, 241);
         this.setLocationRelativeTo(null);
         System.out.println("Your available Memory Heap is " + Memory.byteFormatter(Memory.totalMemory));
         File rootFolder = Paths.get(root + masterFolder + folderName).toFile();
@@ -454,7 +453,7 @@ public class Main extends javax.swing.JFrame {
         jTree1 = new javax.swing.JTree();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("i-ncript™"); // NOI18N
+        setTitle("i-ncript™");
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti.png")));
         setMinimumSize(new java.awt.Dimension(295, 225));
         setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
@@ -1053,6 +1052,11 @@ public class Main extends javax.swing.JFrame {
                 jTree1ValueChanged(evt);
             }
         });
+        jTree1.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jTree1PropertyChange(evt);
+            }
+        });
         jScrollPane5.setViewportView(jTree1);
 
         getContentPane().add(jScrollPane5);
@@ -1165,7 +1169,7 @@ public class Main extends javax.swing.JFrame {
         loginLabelVisibleBool(true);
         jUsernameLabel.setText("make username");
         jPasswordLabel.setText("make password");
-        Memory.getHeapSize();
+        Memory.getHeapSize(this);
         generateFolders();
 
         jToolPanel.setVisible(false);
@@ -1326,6 +1330,25 @@ public class Main extends javax.swing.JFrame {
             System.out.println("TreeView is disabled");
         }
     }//GEN-LAST:event_jTree1MouseEntered
+
+    private void jTree1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTree1PropertyChange
+        if (evt.getPropertyName().equals("enabled")) {
+            switch (toolMode) {
+                case 0:
+                    refreshTreeView(path, TreeView.nodeCaretPos);
+                    break;
+                case 1:
+                    refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
+                    break;
+                case 2:
+                    refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                    break;
+                case 3:
+                    refreshTreeView(path, TreeView.nodeCaretPos);
+                    break;
+            }
+        }
+    }//GEN-LAST:event_jTree1PropertyChange
     /**
      * @param args the command line arguments
      */

@@ -58,7 +58,7 @@ public class Memory {
         return percentageStr;
     }
 
-    public static void getHeapSize() {
+    public static void getHeapSize(Main main) {
         File cfgFile = new File(root + Main.masterFolder + "\\app\\i-ncript.cfg");
         if (cfgFile.exists()) {
             try ( BufferedReader br = new BufferedReader(new FileReader(cfgFile))) {
@@ -75,9 +75,14 @@ public class Memory {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+            Main.jAlertLabel.setLocation(21, 154);
+            main.setSize(120, 241);
         } else {
             Main.jHeapLabel.setVisible(false);
             Main.jSlider1.setVisible(false);
+            Main.jAlertLabel.setLocation(21, 154);
+            main.setSize(120, 211);
+
         }
     }
 
