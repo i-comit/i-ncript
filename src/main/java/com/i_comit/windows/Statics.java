@@ -62,51 +62,6 @@ public class Statics {
 
     public static int fileHideIter;
 
-    public enum OS {
-        WINDOWS,
-        UNIX,
-        POSIX_UNIX,
-        MAC,
-        OTHER;
-
-        private String version;
-
-        public String getVersion() {
-            return version;
-        }
-
-        public void setVersion(String version) {
-            this.version = version;
-        }
-    }
-    public static OS os = OS.OTHER;
-
-    public static void getOS() {
-        String osName = System.getProperty("os.name").toLowerCase();
-        System.out.println("OS: " + osName);
-        if (osName.contains("windows")) {
-            os = OS.WINDOWS;
-        } else if (osName.contains("linux")
-                || osName.contains("mpe/ix")
-                || osName.contains("freebsd")
-                || osName.contains("irix")
-                || osName.contains("digital unix")
-                || osName.contains("unix")) {
-            os = OS.UNIX;
-        } else if (osName.contains("mac os")) {
-            os = OS.MAC;
-        } else if (osName.contains("sun os")
-                || osName.contains("sunos")
-                || osName.contains("solaris")) {
-            os = OS.POSIX_UNIX;
-        } else if (osName.contains("hp-ux")
-                || osName.contains("aix")) {
-            os = OS.POSIX_UNIX;
-        } else {
-            os = OS.OTHER;
-        }
-        System.out.println(os);
-    }
     public static Font customFont;
 
     public static Font registerCustomFont(float fontSize, URL fontFile) {
@@ -174,6 +129,7 @@ public class Statics {
         jTextField2.setText("");
         jPasswordField2.setText("");
         jPasswordField3.setText("");
+        System.out.println("statics tooldmode "+toolMode);
         GUI.getGB();
 
         switch (toolMode) {
@@ -196,7 +152,8 @@ public class Statics {
                 FileHider.cleanUp(receiveFolder);
                 TreeView.setRootName("n-box");
                 TreeView.populateStoreTree(receiveFolder);
-                TreeView.expandTreeNode(receiveFolder);
+                Main.refreshTreeView(receiveFolder);
+
                 break;
             case 2:
                 jSwitchMode.setText("O-BOX");
@@ -217,7 +174,8 @@ public class Statics {
                 FileHider.cleanUp(sendFolder);
                 TreeView.setRootName("o-box");
                 TreeView.populateStoreTree(sendFolder);
-                TreeView.expandTreeNode(sendFolder);
+                Main.refreshTreeView(sendFolder);
+
                 break;
             case 3:
                 jSwitchMode.setText("STORE");
@@ -234,8 +192,7 @@ public class Statics {
                 dragDrop.setToolTipText("drop box will encrypt & decrypt any files dropped here");
                 FileHider.cleanUp(path);
                 TreeView.setRootName("i-ncript");
-                TreeView.populateStoreTree(path);
-                TreeView.expandTreeNode(path);
+                Main.refreshTreeView(path);
                 toolMode = 0;
                 break;
         }
@@ -282,19 +239,19 @@ public class Statics {
         switch (toolMode) {
             case 0:
                 FileHider.cleanUp(path);
-                refreshTreeView(path, TreeView.nodeCaretPos);
+                refreshTreeView(path);
                 break;
             case 1:
                 FileHider.cleanUp(receiveFolder);
-                refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
+                refreshTreeView(receiveFolder);
                 break;
             case 2:
                 FileHider.cleanUp(sendFolder);
-                refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                refreshTreeView(sendFolder);
                 break;
             case 3:
                 FileHider.cleanUp(path);
-                refreshTreeView(path, TreeView.nodeCaretPos);
+                refreshTreeView(path);
                 break;
         }
         main.setSize(780, 241);
