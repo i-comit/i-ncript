@@ -35,7 +35,7 @@ class DragDrop implements DropTargetListener {
 
     @Override
     public void drop(DropTargetDropEvent event) {
-        // Accept copy drops
+        boolean b = false;
         event.acceptDrop(DnDConstants.ACTION_COPY);
         // Get the transfer which can provide the dropped item data
         Transferable transferable = event.getTransferable();
@@ -52,14 +52,16 @@ class DragDrop implements DropTargetListener {
                 for (int i = 0; i < Main.jTree1.getSelectionPaths().length; i++) {
                     File fileFormat = new File(root + masterFolder + Main.jTree1.getSelectionPaths()[i].toString().substring(1, Main.jTree1.getSelectionPaths()[i].toString().length() - 1).replaceAll(", ", "\\\\"));
                     if (!fileFormat.isDirectory()) {
-                        System.out.println("files from Drag Drop are " + fileFormat);
+//                        System.out.println("files from Drag Drop are " + fileFormat);
                         treepaths.add(fileFormat.toPath());
                     }
                 }
                 if (TreeView.checkFilesAreFromSameFolder(treepaths)) {
+                    Statics.dragDropBool = false;
                     Main.jButton2.setVisible(true);
                     Main.jProgressBar1.setMaximum(treepaths.size());
-                    System.out.println("Path from Drag Drop is " + path.replaceAll(fileName, ""));
+//                    System.out.println("Path from Drag Drop is " + path.replaceAll(fileName, ""));
+                    Statics.dragDropBool = false;
                     AES.AESThread(treepaths, new File(path.replaceAll(fileName, "")), false, 0);
 
                 } else {
@@ -69,7 +71,6 @@ class DragDrop implements DropTargetListener {
                 jTree1.clearSelection();
             }
         }
-
         for (DataFlavor flavor : flavors) {
             try {
                 // If the drop items are files
@@ -85,19 +86,23 @@ class DragDrop implements DropTargetListener {
                             paths.add(filesf.toPath());
                             if (Statics.toolMode == 0) {
                                 if (i >= paths.size() - 1) {
-                                    if (!filesf.isDirectory()) {
-                                        Main.jButton2.setVisible(true);
-                                        jProgressBar1.setString("0% | 0/" + files.size());
-                                        Main.jProgressBar1.setMaximum(0);
-                                        AES.AESThread(paths, Statics.directory, false, 0);
-                                    } else {
-                                        Folder.getFileDropCount(filesf);
-                                        recursiveFileDrop_T.recursiveFileStoreDrop(filesf, Statics.path, paths);
-                                        paths.remove(0);
-                                        Main.jButton2.setVisible(true);
-                                        jProgressBar1.setString("0% | 0/" + files.size());
-                                        Main.jProgressBar1.setMaximum(0);
-                                        AES.AESThread(paths, Statics.directory, false, 0);
+                                    if (!b) {
+                                        Statics.dragDropBool = true;
+                                        if (!filesf.isDirectory()) {
+                                            Main.jButton2.setVisible(true);
+                                            jProgressBar1.setString("0% | 0/" + files.size());
+                                            Main.jProgressBar1.setMaximum(0);
+                                            AES.AESThread(paths, Statics.directory, false, 0);
+                                        } else {
+                                            Folder.getFileDropCount(filesf);
+                                            recursiveFileDrop_T.recursiveFileStoreDrop(filesf, Statics.path, paths);
+                                            paths.remove(0);
+                                            Main.jButton2.setVisible(true);
+                                            jProgressBar1.setString("0% | 0/" + files.size());
+                                            Main.jProgressBar1.setMaximum(0);
+                                            AES.AESThread(paths, Statics.directory, false, 0);
+                                        }
+                                        b = true;
                                     }
                                 }
                             }
@@ -124,6 +129,7 @@ class DragDrop implements DropTargetListener {
                                         filesf.delete();
                                     } else {
                                         Files.move(filesf.toPath(), Paths.get(Statics.sendFolder + File.separator + filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
+                                        Main.refreshTreeView(Statics.sendFolder, TreeView.sendCaretPos);
                                     }
                                 } else {
                                     GUI.t.interrupt();
@@ -211,7 +217,9 @@ class DragDrop_T implements Runnable {
                 Main.dragDrop.setVisible(true);
                 Main.toolBtnsBool(true);
                 Main.jTabbedPane1.setSelectedIndex(0);
-                TreeView.populateStoreTree(Statics.path);
+                if (!Statics.dragDropBool) {
+                    Main.refreshTreeView(Statics.path, TreeView.nodeCaretPos);
+                }
                 AES_T.paths = null;
             }
         } catch (InterruptedException ex) {

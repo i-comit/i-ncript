@@ -36,6 +36,7 @@ public class Statics {
 
     public static boolean hotFilerBool = false;
     public static boolean fileHiderBool = false;
+    public static boolean dragDropBool = false;
 
     public static File directory = new File(root + Main.masterFolder + folderName);
     public static File keyFile = Paths.get(root + Main.masterFolder + keyName).toFile();
@@ -136,6 +137,7 @@ public class Statics {
         jProgressBar1.setValue(0);
         jProgressBar1.setMaximum(0);
         jProgressBar1.setVisible(true);
+        Statics.dragDropBool = false;
 
         try {
             jProgressBar1.setString("0% | 0/" + fileCount);
@@ -155,6 +157,7 @@ public class Statics {
         jProgressBar1.setValue(0);
         jProgressBar1.setMaximum(0);
         jProgressBar1.setVisible(true);
+        Statics.dragDropBool = false;
 
         try {
             jProgressBar1.setString("0% | 0/" + fileCount);

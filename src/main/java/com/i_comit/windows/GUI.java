@@ -327,16 +327,20 @@ class logger_T implements Runnable {
     public static void logger_T(File outputFile, int toolMode) {
         try {
             Thread.sleep(40);
-            switch (toolMode) {
-                case 0:
-                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(21, outputFile.getPath().length()) + "\n");
-                    break;
-                case 1:
-                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(18, outputFile.getPath().length()) + "\n");
-                    break;
-                case 2:
-                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(18, outputFile.getPath().length()) + "\n");
-                    break;
+            if (!Statics.dragDropBool) {
+                switch (toolMode) {
+                    case 0:
+                        Main.jTextArea1.append(outputFile.getAbsolutePath().substring(21, outputFile.getPath().length()) + "\n");
+                        break;
+                    case 1:
+                        Main.jTextArea1.append(outputFile.getAbsolutePath().substring(18, outputFile.getPath().length()) + "\n");
+                        break;
+                    case 2:
+                        Main.jTextArea1.append(outputFile.getAbsolutePath().substring(18, outputFile.getPath().length()) + "\n");
+                        break;
+                }
+            } else {
+                Main.jTextArea1.append(outputFile.getAbsolutePath() + "\n");
             }
             Thread.sleep(40);
             Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());

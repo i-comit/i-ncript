@@ -88,7 +88,7 @@ public class Folder {
                 }
             }
             Main.jList1.setSelectedIndex(0);
-            TreeView.populateStoreTree(Statics.receiveFolder);
+            Main.refreshTreeView(Statics.receiveFolder, TreeView.receiveCaretPos);
             GUI.getGB();
         }
     }
@@ -100,7 +100,7 @@ public class Folder {
         File directory = new File(dir);
         zipFileList(directory);
 
-        try (FileOutputStream fos = new FileOutputStream(zipFile); ZipOutputStream zos = new ZipOutputStream(fos)) {
+        try ( FileOutputStream fos = new FileOutputStream(zipFile);  ZipOutputStream zos = new ZipOutputStream(fos)) {
 
             for (String filePath : zipFileList) {
                 System.out.println("Compressing: " + filePath);
@@ -109,14 +109,13 @@ public class Folder {
                 zos.putNextEntry(zipEntry);
 
                 // Read file content and write to zip output stream.
-                try (FileInputStream fis = new FileInputStream(filePath)) {
+                try ( FileInputStream fis = new FileInputStream(filePath)) {
                     byte[] buffer = new byte[1024];
                     int length;
                     while ((length = fis.read(buffer)) > 0) {
                         zos.write(buffer, 0, length);
                     }
 
-                    // Close the zip entry.
                     zos.closeEntry();
                     Statics.zipIter++;
                     Main.jProgressBar2.setValue(Statics.zipIter);
