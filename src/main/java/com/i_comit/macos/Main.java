@@ -675,11 +675,6 @@ public class Main extends javax.swing.JFrame {
         jTextField1.setFont(Statics.registerCustomFont(12, fontFile));
         jLoginPanel.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(137, 6, 103, -1));
 
-        jPasswordField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jPasswordField1ActionPerformed(evt);
-            }
-        });
         jPasswordField1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jPasswordField1KeyPressed(evt);
@@ -724,7 +719,7 @@ public class Main extends javax.swing.JFrame {
         jLoginPanel.add(jHeapLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 100, -1, -1));
 
         getContentPane().add(jLoginPanel);
-        jLoginPanel.setBounds(14, 44, 250, 116);
+        jLoginPanel.setBounds(14, 44, 250, 118);
 
         jProgressBar1.setFont(Statics.registerCustomFont(12, fontFile));
         jProgressBar1.setForeground(Color.WHITE);
@@ -789,6 +784,7 @@ public class Main extends javax.swing.JFrame {
 
         dragDrop.setBackground(new java.awt.Color(57, 57, 57));
         dragDrop.setToolTipText("drop box will encrypt & decrypt any files dropped here");
+        dragDrop.setFocusable(false);
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/drop.png"))); // NOI18N
 
@@ -869,6 +865,7 @@ public class Main extends javax.swing.JFrame {
         jTextArea1.setForeground(Color.white);
         jTextArea1.setRows(5);
         jTextArea1.setAutoscrolls(false);
+        jTextArea1.setFocusable(false);
         jTextArea1.setMargin(new java.awt.Insets(3, 6, 3, 6));
         jScrollPane1.setViewportView(jTextArea1);
 
@@ -1076,10 +1073,6 @@ public class Main extends javax.swing.JFrame {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_jRadioButton1ActionPerformed
-
-    private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jPasswordField1ActionPerformed
 
 //LOGIN
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

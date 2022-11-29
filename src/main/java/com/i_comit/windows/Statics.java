@@ -25,9 +25,9 @@ public class Statics {
 
     public static int toolMode = 0;
 
-    public static String folderName = "i-ncript";
+    public static final String folderName = "i-ncript";
     public static String rootFolder = root.substring(0, 3) + Main.masterFolder + folderName;
-    public static String keyName = "\\.i-ncript.key";
+    public static final String keyName = "\\.i-ncript.key";
 
     public static int maxFileBytes = 1048576 * 4;
 
@@ -37,6 +37,7 @@ public class Statics {
     public static boolean hotFilerBool = false;
     public static boolean fileHiderBool = false;
     public static boolean dragDropBool = false;
+    public static boolean fileTreeBool = false;
 
     public static File directory = new File(root + Main.masterFolder + folderName);
     public static File keyFile = Paths.get(root + Main.masterFolder + keyName).toFile();
@@ -62,59 +63,12 @@ public class Statics {
 
     public static int fileHideIter;
 
-    public enum OS {
-        WINDOWS,
-        UNIX,
-        POSIX_UNIX,
-        MAC,
-        OTHER;
-
-        private String version;
-
-        public String getVersion() {
-            return version;
-        }
-
-        public void setVersion(String version) {
-            this.version = version;
-        }
-    }
-    public static OS os = OS.OTHER;
-
-    public static void getOS() {
-        String osName = System.getProperty("os.name").toLowerCase();
-        System.out.println("OS: " + osName);
-        if (osName.contains("windows")) {
-            os = OS.WINDOWS;
-        } else if (osName.contains("linux")
-                || osName.contains("mpe/ix")
-                || osName.contains("freebsd")
-                || osName.contains("irix")
-                || osName.contains("digital unix")
-                || osName.contains("unix")) {
-            os = OS.UNIX;
-        } else if (osName.contains("mac os")) {
-            os = OS.MAC;
-        } else if (osName.contains("sun os")
-                || osName.contains("sunos")
-                || osName.contains("solaris")) {
-            os = OS.POSIX_UNIX;
-        } else if (osName.contains("hp-ux")
-                || osName.contains("aix")) {
-            os = OS.POSIX_UNIX;
-        } else {
-            os = OS.OTHER;
-        }
-        System.out.println(os);
-    }
     public static Font customFont;
 
     public static Font registerCustomFont(float fontSize, URL fontFile) {
         try {
-            //create the font to use. Specify the size!
             customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile.openStream()).deriveFont(fontSize);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            //register the font
             ge.registerFont(customFont);
         } catch (IOException | FontFormatException e) {
             e.printStackTrace();
@@ -174,7 +128,6 @@ public class Statics {
         jTextField2.setText("");
         jPasswordField2.setText("");
         jPasswordField3.setText("");
-        System.out.println("statics tooldmode "+toolMode);
         GUI.getGB();
 
         switch (toolMode) {
@@ -254,16 +207,6 @@ public class Statics {
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
-        switch (AESMode) {
-            case 0:
-                jTextArea1.append("encryption of " + fileCount + " files stopped at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
-                break;
-            case 1:
-                jTextArea1.append("decryption of " + fileCount + " files stopped at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
-                break;
-        }
-        resetStaticInts();
-
         jButton2.setVisible(false);
         jTabbedPane1.setSelectedIndex(0);
         jProgressBar1.setValue(fileIter);
@@ -299,6 +242,23 @@ public class Statics {
                 break;
         }
         main.setSize(780, 241);
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+    }
+        if (!AES.t.isAlive()) {
+            switch (AESMode) {
+                case 0:
+                    jTextArea1.append("encryption of " + fileIter + " files stopped at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
+                    break;
+                case 1:
+                    jTextArea1.append("decryption of " + fileIter + " files stopped at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
+                    break;
+            }
+        }
+        resetStaticInts();
     }
 
     public static void hotFilerFunction(Main main) {

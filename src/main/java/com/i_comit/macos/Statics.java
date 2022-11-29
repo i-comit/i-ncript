@@ -66,10 +66,8 @@ public class Statics {
 
     public static Font registerCustomFont(float fontSize, URL fontFile) {
         try {
-            //create the font to use. Specify the size!
             customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile.openStream()).deriveFont(fontSize);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            //register the font
             ge.registerFont(customFont);
         } catch (IOException | FontFormatException e) {
             e.printStackTrace();
@@ -138,7 +136,7 @@ public class Statics {
                 jStorePanel.setVisible(false);
                 jSendPanel.setVisible(false);
                 jReceivePanel.setVisible(true);
-                jTree1.setDragEnabled(true);
+                jTree1.setDragEnabled(false);
 
                 jLabel5.setVisible(false);
                 jLabel6.setVisible(false);
@@ -168,7 +166,7 @@ public class Statics {
                 jRadioButton3.setVisible(false);
                 jLabel10.setText("O-BOX MODE");
                 jLabel11.setText("MOVE FILES TO O-BOX");
-                dragDrop.setToolTipText("drop box will move 10 files or 1 folder into o-box folder");
+                dragDrop.setToolTipText("drop box will move files or folder into o-box folder");
                 FileHider.cleanUp(sendFolder);
                 TreeView.setRootName("o-box");
                 TreeView.populateStoreTree(sendFolder);

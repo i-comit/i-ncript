@@ -253,23 +253,7 @@ class AES_T implements Runnable {
                                 }
                                 break;
                         }
-                    } else {
-                        if (!Main.jToggleButton1.isSelected()) {
-                            switch (AESMode) {
-                                case 0:
-                                    GUI.t.interrupt();
-                                    GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 10, 20, 400, false);
-                                    Main.jRadioButton2.setEnabled(true);
-                                    break;
-                                case 1:
-                                    GUI.t.interrupt();
-                                    GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400, false);
-                                    Main.jToggleButton1.setEnabled(true);
-                                    Main.jRadioButton3.setEnabled(true);
-                                    break;
-                            }
-                        }
-                    }
+                    } 
                 } else {
                     switch (toolMode) {
                         case 0:
@@ -278,10 +262,6 @@ class AES_T implements Runnable {
                         case 1:
                             GUI.labelCutterThread(jAlertLabel, "n-box folder has no files", 20, 40, 800, false);
                             Main.jRadioButton3.setEnabled(true);
-                            break;
-                        case 2:
-                            GUI.labelCutterThread(jAlertLabel, "o-box folder has no files", 20, 40, 800, false);
-                            Main.jRadioButton2.setEnabled(true);
                             break;
                     }
                     Main.jToggleButton2.setEnabled(true);

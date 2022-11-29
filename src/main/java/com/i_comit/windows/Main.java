@@ -35,7 +35,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "";
+    public static String root = "D:\\";
     public static String masterFolder = "--------" + File.separator;
 
     private final String appVer = "1.8.0";
@@ -45,55 +45,55 @@ public class Main extends javax.swing.JFrame {
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
 
     public Main() {
-        root = Paths.get("").toAbsolutePath().toString();
-        if (Memory.checkWMIC()) {
-            root = root.substring(0, 3);
-            initComponents();
-            Memory.getUSBName(this);
+//        root = Paths.get("").toAbsolutePath().toString();
+//        if (Memory.checkWMIC()) {
+        root = root.substring(0, 3);
+        initComponents();
+        Memory.getUSBName(this);
 
-            Path runtime = Paths.get(root + masterFolder + "runtime");
-            Path app = Paths.get(root + masterFolder + "app");
-            if (runtime.toFile().exists()) {
-                try {
-                    Files.setAttribute(runtime, "dos:hidden", true);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+        Path runtime = Paths.get(root + masterFolder + "runtime");
+        Path app = Paths.get(root + masterFolder + "app");
+        if (runtime.toFile().exists()) {
+            try {
+                Files.setAttribute(runtime, "dos:hidden", true);
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-            if (app.toFile().exists()) {
-                try {
-                    Files.setAttribute(app, "dos:hidden", true);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            }
-
-            jStorePanel.setVisible(true);
-            jSendPanel.setVisible(false);
-            jReceivePanel.setVisible(false);
-            jRadioButton2.setVisible(false);
-            jRadioButton3.setVisible(false);
-            jScrollPane5.setVisible(false);
-
-            if (!keyFile.exists()) {
-                jToolPanel.setVisible(false);
-                loginLabelVisibleBool(false);
-                this.setSize(540, 241);
-                this.setLocationRelativeTo(null);
-            } else {
-                Memory.getHeapSize(this);
-                setKeybinding();
-                loginLabelVisibleBool(true);
-                jUsernameLabel.setText("enter username");
-                jPasswordLabel.setText("enter password");
-                generateFolders();
-
-                jToolPanel.setVisible(false);
-                jButton2.setVisible(false);
-            }
-            jProgressBar2.setVisible(false);
-            dragDrop.setVisible(false);
         }
+        if (app.toFile().exists()) {
+            try {
+                Files.setAttribute(app, "dos:hidden", true);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        jStorePanel.setVisible(true);
+        jSendPanel.setVisible(false);
+        jReceivePanel.setVisible(false);
+        jRadioButton2.setVisible(false);
+        jRadioButton3.setVisible(false);
+        jScrollPane5.setVisible(false);
+
+        if (!keyFile.exists()) {
+            jToolPanel.setVisible(false);
+            loginLabelVisibleBool(false);
+            this.setSize(540, 241);
+            this.setLocationRelativeTo(null);
+        } else {
+            Memory.getHeapSize(this);
+            setKeybinding();
+            loginLabelVisibleBool(true);
+            jUsernameLabel.setText("enter username");
+            jPasswordLabel.setText("enter password");
+            generateFolders();
+
+            jToolPanel.setVisible(false);
+            jButton2.setVisible(false);
+        }
+        jProgressBar2.setVisible(false);
+        dragDrop.setVisible(false);
+//        }
     }
 
     private void getKeyBinding(int keyCode, JPanel jPanel, AbstractAction action) {
@@ -683,11 +683,6 @@ public class Main extends javax.swing.JFrame {
         jTextField1.setFont(Statics.registerCustomFont(12, fontFile));
         jLoginPanel.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(137, 6, 103, -1));
 
-        jPasswordField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jPasswordField1ActionPerformed(evt);
-            }
-        });
         jPasswordField1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 jPasswordField1KeyPressed(evt);
@@ -873,7 +868,7 @@ public class Main extends javax.swing.JFrame {
 
         jTextArea1.setEditable(false);
         jTextArea1.setBackground(new java.awt.Color(57, 57, 57));
-        jTextArea1.setColumns(20);
+        jTextArea1.setColumns(16);
         jTextArea1.setForeground(Color.white);
         jTextArea1.setRows(5);
         jTextArea1.setAutoscrolls(false);
@@ -1085,11 +1080,6 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
-
-    private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jPasswordField1ActionPerformed
-
 //LOGIN
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (jButton1.getText().equals("ENTER")) {
@@ -1212,10 +1202,37 @@ public class Main extends javax.swing.JFrame {
         try {
             zipFileCount = 0;
             zipIter = 0;
-            if (Login.sendKeyCheck()) {
-                this.setSize(780, 266);
+
+            AESMode = 1;
+            fileCount = GUI.countFiles(sendFolder);
+            if (fileCount == 0) {
+                AESMode = 0;
+                fileCount = GUI.countFiles(sendFolder);
+                zipFileCount = fileCount;
+                jProgressBar1.setMaximum(zipFileCount);
+                contents = sendFolder.toFile().listFiles();
+                if (contents != null) {
+                    if (contents.length != 0) {
+                        Login.sendKeyCheck();
+                        this.setSize(780, 266);
+                    } else {
+                        GUI.t.interrupt();
+                        GUI.labelCutterThread(jAlertLabel, "o-box folder has no files", 20, 40, 800, false);
+                        Main.jRadioButton2.setEnabled(true);
+                        this.setSize(780, 241);
+                    }
+                } else {
+                    GUI.t.interrupt();
+                    GUI.labelCutterThread(jAlertLabel, "o-box folder does not exist", 20, 40, 800, false);
+                    Main.jRadioButton2.setEnabled(true);
+                    this.setSize(780, 241);
+                }
             } else {
+                GUI.t.interrupt();
+                GUI.labelCutterThread(jAlertLabel, "o-box can't contain .enc files", 20, 20, 1200, false);
+                jRadioButton2.setEnabled(true);
                 this.setSize(780, 241);
+
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -1274,6 +1291,17 @@ public class Main extends javax.swing.JFrame {
     private void jProgressBar1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jProgressBar1StateChanged
         if (progressbarBool) {
             this.setSize(780, 241);
+            switch (Statics.toolMode) {
+                case 0:
+                    refreshTreeView(path, TreeView.nodeCaretPos);
+                    break;
+                case 1:
+                    refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
+                    break;
+                case 2:
+                    refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                    break;
+            }
             progressbarBool = false;
         } else {
             this.setSize(780, 266);
@@ -1282,8 +1310,26 @@ public class Main extends javax.swing.JFrame {
 
     private void formMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseMoved
         if (!jToolPanel.isFocusOwner() && jStorePanel.isVisible()) {
-//            System.out.println("jToolPanel is focused");
             jToolPanel.requestFocus();
+        }
+        if (fileTreeBool) {
+            if (jTree1.isEnabled()) {
+                switch (toolMode) {
+                    case 0:
+                        refreshTreeView(path, TreeView.nodeCaretPos);
+                        break;
+                    case 1:
+                        refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
+                        break;
+                    case 2:
+                        refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                        break;
+                    case 3:
+                        refreshTreeView(path, TreeView.nodeCaretPos);
+                        break;
+                }
+                fileTreeBool = false;
+            }
         }
     }//GEN-LAST:event_formMouseMoved
 
@@ -1333,7 +1379,7 @@ public class Main extends javax.swing.JFrame {
 
     private void jTree1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTree1PropertyChange
         if (evt.getPropertyName().equals("enabled")) {
-            if (fileIter != 0) {
+            if (jTree1.isEnabled()) {
                 switch (toolMode) {
                     case 0:
                         refreshTreeView(path, TreeView.nodeCaretPos);

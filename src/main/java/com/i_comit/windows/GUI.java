@@ -235,7 +235,7 @@ public class GUI {
                         Main.progressbarBool = true;
                     }
                 }
-                if (progressBar.getValue() >= 0) {
+                if (progressBar.getValue() == 0) {
                     progressBar.setStringPainted(false);
                     Main.jTabbedPane1.setSelectedIndex(0);
                     Main.jProgressBar2.setVisible(true);

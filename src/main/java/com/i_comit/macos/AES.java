@@ -94,8 +94,6 @@ public class AES {
         }
         return inputBytes;
     }
-//    static SecureRandom rnd = new SecureRandom();
-//    static IvParameterSpec iv = new IvParameterSpec(rnd.generateSeed(16));
 
     private static void doCrypto(int cipherMode, String key, File inputFile,
             File outputFile) throws CryptoException {
@@ -104,7 +102,7 @@ public class AES {
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
             cipher.init(cipherMode, secretKey);
 
-            try ( FileInputStream inputStream = new FileInputStream(inputFile);  FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+            try (FileInputStream inputStream = new FileInputStream(inputFile); FileOutputStream outputStream = new FileOutputStream(outputFile)) {
                 byte[] inputBytes = dynamicBytes(inputFile);
                 int nread;
                 while ((nread = inputStream.read(inputBytes)) > 0) {
@@ -187,12 +185,7 @@ class AES_T implements Runnable {
                                         Main.jProgressBar2.setVisible(true);
                                         Main.jAlertLabel.setText("encrypting " + x.toFile().getName());
                                     }
-                                    if (toolMode == 0) {
                                         encrypt(Hasher.hashedPassword, x.toFile(), x.toFile());
-                                    }
-                                    if (toolMode == 2) {
-                                        encrypt(Hasher.hashedPassword, x.toFile(), x.toFile());
-                                    }
                                 });
                                 if (fileIter == 0) {
                                     Main.toolBtnsBool(true);
@@ -231,12 +224,7 @@ class AES_T implements Runnable {
                                         Main.jProgressBar2.setVisible(true);
                                         Main.jAlertLabel.setText("decrypting " + x.toFile().getName());
                                     }
-                                    if (toolMode == 0) {
                                         decrypt(Hasher.hashedPassword, x.toFile(), x.toFile());
-                                    }
-                                    if (toolMode == 1) {
-                                        decrypt(Hasher.hashedPassword, x.toFile(), x.toFile());
-                                    }
                                 });
                                 if (fileIter == 0) {
                                     Main.toolBtnsBool(true);

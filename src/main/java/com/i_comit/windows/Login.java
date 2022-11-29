@@ -24,7 +24,7 @@ import static javax.swing.SwingConstants.CENTER;
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
 public class Login {
-    
+
     public static boolean loginCheck() {
         boolean b = false;
         char[] password = jPasswordField1.getPassword();
@@ -72,7 +72,7 @@ public class Login {
         jPasswordField1.setText("");
         return b;
     }
-    
+
     private static boolean Authenticator() {
         boolean b = false;
         if (keyFile.exists()) {
@@ -89,7 +89,7 @@ public class Login {
         }
         return b;
     }
-    
+
     private static void makeKey() {
         Path path = keyFile.toPath();//creates Path instance  
         try {
@@ -104,13 +104,13 @@ public class Login {
             e.printStackTrace();
         }
     }
-    
+
     private static void sendPanelTools() {
         jLabel6.setVisible(true);
         jLabel5.setVisible(true);
         jRadioButton2.setVisible(false);
     }
-    
+
     public static boolean sendKeyCheck() throws IOException {
         boolean b = false;
         char[] password = Main.jPasswordField2.getPassword();
@@ -129,22 +129,8 @@ public class Login {
                         Main.jRadioButton2.setEnabled(false);
                         Main.jTextField2.setText("");
                         Main.jPasswordField2.setText("");
-                        AESMode = 1;
-                        fileCount = GUI.countFiles(sendFolder);
-                        if (fileCount == 0) {
-                            AESMode = 0;
-                            fileCount = GUI.countFiles(sendFolder);
-                            zipFileCount = fileCount;
-                            jProgressBar1.setMaximum(zipFileCount);
-                            AES.AESThread(listAESPaths(sendFolder), sendFolder.toFile(), true, 2);
-                            b = true;
-                        } else {
-                            GUI.t.interrupt();
-                            GUI.labelCutterThread(jAlertLabel, "o-box can't contain .enc files", 20, 20, 1200, false);
-                            sendPanelTools();
-                            jRadioButton2.setEnabled(true);
-                        }
-                        
+                        AES.AESThread(listAESPaths(sendFolder), sendFolder.toFile(), true, 2);
+                        b = true;
                     } else {
                         GUI.t.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "password can't be username", 20, 20, 1200, false);
@@ -167,7 +153,7 @@ public class Login {
         }
         return b;
     }
-    
+
     public static void sendKey() {
         Path sendKeyPath = Paths.get(Statics.sendFolder + File.separator + ".send.key");
         try {
@@ -180,14 +166,14 @@ public class Login {
             e.printStackTrace();
         }
     }
-    
+
     private static void receivePanelTools() {
         Main.jLabel8.setVisible(true);
         Main.jLabel7.setVisible(true);
         Main.jRadioButton3.setVisible(false);
         Main.jRadioButton3.setSelected(false);
     }
-    
+
     public static boolean verifySendKey(String zipFileN) {
         boolean b = false;
         char[] password = Main.jPasswordField3.getPassword();
@@ -196,7 +182,7 @@ public class Login {
         }
         zipFileName = zipFileN;
         System.out.println(Main.jList1.getSelectedValue());
-        
+
         recipientPassword = new String(password);
         if (Main.jList1.getSelectedValue() != null) {
             if (!"".equals(recipientPassword)) {
@@ -210,7 +196,7 @@ public class Login {
                     BufferedReader brTest = new BufferedReader(new FileReader(zipFileName + File.separator + ".send.key"));
                     String usernameRead = Hasher.readKey(brTest.readLine(), username);
                     String passwordRead = Hasher.readKey(brTest.readLine(), recipientPassword);
-                    
+
                     BufferedReader brTest1 = new BufferedReader(new FileReader(keyFile));
                     String usernameRead1 = Hasher.readKey(brTest1.readLine(), username);
 //
@@ -257,7 +243,7 @@ public class Login {
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
-                
+
             } else {
                 GUI.labelCutterThread(jAlertLabel, "please make a password", 20, 20, 1200, false);
                 receivePanelTools();
@@ -269,7 +255,7 @@ public class Login {
         }
         return b;
     }
-    
+
     public static boolean verifyLogin() {
         boolean b = false;
         try {
@@ -291,9 +277,9 @@ public class Login {
                     b = true;
                 }
             } else {
-                
+
             }
-            
+
         } catch (IOException ex) {
             ex.printStackTrace();
         }
