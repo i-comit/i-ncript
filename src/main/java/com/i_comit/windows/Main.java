@@ -35,7 +35,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "D:\\";
+    public static String root = "";
     public static String masterFolder = "--------" + File.separator;
 
     private final String appVer = "1.8.0";
@@ -45,8 +45,8 @@ public class Main extends javax.swing.JFrame {
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
 
     public Main() {
-//        root = Paths.get("").toAbsolutePath().toString();
-//        if (Memory.checkWMIC()) {
+        root = Paths.get("").toAbsolutePath().toString();
+        if (Memory.checkWMIC()) {
         root = root.substring(0, 3);
         initComponents();
         Memory.getUSBName(this);
@@ -78,7 +78,7 @@ public class Main extends javax.swing.JFrame {
         if (!keyFile.exists()) {
             jToolPanel.setVisible(false);
             loginLabelVisibleBool(false);
-            this.setSize(540, 241);
+            this.setSize(540, 240);
             this.setLocationRelativeTo(null);
         } else {
             Memory.getHeapSize(this);
@@ -93,7 +93,7 @@ public class Main extends javax.swing.JFrame {
         }
         jProgressBar2.setVisible(false);
         dragDrop.setVisible(false);
-//        }
+        }
     }
 
     private void getKeyBinding(int keyCode, JPanel jPanel, AbstractAction action) {
@@ -150,7 +150,7 @@ public class Main extends javax.swing.JFrame {
                             } else {
                                 GUI.t.interrupt();
                                 GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 10, 20, 400, false);
-                                Main.this.setSize(780, 241);
+                                Main.this.setSize(780, 240);
                             }
                         } catch (IOException ex) {
                             ex.printStackTrace();
@@ -174,7 +174,7 @@ public class Main extends javax.swing.JFrame {
                             } else {
                                 GUI.t.interrupt();
                                 GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400, false);
-                                Main.this.setSize(780, 241);
+                                Main.this.setSize(780, 240);
                             }
                         } catch (IOException ex) {
                             ex.printStackTrace();
@@ -1073,7 +1073,7 @@ public class Main extends javax.swing.JFrame {
             } else {
                 GUI.t.interrupt();
                 GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400, false);
-                this.setSize(780, 241);
+                this.setSize(780, 240);
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -1115,7 +1115,7 @@ public class Main extends javax.swing.JFrame {
             } else {
                 GUI.t.interrupt();
                 GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 10, 20, 400, false);
-                this.setSize(780, 241);
+                this.setSize(780, 240);
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -1219,19 +1219,19 @@ public class Main extends javax.swing.JFrame {
                         GUI.t.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "o-box folder has no files", 20, 40, 800, false);
                         Main.jRadioButton2.setEnabled(true);
-                        this.setSize(780, 241);
+                        this.setSize(780, 240);
                     }
                 } else {
                     GUI.t.interrupt();
                     GUI.labelCutterThread(jAlertLabel, "o-box folder does not exist", 20, 40, 800, false);
                     Main.jRadioButton2.setEnabled(true);
-                    this.setSize(780, 241);
+                    this.setSize(780, 240);
                 }
             } else {
                 GUI.t.interrupt();
                 GUI.labelCutterThread(jAlertLabel, "o-box can't contain .enc files", 20, 20, 1200, false);
                 jRadioButton2.setEnabled(true);
-                this.setSize(780, 241);
+                this.setSize(780, 240);
 
             }
         } catch (IOException ex) {
@@ -1245,7 +1245,7 @@ public class Main extends javax.swing.JFrame {
         if (Login.verifySendKey(receiveFolder + File.separator + jList1.getSelectedValue())) {
             this.setSize(780, 266);
         } else {
-            this.setSize(780, 241);
+            this.setSize(780, 240);
         }
     }//GEN-LAST:event_jRadioButton3Evt
 
@@ -1290,7 +1290,7 @@ public class Main extends javax.swing.JFrame {
 
     private void jProgressBar1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jProgressBar1StateChanged
         if (progressbarBool) {
-            this.setSize(780, 241);
+            this.setSize(780, 240);
             switch (Statics.toolMode) {
                 case 0:
                     refreshTreeView(path, TreeView.nodeCaretPos);

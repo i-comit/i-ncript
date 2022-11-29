@@ -244,7 +244,7 @@ public class Statics {
                 refreshTreeView(path, TreeView.nodeCaretPos);
                 break;
         }
-        main.setSize(780, 241);
+        main.setSize(780, 240);
 
         try {
             Thread.sleep(100);
@@ -320,7 +320,7 @@ public class Statics {
     }
 
     public static void collapseLogin(Main main) {
-        main.setSize(780, 241);
+        main.setSize(780, 240);
         jLabel1.setLocation(265, 10);
         jLabel3.setLocation(367, 4);
         jAlertLabel.setLocation(265, 174);
