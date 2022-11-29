@@ -1273,8 +1273,26 @@ public class Main extends javax.swing.JFrame {
 
     private void formMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseMoved
         if (!jToolPanel.isFocusOwner() && jStorePanel.isVisible()) {
-//            System.out.println("jToolPanel is focused");
             jToolPanel.requestFocus();
+        }
+        if (fileTreeBool) {
+            if (jTree1.isEnabled()) {
+                switch (toolMode) {
+                    case 0:
+                        refreshTreeView(path, TreeView.nodeCaretPos);
+                        break;
+                    case 1:
+                        refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
+                        break;
+                    case 2:
+                        refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                        break;
+                    case 3:
+                        refreshTreeView(path, TreeView.nodeCaretPos);
+                        break;
+                }
+                fileTreeBool = false;
+            }
         }
     }//GEN-LAST:event_formMouseMoved
 

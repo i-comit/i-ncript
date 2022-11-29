@@ -36,6 +36,7 @@ public class Statics {
     public static boolean hotFilerBool = false;
     public static boolean fileHiderBool = false;
     public static boolean dragDropBool = false;
+    public static boolean fileTreeBool = false;
 
     public static File directory = null;
     public static File keyFile = null;
