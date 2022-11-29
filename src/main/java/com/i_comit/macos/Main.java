@@ -48,6 +48,7 @@ public class Main extends javax.swing.JFrame {
 //        root = Paths.get("").toAbsolutePath().toString();
         if (Memory.checkBash()) {
             initComponents();
+            Memory.getUSBName(this);
 
             jStorePanel.setVisible(true);
             jSendPanel.setVisible(false);
@@ -292,7 +293,7 @@ public class Main extends javax.swing.JFrame {
         jAlertLabel.setHorizontalAlignment(LEFT);
         jEULAPanel1.setVisible(false);
         jEULAPanel.setVisible(false);
-        this.setSize(274, 224);
+        this.setSize(274, 200);
         this.setLocationRelativeTo(null);
         System.out.println("Your available Memory Heap is " + Memory.byteFormatter(Memory.totalMemory));
         File rootFolder = Paths.get(root + masterFolder + folderName).toFile();
@@ -327,7 +328,7 @@ public class Main extends javax.swing.JFrame {
                         GUI.labelCutterThread(jAlertLabel, "also available on windows.", 60, 80, 100, true);
                         break;
                     case 4:
-                        GUI.labelCutterThread(jAlertLabel, "also available on mac os.", 60, 80, 100, true);
+                        GUI.labelCutterThread(jAlertLabel, "also available on linux.", 60, 80, 100, true);
                         break;
 
                 }
@@ -437,7 +438,7 @@ public class Main extends javax.swing.JFrame {
         jTree1 = new javax.swing.JTree();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("i-ncript™ NO NAME");
+        setTitle("i-ncript™");
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti.icns")));
         setMinimumSize(new java.awt.Dimension(270, 150));
         setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
@@ -763,7 +764,7 @@ public class Main extends javax.swing.JFrame {
         jAlertLabel.setFont(Statics.registerCustomFont(12, fontFile));
         jAlertLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         getContentPane().add(jAlertLabel);
-        jAlertLabel.setBounds(15, 174, 236, 27);
+        jAlertLabel.setBounds(15, 148, 236, 27);
 
         jCreationDateLabel.setFont(Statics.registerCustomFont(13, fontFile));
         jCreationDateLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);

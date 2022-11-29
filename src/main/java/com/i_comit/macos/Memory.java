@@ -95,7 +95,6 @@ public class Memory {
                                         Statics.sendFolder = Paths.get(root + Main.masterFolder + "o-box");
                                         Statics.receiveFolder = Paths.get(root + Main.masterFolder + "n-box");
                                         System.out.println("MAIN ROOT " + root);
-                                        System.out.println("CWD " + Paths.get("").toAbsolutePath().toString());
                                         driveCheck.dispose();
                                         b = true;
 
@@ -130,87 +129,6 @@ public class Memory {
         return b;
     }
 
-    public static void getHeapSize() {
-        File cfgFile = new File(root + File.separator + masterFolder + File.separator + Main.appBundle + File.separator + "Info.plist");
-        if (cfgFile.exists()) {
-            try (BufferedReader br = new BufferedReader(new FileReader(cfgFile))) {
-                String line = "";
-                for (int i = 0; i <= 56; i++) {
-                    line = br.readLine();
-                    System.out.println(line);
-                }
-                System.out.println("LAST LINE " + line);
-                String gb = line.substring(line.length() - 11, line.length() - 10);
-                System.out.println("GB S " + gb);
-                currentHeap = Integer.parseInt(gb);
-                System.out.println("current heap is " + currentHeap);
-                Main.jSlider1.setValue(currentHeap);
-                Main.jHeapLabel.setText(currentHeap + "GB heap");
-            } catch (FileNotFoundException ex) {
-                ex.printStackTrace();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        } else {
-            Main.jHeapLabel.setVisible(false);
-            Main.jSlider1.setVisible(false);
-        }
-    }
-
-    public static void changeHeapSize() {
-        try {
-            List<String> lines = Files.readAllLines(Paths.get(root + File.separator + masterFolder + File.separator + Main.appBundle + File.separator + "Info.plist"), StandardCharsets.UTF_8);
-            for (String line : lines) {
-                System.out.println(line);
-            }
-            System.out.println("LINE AT " + lines.get(56));
-            lines.remove(56);
-
-            lines.add(56, "\t\t<string>-Xms" + selectedHeap + "g</string>");
-//            switch (selectedHeap) {
-//                case 1:
-//                    lines.remove(7);
-//                    lines.add(7, "java-options=-Xmx" + 2 + "g");
-//                    break;
-//                case 2:
-//                    lines.remove(7);
-//                    lines.add(7, "java-options=-Xmx" + 4 + "g");
-//                    break;
-//                case 3:
-//                    lines.remove(7);
-//                    lines.add(7, "java-options=-Xmx" + 6 + "g");
-//                    break;
-//                case 4:
-//                    lines.remove(7);
-//                    lines.add(7, "java-options=-Xmx" + 8 + "g");
-//                    break;
-//                case 5:
-//                    lines.remove(7);
-//                    lines.add(7, "java-options=-Xmx" + 10 + "g");
-//                    break;
-//                case 6:
-//                    lines.remove(7);
-//                    lines.add(7, "java-options=-Xmx" + 12 + "g");
-//                    break;
-//                case 7:
-//                    lines.remove(7);
-//                    lines.add(7, "java-options=-Xmx" + 14 + "g");
-//                    break;
-//                case 8:
-//                    lines.remove(7);
-//                    lines.add(7, "java-options=-Xmx" + 16 + "g");
-//                    break;
-//
-//            }
-//            Files.write(Paths.get(root + File.separator + masterFolder + File.separator + Main.appBundle + File.separator + "Info.plist"), lines, StandardCharsets.UTF_8);
-
-//            System.exit(0);
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-
     private static boolean checkBash2(String devPath) {
         String diskUtil = String.format("diskutil list | grep '%s'", devPath);
         ProcessBuilder pb = new ProcessBuilder("bash", "-c", diskUtil);
@@ -233,6 +151,11 @@ public class Memory {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static void getUSBName(Main main) {
+        String usbName = Paths.get(root).toFile().getName().trim();
+        main.setTitle("i-ncript™ - "+usbName.toLowerCase().trim());
     }
 
     public static void byteMonitor(InputStream inputStream, File inputFile) throws IOException {
