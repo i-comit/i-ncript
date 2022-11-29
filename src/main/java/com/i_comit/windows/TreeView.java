@@ -83,7 +83,6 @@ public class TreeView {
                         }
                     }
                 }
-                storeNodeCaretPos(toolMode);
                 break;
             case 1:
                 for (DefaultMutableTreeNode singleNode : receiveNodeList) {
@@ -99,7 +98,7 @@ public class TreeView {
                         }
                     }
                 }
-                storeNodeCaretPos(toolMode);
+                System.out.println("receiveTreePaths " + receiveTreePaths);
                 break;
             case 2:
                 for (DefaultMutableTreeNode singleNode : sendNodeList) {
@@ -115,7 +114,7 @@ public class TreeView {
                         }
                     }
                 }
-                storeNodeCaretPos(toolMode);
+                System.out.println("sendTreePaths " + sendTreePaths);
                 break;
             case 3:
                 for (DefaultMutableTreeNode singleNode : dirNodeList) {
@@ -130,16 +129,40 @@ public class TreeView {
                             treePaths.remove(path);
                         }
                     }
-                    storeNodeCaretPos(toolMode);
-                    break;
                 }
+                System.out.println("StoreTreePaths " + treePaths);
+                break;
+        }
+    }
+    public static int nodeCaretPos;
+    public static int receiveCaretPos;
+    public static int sendCaretPos;
+
+    public static void storeNodeCaretPos(int toolMode) {
+        switch (toolMode) {
+            case 0:
+                nodeCaretPos = Main.jScrollPane5.getVerticalScrollBar().getValue();
+                System.out.println("CARET POS " + nodeCaretPos);
+                break;
+            case 1:
+                receiveCaretPos = Main.jScrollPane5.getVerticalScrollBar().getValue();
+                System.out.println("RECEIVE CARET POS " + receiveCaretPos);
+                break;
+            case 2:
+                sendCaretPos = Main.jScrollPane5.getVerticalScrollBar().getValue();
+                System.out.println("SEND CARET POS " + sendCaretPos);
+                break;
+            case 3:
+                nodeCaretPos = Main.jScrollPane5.getVerticalScrollBar().getValue();
+                System.out.println("CARET POS " + nodeCaretPos);
+                break;
         }
     }
 
-    private static void storeNodeCaretPos(int toolMode) {
-        switch (toolMode) {
-            case 0:
-                int nodeCaretPos = Main.jScrollPane5.getVerticalScrollBar().getValue();
+    public static void expandTreeNode(Path path) {
+        String fileName = path.toFile().getName();
+        switch (fileName) {
+            case "i-ncript":
                 for (DefaultMutableTreeNode pathx : dirNodeList) {
                     TreePath path2 = new TreePath(pathx.getPath());
                     for (TreePath treePath : treePaths) {
@@ -150,8 +173,7 @@ public class TreeView {
                 }
                 setCaretPos(nodeCaretPos);
                 break;
-            case 1:
-                int receiveCaretPos = Main.jScrollPane5.getVerticalScrollBar().getValue();
+            case "n-box":
                 for (DefaultMutableTreeNode pathx : receiveNodeList) {
                     TreePath path2 = new TreePath(pathx.getPath());
                     for (TreePath treePath : receiveTreePaths) {
@@ -162,8 +184,7 @@ public class TreeView {
                 }
                 setCaretPos(receiveCaretPos);
                 break;
-            case 2:
-                int sendCaretPos = Main.jScrollPane5.getVerticalScrollBar().getValue();
+            case "o-box":
                 for (DefaultMutableTreeNode pathx : sendNodeList) {
                     TreePath path2 = new TreePath(pathx.getPath());
                     for (TreePath treePath : sendTreePaths) {
@@ -174,26 +195,14 @@ public class TreeView {
                 }
                 setCaretPos(sendCaretPos);
                 break;
-            case 3:
-                nodeCaretPos = Main.jScrollPane5.getVerticalScrollBar().getValue();
-                for (DefaultMutableTreeNode pathx : dirNodeList) {
-                    TreePath path2 = new TreePath(pathx.getPath());
-                    for (TreePath treePath : treePaths) {
-                        if (treePath.toString().equals(path2.toString())) {
-                            jTree1.expandPath(path2);
-                        }
-                    }
-                }
-                setCaretPos(nodeCaretPos);
-                break;
         }
     }
 
-    private static void setCaretPos(int caretPos) {
+    public static void setCaretPos(int caretPos) {
         Rectangle rect = new Rectangle(0, caretPos, 1, jTree1.getRowCount());
         Main.jScrollPane5.getViewport().scrollRectToVisible(rect);
         Main.jScrollPane5.getVerticalScrollBar().setValue(caretPos);
-        Main.jScrollPane5.revalidate();
+        Main.jScrollPane5.updateUI();
     }
 
     public static void setRootName(String rootName) {

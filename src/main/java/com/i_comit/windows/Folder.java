@@ -88,7 +88,7 @@ public class Folder {
                 }
             }
             Main.jList1.setSelectedIndex(0);
-            Main.refreshTreeView(Statics.receiveFolder);
+            Main.refreshTreeView(Statics.receiveFolder, TreeView.receiveCaretPos);
             GUI.getGB();
         }
     }
