@@ -47,52 +47,52 @@ public class Main extends javax.swing.JFrame {
     public Main() {
         root = Paths.get("").toAbsolutePath().toString();
         if (Memory.checkWMIC()) {
-        root = root.substring(0, 3);
-        initComponents();
-        Memory.getUSBName(this);
+            root = root.substring(0, 3);
+            initComponents();
+            Memory.getUSBName(this);
 
-        Path runtime = Paths.get(root + masterFolder + "runtime");
-        Path app = Paths.get(root + masterFolder + "app");
-        if (runtime.toFile().exists()) {
-            try {
-                Files.setAttribute(runtime, "dos:hidden", true);
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            Path runtime = Paths.get(root + masterFolder + "runtime");
+            Path app = Paths.get(root + masterFolder + "app");
+            if (runtime.toFile().exists()) {
+                try {
+                    Files.setAttribute(runtime, "dos:hidden", true);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
-        }
-        if (app.toFile().exists()) {
-            try {
-                Files.setAttribute(app, "dos:hidden", true);
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            if (app.toFile().exists()) {
+                try {
+                    Files.setAttribute(app, "dos:hidden", true);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
-        }
 
-        jStorePanel.setVisible(true);
-        jSendPanel.setVisible(false);
-        jReceivePanel.setVisible(false);
-        jRadioButton2.setVisible(false);
-        jRadioButton3.setVisible(false);
-        jScrollPane5.setVisible(false);
+            jStorePanel.setVisible(true);
+            jSendPanel.setVisible(false);
+            jReceivePanel.setVisible(false);
+            jRadioButton2.setVisible(false);
+            jRadioButton3.setVisible(false);
+            jScrollPane5.setVisible(false);
 
-        if (!keyFile.exists()) {
-            jToolPanel.setVisible(false);
-            loginLabelVisibleBool(false);
-            this.setSize(540, 240);
-            this.setLocationRelativeTo(null);
-        } else {
-            Memory.getHeapSize(this);
-            setKeybinding();
-            loginLabelVisibleBool(true);
-            jUsernameLabel.setText("enter username");
-            jPasswordLabel.setText("enter password");
-            generateFolders();
+            if (!keyFile.exists()) {
+                jToolPanel.setVisible(false);
+                loginLabelVisibleBool(false);
+                this.setSize(540, 240);
+                this.setLocationRelativeTo(null);
+            } else {
+                Memory.getHeapSize(this);
+                setKeybinding();
+                loginLabelVisibleBool(true);
+                jUsernameLabel.setText("enter username");
+                jPasswordLabel.setText("enter password");
+                generateFolders();
 
-            jToolPanel.setVisible(false);
-            jButton2.setVisible(false);
-        }
-        jProgressBar2.setVisible(false);
-        dragDrop.setVisible(false);
+                jToolPanel.setVisible(false);
+                jButton2.setVisible(false);
+            }
+            jProgressBar2.setVisible(false);
+            dragDrop.setVisible(false);
         }
     }
 
@@ -145,12 +145,12 @@ public class Main extends javax.swing.JFrame {
                             AESMode = 0;
                             fileCount = GUI.countFiles(path);
                             if (fileCount != 0) {
-                                Main.this.setSize(780, 266);
+                                Main.this.setSize(779, 266);
                                 encryptFunction(Main.this);
                             } else {
                                 GUI.t.interrupt();
                                 GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 10, 20, 400, false);
-                                Main.this.setSize(780, 240);
+                                Main.this.setSize(779, 240);
                             }
                         } catch (IOException ex) {
                             ex.printStackTrace();
@@ -169,12 +169,12 @@ public class Main extends javax.swing.JFrame {
                             AESMode = 1;
                             fileCount = GUI.countFiles(path);
                             if (fileCount != 0) {
-                                Main.this.setSize(780, 266);
+                                Main.this.setSize(779, 266);
                                 decryptFunction(Main.this);
                             } else {
                                 GUI.t.interrupt();
                                 GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400, false);
-                                Main.this.setSize(780, 240);
+                                Main.this.setSize(779, 240);
                             }
                         } catch (IOException ex) {
                             ex.printStackTrace();
@@ -738,7 +738,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jProgressBar1);
-        jProgressBar1.setBounds(22, 204, 722, 17);
+        jProgressBar1.setBounds(22, 204, 721, 17);
 
         jLabel1.setFont(Statics.registerCustomFont(18, fontFile));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -1068,12 +1068,12 @@ public class Main extends javax.swing.JFrame {
             AESMode = 1;
             fileCount = GUI.countFiles(path);
             if (fileCount != 0) {
-                this.setSize(780, 266);
+                this.setSize(779, 266);
                 decryptFunction(this);
             } else {
                 GUI.t.interrupt();
                 GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400, false);
-                this.setSize(780, 240);
+                this.setSize(779, 240);
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -1110,12 +1110,12 @@ public class Main extends javax.swing.JFrame {
             AESMode = 0;
             fileCount = GUI.countFiles(path);
             if (fileCount != 0) {
-                this.setSize(780, 266);
+                this.setSize(779, 266);
                 encryptFunction(this);
             } else {
                 GUI.t.interrupt();
                 GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 10, 20, 400, false);
-                this.setSize(780, 240);
+                this.setSize(779, 240);
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -1214,24 +1214,24 @@ public class Main extends javax.swing.JFrame {
                 if (contents != null) {
                     if (contents.length != 0) {
                         Login.sendKeyCheck();
-                        this.setSize(780, 266);
+                        this.setSize(779, 266);
                     } else {
                         GUI.t.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "o-box folder has no files", 20, 40, 800, false);
                         Main.jRadioButton2.setEnabled(true);
-                        this.setSize(780, 240);
+                        this.setSize(779, 240);
                     }
                 } else {
                     GUI.t.interrupt();
                     GUI.labelCutterThread(jAlertLabel, "o-box folder does not exist", 20, 40, 800, false);
                     Main.jRadioButton2.setEnabled(true);
-                    this.setSize(780, 240);
+                    this.setSize(779, 240);
                 }
             } else {
                 GUI.t.interrupt();
                 GUI.labelCutterThread(jAlertLabel, "o-box can't contain .enc files", 20, 20, 1200, false);
                 jRadioButton2.setEnabled(true);
-                this.setSize(780, 240);
+                this.setSize(779, 240);
 
             }
         } catch (IOException ex) {
@@ -1243,9 +1243,9 @@ public class Main extends javax.swing.JFrame {
         zipFileCount = 0;
         zipIter = 0;
         if (Login.verifySendKey(receiveFolder + File.separator + jList1.getSelectedValue())) {
-            this.setSize(780, 266);
+            this.setSize(779, 266);
         } else {
-            this.setSize(780, 240);
+            this.setSize(779, 240);
         }
     }//GEN-LAST:event_jRadioButton3Evt
 
@@ -1290,7 +1290,7 @@ public class Main extends javax.swing.JFrame {
 
     private void jProgressBar1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jProgressBar1StateChanged
         if (progressbarBool) {
-            this.setSize(780, 240);
+            this.setSize(779, 240);
             switch (Statics.toolMode) {
                 case 0:
                     refreshTreeView(path, TreeView.nodeCaretPos);
@@ -1304,7 +1304,7 @@ public class Main extends javax.swing.JFrame {
             }
             progressbarBool = false;
         } else {
-            this.setSize(780, 266);
+            this.setSize(779, 266);
         }
     }//GEN-LAST:event_jProgressBar1StateChanged
 

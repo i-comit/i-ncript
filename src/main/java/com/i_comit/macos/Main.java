@@ -730,7 +730,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jProgressBar1);
-        jProgressBar1.setBounds(16, 204, 722, 17);
+        jProgressBar1.setBounds(16, 204, 721, 17);
 
         jLabel1.setFont(Statics.registerCustomFont(18, fontFile));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);

@@ -244,12 +244,7 @@ public class Statics {
                 break;
         }
         main.setSize(756, 224);
-        
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
+
         if (!AES.t.isAlive()) {
             switch (AESMode) {
                 case 0:

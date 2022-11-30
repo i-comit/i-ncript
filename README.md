@@ -1,13 +1,31 @@
-# <p align="center">i-ncript™</p>
-![image](https://i-comit.com/wp-content/uploads/2022/11/Screenshot_20221118_052656.png)
+  _                             _         _
+ (_)                           (_)       | |  
+  _  ______  _ __    ___  _ __  _  _ __  | |_ 
+ | ||______|| '_ \  / __|| '__|| || '_ \ | __|
+ | |        | | | || (__ | |   | || |_) || |_ 
+ |_|        |_| |_| \___||_|   |_|| .__/  \__|
+                                  | |
+                                  |_|
 
-### i-ncript is an offline & portable (no installation) USB based data encryption application
-Current Version: 1.7.2
+
+![image](https://raw.githubusercontent.com/i-comit/i-comit.github.io/main/i-comit/i-ncript.gif)
+
+## i-ncript is an offline, cross-platform & portable USB based data encryption application
+
+Current Version: 1.8.0 - For Windows, MacOS (Portable & Installer) and Linux (Installer only)
 
 Copyright 2022 [i-comit LLC](https://i-comit.com/). All rights reserved.
 
-## __I-NCRIPT STANDARD OPERATING PROCEDURE 11/19/2022__
+## __I-NCRIPT'S FEATURES__
+i-ncript is an app that can be run entirely within the USB flash drive in which it is stored in. This means that the user does not need to run an installer; just click on the executable within the -------- folder.
 
+It only encrypts a specific set of folders within the USB file directory, allowing the user to use the rest of the available drive space for any data they want to store, allowing for more flexibility compared to encrypting an entire drive such as BitLocker or Apple's Drive encryption, both of which are platform-dependent.
+
+Since it is cross-platform, you can run encryption & decryption on the same set of files for Windows, macOS or Linux by running the respective executable for your operating system.
+
+Finally, not only can i-ncript encrypt and decrypt your personal files, but it can also encrypt files that is to be sent to another person who also has an i-ncript account.  Simply load content into the o-box folder and encrypt it using the recipients provided username and password, then it will create a single .i-cc file for you to send. Conversely, the recipient can send you an .i-cc file which you can place within the n-box folder for decryption.
+
+## __I-NCRIPT STANDARD OPERATING PROCEDURE 11/25/2022__
 i-ncript operates with 3 tool panels connected to their respective folders: STORE, N-BOX, and O-BOX, which you can cycle through via the button on the bottom left. Within these panels are primary tools which are accessible in all 3 panels, and some others which are exclusive to its respective panel.
 It also has a tabbed pane to the right of its interface, containing panels which contains a drop box, output log, and supplementary information about the APP, including this SOP.
 Then on the left, there is a file tree view which recursively lists out all the files in within its respective folder, where you can retrieve the file size and creation date, open it by double clicking, and drag it to the drop box for encrypt/decrypt.
@@ -15,17 +33,22 @@ Finally, i-ncript has a set of hotkeys which you can use to activate functions w
 
 _If this is your first time using i-ncript, we recommend that you read [FIRST TIME SETUP]._
 
-## [FIRST TIME SETUP]
+## [FIRST TIME SETUP] - PORTABLE VERSION FOR WINDOWS AND macOS
 
-No installation required, just extracts the contents of the zip file into the root of your USB drive.
+Depending on what app version you select, you will replace the [version] of the zip file with the following versions:
+
+- windows
+- macos
+
+
 If you've received a USB with the contents in i-ncript-[version].zip already extracted, then please skip step 1.
 
-1. Extract the contents of i-ncript-[version].zip into the root of your USB flash drive (you can delete the zip file after extraction is done)
-2. Go into the -------- folder and click on i-ncript.exe
-3. Accept the EULA and Terms of Use (pdf copies can be found in app folder)
-4. 3 folders should then be made within the -------- folder
-5. Create a username and password, this will be stored as a 256bit key
-6. You now have access to i-ncript's tools, read more to see how to use them below:
+1. Extract the contents of i-ncript-[version].zip into the root of your USB flash drive (you can then delete the zip file)
+2. Go into the -------- folder and click on i-ncript.exe (Windows) or i-ncript.app (macOS)
+3. Accept the EULA and Terms of Use (pdf copies can be found in app folder in Windows)
+4. 3 folders should then be made within the -------- folder, i-ncript, o-box and n-box
+5. Create a username and password; this will be stored as a 256bit key
+6. __You now have access to i-ncript's tools, read more to see how to use them below:__
 
 ## [PRIMARY TOOLS]
 
@@ -58,7 +81,7 @@ These components are active throughout all 3 panels, now we will go over some th
 
 This panel is connected to the i-ncript folder and the first panel that you will see. It is your personal encryption folder that you can use to store data that only you can access.
 
-- HOT FILER \
+- HOT FILE \
 Hot Filer can be toggled for automatic encryption whenever any new files is dropped into the i-ncript folder. If it detects any new files it will run the Encrypt function the same way as clicking on the Encrypt radio button.
 - HIDE FILE \
 Hide File can be toggled to hide or unhide every file in the i-ncript folder. It runs after every crypto task.
@@ -98,6 +121,4 @@ This will cycle through the 3 tool panels, STORE, N-BOX, and O-BOX.
 - 1,2,3, and 4 \
 These number keys will switch to the corresponding tabbed panel such as DROP, LOG, etc.
 
-# <p align="center">CONTACT</p>
-### For more information about this app, contact info@i-comit.com (you may delete this README file)
-
+### For more information about this app, contact info@i-comit.com

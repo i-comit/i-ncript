@@ -60,7 +60,7 @@ public class GUI {
 
     public static int countAllFiles(Path path) throws IOException {
         int result;
-        try (Stream<Path> walk = Files.walk(path)) {
+        try ( Stream<Path> walk = Files.walk(path)) {
             result = Math.toIntExact(walk.filter(Files::isRegularFile)
                     .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
                     .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
@@ -71,7 +71,7 @@ public class GUI {
 
     public static int countFiles(Path path) throws IOException {
         int result = 0;
-        try (Stream<Path> walk = Files.walk(path)) {
+        try ( Stream<Path> walk = Files.walk(path)) {
             int result2 = 0;
             switch (Statics.AESMode) {
                 case 0:
@@ -97,7 +97,7 @@ public class GUI {
 
     public static List<Path> listDirs(Path path) throws IOException {
         List<Path> result;
-        try (Stream<Path> walk = Files.walk(path)) {
+        try ( Stream<Path> walk = Files.walk(path)) {
             result = walk.filter(Files::isDirectory)
                     .collect(Collectors.toList());
             return result;
@@ -106,7 +106,7 @@ public class GUI {
 
     public static List<Path> listPaths(Path path) throws IOException {
         List<Path> result;
-        try (Stream<Path> walk = Files.walk(path)) {
+        try ( Stream<Path> walk = Files.walk(path)) {
             result = walk.filter(Files::isRegularFile)
                     .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
                     .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
@@ -117,7 +117,7 @@ public class GUI {
 
     public static List<Path> listAESPaths(Path path) throws IOException {
         List<Path> result = null;
-        try (Stream<Path> walk = Files.walk(path)) {
+        try ( Stream<Path> walk = Files.walk(path)) {
             switch (AESMode) {
                 case 0:
                     result = walk.filter(Files::isRegularFile)
@@ -161,25 +161,38 @@ public class GUI {
         if (progressBar == Main.jProgressBar1) {
             progressBar.setString("100% | " + AES_T.paths.size() + "/" + AES_T.paths.size());
             try {
+                Thread.sleep(50);
                 AudioPlayer.audioPlayerThread("ding-sfx.wav");
                 switch (Statics.AESMode) {
                     case 0:
                         GUI.t.interrupt();
+                        GUI.t1.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "encrypted " + Statics.fileIter + " files", 10, 20, 400, false);
                         Main.jTextArea1.append("encrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
                         break;
                     case 1:
                         GUI.t.interrupt();
+                        GUI.t1.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "decrypted " + Statics.fileIter + " files", 10, 20, 400, false);
                         Main.jTextArea1.append("decrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
                         break;
                 }
-                Thread.sleep(200);
-                for (int x = progressBar.getMaximum(); x >= 0; x--) {
-                    Thread.sleep(5);
-                    progressBar.setValue(x);
-                    if (x <= 1) {
-                        Main.progressbarBool = true;
+                Thread.sleep(150);
+                if (Statics.fileIter <= 100) {
+                    for (int x = progressBar.getMaximum(); x >= 0; x--) {
+                        Thread.sleep(4);
+                        progressBar.setValue(x);
+                        if (x <= 1) {
+                            Main.progressbarBool = true;
+                        }
+                    }
+                } else {
+                    for (int x = progressBar.getMaximum(); x >= 0; x--) {
+                        Thread.sleep(2);
+                        progressBar.setValue(x);
+                        if (x <= 1) {
+                            Main.progressbarBool = true;
+                        }
                     }
                 }
 
@@ -207,6 +220,7 @@ public class GUI {
         }
         if (progressBar == Main.jProgressBar2) {
             try {
+                Thread.sleep(50);
                 String fileName = new File(Folder.sendFolderStr).getName();
                 if (Statics.toolMode == 2) {
                     GUI.t.interrupt();
@@ -218,15 +232,25 @@ public class GUI {
                     GUI.labelCutterThread(jAlertLabel, "unpacked " + fileName + ".i-cc", 10, 25, 500, false);
                     Main.jTextArea1.append("unpacked " + fileName + ".i-cc at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
                 }
-                Thread.sleep(800);
-                for (int x = progressBar.getMaximum(); x >= 0; x--) {
-                    Thread.sleep(5);
-                    progressBar.setValue(x);
-                    if (x <= 1) {
-                        Main.progressbarBool = true;
+                Thread.sleep(600);
+                if (Statics.fileIter <= 100) {
+                    for (int x = progressBar.getMaximum(); x >= 0; x--) {
+                        Thread.sleep(4);
+                        progressBar.setValue(x);
+                        if (x <= 1) {
+                            Main.progressbarBool = true;
+                        }
+                    }
+                } else {
+                    for (int x = progressBar.getMaximum(); x >= 0; x--) {
+                        Thread.sleep(2);
+                        progressBar.setValue(x);
+                        if (x <= 1) {
+                            Main.progressbarBool = true;
+                        }
                     }
                 }
-                if (progressBar.getValue() >= 0) {
+                if (progressBar.getValue() == 0) {
                     progressBar.setStringPainted(false);
                     Main.jTabbedPane1.setSelectedIndex(0);
                     Main.jProgressBar2.setVisible(true);
@@ -317,22 +341,24 @@ class logger_T implements Runnable {
 
     public static void logger_T(File outputFile, int toolMode) {
         try {
-            Thread.sleep(40);
-            switch (toolMode) {
-                case 0:
-                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(35, outputFile.getPath().length()) + "\n");
-                    break;
-                case 1:
-                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(32, outputFile.getPath().length()) + "\n");
-                    break;
-                case 2:
-                    Main.jTextArea1.append(outputFile.getAbsolutePath().substring(32, outputFile.getPath().length()) + "\n");
-                    break;
+            Thread.sleep(30);
+            if (!Statics.dragDropBool) {
+                switch (toolMode) {
+                    case 0:
+                        Main.jTextArea1.append(outputFile.getAbsolutePath().substring(35, outputFile.getPath().length()) + "\n");
+                        break;
+                    case 1:
+                        Main.jTextArea1.append(outputFile.getAbsolutePath().substring(32, outputFile.getPath().length()) + "\n");
+                        break;
+                    case 2:
+                        Main.jTextArea1.append(outputFile.getAbsolutePath().substring(32, outputFile.getPath().length()) + "\n");
+                        break;
+                }
+            } else {
+                Main.jTextArea1.append(outputFile.getAbsolutePath() + "\n");
             }
-            Thread.sleep(40);
             Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
         } catch (InterruptedException ex) {
-//            ex.printStackTrace();
             System.out.println("logger thread interrupted.");
         }
     }
