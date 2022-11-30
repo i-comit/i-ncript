@@ -39,61 +39,61 @@ public class Main extends javax.swing.JFrame {
     public static String masterFolder = "--------" + File.separator;
 
     private final String appVer = "1.8.0";
-    private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy hh:ss a"));
+    private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
     public static final int year = Year.now().getValue();
 
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
 
     public Main() {
-        root = Paths.get("").toAbsolutePath().toString();
-        if (Memory.checkWMIC()) {
-            root = root.substring(0, 3);
-            initComponents();
-            Memory.getUSBName(this);
+//        root = Paths.get("").toAbsolutePath().toString();
+//        if (Memory.checkWMIC()) {
+        root = root.substring(0, 3);
+        initComponents();
+        Memory.getUSBName(this);
 
-            Path runtime = Paths.get(root + masterFolder + "runtime");
-            Path app = Paths.get(root + masterFolder + "app");
-            if (runtime.toFile().exists()) {
-                try {
-                    Files.setAttribute(runtime, "dos:hidden", true);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+        Path runtime = Paths.get(root + masterFolder + "runtime");
+        Path app = Paths.get(root + masterFolder + "app");
+        if (runtime.toFile().exists()) {
+            try {
+                Files.setAttribute(runtime, "dos:hidden", true);
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-            if (app.toFile().exists()) {
-                try {
-                    Files.setAttribute(app, "dos:hidden", true);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            }
-
-            jStorePanel.setVisible(true);
-            jSendPanel.setVisible(false);
-            jReceivePanel.setVisible(false);
-            jRadioButton2.setVisible(false);
-            jRadioButton3.setVisible(false);
-            jScrollPane5.setVisible(false);
-
-            if (!keyFile.exists()) {
-                jToolPanel.setVisible(false);
-                loginLabelVisibleBool(false);
-                this.setSize(540, 240);
-                this.setLocationRelativeTo(null);
-            } else {
-                Memory.getHeapSize(this);
-                setKeybinding();
-                loginLabelVisibleBool(true);
-                jUsernameLabel.setText("enter username");
-                jPasswordLabel.setText("enter password");
-                generateFolders();
-
-                jToolPanel.setVisible(false);
-                jButton2.setVisible(false);
-            }
-            jProgressBar2.setVisible(false);
-            dragDrop.setVisible(false);
         }
+        if (app.toFile().exists()) {
+            try {
+                Files.setAttribute(app, "dos:hidden", true);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        jStorePanel.setVisible(true);
+        jSendPanel.setVisible(false);
+        jReceivePanel.setVisible(false);
+        jRadioButton2.setVisible(false);
+        jRadioButton3.setVisible(false);
+        jScrollPane5.setVisible(false);
+
+        if (!keyFile.exists()) {
+            jToolPanel.setVisible(false);
+            loginLabelVisibleBool(false);
+            this.setSize(540, 240);
+            this.setLocationRelativeTo(null);
+        } else {
+            Memory.getHeapSize(this);
+            setKeybinding();
+            loginLabelVisibleBool(true);
+            jUsernameLabel.setText("enter username");
+            jPasswordLabel.setText("enter password");
+            generateFolders();
+
+            jToolPanel.setVisible(false);
+            jButton2.setVisible(false);
+        }
+        jProgressBar2.setVisible(false);
+        dragDrop.setVisible(false);
+//        }
     }
 
     private void getKeyBinding(int keyCode, JPanel jPanel, AbstractAction action) {
@@ -1218,19 +1218,19 @@ public class Main extends javax.swing.JFrame {
                     } else {
                         GUI.t.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "o-box folder has no files", 20, 40, 800, false);
-                        Main.jRadioButton2.setEnabled(true);
+                        resetSendTools(2);
                         this.setSize(779, 240);
                     }
                 } else {
                     GUI.t.interrupt();
                     GUI.labelCutterThread(jAlertLabel, "o-box folder does not exist", 20, 40, 800, false);
-                    Main.jRadioButton2.setEnabled(true);
+                    resetSendTools(2);
                     this.setSize(779, 240);
                 }
             } else {
                 GUI.t.interrupt();
                 GUI.labelCutterThread(jAlertLabel, "o-box can't contain .enc files", 20, 20, 1200, false);
-                jRadioButton2.setEnabled(true);
+                resetSendTools(2);
                 this.setSize(779, 240);
 
             }
@@ -1320,6 +1320,7 @@ public class Main extends javax.swing.JFrame {
                         break;
                     case 1:
                         refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
+                        Folder.listZipFiles();
                         break;
                     case 2:
                         refreshTreeView(sendFolder, TreeView.sendCaretPos);
@@ -1366,6 +1367,7 @@ public class Main extends javax.swing.JFrame {
                     break;
                 case 1:
                     refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
+                    Folder.listZipFiles();
                     break;
                 case 2:
                     refreshTreeView(sendFolder, TreeView.sendCaretPos);
@@ -1386,6 +1388,7 @@ public class Main extends javax.swing.JFrame {
                         break;
                     case 1:
                         refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
+                        Folder.listZipFiles();
                         break;
                     case 2:
                         refreshTreeView(sendFolder, TreeView.sendCaretPos);

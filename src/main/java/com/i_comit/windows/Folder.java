@@ -25,10 +25,10 @@ import java.util.zip.ZipOutputStream;
 import javax.swing.DefaultListModel;
 
 public class Folder {
-
+    
     public static String sendFolderStr = "";
     private static final List<String> zipFileList = new ArrayList<>();
-
+    
     public static void prepareZipFile() throws IOException {
         zipFileList.clear();
         sendFolderStr = Statics.sendFolder + File.separator + firstLastChar(Statics.recipientUsername) + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMddmmss"));
@@ -36,25 +36,24 @@ public class Folder {
         GUI.resetProgressBar(Main.jProgressBar2);
         Main.toolBtnsBool(true);
         deleteDirectory(Statics.sendFolder.toFile());
-        Main.jRadioButton2.setEnabled(true);
-        Main.jRadioButton2.setSelected(false);
+        Statics.resetSendTools(2);
         Main.dragDrop.setVisible(true);
         GUI.getGB();
     }
-
+    
     public static String firstLastChar(String username) {
         String a = username.substring(0, 1);
         String b = username.substring(username.length() - 1, username.length());
         String c = a + b + "-";
         return c;
     }
-
+    
     public static String first2Char(String fileName) {
         String a = fileName.substring(0, 2);
         String b = a + "-";
         return b;
     }
-
+    
     public static void deleteDirectory(File file) {
         for (File subfile : file.listFiles()) {
             if (!subfile.toString().endsWith(".i-cc")) {
@@ -65,9 +64,9 @@ public class Folder {
             }
         }
     }
-
+    
     public static DefaultListModel zipList = new DefaultListModel();
-
+    
     public static void listZipFiles() {
         zipList.clear();
         Main.jList1.removeAll();
@@ -92,16 +91,16 @@ public class Folder {
             GUI.getGB();
         }
     }
-
+    
     public static void zipFile(String dir, String zipFile) {
         zipFile = sendFolderStr + ".i-cc";
         Main.jProgressBar2.setStringPainted(true);
         Main.jProgressBar2.setMaximum(zipFileCount);
         File directory = new File(dir);
         zipFileList(directory);
-
+        
         try ( FileOutputStream fos = new FileOutputStream(zipFile);  ZipOutputStream zos = new ZipOutputStream(fos)) {
-
+            
             for (String filePath : zipFileList) {
                 System.out.println("Compressing: " + filePath);
                 String name = filePath.substring(directory.getAbsolutePath().length() + 1);
@@ -115,7 +114,7 @@ public class Folder {
                     while ((length = fis.read(buffer)) > 0) {
                         zos.write(buffer, 0, length);
                     }
-
+                    
                     zos.closeEntry();
                     Statics.zipIter++;
                     Main.jProgressBar2.setValue(Statics.zipIter);
@@ -127,7 +126,7 @@ public class Folder {
             e.printStackTrace();
         }
     }
-
+    
     private static void zipFileList(File directory) {
         File[] files = directory.listFiles();
         if (files != null && files.length > 0) {
@@ -140,7 +139,7 @@ public class Folder {
             }
         }
     }
-
+    
     public static void unzipFile(String zipFilePath, String destDir) {
         File dir = new File(destDir);
         // create output directory if it doesn't exist
@@ -177,18 +176,18 @@ public class Folder {
             e.printStackTrace();
         }
     }
-
+    
     public static void recursiveFileDropSendThread(File filesf, Path path) {
         Thread t = new Thread(() -> recursiveFileDrop_T.recursiveFileSendDrop(filesf, path));
         t.start();
     }
-
+    
     public static void recursiveFileDropStoreThread(File filesf, Path path, List<Path> paths) {
         Thread t = new Thread(() -> recursiveFileDrop_T.recursiveFileStoreDrop(filesf, path, paths));
         t.start();
     }
     public static int fileDropCount;
-
+    
     public static int getFileDropCount(File filesf) {
         fileDropCount = 0;
         try {
@@ -199,16 +198,16 @@ public class Folder {
         System.out.println("Drop Count " + fileDropCount);
         return fileDropCount;
     }
-
+    
 }
 
 class recursiveFileDrop_T implements Runnable {
-
+    
     public void run() {
-
+        
     }
     public static int fileDropIter;
-
+    
     public static void recursiveFileSendDrop(File filesf, Path path) {
         Paths.get(path + File.separator + filesf.getName()).toFile().mkdir();
         File[] filesArr = filesf.listFiles();
@@ -237,7 +236,7 @@ class recursiveFileDrop_T implements Runnable {
         }
         filesf.delete();
     }
-
+    
     public static void recursiveFileStoreDrop(File filesf, Path path, List<Path> recursiveStorePaths) {
         File[] filesArr = filesf.listFiles();
         for (File filesArr1 : filesArr) {
@@ -251,5 +250,5 @@ class recursiveFileDrop_T implements Runnable {
             }
         }
     }
-
+    
 }

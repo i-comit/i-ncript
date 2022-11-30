@@ -98,7 +98,6 @@ public class TreeView {
                         }
                     }
                 }
-                System.out.println("receiveTreePaths " + receiveTreePaths);
                 break;
             case 2:
                 for (DefaultMutableTreeNode singleNode : sendNodeList) {
@@ -114,7 +113,6 @@ public class TreeView {
                         }
                     }
                 }
-                System.out.println("sendTreePaths " + sendTreePaths);
                 break;
             case 3:
                 for (DefaultMutableTreeNode singleNode : dirNodeList) {
@@ -130,7 +128,6 @@ public class TreeView {
                         }
                     }
                 }
-                System.out.println("StoreTreePaths " + treePaths);
                 break;
         }
     }
@@ -142,19 +139,15 @@ public class TreeView {
         switch (toolMode) {
             case 0:
                 nodeCaretPos = Main.jScrollPane5.getVerticalScrollBar().getValue();
-                System.out.println("CARET POS " + nodeCaretPos);
                 break;
             case 1:
                 receiveCaretPos = Main.jScrollPane5.getVerticalScrollBar().getValue();
-                System.out.println("RECEIVE CARET POS " + receiveCaretPos);
                 break;
             case 2:
                 sendCaretPos = Main.jScrollPane5.getVerticalScrollBar().getValue();
-                System.out.println("SEND CARET POS " + sendCaretPos);
                 break;
             case 3:
                 nodeCaretPos = Main.jScrollPane5.getVerticalScrollBar().getValue();
-                System.out.println("CARET POS " + nodeCaretPos);
                 break;
         }
     }

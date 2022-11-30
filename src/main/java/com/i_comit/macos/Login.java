@@ -128,21 +128,9 @@ public class Login {
                         Main.jRadioButton2.setEnabled(false);
                         Main.jTextField2.setText("");
                         Main.jPasswordField2.setText("");
-                        AESMode = 1;
-                        fileCount = GUI.countFiles(sendFolder);
-                        if (fileCount == 0) {
-                            AESMode = 0;
-                            fileCount = GUI.countFiles(sendFolder);
-                            zipFileCount = fileCount;
-                            jProgressBar1.setMaximum(zipFileCount);
-                            AES.AESThread(listAESPaths(sendFolder), sendFolder.toFile(), true, 2);
-                            b = true;
-                        } else {
-                            GUI.t.interrupt();
-                            GUI.labelCutterThread(jAlertLabel, "o-box can't contain .enc files", 20, 20, 1200, false);
-                            sendPanelTools();
-                            jRadioButton2.setEnabled(true);
-                        }
+                        Main.jTextField2.setEnabled(false);
+                        Main.jPasswordField2.setEnabled(false);
+                        AES.AESThread(listAESPaths(sendFolder), sendFolder.toFile(), true, 2);
                         b = true;
                     } else {
                         GUI.t.interrupt();
@@ -212,9 +200,7 @@ public class Login {
                     String usernameRead1 = Hasher.readKey(brTest1.readLine(), username);
 //
                     if (usernameRead.equals(usernameRead1)) {
-                        System.out.println("USERNAME MATCH");
                         if (passwordRead.equals(Hasher.getHash(recipientPassword, false))) {
-                            System.out.println("PASSWORD MATCH");
                             resetStaticInts();
                             jProgressBar1.setValue(Statics.fileIter);
                             jProgressBar1.setValue(Statics.fileCount);
@@ -222,6 +208,8 @@ public class Login {
                             fileCount = GUI.countFiles(receiveFolder);
                             zipFileCount = fileCount;
                             jProgressBar1.setMaximum(fileCount);
+                            Main.jPasswordField3.setEnabled(false);
+                            Main.jList1.setEnabled(false);
                             AES.AESThread(listAESPaths(Paths.get(Statics.zipFileName)), Paths.get(Statics.zipFileName).toFile(), true, 1);
                             Main.progressbarBool = false;
                             b = true;

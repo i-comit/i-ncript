@@ -36,8 +36,7 @@ public class Folder {
         GUI.resetProgressBar(Main.jProgressBar2);
         Main.toolBtnsBool(true);
         deleteDirectory(Statics.sendFolder.toFile());
-        Main.jRadioButton2.setEnabled(true);
-        Main.jRadioButton2.setSelected(false);
+        Statics.resetSendTools(2);
         Main.dragDrop.setVisible(true);
         GUI.getGB();
     }
@@ -116,7 +115,6 @@ public class Folder {
                         zos.write(buffer, 0, length);
                     }
 
-                    // Close the zip entry.
                     zos.closeEntry();
                     Statics.zipIter++;
                     Main.jProgressBar2.setValue(Statics.zipIter);

@@ -1359,6 +1359,7 @@ public class Main extends javax.swing.JFrame {
                     break;
                 case 1:
                     refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
+                    Folder.listZipFiles();
                     break;
                 case 2:
                     refreshTreeView(sendFolder, TreeView.sendCaretPos);
@@ -1379,6 +1380,7 @@ public class Main extends javax.swing.JFrame {
                         break;
                     case 1:
                         refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
+                        Folder.listZipFiles();
                         break;
                     case 2:
                         refreshTreeView(sendFolder, TreeView.sendCaretPos);

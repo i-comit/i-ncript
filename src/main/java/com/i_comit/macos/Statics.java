@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -223,6 +224,7 @@ public class Statics {
         buttonGroup1.clearSelection();
         jAlertLabel.setText("");
         dragDrop.setVisible(true);
+
         toolBtnsBool(true);
         
         switch (toolMode) {
@@ -231,12 +233,16 @@ public class Statics {
                 refreshTreeView(path, TreeView.nodeCaretPos);
                 break;
             case 1:
+                Folder.deleteDirectory(Paths.get(Statics.zipFileName).toFile());
+                new File(Statics.zipFileName).delete();
                 FileHider.cleanUp(receiveFolder);
                 refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
+                resetSendTools(toolMode);
                 break;
             case 2:
                 FileHider.cleanUp(sendFolder);
                 refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                resetSendTools(toolMode);
                 break;
             case 3:
                 FileHider.cleanUp(path);
@@ -258,6 +264,34 @@ public class Statics {
         resetStaticInts();
     }
     
+    public static void resetSendTools(int toolMode) {
+        switch (toolMode) {
+            case 1:
+                jPasswordField3.setEnabled(true);
+                jList1.setEnabled(true);
+                jPasswordField3.setText("");
+                jLabel7.setVisible(true);
+                jLabel8.setVisible(true);
+                jRadioButton3.setVisible(false);
+                jRadioButton3.setSelected(false);
+                jRadioButton3.setEnabled(true);
+                Folder.listZipFiles();
+                break;
+            case 2:
+                jPasswordField2.setEnabled(true);
+                jTextField2.setEnabled(true);
+                jTextField2.setText("");
+                jPasswordField2.setText("");
+                jLabel5.setVisible(true);
+                jLabel6.setVisible(true);
+                jRadioButton2.setVisible(false);
+                jRadioButton2.setSelected(false);
+                jRadioButton2.setEnabled(true);
+                break;
+        }
+
+    }
+
     public static void hotFilerFunction(Main main) {
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();

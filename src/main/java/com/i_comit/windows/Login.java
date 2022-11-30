@@ -129,6 +129,8 @@ public class Login {
                         Main.jRadioButton2.setEnabled(false);
                         Main.jTextField2.setText("");
                         Main.jPasswordField2.setText("");
+                        Main.jTextField2.setEnabled(false);
+                        Main.jPasswordField2.setEnabled(false);
                         AES.AESThread(listAESPaths(sendFolder), sendFolder.toFile(), true, 2);
                         b = true;
                     } else {
@@ -158,7 +160,6 @@ public class Login {
         Path sendKeyPath = Paths.get(Statics.sendFolder + File.separator + ".send.key");
         try {
             List<String> lines = Arrays.asList(Hasher.finalizeHash(recipientUsername, true), Hasher.finalizeHash(recipientPassword, false));
-//            List<String> lines = Arrays.asList(Hasher.modHash(recipientPassword));
             Path p = Files.createFile(sendKeyPath);//creates file at specified location  
             Files.write(sendKeyPath, lines);
             Files.setAttribute(p, "dos:hidden", true);
@@ -201,9 +202,7 @@ public class Login {
                     String usernameRead1 = Hasher.readKey(brTest1.readLine(), username);
 //
                     if (usernameRead.equals(usernameRead1)) {
-                        System.out.println("USERNAME MATCH");
                         if (passwordRead.equals(Hasher.getHash(recipientPassword, false))) {
-                            System.out.println("PASSWORD MATCH");
                             resetStaticInts();
                             jProgressBar1.setValue(Statics.fileIter);
                             jProgressBar1.setValue(Statics.fileCount);
@@ -211,6 +210,8 @@ public class Login {
                             fileCount = GUI.countFiles(receiveFolder);
                             zipFileCount = fileCount;
                             jProgressBar1.setMaximum(fileCount);
+                            Main.jPasswordField3.setEnabled(false);
+                            Main.jList1.setEnabled(false);
                             AES.AESThread(listAESPaths(Paths.get(Statics.zipFileName)), Paths.get(Statics.zipFileName).toFile(), true, 1);
                             Main.progressbarBool = false;
                             b = true;

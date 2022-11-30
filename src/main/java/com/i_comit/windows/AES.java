@@ -30,9 +30,9 @@ import javax.crypto.spec.SecretKeySpec;
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
 public class AES {
-
+    
     public static Thread t;
-
+    
     public static void AESThread(List<Path> paths, File dirFile, boolean AESBool, int toolMode) {
         t = new Thread(() -> {
             try {
@@ -43,10 +43,10 @@ public class AES {
         });
         t.start();
     }
-
+    
     private static final String ALGORITHM = "AES";
     private static final String TRANSFORMATION = "AES/ECB/PKCS5Padding";
-
+    
     public static void encrypt(String key, File inputFile, File outputFile) {
         if (inputFile.exists()) {
             if (!inputFile.toString().endsWith(".enc")) {
@@ -60,7 +60,7 @@ public class AES {
             }
         }
     }
-
+    
     public static void decrypt(String key, File inputFile, File outputFile) {
         if (inputFile.exists()) {
             if (inputFile.toString().endsWith(".enc")) {
@@ -74,17 +74,17 @@ public class AES {
             }
         }
     }
-
+    
     public static void getFileAttr(File inputFile, File outputFile) throws IOException {
         BasicFileAttributes attr = Files.readAttributes(inputFile.toPath(), BasicFileAttributes.class);
-
+        
         FileTime time = attr.creationTime();
         FileTime time2 = attr.lastModifiedTime();
-
+        
         Files.setAttribute(outputFile.toPath(), "basic:creationTime", time, NOFOLLOW_LINKS);
         Files.setLastModifiedTime(outputFile.toPath(), time2);
     }
-
+    
     public static byte[] dynamicBytes(File inputFile) {
         byte[] inputBytes;
         if (inputFile.length() > Statics.maxFileBytes) {
@@ -94,15 +94,15 @@ public class AES {
         }
         return inputBytes;
     }
-
+    
     private static void doCrypto(int cipherMode, String key, File inputFile,
             File outputFile) throws CryptoException {
         try {
             Key secretKey = new SecretKeySpec(key.getBytes(), ALGORITHM);
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
             cipher.init(cipherMode, secretKey);
-
-            try (FileInputStream inputStream = new FileInputStream(inputFile); FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+            
+            try ( FileInputStream inputStream = new FileInputStream(inputFile);  FileOutputStream outputStream = new FileOutputStream(outputFile)) {
                 byte[] inputBytes = dynamicBytes(inputFile);
                 int nread;
                 while ((nread = inputStream.read(inputBytes)) > 0) {
@@ -127,7 +127,7 @@ public class AES {
             Main.jProgressBar1.setValue(fileIter);
             GUI.loggerThread(outputFile, Statics.toolMode);
             getFileAttr(inputFile, outputFile);
-
+            
         } catch (NoSuchPaddingException | NoSuchAlgorithmException
                 | InvalidKeyException | BadPaddingException
                 | IllegalBlockSizeException ex) {
@@ -136,12 +136,12 @@ public class AES {
             System.out.println("Last File Was " + inputFile.getName());
         }
     }
-
+    
     public static class CryptoException extends Exception {
-
+        
         public CryptoException() {
         }
-
+        
         public CryptoException(String message, Throwable throwable) {
             super(message, throwable);
         }
@@ -149,9 +149,9 @@ public class AES {
 }
 
 class AES_T implements Runnable {
-
+    
     public int threadIterator;
-
+    
     public void run() {
 //        try {
 //            AESQuery();
@@ -159,9 +159,9 @@ class AES_T implements Runnable {
 //            ex.printStackTrace();
 //        }
     }
-
+    
     public static List<Path> paths = null;
-
+    
     public static void AESQuery(List<Path> paths, File dirFile, boolean AESBool, int toolMode) throws InterruptedException {
         AES_T.paths = paths;
         if (AESBool) {
@@ -240,12 +240,8 @@ class AES_T implements Runnable {
                                         new File(Statics.zipFileName + ".i-cc").delete();
                                         new File(Statics.zipFileName + File.separator + ".send.key").delete();
                                         Main.jList1.clearSelection();
-                                        Folder.listZipFiles();
-                                        Main.jLabel8.setVisible(true);
-                                        Main.jLabel7.setVisible(true);
-                                        Main.jRadioButton3.setEnabled(true);
-                                        Main.jRadioButton3.setVisible(false);
-                                        Main.jRadioButton3.setSelected(false);
+                                        Statics.resetSendTools(toolMode);
+                                        Main.jList1.setEnabled(true);
                                         Main.jTabbedPane1.setSelectedIndex(0);
                                         Main.toolBtnsBool(true);
                                     }
@@ -253,7 +249,7 @@ class AES_T implements Runnable {
                                 }
                                 break;
                         }
-                    } 
+                    }
                 } else {
                     switch (toolMode) {
                         case 0:
@@ -316,7 +312,7 @@ class AES_T implements Runnable {
             }
         }
     }
-
+    
     private static void buttonRestart() {
         Main.jButton2.setVisible(true);
         Main.jTabbedPane1.setSelectedIndex(1);

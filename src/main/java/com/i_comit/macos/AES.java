@@ -240,12 +240,8 @@ class AES_T implements Runnable {
                                         new File(Statics.zipFileName + ".i-cc").delete();
                                         new File(Statics.zipFileName + File.separator + ".send.key").delete();
                                         Main.jList1.clearSelection();
-                                        Folder.listZipFiles();
-                                        Main.jLabel8.setVisible(true);
-                                        Main.jLabel7.setVisible(true);
-                                        Main.jRadioButton3.setEnabled(true);
-                                        Main.jRadioButton3.setVisible(false);
-                                        Main.jRadioButton3.setSelected(false);
+                                        Statics.resetSendTools(toolMode);
+                                        Main.jList1.setEnabled(true);
                                         Main.jTabbedPane1.setSelectedIndex(0);
                                         Main.toolBtnsBool(true);
                                     }
@@ -262,10 +258,6 @@ class AES_T implements Runnable {
                         case 1:
                             GUI.labelCutterThread(jAlertLabel, "n-box folder has no files", 20, 40, 800, false);
                             Main.jRadioButton3.setEnabled(true);
-                            break;
-                        case 2:
-                            GUI.labelCutterThread(jAlertLabel, "o-box folder has no files", 20, 40, 800, false);
-                            Main.jRadioButton2.setEnabled(true);
                             break;
                     }
                     Main.jToggleButton2.setEnabled(true);
