@@ -40,7 +40,6 @@ Depending on what app version you select, you will replace the [version] of the 
 - windows
 - macos
 
-
 If you've received a USB with the contents in i-ncript-[version].zip already extracted, then please skip step 1.
 
 1. Extract the contents of i-ncript-[version].zip into the root of your USB flash drive (you can then delete the zip file)
