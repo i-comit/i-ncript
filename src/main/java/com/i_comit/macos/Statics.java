@@ -243,7 +243,7 @@ public class Statics {
                 refreshTreeView(path, TreeView.nodeCaretPos);
                 break;
         }
-        main.setSize(756, 224);
+        main.setSize(755, 224);
 
         if (!AES.t.isAlive()) {
             switch (AESMode) {
@@ -314,7 +314,7 @@ public class Statics {
     }
     
     public static void collapseLogin(Main main) {
-        main.setSize(756, 224);
+        main.setSize(755, 224);
         jLabel1.setLocation(259, 8);
         jLabel3.setLocation(361, 4);
         jAlertLabel.setLocation(259, 174);
