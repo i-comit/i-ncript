@@ -15,7 +15,7 @@
       <Connection code="Toolkit.getDefaultToolkit().getImage(getClass().getResource(&quot;/i-comiti.png&quot;))" type="code"/>
     </Property>
     <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[295, 225]"/>
+      <Dimension value="[295, 205]"/>
     </Property>
     <Property name="modalExclusionType" type="java.awt.Dialog$ModalExclusionType" editor="org.netbeans.modules.form.editors.EnumEditor">
       <Value id="APPLICATION_EXCLUDE"/>

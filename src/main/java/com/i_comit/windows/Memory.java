@@ -75,13 +75,13 @@ public class Memory {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-            Main.jAlertLabel.setLocation(21, 154);
+            Main.jAlertLabel.setLocation(21, 174);
             main.setSize(120, 241);
         } else {
             Main.jHeapLabel.setVisible(false);
             Main.jSlider1.setVisible(false);
             Main.jAlertLabel.setLocation(21, 154);
-            main.setSize(120, 211);
+            main.setSize(120, 221);
 
         }
     }
