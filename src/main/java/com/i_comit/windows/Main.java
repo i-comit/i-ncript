@@ -35,10 +35,10 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "D:\\";
+    public static String root = "";
     public static String masterFolder = "--------" + File.separator;
 
-    private final String appVer = "1.8.0";
+    private final String appVer = "1.8.1";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
     public static final int year = Year.now().getValue();
 
@@ -49,6 +49,7 @@ public class Main extends javax.swing.JFrame {
         if (Memory.checkWMIC()) {
             root = root.substring(0, 3);
             initComponents();
+            TreeView.renderTreeCells();
             Memory.getUSBName(this);
 
             Path runtime = Paths.get(root + masterFolder + "runtime");
@@ -295,6 +296,7 @@ public class Main extends javax.swing.JFrame {
             TreeView.populateStoreTree(path);
             caretPos = jScrollPane5.getVerticalScrollBar().getValue();
             TreeView.expandTreeNode(path);
+            TreeView.renderTreeCells();
         }
     }
 
@@ -1029,7 +1031,7 @@ public class Main extends javax.swing.JFrame {
 
         jTree1.setBackground(new java.awt.Color(57, 57, 57));
         jTree1.setForeground(Color.WHITE);
-        jTree1.setModel(TreeView.populateStoreTree(Statics.path));
+        jTree1.setModel(TreeView.populateStoreTree(path));
         jTree1.setDragEnabled(true);
         jTree1.setFocusCycleRoot(true);
         jTree1.setRootVisible(false);
@@ -1162,6 +1164,7 @@ public class Main extends javax.swing.JFrame {
         jUsernameLabel.setText("make username");
         jPasswordLabel.setText("make password");
         Memory.getHeapSize(this);
+        setKeybinding();
         generateFolders();
 
         jToolPanel.setVisible(false);
@@ -1363,16 +1366,20 @@ public class Main extends javax.swing.JFrame {
         if (jTree1.isEnabled()) {
             switch (toolMode) {
                 case 0:
+                    TreeView.nodeCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
                     refreshTreeView(path, TreeView.nodeCaretPos);
                     break;
                 case 1:
+                    TreeView.receiveCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
                     refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
                     Folder.listZipFiles();
                     break;
                 case 2:
+                    TreeView.sendCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
                     refreshTreeView(sendFolder, TreeView.sendCaretPos);
                     break;
                 case 3:
+                    TreeView.nodeCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
                     refreshTreeView(path, TreeView.nodeCaretPos);
                     break;
             }
@@ -1384,16 +1391,20 @@ public class Main extends javax.swing.JFrame {
             if (jTree1.isEnabled()) {
                 switch (toolMode) {
                     case 0:
+                        TreeView.nodeCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
                         refreshTreeView(path, TreeView.nodeCaretPos);
                         break;
                     case 1:
+                        TreeView.receiveCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
                         refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
                         Folder.listZipFiles();
                         break;
                     case 2:
+                        TreeView.sendCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
                         refreshTreeView(sendFolder, TreeView.sendCaretPos);
                         break;
                     case 3:
+                        TreeView.nodeCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
                         refreshTreeView(path, TreeView.nodeCaretPos);
                         break;
                 }

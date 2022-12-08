@@ -7,8 +7,15 @@ package com.i_comit.windows;
 import static com.i_comit.windows.Main.jTree1;
 import static com.i_comit.windows.Main.masterFolder;
 import static com.i_comit.windows.Main.root;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Desktop;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,7 +23,11 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
@@ -40,6 +51,15 @@ public class TreeView {
         model.reload(treeRoot);
         jTree1.revalidate();
         return model;
+    }
+
+    private static Image getScaledImage(Image srcImg, int w, int h) {
+        BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_4BYTE_ABGR);
+        Graphics2D g2 = resizedImg.createGraphics();
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2.drawImage(srcImg, 0, 0, w, h, null);
+        g2.dispose();
+        return resizedImg;
     }
 
     private static List<DefaultMutableTreeNode> dirNodeList = new ArrayList<>();
@@ -150,6 +170,40 @@ public class TreeView {
                 nodeCaretPos = Main.jScrollPane5.getVerticalScrollBar().getValue();
                 break;
         }
+    }
+
+    public static void renderTreeCells() {
+        jTree1.setCellRenderer(new DefaultTreeCellRenderer() {
+            @Override
+            public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+                JLabel c = (JLabel) super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+                if (leaf) {
+                    if (value.toString().endsWith(".enc")) {
+                        c.setForeground(new Color(110, 110, 110));
+                        c.setIcon(new ImageIcon(getScaledImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/lock.png")), 11, 13)));
+                    } else if (value.toString().endsWith(".pdf")) {
+                        c.setIcon(new ImageIcon(getScaledImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/pdf.png")), 14, 13)));
+                    } else if (value.toString().endsWith(".mp4") || value.toString().endsWith(".avi") || value.toString().endsWith(".webm")) {
+                        c.setIcon(new ImageIcon(getScaledImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/video.png")), 14, 13)));
+                    } else if (value.toString().endsWith(".stl") || value.toString().endsWith(".step") || value.toString().endsWith(".gcode") || value.toString().endsWith(".fbx")) {
+                        c.setIcon(new ImageIcon(getScaledImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/model.png")), 14, 13)));
+                    } else if (value.toString().endsWith(".png") || value.toString().endsWith(".jpg") || value.toString().endsWith(".gif") || value.toString().endsWith(".svg")) {
+                        c.setIcon(new ImageIcon(getScaledImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/img.png")), 14, 13)));
+                    } else if (value.toString().endsWith(".xlsx") || value.toString().endsWith(".xls") || value.toString().endsWith(".ods")) {
+                        c.setIcon(new ImageIcon(getScaledImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/xls.png")), 14, 13)));
+                    } else if (value.toString().endsWith(".docx") || value.toString().endsWith(".odt") || value.toString().endsWith(".txt") || value.toString().endsWith(".md")) {
+                        c.setIcon(new ImageIcon(getScaledImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/doc.png")), 14, 13)));
+                    } else if (value.toString().endsWith(".c") || value.toString().endsWith(".cpp") || value.toString().endsWith(".java") || value.toString().endsWith(".py") || value.toString().endsWith(".php")) {
+                        c.setIcon(new ImageIcon(getScaledImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/code.png")), 14, 13)));
+                    } else {
+                        c.setForeground(Color.WHITE);
+                    }
+                }
+                return c;
+            }
+        });
+        jTree1.revalidate();
+//        jTree1.updateUI();
     }
 
     public static void expandTreeNode(Path path) {

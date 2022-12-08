@@ -279,6 +279,7 @@ public class Main extends javax.swing.JFrame {
             TreeView.populateStoreTree(path);
             caretPos = jScrollPane5.getVerticalScrollBar().getValue();
             TreeView.expandTreeNode(path);
+            TreeView.renderTreeCells();
         }
     }
 
@@ -1356,16 +1357,20 @@ public class Main extends javax.swing.JFrame {
         if (jTree1.isEnabled()) {
             switch (toolMode) {
                 case 0:
+                    TreeView.nodeCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
                     refreshTreeView(path, TreeView.nodeCaretPos);
                     break;
                 case 1:
+                    TreeView.receiveCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
                     refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
                     Folder.listZipFiles();
                     break;
                 case 2:
+                    TreeView.sendCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
                     refreshTreeView(sendFolder, TreeView.sendCaretPos);
                     break;
                 case 3:
+                    TreeView.nodeCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
                     refreshTreeView(path, TreeView.nodeCaretPos);
                     break;
             }
@@ -1377,16 +1382,20 @@ public class Main extends javax.swing.JFrame {
             if (fileIter != 0) {
                 switch (toolMode) {
                     case 0:
+                        TreeView.nodeCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
                         refreshTreeView(path, TreeView.nodeCaretPos);
                         break;
                     case 1:
+                        TreeView.receiveCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
                         refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
                         Folder.listZipFiles();
                         break;
                     case 2:
+                        TreeView.sendCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
                         refreshTreeView(sendFolder, TreeView.sendCaretPos);
                         break;
                     case 3:
+                        TreeView.nodeCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
                         refreshTreeView(path, TreeView.nodeCaretPos);
                         break;
                 }

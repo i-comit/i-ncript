@@ -150,8 +150,8 @@ public class Statics {
                 dragDrop.setToolTipText("drop box will move dropped .i-cc file to n-box folder");
                 FileHider.cleanUp(receiveFolder);
                 TreeView.setRootName("n-box");
-                TreeView.populateStoreTree(receiveFolder);
-                TreeView.expandTreeNode(receiveFolder);
+                Main.refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
+//                TreeView.expandTreeNode(receiveFolder);
                 break;
             case 2:
                 jSwitchMode.setText("O-BOX");
@@ -173,8 +173,8 @@ public class Statics {
                 dragDrop.setToolTipText("drop box will move files or folder into o-box folder");
                 FileHider.cleanUp(sendFolder);
                 TreeView.setRootName("o-box");
-                TreeView.populateStoreTree(sendFolder);
-                TreeView.expandTreeNode(sendFolder);
+                Main.refreshTreeView(sendFolder, TreeView.sendCaretPos);
+//                TreeView.expandTreeNode(sendFolder);
                 break;
             case 3:
                 jSwitchMode.setText("STORE");
@@ -191,8 +191,7 @@ public class Statics {
                 dragDrop.setToolTipText("drop box will encrypt & decrypt any files dropped here");
                 FileHider.cleanUp(path);
                 TreeView.setRootName("i-ncript");
-                TreeView.populateStoreTree(path);
-                TreeView.expandTreeNode(path);
+                Main.refreshTreeView(path, TreeView.nodeCaretPos);
                 toolMode = 0;
                 break;
         }

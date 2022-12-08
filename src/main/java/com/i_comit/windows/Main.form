@@ -1289,7 +1289,7 @@
               <Connection code="Color.WHITE" type="code"/>
             </Property>
             <Property name="model" type="javax.swing.tree.TreeModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="TreeView.populateStoreTree(Statics.path)" type="code"/>
+              <Connection code="TreeView.populateStoreTree(path)" type="code"/>
             </Property>
             <Property name="dragEnabled" type="boolean" value="true"/>
             <Property name="focusCycleRoot" type="boolean" value="true"/>

@@ -53,18 +53,27 @@ class DragDrop implements DropTargetListener {
                     File fileFormat = new File(root + masterFolder + Main.jTree1.getSelectionPaths()[i].toString().substring(1, Main.jTree1.getSelectionPaths()[i].toString().length() - 1).replaceAll(", ", File.separator));
                     if (!fileFormat.isDirectory()) {
                         treepaths.add(fileFormat.toPath());
+                        if (TreeView.checkFilesAreFromSameFolder(treepaths)) {
+                            Main.jButton2.setVisible(true);
+                            Main.jProgressBar1.setMaximum(treepaths.size());
+                            jProgressBar1.setString("0% | 0/" + treepaths.size());
+                            Statics.dragDropBool = false;
+                            AES.AESThread(treepaths, new File(path.replaceAll(fileName, "")), false, 0);
+                        } else {
+                            GUI.t.interrupt();
+                            GUI.labelCutterThread(jAlertLabel, "all files must be in same folder", 10, 20, 800, false);
+                        }
+                    } else {
+                        try {
+                            List<Path> dropDir = GUI.listPaths(fileFormat.toPath());
+                            dropDir.forEach(x -> {
+                                treepaths.add(x);
+                            });
+                            AES.AESThread(treepaths, new File(path.replaceAll(fileName, "")), false, 0);
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
                     }
-                }
-                if (TreeView.checkFilesAreFromSameFolder(treepaths)) {
-                    Main.jButton2.setVisible(true);
-                    Main.jProgressBar1.setMaximum(treepaths.size());
-                    jProgressBar1.setString("0% | 0/" + treepaths.size());
-                    Statics.dragDropBool = false;
-                    AES.AESThread(treepaths, new File(path.replaceAll(fileName, "")), false, 0);
-
-                } else {
-                    GUI.t.interrupt();
-                    GUI.labelCutterThread(jAlertLabel, "all files must be in same folder", 10, 20, 800, false);
                 }
                 jTree1.clearSelection();
             }
