@@ -1269,12 +1269,15 @@
         </Property>
         <Property name="requestFocusEnabled" type="boolean" value="false"/>
       </Properties>
+      <Events>
+        <EventHandler event="mouseWheelMoved" listener="java.awt.event.MouseWheelListener" parameters="java.awt.event.MouseWheelEvent" handler="jScrollPane5MouseWheelMoved"/>
+      </Events>
       <AuxValues>
         <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="22" y="12" width="225" height="158"/>
+          <AbsoluteConstraints x="22" y="12" width="-1" height="158"/>
         </Constraint>
       </Constraints>
 
@@ -1293,6 +1296,7 @@
             </Property>
             <Property name="dragEnabled" type="boolean" value="true"/>
             <Property name="focusCycleRoot" type="boolean" value="true"/>
+            <Property name="largeModel" type="boolean" value="true"/>
             <Property name="rootVisible" type="boolean" value="false"/>
           </Properties>
           <Events>

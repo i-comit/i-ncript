@@ -38,7 +38,7 @@ public class Main extends javax.swing.JFrame {
     public static String root = "";
     public static String masterFolder = "--------" + File.separator;
 
-    private final String appVer = "1.8.1";
+    private final String appVer = "1.8.2";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
     public static final int year = Year.now().getValue();
 
@@ -1028,12 +1028,18 @@ public class Main extends javax.swing.JFrame {
         jScrollPane5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(75, 110, 175)));
         jScrollPane5.setPreferredSize(new java.awt.Dimension(225, 160));
         jScrollPane5.setRequestFocusEnabled(false);
+        jScrollPane5.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
+            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
+                jScrollPane5MouseWheelMoved(evt);
+            }
+        });
 
         jTree1.setBackground(new java.awt.Color(57, 57, 57));
         jTree1.setForeground(Color.WHITE);
         jTree1.setModel(TreeView.populateStoreTree(path));
         jTree1.setDragEnabled(true);
         jTree1.setFocusCycleRoot(true);
+        jTree1.setLargeModel(true);
         jTree1.setRootVisible(false);
         jTree1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -1411,6 +1417,12 @@ public class Main extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_jTree1PropertyChange
+
+    private void jScrollPane5MouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_jScrollPane5MouseWheelMoved
+        if (jScrollPane5.getVerticalScrollBar().getValue() == 1 && evt.getWheelRotation() == -1) {
+            Main.jScrollPane5.getVerticalScrollBar().setValue(0);
+        }
+    }//GEN-LAST:event_jScrollPane5MouseWheelMoved
     /**
      * @param args the command line arguments
      */
