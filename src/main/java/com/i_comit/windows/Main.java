@@ -35,7 +35,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "D:\\";
+    public static String root = "";
     public static String masterFolder = "--------" + File.separator;
 
     private final String appVer = "1.8.2";
@@ -45,56 +45,56 @@ public class Main extends javax.swing.JFrame {
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
 
     public Main() {
-//        root = Paths.get("").toAbsolutePath().toString();
-//        if (Memory.checkWMIC()) {
-        root = root.substring(0, 3);
-        initComponents();
-        TreeView.renderTreeCells();
-        Memory.getUSBName(this);
+        root = Paths.get("").toAbsolutePath().toString();
+        if (Memory.checkWMIC()) {
+            root = root.substring(0, 3);
+            initComponents();
+            TreeView.renderTreeCells();
+            Memory.getUSBName(this);
 
-        Path runtime = Paths.get(root + masterFolder + "runtime");
-        Path app = Paths.get(root + masterFolder + "app");
-        if (runtime.toFile().exists()) {
-            try {
-                Files.setAttribute(runtime, "dos:hidden", true);
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            Path runtime = Paths.get(root + masterFolder + "runtime");
+            Path app = Paths.get(root + masterFolder + "app");
+            if (runtime.toFile().exists()) {
+                try {
+                    Files.setAttribute(runtime, "dos:hidden", true);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
-        }
-        if (app.toFile().exists()) {
-            try {
-                Files.setAttribute(app, "dos:hidden", true);
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            if (app.toFile().exists()) {
+                try {
+                    Files.setAttribute(app, "dos:hidden", true);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
+
+            jStorePanel.setVisible(true);
+            jSendPanel.setVisible(false);
+            jReceivePanel.setVisible(false);
+            jRadioButton2.setVisible(false);
+            jRadioButton3.setVisible(false);
+            jScrollPane5.setVisible(false);
+
+            if (!keyFile.exists()) {
+                jToolPanel.setVisible(false);
+                loginLabelVisibleBool(false);
+                this.setSize(540, 240);
+                this.setLocationRelativeTo(null);
+            } else {
+                Memory.getHeapSize(this);
+                setKeybinding();
+                loginLabelVisibleBool(true);
+                jUsernameLabel.setText("enter username");
+                jPasswordLabel.setText("enter password");
+                generateFolders();
+
+                jToolPanel.setVisible(false);
+                jButton2.setVisible(false);
+            }
+            jProgressBar2.setVisible(false);
+            dragDrop.setVisible(false);
         }
-
-        jStorePanel.setVisible(true);
-        jSendPanel.setVisible(false);
-        jReceivePanel.setVisible(false);
-        jRadioButton2.setVisible(false);
-        jRadioButton3.setVisible(false);
-        jScrollPane5.setVisible(false);
-
-        if (!keyFile.exists()) {
-            jToolPanel.setVisible(false);
-            loginLabelVisibleBool(false);
-            this.setSize(540, 240);
-            this.setLocationRelativeTo(null);
-        } else {
-            Memory.getHeapSize(this);
-            setKeybinding();
-            loginLabelVisibleBool(true);
-            jUsernameLabel.setText("enter username");
-            jPasswordLabel.setText("enter password");
-            generateFolders();
-
-            jToolPanel.setVisible(false);
-            jButton2.setVisible(false);
-        }
-        jProgressBar2.setVisible(false);
-        dragDrop.setVisible(false);
-//        }
     }
 
     private void getKeyBinding(int keyCode, JPanel jPanel, AbstractAction action) {
