@@ -151,7 +151,6 @@ public class Statics {
                 FileHider.cleanUp(receiveFolder);
                 TreeView.setRootName("n-box");
                 Main.refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
-//                TreeView.expandTreeNode(receiveFolder);
                 break;
             case 2:
                 jSwitchMode.setText("O-BOX");
@@ -174,7 +173,6 @@ public class Statics {
                 FileHider.cleanUp(sendFolder);
                 TreeView.setRootName("o-box");
                 Main.refreshTreeView(sendFolder, TreeView.sendCaretPos);
-//                TreeView.expandTreeNode(sendFolder);
                 break;
             case 3:
                 jSwitchMode.setText("STORE");

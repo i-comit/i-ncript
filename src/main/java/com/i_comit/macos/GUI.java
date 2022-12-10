@@ -151,6 +151,7 @@ public class GUI {
             if (x <= 1) {
                 Main.progressbarBool = true;
             }
+            Main.jTabbedPane1.setSelectedIndex(0);
         }
     }
 

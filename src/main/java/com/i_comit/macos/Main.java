@@ -368,6 +368,7 @@ public class Main extends javax.swing.JFrame {
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
+        jAlertLabel = new javax.swing.JLabel();
         jToolPanel = new javax.swing.JPanel();
         jButton2 = new javax.swing.JButton();
         jSwitchMode = new javax.swing.JButton();
@@ -402,7 +403,6 @@ public class Main extends javax.swing.JFrame {
         jProgressBar1 = new javax.swing.JProgressBar();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jAlertLabel = new javax.swing.JLabel();
         jCreationDateLabel = new javax.swing.JLabel();
         jFileSizeLabel = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
@@ -454,6 +454,11 @@ public class Main extends javax.swing.JFrame {
         });
         getContentPane().setLayout(null);
 
+        jAlertLabel.setFont(Statics.registerCustomFont(12, fontFile));
+        jAlertLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        getContentPane().add(jAlertLabel);
+        jAlertLabel.setBounds(15, 148, 236, 27);
+
         jToolPanel.setOpaque(false);
         jToolPanel.setPreferredSize(new java.awt.Dimension(252, 150));
         jToolPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -461,6 +466,7 @@ public class Main extends javax.swing.JFrame {
         jButton2.setFont(Statics.registerCustomFont(12, fontFile));
         jButton2.setText("STOP");
         jButton2.setToolTipText("stops current AES task");
+        jButton2.setMargin(new java.awt.Insets(2, 14, 2, 14));
         jButton2.setPreferredSize(new java.awt.Dimension(105, 22));
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -472,6 +478,7 @@ public class Main extends javax.swing.JFrame {
         jSwitchMode.setFont(Statics.registerCustomFont(12, fontFile));
         jSwitchMode.setText("STORE");
         jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
+        jSwitchMode.setMargin(new java.awt.Insets(2, 14, 2, 14));
         jSwitchMode.setPreferredSize(new java.awt.Dimension(72, 22));
         jSwitchMode.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -483,6 +490,7 @@ public class Main extends javax.swing.JFrame {
         jButton3.setFont(Statics.registerCustomFont(12, fontFile));
         jButton3.setText("CLR LOG");
         jButton3.setToolTipText("clear output from LOG tab");
+        jButton3.setMargin(new java.awt.Insets(2, 14, 2, 14));
         jButton3.setPreferredSize(new java.awt.Dimension(105, 22));
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -517,6 +525,7 @@ public class Main extends javax.swing.JFrame {
         jToggleButton2.setText("HIDE FILE");
         jToggleButton2.setToolTipText("click to hide or unhide all files, runs after every AES task");
         jToggleButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jToggleButton2.setMargin(new java.awt.Insets(2, 14, 2, 14));
         jToggleButton2.setMaximumSize(new java.awt.Dimension(105, 22));
         jToggleButton2.setMinimumSize(new java.awt.Dimension(105, 22));
         jToggleButton2.setPreferredSize(new java.awt.Dimension(105, 22));
@@ -531,6 +540,7 @@ public class Main extends javax.swing.JFrame {
         jRadioButton1.setText("DECRYPT");
         jRadioButton1.setFocusable(false);
         jRadioButton1.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
+        jRadioButton1.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadioButton1ActionPerformed(evt);
@@ -541,6 +551,7 @@ public class Main extends javax.swing.JFrame {
         jRadioButton0.setFont(Statics.registerCustomFont(12, fontFile));
         jRadioButton0.setText("ENCRYPT");
         jRadioButton0.setFocusable(false);
+        jRadioButton0.setMargin(new java.awt.Insets(2, 2, 2, 2));
         jRadioButton0.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jRadioButton0ActionPerformed(evt);
@@ -694,6 +705,7 @@ public class Main extends javax.swing.JFrame {
         jButton1.setFont(Statics.registerCustomFont(12, fontFile));
         jButton1.setText("ENTER");
         jButton1.setToolTipText("log into i-ncript");
+        jButton1.setMargin(new java.awt.Insets(2, 14, 2, 14));
         jButton1.setPreferredSize(new java.awt.Dimension(73, 22));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -758,11 +770,6 @@ public class Main extends javax.swing.JFrame {
         });
         getContentPane().add(jLabel3);
         jLabel3.setBounds(119, 4, 135, 30);
-
-        jAlertLabel.setFont(Statics.registerCustomFont(12, fontFile));
-        jAlertLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        getContentPane().add(jAlertLabel);
-        jAlertLabel.setBounds(15, 148, 236, 27);
 
         jCreationDateLabel.setFont(Statics.registerCustomFont(13, fontFile));
         jCreationDateLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
@@ -961,6 +968,7 @@ public class Main extends javax.swing.JFrame {
         jEULAPanel.add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 38, 498, 132));
 
         jButton4.setText("I AGREE");
+        jButton4.setMargin(new java.awt.Insets(2, 14, 2, 14));
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -969,6 +977,7 @@ public class Main extends javax.swing.JFrame {
         jEULAPanel.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(424, 176, -1, -1));
 
         jButton5.setText("I DISAGREE");
+        jButton5.setMargin(new java.awt.Insets(2, 14, 2, 14));
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
@@ -999,6 +1008,7 @@ public class Main extends javax.swing.JFrame {
         jEULAPanel1.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 38, 498, 132));
 
         jButton6.setText("I AGREE");
+        jButton6.setMargin(new java.awt.Insets(2, 14, 2, 14));
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ActionjButton6(evt);
@@ -1007,6 +1017,7 @@ public class Main extends javax.swing.JFrame {
         jEULAPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(424, 176, -1, -1));
 
         jButton7.setText("I DISAGREE");
+        jButton7.setMargin(new java.awt.Insets(2, 14, 2, 14));
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton7ActionPerformed(evt);

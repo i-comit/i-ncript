@@ -12,8 +12,6 @@ import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
@@ -187,7 +185,7 @@ public class TreeView {
                         c.setIcon(new ImageIcon(getScaledImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/pdf.png")), 14, 13)));
                     } else if (value.toString().endsWith(".mp4") || value.toString().endsWith(".avi") || value.toString().endsWith(".webm")) {
                         c.setIcon(new ImageIcon(getScaledImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/video.png")), 14, 13)));
-                    } else if (value.toString().endsWith(".stl") || value.toString().endsWith(".step") || value.toString().endsWith(".gcode") || value.toString().endsWith(".fbx")) {
+                    } else if (value.toString().endsWith(".stl") || value.toString().endsWith(".step") || value.toString().endsWith(".gcode") || value.toString().endsWith(".fbx") || value.toString().endsWith(".FCStd") ) {
                         c.setIcon(new ImageIcon(getScaledImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/model.png")), 14, 13)));
                     } else if (value.toString().endsWith(".png") || value.toString().endsWith(".jpg") || value.toString().endsWith(".gif") || value.toString().endsWith(".svg")) {
                         c.setIcon(new ImageIcon(getScaledImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/img.png")), 14, 13)));
