@@ -65,7 +65,7 @@ public class Folder {
         }
     }
     
-    public static DefaultListModel zipList = new DefaultListModel();
+    private static DefaultListModel zipList = new DefaultListModel();
     
     public static void listZipFiles() {
         zipList.clear();
@@ -156,7 +156,6 @@ public class Folder {
             while (ze != null) {
                 String fileName = ze.getName();
                 File newFile = new File(destDir + File.separator + fileName);
-//                System.out.println("Unzipping to " + newFile.getAbsolutePath());
                 new File(newFile.getParent()).mkdirs();
                 FileOutputStream fos = new FileOutputStream(newFile);
                 int len;
@@ -195,7 +194,6 @@ public class Folder {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        System.out.println("Drop Count " + fileDropCount);
         return fileDropCount;
     }
     
@@ -245,7 +243,6 @@ class recursiveFileDrop_T implements Runnable {
                     recursiveStorePaths.add(filesArr1.toPath());
                 }
             } else {
-                System.out.println(filesArr1);
                 recursiveFileStoreDrop(filesArr1, path, recursiveStorePaths);
             }
         }

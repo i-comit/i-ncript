@@ -36,7 +36,7 @@ public class DriveCheck extends javax.swing.JFrame {
             break;
             case 3:
                 jLabel1.setText("i-ncript must be in a");
-                jLabel2.setText("folder named --------");
+                jLabel2.setText("folder named '-------'");
             break;
             case 4:
                 goWebsite(jLabel1, "the folder with ", "https://i-comit.com/i-ncript/", "i-ncript", false);

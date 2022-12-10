@@ -67,7 +67,6 @@ public class Memory {
                     line = br.readLine();
                 }
                 currentHeap = Integer.parseInt(line.substring(line.length() - 2, line.length() - 1));
-                System.out.println("current heap is " + currentHeap);
                 Main.jSlider1.setValue(currentHeap);
                 Main.jHeapLabel.setText(currentHeap + "GB heap");
             } catch (FileNotFoundException ex) {
@@ -75,6 +74,8 @@ public class Memory {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+            Main.jHeapLabel.setVisible(true);
+            Main.jSlider1.setVisible(true);
             Main.jAlertLabel.setLocation(21, 174);
             main.setSize(120, 241);
         } else {
@@ -87,51 +88,52 @@ public class Memory {
     }
 
     public static void changeHeapSize() {
-        try {
-            List<String> lines = Files.readAllLines(Paths.get(root + Main.masterFolder + "\\app\\i-ncript.cfg"), StandardCharsets.UTF_8);
-            lines.remove(6);
-            lines.add(6, "java-options=-Xms" + selectedHeap + "g");
-            switch (selectedHeap) {
-                case 1:
-                    lines.remove(7);
-                    lines.add(7, "java-options=-Xmx" + 2 + "g");
-                    break;
-                case 2:
-                    lines.remove(7);
-                    lines.add(7, "java-options=-Xmx" + 4 + "g");
-                    break;
-                case 3:
-                    lines.remove(7);
-                    lines.add(7, "java-options=-Xmx" + 6 + "g");
-                    break;
-                case 4:
-                    lines.remove(7);
-                    lines.add(7, "java-options=-Xmx" + 8 + "g");
-                    break;
-                case 5:
-                    lines.remove(7);
-                    lines.add(7, "java-options=-Xmx" + 10 + "g");
-                    break;
-                case 6:
-                    lines.remove(7);
-                    lines.add(7, "java-options=-Xmx" + 12 + "g");
-                    break;
-                case 7:
-                    lines.remove(7);
-                    lines.add(7, "java-options=-Xmx" + 14 + "g");
-                    break;
-                case 8:
-                    lines.remove(7);
-                    lines.add(7, "java-options=-Xmx" + 16 + "g");
-                    break;
+        if (new File(root + Main.masterFolder + "\\app\\i-ncript.cfg").exists()) {
+            try {
+                List<String> lines = Files.readAllLines(Paths.get(root + Main.masterFolder + "\\app\\i-ncript.cfg"), StandardCharsets.UTF_8);
+                lines.remove(6);
+                lines.add(6, "java-options=-Xms" + selectedHeap + "g");
+                switch (selectedHeap) {
+                    case 1:
+                        lines.remove(7);
+                        lines.add(7, "java-options=-Xmx" + 2 + "g");
+                        break;
+                    case 2:
+                        lines.remove(7);
+                        lines.add(7, "java-options=-Xmx" + 4 + "g");
+                        break;
+                    case 3:
+                        lines.remove(7);
+                        lines.add(7, "java-options=-Xmx" + 6 + "g");
+                        break;
+                    case 4:
+                        lines.remove(7);
+                        lines.add(7, "java-options=-Xmx" + 8 + "g");
+                        break;
+                    case 5:
+                        lines.remove(7);
+                        lines.add(7, "java-options=-Xmx" + 10 + "g");
+                        break;
+                    case 6:
+                        lines.remove(7);
+                        lines.add(7, "java-options=-Xmx" + 12 + "g");
+                        break;
+                    case 7:
+                        lines.remove(7);
+                        lines.add(7, "java-options=-Xmx" + 14 + "g");
+                        break;
+                    case 8:
+                        lines.remove(7);
+                        lines.add(7, "java-options=-Xmx" + 16 + "g");
+                        break;
 
+                }
+                Files.write(Paths.get(root + Main.masterFolder + "\\app\\i-ncript.cfg"), lines, StandardCharsets.UTF_8);
+                Runtime.getRuntime().exec("cmd /c " + root + Main.masterFolder + "i-ncript.exe");
+                System.exit(0);
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-            Files.write(Paths.get(root + Main.masterFolder + "\\app\\i-ncript.cfg"), lines, StandardCharsets.UTF_8);
-            Runtime.getRuntime().exec("cmd /c " + root + Main.masterFolder + "i-ncript.exe");
-            System.exit(0);
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
         }
     }
 
@@ -167,10 +169,9 @@ public class Memory {
                 while ((s = reader.readLine()) != null) {
                     if (s.trim().length() != 0) {
                         if (s.trim().equals("Removable Disk")) {
-                            System.out.println("USB MATCH");
                             if (root.length() > 2) {
-                                if (root.contains("--------")) {
-                                    if (root.length() == 11) {
+                                if (root.contains("'--------'")) {
+                                    if (root.length() == 13) {
                                         b = true;
                                     } else {
                                         DriveCheck.driveState = 4;
@@ -188,7 +189,6 @@ public class Memory {
                                 b = false;
                             }
                         } else {
-                            System.out.println("Drive Must Be A USB");
                             DriveCheck.driveState = 1;
                             new DriveCheck().setVisible(true);
                             b = false;

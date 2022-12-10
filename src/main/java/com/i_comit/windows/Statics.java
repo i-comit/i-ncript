@@ -25,9 +25,9 @@ public class Statics {
 
     public static int toolMode = 0;
 
-    public static final String folderName = "i-ncript";
+    public static final String folderName = "vault";
     public static String rootFolder = root.substring(0, 3) + Main.masterFolder + folderName;
-    public static final String keyName = "\\.i-ncript.key";
+    public static final String keyName = "\\.🔑";
 
     public static int maxFileBytes = 1048576 * 4;
 

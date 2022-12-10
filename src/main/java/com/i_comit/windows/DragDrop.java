@@ -97,10 +97,15 @@ class DragDrop implements DropTargetListener {
                                         if (!b) {
                                             Statics.dragDropBool = true;
                                             if (!filesf.isDirectory()) {
+                                                if (!filesf.getName().endsWith(".i-cc")) {
                                                 Main.jButton2.setVisible(true);
                                                 Main.jProgressBar1.setMaximum(0);
                                                 jProgressBar1.setString("0% | 0/" + files.size());
                                                 AES.AESThread(paths, Statics.directory, false, 0);
+                                            } else {
+                                                    GUI.t.interrupt();
+                                                    GUI.labelCutterThread(Main.jAlertLabel, ".i-cc files are not allowed", 10, 25, 750, false);
+                                                }
                                             } else {
                                                 Folder.getFileDropCount(filesf);
                                                 recursiveFileDrop_T.recursiveFileStoreDrop(filesf, Statics.path, paths);

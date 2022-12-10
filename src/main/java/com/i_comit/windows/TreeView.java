@@ -37,7 +37,7 @@ import javax.swing.tree.TreePath;
  */
 public class TreeView {
 
-    public static DefaultMutableTreeNode treeRoot = new DefaultMutableTreeNode("i-ncript"); // root node
+    public static DefaultMutableTreeNode treeRoot = new DefaultMutableTreeNode("vault"); // root node
     public static DefaultTreeModel model = new DefaultTreeModel(treeRoot);
 
     public static DefaultTreeModel populateStoreTree(Path path) {
@@ -90,6 +90,7 @@ public class TreeView {
     public static void storeExpandedNodes(int toolMode) {
         switch (toolMode) {
             case 0:
+                treePaths.clear();
                 for (DefaultMutableTreeNode singleNode : dirNodeList) {
                     TreePath path = new TreePath(singleNode.getPath());
                     if (jTree1.isExpanded(path)) {
@@ -105,6 +106,7 @@ public class TreeView {
                 }
                 break;
             case 1:
+                receiveTreePaths.clear();
                 for (DefaultMutableTreeNode singleNode : receiveNodeList) {
                     TreePath path = new TreePath(singleNode.getPath());
                     if (jTree1.isExpanded(path)) {
@@ -120,6 +122,7 @@ public class TreeView {
                 }
                 break;
             case 2:
+                sendTreePaths.clear();
                 for (DefaultMutableTreeNode singleNode : sendNodeList) {
                     TreePath path = new TreePath(singleNode.getPath());
                     if (jTree1.isExpanded(path)) {
@@ -135,6 +138,7 @@ public class TreeView {
                 }
                 break;
             case 3:
+                treePaths.clear();
                 for (DefaultMutableTreeNode singleNode : dirNodeList) {
                     TreePath path = new TreePath(singleNode.getPath());
                     if (jTree1.isExpanded(path)) {
@@ -151,6 +155,7 @@ public class TreeView {
                 break;
         }
     }
+
     public static int nodeCaretPos;
     public static int receiveCaretPos;
     public static int sendCaretPos;
@@ -203,13 +208,12 @@ public class TreeView {
             }
         });
         jTree1.revalidate();
-//        jTree1.updateUI();
     }
 
     public static void expandTreeNode(Path path) {
         String fileName = path.toFile().getName();
         switch (fileName) {
-            case "i-ncript":
+            case "vault":
                 for (DefaultMutableTreeNode pathx : dirNodeList) {
                     TreePath path2 = new TreePath(pathx.getPath());
                     for (TreePath treePath : treePaths) {
@@ -245,7 +249,7 @@ public class TreeView {
         }
     }
 
-    public static void setCaretPos(int caretPos) {
+    private static void setCaretPos(int caretPos) {
         Rectangle rect = new Rectangle(0, caretPos, 1, jTree1.getRowCount());
         Main.jScrollPane5.getViewport().scrollRectToVisible(rect);
         Main.jScrollPane5.getVerticalScrollBar().setValue(caretPos);

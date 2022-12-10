@@ -253,7 +253,7 @@ class AES_T implements Runnable {
                 } else {
                     switch (toolMode) {
                         case 0:
-                            GUI.labelCutterThread(jAlertLabel, "i-ncript folder has no files", 20, 40, 800, false);
+                            GUI.labelCutterThread(jAlertLabel, "vault folder has no files", 20, 40, 800, false);
                             break;
                         case 1:
                             GUI.labelCutterThread(jAlertLabel, "n-box folder has no files", 20, 40, 800, false);
@@ -263,7 +263,7 @@ class AES_T implements Runnable {
                     Main.jToggleButton2.setEnabled(true);
                 }
             } else {
-                GUI.labelCutterThread(jAlertLabel, "i-ncript folder does not exist", 20, 40, 800, false);
+                GUI.labelCutterThread(jAlertLabel, "vault folder does not exist", 20, 40, 800, false);
                 Main.jToggleButton2.setEnabled(true);
             }
         } else {

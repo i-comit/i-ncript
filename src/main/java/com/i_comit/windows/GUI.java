@@ -150,8 +150,10 @@ public class GUI {
             if (x <= 1) {
                 Main.progressbarBool = true;
             }
-            Main.jTabbedPane1.setSelectedIndex(0);
         }
+        Main.refreshTreeView(Statics.receiveFolder, TreeView.receiveCaretPos);
+        GUI.getGB();
+        Main.jList1.setSelectedIndex(0);
     }
 
     public static void resetProgressBar(JProgressBar progressBar) {
@@ -197,19 +199,18 @@ public class GUI {
                 }
 
                 if (progressBar.getValue() == 0) {
-                    progressBar.setStringPainted(false);
                     switch (Statics.toolMode) {
                         case 0:
-                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.path);
+                            FileHider_T.FileHider_T(Main.jToggleButton2.isSelected(), Statics.path);
                             break;
                         case 1:
-                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.receiveFolder);
+                            FileHider_T.FileHider_T(Main.jToggleButton2.isSelected(), Statics.receiveFolder);
                             break;
                         case 2:
-                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.sendFolder);
+                            FileHider_T.FileHider_T(Main.jToggleButton2.isSelected(), Statics.sendFolder);
                             break;
                         case 3:
-                            FileHider.FileHiderThread(Main.jToggleButton2.isSelected(), Statics.path);
+                            FileHider_T.FileHider_T(Main.jToggleButton2.isSelected(), Statics.path);
                             break;
                     }
                 }
@@ -237,7 +238,7 @@ public class GUI {
                     for (int x = progressBar.getMaximum(); x >= 0; x--) {
                         Thread.sleep(4);
                         progressBar.setValue(x);
-                        if (x <= 1) {
+                        if (x == 1) {
                             Main.progressbarBool = true;
                         }
                     }
@@ -245,7 +246,7 @@ public class GUI {
                     for (int x = progressBar.getMaximum(); x >= 0; x--) {
                         Thread.sleep(2);
                         progressBar.setValue(x);
-                        if (x <= 1) {
+                        if (x == 1) {
                             Main.progressbarBool = true;
                         }
                     }
@@ -296,7 +297,7 @@ class labelCutter_T implements Runnable {
                 }
             }
         } catch (InterruptedException ex) {
-            System.out.println("label thread interrupted.");
+//            System.out.println("label thread interrupted.");
         }
 
     }
@@ -345,13 +346,16 @@ class logger_T implements Runnable {
             if (!Statics.dragDropBool) {
                 switch (toolMode) {
                     case 0:
-                        Main.jTextArea1.append(outputFile.getAbsolutePath().substring(21, outputFile.getPath().length()) + "\n");
+                        Main.jTextArea1.append(outputFile.getAbsolutePath().substring(20, outputFile.getPath().length()) + "\n");
                         break;
                     case 1:
-                        Main.jTextArea1.append(outputFile.getAbsolutePath().substring(18, outputFile.getPath().length()) + "\n");
+                        Main.jTextArea1.append(outputFile.getAbsolutePath().substring(19, outputFile.getPath().length()) + "\n");
                         break;
                     case 2:
-                        Main.jTextArea1.append(outputFile.getAbsolutePath().substring(18, outputFile.getPath().length()) + "\n");
+                        Main.jTextArea1.append(outputFile.getAbsolutePath().substring(19, outputFile.getPath().length()) + "\n");
+                        break;
+                    case 3:
+                        Main.jTextArea1.append(outputFile.getAbsolutePath().substring(20, outputFile.getPath().length()) + "\n");
                         break;
                 }
             } else {

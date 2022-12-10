@@ -65,8 +65,6 @@ public class FileHider {
                     }
                     deletedFiles++;
                 }
-            } else {
-                System.out.println("no files to clean up in " + path.toFile().getName() + " folder");
             }
             if (deletedFiles > 2) {
                 Main.jTextArea1.append("cleaned up " + deletedFiles + " corrupted files\n");

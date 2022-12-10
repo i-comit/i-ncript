@@ -67,7 +67,6 @@ public class Login {
             GUI.t.interrupt();
             GUI.labelCutterThread(jAlertLabel, "please enter a username", 20, 20, 1200, false);
         }
-        jAlertLabel.setHorizontalAlignment(CENTER);
         jTextField1.setText("");
         jPasswordField1.setText("");
         return b;
@@ -82,8 +81,12 @@ public class Login {
             Main.jProgressBar2.setVisible(true);
             Hasher.hashedUsername = Hasher.getHash(username, true);
             Hasher.hashedPassword = Hasher.getHash(password, false);
+            jAlertLabel.setHorizontalAlignment(CENTER);
             GUI.t.interrupt();
-            GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript", 30, 30, 600, false);
+            GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript, " + username + ".", 20, 40, 1200, false);
+            Main.dragDropper();
+            Main.jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
+            Main.jToolPanel.requestFocus();
             makeKey();
             b = true;
         }
@@ -157,7 +160,7 @@ public class Login {
     }
 
     public static void sendKey() {
-        Path sendKeyPath = Paths.get(Statics.sendFolder + File.separator + ".send.key");
+        Path sendKeyPath = Paths.get(Statics.sendFolder + File.separator + ".🔑");
         try {
             List<String> lines = Arrays.asList(Hasher.finalizeHash(recipientUsername, true), Hasher.finalizeHash(recipientPassword, false));
             Path p = Files.createFile(sendKeyPath);//creates file at specified location  
@@ -182,7 +185,6 @@ public class Login {
             GUI.t.interrupt();
         }
         zipFileName = zipFileN;
-        System.out.println(Main.jList1.getSelectedValue());
 
         recipientPassword = new String(password);
         if (Main.jList1.getSelectedValue() != null) {
@@ -194,7 +196,7 @@ public class Login {
                 unzipFile(Statics.zipFileName + ".i-cc", Statics.zipFileName.replaceAll(".i-cc", ""));
                 Main.toolBtnsBool(true);
                 try {
-                    BufferedReader brTest = new BufferedReader(new FileReader(zipFileName + File.separator + ".send.key"));
+                    BufferedReader brTest = new BufferedReader(new FileReader(zipFileName + File.separator + ".🔑"));
                     String usernameRead = Hasher.readKey(brTest.readLine(), username);
                     String passwordRead = Hasher.readKey(brTest.readLine(), recipientPassword);
 
@@ -270,11 +272,13 @@ public class Login {
                     Main.jLoginPanel.setVisible(false);
                     Main.jToolPanel.setVisible(true);
                     Main.jProgressBar2.setVisible(true);
+                    jAlertLabel.setHorizontalAlignment(CENTER);
                     GUI.t.interrupt();
                     GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript, " + username + ".", 20, 40, 1200, false);
                     Main.dragDropper();
                     Main.jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
                     Main.jToolPanel.requestFocus();
+                    Main.refreshTreeView(path, TreeView.nodeCaretPos);
                     b = true;
                 }
             } else {

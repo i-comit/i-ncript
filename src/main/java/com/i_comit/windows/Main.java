@@ -35,8 +35,8 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "";
-    public static String masterFolder = "--------" + File.separator;
+    public static String root = "D:\\";
+    public static final String masterFolder = "'--------'" + File.separator;
 
     private final String appVer = "1.8.2";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
@@ -329,6 +329,8 @@ public class Main extends javax.swing.JFrame {
         }
         if (!keyFile.exists()) {
             GUI.labelCutterThread(jAlertLabel, "please create an account.", 60, 80, 100, true);
+            jUsernameLabel.setText("create username");
+            jPasswordLabel.setText("create password");
         } else {
             Random rand = new Random();
             int rand_int1 = rand.nextInt(5);
@@ -349,7 +351,6 @@ public class Main extends javax.swing.JFrame {
                     case 4:
                         GUI.labelCutterThread(jAlertLabel, "also available on linux.", 60, 80, 100, true);
                         break;
-
                 }
             }
             FileHider.cleanUp(path);
@@ -1336,26 +1337,6 @@ public class Main extends javax.swing.JFrame {
         if (!jToolPanel.isFocusOwner() && jStorePanel.isVisible()) {
             jToolPanel.requestFocus();
         }
-        if (fileTreeBool) {
-            if (jTree1.isEnabled()) {
-                switch (toolMode) {
-                    case 0:
-                        refreshTreeView(path, TreeView.nodeCaretPos);
-                        break;
-                    case 1:
-                        refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
-                        Folder.listZipFiles();
-                        break;
-                    case 2:
-                        refreshTreeView(sendFolder, TreeView.sendCaretPos);
-                        break;
-                    case 3:
-                        refreshTreeView(path, TreeView.nodeCaretPos);
-                        break;
-                }
-                fileTreeBool = false;
-            }
-        }
     }//GEN-LAST:event_formMouseMoved
 
     private void jLabel3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseEntered
@@ -1368,7 +1349,6 @@ public class Main extends javax.swing.JFrame {
 
     private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
         Memory.selectedHeap = jSlider1.getValue();
-        System.out.println(jSlider1.getValue());
         jHeapLabel.setText(Memory.selectedHeap + "GB heap");
         if (Memory.selectedHeap == Memory.currentHeap) {
             jButton1.setToolTipText("log into i-ncript");
@@ -1387,20 +1367,16 @@ public class Main extends javax.swing.JFrame {
         if (jTree1.isEnabled()) {
             switch (toolMode) {
                 case 0:
-                    TreeView.nodeCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
                     refreshTreeView(path, TreeView.nodeCaretPos);
                     break;
                 case 1:
-                    TreeView.receiveCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
                     refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
                     Folder.listZipFiles();
                     break;
                 case 2:
-                    TreeView.sendCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
                     refreshTreeView(sendFolder, TreeView.sendCaretPos);
                     break;
                 case 3:
-                    TreeView.nodeCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
                     refreshTreeView(path, TreeView.nodeCaretPos);
                     break;
             }
@@ -1412,20 +1388,16 @@ public class Main extends javax.swing.JFrame {
             if (jTree1.isEnabled()) {
                 switch (toolMode) {
                     case 0:
-//                        TreeView.nodeCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
                         refreshTreeView(path, TreeView.nodeCaretPos);
                         break;
                     case 1:
-//                        TreeView.receiveCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
                         refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
                         Folder.listZipFiles();
                         break;
                     case 2:
-//                        TreeView.sendCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
                         refreshTreeView(sendFolder, TreeView.sendCaretPos);
                         break;
                     case 3:
-//                        TreeView.nodeCaretPos = jScrollPane5.getVerticalScrollBar().getValue();
                         refreshTreeView(path, TreeView.nodeCaretPos);
                         break;
                 }
