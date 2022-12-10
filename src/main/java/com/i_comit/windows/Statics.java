@@ -188,7 +188,7 @@ public class Statics {
                 jLabel11.setText("ENCRYPT & DECRYPT");
                 dragDrop.setToolTipText("drop box will encrypt & decrypt any files dropped here");
                 FileHider.cleanUp(path);
-                TreeView.setRootName("i-ncript");
+                TreeView.setRootName("vault");
                 Main.refreshTreeView(path, TreeView.nodeCaretPos);
                 toolMode = 0;
                 break;
