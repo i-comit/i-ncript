@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -103,6 +104,22 @@ public class GUI {
         }
     }
 
+    public static List<Path> listAllPaths(Path path) throws IOException {
+        List<Path> result;
+        try ( Stream<Path> walk = Files.walk(path)) {
+            result = walk.filter(Files::isRegularFile)
+                    .collect(Collectors.toList());
+
+            for (Path paths : result) {
+                if (paths.toFile().getName().equals("Thumbs.db")) {
+                    paths.toFile().delete();
+                    System.out.println("deleted " + paths.toFile());
+                }
+            }
+            return result;
+        }
+    }
+
     public static List<Path> listPaths(Path path) throws IOException {
         List<Path> result;
         try ( Stream<Path> walk = Files.walk(path)) {
@@ -147,7 +164,7 @@ public class GUI {
                 ex.printStackTrace();
             }
             progressBar.setValue(x);
-            if (x <= 1) {
+            if (x == 1) {
                 Main.progressbarBool = true;
             }
         }
@@ -184,7 +201,7 @@ public class GUI {
                     for (int x = progressBar.getMaximum(); x >= 0; x--) {
                         Thread.sleep(4);
                         progressBar.setValue(x);
-                        if (x <= 1) {
+                        if (x == 1) {
                             Main.progressbarBool = true;
                         }
                     }
@@ -192,7 +209,7 @@ public class GUI {
                     for (int x = progressBar.getMaximum(); x >= 0; x--) {
                         Thread.sleep(2);
                         progressBar.setValue(x);
-                        if (x <= 1) {
+                        if (x == 1) {
                             Main.progressbarBool = true;
                         }
                     }

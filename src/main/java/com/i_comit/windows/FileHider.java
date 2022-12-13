@@ -5,6 +5,7 @@
 package com.i_comit.windows;
 
 import static com.i_comit.windows.FileHider.fileCt;
+import static com.i_comit.windows.GUI.listAllPaths;
 import static com.i_comit.windows.GUI.listPaths;
 import static com.i_comit.windows.HotFiler_T.folderWatcher;
 import java.io.File;
@@ -30,7 +31,7 @@ public class FileHider {
         try {
             Set<String> unique = new HashSet<>();
 
-            List<Path> paths = listPaths(path);
+            List<Path> paths = listAllPaths(path);
             List<String> duplicates = new ArrayList<>();
             List<String> duplStr = new ArrayList<>();
             int deletedFiles = 0;

@@ -38,6 +38,7 @@ public class Folder {
         deleteDirectory(Statics.sendFolder.toFile());
         Statics.resetSendTools(2);
         Main.dragDrop.setVisible(true);
+        Statics.resetStaticInts();
         GUI.getGB();
     }
 
@@ -160,7 +161,6 @@ public class Folder {
                 File newFile = new File(destDir + File.separator + fileName);
                 new File(newFile.getParent()).mkdirs();
                 FileOutputStream fos = new FileOutputStream(newFile);
-//                byte[] buffer = AES.dynamicBytes(newFile);
                 byte[] buffer = new byte[1024];
                 int len;
                 while ((len = zis.read(buffer)) > 0) {

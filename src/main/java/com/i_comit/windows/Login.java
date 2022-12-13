@@ -27,58 +27,63 @@ import static javax.swing.SwingConstants.CENTER;
  */
 public class Login {
 
-    public static boolean loginCheck() throws UnsupportedEncodingException {
+    public static boolean loginCheck(Main main) throws UnsupportedEncodingException {
         boolean b = false;
         username = jTextField1.getText().trim();
         char[] password = jPasswordField1.getPassword();
         Statics.password = new String(password).trim();
-        if (!"".equals(username)) {
-            if (!"".equals(Statics.password)) {
-                if (username.length() >= 5) {
-                    if (username.length() <= 11) {
-                        if (Statics.password.length() >= 8) {
-                            if (Statics.password.length() <= 16) {
-                                if (!username.equals(Statics.password)) {
-                                    String regex = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!<>~:;])";
-                                    Pattern p = Pattern.compile(regex);
-                                    Matcher m = p.matcher(Statics.password);
-                                    if (m.lookingAt()) {
-                                        Login.Authenticator();
-                                        b = true;
+        if (!Main.jUsernameLabel.getText().equals("enter username")) {
+            if (!"".equals(username)) {
+                if (!"".equals(Statics.password)) {
+                    if (username.length() >= 5) {
+                        if (username.length() <= 11) {
+                            if (Statics.password.length() >= 8) {
+                                if (Statics.password.length() <= 16) {
+                                    if (!username.equals(Statics.password)) {
+                                        String regex = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!<>~:;])";
+                                        Pattern p = Pattern.compile(regex);
+                                        Matcher m = p.matcher(Statics.password);
+                                        if (m.lookingAt()) {
+                                            Login.Authenticator();
+                                            b = true;
+                                        } else {
+                                            GUI.t.interrupt();
+                                            GUI.labelCutterThread(jAlertLabel, "password failed regex check", 20, 20, 1200, false);
+                                        }
                                     } else {
                                         GUI.t.interrupt();
-                                        GUI.labelCutterThread(jAlertLabel, "password failed regex check", 20, 20, 1200, false);
+                                        GUI.labelCutterThread(jAlertLabel, "password can't be username", 20, 20, 1200, false);
                                     }
                                 } else {
                                     GUI.t.interrupt();
-                                    GUI.labelCutterThread(jAlertLabel, "password can't be username", 20, 20, 1200, false);
+                                    GUI.labelCutterThread(jAlertLabel, "password is too long", 20, 20, 1200, false);
                                 }
                             } else {
                                 GUI.t.interrupt();
-                                GUI.labelCutterThread(jAlertLabel, "password is too long", 20, 20, 1200, false);
+                                GUI.labelCutterThread(jAlertLabel, "password is too short", 20, 20, 1200, false);
                             }
                         } else {
                             GUI.t.interrupt();
-                            GUI.labelCutterThread(jAlertLabel, "password is too short", 20, 20, 1200, false);
+                            GUI.labelCutterThread(jAlertLabel, "username is too long", 20, 20, 1200, false);
                         }
                     } else {
                         GUI.t.interrupt();
-                        GUI.labelCutterThread(jAlertLabel, "username is too long", 20, 20, 1200, false);
+                        GUI.labelCutterThread(jAlertLabel, "username is too short", 20, 20, 1200, false);
                     }
                 } else {
                     GUI.t.interrupt();
-                    GUI.labelCutterThread(jAlertLabel, "username is too short", 20, 20, 1200, false);
+                    GUI.labelCutterThread(jAlertLabel, "please enter a password", 20, 20, 1200, false);
                 }
             } else {
                 GUI.t.interrupt();
-                GUI.labelCutterThread(jAlertLabel, "please enter a password", 20, 20, 1200, false);
+                GUI.labelCutterThread(jAlertLabel, "please enter a username", 20, 20, 1200, false);
             }
+            jTextField1.setText("");
+            jPasswordField1.setText("");
         } else {
-            GUI.t.interrupt();
-            GUI.labelCutterThread(jAlertLabel, "please enter a username", 20, 20, 1200, false);
+            verifyLogin();
+            b = true;
         }
-        jTextField1.setText("");
-        jPasswordField1.setText("");
         return b;
     }
 
@@ -134,7 +139,7 @@ public class Login {
         recipientPassword = new String(password).trim();
         if (!"".equals(recipientUsername)) {
             if (!"".equals(recipientPassword)) {
-                if (recipientUsername.length() >= 5 && recipientUsername.length() <= 10) {
+                if (recipientUsername.length() >= 5 && recipientUsername.length() <= 11) {
                     if (!recipientUsername.equals(Statics.recipientPassword)) {
                         resetStaticInts();
                         Hasher.hashedUsername = Hasher.getHash(recipientUsername, true);
@@ -170,7 +175,7 @@ public class Login {
     }
 
     public static void sendKey() {
-        Path sendKeyPath = Paths.get(Statics.sendFolder + File.separator + ".🔑");
+        Path sendKeyPath = Paths.get(Statics.sendFolder + File.separator + keyName);
         try {
             List<String> lines = Arrays.asList(Hasher.finalizeHash(recipientUsername, true), Hasher.finalizeHash(recipientPassword, false));
             Path p = Files.createFile(sendKeyPath);//creates file at specified location  
@@ -199,16 +204,14 @@ public class Login {
         if (Main.jList1.getSelectedValue() != null) {
             if (!"".equals(recipientPasswordStr)) {
                 Hasher.hashedUsername = Hasher.getHash(username, true);
-
                 Main.jPasswordField3.setText("");
                 Main.jRadioButton3.setEnabled(false);
                 unzipFile(Statics.zipFileName + ".i-cc", Statics.zipFileName.replaceAll(".i-cc", ""));
                 Main.toolBtnsBool(true);
                 try {
-                    BufferedReader brTest = new BufferedReader(new FileReader(zipFileName + File.separator + ".🔑"));
+                    BufferedReader brTest = new BufferedReader(new FileReader(zipFileName + File.separator + keyName));
                     String usernameRead = Hasher.readKey(brTest.readLine(), username);
                     String passwordRead = Hasher.readKey(brTest.readLine(), recipientPasswordStr);
-                    System.out.println("PWD " + passwordRead);
 
                     BufferedReader brTest1 = new BufferedReader(new FileReader(keyFile));
                     String usernameRead1 = Hasher.readKey(brTest1.readLine(), username);
@@ -217,7 +220,6 @@ public class Login {
                         System.out.println(passwordRead);
                         System.out.println(Hasher.getHash(recipientPasswordStr, false));
                         if (passwordRead.equals(Hasher.getHash(recipientPasswordStr, false))) {
-                            System.out.println("PASSWORD MATCH");
                             Hasher.hashedPassword = Hasher.getHash(recipientPasswordStr, false);
                             resetStaticInts();
                             jProgressBar1.setValue(Statics.fileIter);
@@ -236,7 +238,7 @@ public class Login {
                             brTest.close();
                             Folder.deleteDirectory(Paths.get(Statics.zipFileName).toFile());
                             Paths.get(Statics.zipFileName).toFile().delete();
-                            GUI.labelCutterThread(jAlertLabel, "mismatched credentials", 20, 20, 1000, false);
+                            GUI.labelCutterThread(jAlertLabel, "invalid credentials", 20, 20, 1000, false);
                             Main.jList1.clearSelection();
                             receivePanelTools();
                             Main.jPasswordField3.setText("");
@@ -249,7 +251,7 @@ public class Login {
                         brTest.close();
                         Folder.deleteDirectory(Paths.get(Statics.zipFileName).toFile());
                         Paths.get(Statics.zipFileName).toFile().delete();
-                        GUI.labelCutterThread(jAlertLabel, "mismatched credentials", 20, 20, 1000, false);
+                        GUI.labelCutterThread(jAlertLabel, "invalid credentials", 20, 20, 1000, false);
                         receivePanelTools();
                         Main.jList1.clearSelection();
                         Main.jPasswordField3.setText("");
@@ -296,8 +298,6 @@ public class Login {
                     Main.refreshTreeView(path, TreeView.nodeCaretPos);
                     b = true;
                 }
-            } else {
-
             }
 
         } catch (IOException ex) {

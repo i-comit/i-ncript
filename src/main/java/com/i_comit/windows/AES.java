@@ -240,7 +240,7 @@ class AES_T implements Runnable {
                                     System.out.println("File Decryption Complete");
                                     if (toolMode == 1) {
                                         new File(Statics.zipFileName + ".i-cc").delete();
-                                        new File(Statics.zipFileName + File.separator + ".🔑").delete();
+                                        new File(Statics.zipFileName + File.separator + keyName).delete();
                                         Main.jList1.clearSelection();
                                         Statics.resetSendTools(toolMode);
                                         Main.jList1.setEnabled(true);
@@ -248,6 +248,7 @@ class AES_T implements Runnable {
                                         Main.toolBtnsBool(true);
                                     }
                                     GUI.resetProgressBar(jProgressBar1);
+                                    Statics.resetStaticInts();
                                 }
                                 break;
                         }

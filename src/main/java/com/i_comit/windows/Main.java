@@ -47,53 +47,53 @@ public class Main extends javax.swing.JFrame {
     public Main() {
 //        root = Paths.get("").toAbsolutePath().toString();
 //        if (Memory.checkWMIC()) {
-            root = root.substring(0, 3);
-            initComponents();
-            TreeView.renderTreeCells();
-            Memory.getUSBName(this);
+        root = root.substring(0, 3);
+        initComponents();
+        TreeView.renderTreeCells();
+        Memory.getUSBName(this);
 
-            Path runtime = Paths.get(root + masterFolder + "runtime");
-            Path app = Paths.get(root + masterFolder + "app");
-            if (runtime.toFile().exists()) {
-                try {
-                    Files.setAttribute(runtime, "dos:hidden", true);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+        Path runtime = Paths.get(root + masterFolder + "runtime");
+        Path app = Paths.get(root + masterFolder + "app");
+        if (runtime.toFile().exists()) {
+            try {
+                Files.setAttribute(runtime, "dos:hidden", true);
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-            if (app.toFile().exists()) {
-                try {
-                    Files.setAttribute(app, "dos:hidden", true);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+        }
+        if (app.toFile().exists()) {
+            try {
+                Files.setAttribute(app, "dos:hidden", true);
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
+        }
 
-            jStorePanel.setVisible(true);
-            jSendPanel.setVisible(false);
-            jReceivePanel.setVisible(false);
-            jRadioButton2.setVisible(false);
-            jRadioButton3.setVisible(false);
-            jScrollPane5.setVisible(false);
+        jStorePanel.setVisible(true);
+        jSendPanel.setVisible(false);
+        jReceivePanel.setVisible(false);
+        jRadioButton2.setVisible(false);
+        jRadioButton3.setVisible(false);
+        jScrollPane5.setVisible(false);
 
-            if (!keyFile.exists()) {
-                jToolPanel.setVisible(false);
-                loginLabelVisibleBool(false);
-                this.setSize(540, 240);
-                this.setLocationRelativeTo(null);
-            } else {
-                Memory.getHeapSize(this);
-                setKeybinding();
-                loginLabelVisibleBool(true);
-                jUsernameLabel.setText("enter username");
-                jPasswordLabel.setText("enter password");
-                generateFolders();
+        if (!keyFile.exists()) {
+            jToolPanel.setVisible(false);
+            loginLabelVisibleBool(false);
+            this.setSize(540, 240);
+            this.setLocationRelativeTo(null);
+        } else {
+            Memory.getHeapSize(this);
+            setKeybinding();
+            loginLabelVisibleBool(true);
+            jUsernameLabel.setText("enter username");
+            jPasswordLabel.setText("enter password");
+            generateFolders();
 
-                jToolPanel.setVisible(false);
-                jButton2.setVisible(false);
-            }
-            jProgressBar2.setVisible(false);
-            dragDrop.setVisible(false);
+            jToolPanel.setVisible(false);
+            jButton2.setVisible(false);
+        }
+        jProgressBar2.setVisible(false);
+        dragDrop.setVisible(false);
 //        }
     }
 
@@ -1105,12 +1105,12 @@ public class Main extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (jButton1.getText().equals("ENTER")) {
             try {
-                if (Login.loginCheck()) {
+                if (Login.loginCheck(this)) {
                     if (Login.verifyLogin()) {
                         collapseLogin(this);
                     } else {
                         GUI.t.interrupt();
-                        GUI.labelCutterThread(jAlertLabel, "incorrect login info", 45, 30, 900, false);
+                        GUI.labelCutterThread(jAlertLabel, "username or password is invalid.", 20, 40, 2000, false);
                     }
                 } else {
                 }
@@ -1153,12 +1153,12 @@ public class Main extends javax.swing.JFrame {
     private void jPasswordField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField1KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             try {
-                if (Login.loginCheck()) {
+                if (Login.loginCheck(this)) {
                     if (Login.verifyLogin()) {
                         collapseLogin(this);
                     } else {
                         GUI.t.interrupt();
-                        GUI.labelCutterThread(jAlertLabel, "incorrect login info", 45, 30, 900, false);
+                        GUI.labelCutterThread(jAlertLabel, "username or password is invalid.", 20, 40, 2000, false);
                     }
                 } else {
                 }
@@ -1268,7 +1268,6 @@ public class Main extends javax.swing.JFrame {
     private void jRadioButton3Evt(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3Evt
         zipFileCount = 0;
         zipIter = 0;
-        System.out.println("WTF");
         if (Login.verifySendKey(receiveFolder + File.separator + jList1.getSelectedValue())) {
             this.setSize(779, 266);
         } else {
@@ -1518,7 +1517,7 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JToggleButton jToggleButton2;
     public static javax.swing.JPanel jToolPanel;
     protected static javax.swing.JTree jTree1;
-    protected javax.swing.JLabel jUsernameLabel;
+    protected static javax.swing.JLabel jUsernameLabel;
     // End of variables declaration//GEN-END:variables
 
 }
