@@ -1,10 +1,7 @@
 package com.i_comit.windows;
 
-import static com.i_comit.windows.Statics.recipientPassword;
 import static com.i_comit.windows.Statics.username;
-import static com.i_comit.windows.Statics.zipFileName;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
