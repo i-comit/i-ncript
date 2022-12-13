@@ -38,7 +38,7 @@ public class Main extends javax.swing.JFrame {
     public static String appBundle = "";
     public static final String masterFolder = File.separator + "--------" + File.separator;
 
-    private final String appVer = "1.8.2";
+    private final String appVer = "1.8.3";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
     public static final int year = Year.now().getValue();
 
@@ -77,6 +77,7 @@ public class Main extends javax.swing.JFrame {
             }
             jProgressBar2.setVisible(false);
             dragDrop.setVisible(false);
+            Memory.checkUSBConnection();
         }
     }
 

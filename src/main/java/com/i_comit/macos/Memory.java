@@ -61,7 +61,7 @@ public class Memory {
         String s;
         try {
             Process process = Runtime.getRuntime().exec(logicaldisk);
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            try ( BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 reader.readLine();
                 while ((s = reader.readLine()) != null) {
                     if (s.trim().length() != 0) {
@@ -92,20 +92,17 @@ public class Memory {
                                         System.out.println("MAIN ROOT " + root);
                                         driveCheck.dispose();
                                         b = true;
-
                                     } else {
                                         System.out.println("-------- folder needs to be at USB root");
                                         driveCheck.setVisible(true);
                                         driveCheck.setDriveCheckText(4);
                                     }
-
                                 } else {
                                     System.out.println("App needs to be in a folder called -------- ");
                                     driveCheck.setVisible(true);
                                     driveCheck.setDriveCheckText(3);
                                 }
                                 break;
-
                             } else {
                                 driveCheck.setVisible(true);
                                 driveCheck.setDriveCheckText(1);
@@ -124,6 +121,40 @@ public class Memory {
         return b;
     }
 
+    public static void checkUSBConnection() {
+        Thread usbConnectionT = new Thread(() -> {
+            while (!(root + Main.masterFolder).equals("")) {
+                try {
+                    String diskUtil = String.format("diskutil list | grep '%s'", devPath);
+                    ProcessBuilder pb = new ProcessBuilder("bash", "-c", diskUtil);
+
+                    String s;
+                    try {
+                        Process sh = pb.start();
+                        try ( BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                            reader.readLine();
+                            while ((s = reader.readLine()) != null) {
+                                if (s.trim().length() != 0) {
+                                    break;
+                                }
+                            }
+                            if ((s = reader.readLine()) == null) {
+                                System.exit(0);
+                            }
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Thread.sleep(400);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        usbConnectionT.start();
+    }
+
     private static boolean checkBash2(String devPath) {
         String diskUtil = String.format("diskutil list | grep '%s'", devPath);
         ProcessBuilder pb = new ProcessBuilder("bash", "-c", diskUtil);
@@ -131,7 +162,7 @@ public class Memory {
         String s;
         try {
             Process sh = pb.start();
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(sh.getInputStream()))) {
+            try ( BufferedReader reader = new BufferedReader(new InputStreamReader(sh.getInputStream()))) {
                 while ((s = reader.readLine()) != null) {
                     if (s.trim().length() != 0) {
                         if (s.trim().contains("external, physical")) {
@@ -150,7 +181,7 @@ public class Memory {
 
     public static void getUSBName(Main main) {
         String usbName = Paths.get(root).toFile().getName().trim();
-        main.setTitle("i-ncript™ - "+usbName.toLowerCase().trim());
+        main.setTitle("i-ncript™ - " + usbName.toLowerCase().trim());
     }
 
     public static void byteMonitor(InputStream inputStream, File inputFile) throws IOException {

@@ -92,17 +92,22 @@ class DragDrop implements DropTargetListener {
                                 String sf = files.get(i).toString();
                                 filesf = new File(sf);
                                 paths.add(filesf.toPath());
-                                if (Statics.toolMode == 0) {
+                                if (Statics.toolMode == 0 || Statics.toolMode == 3) {
                                     if (i >= paths.size() - 1) {
                                         if (!b) {
                                             Statics.dragDropBool = true;
                                             if (!filesf.isDirectory()) {
                                                 if (!filesf.getName().endsWith(".i-cc")) {
-                                                Main.jButton2.setVisible(true);
-                                                Main.jProgressBar1.setMaximum(0);
-                                                jProgressBar1.setString("0% | 0/" + files.size());
-                                                AES.AESThread(paths, Statics.directory, false, 0);
-                                            } else {
+                                                    if (!filesf.getAbsolutePath().equals(root + masterFolder + "i-ncript.exe") && !filesf.getAbsolutePath().equals(root + masterFolder + ".🔑")) {
+                                                        Main.jButton2.setVisible(true);
+                                                        Main.jProgressBar1.setMaximum(0);
+                                                        jProgressBar1.setString("0% | 0/" + files.size());
+                                                        AES.AESThread(paths, Statics.directory, false, 0);
+                                                    } else {
+                                                        GUI.t.interrupt();
+                                                        GUI.labelCutterThread(Main.jAlertLabel, "can't encrypt app files", 10, 25, 750, false);
+                                                    }
+                                                } else {
                                                     GUI.t.interrupt();
                                                     GUI.labelCutterThread(Main.jAlertLabel, ".i-cc files are not allowed", 10, 25, 750, false);
                                                 }

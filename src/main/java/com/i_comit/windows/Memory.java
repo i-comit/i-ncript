@@ -154,7 +154,6 @@ public class Memory {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -201,6 +200,38 @@ public class Memory {
             e.printStackTrace();
         }
         return b;
+    }
+
+    public static void checkUSBConnection() {
+        Thread usbConnectionT = new Thread(() -> {
+            while (!(root + Main.masterFolder).equals("")) {
+                try {
+                    String logicaldisk = "wmic logicaldisk where name=" + "\"" + Main.root.substring(0, 2) + "\"" + " get deviceID";
+                    String s = "";
+                    try {
+                        Process process = Runtime.getRuntime().exec(logicaldisk);
+                        try ( BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                            reader.readLine();
+                            while ((s = reader.readLine()) != null) {
+                                if (s.trim().length() != 0) {
+                                    break;
+                                }
+                            }
+                            if ((s = reader.readLine()) == null) {
+                                System.exit(0);
+                            }
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Thread.sleep(400);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        usbConnectionT.start();
     }
 
     public static void byteMonitor(InputStream inputStream, File inputFile) throws IOException {
