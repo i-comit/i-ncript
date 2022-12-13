@@ -37,6 +37,7 @@ class DragDrop implements DropTargetListener {
     @Override
     public void drop(DropTargetDropEvent event) {
         boolean b = false;
+        Statics.resetStaticInts();
         event.acceptDrop(DnDConstants.ACTION_COPY);
         // Get the transfer which can provide the dropped item data
         Transferable transferable = event.getTransferable();
@@ -120,7 +121,6 @@ class DragDrop implements DropTargetListener {
                                                 jProgressBar1.setString("0% | 0/" + files.size());
                                                 AES.AESThread(paths, Statics.directory, false, 0);
                                             }
-                                            Statics.dragDropBool = false;
                                             b = true;
                                         }
                                     }
@@ -211,7 +211,9 @@ class DragDrop_T implements Runnable {
         try {
             Thread.sleep(400);
             AudioPlayer.audioPlayerThread("ding-sfx.wav");
-            GUI.labelCutterThread(jAlertLabel, decFiles + " encrypted | " + encFiles + " decrypted", 15, 30, 300, false);
+            GUI.labelCutterThread(jAlertLabel, decFiles + " encrypted | " + encFiles + " decrypted", 15, 30, 600, false);
+            Main.jTextArea1.append("--------------------------------------------\n\n");
+            Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
 
             Thread.sleep(300);
 
@@ -223,8 +225,6 @@ class DragDrop_T implements Runnable {
                 }
             }
             if (jProgressBar1.getValue() == 0) {
-                Statics.fileIter = 0;
-                Statics.fileCount = 0;
                 jProgressBar1.setValue(Statics.fileIter);
                 jProgressBar1.setStringPainted(false);
                 jProgressBar1.setVisible(false);

@@ -40,6 +40,7 @@ public class Folder {
         Main.dragDrop.setVisible(true);
         Statics.resetStaticInts();
         GUI.getGB();
+        Main.refreshTreeView(Statics.sendFolder, TreeView.sendCaretPos);
     }
 
     public static String firstLastChar(String username) {

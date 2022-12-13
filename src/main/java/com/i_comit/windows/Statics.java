@@ -258,6 +258,7 @@ public class Statics {
                     jTextArea1.append("decryption of " + fileIter + " files stopped at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
                     break;
             }
+            Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
         }
         resetStaticInts();
     }

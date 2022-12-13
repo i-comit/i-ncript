@@ -217,8 +217,6 @@ public class Login {
                     String usernameRead1 = Hasher.readKey(brTest1.readLine(), username);
 //
                     if (usernameRead.equals(usernameRead1)) {
-                        System.out.println(passwordRead);
-                        System.out.println(Hasher.getHash(recipientPasswordStr, false));
                         if (passwordRead.equals(Hasher.getHash(recipientPasswordStr, false))) {
                             Hasher.hashedPassword = Hasher.getHash(recipientPasswordStr, false);
                             resetStaticInts();

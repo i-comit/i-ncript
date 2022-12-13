@@ -1,10 +1,5 @@
 package com.i_comit.windows;
 
-import static com.i_comit.windows.Statics.username;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.Random;
 import java.io.UnsupportedEncodingException;
 
@@ -24,7 +19,6 @@ public class Hasher {
     public static String getHash(String hash, boolean hashBool) {
         String hash2 = finalizeHash(hash, hashBool);
         int firstHashIndex = (hash.length() + 5);
-//        System.out.println("GET HASH " + firstHashIndex);
 
         int secondHashIndex = (15 - hash.length()) + (hash.length() * 16) + 9;
         String[] hashIndices = {
@@ -40,7 +34,6 @@ public class Hasher {
     public static String readKey(String hash, String loginString) {
         int firstHashIndex = (loginString.length() + 5);
         int secondHashIndex = (15 - loginString.length()) + (loginString.length() * 16) + 9;
-//        System.out.println("READ KEY " + firstHashIndex);
 
         String[] hashIndices = {
             hash.substring(0, 4).trim(),
@@ -79,8 +72,6 @@ public class Hasher {
                 }
             }
             sb.append(parts[3]);
-//            System.out.println("REAL HASH "+ s1);
-//            System.out.println(sb + "\n OF " + hash);
         } catch (UnsupportedEncodingException ex) {
         }
         return sb.toString().trim();

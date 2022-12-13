@@ -197,12 +197,13 @@ public class GUI {
                         Main.jTextArea1.append("decrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
                         break;
                 }
+                Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
                 Thread.sleep(150);
                 if (Statics.fileIter <= 100) {
                     for (int x = progressBar.getMaximum(); x >= 0; x--) {
                         Thread.sleep(4);
                         progressBar.setValue(x);
-                        if (x == 1) {
+                        if (x <= 1) {
                             Main.progressbarBool = true;
                         }
                     }
@@ -210,7 +211,7 @@ public class GUI {
                     for (int x = progressBar.getMaximum(); x >= 0; x--) {
                         Thread.sleep(2);
                         progressBar.setValue(x);
-                        if (x == 1) {
+                        if (x <= 1) {
                             Main.progressbarBool = true;
                         }
                     }
@@ -240,22 +241,27 @@ public class GUI {
         if (progressBar == Main.jProgressBar2) {
             try {
                 Thread.sleep(50);
+                AudioPlayer.audioPlayerThread("ding-sfx.wav");
+                Main.jTextArea1.append("--------------------------------------------\n");
                 String fileName = new File(Folder.sendFolderStr).getName();
                 if (Statics.toolMode == 2) {
                     GUI.t.interrupt();
-                    GUI.labelCutterThread(jAlertLabel, "packaged " + fileName + ".i-cc", 10, 25, 500, false);
-                    Main.jTextArea1.append("packaged " + fileName + ".i-cc at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
+                    GUI.labelCutterThread(jAlertLabel, "packaged " + fileName + ".i-cc", 10, 15, 300, false);
+                    Main.jTextArea1.append("packaged " + fileName + ".i-cc at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
                 }
                 if (Statics.toolMode == 1) {
                     GUI.t.interrupt();
-                    GUI.labelCutterThread(jAlertLabel, "unpacked " + fileName + ".i-cc", 10, 25, 500, false);
-                    Main.jTextArea1.append("unpacked " + fileName + ".i-cc at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
+                    GUI.labelCutterThread(jAlertLabel, "unpacked " + fileName + ".i-cc", 10, 15, 300, false);
+                    Main.jTextArea1.append("unpacked " + fileName + ".i-cc at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
                 }
-                Thread.sleep(600);
+                Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
+                progressBar = Main.jProgressBar1;
+                Thread.sleep(200);
                 if (Statics.fileIter <= 100) {
                     for (int x = progressBar.getMaximum(); x >= 0; x--) {
                         Thread.sleep(4);
                         progressBar.setValue(x);
+                        Main.jProgressBar2.setValue(x);
                         if (x == 1) {
                             Main.progressbarBool = true;
                         }
@@ -271,6 +277,7 @@ public class GUI {
                 }
                 if (progressBar.getValue() == 0) {
                     progressBar.setStringPainted(false);
+                    Main.jProgressBar2.setStringPainted(false);
                     if (!Main.mouseOverLog) {
                         Main.jTabbedPane1.setSelectedIndex(0);
                     }
@@ -366,7 +373,7 @@ class logger_T implements Runnable {
             if (!Statics.dragDropBool) {
                 Main.jTextArea1.append(outputFile.getAbsolutePath().substring(20, outputFile.getPath().length()) + "\n");
             } else {
-                Main.jTextArea1.append(outputFile.getAbsolutePath() + "\n");
+                Main.jTextArea1.append(outputFile.getName() + "\n");
             }
             Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
         } catch (InterruptedException ex) {

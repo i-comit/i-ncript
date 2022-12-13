@@ -209,8 +209,9 @@ class AES_T implements Runnable {
                                         } catch (IOException ex) {
                                             ex.printStackTrace();
                                         }
+                                    } else {
+                                        GUI.resetProgressBar(jProgressBar1);
                                     }
-                                    GUI.resetProgressBar(jProgressBar1);
                                 }
                                 break;
                             case 1:
