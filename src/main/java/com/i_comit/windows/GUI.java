@@ -182,18 +182,19 @@ public class GUI {
             try {
                 Thread.sleep(50);
                 AudioPlayer.audioPlayerThread("ding-sfx.wav");
+                Main.jTextArea1.append("--------------------------------------------\n");
                 switch (Statics.AESMode) {
                     case 0:
                         GUI.t.interrupt();
                         GUI.t1.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "encrypted " + Statics.fileIter + " files", 10, 20, 400, false);
-                        Main.jTextArea1.append("encrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
+                        Main.jTextArea1.append("encrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
                         break;
                     case 1:
                         GUI.t.interrupt();
                         GUI.t1.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "decrypted " + Statics.fileIter + " files", 10, 20, 400, false);
-                        Main.jTextArea1.append("decrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
+                        Main.jTextArea1.append("decrypted " + Statics.fileIter + " files at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
                         break;
                 }
                 Thread.sleep(150);
@@ -270,7 +271,9 @@ public class GUI {
                 }
                 if (progressBar.getValue() == 0) {
                     progressBar.setStringPainted(false);
-                    Main.jTabbedPane1.setSelectedIndex(0);
+                    if (!Main.mouseOverLog) {
+                        Main.jTabbedPane1.setSelectedIndex(0);
+                    }
                     Main.jProgressBar2.setVisible(true);
                 }
             } catch (InterruptedException ex) {

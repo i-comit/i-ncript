@@ -249,12 +249,13 @@ public class Statics {
         main.setSize(779, 240);
 
         if (!AES.t.isAlive()) {
+            Main.jTextArea1.append("--------------------------------------------\n");
             switch (AESMode) {
                 case 0:
-                    jTextArea1.append("encryption of " + fileIter + " files stopped at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
+                    jTextArea1.append("encryption of " + fileIter + " files stopped at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
                     break;
                 case 1:
-                    jTextArea1.append("decryption of " + fileIter + " files stopped at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n");
+                    jTextArea1.append("decryption of " + fileIter + " files stopped at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
                     break;
             }
         }

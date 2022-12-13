@@ -244,7 +244,9 @@ class AES_T implements Runnable {
                                         Main.jList1.clearSelection();
                                         Statics.resetSendTools(toolMode);
                                         Main.jList1.setEnabled(true);
-                                        Main.jTabbedPane1.setSelectedIndex(0);
+                                        if (!Main.mouseOverLog) {
+                                            Main.jTabbedPane1.setSelectedIndex(0);
+                                        }
                                         Main.toolBtnsBool(true);
                                     }
                                     GUI.resetProgressBar(jProgressBar1);

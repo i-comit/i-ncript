@@ -98,7 +98,7 @@ class DragDrop implements DropTargetListener {
                                             Statics.dragDropBool = true;
                                             if (!filesf.isDirectory()) {
                                                 if (!filesf.getName().endsWith(".i-cc")) {
-                                                    if (!filesf.getAbsolutePath().equals(root + masterFolder + "i-ncript.exe") && !filesf.getAbsolutePath().equals(root + masterFolder + ".🔑")) {
+                                                    if (!filesf.getAbsolutePath().equals(root + masterFolder + "i-ncript.exe") && !filesf.getAbsolutePath().equals(root + masterFolder + ".⅄.🔑")) {
                                                         Main.jButton2.setVisible(true);
                                                         Main.jProgressBar1.setMaximum(0);
                                                         jProgressBar1.setString("0% | 0/" + files.size());
@@ -237,7 +237,9 @@ class DragDrop_T implements Runnable {
                 Main.dragDrop.setVisible(true);
                 Main.toolBtnsBool(true);
                 Main.jButton2.setVisible(false);
-                Main.jTabbedPane1.setSelectedIndex(0);
+                if (!Main.mouseOverLog) {
+                    Main.jTabbedPane1.setSelectedIndex(0);
+                }
                 AES_T.paths.clear();
             }
         } catch (InterruptedException ex) {
