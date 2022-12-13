@@ -55,7 +55,7 @@ public class Hasher {
     public static String finalizeHash(String hash, boolean hashBool) {
         StringBuilder sb = new StringBuilder();
         try {
-            String alphabet = "1234567890abcdefghijklmnopqrstuvwxyz!@#$;*|'<>+-~?:".toUpperCase();
+            String alphabet = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ".toUpperCase();
             String s1 = Strings.getHash64(joinHash(hash, hashBool));
             final int mid = s1.length() / 4; //get the middle of the String
             String[] parts = {s1.substring(0, mid), s1.substring(mid, mid * 2), s1.substring(mid * 2, mid * 3), s1.substring(mid * 3, mid * 4)};
@@ -193,16 +193,5 @@ public class Hasher {
             }
         }
         return result;
-    }
-
-    public static void main(String[] arg) throws FileNotFoundException, IOException {
-        System.out.println(getHash("12345", false));
-//        getHash("12345", false);
-//        System.out.println(readKey(finalizeHash("12345", false), "12345"));
-        System.out.println(finalizeHash("12345", false));
-        BufferedReader brTest = new BufferedReader(new FileReader("E:\\'--------'\\n-box\\H9-12134809\\.🔑"));
-        String usernameRead = Hasher.readKey(brTest.readLine(), username);
-
-        String passwordRead = Hasher.readKey(brTest.readLine(), "12345");
     }
 }

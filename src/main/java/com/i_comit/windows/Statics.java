@@ -25,7 +25,7 @@ public class Statics {
 
     public static int toolMode = 0;
 
-    public static final String folderName = "vault";
+    public static final String folderName = "ᴠᴀᴜʟᴛ";
     public static String rootFolder = root.substring(0, 3) + Main.masterFolder + folderName;
     public static final String keyName = "\\.⅄.🔑";
 
@@ -45,8 +45,8 @@ public class Statics {
     public static File[] contents = null;
 
     public static Path path = Paths.get(root + Main.masterFolder + folderName);
-    public static Path sendFolder = Paths.get(root + Main.masterFolder + "o-box");
-    public static Path receiveFolder = Paths.get(root + Main.masterFolder + "n-box");
+    public static Path sendFolder = Paths.get(root + Main.masterFolder + "ᴏ-ʙᴏx");
+    public static Path receiveFolder = Paths.get(root + Main.masterFolder + "ɴ-ʙᴏx");
 
     public static String username = "";
     public static String password = "";
@@ -149,7 +149,7 @@ public class Statics {
                 jLabel11.setText("MOVE .I-CC TO N-BOX");
                 dragDrop.setToolTipText("drop box will move dropped .i-cc file to n-box folder");
                 FileHider.cleanUp(receiveFolder);
-                TreeView.setRootName("n-box");
+                TreeView.setRootName("ɴ-ʙᴏx");
                 Main.refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
                 break;
             case 2:
@@ -171,7 +171,7 @@ public class Statics {
                 jLabel11.setText("MOVE FILES TO O-BOX");
                 dragDrop.setToolTipText("drop box will move files or folder into o-box folder");
                 FileHider.cleanUp(sendFolder);
-                TreeView.setRootName("o-box");
+                TreeView.setRootName("ᴏ-ʙᴏx");
                 Main.refreshTreeView(sendFolder, TreeView.sendCaretPos);
                 break;
             case 3:
@@ -188,7 +188,7 @@ public class Statics {
                 jLabel11.setText("ENCRYPT & DECRYPT");
                 dragDrop.setToolTipText("drop box will encrypt & decrypt any files dropped here");
                 FileHider.cleanUp(path);
-                TreeView.setRootName("vault");
+                TreeView.setRootName("ᴠᴀᴜʟᴛ");
                 Main.refreshTreeView(path, TreeView.nodeCaretPos);
                 toolMode = 0;
                 break;

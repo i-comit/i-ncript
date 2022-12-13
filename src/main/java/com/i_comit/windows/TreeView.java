@@ -37,7 +37,7 @@ import javax.swing.tree.TreePath;
  */
 public class TreeView {
 
-    public static DefaultMutableTreeNode treeRoot = new DefaultMutableTreeNode("vault"); // root node
+    public static DefaultMutableTreeNode treeRoot = new DefaultMutableTreeNode("ᴠᴀᴜʟᴛ"); // root node
     public static DefaultTreeModel model = new DefaultTreeModel(treeRoot);
 
     public static DefaultTreeModel populateStoreTree(Path path) {
@@ -213,7 +213,7 @@ public class TreeView {
     public static void expandTreeNode(Path path) {
         String fileName = path.toFile().getName();
         switch (fileName) {
-            case "vault":
+            case "ᴠᴀᴜʟᴛ":
                 for (DefaultMutableTreeNode pathx : dirNodeList) {
                     TreePath path2 = new TreePath(pathx.getPath());
                     for (TreePath treePath : treePaths) {
@@ -224,7 +224,7 @@ public class TreeView {
                 }
                 setCaretPos(nodeCaretPos);
                 break;
-            case "n-box":
+            case "ɴ-ʙᴏx":
                 for (DefaultMutableTreeNode pathx : receiveNodeList) {
                     TreePath path2 = new TreePath(pathx.getPath());
                     for (TreePath treePath : receiveTreePaths) {
@@ -235,7 +235,7 @@ public class TreeView {
                 }
                 setCaretPos(receiveCaretPos);
                 break;
-            case "o-box":
+            case "ᴏ-ʙᴏx":
                 for (DefaultMutableTreeNode pathx : sendNodeList) {
                     TreePath path2 = new TreePath(pathx.getPath());
                     for (TreePath treePath : sendTreePaths) {
