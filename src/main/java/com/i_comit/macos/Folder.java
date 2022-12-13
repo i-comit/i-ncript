@@ -102,24 +102,25 @@ public class Folder {
         try ( FileOutputStream fos = new FileOutputStream(zipFile);  ZipOutputStream zos = new ZipOutputStream(fos)) {
 
             for (String filePath : zipFileList) {
-                System.out.println("Compressing: " + filePath);
-                String name = filePath.substring(directory.getAbsolutePath().length() + 1);
-                ZipEntry zipEntry = new ZipEntry(name);
-                zos.putNextEntry(zipEntry);
+                if (!filePath.endsWith(".i-cc")) {
+                    System.out.println("Compressing: " + filePath);
+                    String name = filePath.substring(directory.getAbsolutePath().length() + 1);
+                    ZipEntry zipEntry = new ZipEntry(name);
+                    zos.putNextEntry(zipEntry);
 
-                // Read file content and write to zip output stream.
-                try ( FileInputStream fis = new FileInputStream(filePath)) {
-                    byte[] buffer = new byte[1024];
-                    int length;
-                    while ((length = fis.read(buffer)) > 0) {
-                        zos.write(buffer, 0, length);
+                    try ( FileInputStream fis = new FileInputStream(filePath)) {
+                        byte[] buffer = new byte[1024];
+                        int length;
+                        while ((length = fis.read(buffer)) > 0) {
+                            zos.write(buffer, 0, length);
+                        }
+
+                        zos.closeEntry();
+                        Statics.zipIter++;
+                        Main.jProgressBar2.setValue(Statics.zipIter);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-
-                    zos.closeEntry();
-                    Statics.zipIter++;
-                    Main.jProgressBar2.setValue(Statics.zipIter);
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
         } catch (IOException e) {

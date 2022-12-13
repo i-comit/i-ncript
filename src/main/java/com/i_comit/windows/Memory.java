@@ -173,24 +173,23 @@ public class Memory {
                                     if (root.length() == 13) {
                                         b = true;
                                     } else {
-                                        DriveCheck.driveState = 4;
+                                        DriveCheck.driveState = 3;
                                         new DriveCheck().setVisible(true);
-                                        b = false;
+                                        checkUSBConnection();
                                     }
                                 } else {
-                                    DriveCheck.driveState = 3;
+                                    DriveCheck.driveState = 2;
                                     new DriveCheck().setVisible(true);
-                                    b = false;
+                                    checkUSBConnection();
                                 }
                             } else {
-                                DriveCheck.driveState = 3;
+                                DriveCheck.driveState = 2;
                                 new DriveCheck().setVisible(true);
-                                b = false;
+                                checkUSBConnection();
                             }
                         } else {
                             DriveCheck.driveState = 1;
                             new DriveCheck().setVisible(true);
-                            b = false;
                         }
                     }
                 }

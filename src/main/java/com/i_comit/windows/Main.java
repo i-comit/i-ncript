@@ -94,7 +94,6 @@ public class Main extends javax.swing.JFrame {
             }
             jProgressBar2.setVisible(false);
             dragDrop.setVisible(false);
-            Memory.checkUSBConnection();
         }
     }
 

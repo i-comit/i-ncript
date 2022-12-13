@@ -96,11 +96,13 @@ public class Memory {
                                         System.out.println("-------- folder needs to be at USB root");
                                         driveCheck.setVisible(true);
                                         driveCheck.setDriveCheckText(4);
+                                        checkUSBConnection();
                                     }
                                 } else {
                                     System.out.println("App needs to be in a folder called -------- ");
                                     driveCheck.setVisible(true);
                                     driveCheck.setDriveCheckText(3);
+                                    checkUSBConnection();
                                 }
                                 break;
                             } else {
@@ -122,37 +124,37 @@ public class Memory {
     }
 
     public static void checkUSBConnection() {
-        Thread usbConnectionT = new Thread(() -> {
-            while (!(root + Main.masterFolder).equals("")) {
-                try {
-                    String diskUtil = String.format("diskutil list | grep '%s'", devPath);
-                    ProcessBuilder pb = new ProcessBuilder("bash", "-c", diskUtil);
-
-                    String s;
-                    try {
-                        Process sh = pb.start();
-                        try ( BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-                            reader.readLine();
-                            while ((s = reader.readLine()) != null) {
-                                if (s.trim().length() != 0) {
-                                    break;
-                                }
-                            }
-                            if ((s = reader.readLine()) == null) {
-                                System.exit(0);
-                            }
-                        }
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    Thread.sleep(400);
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-        usbConnectionT.start();
+//        Thread usbConnectionT = new Thread(() -> {
+////            while (!(root + Main.masterFolder).equals("")) {
+////                try {
+////                    String diskUtil = String.format("diskutil list | grep '%s'", devPath);
+////                    ProcessBuilder pb = new ProcessBuilder("bash", "-c", diskUtil);
+////
+////                    String s;
+////                    try {
+////                        Process sh = pb.start();
+////                        try ( BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+////                            reader.readLine();
+////                            while ((s = reader.readLine()) != null) {
+////                                if (s.trim().length() != 0) {
+////                                    break;
+////                                }
+////                            }
+////                            if ((s = reader.readLine()) == null) {
+////                                System.exit(0);
+////                            }
+////                        }
+////
+////                    } catch (IOException e) {
+////                        e.printStackTrace();
+////                    }
+////                    Thread.sleep(400);
+////                } catch (InterruptedException ex) {
+////                    ex.printStackTrace();
+////                }
+////            }
+//        });
+//        usbConnectionT.start();
     }
 
     private static boolean checkBash2(String devPath) {

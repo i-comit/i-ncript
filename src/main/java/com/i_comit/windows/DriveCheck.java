@@ -31,14 +31,10 @@ public class DriveCheck extends javax.swing.JFrame {
                 goWebsite(jLabel2, "within a ", "https://i-comit.com", "USB device", false);
             break;
             case 2:
-                jLabel1.setText("i-ncript can not run");
-                jLabel2.setText("with this USB drive");
-            break;
-            case 3:
                 jLabel1.setText("i-ncript must be in a");
                 jLabel2.setText("folder named '-------'");
             break;
-            case 4:
+            case 3:
                 goWebsite(jLabel1, "the folder with ", "https://i-comit.com/i-ncript/", "i-ncript", false);
                 jLabel2.setText("must be placed at root");
             break;
