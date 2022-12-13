@@ -364,20 +364,7 @@ class logger_T implements Runnable {
         try {
             Thread.sleep(30);
             if (!Statics.dragDropBool) {
-                switch (toolMode) {
-                    case 0:
-                        Main.jTextArea1.append(outputFile.getAbsolutePath().substring(20, outputFile.getPath().length()) + "\n");
-                        break;
-                    case 1:
-                        Main.jTextArea1.append(outputFile.getAbsolutePath().substring(19, outputFile.getPath().length()) + "\n");
-                        break;
-                    case 2:
-                        Main.jTextArea1.append(outputFile.getAbsolutePath().substring(19, outputFile.getPath().length()) + "\n");
-                        break;
-                    case 3:
-                        Main.jTextArea1.append(outputFile.getAbsolutePath().substring(20, outputFile.getPath().length()) + "\n");
-                        break;
-                }
+                Main.jTextArea1.append(outputFile.getAbsolutePath().substring(20, outputFile.getPath().length()) + "\n");
             } else {
                 Main.jTextArea1.append(outputFile.getAbsolutePath() + "\n");
             }
