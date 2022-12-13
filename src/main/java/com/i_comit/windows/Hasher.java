@@ -1,6 +1,10 @@
 package com.i_comit.windows;
 
 import java.util.Random;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -19,15 +23,22 @@ public class Hasher {
 
     public static String getHash(String hash, boolean hashBool) {
         String hash2 = finalizeHash(hash, hashBool);
-        int firstHashIndex = (hash.length() + 2) * 8;
-
-        int secondHashIndex = (hash.length() + 17) * 8;
-        String[] hashIndices = {hash2.substring(0, 8).trim(),
-            hash2.substring(firstHashIndex, firstHashIndex + 8).trim(),
-            hash2.substring(secondHashIndex, secondHashIndex + 8).trim(),
-            hash2.substring(hash2.length() - 8, hash2.length())};
+        int firstHashIndex = (hash.length() + 5);
+        System.out.println("FIRST " + firstHashIndex);
+        int secondHashIndex = (15 - hash.length()) + (hash.length() * 16) + 9;
+        String[] hashIndices = {
+            hash2.substring(0, 4).trim(),
+            hash2.substring(firstHashIndex, firstHashIndex + 4).trim(),
+            hash2.substring(secondHashIndex, secondHashIndex + 4).trim(),
+            hash2.substring(hash2.length() - 4, hash2.length())};
 
         String finalHash = hashIndices[0] + hashIndices[1] + hashIndices[2] + hashIndices[3];
+//        System.out.println(hashIndices[0]);
+        int i = 0;
+
+        for (String hashIndex : hashIndices) {
+            System.out.println(hashIndex + " " + i++);
+        }
         return finalHash;
     }
 
@@ -46,35 +57,39 @@ public class Hasher {
 
     public static String finalizeHash(String hash, boolean hashBool) {
         StringBuilder sb = new StringBuilder();
+        try {
+            String alphabet = "1234567890abcdefghijklmnopqrstuvwxyz!@#$*".toUpperCase();
+            String s1 = Strings.getHash64(joinHash(hash, hashBool));
+//            String s1 = joinHash(hash, hashBool);
+            final int mid = s1.length() / 4; //get the middle of the String
+            String[] parts = {s1.substring(0, mid), s1.substring(mid, mid * 2), s1.substring(mid * 2, mid * 3), s1.substring(mid * 3, mid * 4)};
+            //Convert to 32bit
 
-        String s1 = joinHash(hash, hashBool);
-        final int mid = s1.length() / 4; //get the middle of the String
-        String[] parts = {s1.substring(0, mid), s1.substring(mid, mid * 2), s1.substring(mid * 2, mid * 3), s1.substring(mid * 3, mid * 4)};
-        //Convert to 32bit
+            sb.append(parts[0]);
+            for (int i = 0; i < hash.length() * 16; i++) {
+                Random rand = new Random();
+                char alphabetChar = alphabet.charAt(rand.nextInt(alphabet.length()));
+                sb.append(alphabetChar);
+                if (i == hash.length()) {
+                    sb.append(parts[1]);
+                }
+            }
+            int remainder = 15 - hash.length();
+            for (int i = 0; i < remainder * 16; i++) {
+                Random rand1 = new Random();
+                char alphabetChar = alphabet.charAt(rand1.nextInt(alphabet.length()));
+                sb.append(alphabetChar);
+                if (i == remainder) {
+                    sb.append(parts[2]);
+                }
+            }
+            sb.append(parts[3]);
+            System.out.println("REAL HASH " + s1);
 
-        sb.append(parts[0]);
-        for (int i = 0; i < hash.length() * 2; i++) {
-            Random rand = new Random();
-            // Generate random 8bit int
-            int rand_int1 = rand.nextInt(max + 1 - min) + min;
-            sb.append(String.valueOf(rand_int1));
-            if (i == hash.length()) {
-                sb.append(parts[1]);
-            }
+        } catch (UnsupportedEncodingException ex) {
+            ex.printStackTrace();
         }
-        int remainder = 14 - hash.length();
-        for (int i = 0; i < remainder * 2; i++) {
-            Random rand = new Random();
-            // Generate random 8bit int
-            int rand_int1 = rand.nextInt(max + 1 - min) + min;
-            sb.append(String.valueOf(rand_int1));
-            if (i == remainder) {
-                sb.append(parts[2]);
-            }
-        }
-        sb.append(parts[3]);
         return sb.toString().trim();
-
     }
 
     public static String joinHash(String hash, boolean hashBool) {
@@ -106,7 +121,7 @@ public class Hasher {
                 sb.append(numReverser(sbInt));
                 sb.append(sbInt);
                 username = sb.toString();
-            break;
+                break;
             case 8:
                 hashTrimmer = pw / 1;
                 sbInt = (int) Math.sqrt(hashTrimmer);
@@ -114,7 +129,7 @@ public class Hasher {
                 sb.append(numReverser(sbInt));
                 sb.append(numReverser(hashTrimmer));
                 username = sb.toString();
-            break;
+                break;
             case 9:
                 hashTrimmer = pw / 10;
                 sbInt = (int) Math.sqrt(hashTrimmer);
@@ -122,14 +137,15 @@ public class Hasher {
                 sb.append(sbInt);
                 sb.append(numReverser(sbInt));
                 username = sb.toString();
-            break;
+                break;
             case 10:
                 hashTrimmer = pw / 100;
                 sb.append(hashTrimmer);
                 sb.append(numReverser(hashTrimmer));
                 username = sb.toString();
-            break;
-            default:break;
+                break;
+            default:
+                break;
         }
         return numPadder(username);
     }
@@ -152,7 +168,7 @@ public class Hasher {
                 sb.append(sbInt);
                 sb.append(numReverser(sbInt));
                 password = sb.toString();
-            break;
+                break;
             case 8:
                 hashTrimmer = pw / 1;
                 sbInt = (int) Math.sqrt(hashTrimmer);
@@ -160,7 +176,7 @@ public class Hasher {
                 sb.append(numReverser(hashTrimmer));
                 sb.append(numReverser(sbInt));
                 password = sb.toString();
-            break;
+                break;
             case 9:
                 hashTrimmer = pw / 10;
                 sbInt = (int) Math.sqrt(hashTrimmer);
@@ -168,14 +184,15 @@ public class Hasher {
                 sb.append(hashTrimmer);
                 sb.append(sbInt);
                 password = sb.toString();
-            break;
+                break;
             case 10:
                 hashTrimmer = pw / 100;
                 sb.append(numReverser(hashTrimmer));
                 sb.append(hashTrimmer);
                 password = sb.toString();
-            break;
-            default: break;
+                break;
+            default:
+                break;
         }
         return numPadder(password);
     }
@@ -238,4 +255,43 @@ public class Hasher {
         }
         return result;
     }
+
+    public static void main(String[] args) throws UnsupportedEncodingException {
+
+//        System.out.println(getHash("Harel18", true));
+//        System.out.println(getHash("Harel19", true));
+//        System.out.println(getHash("Harel20", true));
+//
+//        System.out.println("Harel18".hashCode());
+//        System.out.println("harel18".hashCode());
+//
+//        System.out.println("");
+//        System.out.println(Strings.getHash64("harel18"));
+//        System.out.println(Strings.getHash64("Ha19"));
+//        System.out.println(Strings.getHash64("213213213214sdsaHarel2`13"));
+//
+//        System.out.println("SUS");
+////        System.out.println(getHash(Strings.getHash64("Harel18"), true));
+////        System.out.println(getHash(Strings.getHash64("Harel19"), true));
+//
+//        System.out.println("");
+////        System.out.println(generateChars("harel19"));
+//        System.out.println("");
+//        System.out.println(finalizeHash("12345", true));
+//        System.out.println(getHash("12345", true));
+//        System.out.println(finalizeHash("12345", true).equals(getHash("12345", true)));
+        System.out.println(finalizeHash("12345", false));
+        System.out.println(getHash("12345", false));
+//        
+        System.out.println(finalizeHash("Harel19", false));
+        System.out.println(getHash("Harel19", false));
+        System.out.println(finalizeHash("Harel182", false));
+        System.out.println(getHash("Harel182", false));
+
+        System.out.println(finalizeHash("khiemluong", true));
+        System.out.println(getHash("khiemluong", true));
+        System.out.println(finalizeHash("12345", true));
+        System.out.println(getHash("12345", true));
+    }
+
 }

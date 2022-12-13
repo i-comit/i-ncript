@@ -35,7 +35,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "";
+    public static String root = "D:\\";
     public static final String masterFolder = "'--------'" + File.separator;
 
     private final String appVer = "1.8.3";
@@ -45,8 +45,8 @@ public class Main extends javax.swing.JFrame {
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
 
     public Main() {
-        root = Paths.get("").toAbsolutePath().toString();
-        if (Memory.checkWMIC()) {
+//        root = Paths.get("").toAbsolutePath().toString();
+//        if (Memory.checkWMIC()) {
             root = root.substring(0, 3);
             initComponents();
             TreeView.renderTreeCells();
@@ -94,7 +94,7 @@ public class Main extends javax.swing.JFrame {
             }
             jProgressBar2.setVisible(false);
             dragDrop.setVisible(false);
-        }
+//        }
     }
 
     private void getKeyBinding(int keyCode, JPanel jPanel, AbstractAction action) {

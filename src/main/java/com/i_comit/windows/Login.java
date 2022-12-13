@@ -186,7 +186,7 @@ public class Login {
         }
         zipFileName = zipFileN;
 
-        recipientPassword = new String(password);
+        String recipientPasswordStr = new String(password);
         if (Main.jList1.getSelectedValue() != null) {
             if (!"".equals(recipientPassword)) {
                 Hasher.hashedUsername = Hasher.getHash(username, true);
@@ -204,7 +204,7 @@ public class Login {
                     String usernameRead1 = Hasher.readKey(brTest1.readLine(), username);
 //
                     if (usernameRead.equals(usernameRead1)) {
-                        if (passwordRead.equals(Hasher.getHash(recipientPassword, false))) {
+                        if (passwordRead.equals(Hasher.getHash(recipientPasswordStr, false))) {
                             resetStaticInts();
                             jProgressBar1.setValue(Statics.fileIter);
                             jProgressBar1.setValue(Statics.fileCount);
@@ -265,6 +265,11 @@ public class Login {
             BufferedReader brTest = new BufferedReader(new FileReader(keyFile));
             String usernameRead = Hasher.readKey(brTest.readLine(), username);
             String passwordRead = Hasher.readKey(brTest.readLine(), password);
+            System.out.println("VERIFY USER " + Hasher.getHash(username, true));
+            System.out.println("VERIFY USER1 " + usernameRead);
+
+            System.out.println("VERIFY PSWD " + passwordRead);
+
             if (usernameRead.equals(Hasher.getHash(username, true))) {
                 if (passwordRead.equals(Hasher.getHash(password, false))) {
                     Hasher.hashedUsername = Hasher.getHash(username, true);

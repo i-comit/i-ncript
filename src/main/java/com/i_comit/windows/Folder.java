@@ -103,14 +103,15 @@ public class Folder {
 
             for (String filePath : zipFileList) {
                 if (!filePath.endsWith(".i-cc")) {
-                    System.out.println("Compressing: " + filePath);
+                    File filePathF = Paths.get(filePath).toFile();
+                    System.out.println("Compressing: " + filePathF);
                     String name = filePath.substring(directory.getAbsolutePath().length() + 1);
                     ZipEntry zipEntry = new ZipEntry(name);
                     zos.putNextEntry(zipEntry);
 
                     // Read file content and write to zip output stream.
                     try ( FileInputStream fis = new FileInputStream(filePath)) {
-                        byte[] buffer = new byte[1024];
+                        byte[] buffer = AES.dynamicBytes(filePathF);
                         int length;
                         while ((length = fis.read(buffer)) > 0) {
                             zos.write(buffer, 0, length);
@@ -150,7 +151,6 @@ public class Folder {
         }
         FileInputStream fis;
         //buffer for read and write data to file
-        byte[] buffer = new byte[1024];
         try {
             fis = new FileInputStream(zipFilePath);
             ZipInputStream zis = new ZipInputStream(fis);
@@ -160,6 +160,8 @@ public class Folder {
                 File newFile = new File(destDir + File.separator + fileName);
                 new File(newFile.getParent()).mkdirs();
                 FileOutputStream fos = new FileOutputStream(newFile);
+//                byte[] buffer = AES.dynamicBytes(newFile);
+                byte[] buffer = new byte[1024];
                 int len;
                 while ((len = zis.read(buffer)) > 0) {
                     fos.write(buffer, 0, len);
