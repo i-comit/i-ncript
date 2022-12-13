@@ -17,6 +17,8 @@ import static com.i_comit.windows.Statics.*;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import static javax.swing.SwingConstants.CENTER;
 
 /**
@@ -25,20 +27,28 @@ import static javax.swing.SwingConstants.CENTER;
  */
 public class Login {
 
-    public static boolean loginCheck() {
+    public static boolean loginCheck() throws UnsupportedEncodingException {
         boolean b = false;
+        username = jTextField1.getText().trim();
         char[] password = jPasswordField1.getPassword();
-        username = jTextField1.getText();
-        Statics.password = new String(password);
+        Statics.password = new String(password).trim();
         if (!"".equals(username)) {
             if (!"".equals(Statics.password)) {
                 if (username.length() >= 5) {
-                    if (username.length() <= 10) {
-                        if (Statics.password.length() >= 5) {
-                            if (Statics.password.length() <= 10) {
+                    if (username.length() <= 11) {
+                        if (Statics.password.length() >= 8) {
+                            if (Statics.password.length() <= 16) {
                                 if (!username.equals(Statics.password)) {
-                                    Login.Authenticator();
-                                    b = true;
+                                    String regex = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!<>~:;])";
+                                    Pattern p = Pattern.compile(regex);
+                                    Matcher m = p.matcher(Statics.password);
+                                    if (m.lookingAt()) {
+                                        Login.Authenticator();
+                                        b = true;
+                                    } else {
+                                        GUI.t.interrupt();
+                                        GUI.labelCutterThread(jAlertLabel, "password failed regex check", 20, 20, 1200, false);
+                                    }
                                 } else {
                                     GUI.t.interrupt();
                                     GUI.labelCutterThread(jAlertLabel, "password can't be username", 20, 20, 1200, false);
@@ -120,8 +130,8 @@ public class Login {
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
-        recipientUsername = Main.jTextField2.getText();
-        recipientPassword = new String(password);
+        recipientUsername = Main.jTextField2.getText().trim();
+        recipientPassword = new String(password).trim();
         if (!"".equals(recipientUsername)) {
             if (!"".equals(recipientPassword)) {
                 if (recipientUsername.length() >= 5 && recipientUsername.length() <= 10) {
@@ -185,12 +195,11 @@ public class Login {
             GUI.t.interrupt();
         }
         zipFileName = zipFileN;
-
         String recipientPasswordStr = new String(password);
         if (Main.jList1.getSelectedValue() != null) {
-            if (!"".equals(recipientPassword)) {
+            if (!"".equals(recipientPasswordStr)) {
                 Hasher.hashedUsername = Hasher.getHash(username, true);
-                Hasher.hashedPassword = Hasher.getHash(recipientPassword, false);
+
                 Main.jPasswordField3.setText("");
                 Main.jRadioButton3.setEnabled(false);
                 unzipFile(Statics.zipFileName + ".i-cc", Statics.zipFileName.replaceAll(".i-cc", ""));
@@ -198,13 +207,18 @@ public class Login {
                 try {
                     BufferedReader brTest = new BufferedReader(new FileReader(zipFileName + File.separator + ".🔑"));
                     String usernameRead = Hasher.readKey(brTest.readLine(), username);
-                    String passwordRead = Hasher.readKey(brTest.readLine(), recipientPassword);
+                    String passwordRead = Hasher.readKey(brTest.readLine(), recipientPasswordStr);
+                    System.out.println("PWD " + passwordRead);
 
                     BufferedReader brTest1 = new BufferedReader(new FileReader(keyFile));
                     String usernameRead1 = Hasher.readKey(brTest1.readLine(), username);
 //
                     if (usernameRead.equals(usernameRead1)) {
+                        System.out.println(passwordRead);
+                        System.out.println(Hasher.getHash(recipientPasswordStr, false));
                         if (passwordRead.equals(Hasher.getHash(recipientPasswordStr, false))) {
+                            System.out.println("PASSWORD MATCH");
+                            Hasher.hashedPassword = Hasher.getHash(recipientPasswordStr, false);
                             resetStaticInts();
                             jProgressBar1.setValue(Statics.fileIter);
                             jProgressBar1.setValue(Statics.fileCount);
@@ -265,10 +279,6 @@ public class Login {
             BufferedReader brTest = new BufferedReader(new FileReader(keyFile));
             String usernameRead = Hasher.readKey(brTest.readLine(), username);
             String passwordRead = Hasher.readKey(brTest.readLine(), password);
-            System.out.println("VERIFY USER " + Hasher.getHash(username, true));
-            System.out.println("VERIFY USER1 " + usernameRead);
-
-            System.out.println("VERIFY PSWD " + passwordRead);
 
             if (usernameRead.equals(Hasher.getHash(username, true))) {
                 if (passwordRead.equals(Hasher.getHash(password, false))) {

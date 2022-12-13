@@ -1,10 +1,15 @@
 package com.i_comit.windows;
 
+import static com.i_comit.windows.Statics.recipientPassword;
+import static com.i_comit.windows.Statics.username;
+import static com.i_comit.windows.Statics.zipFileName;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Random;
 import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -18,13 +23,12 @@ public class Hasher {
 
     public static String hashedPassword;
     public static String hashedUsername;
-    private static final int min = 10000000;
-    private static final int max = 99999999;
 
     public static String getHash(String hash, boolean hashBool) {
         String hash2 = finalizeHash(hash, hashBool);
         int firstHashIndex = (hash.length() + 5);
-        System.out.println("FIRST " + firstHashIndex);
+//        System.out.println("GET HASH " + firstHashIndex);
+
         int secondHashIndex = (15 - hash.length()) + (hash.length() * 16) + 9;
         String[] hashIndices = {
             hash2.substring(0, 4).trim(),
@@ -33,23 +37,19 @@ public class Hasher {
             hash2.substring(hash2.length() - 4, hash2.length())};
 
         String finalHash = hashIndices[0] + hashIndices[1] + hashIndices[2] + hashIndices[3];
-//        System.out.println(hashIndices[0]);
-        int i = 0;
-
-        for (String hashIndex : hashIndices) {
-            System.out.println(hashIndex + " " + i++);
-        }
         return finalHash;
     }
 
     public static String readKey(String hash, String loginString) {
-        int firstHashIndex = (loginString.length() + 2) * 8;
-        int secondHashIndex = (loginString.length() + 17) * 8;
+        int firstHashIndex = (loginString.length() + 5);
+        int secondHashIndex = (15 - loginString.length()) + (loginString.length() * 16) + 9;
+//        System.out.println("READ KEY " + firstHashIndex);
 
-        String[] hashIndices = {hash.substring(0, 8).trim(),
-            hash.substring(firstHashIndex, firstHashIndex + 8).trim(),
-            hash.substring(secondHashIndex, secondHashIndex + 8).trim(),
-            hash.substring(hash.length() - 8, hash.length())};
+        String[] hashIndices = {
+            hash.substring(0, 4).trim(),
+            hash.substring(firstHashIndex, firstHashIndex + 4).trim(),
+            hash.substring(secondHashIndex, secondHashIndex + 4).trim(),
+            hash.substring(hash.length() - 4, hash.length())};
 
         String finalHash = hashIndices[0] + hashIndices[1] + hashIndices[2] + hashIndices[3];
         return finalHash;
@@ -58,12 +58,10 @@ public class Hasher {
     public static String finalizeHash(String hash, boolean hashBool) {
         StringBuilder sb = new StringBuilder();
         try {
-            String alphabet = "1234567890abcdefghijklmnopqrstuvwxyz!@#$*".toUpperCase();
+            String alphabet = "1234567890abcdefghijklmnopqrstuvwxyz!@#$;*|'<>+-~?:".toUpperCase();
             String s1 = Strings.getHash64(joinHash(hash, hashBool));
-//            String s1 = joinHash(hash, hashBool);
             final int mid = s1.length() / 4; //get the middle of the String
             String[] parts = {s1.substring(0, mid), s1.substring(mid, mid * 2), s1.substring(mid * 2, mid * 3), s1.substring(mid * 3, mid * 4)};
-            //Convert to 32bit
 
             sb.append(parts[0]);
             for (int i = 0; i < hash.length() * 16; i++) {
@@ -84,117 +82,72 @@ public class Hasher {
                 }
             }
             sb.append(parts[3]);
-            System.out.println("REAL HASH " + s1);
-
+//            System.out.println("REAL HASH "+ s1);
+//            System.out.println(sb + "\n OF " + hash);
         } catch (UnsupportedEncodingException ex) {
-            ex.printStackTrace();
         }
         return sb.toString().trim();
     }
 
-    public static String joinHash(String hash, boolean hashBool) {
+    public static String joinHash(String hash, boolean hashBool) throws UnsupportedEncodingException {
         if (hashBool) {
             String finalStr = hashUsername(caesarCipher(hash, hash.length()).toString()).trim() + hashUsername(hash);
             return finalStr;
-
         } else {
             String finalStr = hashPassword(hash) + hashPassword(caesarCipher(hash, hash.length() * 2).toString()).trim();
             return finalStr;
         }
     }
 
-    public static String hashUsername(String username) {
+    public static String hashUsername(String username) throws UnsupportedEncodingException {
         int pw = noNegatives(username.hashCode());
         int length = (int) (Math.log10(pw) + 1);
-
-        int hashTrimmer = 0;
-        int sbInt = 0;
-        StringBuilder sb = new StringBuilder();
-
+        String hash64Str = Strings.getHash64(username);
+        final int mid = hash64Str.length() / 4;
+        String[] parts = {hash64Str.substring(0, mid), hash64Str.substring(mid, mid * 2), hash64Str.substring(mid * 2, mid * 3), hash64Str.substring(mid * 3, mid * 4)};
         switch (length) {
             case 7:
-                hashTrimmer = pw / 1000;
-                //Trims to 4 digits
-                sb.append(numReverser(hashTrimmer));
-                sb.append(hashTrimmer);
-                sbInt = (int) Math.sqrt(Integer.parseInt(sb.toString()));
-                sb.append(numReverser(sbInt));
-                sb.append(sbInt);
-                username = sb.toString();
+                username = parts[0] + parts[1] + parts[2] + parts[3];
                 break;
             case 8:
-                hashTrimmer = pw / 1;
-                sbInt = (int) Math.sqrt(hashTrimmer);
-                sb.append(sbInt);
-                sb.append(numReverser(sbInt));
-                sb.append(numReverser(hashTrimmer));
-                username = sb.toString();
+                username = parts[1] + parts[0] + parts[3] + parts[2];
                 break;
             case 9:
-                hashTrimmer = pw / 10;
-                sbInt = (int) Math.sqrt(hashTrimmer);
-                sb.append(hashTrimmer);
-                sb.append(sbInt);
-                sb.append(numReverser(sbInt));
-                username = sb.toString();
+                username = parts[2] + parts[3] + parts[1] + parts[0];
                 break;
             case 10:
-                hashTrimmer = pw / 100;
-                sb.append(hashTrimmer);
-                sb.append(numReverser(hashTrimmer));
-                username = sb.toString();
+                username = parts[3] + parts[0] + parts[1] + parts[2];
                 break;
             default:
                 break;
         }
-        return numPadder(username);
+        return username;
     }
 
-    public static String hashPassword(String password) {
+    public static String hashPassword(String password) throws UnsupportedEncodingException {
         int pw = noNegatives(password.hashCode());
         int length = (int) (Math.log10(pw) + 1);
+        String hash64Str = Strings.getHash64(password);
 
-        int hashTrimmer = 0;
-        int sbInt = 0;
-        StringBuilder sb = new StringBuilder();
-
+        final int mid = hash64Str.length() / 4; //get the middle of the String
+        String[] parts = {hash64Str.substring(0, mid), hash64Str.substring(mid, mid * 2), hash64Str.substring(mid * 2, mid * 3), hash64Str.substring(mid * 3, mid * 4)};
         switch (length) {
             case 7:
-                hashTrimmer = pw / 1000;
-                //Trims to 4 digits
-                sb.append(hashTrimmer);
-                sb.append(numReverser(hashTrimmer));
-                sbInt = (int) Math.sqrt(Integer.parseInt(sb.toString()));
-                sb.append(sbInt);
-                sb.append(numReverser(sbInt));
-                password = sb.toString();
+                password = parts[3] + parts[0] + parts[1] + parts[2];
                 break;
             case 8:
-                hashTrimmer = pw / 1;
-                sbInt = (int) Math.sqrt(hashTrimmer);
-                sb.append(sbInt);
-                sb.append(numReverser(hashTrimmer));
-                sb.append(numReverser(sbInt));
-                password = sb.toString();
+                password = parts[2] + parts[3] + parts[1] + parts[0];
                 break;
             case 9:
-                hashTrimmer = pw / 10;
-                sbInt = (int) Math.sqrt(hashTrimmer);
-                sb.append(numReverser(sbInt));
-                sb.append(hashTrimmer);
-                sb.append(sbInt);
-                password = sb.toString();
+                password = parts[1] + parts[0] + parts[3] + parts[2];
                 break;
             case 10:
-                hashTrimmer = pw / 100;
-                sb.append(numReverser(hashTrimmer));
-                sb.append(hashTrimmer);
-                password = sb.toString();
+                password = parts[0] + parts[1] + parts[2] + parts[3];
                 break;
             default:
                 break;
         }
-        return numPadder(password);
+        return password;
     }
 
     public static String splitString(String s1, boolean hashBool) {
@@ -221,17 +174,6 @@ public class Hasher {
         return reversed;
     }
 
-    public static String numPadder(String hashPassword) {
-        int pw = hashPassword.length();
-        StringBuilder sb = new StringBuilder();
-        int lengthDifference = 16 - pw;
-        sb.append(hashPassword);
-        for (int i = 0; i < lengthDifference; i++) {
-            sb.append(0);
-        }
-        return sb.toString();
-    }
-
     public static Integer noNegatives(Integer negativeInt) {
         if (negativeInt < 0) {
             negativeInt *= -1;
@@ -256,42 +198,14 @@ public class Hasher {
         return result;
     }
 
-    public static void main(String[] args) throws UnsupportedEncodingException {
-
-//        System.out.println(getHash("Harel18", true));
-//        System.out.println(getHash("Harel19", true));
-//        System.out.println(getHash("Harel20", true));
-//
-//        System.out.println("Harel18".hashCode());
-//        System.out.println("harel18".hashCode());
-//
-//        System.out.println("");
-//        System.out.println(Strings.getHash64("harel18"));
-//        System.out.println(Strings.getHash64("Ha19"));
-//        System.out.println(Strings.getHash64("213213213214sdsaHarel2`13"));
-//
-//        System.out.println("SUS");
-////        System.out.println(getHash(Strings.getHash64("Harel18"), true));
-////        System.out.println(getHash(Strings.getHash64("Harel19"), true));
-//
-//        System.out.println("");
-////        System.out.println(generateChars("harel19"));
-//        System.out.println("");
-//        System.out.println(finalizeHash("12345", true));
-//        System.out.println(getHash("12345", true));
-//        System.out.println(finalizeHash("12345", true).equals(getHash("12345", true)));
-        System.out.println(finalizeHash("12345", false));
+    public static void main(String[] arg) throws FileNotFoundException, IOException {
         System.out.println(getHash("12345", false));
-//        
-        System.out.println(finalizeHash("Harel19", false));
-        System.out.println(getHash("Harel19", false));
-        System.out.println(finalizeHash("Harel182", false));
-        System.out.println(getHash("Harel182", false));
+//        getHash("12345", false);
+//        System.out.println(readKey(finalizeHash("12345", false), "12345"));
+        System.out.println(finalizeHash("12345", false));
+        BufferedReader brTest = new BufferedReader(new FileReader("E:\\'--------'\\n-box\\H9-12134809\\.🔑"));
+        String usernameRead = Hasher.readKey(brTest.readLine(), username);
 
-        System.out.println(finalizeHash("khiemluong", true));
-        System.out.println(getHash("khiemluong", true));
-        System.out.println(finalizeHash("12345", true));
-        System.out.println(getHash("12345", true));
+        String passwordRead = Hasher.readKey(brTest.readLine(), "12345");
     }
-
 }

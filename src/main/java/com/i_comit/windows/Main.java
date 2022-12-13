@@ -14,6 +14,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,7 +26,6 @@ import java.util.Random;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
-import static javax.swing.SwingConstants.CENTER;
 import static javax.swing.SwingConstants.LEFT;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -35,7 +35,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "D:\\";
+    public static String root = "E:\\";
     public static final String masterFolder = "'--------'" + File.separator;
 
     private final String appVer = "1.8.3";
@@ -1104,16 +1104,18 @@ public class Main extends javax.swing.JFrame {
 //LOGIN
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (jButton1.getText().equals("ENTER")) {
-            if (Login.loginCheck()) {
-                if (Login.verifyLogin()) {
-                    collapseLogin(this);
+            try {
+                if (Login.loginCheck()) {
+                    if (Login.verifyLogin()) {
+                        collapseLogin(this);
+                    } else {
+                        GUI.t.interrupt();
+                        GUI.labelCutterThread(jAlertLabel, "incorrect login info", 45, 30, 900, false);
+                    }
                 } else {
-                    jAlertLabel.setHorizontalAlignment(CENTER);
-                    GUI.t.interrupt();
-                    GUI.labelCutterThread(jAlertLabel, "incorrect login info", 45, 30, 900, false);
                 }
-            } else {
-                jAlertLabel.setHorizontalAlignment(CENTER);
+            } catch (UnsupportedEncodingException ex) {
+                ex.printStackTrace();
             }
         }
         if (jButton1.getText().equals("RESTART")) {
@@ -1150,16 +1152,18 @@ public class Main extends javax.swing.JFrame {
 
     private void jPasswordField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField1KeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            if (Login.loginCheck()) {
-                if (Login.verifyLogin()) {
-                    collapseLogin(this);
+            try {
+                if (Login.loginCheck()) {
+                    if (Login.verifyLogin()) {
+                        collapseLogin(this);
+                    } else {
+                        GUI.t.interrupt();
+                        GUI.labelCutterThread(jAlertLabel, "incorrect login info", 45, 30, 900, false);
+                    }
                 } else {
-                    jAlertLabel.setHorizontalAlignment(CENTER);
-                    GUI.t.interrupt();
-                    GUI.labelCutterThread(jAlertLabel, "incorrect login info", 45, 30, 900, false);
                 }
-            } else {
-                jAlertLabel.setHorizontalAlignment(CENTER);
+            } catch (UnsupportedEncodingException ex) {
+                ex.printStackTrace();
             }
         }
     }//GEN-LAST:event_jPasswordField1KeyPressed
@@ -1264,6 +1268,7 @@ public class Main extends javax.swing.JFrame {
     private void jRadioButton3Evt(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3Evt
         zipFileCount = 0;
         zipIter = 0;
+        System.out.println("WTF");
         if (Login.verifySendKey(receiveFolder + File.separator + jList1.getSelectedValue())) {
             this.setSize(779, 266);
         } else {
