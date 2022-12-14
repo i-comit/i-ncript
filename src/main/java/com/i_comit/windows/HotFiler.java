@@ -100,12 +100,10 @@ class HotFiler_T implements Runnable {
                             }
                         }
                     }
-//                    System.out.println(Statics.fileIter++);
                     System.out.println(
                             "Event kind:" + event.kind()
                             + ". File affected: " + event.context() + ".");
                 }
-//                key.reset();
             }
         } catch (InterruptedException ex) {
             ex.printStackTrace();

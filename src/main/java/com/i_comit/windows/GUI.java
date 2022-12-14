@@ -324,7 +324,6 @@ class labelCutter_T implements Runnable {
                 }
             }
         } catch (InterruptedException ex) {
-//            System.out.println("label thread interrupted.");
         }
 
     }
@@ -355,7 +354,6 @@ class labelCutterTree_T implements Runnable {
                 }
             }
         } catch (InterruptedException ex) {
-            System.out.println("label thread interrupted.");
         }
 
     }
@@ -377,7 +375,6 @@ class logger_T implements Runnable {
             }
             Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
         } catch (InterruptedException ex) {
-            System.out.println("logger thread interrupted.");
         }
     }
 }

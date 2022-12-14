@@ -200,8 +200,6 @@ class AES_T implements Runnable {
                                     if (toolMode == 2) {
                                         try {
                                             sendKey();
-                                            System.out.println(Statics.recipientUsername);
-                                            System.out.println(Statics.recipientPassword);
                                             Folder.prepareZipFile();
                                             Main.jLabel6.setVisible(true);
                                             Main.jLabel5.setVisible(true);

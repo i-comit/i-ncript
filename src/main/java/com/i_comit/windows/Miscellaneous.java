@@ -16,7 +16,6 @@ public class Miscellaneous {
 
     public static boolean holidayCheck() {
         String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd"));
-        System.out.println(today);
         switch (today) {
             case "01/01":
                 GUI.labelCutterThread(jAlertLabel, "happy new year " + Main.year + "!", 80, 80, 100, true);

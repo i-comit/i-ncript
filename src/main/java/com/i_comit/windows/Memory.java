@@ -146,7 +146,6 @@ public class Memory {
                 reader.readLine();
                 while ((s = reader.readLine()) != null) {
                     if (s.trim().length() != 0) {
-                        System.out.println(s);
                         if (!s.equals("")) {
                             main.setTitle("i-ncript™ - " + s.trim().toLowerCase());
                         }
