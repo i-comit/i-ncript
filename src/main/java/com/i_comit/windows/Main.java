@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Random;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
@@ -1245,19 +1246,20 @@ public class Main extends javax.swing.JFrame {
                 zipFileCount = fileCount;
                 jProgressBar1.setMaximum(zipFileCount);
                 contents = sendFolder.toFile().listFiles();
+                List<Path> pathLists = GUI.listPaths(sendFolder);
                 if (contents != null) {
-                    if (contents.length != 0) {
+                    if (contents.length != 0 && !pathLists.isEmpty()) {
                         Login.sendKeyCheck();
                         this.setSize(779, 266);
                     } else {
                         GUI.t.interrupt();
-                        GUI.labelCutterThread(jAlertLabel, "o-box folder has no files", 20, 40, 800, false);
+                        GUI.labelCutterThread(jAlertLabel, "o-box folder has no files", 20, 40, 1200, false);
                         resetSendTools(2);
                         this.setSize(779, 240);
                     }
                 } else {
                     GUI.t.interrupt();
-                    GUI.labelCutterThread(jAlertLabel, "o-box folder does not exist", 20, 40, 800, false);
+                    GUI.labelCutterThread(jAlertLabel, "o-box folder does not exist", 20, 40, 1200, false);
                     resetSendTools(2);
                     this.setSize(779, 240);
                 }

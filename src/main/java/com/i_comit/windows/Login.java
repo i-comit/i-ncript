@@ -266,7 +266,7 @@ public class Login {
                 receivePanelTools();
             }
         } else {
-            GUI.labelCutterThread(jAlertLabel, "please select a .i-cc file", 20, 20, 1200, false);
+            GUI.labelCutterThread(jAlertLabel, "please select an .i-cc file", 20, 20, 1200, false);
             receivePanelTools();
             Main.jPasswordField3.setText("");
         }
