@@ -106,20 +106,29 @@ class DragDrop implements DropTargetListener {
                                                         AES.AESThread(paths, Statics.directory, false, 0);
                                                     } else {
                                                         GUI.t.interrupt();
-                                                        GUI.labelCutterThread(Main.jAlertLabel, "can't encrypt app files", 10, 25, 750, false);
+                                                        GUI.labelCutterThread(Main.jAlertLabel, "can't encrypt app files", 10, 25, 1000, false);
                                                     }
                                                 } else {
                                                     GUI.t.interrupt();
-                                                    GUI.labelCutterThread(Main.jAlertLabel, ".i-cc files are not allowed", 10, 25, 750, false);
+                                                    GUI.labelCutterThread(Main.jAlertLabel, ".i-cc files are not allowed", 10, 25, 1000, false);
                                                 }
                                             } else {
-                                                Folder.getFileDropCount(filesf);
-                                                recursiveFileDrop_T.recursiveFileStoreDrop(filesf, Statics.path, paths);
-                                                paths.remove(0);
-                                                Main.jButton2.setVisible(true);
-                                                Main.jProgressBar1.setMaximum(0);
-                                                jProgressBar1.setString("0% | 0/" + files.size());
-                                                AES.AESThread(paths, Statics.directory, false, 0);
+                                                if (!filesf.getAbsolutePath().endsWith(masterFolder + "ᴠᴀᴜʟᴛ")
+                                                        && filesf.getAbsolutePath().endsWith(masterFolder + "ᴏ-ʙᴏx")
+                                                        && !filesf.getAbsolutePath().endsWith(masterFolder + "ɴ-ʙᴏx")
+                                                        && !filesf.getAbsolutePath().endsWith(masterFolder + "app")
+                                                        && !filesf.getAbsolutePath().endsWith(masterFolder + "runtime")) {
+                                                    Folder.getFileDropCount(filesf);
+                                                    recursiveFileDrop_T.recursiveFileStoreDrop(filesf, Statics.path, paths);
+                                                    paths.remove(0);
+                                                    Main.jButton2.setVisible(true);
+                                                    Main.jProgressBar1.setMaximum(0);
+                                                    jProgressBar1.setString("0% | 0/" + files.size());
+                                                    AES.AESThread(paths, Statics.directory, false, 0);
+                                                } else {
+                                                    GUI.t.interrupt();
+                                                    GUI.labelCutterThread(Main.jAlertLabel, "can't encrypt app folders", 10, 25, 1000, false);
+                                                }
                                             }
                                             b = true;
                                         }
@@ -133,11 +142,11 @@ class DragDrop implements DropTargetListener {
                                             Folder.listZipFiles();
                                         } else {
                                             GUI.t.interrupt();
-                                            GUI.labelCutterThread(Main.jAlertLabel, "only .i-cc files are allowed", 10, 25, 750, false);
+                                            GUI.labelCutterThread(Main.jAlertLabel, "only .i-cc files are allowed", 10, 25, 1000, false);
                                         }
                                     } else {
                                         GUI.t.interrupt();
-                                        GUI.labelCutterThread(Main.jAlertLabel, "only 1 file is allowed at once", 10, 25, 750, false);
+                                        GUI.labelCutterThread(Main.jAlertLabel, "only 1 file is allowed at once", 10, 25, 1000, false);
                                     }
                                 }
                                 if (Statics.toolMode == 2) {
