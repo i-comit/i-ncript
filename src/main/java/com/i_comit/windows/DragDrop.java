@@ -136,9 +136,10 @@ class DragDrop implements DropTargetListener {
                                     }
                                 }
                                 if (Statics.toolMode == 1) {
-                                    if (files.size() <= 1) {
+                                    if (files.size() <= 10) {
                                         if (filesf.toString().endsWith(".i-cc")) {
                                             Files.move(filesf.toPath(), Paths.get(Statics.receiveFolder + File.separator + filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
+                                            AES.getFileAttr(filesf, new File(Statics.receiveFolder + File.separator + filesf.getName()));
                                             Main.jTextArea1.append(filesf.getName() + " has been moved to the n-box folder\n");
                                             Folder.listZipFiles();
                                         } else {
@@ -147,7 +148,7 @@ class DragDrop implements DropTargetListener {
                                         }
                                     } else {
                                         GUI.t.interrupt();
-                                        GUI.labelCutterThread(Main.jAlertLabel, "only 1 file is allowed at once", 10, 25, 1000, false);
+                                        GUI.labelCutterThread(Main.jAlertLabel, "only 10 file is allowed at once", 10, 25, 1000, false);
                                     }
                                 }
                                 if (Statics.toolMode == 2) {
@@ -158,6 +159,7 @@ class DragDrop implements DropTargetListener {
                                             filesf.delete();
                                         } else {
                                             Files.move(filesf.toPath(), Paths.get(Statics.sendFolder + File.separator + filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
+                                            AES.getFileAttr(filesf, new File(Statics.sendFolder + File.separator + filesf.getName()));
                                             Main.refreshTreeView(Statics.sendFolder, TreeView.sendCaretPos);
                                         }
                                     } else {

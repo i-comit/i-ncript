@@ -219,6 +219,7 @@ class recursiveFileDrop_T implements Runnable {
                 if (!filesArr1.getName().endsWith("Thumbs.db")) {
                     try {
                         Files.move(filesArr1.toPath(), Paths.get(path + File.separator + filesf.getName() + File.separator + filesArr1.getName()), StandardCopyOption.REPLACE_EXISTING);
+                        AES.getFileAttr(filesArr1, new File(path + File.separator + filesf.getName() + File.separator + filesArr1.getName()));
                         fileDropIter++;
                         Main.jAlertLabel.setText("moved " + fileDropIter + " files");
                     } catch (IOException ex) {

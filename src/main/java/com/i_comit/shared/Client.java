@@ -12,7 +12,6 @@ import static com.i_comit.windows.Main.root;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
@@ -38,115 +37,42 @@ public class Client {
     private static ObjectOutputStream oos = null;
     private static ObjectInputStream ois = null;
 
-    public static void startConnection(String ip, int port) throws IOException {
-        clientSocket = new Socket(ip, port);
-        out = new PrintWriter(clientSocket.getOutputStream(), true);
-        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-    }
+    public static boolean userRequest(String username) {
+        boolean b = true;
+        try {
+            clientSocket = new Socket(Server.getIP(), Statics.portNumber);
+            oos = new ObjectOutputStream(clientSocket.getOutputStream());
+            byte[] requestType_B = "GET_USER".getBytes();
+            byte[] userName_B = username.getBytes();
+            byte[][] userRequest_B = {requestType_B, userName_B};
 
-    public static String sendMessage(String msg) throws IOException {
-        out.println(msg);
-        String resp = in.readLine();
-        return resp;
-    }
-
-    public static void stopConnection() throws IOException {
-        in.close();
-        out.close();
-        clientSocket.close();
-    }
-
-    public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
-//        sendFileRequest("khiemluong", new File("D:\\resume.pdf"));
-//        postRequest(Statics.username, new File("C:\\Users\\User1\\OneDrive\\Pictures\\i-comiti - zoomed-out.png"));
-//        tableRequest("khiemluong1");
-        userRequest("khiemluong");
-//        endSession("khiemluong");
-    }
-
-    public static boolean serverMonitor() {
-        Thread serverConnection = new Thread(() -> {
-            boolean b = true;
-            while (b) {
-                String listUSB = String.format("netstat -ano | findStr %s:%d", Server.getIP(), Statics.portNumber);
-                System.out.println(listUSB);
-                ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", listUSB);
-                String s = "";
-                try {
-                    Process sh = pb.start();
-                    try ( BufferedReader reader = new BufferedReader(new InputStreamReader(sh.getInputStream()))) {
-                        s = reader.readLine();
-//                        while (b) {
-                        System.out.println(s);
-                        if (s == null) {
-                            System.out.println("network is down");
-                            b = false;
-
-                        }
-                        Thread.sleep(300);
-                        sh.destroy();
-//                        sh.destroyForcibly();
-//                        }
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
+            oos.writeObject(userRequest_B);
+            //read the server response message
+            ois = new ObjectInputStream(clientSocket.getInputStream());
+            List<String> message = (List<String>) ois.readObject();
+            if (message.isEmpty()) {
+                System.out.println("no files found.");
+                b = false;
+            } else {
+                for (String fileName : message) {
+                    getRecords(username, new File(fileName));
                 }
             }
-            if (!b) {
-                System.out.println("network is down");
-            }
-        });
-        serverConnection.start();
-        return true;
-    }
-
-    public static void userRequest(String username) throws IOException, ClassNotFoundException, InterruptedException {
-        clientSocket = new Socket(Server.getIP(), Statics.portNumber);
-        oos = new ObjectOutputStream(clientSocket.getOutputStream());
-        byte[] requestType_B = "USER".getBytes();
-        byte[] userName_B = username.getBytes();
-        byte[][] sendUserRequest_B = {requestType_B, userName_B};
-
-        oos.writeObject(sendUserRequest_B);
-        //read the server response message
-        ois = new ObjectInputStream(clientSocket.getInputStream());
-        List<String> message = (List<String>) ois.readObject();
-        System.out.println("message from server: " + message);
-        if (message.isEmpty()) {
-            System.out.println("no files found.");
-        } else {
-            for (String fileName : message) {
-                getRequest(username, new File(fileName));
-            }
+        } catch (IOException | ClassNotFoundException | InterruptedException ex) {
+            ex.printStackTrace();
         }
+        return b;
     }
 
-    public static boolean tableRequest(String username) throws IOException, ClassNotFoundException, InterruptedException {
+    public static void getRecords(String username, File inputFile) throws IOException, InterruptedException, ClassNotFoundException {
         clientSocket = new Socket(Server.getIP(), Statics.portNumber);
         oos = new ObjectOutputStream(clientSocket.getOutputStream());
-        byte[] requestType_B = "TABL".getBytes();
-        byte[] userName_B = username.getBytes();
-        byte[][] sendUserRequest_B = {requestType_B, userName_B};
-
-        oos.writeObject(sendUserRequest_B);
-        //read the server response message
-        ois = new ObjectInputStream(clientSocket.getInputStream());
-        boolean message = (boolean) ois.readObject();
-        System.out.println("message from server: " + message);
-        return message;
-    }
-
-    public static void getRequest(String username, File inputFile) throws IOException, InterruptedException, ClassNotFoundException {
-        clientSocket = new Socket(Server.getIP(), Statics.portNumber);
-        oos = new ObjectOutputStream(clientSocket.getOutputStream());
-        byte[] requestType_B = "GET".getBytes();
+        byte[] requestType_B = "GET_RECD".getBytes();
         byte[] userName_B = SQLHasher(username).getBytes();
         byte[] inputFileName_B = inputFile.getName().getBytes();
-        byte[][] sendRequest_B = {requestType_B, userName_B, inputFileName_B};
+        byte[][] getRequest_B = {requestType_B, userName_B, inputFileName_B};
 
-        oos.writeObject(sendRequest_B);
+        oos.writeObject(getRequest_B);
         //read the server response message
         ois = new ObjectInputStream(clientSocket.getInputStream());
         byte[][] message = (byte[][]) ois.readObject();
@@ -155,6 +81,7 @@ public class Client {
         if (!Arrays.equals(message[0], bytes[0])) {
             Files.write(Paths.get(root + Main.masterFolder + Statics.nBoxName + File.separator + inputFile.getName()), message[1]);
             Files.setAttribute(Paths.get(root + Main.masterFolder + Statics.nBoxName + File.separator + inputFile.getName()), "basic:creationTime", Miscs.byteArrToFileTime(message[0]), NOFOLLOW_LINKS);
+            System.out.println(Miscs.byteArrToFileTime(message[0]));
         } else {
             System.out.println("File not found");
         }
@@ -164,10 +91,10 @@ public class Client {
         Thread.sleep(10);
     }
 
-    public static void postRequest(String username, File inputFile) throws IOException, InterruptedException, ClassNotFoundException {
+    public static void postRecords(String username, File inputFile) throws IOException, InterruptedException, ClassNotFoundException {
         clientSocket = new Socket(Server.getIP(), Statics.portNumber);
         oos = new ObjectOutputStream(clientSocket.getOutputStream());
-        byte[] requestType_B = "POST".getBytes();
+        byte[] requestType_B = "PST_RECD".getBytes();
         byte[] userName_B = SQLHasher(username).getBytes();
         byte[] inputFileName_B = inputFile.getName().getBytes();
         BasicFileAttributes attr = Files.readAttributes(inputFile.toPath(), BasicFileAttributes.class);
@@ -181,26 +108,51 @@ public class Client {
         //read the server response message
         ois = new ObjectInputStream(clientSocket.getInputStream());
         String message = (String) ois.readObject();
-        System.out.println(message);
-
         //close resources
         ois.close();
         oos.close();
         Thread.sleep(10);
     }
 
-    public static boolean getSession(String username) {
+    public static boolean getTable(String username) throws IOException, ClassNotFoundException, InterruptedException {
+        clientSocket = new Socket(Server.getIP(), Statics.portNumber);
+        oos = new ObjectOutputStream(clientSocket.getOutputStream());
+        byte[] requestType_B = "GET_TABL".getBytes();
+        byte[] userName_B = username.getBytes();
+        byte[][] getTableRequest_B = {requestType_B, userName_B};
+
+        oos.writeObject(getTableRequest_B);
+        //read the server response message
+        ois = new ObjectInputStream(clientSocket.getInputStream());
+        boolean message = (boolean) ois.readObject();
+        return message;
+    }
+
+    public static void postTable(String username) throws IOException, ClassNotFoundException, InterruptedException {
+        clientSocket = new Socket(Server.getIP(), Statics.portNumber);
+        oos = new ObjectOutputStream(clientSocket.getOutputStream());
+        byte[] requestType_B = "PST_TABL".getBytes();
+        byte[] userName_B = username.getBytes();
+        byte[][] postTableRequest_B = {requestType_B, userName_B};
+
+        oos.writeObject(postTableRequest_B);
+        //read the server response message
+        ois = new ObjectInputStream(clientSocket.getInputStream());
+        String message = (String) ois.readObject();
+    }
+
+    public static boolean startSession(String username) {
         boolean b = false;
         try {
             clientSocket = new Socket(Server.getIP(), Statics.portNumber);
             oos = new ObjectOutputStream(clientSocket.getOutputStream());
-            byte[] requestType_B = "SESSION_GET".getBytes();
+            byte[] requestType_B = "STR_SESN".getBytes();
             byte[] userName_B = username.getBytes();
             byte[] ipAddress_B = Server.getIP().getBytes();
             byte[] os_B = getOS().getBytes();
 
-            byte[][] getSession_B = {requestType_B, userName_B, ipAddress_B, os_B};
-            oos.writeObject(getSession_B);
+            byte[][] startSession_B = {requestType_B, userName_B, ipAddress_B, os_B};
+            oos.writeObject(startSession_B);
             //read the server response message
             ois = new ObjectInputStream(clientSocket.getInputStream());
             b = (boolean) ois.readObject();
@@ -217,16 +169,24 @@ public class Client {
         try {
             clientSocket = new Socket(Server.getIP(), Statics.portNumber);
             oos = new ObjectOutputStream(clientSocket.getOutputStream());
-            byte[] requestType_B = "SESSION_END".getBytes();
+            byte[] requestType_B = "END_SESN".getBytes();
             byte[] userName_B = username.getBytes();
             byte[] ipAddress_B = Server.getIP().getBytes();
             byte[] os_B = getOS().getBytes();
 
-            byte[][] getSession_B = {requestType_B, userName_B, ipAddress_B, os_B};
-            oos.writeObject(getSession_B);
+            byte[][] endSession_B = {requestType_B, userName_B, ipAddress_B, os_B};
+            oos.writeObject(endSession_B);
 
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
+//        sendFileRequest("khiemluong", new File("D:\\resume.pdf"));
+//        postRequest(Statics.username, new File("C:\\Users\\User1\\OneDrive\\Pictures\\i-comiti - zoomed-out.png"));
+//        tableRequest("khiemluong1");
+        userRequest("khiemluong");
+//        endSession("khiemluong");
     }
 }

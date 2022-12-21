@@ -4,7 +4,6 @@
  */
 package com.i_comit.shared;
 
-import com.i_comit.shared.Hasher;
 import com.i_comit.windows.Statics;
 import static com.i_comit.shared.Hasher.SQLHasher;
 import static com.i_comit.windows.Main.masterFolder;
@@ -43,9 +42,9 @@ public class Server {
     private static Socket clientSocket;
 
     private static synchronized void socketStart(int port) {
-        Session session = new Session();
-        Table table = new Table();
-        Record record = new Record();
+        ServerSession session = new ServerSession();
+        ServerTable table = new ServerTable();
+        ServerRecord record = new ServerRecord();
         try {
             InetAddress addr = InetAddress.getByName(Server.getIP());
             serverSocket = new ServerSocket(port, 50, addr);
@@ -58,12 +57,12 @@ public class Server {
                         byte[][] message = (byte[][]) ois.readObject();
                         ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream());
 
-                        if (Arrays.equals(message[0], "USER".getBytes())) {
+                        if (Arrays.equals(message[0], "GET_USER".getBytes())) {
                             String userName = new String(message[1], StandardCharsets.UTF_8);
                             List<String> fileRecords = findFiles(userName);
                             oos.writeObject(fileRecords);
                         }
-                        if (Arrays.equals(message[0], "GET".getBytes())) {
+                        if (Arrays.equals(message[0], "GET_RECD".getBytes())) {
                             String userName = new String(message[1], StandardCharsets.UTF_8);
                             String fileName = new String(message[2], StandardCharsets.UTF_8);
                             if (findRecord(userName, fileName)) {
@@ -78,7 +77,7 @@ public class Server {
                             oos.close();
                             clientSocket.close();
                         }
-                        if (Arrays.equals(message[0], "POST".getBytes())) {
+                        if (Arrays.equals(message[0], "PST_RECD".getBytes())) {
                             try {
                                 String userName = new String(message[1], StandardCharsets.UTF_8);
                                 String fileName = new String(message[2], StandardCharsets.UTF_8);
@@ -93,7 +92,7 @@ public class Server {
                                 ex.printStackTrace();
                             }
                         }
-                        if (Arrays.equals(message[0], "TABL".getBytes())) {
+                        if (Arrays.equals(message[0], "GET_TABL".getBytes())) {
                             String userName = new String(message[1], StandardCharsets.UTF_8);
                             boolean b = table.listTables(userName);
                             oos.writeObject(b);
@@ -101,7 +100,15 @@ public class Server {
                             oos.close();
                             clientSocket.close();
                         }
-                        if (Arrays.equals(message[0], "SESSION_GET".getBytes())) {
+                        if (Arrays.equals(message[0], "PST_TABL".getBytes())) {
+                            String userName = new String(message[1], StandardCharsets.UTF_8);
+                            String msg = table.createTable(userName);
+                            oos.writeObject(msg);
+                            ois.close();
+                            oos.close();
+                            clientSocket.close();
+                        }
+                        if (Arrays.equals(message[0], "STR_SESN".getBytes())) {
                             String userName = new String(message[1], StandardCharsets.UTF_8);
                             String ipAddress = new String(message[2], StandardCharsets.UTF_8);
                             String OS = new String(message[3], StandardCharsets.UTF_8);
@@ -116,7 +123,7 @@ public class Server {
                             oos.close();
                             clientSocket.close();
                         }
-                        if (Arrays.equals(message[0], "SESSION_END".getBytes())) {
+                        if (Arrays.equals(message[0], "END_SESN".getBytes())) {
                             String userName = new String(message[1], StandardCharsets.UTF_8);
                             session.endSession(userName);
                             System.out.println(userName + " has ended their session.");
@@ -176,7 +183,7 @@ public class Server {
             stmt.execute(tbl1);
             stmt.execute(tbl2);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+//            System.out.println(e.getMessage());
         }
 
     }
@@ -190,7 +197,7 @@ public class Server {
             pstmt.setBytes(4, fileBytes);
             pstmt.executeLargeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+//            System.out.println(e.getMessage());
         }
     }
 
@@ -201,7 +208,7 @@ public class Server {
             ResultSet rs = stmt.executeQuery(sql);
             // loop through the result set
             while (rs.next()) {
-                System.out.println(rs.getString(2));
+//                System.out.println(rs.getString(2));
                 fileRecords.add(rs.getString(2));
             }
             if (fileRecords.isEmpty()) {
@@ -212,7 +219,6 @@ public class Server {
 //        } catch (IOException ex) {
 //            ex.printStackTrace();
         }
-        System.out.println(fileRecords);
         return fileRecords;
     }
 
@@ -283,18 +289,17 @@ public class Server {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
-        Session session = new Session();
-        Table table = new Table();
-        Record record = new Record();
+        ServerSession session = new ServerSession();
+        ServerTable table = new ServerTable();
+        ServerRecord record = new ServerRecord();
 //        dropTable("SESSIONS");
 //        dropTable("I-NCRIPT");
         initDatabase();
-//        table.dropTable("F092171D");
-//        table.dropTable("46FD6368");
+//        table.createTable("khiemluong");
 //        insertRecord("khiemluong", new File("D:\\resume.pdf"));
 //        insertRecord("khiemluong", new File("D:\\i-comiti.ico"));
 //        insertRecord("khiemluong", new File("D:\\read-me.md"));
-//        table.listTables("khiemluong");
+        table.listTables("khiemluong");
         record.listRecords("khiemluong");
 //        session.listSessions("khiemluong");
 //        System.out.println(SQLHasher("khiemluong"));
@@ -307,7 +312,7 @@ public class Server {
     }
 }
 
-class Session {
+class ServerSession {
 
     public void listSessions(String username) throws UnsupportedEncodingException {
         String sql = String.format("SELECT * FROM \"SESSIONS\" WHERE \"user-name\"  = \"%s\";", SQLHasher(username));
@@ -318,15 +323,13 @@ class Session {
             while (rs.next()) {
                 str = rs.getString(1);
                 if (rs.getString(1).equals(SQLHasher(username))) {
-                    System.out.println(username + " is connected to session");
+//                    System.out.println(username + " is connected to session");
                 }
             }
             if (str.equals("")) {
-                System.out.println("no session for " + username);
+//                System.out.println("no session for " + username);
             }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } catch (UnsupportedEncodingException ex) {
+        } catch (SQLException | UnsupportedEncodingException ex) {
             ex.printStackTrace();
         }
     }
@@ -352,7 +355,7 @@ class Session {
                     pstmt.setString(3, OS);
                     pstmt.executeLargeUpdate();
                 } catch (SQLException e) {
-                    System.out.println(e.getMessage());
+//                    System.out.println(e.getMessage());
                 }
             }
         } catch (SQLException ex) {
@@ -361,11 +364,11 @@ class Session {
         return true;
     }
 
-    public void endSession(String clientUsername) throws UnsupportedEncodingException {
-        String sql = String.format("DELETE FROM \"SESSIONS\" WHERE \"user-name\"  = \"%s\";", SQLHasher(clientUsername));
+    public void endSession(String username) throws UnsupportedEncodingException {
+        String sql = String.format("DELETE FROM \"SESSIONS\" WHERE \"user-name\"  = \"%s\";", SQLHasher(username));
         try ( Connection conn = DriverManager.getConnection(Server.url);  PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.executeUpdate();
-            listSessions(SQLHasher(clientUsername));
+            listSessions(SQLHasher(username));
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -373,32 +376,25 @@ class Session {
 
 }
 
-class Table {
+class ServerTable {
 
-    public void createTable(String clientUsername) throws UnsupportedEncodingException {
-        String tbl = String.format("CREATE TABLE IF NOT EXISTS '%s' ('recipient-name' text NOT NULL, 'comm-text' text NOT NULL, 'comm-date' text NOT NULL);", Hasher.getHash32(clientUsername));
+    public String createTable(String username) throws UnsupportedEncodingException {
+        String tbl = String.format("CREATE TABLE IF NOT EXISTS \"%s\" ('recipient-name' text NOT NULL, 'comm-text' text NOT NULL, 'comm-date' text NOT NULL);", SQLHasher(username));
         try ( Connection conn = DriverManager.getConnection(Server.url);  Statement stmt = conn.createStatement()) {
             stmt.execute(tbl);
+            System.out.println(username + " has created an account");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            e.printStackTrace();
         }
-    }
-
-    public void requestClientTable(String username) {
-
+        return "account created for " + username;
     }
 
     public boolean listTables(String username) throws UnsupportedEncodingException {
         boolean b = false;
         try ( Connection conn = DriverManager.getConnection(Server.url)) {
             ResultSet rs = conn.getMetaData().getTables(null, null, null, null);
-            rs.next();
-            rs.next();
-
             while (rs.next()) {
-                System.out.println(rs.getString("TABLE_NAME"));
-                if (rs.getString("TABLE_NAME").equals(Hasher.getHash32(username))) {
+                if (rs.getString("TABLE_NAME").equals(SQLHasher(username))) {
                     System.out.println("found table match: " + rs.getString("TABLE_NAME"));
                     b = true;
                 }
@@ -423,7 +419,7 @@ class Table {
     }
 }
 
-class Record {
+class ServerRecord {
 
     public void listRecords(String username) throws UnsupportedEncodingException {
         String sql = "SELECT * FROM 'FILES-DB'";

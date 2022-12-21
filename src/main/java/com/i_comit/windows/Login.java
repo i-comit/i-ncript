@@ -4,6 +4,7 @@
  */
 package com.i_comit.windows;
 
+import com.i_comit.shared.Client;
 import com.i_comit.shared.Hasher;
 import static com.i_comit.windows.Folder.unzipFile;
 import static com.i_comit.windows.GUI.listAESPaths;
@@ -295,11 +296,11 @@ public class Login {
                     Main.jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
                     Main.jToolPanel.requestFocus();
                     Main.refreshTreeView(path, TreeView.nodeCaretPos);
+                    Client.postTable(username);
                     b = true;
                 }
             }
-
-        } catch (IOException ex) {
+        } catch (IOException | ClassNotFoundException | InterruptedException ex) {
             ex.printStackTrace();
         }
         return b;

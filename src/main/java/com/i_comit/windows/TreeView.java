@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
@@ -400,5 +401,20 @@ public class TreeView {
             }
         }
         return b;
+    }
+
+    public static File convertTreePathToFile(TreePath[] treePaths, int i) {
+        String fileStr = root + masterFolder + Main.jTree1.getSelectionPaths()[i].toString().substring(1, Main.jTree1.getSelectionPaths()[i].toString().length() - 1).replaceAll(", ", File.separator + File.separator);
+        File filePath = Paths.get(fileStr).toFile();
+        return filePath;
+}
+
+    public static List<Path> convertTreePathToPath(TreePath[] treePaths) {
+        List<Path> pathLists = new ArrayList<>();
+        for (int i = 0; i < treePaths.length; i++) {
+            Path filePath = convertTreePathToFile(Main.jTree1.getSelectionPaths(), i).toPath();
+            pathLists.add(filePath);
+        }
+        return pathLists;
     }
 }

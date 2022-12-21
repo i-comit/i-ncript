@@ -127,6 +127,24 @@ public class Statics {
         }
     }
 
+    private static void inboxMonitor() {
+        new Thread(() -> {
+            try {
+                Thread.sleep(500);
+                boolean b = Client.userRequest(username);
+                if (!b) {
+                    Thread.sleep(500);
+                    inboxMonitor();
+                } else {
+                    Thread.sleep(500);
+                }
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+
+        }).start();
+    }
+
     public static void switchToolPanels() {
         jRadioButton2.setVisible(false);
         toolMode++;
@@ -143,7 +161,7 @@ public class Statics {
                 jSendPanel.setVisible(false);
                 jReceivePanel.setVisible(true);
                 jTree1.setDragEnabled(false);
-
+                inboxMonitor();
                 jLabel5.setVisible(false);
                 jLabel6.setVisible(false);
                 jRadioButton2.setVisible(false);
@@ -293,6 +311,9 @@ public class Statics {
                 jLabel6.setVisible(true);
                 jRadioButton2.setVisible(false);
                 jRadioButton2.setSelected(false);
+                jSendSQL.setVisible(false);
+                jSendSQL.setSelected(false);
+                jSendSQL.setEnabled(true);
                 jRadioButton2.setEnabled(true);
                 break;
         }
@@ -355,7 +376,7 @@ public class Statics {
     }
 
     public static void collapseLogin(Main main) {
-        if (Client.getSession(username)) {
+        if (Client.startSession(username)) {
             main.setSize(779, 240);
             jLabel1.setLocation(265, 10);
             jLabel3.setLocation(367, 4);

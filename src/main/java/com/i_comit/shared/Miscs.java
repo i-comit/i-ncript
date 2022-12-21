@@ -103,7 +103,7 @@ public class Miscs {
         FileTime fileTime = null;
         String str = new String(fileTimeArr, StandardCharsets.UTF_8);
         try {
-            milis = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(str).getTime();
+            milis = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SS'Z'").parse(str).getTime();
             fileTime = FileTime.fromMillis(milis);
         } catch (ParseException e) {
             // TODO Auto-generated catch block

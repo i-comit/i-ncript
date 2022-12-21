@@ -22,8 +22,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import javax.swing.AbstractAction;
@@ -51,66 +53,72 @@ public class Main extends javax.swing.JFrame {
     public Main() {
 //        root = Paths.get("").toAbsolutePath().toString();
 //        if (Memory.checkWMIC()) {
-            root = root.substring(0, 3);
-            initComponents();
-            TreeView.renderTreeCells();
-            Memory.getUSBName(this);
+        root = root.substring(0, 3);
+        initComponents();
+        TreeView.renderTreeCells();
+        Memory.getUSBName(this);
 
-            Path runtime = Paths.get(root + masterFolder + "runtime");
-            Path app = Paths.get(root + masterFolder + "app");
-            if (runtime.toFile().exists()) {
-                try {
-                    Files.setAttribute(runtime, "dos:hidden", true);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+        Path runtime = Paths.get(root + masterFolder + "runtime");
+        Path app = Paths.get(root + masterFolder + "app");
+        if (runtime.toFile().exists()) {
+            try {
+                Files.setAttribute(runtime, "dos:hidden", true);
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-            if (app.toFile().exists()) {
-                try {
-                    Files.setAttribute(app, "dos:hidden", true);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+        }
+        if (app.toFile().exists()) {
+            try {
+                Files.setAttribute(app, "dos:hidden", true);
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
+        }
 
-            jStorePanel.setVisible(true);
-            jSendPanel.setVisible(false);
-            jReceivePanel.setVisible(false);
-            jRadioButton2.setVisible(false);
-            jRadioButton3.setVisible(false);
-            jScrollPane5.setVisible(false);
+        jStorePanel.setVisible(true);
+        jSendPanel.setVisible(false);
+        jReceivePanel.setVisible(false);
+        jRadioButton2.setVisible(false);
+        jRadioButton3.setVisible(false);
+        jScrollPane5.setVisible(false);
 
-            if (!keyFile.exists()) {
-                jToolPanel.setVisible(false);
-                loginLabelVisibleBool(false);
-                this.setSize(540, 240);
-                this.setLocationRelativeTo(null);
-            } else {
-                Memory.getHeapSize(this);
-                setKeybinding();
-                loginLabelVisibleBool(true);
-                jUsernameLabel.setText("enter username");
-                jPasswordLabel.setText("enter password");
-                generateFolders();
+        if (!keyFile.exists()) {
+            jToolPanel.setVisible(false);
+            loginLabelVisibleBool(false);
+            this.setSize(540, 240);
+            this.setLocationRelativeTo(null);
+        } else {
+            Memory.getHeapSize(this);
+            setKeybinding();
+            loginLabelVisibleBool(true);
+            jUsernameLabel.setText("enter username");
+            jPasswordLabel.setText("enter password");
+            generateFolders();
 
-                jToolPanel.setVisible(false);
-                jButton2.setVisible(false);
-            }
-            jProgressBar2.setVisible(false);
-            dragDrop.setVisible(false);
-            jSendSQL.setVisible(false);
+            jToolPanel.setVisible(false);
+            jButton2.setVisible(false);
+        }
+        jProgressBar2.setVisible(false);
+        dragDrop.setVisible(false);
+        jSendSQL.setVisible(false);
 //        }
     }
 
     private void getKeyBinding(int keyCode, JPanel jPanel, AbstractAction action) {
         int modifier = 0;
         switch (keyCode) {
-            case KeyEvent.VK_E -> modifier = InputEvent.SHIFT_DOWN_MASK;
-            case KeyEvent.VK_D -> modifier = InputEvent.SHIFT_DOWN_MASK;
-            case KeyEvent.VK_S -> modifier = InputEvent.SHIFT_DOWN_MASK;
-            case KeyEvent.VK_X -> modifier = InputEvent.SHIFT_DOWN_MASK;
-            case KeyEvent.VK_F -> modifier = InputEvent.SHIFT_DOWN_MASK;
-            case KeyEvent.VK_SPACE -> modifier = InputEvent.SHIFT_DOWN_MASK;
+            case KeyEvent.VK_E ->
+                modifier = InputEvent.SHIFT_DOWN_MASK;
+            case KeyEvent.VK_D ->
+                modifier = InputEvent.SHIFT_DOWN_MASK;
+            case KeyEvent.VK_S ->
+                modifier = InputEvent.SHIFT_DOWN_MASK;
+            case KeyEvent.VK_X ->
+                modifier = InputEvent.SHIFT_DOWN_MASK;
+            case KeyEvent.VK_F ->
+                modifier = InputEvent.SHIFT_DOWN_MASK;
+            case KeyEvent.VK_SPACE ->
+                modifier = InputEvent.SHIFT_DOWN_MASK;
             case KeyEvent.VK_V -> {
             }
             case KeyEvent.VK_ENTER -> {
@@ -482,7 +490,7 @@ public class Main extends javax.swing.JFrame {
         jToolPanel.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 80, -1, -1));
 
         jSwitchMode.setFont(Statics.registerCustomFont(12, fontFile));
-        jSwitchMode.setText("⇒");
+        jSwitchMode.setText("STORE");
         jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
         jSwitchMode.setMargin(new java.awt.Insets(2, 14, 2, 14));
         jSwitchMode.setPreferredSize(new java.awt.Dimension(72, 22));
@@ -608,6 +616,11 @@ public class Main extends javax.swing.JFrame {
 
         jTextField2.setFont(Statics.registerCustomFont(12, fontFile));
         jTextField2.setPreferredSize(new java.awt.Dimension(103, 22));
+        jTextField2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextField2KeyTyped(evt);
+            }
+        });
         jSendPanel.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(144, 15, 100, -1));
 
         jLabel5.setFont(Statics.registerCustomFont(12, fontFile));
@@ -1115,6 +1128,8 @@ public class Main extends javax.swing.JFrame {
                     if (Login.verifyLogin()) {
                         collapseLogin(this);
                     } else {
+                        GUI.t.interrupt();
+                        GUI.labelCutterThread(jAlertLabel, "username or password is invalid.", 20, 40, 2000, false);
                         jTextField1.setText("");
                         jPasswordField1.setText("");
                         jTextField1.requestFocus();
@@ -1169,6 +1184,8 @@ public class Main extends javax.swing.JFrame {
                     if (Login.verifyLogin()) {
                         collapseLogin(this);
                     } else {
+                        GUI.t.interrupt();
+                        GUI.labelCutterThread(jAlertLabel, "username or password is invalid.", 20, 40, 2000, false);
                         jTextField1.setText("");
                         jPasswordField1.setText("");
                         jTextField1.requestFocus();
@@ -1310,6 +1327,15 @@ public class Main extends javax.swing.JFrame {
                 TreeView.openFile(jTree1.getSelectionPath());
             }
         }
+        if (jTextField2.getText().length() < 4) {
+            jSendSQL.setVisible(false);
+            jLabel5.setVisible(true);
+        } else {
+            if (!jTree1.isSelectionEmpty()) {
+                jSendSQL.setVisible(true);
+                jLabel5.setVisible(false);
+            }
+        }
     }//GEN-LAST:event_jTree1MouseClicked
     //HOT FILER
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
@@ -1437,8 +1463,44 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextArea1MouseExited
 
     private void jSendSQLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSendSQLActionPerformed
-        // TODO add your handling code here:
+        new Thread(() -> {
+            try {
+                if (Client.getTable(Main.jTextField2.getText().trim())) {
+                    List<Path> paths = TreeView.convertTreePathToPath(jTree1.getSelectionPaths());
+                    jAlertLabel.setText("");
+                    Main.jTextField2.setEnabled(false);
+                    Main.jPasswordField2.setEnabled(false);
+                    for (Path path : paths) {
+                        Client.postRecords(Main.jTextField2.getText().trim(), path.toFile());
+                        path.toFile().delete();
+                        refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                    }
+                    GUI.t.interrupt();
+                    GUI.labelCutterThread(jAlertLabel, paths.size() + " files sent to " + Main.jTextField2.getText().trim(), 20, 25, 1000, false);
+                    Main.jTextArea1.append("--------------------------------------------\n");
+                    Main.jTextArea1.append(paths.size() + " files sent to " + Main.jTextField2.getText().trim() + " at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
+                    Statics.resetSendTools(2);
+                } else {
+                    Statics.resetSendTools(2);
+                    GUI.t.interrupt();
+                    GUI.labelCutterThread(jAlertLabel, "user is not in this network", 20, 25, 1000, false);
+                }
+            } catch (IOException | ClassNotFoundException | InterruptedException ex) {
+            }
+        }).start();
     }//GEN-LAST:event_jSendSQLActionPerformed
+
+    private void jTextField2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyTyped
+        if (jTextField2.getText().length() < 4) {
+            jSendSQL.setVisible(false);
+            jLabel5.setVisible(true);
+        } else {
+            if (!jTree1.isSelectionEmpty()) {
+                jSendSQL.setVisible(true);
+                jLabel5.setVisible(false);
+            }
+        }
+    }//GEN-LAST:event_jTextField2KeyTyped
     /**
      * @param args the command line arguments
      */
