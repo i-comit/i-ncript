@@ -42,9 +42,9 @@ public class Server {
     private static Socket clientSocket;
 
     private static synchronized void socketStart(int port) {
-        ServerSession session = new ServerSession();
-        ServerTable table = new ServerTable();
-        ServerRecord record = new ServerRecord();
+        Session session = new Session();
+        Table table = new Table();
+        Record record = new Record();
         try {
             InetAddress addr = InetAddress.getByName(Server.getIP());
             serverSocket = new ServerSocket(port, 50, addr);
@@ -215,9 +215,9 @@ public class Server {
                 System.out.println("No records found");
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
 //        } catch (IOException ex) {
 //            ex.printStackTrace();
+            
         }
         return fileRecords;
     }
@@ -289,9 +289,9 @@ public class Server {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
-        ServerSession session = new ServerSession();
-        ServerTable table = new ServerTable();
-        ServerRecord record = new ServerRecord();
+        Session session = new Session();
+        Table table = new Table();
+        Record record = new Record();
 //        dropTable("SESSIONS");
 //        dropTable("I-NCRIPT");
         initDatabase();
@@ -312,7 +312,7 @@ public class Server {
     }
 }
 
-class ServerSession {
+class Session {
 
     public void listSessions(String username) throws UnsupportedEncodingException {
         String sql = String.format("SELECT * FROM \"SESSIONS\" WHERE \"user-name\"  = \"%s\";", SQLHasher(username));
@@ -376,7 +376,7 @@ class ServerSession {
 
 }
 
-class ServerTable {
+class Table {
 
     public String createTable(String username) throws UnsupportedEncodingException {
         String tbl = String.format("CREATE TABLE IF NOT EXISTS \"%s\" ('recipient-name' text NOT NULL, 'comm-text' text NOT NULL, 'comm-date' text NOT NULL);", SQLHasher(username));
@@ -419,7 +419,7 @@ class ServerTable {
     }
 }
 
-class ServerRecord {
+class Record {
 
     public void listRecords(String username) throws UnsupportedEncodingException {
         String sql = "SELECT * FROM 'FILES-DB'";

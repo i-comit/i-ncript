@@ -42,7 +42,7 @@ public class Main extends javax.swing.JFrame {
 
     public static String root = "D:\\";
     public static final String masterFolder = "'--------'" + File.separator;
-    public static boolean networkAlive = false;
+    public static boolean adminBool = false;
 
     private final String appVer = "1.8.5";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
@@ -51,6 +51,7 @@ public class Main extends javax.swing.JFrame {
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
 
     public Main() {
+        Client.internetMonitor();
 //        root = Paths.get("").toAbsolutePath().toString();
 //        if (Memory.checkWMIC()) {
         root = root.substring(0, 3);
@@ -1327,15 +1328,7 @@ public class Main extends javax.swing.JFrame {
                 TreeView.openFile(jTree1.getSelectionPath());
             }
         }
-        if (jTextField2.getText().length() < 4) {
-            jSendSQL.setVisible(false);
-            jLabel5.setVisible(true);
-        } else {
-            if (!jTree1.isSelectionEmpty()) {
-                jSendSQL.setVisible(true);
-                jLabel5.setVisible(false);
-            }
-        }
+        sendSQLToggle();
     }//GEN-LAST:event_jTree1MouseClicked
     //HOT FILER
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
@@ -1349,7 +1342,6 @@ public class Main extends javax.swing.JFrame {
     private void jTree1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MouseExited
         TreeView.storeExpandedNodes(toolMode);
         TreeView.storeNodeCaretPos(Statics.toolMode);
-
         jCreationDateLabel.setText("");
         jFileSizeLabel.setText("");
         if (toolMode == 0 || toolMode == 3)
@@ -1490,16 +1482,21 @@ public class Main extends javax.swing.JFrame {
         }).start();
     }//GEN-LAST:event_jSendSQLActionPerformed
 
-    private void jTextField2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyTyped
-        if (jTextField2.getText().length() < 4) {
-            jSendSQL.setVisible(false);
-            jLabel5.setVisible(true);
-        } else {
-            if (!jTree1.isSelectionEmpty()) {
-                jSendSQL.setVisible(true);
-                jLabel5.setVisible(false);
+    private void sendSQLToggle() {
+        if (Client.internetBool) {
+            if (jTextField2.getText().length() < 4) {
+                jSendSQL.setVisible(false);
+                jLabel5.setVisible(true);
+            } else {
+                if (!jTree1.isSelectionEmpty()) {
+                    jSendSQL.setVisible(true);
+                    jLabel5.setVisible(false);
+                }
             }
         }
+    }
+    private void jTextField2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyTyped
+        sendSQLToggle();
     }//GEN-LAST:event_jTextField2KeyTyped
     /**
      * @param args the command line arguments

@@ -1,7 +1,9 @@
 com\i_comit\macos\GUI.class
 com\i_comit\windows\Main$21.class
 com\i_comit\windows\Main$31.class
+com\i_comit\windows\Main$41.class
 com\i_comit\macos\Main.class
+com\i_comit\shared\Table.class
 com\i_comit\macos\Folder.class
 com\i_comit\macos\Main$1.class
 com\i_comit\windows\Main$11.class
@@ -51,7 +53,6 @@ com\i_comit\macos\Main$30.class
 com\i_comit\macos\Main$7.class
 com\i_comit\shared\Client.class
 com\i_comit\shared\Session.class
-.netbeans_automatic_build
 com\i_comit\shared\Enums$OS.class
 com\i_comit\windows\Main$37.class
 com\i_comit\windows\recursiveFileDrop_T.class
@@ -85,6 +86,7 @@ com\i_comit\shared\Hasher.class
 com\i_comit\windows\AES.class
 com\i_comit\windows\Main$2.class
 com\i_comit\macos\DriveCheck$1.class
+com\i_comit\shared\Record.class
 com\i_comit\windows\AES_T.class
 com\i_comit\windows\Main$12.class
 com\i_comit\windows\Main$40.class

@@ -376,7 +376,21 @@ public class Statics {
     }
 
     public static void collapseLogin(Main main) {
-        if (Client.startSession(username)) {
+        if (Client.internetBool) {
+            if (Client.startSession(username)) {
+                main.setSize(779, 240);
+                jLabel1.setLocation(265, 10);
+                jLabel3.setLocation(367, 4);
+                jAlertLabel.setLocation(265, 174);
+                main.setLocationRelativeTo(null);
+                jScrollPane5.setVisible(true);
+                GUI.t.interrupt();
+                GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript, " + username + ".", 20, 40, 1200, false);
+            } else {
+                GUI.t.interrupt();
+                GUI.labelCutterThread(jAlertLabel, "user is already logged in network.", 20, 40, 2000, false);
+            }
+        } else {
             main.setSize(779, 240);
             jLabel1.setLocation(265, 10);
             jLabel3.setLocation(367, 4);
@@ -385,9 +399,6 @@ public class Statics {
             jScrollPane5.setVisible(true);
             GUI.t.interrupt();
             GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript, " + username + ".", 20, 40, 1200, false);
-        } else {
-            GUI.t.interrupt();
-            GUI.labelCutterThread(jAlertLabel, "user is already logged in network.", 20, 40, 2000, false);
         }
     }
 }

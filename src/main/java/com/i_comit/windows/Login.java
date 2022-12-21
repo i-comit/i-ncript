@@ -296,7 +296,9 @@ public class Login {
                     Main.jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
                     Main.jToolPanel.requestFocus();
                     Main.refreshTreeView(path, TreeView.nodeCaretPos);
-                    Client.postTable(username);
+                    if (Client.internetBool) {
+                        Client.postTable(username);
+                    }
                     b = true;
                 }
             }

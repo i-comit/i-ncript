@@ -4,9 +4,11 @@
  */
 package com.i_comit.windows;
 
+import com.i_comit.shared.Client;
 import static com.i_comit.windows.Main.jProgressBar2;
 import static com.i_comit.windows.Main.root;
 import static com.i_comit.windows.Memory.byteFormatter;
+import static com.i_comit.windows.Statics.username;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -217,6 +219,7 @@ public class Memory {
                             }
                             if ((s = reader.readLine()) == null) {
                                 System.exit(0);
+                                Client.endSession(username);
                             }
                         }
 

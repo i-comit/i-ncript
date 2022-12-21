@@ -29,25 +29,6 @@ public class Enums {
 
     }
 
-    public static void main(String[] args) {
-
-        System.out.println(Requests.SESS_GET);
-        System.out.println(getOS());
-//        if (OSStr.contains("win")) {
-//            OS os = OS.windows;
-//            System.out.println(OS.windows);
-//        } else if (OSStr.contains("mac")) {
-//            System.out.println("This is MacOS");
-//        } else if (OSStr.contains("nix") || OSStr.contains("nux") || OSStr.contains("aix")) {
-//            System.out.println("This is Unix or Linux");
-//        } else if (OSStr.contains("sunos")) {
-//            System.out.println("This is Solaris");
-//        } else {
-//            System.out.println("This OS is not supported");
-//        }
-//        if(os )
-    }
-
     public static byte[] requestCode(Requests requests) {
         String requestStr = requests.toString();
         System.out.println(requestStr);
