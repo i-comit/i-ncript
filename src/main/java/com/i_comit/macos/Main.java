@@ -6,6 +6,7 @@ package com.i_comit.macos;
 
 import static com.i_comit.macos.DriveCheck.goWebsite;
 import static com.i_comit.macos.Statics.*;
+import com.i_comit.shared.Miscs;
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.awt.dnd.DropTarget;
@@ -317,7 +318,7 @@ public class Main extends javax.swing.JFrame {
         } else {
             Random rand = new Random();
             int rand_int1 = rand.nextInt(5);
-            if (!Miscellaneous.holidayCheck()) {
+            if (!Miscs.holidayCheck()) {
                 switch (rand_int1) {
                     case 0:
                         GUI.labelCutterThread(jAlertLabel, "a data encryption app.", 80, 80, 100, true);
@@ -477,7 +478,7 @@ public class Main extends javax.swing.JFrame {
         jToolPanel.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 80, -1, -1));
 
         jSwitchMode.setFont(Statics.registerCustomFont(12, fontFile));
-        jSwitchMode.setText("STORE");
+        jSwitchMode.setText("⇒");
         jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
         jSwitchMode.setMargin(new java.awt.Insets(2, 14, 2, 14));
         jSwitchMode.setPreferredSize(new java.awt.Dimension(72, 22));

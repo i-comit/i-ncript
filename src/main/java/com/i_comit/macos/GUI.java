@@ -8,6 +8,7 @@ import static com.i_comit.macos.Main.jAlertLabel;
 import static com.i_comit.macos.Main.root;
 import static com.i_comit.macos.Statics.AESMode;
 import static com.i_comit.macos.Statics.GB;
+import com.i_comit.shared.Audio;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -163,7 +164,7 @@ public class GUI {
             progressBar.setString("100% | " + AES_T.paths.size() + "/" + AES_T.paths.size());
             try {
                 Thread.sleep(50);
-                AudioPlayer.audioPlayerThread("ding-sfx.wav");
+                Audio.audioPlayerThread("ding-sfx.wav");
                 switch (Statics.AESMode) {
                     case 0:
                         GUI.t.interrupt();

@@ -118,7 +118,7 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
               <Connection code="Statics.registerCustomFont(12, fontFile)" type="code"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="STORE"/>
+            <Property name="text" type="java.lang.String" value="&#x21d2;"/>
             <Property name="toolTipText" type="java.lang.String" value="current panel can encrypt &amp; decrypt personal files"/>
             <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
               <Insets value="[2, 14, 2, 14]"/>
@@ -397,6 +397,22 @@
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
                   <AbsoluteConstraints x="6" y="50" width="-1" height="-1"/>
+                </Constraint>
+              </Constraints>
+            </Component>
+            <Component class="javax.swing.JRadioButton" name="jSendSQL">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="Statics.registerCustomFont(12, fontFile)" type="code"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="SEND TO"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jSendSQLActionPerformed"/>
+              </Events>
+              <Constraints>
+                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+                  <AbsoluteConstraints x="6" y="16" width="-1" height="-1"/>
                 </Constraint>
               </Constraints>
             </Component>

@@ -9,6 +9,7 @@ import static com.i_comit.macos.Main.jProgressBar1;
 import static com.i_comit.macos.Main.jTree1;
 import static com.i_comit.macos.Main.masterFolder;
 import static com.i_comit.macos.Main.root;
+import com.i_comit.shared.Audio;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -210,7 +211,7 @@ class DragDrop_T implements Runnable {
         jProgressBar1.setValue(jProgressBar1.getMaximum());
         try {
             Thread.sleep(400);
-            AudioPlayer.audioPlayerThread("ding-sfx.wav");
+            Audio.audioPlayerThread("ding-sfx.wav");
             GUI.labelCutterThread(jAlertLabel, decFiles + " encrypted | " + encFiles + " decrypted", 15, 30, 300, false);
 
             Thread.sleep(300);

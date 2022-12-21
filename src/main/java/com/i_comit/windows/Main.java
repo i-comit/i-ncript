@@ -4,6 +4,8 @@
  */
 package com.i_comit.windows;
 
+import com.i_comit.shared.Client;
+import com.i_comit.shared.Miscs;
 import static com.i_comit.windows.DriveCheck.goWebsite;
 import static com.i_comit.windows.Statics.*;
 import java.awt.Color;
@@ -36,8 +38,9 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "";
+    public static String root = "D:\\";
     public static final String masterFolder = "'--------'" + File.separator;
+    public static boolean networkAlive = false;
 
     private final String appVer = "1.8.5";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
@@ -46,8 +49,8 @@ public class Main extends javax.swing.JFrame {
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
 
     public Main() {
-        root = Paths.get("").toAbsolutePath().toString();
-        if (Memory.checkWMIC()) {
+//        root = Paths.get("").toAbsolutePath().toString();
+//        if (Memory.checkWMIC()) {
             root = root.substring(0, 3);
             initComponents();
             TreeView.renderTreeCells();
@@ -95,42 +98,31 @@ public class Main extends javax.swing.JFrame {
             }
             jProgressBar2.setVisible(false);
             dragDrop.setVisible(false);
-        }
+            jSendSQL.setVisible(false);
+//        }
     }
 
     private void getKeyBinding(int keyCode, JPanel jPanel, AbstractAction action) {
         int modifier = 0;
         switch (keyCode) {
-            case KeyEvent.VK_E:
-                modifier = InputEvent.SHIFT_DOWN_MASK;
-                break;
-            case KeyEvent.VK_D:
-                modifier = InputEvent.SHIFT_DOWN_MASK;
-                break;
-            case KeyEvent.VK_S:
-                modifier = InputEvent.SHIFT_DOWN_MASK;
-                break;
-            case KeyEvent.VK_X:
-                modifier = InputEvent.SHIFT_DOWN_MASK;
-                break;
-            case KeyEvent.VK_F:
-                modifier = InputEvent.SHIFT_DOWN_MASK;
-                break;
-            case KeyEvent.VK_SPACE:
-                modifier = InputEvent.SHIFT_DOWN_MASK;
-                break;
-            case KeyEvent.VK_V:
-                break;
-            case KeyEvent.VK_ENTER:
-                break;
-            case KeyEvent.VK_1:
-                break;
-            case KeyEvent.VK_2:
-                break;
-            case KeyEvent.VK_3:
-                break;
-            case KeyEvent.VK_4:
-                break;
+            case KeyEvent.VK_E -> modifier = InputEvent.SHIFT_DOWN_MASK;
+            case KeyEvent.VK_D -> modifier = InputEvent.SHIFT_DOWN_MASK;
+            case KeyEvent.VK_S -> modifier = InputEvent.SHIFT_DOWN_MASK;
+            case KeyEvent.VK_X -> modifier = InputEvent.SHIFT_DOWN_MASK;
+            case KeyEvent.VK_F -> modifier = InputEvent.SHIFT_DOWN_MASK;
+            case KeyEvent.VK_SPACE -> modifier = InputEvent.SHIFT_DOWN_MASK;
+            case KeyEvent.VK_V -> {
+            }
+            case KeyEvent.VK_ENTER -> {
+            }
+            case KeyEvent.VK_1 -> {
+            }
+            case KeyEvent.VK_2 -> {
+            }
+            case KeyEvent.VK_3 -> {
+            }
+            case KeyEvent.VK_4 -> {
+            }
         }
         jPanel.getInputMap().put(KeyStroke.getKeyStroke(keyCode, modifier), keyCode);
         jPanel.getActionMap().put(keyCode, action);
@@ -335,23 +327,18 @@ public class Main extends javax.swing.JFrame {
         } else {
             Random rand = new Random();
             int rand_int1 = rand.nextInt(5);
-            if (!Miscellaneous.holidayCheck()) {
+            if (!Miscs.holidayCheck()) {
                 switch (rand_int1) {
-                    case 0:
+                    case 0 ->
                         GUI.labelCutterThread(jAlertLabel, "a data encryption app.", 80, 80, 100, true);
-                        break;
-                    case 1:
+                    case 1 ->
                         GUI.labelCutterThread(jAlertLabel, "developed by i-comit LLC.", 80, 80, 100, true);
-                        break;
-                    case 2:
+                    case 2 ->
                         GUI.labelCutterThread(jAlertLabel, "USB drive, reimagined.", 60, 80, 100, true);
-                        break;
-                    case 3:
+                    case 3 ->
                         GUI.labelCutterThread(jAlertLabel, "also available on mac os.", 60, 80, 100, true);
-                        break;
-                    case 4:
+                    case 4 ->
                         GUI.labelCutterThread(jAlertLabel, "also available on linux.", 60, 80, 100, true);
-                        break;
                 }
             }
             FileHider.cleanUp(path);
@@ -402,6 +389,7 @@ public class Main extends javax.swing.JFrame {
         jTextField2 = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        jSendSQL = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
         jReceivePanel = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
@@ -494,7 +482,7 @@ public class Main extends javax.swing.JFrame {
         jToolPanel.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 80, -1, -1));
 
         jSwitchMode.setFont(Statics.registerCustomFont(12, fontFile));
-        jSwitchMode.setText("STORE");
+        jSwitchMode.setText("⇒");
         jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
         jSwitchMode.setMargin(new java.awt.Insets(2, 14, 2, 14));
         jSwitchMode.setPreferredSize(new java.awt.Dimension(72, 22));
@@ -630,6 +618,15 @@ public class Main extends javax.swing.JFrame {
         jLabel6.setFont(Statics.registerCustomFont(12, fontFile));
         jLabel6.setText("create password");
         jSendPanel.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 50, -1, -1));
+
+        jSendSQL.setFont(Statics.registerCustomFont(12, fontFile));
+        jSendSQL.setText("SEND TO");
+        jSendSQL.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jSendSQLActionPerformed(evt);
+            }
+        });
+        jSendPanel.add(jSendSQL, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 16, -1, -1));
 
         jRadioButton2.setFont(Statics.registerCustomFont(12, fontFile));
         jRadioButton2.setText("ENCRYPT");
@@ -1118,10 +1115,16 @@ public class Main extends javax.swing.JFrame {
                     if (Login.verifyLogin()) {
                         collapseLogin(this);
                     } else {
-                        GUI.t.interrupt();
-                        GUI.labelCutterThread(jAlertLabel, "username or password is invalid.", 20, 40, 2000, false);
+                        jTextField1.setText("");
+                        jPasswordField1.setText("");
+                        jTextField1.requestFocus();
                     }
                 } else {
+                    GUI.t.interrupt();
+                    GUI.labelCutterThread(jAlertLabel, "username or password is invalid.", 20, 40, 2000, false);
+                    jTextField1.setText("");
+                    jPasswordField1.setText("");
+                    jTextField1.requestFocus();
                 }
             } catch (UnsupportedEncodingException ex) {
                 ex.printStackTrace();
@@ -1166,10 +1169,16 @@ public class Main extends javax.swing.JFrame {
                     if (Login.verifyLogin()) {
                         collapseLogin(this);
                     } else {
-                        GUI.t.interrupt();
-                        GUI.labelCutterThread(jAlertLabel, "username or password is invalid.", 20, 40, 2000, false);
+                        jTextField1.setText("");
+                        jPasswordField1.setText("");
+                        jTextField1.requestFocus();
                     }
                 } else {
+                    GUI.t.interrupt();
+                    GUI.labelCutterThread(jAlertLabel, "username or password is invalid.", 20, 40, 2000, false);
+                    jTextField1.setText("");
+                    jPasswordField1.setText("");
+                    jTextField1.requestFocus();
                 }
             } catch (UnsupportedEncodingException ex) {
                 ex.printStackTrace();
@@ -1207,9 +1216,9 @@ public class Main extends javax.swing.JFrame {
     private void jSwitchModeActionEvt(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSwitchModeActionEvt
         switchToolPanels();
     }//GEN-LAST:event_jSwitchModeActionEvt
-    //SEND PANEL
+    //SEND PANEL PW
     private void jPasswordField2Evt(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField2Evt
-        if (jPasswordField2.getPassword().length < 4) {
+        if (jPasswordField2.getPassword().length <= 5) {
             jLabel6.setVisible(true);
             jLabel5.setVisible(true);
             jRadioButton2.setVisible(false);
@@ -1219,9 +1228,9 @@ public class Main extends javax.swing.JFrame {
             jRadioButton2.setVisible(true);
         }
     }//GEN-LAST:event_jPasswordField2Evt
-    //RECEIVE PANEL
+    //RECEIVE PANEL PW
     private void jPasswordField3Evt(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField3Evt
-        if (jPasswordField3.getPassword().length < 4) {
+        if (jPasswordField3.getPassword().length <= 5) {
             jLabel7.setVisible(true);
             jLabel8.setVisible(true);
             jRadioButton3.setVisible(false);
@@ -1317,9 +1326,10 @@ public class Main extends javax.swing.JFrame {
 
         jCreationDateLabel.setText("");
         jFileSizeLabel.setText("");
-        if (jTree1.getSelectionPaths() != null) {
-            jTree1.clearSelection();
-        }
+        if (toolMode == 0 || toolMode == 3)
+            if (jTree1.getSelectionPaths() != null) {
+                jTree1.clearSelection();
+            }
     }//GEN-LAST:event_jTree1MouseExited
 
     public static boolean progressbarBool = false;
@@ -1328,18 +1338,14 @@ public class Main extends javax.swing.JFrame {
         if (progressbarBool) {
             this.setSize(779, 240);
             switch (Statics.toolMode) {
-                case 0:
+                case 0 ->
                     refreshTreeView(path, TreeView.nodeCaretPos);
-                    break;
-                case 1:
+                case 1 ->
                     refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
-                    break;
-                case 2:
+                case 2 ->
                     refreshTreeView(sendFolder, TreeView.sendCaretPos);
-                    break;
-                case 3:
+                case 3 ->
                     refreshTreeView(path, TreeView.nodeCaretPos);
-                    break;
             }
             progressbarBool = false;
         } else {
@@ -1378,42 +1384,37 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jSlider1StateChanged
 
     private void jTree1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MouseEntered
-        if (jTree1.isEnabled()) {
-            switch (toolMode) {
-                case 0:
-                    refreshTreeView(path, TreeView.nodeCaretPos);
-                    break;
-                case 1:
-                    refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
-                    Folder.listZipFiles();
-                    break;
-                case 2:
-                    refreshTreeView(sendFolder, TreeView.sendCaretPos);
-                    break;
-                case 3:
-                    refreshTreeView(path, TreeView.nodeCaretPos);
-                    break;
+        if (toolMode == 0 || toolMode == 3)
+            if (jTree1.isEnabled()) {
+                switch (toolMode) {
+                    case 0 ->
+                        refreshTreeView(path, TreeView.nodeCaretPos);
+                    case 1 -> {
+                        refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
+                        Folder.listZipFiles();
+                    }
+                    case 2 ->
+                        refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                    case 3 ->
+                        refreshTreeView(path, TreeView.nodeCaretPos);
+                }
             }
-        }
     }//GEN-LAST:event_jTree1MouseEntered
 
     private void jTree1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTree1PropertyChange
         if (evt.getPropertyName().equals("enabled")) {
             if (jTree1.isEnabled()) {
                 switch (toolMode) {
-                    case 0:
+                    case 0 ->
                         refreshTreeView(path, TreeView.nodeCaretPos);
-                        break;
-                    case 1:
+                    case 1 -> {
                         refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
                         Folder.listZipFiles();
-                        break;
-                    case 2:
+                    }
+                    case 2 ->
                         refreshTreeView(sendFolder, TreeView.sendCaretPos);
-                        break;
-                    case 3:
+                    case 3 ->
                         refreshTreeView(path, TreeView.nodeCaretPos);
-                        break;
                 }
             }
         }
@@ -1434,17 +1435,19 @@ public class Main extends javax.swing.JFrame {
     private void jTextArea1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextArea1MouseExited
         mouseOverLog = false;
     }//GEN-LAST:event_jTextArea1MouseExited
+
+    private void jSendSQLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSendSQLActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jSendSQLActionPerformed
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
@@ -1458,7 +1461,12 @@ public class Main extends javax.swing.JFrame {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             ex.printStackTrace();
         }
-
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                Client.endSession(username);
+            }
+        });
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             new Main().setVisible(true);
@@ -1520,6 +1528,7 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JScrollPane jScrollPane6;
     protected static javax.swing.JScrollPane jScrollPane7;
     protected static javax.swing.JPanel jSendPanel;
+    protected static javax.swing.JRadioButton jSendSQL;
     protected static javax.swing.JSeparator jSeparator1;
     protected static javax.swing.JSeparator jSeparator2;
     protected static javax.swing.JSlider jSlider1;

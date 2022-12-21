@@ -14,6 +14,7 @@ import static com.i_comit.macos.Main.jProgressBar1;
 import static com.i_comit.macos.Main.jRadioButton2;
 import static com.i_comit.macos.Main.jTextField1;
 import static com.i_comit.macos.Statics.*;
+import com.i_comit.shared.Hasher;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;

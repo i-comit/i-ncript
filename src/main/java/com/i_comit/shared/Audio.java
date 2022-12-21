@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.i_comit.windows;
+package com.i_comit.shared;
 
 import java.io.IOException;
 import java.net.URL;
@@ -20,7 +20,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  * @author www.codejava.net
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
-public class AudioPlayer implements LineListener {
+public class Audio implements LineListener {
 
     boolean playCompleted;
     public static Thread t;
@@ -97,7 +97,7 @@ class AudioPlayer_T implements Runnable {
     }
 
     public static void audioPlayer_T(String audioFileName) {
-        AudioPlayer player = new AudioPlayer();
+        Audio player = new Audio();
         player.play(audioFileName);
     }
 }

@@ -1,5 +1,8 @@
-package com.i_comit.windows;
+package com.i_comit.shared;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 import java.io.UnsupportedEncodingException;
 
@@ -49,7 +52,7 @@ public class Hasher {
         StringBuilder sb = new StringBuilder();
         try {
             String alphabet = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ".toUpperCase();
-            String s1 = Strings.getHash64(joinHash(hash, hashBool));
+            String s1 = getHash64(joinHash(hash, hashBool));
             final int mid = s1.length() / 4; //get the middle of the String
             String[] parts = {s1.substring(0, mid), s1.substring(mid, mid * 2), s1.substring(mid * 2, mid * 3), s1.substring(mid * 3, mid * 4)};
 
@@ -90,7 +93,7 @@ public class Hasher {
     public static String hashUsername(String username) throws UnsupportedEncodingException {
         int pw = noNegatives(username.hashCode());
         int length = (int) (Math.log10(pw) + 1);
-        String hash64Str = Strings.getHash64(username);
+        String hash64Str = getHash64(username);
         final int mid = hash64Str.length() / 4;
         String[] parts = {hash64Str.substring(0, mid), hash64Str.substring(mid, mid * 2), hash64Str.substring(mid * 2, mid * 3), hash64Str.substring(mid * 3, mid * 4)};
         switch (length) {
@@ -115,7 +118,7 @@ public class Hasher {
     public static String hashPassword(String password) throws UnsupportedEncodingException {
         int pw = noNegatives(password.hashCode());
         int length = (int) (Math.log10(pw) + 1);
-        String hash64Str = Strings.getHash64(password);
+        String hash64Str = getHash64(password);
 
         final int mid = hash64Str.length() / 4; //get the middle of the String
         String[] parts = {hash64Str.substring(0, mid), hash64Str.substring(mid, mid * 2), hash64Str.substring(mid * 2, mid * 3), hash64Str.substring(mid * 3, mid * 4)};
@@ -151,15 +154,14 @@ public class Hasher {
         }
     }
 
-    public static int numReverser(int hashTrimmer) {
-        int reversed = 0;
-        while (hashTrimmer != 0) {
-            int digit = hashTrimmer % 10;
-            reversed = reversed * 10 + digit;
-
-            hashTrimmer /= 10;
+    public static String stringReverser(String str) {
+        String nstr = "";
+        char ch;
+        for (int i = 0; i < str.length(); i++) {
+            ch = str.charAt(i); //extracts each character
+            nstr = ch + nstr; //adds each character in front of the existing string
         }
-        return reversed;
+        return nstr;
     }
 
     public static Integer noNegatives(Integer negativeInt) {
@@ -184,5 +186,78 @@ public class Hasher {
             }
         }
         return result;
+    }
+
+    public static String SQLHasher(String username) throws UnsupportedEncodingException {
+        int mod = username.length() % 2;
+        String finalStr = "";
+        StringBuffer SQLHasher = caesarCipher(getHash64(username), mod);
+        String reverser = stringReverser(SQLHasher.toString());
+
+        if (mod == 1) {
+            finalStr = splitString(reverser, true);
+}
+        if (mod == 0) {
+            finalStr = splitString(reverser, false);
+
+        }
+        return finalStr;
+    }
+
+    private static final MessageDigest MESSAGE_DIGEST;
+    public static final String[] EMPTY_ARRAY = new String[0];
+
+    static {
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException err) {
+            throw new IllegalStateException();
+        }
+        MESSAGE_DIGEST = md;
+    }
+    private static final String HEX_CHARS = "0123456789ABCDEF";
+
+    public static String getMD5(String string) {
+        byte[] bytes;
+        try {
+            bytes = string.getBytes("UTF-8");
+        } catch (java.io.UnsupportedEncodingException ue) {
+            throw new IllegalStateException(ue);
+        }
+        byte[] result;
+        synchronized (MESSAGE_DIGEST) {
+            MESSAGE_DIGEST.update(bytes);
+            result = MESSAGE_DIGEST.digest();
+        }
+        char[] resChars = new char[32];
+        int len = result.length;
+        for (int i = 0; i < len; i++) {
+            byte b = result[i];
+            int lo4 = b & 0x0F;
+            int hi4 = (b & 0xF0) >> 4;
+            resChars[i * 2] = HEX_CHARS.charAt(hi4);
+            resChars[i * 2 + 1] = HEX_CHARS.charAt(lo4);
+        }
+        return new String(resChars);
+    }
+
+    public static String getHash32(String string) throws UnsupportedEncodingException {
+        String md5 = getMD5(string);
+        return md5.substring(0, 8);
+    }
+
+    public static String getHash64(String string) throws UnsupportedEncodingException {
+        String md5 = getMD5(string);
+        return md5.substring(0, 16);
+    }
+
+    public static void main(String[] args) throws UnsupportedEncodingException {
+//        System.out.println(SQLHasher("khiemluong"));
+//        System.out.println(SQLHasher("khiemluong2"));
+//
+//        System.out.println(getHash64("khiemluong1"));
+//        System.out.println(getHash64("khiemluong2"));
+
     }
 }

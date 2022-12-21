@@ -4,6 +4,7 @@
  */
 package com.i_comit.windows;
 
+import com.i_comit.shared.Audio;
 import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.jProgressBar1;
 import static com.i_comit.windows.Main.jTree1;
@@ -219,7 +220,7 @@ class DragDrop_T implements Runnable {
         jProgressBar1.setValue(jProgressBar1.getMaximum());
         try {
             Thread.sleep(400);
-            AudioPlayer.audioPlayerThread("ding-sfx.wav");
+            Audio.audioPlayerThread("ding-sfx.wav");
             GUI.labelCutterThread(jAlertLabel, decFiles + " encrypted | " + encFiles + " decrypted", 15, 30, 600, false);
             Main.jTextArea1.append("--------------------------------------------\n\n");
             Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());

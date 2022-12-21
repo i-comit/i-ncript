@@ -4,6 +4,7 @@
  */
 package com.i_comit.windows;
 
+import com.i_comit.shared.Hasher;
 import static com.i_comit.windows.AES.decrypt;
 import static com.i_comit.windows.AES.encrypt;
 import static com.i_comit.windows.DragDrop.decFiles;

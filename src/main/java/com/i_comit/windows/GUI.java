@@ -4,6 +4,7 @@
  */
 package com.i_comit.windows;
 
+import com.i_comit.shared.Audio;
 import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.root;
 import static com.i_comit.windows.Statics.AESMode;
@@ -17,7 +18,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -181,7 +181,7 @@ public class GUI {
             progressBar.setString("100% | " + AES_T.paths.size() + "/" + AES_T.paths.size());
             try {
                 Thread.sleep(50);
-                AudioPlayer.audioPlayerThread("ding-sfx.wav");
+                Audio.audioPlayerThread("ding-sfx.wav");
                 Main.jTextArea1.append("--------------------------------------------\n");
                 switch (Statics.AESMode) {
                     case 0:
@@ -241,7 +241,7 @@ public class GUI {
         if (progressBar == Main.jProgressBar2) {
             try {
                 Thread.sleep(50);
-                AudioPlayer.audioPlayerThread("ding-sfx.wav");
+                Audio.audioPlayerThread("ding-sfx.wav");
                 Main.jTextArea1.append("--------------------------------------------\n");
                 String fileName = new File(Folder.sendFolderStr).getName();
                 if (Statics.toolMode == 2) {

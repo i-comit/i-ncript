@@ -4,6 +4,7 @@
  */
 package com.i_comit.windows;
 
+import com.i_comit.shared.Client;
 import static com.i_comit.windows.GUI.listAESPaths;
 import static com.i_comit.windows.HotFiler_T.watchService;
 import static com.i_comit.windows.Main.*;
@@ -29,7 +30,11 @@ public class Statics {
     public static String rootFolder = root.substring(0, 3) + Main.masterFolder + folderName;
     public static final String keyName = "\\.⅄.🔑";
 
+    public static final String nBoxName = "ɴ-ʙᴏx";
+    public static final String oBoxName = "ᴏ-ʙᴏx";
+
     public static int maxFileBytes = 1048576 * 4;
+    public static int portNumber = 8665;
 
     public static int AESMode;
     public static String GB;
@@ -45,8 +50,8 @@ public class Statics {
     public static File[] contents = null;
 
     public static Path path = Paths.get(root + Main.masterFolder + folderName);
-    public static Path sendFolder = Paths.get(root + Main.masterFolder + "ᴏ-ʙᴏx");
-    public static Path receiveFolder = Paths.get(root + Main.masterFolder + "ɴ-ʙᴏx");
+    public static Path sendFolder = Paths.get(root + Main.masterFolder + oBoxName);
+    public static Path receiveFolder = Paths.get(root + Main.masterFolder + nBoxName);
 
     public static String username = "";
     public static String password = "";
@@ -166,6 +171,9 @@ public class Statics {
                 jLabel8.setVisible(false);
                 jRadioButton3.setVisible(false);
                 jRadioButton3.setSelected(false);
+
+                jSendSQL.setVisible(false);
+                jLabel5.setVisible(true);
 
                 jLabel10.setText("O-BOX MODE");
                 jLabel11.setText("MOVE FILES TO O-BOX");
@@ -347,11 +355,18 @@ public class Statics {
     }
 
     public static void collapseLogin(Main main) {
-        main.setSize(779, 240);
-        jLabel1.setLocation(265, 10);
-        jLabel3.setLocation(367, 4);
-        jAlertLabel.setLocation(265, 174);
-        main.setLocationRelativeTo(null);
-        jScrollPane5.setVisible(true);
+        if (Client.getSession(username)) {
+            main.setSize(779, 240);
+            jLabel1.setLocation(265, 10);
+            jLabel3.setLocation(367, 4);
+            jAlertLabel.setLocation(265, 174);
+            main.setLocationRelativeTo(null);
+            jScrollPane5.setVisible(true);
+            GUI.t.interrupt();
+            GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript, " + username + ".", 20, 40, 1200, false);
+        } else {
+            GUI.t.interrupt();
+            GUI.labelCutterThread(jAlertLabel, "user is already logged in network.", 20, 40, 2000, false);
+        }
     }
 }

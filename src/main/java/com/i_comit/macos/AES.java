@@ -12,6 +12,7 @@ import static com.i_comit.macos.Login.sendKey;
 import static com.i_comit.macos.Main.jAlertLabel;
 import static com.i_comit.macos.Main.jProgressBar1;
 import static com.i_comit.macos.Statics.*;
+import com.i_comit.shared.Hasher;
 import java.io.*;
 import java.nio.file.*;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
