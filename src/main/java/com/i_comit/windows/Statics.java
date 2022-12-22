@@ -131,13 +131,13 @@ public class Statics {
         if (toolMode == 1) {
             new Thread(() -> {
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(250);
                     if (Client.internetBool) {
-                        Thread.sleep(500);
+                        Thread.sleep(250);
                         Client.userRequest(username);
                         inboxMonitor();
                     } else {
-                        Thread.sleep(500);
+                        Thread.sleep(250);
                     }
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
@@ -167,7 +167,6 @@ public class Statics {
                 jRadioButton2.setVisible(false);
                 jRadioButton2.setSelected(false);
                 Folder.listZipFiles();
-
                 jLabel10.setText("N-BOX MODE");
                 jLabel11.setText("MOVE .I-CC TO N-BOX");
                 dragDrop.setToolTipText("drop box will move dropped .i-cc file to n-box folder");
@@ -182,7 +181,9 @@ public class Statics {
                 jStorePanel.setVisible(false);
                 jSendPanel.setVisible(true);
                 jLabel6.setVisible(true);
-                jLabel5.setVisible(true);
+                if (!Client.internetBool) {
+                    jLabel5.setVisible(true);
+                }
                 jReceivePanel.setVisible(false);
                 jTree1.setDragEnabled(false);
 
@@ -190,9 +191,7 @@ public class Statics {
                 jLabel8.setVisible(false);
                 jRadioButton3.setVisible(false);
                 jRadioButton3.setSelected(false);
-
                 jSendSQL.setVisible(false);
-                jLabel5.setVisible(true);
 
                 jLabel10.setText("O-BOX MODE");
                 jLabel11.setText("MOVE FILES TO O-BOX");
@@ -389,9 +388,11 @@ public class Statics {
                 jAlertLabel.setLocation(265, 174);
                 main.setLocationRelativeTo(null);
                 jScrollPane5.setVisible(true);
+                inboxMonitor();
                 GUI.t.interrupt();
                 GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript, " + username + ".", 20, 40, 1200, false);
             } else {
+                Memory.getHeapSize(main);
                 GUI.t.interrupt();
                 GUI.labelCutterThread(jAlertLabel, "user is already logged in network.", 20, 40, 2000, false);
             }

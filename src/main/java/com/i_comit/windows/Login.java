@@ -130,6 +130,7 @@ public class Login {
         Main.jPasswordField2.setText("");
         jLabel6.setVisible(true);
         jLabel5.setVisible(true);
+        Main.jSendSQL.setVisible(false);
         jRadioButton2.setVisible(false);
     }
 

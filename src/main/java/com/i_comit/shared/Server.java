@@ -288,18 +288,51 @@ public class Server {
         return IPv4Addresses.get(IPv4Addresses.size() - 1);
     }
 
+    public static void serverKill(String appName) {
+        String listTasks = String.format("tasklist | findstr %s", appName);
+        ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", listTasks);
+        String s = "";
+        try {
+            Process sh = pb.start();
+            try ( BufferedReader reader = new BufferedReader(new InputStreamReader(sh.getInputStream()))) {
+                while (reader.readLine() != null) {
+                    s = reader.readLine().substring(29, 34);
+                    String killTask = String.format("taskkill /PID %s /F", s);
+                    ProcessBuilder pb1 = new ProcessBuilder("cmd.exe", "/c", killTask);
+                    pb1.start();
+                    Thread.sleep(50);
+                    sh.destroy();
+                    if (reader.readLine() == null) {
+                        System.out.println("killed server " + s);
+                        break;
+                    }
+                }
+            }
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
         Session session = new Session();
-        Table table = new Table();
-        Record record = new Record();
         initDatabase();
         session.clearSessions();
-        if (serverSocket == null) {
-            socketStart(Statics.portNumber);
-        } else {
-            System.out.println("the server is already active");
-            serverSocket.close();
-        }
+        serverKill(".server.exe");
+//        if (serverSocket == null) {
+//            socketStart(Statics.portNumber);
+//        } else {
+//            System.out.println("the server is already active");
+//            serverSocket.close();
+//        }
+
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+
+                System.out.println("SUS");
+            }
+        });
     }
 }
 

@@ -5,6 +5,7 @@
 package com.i_comit.windows;
 
 import com.i_comit.shared.Client;
+import com.i_comit.shared.Server;
 import static com.i_comit.windows.Main.jProgressBar2;
 import static com.i_comit.windows.Main.root;
 import static com.i_comit.windows.Memory.byteFormatter;
@@ -85,7 +86,6 @@ public class Memory {
             Main.jSlider1.setVisible(false);
             Main.jAlertLabel.setLocation(21, 154);
             main.setSize(120, 221);
-
         }
     }
 
@@ -220,6 +220,9 @@ public class Memory {
                             if ((s = reader.readLine()) == null) {
                                 System.exit(0);
                                 Client.endSession(username);
+                                if (Main.adminBool) {
+                                    Server.serverKill(".server.exe");
+                                }
                             }
                         }
 

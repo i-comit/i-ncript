@@ -6,6 +6,7 @@ package com.i_comit.windows;
 
 import com.i_comit.shared.Client;
 import com.i_comit.shared.Miscs;
+import com.i_comit.shared.Server;
 import static com.i_comit.windows.DriveCheck.goWebsite;
 import static com.i_comit.windows.Statics.*;
 import java.awt.Color;
@@ -41,7 +42,7 @@ public class Main extends javax.swing.JFrame {
 
     public static String root = "D:\\";
     public static final String masterFolder = "'--------'" + File.separator;
-    public static boolean adminBool = false;
+    public static boolean adminBool = true;
 
     private final String appVer = "1.8.5";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
@@ -50,6 +51,8 @@ public class Main extends javax.swing.JFrame {
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
 
     public Main() {
+        if (adminBool) {
+        }
 //        root = Paths.get("").toAbsolutePath().toString();
 //        if (Memory.checkWMIC()) {
         root = root.substring(0, 3);
@@ -304,9 +307,7 @@ public class Main extends javax.swing.JFrame {
     }
 
     private void generateApp() {
-        new Thread(() -> {
-            Client.internetMonitor();
-        }).start();
+        Client.clientMonitor();
         Memory.getHeapSize(this);
         Memory.getUSBName(this);
         setKeybinding();
@@ -633,7 +634,7 @@ public class Main extends javax.swing.JFrame {
         jSendPanel.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 50, -1, -1));
 
         jSendSQL.setFont(Statics.registerCustomFont(12, fontFile));
-        jSendSQL.setText("SEND TO");
+        jSendSQL.setText("SEND TO:");
         jSendSQL.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jSendSQLActionPerformed(evt);
@@ -1235,11 +1236,15 @@ public class Main extends javax.swing.JFrame {
     private void jPasswordField2Evt(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField2Evt
         if (jPasswordField2.getPassword().length < 5) {
             jLabel6.setVisible(true);
-            jLabel5.setVisible(true);
+            if (!Client.internetBool) {
+                jLabel5.setVisible(true);
+            }
             jRadioButton2.setVisible(false);
         } else {
             jLabel6.setVisible(false);
-            jLabel5.setVisible(false);
+            if (!Client.internetBool) {
+                jLabel5.setVisible(false);
+            }
             jRadioButton2.setVisible(true);
         }
     }//GEN-LAST:event_jPasswordField2Evt
@@ -1494,17 +1499,19 @@ public class Main extends javax.swing.JFrame {
         }).start();
     }//GEN-LAST:event_jSendSQLActionPerformed
 
-    private void sendSQLToggle() {
+    public static void sendSQLToggle() {
         if (Client.internetBool) {
             if (jTextField2.getText().length() < 4) {
                 jSendSQL.setVisible(false);
+                jSendSQL.setSelected(false);
                 jLabel5.setVisible(true);
             } else {
-                if (!jTree1.isSelectionEmpty()) {
-                    jSendSQL.setVisible(true);
-                    jLabel5.setVisible(false);
-                }
+                jSendSQL.setVisible(true);
+                jLabel5.setVisible(false);
             }
+        } else {
+            jSendSQL.setVisible(false);
+            jSendSQL.setSelected(false);
         }
     }
     private void jTextField2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyTyped
@@ -1539,6 +1546,7 @@ public class Main extends javax.swing.JFrame {
                     Client.endSession(username);
                 }
                 if (adminBool) {
+                    Server.serverKill(".server.exe");
                 }
             }
         });
@@ -1616,7 +1624,7 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JTextArea jTextArea4;
     protected static javax.swing.JTextArea jTextArea6;
     protected static javax.swing.JTextField jTextField1;
-    protected static javax.swing.JTextField jTextField2;
+    public static javax.swing.JTextField jTextField2;
     public static javax.swing.JToggleButton jToggleButton1;
     protected static javax.swing.JToggleButton jToggleButton2;
     public static javax.swing.JPanel jToolPanel;

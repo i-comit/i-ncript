@@ -161,12 +161,7 @@ public class Client {
                 //read the server response message
                 ois = new ObjectInputStream(clientSocket.getInputStream());
                 b = (boolean) ois.readObject();
-                System.out.println("SESSION " + b);
-                if (b) {
-                    System.out.println("you have started your session.");
-                } else {
-                    System.out.println("you have ended your session.");
-                }
+                System.out.println("you have started your session.");
                 ois.close();
                 oos.close();
             } catch (IOException | ClassNotFoundException ex) {
@@ -197,7 +192,7 @@ public class Client {
     public static boolean internetBool = false;
     private static boolean internetBool1 = false;
 
-    public static void internetMonitor() {
+    public static void clientMonitor() {
         new Thread(() -> {
             while (true) {
                 String listUSB = String.format("netstat -ano | findStr %s:%d", Server.getIP(), Statics.portNumber);
@@ -214,6 +209,18 @@ public class Client {
                                 if (!Statics.username.equals("")) {
                                     GUI.t.interrupt();
                                     GUI.labelCutterThread(jAlertLabel, "host has disconnected", 0, 25, 1500, false);
+                                    Main.sendSQLToggle();
+                                }
+                                internetBool1 = true;
+                            }
+                        } else if (s.contains("TIME_WAIT")) {
+                            internetBool = false;
+                            if (!internetBool1) {
+                                System.out.println("network is down");
+                                if (!Statics.username.equals("")) {
+                                    GUI.t.interrupt();
+                                    GUI.labelCutterThread(jAlertLabel, "host has disconnected", 0, 25, 1500, false);
+                                    Main.sendSQLToggle();
                                 }
                                 internetBool1 = true;
                             }
@@ -227,6 +234,7 @@ public class Client {
                                     Statics.inboxMonitor();
                                     GUI.t.interrupt();
                                     GUI.labelCutterThread(jAlertLabel, "host has connected", 0, 25, 1500, false);
+                                    Main.sendSQLToggle();
                                 }
                                 internetBool1 = false;
                             }
@@ -251,6 +259,6 @@ public class Client {
 //        tableRequest("khiemluong1");
 //        userRequest("khiemluong");
 //        endSession("khiemluong");
-        internetMonitor();
+        clientMonitor();
     }
 }
