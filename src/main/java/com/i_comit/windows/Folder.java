@@ -32,10 +32,11 @@ public class Folder {
     public static void prepareZipFile() throws IOException {
         zipFileList.clear();
         sendFolderStr = Statics.sendFolder + File.separator + firstLastChar(Statics.recipientUsername) + LocalDateTime.now().format(DateTimeFormatter.ofPattern("MMddmmss"));
-        zipFile(Statics.sendFolder.toString(), sendFolderStr);
+        zipFile(Statics.sendFolder.toString(), sendFolderStr, Main.jTree1.isSelectionEmpty());
+        deleteDirectory(Statics.sendFolder.toFile(), Main.jTree1.isSelectionEmpty());
+        new File(Statics.sendFolder + File.separator + Statics.keyName).delete();
         GUI.resetProgressBar(Main.jProgressBar2);
         Main.toolBtnsBool(true);
-        deleteDirectory(Statics.sendFolder.toFile());
         Statics.resetSendTools(2);
         Main.dragDrop.setVisible(true);
         Statics.resetStaticInts();
@@ -43,26 +44,33 @@ public class Folder {
         Main.refreshTreeView(Statics.sendFolder, TreeView.sendCaretPos);
     }
 
-    public static String firstLastChar(String username) {
+    private static String firstLastChar(String username) {
         String a = username.substring(0, 1);
         String b = username.substring(username.length() - 1, username.length());
         String c = a + b + "-";
         return c;
     }
 
-    public static String first2Char(String fileName) {
-        String a = fileName.substring(0, 2);
-        String b = a + "-";
-        return b;
-    }
-
-    public static void deleteDirectory(File file) {
-        for (File subfile : file.listFiles()) {
-            if (!subfile.toString().endsWith(".i-cc")) {
-                if (subfile.isDirectory()) {
-                    deleteDirectory(subfile);
+    public static void deleteDirectory(File file, boolean jTreeBool) {
+        if (jTreeBool) {
+            for (File subfile : file.listFiles()) {
+                if (!subfile.toString().endsWith(".i-cc")) {
+                    if (subfile.isDirectory()) {
+                        deleteDirectory(subfile, jTreeBool);
+                    }
+                    subfile.delete();
                 }
-                subfile.delete();
+            }
+        } else {
+            for (Path subPath : filteredSendList) {
+                if (!subPath.toString().endsWith(".i-cc")) {
+                    if (subPath.toFile().isDirectory()) {
+                        System.out.println("deleting directory " + subPath.toFile());
+                        deleteDirectory(subPath.toFile(), jTreeBool);
+                    }
+                    System.out.println("deleting file " + subPath.toFile());
+                    subPath.toFile().delete();
+                }
             }
         }
     }
@@ -94,36 +102,69 @@ public class Folder {
         }
     }
 
-    public static void zipFile(String dir, String zipFile) {
+    public static List<Path> filteredSendList = new ArrayList<>();
+    private static void zipFile(String dir, String zipFile, boolean jTreeBool) {
         zipFile = sendFolderStr + ".i-cc";
         Main.jProgressBar2.setStringPainted(true);
         Main.jProgressBar2.setMaximum(zipFileCount);
-        File directory = new File(dir);
-        zipFileList(directory);
-
         try ( FileOutputStream fos = new FileOutputStream(zipFile);  ZipOutputStream zos = new ZipOutputStream(fos)) {
+            if (jTreeBool) {
+                File directory = new File(dir);
+                zipFileList(directory);
+                for (String filePath : zipFileList) {
+                    if (!filePath.endsWith(".i-cc")) {
+                        File filePathF = Paths.get(filePath).toFile();
+                        String name = filePath.substring(directory.getAbsolutePath().length() + 1);
+                        System.out.print("zipping: " + name);
+                        ZipEntry zipEntry = new ZipEntry(name);
+                        zos.putNextEntry(zipEntry);
+                        // Read file content and write to zip output stream.
+                        try ( FileInputStream fis = new FileInputStream(filePath)) {
+                            byte[] buffer = AES.dynamicBytes(filePathF);
+                            int length;
+                            while ((length = fis.read(buffer)) > 0) {
+                                zos.write(buffer, 0, length);
+                            }
 
-            for (String filePath : zipFileList) {
-                if (!filePath.endsWith(".i-cc")) {
-                    File filePathF = Paths.get(filePath).toFile();
-                    System.out.println("Compressing: " + filePathF);
-                    String name = filePath.substring(directory.getAbsolutePath().length() + 1);
-                    ZipEntry zipEntry = new ZipEntry(name);
-                    zos.putNextEntry(zipEntry);
-
-                    // Read file content and write to zip output stream.
-                    try ( FileInputStream fis = new FileInputStream(filePath)) {
-                        byte[] buffer = AES.dynamicBytes(filePathF);
-                        int length;
-                        while ((length = fis.read(buffer)) > 0) {
-                            zos.write(buffer, 0, length);
+                            zos.closeEntry();
+                            Statics.zipIter++;
+                            Main.jProgressBar2.setValue(Statics.zipIter);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
+                    }
+                }
+            } else {
+                List<Path> treeViewPaths = TreeView.convertTreePathToPath(Main.jTree1.getSelectionPaths());
+                treeViewPaths.forEach(x -> {
+//                                System.out.println(x.toFile().getName());
+                    if (!x.toFile().getName().endsWith(".enc") && !x.toFile().getName().endsWith(".i-cc")) {
+                        filteredSendList.add(Paths.get(x + ".enc"));
+                    }
+                });
+                filteredSendList.add(Paths.get(Statics.sendFolder + File.separator + Statics.keyName));
+                for (Path path : filteredSendList) {
+                    if (!path.toFile().getName().endsWith(".i-cc")) {
+                        File filePathF = path.toFile();
+                        String name = filePathF.getName();
+                        ZipEntry zipEntry = new ZipEntry(name);
+                        System.out.println("zipping: " + name);
+                        zos.putNextEntry(zipEntry);
 
-                        zos.closeEntry();
-                        Statics.zipIter++;
-                        Main.jProgressBar2.setValue(Statics.zipIter);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        // Read file content and write to zip output stream.
+                        try ( FileInputStream fis = new FileInputStream(path.toFile())) {
+                            byte[] buffer = AES.dynamicBytes(filePathF);
+                            int length;
+                            while ((length = fis.read(buffer)) > 0) {
+                                zos.write(buffer, 0, length);
+                            }
+
+                            zos.closeEntry();
+                            Statics.zipIter++;
+                            Main.jProgressBar2.setValue(Statics.zipIter);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -218,7 +259,7 @@ class recursiveFileDrop_T implements Runnable {
             if (!filesArr1.isDirectory()) {
                 if (!filesArr1.getName().endsWith("Thumbs.db")) {
                     try {
-                        Files.move(filesArr1.toPath(), Paths.get(path + File.separator + filesf.getName() + File.separator + filesArr1.getName()), StandardCopyOption.REPLACE_EXISTING);
+                        Files.move(filesArr1.toPath(), Paths.get(path + File.separator + filesf.getName() + File.separator + filesArr1.getName()), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
                         AES.getFileAttr(filesArr1, new File(path + File.separator + filesf.getName() + File.separator + filesArr1.getName()));
                         fileDropIter++;
                         Main.jAlertLabel.setText("moved " + fileDropIter + " files");

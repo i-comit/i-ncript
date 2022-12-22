@@ -85,7 +85,7 @@ public class AES {
         Files.setAttribute(outputFile.toPath(), "basic:creationTime", time, NOFOLLOW_LINKS);
         Files.setLastModifiedTime(outputFile.toPath(), time2);
     }
-
+    
     public static byte[] dynamicBytes(File inputFile) {
         byte[] inputBytes;
         if (inputFile.length() > Statics.maxFileBytes) {

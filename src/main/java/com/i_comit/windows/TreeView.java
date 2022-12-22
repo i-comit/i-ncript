@@ -251,10 +251,13 @@ public class TreeView {
     }
 
     private static void setCaretPos(int caretPos) {
-        Rectangle rect = new Rectangle(0, caretPos, 1, jTree1.getRowCount());
-        Main.jScrollPane5.getViewport().scrollRectToVisible(rect);
-        Main.jScrollPane5.getVerticalScrollBar().setValue(caretPos);
-        Main.jScrollPane5.updateUI();
+        try {
+            Rectangle rect = new Rectangle(0, caretPos, 1, jTree1.getRowCount());
+            Main.jScrollPane5.getViewport().scrollRectToVisible(rect);
+            Main.jScrollPane5.getVerticalScrollBar().setValue(caretPos);
+            Main.jScrollPane5.updateUI();
+        } catch (NullPointerException ex) {
+        }
     }
 
     public static void setRootName(String rootName) {
@@ -407,13 +410,20 @@ public class TreeView {
         String fileStr = root + masterFolder + Main.jTree1.getSelectionPaths()[i].toString().substring(1, Main.jTree1.getSelectionPaths()[i].toString().length() - 1).replaceAll(", ", File.separator + File.separator);
         File filePath = Paths.get(fileStr).toFile();
         return filePath;
-}
+    }
 
-    public static List<Path> convertTreePathToPath(TreePath[] treePaths) {
+    public static List<Path> convertTreePathToPath(TreePath[] treePaths) throws IOException {
         List<Path> pathLists = new ArrayList<>();
         for (int i = 0; i < treePaths.length; i++) {
             Path filePath = convertTreePathToFile(Main.jTree1.getSelectionPaths(), i).toPath();
-            pathLists.add(filePath);
+            if (filePath.toFile().isDirectory()) {
+                List<Path> paths = GUI.listPaths(filePath);
+                paths.forEach(x -> {
+                    pathLists.add(x);
+                });
+            } else {
+                pathLists.add(filePath);
+            }
         }
         return pathLists;
     }

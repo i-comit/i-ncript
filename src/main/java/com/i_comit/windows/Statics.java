@@ -28,7 +28,7 @@ public class Statics {
 
     public static final String folderName = "ᴠᴀᴜʟᴛ";
     public static String rootFolder = root.substring(0, 3) + Main.masterFolder + folderName;
-    public static final String keyName = "\\.⅄.🔑";
+    public static final String keyName = ".⅄.🔑";
 
     public static final String nBoxName = "ɴ-ʙᴏx";
     public static final String oBoxName = "ᴏ-ʙᴏx";
@@ -127,22 +127,23 @@ public class Statics {
         }
     }
 
-    private static void inboxMonitor() {
-        new Thread(() -> {
-            try {
-                Thread.sleep(500);
-                boolean b = Client.userRequest(username);
-                if (!b) {
+    public static void inboxMonitor() {
+        if (toolMode == 1) {
+            new Thread(() -> {
+                try {
                     Thread.sleep(500);
-                    inboxMonitor();
-                } else {
-                    Thread.sleep(500);
+                    if (Client.internetBool) {
+                        Thread.sleep(500);
+                        Client.userRequest(username);
+                        inboxMonitor();
+                    } else {
+                        Thread.sleep(500);
+                    }
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
                 }
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
-
-        }).start();
+            }).start();
+        }
     }
 
     public static void switchToolPanels() {
@@ -161,7 +162,6 @@ public class Statics {
                 jSendPanel.setVisible(false);
                 jReceivePanel.setVisible(true);
                 jTree1.setDragEnabled(false);
-                inboxMonitor();
                 jLabel5.setVisible(false);
                 jLabel6.setVisible(false);
                 jRadioButton2.setVisible(false);
@@ -176,6 +176,7 @@ public class Statics {
                 Main.refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
                 break;
             case 2:
+                resetSendTools(2);
                 jSwitchMode.setText("O-BOX");
                 jSwitchMode.setToolTipText("current panel can encrypt files for sending from o-box (outbox) folder");
                 jStorePanel.setVisible(false);
@@ -256,7 +257,7 @@ public class Statics {
                 refreshTreeView(path, TreeView.nodeCaretPos);
                 break;
             case 1:
-                Folder.deleteDirectory(Paths.get(Statics.zipFileName).toFile());
+                Folder.deleteDirectory(Paths.get(Statics.zipFileName).toFile(), Main.jTree1.isSelectionEmpty());
                 new File(Statics.zipFileName).delete();
                 FileHider.cleanUp(receiveFolder);
                 refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
@@ -294,12 +295,14 @@ public class Statics {
             case 1:
                 jPasswordField3.setEnabled(true);
                 jList1.setEnabled(true);
+                jTextField2.setText("");
                 jPasswordField3.setText("");
                 jLabel7.setVisible(true);
                 jLabel8.setVisible(true);
                 jRadioButton3.setVisible(false);
                 jRadioButton3.setSelected(false);
                 jRadioButton3.setEnabled(true);
+                jPasswordField3.requestFocus();
                 Folder.listZipFiles();
                 break;
             case 2:
@@ -315,6 +318,8 @@ public class Statics {
                 jSendSQL.setSelected(false);
                 jSendSQL.setEnabled(true);
                 jRadioButton2.setEnabled(true);
+                jTextField2.requestFocus();
+                Folder.filteredSendList.clear();
                 break;
         }
 

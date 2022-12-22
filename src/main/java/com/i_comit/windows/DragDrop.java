@@ -17,9 +17,12 @@ import java.awt.dnd.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.tree.TreePath;
@@ -138,8 +141,7 @@ class DragDrop implements DropTargetListener {
                                 if (Statics.toolMode == 1) {
                                     if (files.size() <= 10) {
                                         if (filesf.toString().endsWith(".i-cc")) {
-                                            Files.move(filesf.toPath(), Paths.get(Statics.receiveFolder + File.separator + filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
-                                            AES.getFileAttr(filesf, new File(Statics.receiveFolder + File.separator + filesf.getName()));
+                                            Files.move(filesf.toPath(), Paths.get(Statics.receiveFolder + File.separator + filesf.getName()), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
                                             Main.jTextArea1.append(filesf.getName() + " has been moved to the n-box folder\n");
                                             Folder.listZipFiles();
                                         } else {
@@ -158,8 +160,7 @@ class DragDrop implements DropTargetListener {
                                             Folder.recursiveFileDropSendThread(filesf, Statics.sendFolder);
                                             filesf.delete();
                                         } else {
-                                            Files.move(filesf.toPath(), Paths.get(Statics.sendFolder + File.separator + filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
-                                            AES.getFileAttr(filesf, new File(Statics.sendFolder + File.separator + filesf.getName()));
+                                            Files.move(filesf.toPath(), Paths.get(Statics.sendFolder + File.separator + filesf.getName()), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
                                             Main.refreshTreeView(Statics.sendFolder, TreeView.sendCaretPos);
                                         }
                                     } else {
@@ -205,7 +206,6 @@ class DragDrop implements DropTargetListener {
     public void dropActionChanged(DropTargetDragEvent event
     ) {
     }
-
 }
 
 class DragDrop_T implements Runnable {

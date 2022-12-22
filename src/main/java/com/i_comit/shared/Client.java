@@ -8,6 +8,8 @@ import static com.i_comit.shared.Enums.getOS;
 import com.i_comit.windows.Main;
 import com.i_comit.windows.Statics;
 import static com.i_comit.shared.Hasher.SQLHasher;
+import com.i_comit.windows.GUI;
+import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.root;
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,7 +17,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.nio.file.Files;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
@@ -26,13 +27,11 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- *
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
 public class Client {
 
-    public static Socket clientSocket;
-
+    private static Socket clientSocket;
     private static ObjectOutputStream oos = null;
     private static ObjectInputStream ois = null;
 
@@ -163,6 +162,11 @@ public class Client {
                 ois = new ObjectInputStream(clientSocket.getInputStream());
                 b = (boolean) ois.readObject();
                 System.out.println("SESSION " + b);
+                if (b) {
+                    System.out.println("you have started your session.");
+                } else {
+                    System.out.println("you have ended your session.");
+                }
                 ois.close();
                 oos.close();
             } catch (IOException | ClassNotFoundException ex) {
@@ -191,9 +195,10 @@ public class Client {
         }
     }
     public static boolean internetBool = false;
+    private static boolean internetBool1 = false;
 
     public static void internetMonitor() {
-        Thread serverConnection = new Thread(() -> {
+        new Thread(() -> {
             while (true) {
                 String listUSB = String.format("netstat -ano | findStr %s:%d", Server.getIP(), Statics.portNumber);
                 ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", listUSB);
@@ -204,22 +209,40 @@ public class Client {
                         s = reader.readLine();
                         if (s == null) {
                             internetBool = false;
-                            System.out.println(internetBool);
+                            if (!internetBool1) {
+                                System.out.println("network is down");
+                                if (!Statics.username.equals("")) {
+                                    GUI.t.interrupt();
+                                    GUI.labelCutterThread(jAlertLabel, "host has disconnected", 0, 25, 1500, false);
+                                }
+                                internetBool1 = true;
+                            }
                         } else {
                             internetBool = true;
-                            System.out.println(internetBool);
+                            if (internetBool1) {
+                                System.out.println("network is up");
+                                if (!Statics.username.equals("")) {
+                                    startSession(Statics.username);
+                                    userRequest(Statics.username);
+                                    Statics.inboxMonitor();
+                                    GUI.t.interrupt();
+                                    GUI.labelCutterThread(jAlertLabel, "host has connected", 0, 25, 1500, false);
+                                }
+                                internetBool1 = false;
+                            }
                         }
-                        Thread.sleep(250);
+                        Thread.sleep(300);
                         sh.destroy();
                     }
-                } catch (IOException e) {
+                } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
                 }
             }
-        });
-        serverConnection.start();
+        }).start();
+    }
+
+    public static void initServerJVM() {
+
     }
 
     public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {

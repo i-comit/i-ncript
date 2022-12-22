@@ -217,7 +217,7 @@ public class Server {
         } catch (SQLException ex) {
 //        } catch (IOException ex) {
 //            ex.printStackTrace();
-            
+
         }
         return fileRecords;
     }
@@ -282,7 +282,7 @@ public class Server {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
 //        System.out.println(IPv4Addresses.get(IPv4Addresses.size() - 1));
         return IPv4Addresses.get(IPv4Addresses.size() - 1);
@@ -292,17 +292,8 @@ public class Server {
         Session session = new Session();
         Table table = new Table();
         Record record = new Record();
-//        dropTable("SESSIONS");
-//        dropTable("I-NCRIPT");
         initDatabase();
-//        table.createTable("khiemluong");
-//        insertRecord("khiemluong", new File("D:\\resume.pdf"));
-//        insertRecord("khiemluong", new File("D:\\i-comiti.ico"));
-//        insertRecord("khiemluong", new File("D:\\read-me.md"));
-        table.listTables("khiemluong");
-        record.listRecords("khiemluong");
-//        session.listSessions("khiemluong");
-//        System.out.println(SQLHasher("khiemluong"));
+        session.clearSessions();
         if (serverSocket == null) {
             socketStart(Statics.portNumber);
         } else {
@@ -313,6 +304,17 @@ public class Server {
 }
 
 class Session {
+
+    public void clearSessions() throws UnsupportedEncodingException {
+        String sql = "DELETE FROM \"SESSIONS\";";
+        String sql1 = "VACUUM;";
+        try ( Connection conn = DriverManager.getConnection(Server.url);  PreparedStatement pstmt = conn.prepareStatement(sql);  PreparedStatement pstmt1 = conn.prepareStatement(sql1)) {
+            pstmt.executeUpdate();
+            pstmt1.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
 
     public void listSessions(String username) throws UnsupportedEncodingException {
         String sql = String.format("SELECT * FROM \"SESSIONS\" WHERE \"user-name\"  = \"%s\";", SQLHasher(username));
@@ -359,7 +361,7 @@ class Session {
                 }
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+//            ex.printStackTrace();
         }
         return true;
     }
@@ -373,7 +375,6 @@ class Session {
             ex.printStackTrace();
         }
     }
-
 }
 
 class Table {
@@ -437,7 +438,7 @@ class Record {
                 System.out.println("no files found.");
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+//            ex.printStackTrace();
         }
     }
 
@@ -454,9 +455,9 @@ class Record {
             pstmt.setBytes(4, fileByte);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+//            System.out.println(e.getMessage());
         } catch (IOException ex) {
-            ex.printStackTrace();
+//            ex.printStackTrace();
         }
     }
 

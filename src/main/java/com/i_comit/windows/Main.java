@@ -25,7 +25,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import javax.swing.AbstractAction;
@@ -51,13 +50,11 @@ public class Main extends javax.swing.JFrame {
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
 
     public Main() {
-        Client.internetMonitor();
 //        root = Paths.get("").toAbsolutePath().toString();
 //        if (Memory.checkWMIC()) {
         root = root.substring(0, 3);
         initComponents();
         TreeView.renderTreeCells();
-        Memory.getUSBName(this);
 
         Path runtime = Paths.get(root + masterFolder + "runtime");
         Path app = Paths.get(root + masterFolder + "app");
@@ -65,14 +62,12 @@ public class Main extends javax.swing.JFrame {
             try {
                 Files.setAttribute(runtime, "dos:hidden", true);
             } catch (IOException ex) {
-                ex.printStackTrace();
             }
         }
         if (app.toFile().exists()) {
             try {
                 Files.setAttribute(app, "dos:hidden", true);
             } catch (IOException ex) {
-                ex.printStackTrace();
             }
         }
 
@@ -89,12 +84,10 @@ public class Main extends javax.swing.JFrame {
             this.setSize(540, 240);
             this.setLocationRelativeTo(null);
         } else {
-            Memory.getHeapSize(this);
-            setKeybinding();
             loginLabelVisibleBool(true);
             jUsernameLabel.setText("enter username");
             jPasswordLabel.setText("enter password");
-            generateFolders();
+            generateApp();
 
             jToolPanel.setVisible(false);
             jButton2.setVisible(false);
@@ -310,7 +303,13 @@ public class Main extends javax.swing.JFrame {
         jTabbedPane1.setVisible(b);
     }
 
-    private void generateFolders() {
+    private void generateApp() {
+        new Thread(() -> {
+            Client.internetMonitor();
+        }).start();
+        Memory.getHeapSize(this);
+        Memory.getUSBName(this);
+        setKeybinding();
         GUI.getGB();
         jAlertLabel.setHorizontalAlignment(LEFT);
         jEULAPanel1.setVisible(false);
@@ -1121,7 +1120,7 @@ public class Main extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
-//LOGIN
+    //LOGIN
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (jButton1.getText().equals("ENTER")) {
             try {
@@ -1223,9 +1222,7 @@ public class Main extends javax.swing.JFrame {
         jUsernameLabel.setText("make username");
         jPasswordLabel.setText("make password");
         Memory.getHeapSize(this);
-        setKeybinding();
-        generateFolders();
-
+        generateApp();
         jToolPanel.setVisible(false);
         jButton2.setVisible(false);
     }//GEN-LAST:event_ActionjButton6
@@ -1236,7 +1233,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jSwitchModeActionEvt
     //SEND PANEL PW
     private void jPasswordField2Evt(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField2Evt
-        if (jPasswordField2.getPassword().length <= 5) {
+        if (jPasswordField2.getPassword().length < 5) {
             jLabel6.setVisible(true);
             jLabel5.setVisible(true);
             jRadioButton2.setVisible(false);
@@ -1248,7 +1245,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jPasswordField2Evt
     //RECEIVE PANEL PW
     private void jPasswordField3Evt(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField3Evt
-        if (jPasswordField3.getPassword().length <= 5) {
+        if (jPasswordField3.getPassword().length < 5) {
             jLabel7.setVisible(true);
             jLabel8.setVisible(true);
             jRadioButton3.setVisible(false);
@@ -1264,38 +1261,55 @@ public class Main extends javax.swing.JFrame {
         try {
             zipFileCount = 0;
             zipIter = 0;
-
             AESMode = 1;
             fileCount = GUI.countFiles(sendFolder);
-            if (fileCount == 0) {
-                AESMode = 0;
-                fileCount = GUI.countFiles(sendFolder);
-                zipFileCount = fileCount;
-                jProgressBar1.setMaximum(zipFileCount);
-                contents = sendFolder.toFile().listFiles();
-                List<Path> pathLists = GUI.listPaths(sendFolder);
-                if (contents != null) {
-                    if (contents.length != 0 && !pathLists.isEmpty()) {
-                        Login.sendKeyCheck();
-                        this.setSize(779, 266);
+            if (jTree1.isSelectionEmpty()) {
+                if (fileCount == 0) {
+                    AESMode = 0;
+                    fileCount = GUI.countFiles(sendFolder);
+                    zipFileCount = fileCount;
+                    jProgressBar1.setMaximum(zipFileCount);
+                    contents = sendFolder.toFile().listFiles();
+                    List<Path> pathsList = GUI.listPaths(sendFolder);
+                    if (contents != null) {
+                        if (contents.length != 0 && !pathsList.isEmpty()) {
+                            if (Login.sendKeyCheck(jTree1.isSelectionEmpty())) {
+                                this.setSize(779, 266);
+                            } else {
+                                resetSendTools(2);
+                                this.setSize(779, 240);
+                            }
+                        } else {
+                            GUI.t.interrupt();
+                            GUI.labelCutterThread(jAlertLabel, "o-box folder has no files", 20, 40, 1200, false);
+                            resetSendTools(2);
+                            this.setSize(779, 240);
+                        }
                     } else {
                         GUI.t.interrupt();
-                        GUI.labelCutterThread(jAlertLabel, "o-box folder has no files", 20, 40, 1200, false);
+                        GUI.labelCutterThread(jAlertLabel, "o-box folder does not exist", 20, 40, 1200, false);
                         resetSendTools(2);
                         this.setSize(779, 240);
                     }
                 } else {
                     GUI.t.interrupt();
-                    GUI.labelCutterThread(jAlertLabel, "o-box folder does not exist", 20, 40, 1200, false);
+                    GUI.labelCutterThread(jAlertLabel, "o-box can't contain .enc files", 20, 20, 1200, false);
+                    resetSendTools(2);
+                    this.setSize(779, 240);
+
+                }
+            } else {
+                AESMode = 0;
+                fileCount = jTree1.getSelectionPaths().length;
+                zipFileCount = fileCount;
+                jProgressBar1.setMaximum(zipFileCount);
+                contents = sendFolder.toFile().listFiles();
+                if (Login.sendKeyCheck(jTree1.isSelectionEmpty())) {
+                    this.setSize(779, 266);
+                } else {
                     resetSendTools(2);
                     this.setSize(779, 240);
                 }
-            } else {
-                GUI.t.interrupt();
-                GUI.labelCutterThread(jAlertLabel, "o-box can't contain .enc files", 20, 20, 1200, false);
-                resetSendTools(2);
-                this.setSize(779, 240);
-
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -1344,7 +1358,7 @@ public class Main extends javax.swing.JFrame {
         TreeView.storeNodeCaretPos(Statics.toolMode);
         jCreationDateLabel.setText("");
         jFileSizeLabel.setText("");
-        if (toolMode == 0 || toolMode == 3)
+        if (toolMode != 2)
             if (jTree1.getSelectionPaths() != null) {
                 jTree1.clearSelection();
             }
@@ -1402,21 +1416,20 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jSlider1StateChanged
 
     private void jTree1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MouseEntered
-        if (toolMode == 0 || toolMode == 3)
-            if (jTree1.isEnabled()) {
-                switch (toolMode) {
-                    case 0 ->
-                        refreshTreeView(path, TreeView.nodeCaretPos);
-                    case 1 -> {
-                        refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
-                        Folder.listZipFiles();
-                    }
-                    case 2 ->
-                        refreshTreeView(sendFolder, TreeView.sendCaretPos);
-                    case 3 ->
-                        refreshTreeView(path, TreeView.nodeCaretPos);
+        if (jTree1.isEnabled()) {
+            switch (toolMode) {
+                case 0 ->
+                    refreshTreeView(path, TreeView.nodeCaretPos);
+                case 1 -> {
+                    refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
+                    Folder.listZipFiles();
                 }
+                case 2 ->
+                    refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                case 3 ->
+                    refreshTreeView(path, TreeView.nodeCaretPos);
             }
+        }
     }//GEN-LAST:event_jTree1MouseEntered
 
     private void jTree1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTree1PropertyChange
@@ -1469,7 +1482,6 @@ public class Main extends javax.swing.JFrame {
                     }
                     GUI.t.interrupt();
                     GUI.labelCutterThread(jAlertLabel, paths.size() + " files sent to " + Main.jTextField2.getText().trim(), 20, 25, 1000, false);
-                    Main.jTextArea1.append("--------------------------------------------\n");
                     Main.jTextArea1.append(paths.size() + " files sent to " + Main.jTextField2.getText().trim() + " at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
                     Statics.resetSendTools(2);
                 } else {
@@ -1523,7 +1535,11 @@ public class Main extends javax.swing.JFrame {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                Client.endSession(username);
+                if (!username.equals("")) {
+                    Client.endSession(username);
+                }
+                if (adminBool) {
+                }
             }
         });
         /* Create and display the form */

@@ -126,12 +126,14 @@ public class Login {
     }
 
     private static void sendPanelTools() {
+        Main.jTextField2.setText("");
+        Main.jPasswordField2.setText("");
         jLabel6.setVisible(true);
         jLabel5.setVisible(true);
         jRadioButton2.setVisible(false);
     }
 
-    public static boolean sendKeyCheck() throws IOException {
+    public static boolean sendKeyCheck(boolean jTreeBool) throws IOException {
         boolean b = false;
         char[] password = Main.jPasswordField2.getPassword();
         if (GUI.t.isAlive()) {
@@ -146,13 +148,37 @@ public class Login {
                         resetStaticInts();
                         Hasher.hashedUsername = Hasher.getHash(recipientUsername, true);
                         Hasher.hashedPassword = Hasher.getHash(recipientPassword, false);
+                        Main.jSendSQL.setEnabled(false);
                         Main.jRadioButton2.setEnabled(false);
                         Main.jTextField2.setText("");
                         Main.jPasswordField2.setText("");
                         Main.jTextField2.setEnabled(false);
                         Main.jPasswordField2.setEnabled(false);
-                        AES.AESThread(listAESPaths(sendFolder), sendFolder.toFile(), true, 2);
-                        b = true;
+                        if (jTreeBool) {
+                            AES.AESThread(listAESPaths(sendFolder), sendFolder.toFile(), true, 2);
+                            b = true;
+                        } else {
+                            List<Path> treeViewPaths = TreeView.convertTreePathToPath(Main.jTree1.getSelectionPaths());
+                            List<Path> filteredSendPath = new ArrayList<>();
+                            System.out.println("ORIG PATH " + treeViewPaths);
+                            treeViewPaths.forEach(x -> {
+//                                System.out.println(x.toFile().getName());
+                                if (!x.toFile().getName().endsWith(".enc") && !x.toFile().getName().endsWith(".i-cc")) {
+                                    filteredSendPath.add(x);
+                                }
+                            });
+                            if (filteredSendPath.isEmpty()) {
+                                GUI.t.interrupt();
+                                GUI.labelCutterThread(jAlertLabel, "folder can't contain .enc files", 20, 30, 1500, false);
+                                b = false;
+                            } else {
+                                System.out.println("FILTERED PATH " + filteredSendPath);
+                                System.out.println(recipientUsername);
+                                AES.AESThread(filteredSendPath, sendFolder.toFile(), true, 2);
+                                b = true;
+                            }
+                            filteredSendPath.clear();
+                        }
                     } else {
                         GUI.t.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "password can't be username", 20, 20, 1200, false);
@@ -195,6 +221,21 @@ public class Login {
         Main.jRadioButton3.setSelected(false);
     }
 
+    private static void resetInvalidSendKey(BufferedReader brTest) throws IOException {
+        try (brTest) {
+            resetStaticInts();
+        }
+        Folder.deleteDirectory(Paths.get(Statics.zipFileName).toFile(), Main.jTree1.isSelectionEmpty());
+        Paths.get(Statics.zipFileName).toFile().delete();
+        GUI.labelCutterThread(jAlertLabel, "invalid credentials", 20, 20, 1000, false);
+        Main.jList1.clearSelection();
+        receivePanelTools();
+        Main.jPasswordField3.setText("");
+        Main.jRadioButton3.setEnabled(true);
+        Folder.listZipFiles();
+        Main.toolBtnsBool(true);
+    }
+
     public static boolean verifySendKey(String zipFileN) {
         boolean b = false;
         char[] password = Main.jPasswordField3.getPassword();
@@ -234,30 +275,10 @@ public class Login {
                             Main.progressbarBool = false;
                             b = true;
                         } else {
-                            resetStaticInts();
-                            brTest.close();
-                            Folder.deleteDirectory(Paths.get(Statics.zipFileName).toFile());
-                            Paths.get(Statics.zipFileName).toFile().delete();
-                            GUI.labelCutterThread(jAlertLabel, "invalid credentials", 20, 20, 1000, false);
-                            Main.jList1.clearSelection();
-                            receivePanelTools();
-                            Main.jPasswordField3.setText("");
-                            Main.jRadioButton3.setEnabled(true);
-                            Folder.listZipFiles();
-                            Main.toolBtnsBool(true);
+                            resetInvalidSendKey(brTest);
                         }
                     } else {
-                        resetStaticInts();
-                        brTest.close();
-                        Folder.deleteDirectory(Paths.get(Statics.zipFileName).toFile());
-                        Paths.get(Statics.zipFileName).toFile().delete();
-                        GUI.labelCutterThread(jAlertLabel, "invalid credentials", 20, 20, 1000, false);
-                        receivePanelTools();
-                        Main.jList1.clearSelection();
-                        Main.jPasswordField3.setText("");
-                        Main.jRadioButton3.setEnabled(true);
-                        Folder.listZipFiles();
-                        Main.toolBtnsBool(true);
+                        resetInvalidSendKey(brTest);
                     }
                 } catch (IOException ex) {
                     ex.printStackTrace();
