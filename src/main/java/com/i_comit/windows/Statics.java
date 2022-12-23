@@ -28,7 +28,7 @@ public class Statics {
 
     public static final String folderName = "ᴠᴀᴜʟᴛ";
     public static String rootFolder = root.substring(0, 3) + Main.masterFolder + folderName;
-    public static final String keyName = ".⅄.🔑";
+    public static final String keyName = ".➫.🔑";
 
     public static final String nBoxName = "ɴ-ʙᴏx";
     public static final String oBoxName = "ᴏ-ʙᴏx";
@@ -132,13 +132,13 @@ public class Statics {
             new Thread(() -> {
                 try {
                     Thread.sleep(250);
-                    if (Client.internetBool) {
-                        Thread.sleep(250);
-                        Client.userRequest(username);
-                        inboxMonitor();
-                    } else {
-                        Thread.sleep(250);
-                    }
+//                    if (Client.internetBool) {
+                    Thread.sleep(250);
+                    Client.userRequest(username);
+                    inboxMonitor();
+//                    } else {
+//                        Thread.sleep(250);
+//                    }
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
@@ -167,6 +167,8 @@ public class Statics {
                 jRadioButton2.setVisible(false);
                 jRadioButton2.setSelected(false);
                 Folder.listZipFiles();
+                inboxMonitor();
+
                 jLabel10.setText("N-BOX MODE");
                 jLabel11.setText("MOVE .I-CC TO N-BOX");
                 dragDrop.setToolTipText("drop box will move dropped .i-cc file to n-box folder");
@@ -237,7 +239,6 @@ public class Statics {
         jTabbedPane1.setSelectedIndex(0);
         jProgressBar1.setValue(fileIter);
         jProgressBar1.setMaximum(fileCount);
-        jProgressBar1.setStringPainted(false);
         jProgressBar1.setVisible(false);
 
         jProgressBar2.setMaximum(0);
@@ -347,7 +348,6 @@ public class Statics {
                 watchService.close();
                 HotFiler.t.interrupt();
                 Main.buttonGroup1.clearSelection();
-                Main.jProgressBar1.setStringPainted(false);
             } catch (NullPointerException | IOException ex) {
                 GUI.labelCutterThread(jAlertLabel, "press hot filer one more time", 0, 25, 500, false);
             }

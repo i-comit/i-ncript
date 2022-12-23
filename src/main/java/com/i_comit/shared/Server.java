@@ -4,7 +4,6 @@
  */
 package com.i_comit.shared;
 
-import com.i_comit.windows.Statics;
 import static com.i_comit.shared.Hasher.SQLHasher;
 import static com.i_comit.windows.Main.masterFolder;
 import static com.i_comit.windows.Main.root;
@@ -148,9 +147,11 @@ public class Server {
 //            ex.printStackTrace();
 
     }
-
+//
     private static String dbFileName = ".💽🗄️.db";
+//    private static String dbPath = Paths.get("").toAbsolutePath().toString() + File.separator + "runtime" + File.separator + "bin" + File.separator + "server" + File.separator + dbFileName;
     private static String dbPath = root + masterFolder + "runtime" + File.separator + "bin" + File.separator + "server" + File.separator + dbFileName;
+
     public static String url = "jdbc:sqlite:" + dbPath;
 
     private static void initDatabase() throws UnsupportedEncodingException {
@@ -288,20 +289,21 @@ public class Server {
         return IPv4Addresses.get(IPv4Addresses.size() - 1);
     }
 
-    public static void serverKill(String appName) {
-        String listTasks = String.format("tasklist | findstr %s", appName);
+    public static void serverKill(String appName, boolean exitAppBool) {
+        String listTasks = String.format("tasklist | findStr %s", appName);
         ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", listTasks);
         String s = "";
         try {
             Process sh = pb.start();
             try ( BufferedReader reader = new BufferedReader(new InputStreamReader(sh.getInputStream()))) {
-                while (reader.readLine() != null) {
+                while ((s = reader.readLine()) != null) {
                     s = reader.readLine().substring(29, 34);
+                    System.out.println(s);
                     String killTask = String.format("taskkill /PID %s /F", s);
                     ProcessBuilder pb1 = new ProcessBuilder("cmd.exe", "/c", killTask);
                     pb1.start();
                     Thread.sleep(50);
-                    sh.destroy();
+//                    sh.destroy();
                     if (reader.readLine() == null) {
                         System.out.println("killed server " + s);
                         break;
@@ -311,28 +313,30 @@ public class Server {
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
+        } catch (NullPointerException ex) {
+            if (exitAppBool) {
+                System.exit(0);
+            }
         }
     }
 
     public static void main(String[] args) throws IOException, InterruptedException, SQLException, ClassNotFoundException {
+        serverKill(".server.exe",false);
         Session session = new Session();
+        Record record = new Record();
         initDatabase();
         session.clearSessions();
-        serverKill(".server.exe");
-//        if (serverSocket == null) {
-//            socketStart(Statics.portNumber);
-//        } else {
-//            System.out.println("the server is already active");
-//            serverSocket.close();
-//        }
+        record.insertRecord("khiemluong", new File("D:\\resume.pdf"));
+        record.insertRecord("khiemluong", new File("D:\\i-comiti.ico"));
+        record.insertRecord("khiemluong", new File("D:\\read-me.md"));
+        record.listRecords("khiemluong");
 
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-
-                System.out.println("SUS");
-            }
-        });
+        if (serverSocket == null) {
+            socketStart(8665);
+        } else {
+            System.out.println("the server is already active");
+            serverSocket.close();
+        }
     }
 }
 
@@ -475,7 +479,7 @@ class Record {
         }
     }
 
-    private static void insertRecord(String username, File inputFile) throws UnsupportedEncodingException {
+    public static void insertRecord(String username, File inputFile) throws UnsupportedEncodingException {
         String sql = "INSERT INTO 'FILES-DB' ('user-name', 'file-name', 'file-date', 'file-bytes') VALUES( ?, ?, ?, ?)";
 
         try ( Connection conn = DriverManager.getConnection(Server.url);  PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -498,10 +502,9 @@ class Record {
         String sql = String.format("DELETE FROM \"FILES-DB\" WHERE \"user-name\" = \"%s\" AND \"file-name\" = \"%s\"", username, fileName);
         try ( Connection conn = DriverManager.getConnection(Server.url);  PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.executeLargeUpdate();
-            System.out.println(fileName + "deleted");
+            System.out.println(fileName + " deleted");
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
-
 }

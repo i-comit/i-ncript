@@ -85,7 +85,7 @@ public class AES {
         Files.setAttribute(outputFile.toPath(), "basic:creationTime", time, NOFOLLOW_LINKS);
         Files.setLastModifiedTime(outputFile.toPath(), time2);
     }
-    
+
     public static byte[] dynamicBytes(File inputFile) {
         byte[] inputBytes;
         if (inputFile.length() > Statics.maxFileBytes) {
@@ -288,7 +288,17 @@ class AES_T implements Runnable {
                         Main.jProgressBar2.setVisible(true);
                         Main.jAlertLabel.setText("decrypting " + x.toFile().getName());
                     }
-                    AES.decrypt(Hasher.hashedPassword, file, file);
+                    if (DragDrop.storeDropBool) {
+                        try {
+                            Files.move(file.toPath(), Paths.get(Statics.path + File.separator + file.getName()), StandardCopyOption.REPLACE_EXISTING);
+                            AES.decrypt(Hasher.hashedPassword, file, file);
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    } else {
+                        AES.decrypt(Hasher.hashedPassword, file, file);
+                    }
+//                    System.out.println("encrypting "+);
                 }
                 if (!x.toString().endsWith(".enc") || x.toString().startsWith("Thumbs.db")) {
                     decFiles++;
@@ -299,7 +309,16 @@ class AES_T implements Runnable {
                         Main.jProgressBar2.setVisible(true);
                         Main.jAlertLabel.setText("encrypting " + x.toFile().getName());
                     }
-                    AES.encrypt(Hasher.hashedPassword, file, file);
+                    if (DragDrop.storeDropBool) {
+                        try {
+                            Files.move(file.toPath(), Paths.get(Statics.path + File.separator + file.getName()), StandardCopyOption.REPLACE_EXISTING);
+                            AES.encrypt(Hasher.hashedPassword, Paths.get(Statics.path + File.separator + file.getName()).toFile(), Paths.get(Statics.path + File.separator + file.getName()).toFile());
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    } else {
+                        AES.encrypt(Hasher.hashedPassword, file, file);
+                    }
                 }
             });
             if (fileIter == 0) {

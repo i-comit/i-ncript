@@ -44,19 +44,19 @@ public class Main extends javax.swing.JFrame {
     public static final String masterFolder = "'--------'" + File.separator;
     public static boolean adminBool = true;
 
-    private final String appVer = "1.8.5";
+    private final String appVer = "1.8.6";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
     public static final int year = Year.now().getValue();
 
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
 
     public Main() {
-        if (adminBool) {
-        }
 //        root = Paths.get("").toAbsolutePath().toString();
 //        if (Memory.checkWMIC()) {
         root = root.substring(0, 3);
+
         initComponents();
+
         TreeView.renderTreeCells();
 
         Path runtime = Paths.get(root + masterFolder + "runtime");
@@ -306,8 +306,28 @@ public class Main extends javax.swing.JFrame {
         jTabbedPane1.setVisible(b);
     }
 
+
     private void generateApp() {
+        if (adminBool) {
+            File serverExeFile = new File(root + masterFolder + ".server.exe");
+            if (serverExeFile.exists()) {
+                try {
+                    String listUSB = String.format("start %s", serverExeFile);
+                    ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", listUSB);
+                    pb.start();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            } else {
+                System.out.println("server file does not exists");
+            }
+        } else {
+            jAdminLabel.setVisible(false);
+        }
         Client.clientMonitor();
+
+        Memory.checkUSBConnection();
+
         Memory.getHeapSize(this);
         Memory.getUSBName(this);
         setKeybinding();
@@ -412,6 +432,7 @@ public class Main extends javax.swing.JFrame {
         jPasswordField1 = new javax.swing.JPasswordField();
         jUsernameLabel = new javax.swing.JLabel();
         jPasswordLabel = new javax.swing.JLabel();
+        jAdminLabel = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jSlider1 = new javax.swing.JSlider();
         jHeapLabel = new javax.swing.JLabel();
@@ -726,6 +747,11 @@ public class Main extends javax.swing.JFrame {
         jPasswordLabel.setText("enter password");
         jLoginPanel.add(jPasswordLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 35, -1, -1));
 
+        jAdminLabel.setFont(Statics.registerCustomFont(11, fontFile));
+        jAdminLabel.setForeground(new java.awt.Color(102, 102, 102));
+        jAdminLabel.setText("ADMIN EDITION");
+        jLoginPanel.add(jAdminLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 72, -1, -1));
+
         jButton1.setFont(Statics.registerCustomFont(12, fontFile));
         jButton1.setText("ENTER");
         jButton1.setToolTipText("log into i-ncript");
@@ -747,15 +773,15 @@ public class Main extends javax.swing.JFrame {
                 jSlider1StateChanged(evt);
             }
         });
-        jLoginPanel.add(jSlider1, new org.netbeans.lib.awtextra.AbsoluteConstraints(71, 98, 180, -1));
+        jLoginPanel.add(jSlider1, new org.netbeans.lib.awtextra.AbsoluteConstraints(71, 100, 180, -1));
 
         jHeapLabel.setFont(Statics.registerCustomFont(12, fontFile));
         jHeapLabel.setText("set heap");
         jHeapLabel.setToolTipText("currently selected heap size");
-        jLoginPanel.add(jHeapLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 100, -1, -1));
+        jLoginPanel.add(jHeapLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 101, -1, -1));
 
         getContentPane().add(jLoginPanel);
-        jLoginPanel.setBounds(20, 44, 250, 118);
+        jLoginPanel.setBounds(20, 44, 250, 120);
 
         jProgressBar1.setFont(Statics.registerCustomFont(12, fontFile));
         jProgressBar1.setForeground(Color.WHITE);
@@ -1112,6 +1138,7 @@ public class Main extends javax.swing.JFrame {
                 this.setSize(779, 266);
                 decryptFunction(this);
             } else {
+                resetStaticInts();
                 GUI.t.interrupt();
                 GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400, false);
                 this.setSize(779, 240);
@@ -1164,6 +1191,7 @@ public class Main extends javax.swing.JFrame {
                 this.setSize(779, 266);
                 encryptFunction(this);
             } else {
+                resetStaticInts();
                 GUI.t.interrupt();
                 GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 10, 20, 400, false);
                 this.setSize(779, 240);
@@ -1539,17 +1567,6 @@ public class Main extends javax.swing.JFrame {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             ex.printStackTrace();
         }
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                if (!username.equals("")) {
-                    Client.endSession(username);
-                }
-                if (adminBool) {
-                    Server.serverKill(".server.exe");
-                }
-            }
-        });
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             new Main().setVisible(true);
@@ -1559,6 +1576,7 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public static javax.swing.ButtonGroup buttonGroup1;
     protected static javax.swing.JPanel dragDrop;
+    protected static javax.swing.JLabel jAdminLabel;
     public static javax.swing.JLabel jAlertLabel;
     public javax.swing.JButton jButton1;
     protected static javax.swing.JButton jButton2;

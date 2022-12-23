@@ -202,7 +202,7 @@ public class Memory {
         return b;
     }
 
-    public static void checkUSBConnection() {
+    public static synchronized void checkUSBConnection() {
         Thread usbConnectionT = new Thread(() -> {
             while (!(root + Main.masterFolder).equals("")) {
                 try {
@@ -220,8 +220,9 @@ public class Memory {
                             if ((s = reader.readLine()) == null) {
                                 System.exit(0);
                                 Client.endSession(username);
+                                Client.clientMonitor_T.stop();
                                 if (Main.adminBool) {
-                                    Server.serverKill(".server.exe");
+                                    Server.serverKill(".server.exe", true);
                                 }
                             }
                         }
@@ -229,7 +230,7 @@ public class Memory {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    Thread.sleep(400);
+                    Thread.sleep(500);
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }

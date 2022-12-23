@@ -9,7 +9,9 @@ import com.i_comit.windows.Main;
 import com.i_comit.windows.Statics;
 import static com.i_comit.shared.Hasher.SQLHasher;
 import com.i_comit.windows.GUI;
+import static com.i_comit.windows.Main.adminBool;
 import static com.i_comit.windows.Main.jAlertLabel;
+import static com.i_comit.windows.Main.masterFolder;
 import static com.i_comit.windows.Main.root;
 import java.io.BufferedReader;
 import java.io.File;
@@ -53,12 +55,12 @@ public class Client {
             } else {
                 for (String fileName : message) {
                     getRecords(username, new File(fileName));
+                    System.out.println("server found: " + fileName);
                 }
             }
         } catch (IOException | ClassNotFoundException | InterruptedException ex) {
 //            ex.printStackTrace();
             System.out.println("switching to offline mode");
-            internetBool = false;
         }
         return b;
     }
@@ -188,12 +190,14 @@ public class Client {
                 ex.printStackTrace();
             }
         }
+        System.exit(0);
     }
-    public static boolean internetBool = false;
+    public static boolean internetBool = true;
     private static boolean internetBool1 = false;
+    public static Thread clientMonitor_T;
 
-    public static void clientMonitor() {
-        new Thread(() -> {
+    public static synchronized void clientMonitor() {
+        clientMonitor_T = new Thread(() -> {
             while (true) {
                 String listUSB = String.format("netstat -ano | findStr %s:%d", Server.getIP(), Statics.portNumber);
                 ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", listUSB);
@@ -206,6 +210,21 @@ public class Client {
                             internetBool = false;
                             if (!internetBool1) {
                                 System.out.println("network is down");
+                                if (adminBool) {
+                                    File serverExeFile = new File(root + masterFolder + ".server.exe");
+                                    if (serverExeFile.exists()) {
+                                        try {
+                                            String exeServer = String.format("start %s", serverExeFile);
+                                            ProcessBuilder pb1 = new ProcessBuilder("cmd.exe", "/c", exeServer);
+                                            pb1.start();
+                                        } catch (IOException ex) {
+                                            ex.printStackTrace();
+                                        }
+                                    } else {
+                                        System.out.println("server file does not exists");
+                                    }
+                                } else {
+                                }
                                 if (!Statics.username.equals("")) {
                                     GUI.t.interrupt();
                                     GUI.labelCutterThread(jAlertLabel, "host has disconnected", 0, 25, 1500, false);
@@ -216,7 +235,7 @@ public class Client {
                         } else if (s.contains("TIME_WAIT")) {
                             internetBool = false;
                             if (!internetBool1) {
-                                System.out.println("network is down");
+                                System.out.println("network is in time_wait");
                                 if (!Statics.username.equals("")) {
                                     GUI.t.interrupt();
                                     GUI.labelCutterThread(jAlertLabel, "host has disconnected", 0, 25, 1500, false);
@@ -239,26 +258,22 @@ public class Client {
                                 internetBool1 = false;
                             }
                         }
-                        Thread.sleep(300);
-                        sh.destroy();
+                        Thread.sleep(500);
                     }
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-        }).start();
-    }
-
-    public static void initServerJVM() {
-
+        });
+        clientMonitor_T.start();
     }
 
     public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
+        clientMonitor();
 //        sendFileRequest("khiemluong", new File("D:\\resume.pdf"));
 //        postRequest(Statics.username, new File("C:\\Users\\User1\\OneDrive\\Pictures\\i-comiti - zoomed-out.png"));
 //        tableRequest("khiemluong1");
-//        userRequest("khiemluong");
+        userRequest("khiemluong");
 //        endSession("khiemluong");
-        clientMonitor();
     }
 }

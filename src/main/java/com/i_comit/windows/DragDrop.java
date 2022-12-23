@@ -10,6 +10,7 @@ import static com.i_comit.windows.Main.jProgressBar1;
 import static com.i_comit.windows.Main.jTree1;
 import static com.i_comit.windows.Main.masterFolder;
 import static com.i_comit.windows.Main.root;
+import static com.i_comit.windows.Statics.toolMode;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -23,6 +24,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.tree.TreePath;
@@ -37,6 +40,7 @@ class DragDrop implements DropTargetListener {
     static int decFiles = 0;
 
     public static File filesf;
+    public static boolean storeDropBool = false;
 
     @Override
     public void drop(DropTargetDropEvent event) {
@@ -103,7 +107,10 @@ class DragDrop implements DropTargetListener {
                                             Statics.dragDropBool = true;
                                             if (!filesf.isDirectory()) {
                                                 if (!filesf.getName().endsWith(".i-cc")) {
-                                                    if (!filesf.getAbsolutePath().equals(root + masterFolder + "i-ncript.exe") && !filesf.getAbsolutePath().equals(root + masterFolder + ".⅄.🔑")) {
+                                                    storeDropBool = true;
+                                                    if (!filesf.getAbsolutePath().equals(root + masterFolder + "i-ncript.exe")
+                                                            && !filesf.getAbsolutePath().equals(root + masterFolder + ".server.exe")
+                                                            && !filesf.getAbsolutePath().equals(root + masterFolder + Statics.keyName)) {
                                                         Main.jButton2.setVisible(true);
                                                         Main.jProgressBar1.setMaximum(0);
                                                         jProgressBar1.setString("0% | 0/" + files.size());
@@ -118,10 +125,11 @@ class DragDrop implements DropTargetListener {
                                                 }
                                             } else {
                                                 if (!filesf.getAbsolutePath().endsWith(masterFolder + "ᴠᴀᴜʟᴛ")
-                                                        && filesf.getAbsolutePath().endsWith(masterFolder + "ᴏ-ʙᴏx")
-                                                        && !filesf.getAbsolutePath().endsWith(masterFolder + "ɴ-ʙᴏx")
+                                                        && !filesf.getAbsolutePath().endsWith(masterFolder + Statics.nBoxName)
+                                                        && !filesf.getAbsolutePath().endsWith(masterFolder + Statics.oBoxName)
                                                         && !filesf.getAbsolutePath().endsWith(masterFolder + "app")
                                                         && !filesf.getAbsolutePath().endsWith(masterFolder + "runtime")) {
+                                                    storeDropBool = false;
                                                     Folder.getFileDropCount(filesf);
                                                     recursiveFileDrop_T.recursiveFileStoreDrop(filesf, Statics.path, paths);
                                                     paths.remove(0);
@@ -141,7 +149,7 @@ class DragDrop implements DropTargetListener {
                                 if (Statics.toolMode == 1) {
                                     if (files.size() <= 10) {
                                         if (filesf.toString().endsWith(".i-cc")) {
-                                            Files.move(filesf.toPath(), Paths.get(Statics.receiveFolder + File.separator + filesf.getName()), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
+                                            Files.move(filesf.toPath(), Paths.get(Statics.receiveFolder + File.separator + filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
                                             Main.jTextArea1.append(filesf.getName() + " has been moved to the n-box folder\n");
                                             Folder.listZipFiles();
                                         } else {
@@ -160,7 +168,7 @@ class DragDrop implements DropTargetListener {
                                             Folder.recursiveFileDropSendThread(filesf, Statics.sendFolder);
                                             filesf.delete();
                                         } else {
-                                            Files.move(filesf.toPath(), Paths.get(Statics.sendFolder + File.separator + filesf.getName()), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
+                                            Files.move(filesf.toPath(), Paths.get(Statics.sendFolder + File.separator + filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
                                             Main.refreshTreeView(Statics.sendFolder, TreeView.sendCaretPos);
                                         }
                                     } else {
@@ -224,7 +232,8 @@ class DragDrop_T implements Runnable {
             Thread.sleep(400);
             Audio.audioPlayerThread("ding-sfx.wav");
             GUI.labelCutterThread(jAlertLabel, decFiles + " encrypted | " + encFiles + " decrypted", 15, 30, 600, false);
-            Main.jTextArea1.append("--------------------------------------------\n\n");
+            Main.jTextArea1.append("--------------------------------------------\n");
+            Main.jTextArea1.append(decFiles + " encrypted | " + encFiles + " decrypted | " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
             Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
 
             Thread.sleep(300);
@@ -233,12 +242,14 @@ class DragDrop_T implements Runnable {
                 Thread.sleep(4);
                 jProgressBar1.setValue(x);
                 if (x <= 1) {
+                    if (toolMode == 0 || toolMode == 3) {
+                        Statics.dragDropBool = false;
+                    }
                     Main.progressbarBool = true;
                 }
             }
             if (jProgressBar1.getValue() == 0) {
                 jProgressBar1.setValue(Statics.fileIter);
-                jProgressBar1.setStringPainted(false);
                 jProgressBar1.setVisible(false);
 
                 Main.jProgressBar2.setStringPainted(false);
