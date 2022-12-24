@@ -4,9 +4,9 @@
  */
 package com.i_comit.windows;
 
-import com.i_comit.shared.Client;
+import com.i_comit.server.Client;
 import com.i_comit.shared.Miscs;
-import com.i_comit.shared.Server;
+import com.i_comit.server.Server;
 import static com.i_comit.windows.DriveCheck.goWebsite;
 import static com.i_comit.windows.Statics.*;
 import java.awt.Color;
@@ -44,7 +44,7 @@ public class Main extends javax.swing.JFrame {
     public static final String masterFolder = "'--------'" + File.separator;
     public static boolean adminBool = true;
 
-    private final String appVer = "1.8.6";
+    private final String appVer = "1.8.8";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
     public static final int year = Year.now().getValue();
 
@@ -54,9 +54,7 @@ public class Main extends javax.swing.JFrame {
 //        root = Paths.get("").toAbsolutePath().toString();
 //        if (Memory.checkWMIC()) {
         root = root.substring(0, 3);
-
         initComponents();
-
         TreeView.renderTreeCells();
 
         Path runtime = Paths.get(root + masterFolder + "runtime");
@@ -306,26 +304,52 @@ public class Main extends javax.swing.JFrame {
         jTabbedPane1.setVisible(b);
     }
 
-
-    private void generateApp() {
+    private void startServer() {
         if (adminBool) {
             File serverExeFile = new File(root + masterFolder + ".server.exe");
+            System.out.println(serverExeFile);
             if (serverExeFile.exists()) {
-                try {
-                    String listUSB = String.format("start %s", serverExeFile);
-                    ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", listUSB);
-                    pb.start();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+                if (!Folder.appLockFile.exists()) {
+                    try {
+                        String listUSB = String.format("start %s", serverExeFile);
+                        ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", listUSB);
+                        pb.start();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             } else {
                 System.out.println("server file does not exists");
             }
+            jAdminLabel.setVisible(true);
+            jScrollPane8.setVisible(false);
+        } else {
+            if (Client.getClientIP()) {
+                jAdminLabel.setVisible(true);
+                jScrollPane8.setVisible(false);
+            } else {
+                jAdminLabel.setVisible(false);
+                Client.pingCmdWindows();
+                jScrollPane8.setVisible(true);
+            }
+        }
+    }
+
+    private void generateApp() {
+        startServer();
+        Client.clientMonitor();
+        if (adminBool) {
+            jAdminLabel.setVisible(true);
+            jScrollPane8.setVisible(false);
         } else {
             jAdminLabel.setVisible(false);
+            if (Client.getClientIP()) {
+                jScrollPane8.setVisible(false);
+            } else {
+                Client.pingCmdWindows();
+                jScrollPane8.setVisible(true);
+            }
         }
-        Client.clientMonitor();
-
         Memory.checkUSBConnection();
 
         Memory.getHeapSize(this);
@@ -436,6 +460,8 @@ public class Main extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jSlider1 = new javax.swing.JSlider();
         jHeapLabel = new javax.swing.JLabel();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        jList2 = new javax.swing.JList<>();
         jProgressBar1 = new javax.swing.JProgressBar();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -716,6 +742,7 @@ public class Main extends javax.swing.JFrame {
         jList1.setToolTipText("select one .i-cc file from n-box folder");
         jList1.setAutoscrolls(false);
         jList1.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
+        jList1.setSelectionBackground(new java.awt.Color(75, 110, 175));
         jScrollPane7.setViewportView(jList1);
 
         jReceivePanel.add(jScrollPane7, new org.netbeans.lib.awtextra.AbsoluteConstraints(144, 15, 100, 22));
@@ -749,8 +776,8 @@ public class Main extends javax.swing.JFrame {
 
         jAdminLabel.setFont(Statics.registerCustomFont(11, fontFile));
         jAdminLabel.setForeground(new java.awt.Color(102, 102, 102));
-        jAdminLabel.setText("ADMIN EDITION");
-        jLoginPanel.add(jAdminLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 72, -1, -1));
+        jAdminLabel.setText("ADMIN USB DRIVE");
+        jLoginPanel.add(jAdminLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 69, -1, -1));
 
         jButton1.setFont(Statics.registerCustomFont(12, fontFile));
         jButton1.setText("ENTER");
@@ -761,7 +788,7 @@ public class Main extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jLoginPanel.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(137, 65, 103, -1));
+        jLoginPanel.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(137, 63, 103, -1));
 
         jSlider1.setMaximum(8);
         jSlider1.setMinimum(1);
@@ -779,6 +806,35 @@ public class Main extends javax.swing.JFrame {
         jHeapLabel.setText("set heap");
         jHeapLabel.setToolTipText("currently selected heap size");
         jLoginPanel.add(jHeapLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 101, -1, -1));
+
+        jScrollPane8.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane8.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        jScrollPane8.setViewportBorder(new javax.swing.border.MatteBorder(null));
+        jScrollPane8.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jScrollPane8.setOpaque(false);
+        jScrollPane8.setViewportView(null);
+        jScrollPane8.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
+            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
+                jScrollPane8MouseWheelMoved(evt);
+            }
+        });
+
+        jList2.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jList2.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        jList2.setFocusable(false);
+        jList2.setSelectionBackground(new java.awt.Color(51, 51, 51));
+        jList2.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentMoved(java.awt.event.ComponentEvent evt) {
+                jList2ComponentMoved(evt);
+            }
+        });
+        jScrollPane8.setViewportView(jList2);
+
+        jLoginPanel.add(jScrollPane8, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 65, 114, 18));
 
         getContentPane().add(jLoginPanel);
         jLoginPanel.setBounds(20, 44, 250, 120);
@@ -1153,22 +1209,25 @@ public class Main extends javax.swing.JFrame {
         if (jButton1.getText().equals("ENTER")) {
             try {
                 if (Login.loginCheck(this)) {
-                    if (Login.verifyLogin()) {
-                        collapseLogin(this);
+                    if (!Folder.appLockFile.exists()) {
+                        if (Login.verifyLogin()) {
+//                            Folder.appLock();
+                            collapseLogin(this);
+                        } else {
+                            GUI.t.interrupt();
+                            GUI.labelCutterThread(jAlertLabel, "username or password is invalid.", 20, 40, 2000, false);
+                        }
                     } else {
                         GUI.t.interrupt();
-                        GUI.labelCutterThread(jAlertLabel, "username or password is invalid.", 20, 40, 2000, false);
-                        jTextField1.setText("");
-                        jPasswordField1.setText("");
-                        jTextField1.requestFocus();
+                        GUI.labelCutterThread(jAlertLabel, "an instance of this app is active.", 20, 40, 2000, false);
                     }
                 } else {
                     GUI.t.interrupt();
                     GUI.labelCutterThread(jAlertLabel, "username or password is invalid.", 20, 40, 2000, false);
-                    jTextField1.setText("");
-                    jPasswordField1.setText("");
-                    jTextField1.requestFocus();
                 }
+                jTextField1.setText("");
+                jPasswordField1.setText("");
+                jTextField1.requestFocus();
             } catch (UnsupportedEncodingException ex) {
                 ex.printStackTrace();
             }
@@ -1210,22 +1269,25 @@ public class Main extends javax.swing.JFrame {
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             try {
                 if (Login.loginCheck(this)) {
-                    if (Login.verifyLogin()) {
-                        collapseLogin(this);
+                    if (!Folder.appLockFile.exists()) {
+                        if (Login.verifyLogin()) {
+//                            Folder.appLock();
+                            collapseLogin(this);
+                        } else {
+                            GUI.t.interrupt();
+                            GUI.labelCutterThread(jAlertLabel, "username or password is invalid.", 20, 40, 2000, false);
+                        }
                     } else {
                         GUI.t.interrupt();
-                        GUI.labelCutterThread(jAlertLabel, "username or password is invalid.", 20, 40, 2000, false);
-                        jTextField1.setText("");
-                        jPasswordField1.setText("");
-                        jTextField1.requestFocus();
+                        GUI.labelCutterThread(jAlertLabel, "an instance of this app is active.", 20, 40, 2000, false);
                     }
                 } else {
                     GUI.t.interrupt();
                     GUI.labelCutterThread(jAlertLabel, "username or password is invalid.", 20, 40, 2000, false);
-                    jTextField1.setText("");
-                    jPasswordField1.setText("");
-                    jTextField1.requestFocus();
                 }
+                jTextField1.setText("");
+                jPasswordField1.setText("");
+                jTextField1.requestFocus();
             } catch (UnsupportedEncodingException ex) {
                 ex.printStackTrace();
             }
@@ -1486,7 +1548,7 @@ public class Main extends javax.swing.JFrame {
 
     private void jScrollPane5MouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_jScrollPane5MouseWheelMoved
         if (jScrollPane5.getVerticalScrollBar().getValue() == 1 && evt.getWheelRotation() == -1) {
-            Main.jScrollPane5.getVerticalScrollBar().setValue(0);
+            jScrollPane5.getVerticalScrollBar().setValue(0);
         }
     }//GEN-LAST:event_jScrollPane5MouseWheelMoved
 
@@ -1508,10 +1570,16 @@ public class Main extends javax.swing.JFrame {
                     jAlertLabel.setText("");
                     Main.jTextField2.setEnabled(false);
                     Main.jPasswordField2.setEnabled(false);
-                    for (Path path : paths) {
-                        Client.postRecords(Main.jTextField2.getText().trim(), path.toFile());
-                        path.toFile().delete();
-                        refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                    if (!paths.isEmpty()) {
+                        for (Path path : paths) {
+                            Client.postRecords(Main.jTextField2.getText().trim(), path.toFile());
+                            path.toFile().delete();
+                            refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                        }
+                    } else {
+                        GUI.t.interrupt();
+                        GUI.labelCutterThread(jAlertLabel, paths.size() + " files sent to " + Main.jTextField2.getText().trim(), 20, 25, 1000, false);
+                        Statics.resetSendTools(2);
                     }
                     GUI.t.interrupt();
                     GUI.labelCutterThread(jAlertLabel, paths.size() + " files sent to " + Main.jTextField2.getText().trim(), 20, 25, 1000, false);
@@ -1524,7 +1592,8 @@ public class Main extends javax.swing.JFrame {
                 }
             } catch (IOException | ClassNotFoundException | InterruptedException ex) {
             }
-        }).start();
+        }
+        ).start();
     }//GEN-LAST:event_jSendSQLActionPerformed
 
     public static void sendSQLToggle() {
@@ -1545,6 +1614,21 @@ public class Main extends javax.swing.JFrame {
     private void jTextField2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyTyped
         sendSQLToggle();
     }//GEN-LAST:event_jTextField2KeyTyped
+
+    private void jList2ComponentMoved(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jList2ComponentMoved
+        // TODO add your handling code here:
+        //        System.out.println("amoggg");
+        //        System.out.println(jScrollPane8.getVerticalScrollBar().getValue());
+    }//GEN-LAST:event_jList2ComponentMoved
+
+    private void jScrollPane8MouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_jScrollPane8MouseWheelMoved
+        if (evt.getWheelRotation() == -1) {
+            jList2.setSelectedIndex(jList2.getSelectedIndex() - 1);
+        }
+        if (evt.getWheelRotation() == 1) {
+            jList2.setSelectedIndex(jList2.getSelectedIndex() + 1);
+        }
+    }//GEN-LAST:event_jScrollPane8MouseWheelMoved
     /**
      * @param args the command line arguments
      */
@@ -1554,6 +1638,7 @@ public class Main extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
@@ -1570,13 +1655,28 @@ public class Main extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             new Main().setVisible(true);
+            Runtime.getRuntime().addShutdownHook(new Thread() {
+                public synchronized void run() {
+                    System.out.println("shutdown hook initiated.");
+                    Folder.appLockBool = false;
+                    Folder.appLockFile.delete();
+                    if (!username.equals("")) {
+                        System.out.println("ending user session.");
+                        Client.endSession(username);
+                    }
+                    if (adminBool) {
+                        Server.portKill();
+                        Server.serverKill(".server.exe", true);
+                    }
+                }
+            });
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public static javax.swing.ButtonGroup buttonGroup1;
     protected static javax.swing.JPanel dragDrop;
-    protected static javax.swing.JLabel jAdminLabel;
+    public static javax.swing.JLabel jAdminLabel;
     public static javax.swing.JLabel jAlertLabel;
     public javax.swing.JButton jButton1;
     protected static javax.swing.JButton jButton2;
@@ -1605,6 +1705,7 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JLabel jLabel8;
     protected static javax.swing.JLabel jLabel9;
     protected static javax.swing.JList<String> jList1;
+    public static javax.swing.JList<String> jList2;
     public static javax.swing.JPanel jLoginPanel;
     protected static javax.swing.JPanel jPanel1;
     protected static javax.swing.JPanel jPanel2;
@@ -1628,6 +1729,7 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JScrollPane jScrollPane5;
     protected static javax.swing.JScrollPane jScrollPane6;
     protected static javax.swing.JScrollPane jScrollPane7;
+    public static javax.swing.JScrollPane jScrollPane8;
     protected static javax.swing.JPanel jSendPanel;
     protected static javax.swing.JRadioButton jSendSQL;
     protected static javax.swing.JSeparator jSeparator1;

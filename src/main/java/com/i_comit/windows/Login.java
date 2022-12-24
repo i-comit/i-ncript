@@ -4,7 +4,7 @@
  */
 package com.i_comit.windows;
 
-import com.i_comit.shared.Client;
+import com.i_comit.server.Client;
 import com.i_comit.shared.Hasher;
 import static com.i_comit.windows.Folder.unzipFile;
 import static com.i_comit.windows.GUI.listAESPaths;
@@ -37,10 +37,10 @@ public class Login {
         if (!Main.jUsernameLabel.getText().equals("enter username")) {
             if (!"".equals(username)) {
                 if (!"".equals(Statics.password)) {
-                    if (username.length() >= 5) {
+                    if (username.length() >= 6) {
                         if (username.length() <= 11) {
                             if (Statics.password.length() >= 8) {
-                                if (Statics.password.length() <= 16) {
+                                if (Statics.password.length() <= 15) {
                                     if (!username.equals(Statics.password)) {
                                         String regex = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!<>~:;])";
                                         Pattern p = Pattern.compile(regex);
@@ -308,9 +308,6 @@ public class Login {
                 if (passwordRead.equals(Hasher.getHash(password, false))) {
                     Hasher.hashedUsername = Hasher.getHash(username, true);
                     Hasher.hashedPassword = Hasher.getHash(password, false);
-                    Main.jLoginPanel.setVisible(false);
-                    Main.jToolPanel.setVisible(true);
-                    Main.jProgressBar2.setVisible(true);
                     jAlertLabel.setHorizontalAlignment(CENTER);
                     GUI.t.interrupt();
                     GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript, " + username + ".", 20, 40, 1200, false);
@@ -318,13 +315,10 @@ public class Login {
                     Main.jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
                     Main.jToolPanel.requestFocus();
                     Main.refreshTreeView(path, TreeView.nodeCaretPos);
-                    if (Client.internetBool) {
-                        Client.postTable(username);
-                    }
                     b = true;
                 }
             }
-        } catch (IOException | ClassNotFoundException | InterruptedException ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
         return b;

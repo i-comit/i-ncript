@@ -4,8 +4,8 @@
  */
 package com.i_comit.windows;
 
-import com.i_comit.shared.Client;
-import com.i_comit.shared.Server;
+import com.i_comit.server.Client;
+import com.i_comit.server.Server;
 import static com.i_comit.windows.Main.jProgressBar2;
 import static com.i_comit.windows.Main.root;
 import static com.i_comit.windows.Memory.byteFormatter;
@@ -218,10 +218,13 @@ public class Memory {
                                 }
                             }
                             if ((s = reader.readLine()) == null) {
+                                Folder.appLockBool = false;
+                                Folder.appLockFile.delete();
                                 System.exit(0);
                                 Client.endSession(username);
                                 Client.clientMonitor_T.stop();
                                 if (Main.adminBool) {
+                                    Server.portKill();
                                     Server.serverKill(".server.exe", true);
                                 }
                             }

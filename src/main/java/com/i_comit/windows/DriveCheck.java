@@ -4,6 +4,7 @@
  */
 package com.i_comit.windows;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Toolkit;
@@ -23,27 +24,42 @@ public class DriveCheck extends javax.swing.JFrame {
     public static int driveState = 0;
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
 
-    public DriveCheck() {
+    public DriveCheck(){
         initComponents();
+        this.setBackground(new Color(0, 0, 0, 0));
         switch (driveState) {
             case 1:
                 jLabel1.setText("i-ncript can only run");
                 goWebsite(jLabel2, "within a ", "https://i-comit.com", "USB device", false);
-            break;
+//                Thread.sleep(5000);
+//                this.dispose();
+//                System.exit(0);
+                break;
             case 2:
                 jLabel1.setText("i-ncript must be in a");
                 jLabel2.setText("folder named '-------'");
-            break;
+
+                break;
             case 3:
                 goWebsite(jLabel1, "the folder with ", "https://i-comit.com/i-ncript/", "i-ncript", false);
                 jLabel2.setText("must be placed at root");
-            break;
+
+                break;
         }
+        new Thread(() -> {
+            try {
+                Thread.sleep(4000);
+                this.dispose();
+                System.exit(0);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+        }).start();
     }
 
     public static final String goWebsite(JLabel website, final String leadingStr, final String url, String text, boolean changeColor) {
         if (changeColor) {
-            website.setText("<html>" 
+            website.setText("<html>"
                     + leadingStr + "<a style=\"text-decoration:none\" text=\"rgb(187,187,187)\" href=\"\">"
                     + text + "</a><span text=\"rgb(187,187,187)\" style=\"white-space: nowrap\"><font size=\"2\">" + "®" + "</font></span></html>");
         } else {
@@ -60,10 +76,11 @@ public class DriveCheck extends javax.swing.JFrame {
                         //It looks like there's a problem
                     }
                 }
+
                 @Override
                 public void mouseEntered(MouseEvent e) {
                     if (changeColor) {
-                        website.setText("<html>" 
+                        website.setText("<html>"
                                 + leadingStr + "<a style=\"text-decoration:none\" text=\"rgb(107,107,107)\" href=\"\">"
                                 + text + "</a><span text=\"rgb(107,107,107)\" style=\"white-space: nowrap\"><font size=\"2\">" + "®" + "</font></span></html>");
                     }
@@ -72,7 +89,7 @@ public class DriveCheck extends javax.swing.JFrame {
                 @Override
                 public void mouseExited(MouseEvent e) {
                     if (changeColor) {
-                        website.setText("<html>" 
+                        website.setText("<html>"
                                 + leadingStr + "<a style=\"text-decoration:none\" text=\"rgb(187,187,187)\" href=\"\">"
                                 + text + "</a><span text=\"rgb(187,187,187)\" style=\"white-space: nowrap\"><font size=\"2\">" + "®" + "</font></span></html>");
                     }
@@ -96,16 +113,16 @@ public class DriveCheck extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("i-ncript™");
+        setAlwaysOnTop(true);
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti.png")));
+        setUndecorated(true);
         setResizable(false);
 
         jLabel1.setFont(Statics.registerCustomFont(14, fontFile));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("i-ncript must be in a");
 
         jLabel2.setFont(Statics.registerCustomFont(14, fontFile));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("the -------- folder must");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

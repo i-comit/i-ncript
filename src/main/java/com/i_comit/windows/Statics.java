@@ -4,7 +4,7 @@
  */
 package com.i_comit.windows;
 
-import com.i_comit.shared.Client;
+import com.i_comit.server.Client;
 import static com.i_comit.windows.GUI.listAESPaths;
 import static com.i_comit.windows.HotFiler_T.watchService;
 import static com.i_comit.windows.Main.*;
@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import static javax.swing.SwingConstants.LEFT;
 
 /**
  * @author Khiem Luong <khiemluong@i-comit.com>
@@ -133,9 +134,15 @@ public class Statics {
                 try {
                     Thread.sleep(250);
 //                    if (Client.internetBool) {
-                    Thread.sleep(250);
-                    Client.userRequest(username);
-                    inboxMonitor();
+                    if (Client.userRequest(username)) {
+                        TreeView.populateStoreTree(receiveFolder);
+                        Thread.sleep(250);
+
+                    } else {
+                        System.out.println("waiting for inbox to populate");
+                        Thread.sleep(250);
+                        inboxMonitor();
+                    }
 //                    } else {
 //                        Thread.sleep(250);
 //                    }
@@ -166,9 +173,8 @@ public class Statics {
                 jLabel6.setVisible(false);
                 jRadioButton2.setVisible(false);
                 jRadioButton2.setSelected(false);
-                Folder.listZipFiles();
                 inboxMonitor();
-
+                Folder.listZipFiles();
                 jLabel10.setText("N-BOX MODE");
                 jLabel11.setText("MOVE .I-CC TO N-BOX");
                 dragDrop.setToolTipText("drop box will move dropped .i-cc file to n-box folder");
@@ -382,17 +388,33 @@ public class Statics {
     public static void collapseLogin(Main main) {
         if (Client.internetBool) {
             if (Client.startSession(username)) {
-                main.setSize(779, 240);
-                jLabel1.setLocation(265, 10);
-                jLabel3.setLocation(367, 4);
-                jAlertLabel.setLocation(265, 174);
-                main.setLocationRelativeTo(null);
-                jScrollPane5.setVisible(true);
-                inboxMonitor();
-                GUI.t.interrupt();
-                GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript, " + username + ".", 20, 40, 1200, false);
+                try {
+                    Client.postTable(username);
+                    main.setSize(779, 240);
+                    jLabel1.setLocation(265, 10);
+                    jLabel3.setLocation(367, 4);
+                    jAlertLabel.setLocation(265, 174);
+                    Main.jLoginPanel.setVisible(false);
+                    Main.jToolPanel.setVisible(true);
+                    Main.jProgressBar2.setVisible(true);
+                    main.setLocationRelativeTo(null);
+                    jScrollPane5.setVisible(true);
+                    GUI.t.interrupt();
+                    GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript, " + username + ".", 20, 40, 1200, false);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                } catch (ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
             } else {
                 Memory.getHeapSize(main);
+                Main.jLoginPanel.setVisible(true);
+                Main.jToolPanel.setVisible(false);
+                Main.jProgressBar2.setVisible(false);
+                jAlertLabel.setHorizontalAlignment(LEFT);
+                username = "";
                 GUI.t.interrupt();
                 GUI.labelCutterThread(jAlertLabel, "user is already logged in network.", 20, 40, 2000, false);
             }
@@ -401,10 +423,17 @@ public class Statics {
             jLabel1.setLocation(265, 10);
             jLabel3.setLocation(367, 4);
             jAlertLabel.setLocation(265, 174);
+
+            Main.jLoginPanel.setVisible(false);
+            Main.jToolPanel.setVisible(true);
+            Main.jProgressBar2.setVisible(true);
             main.setLocationRelativeTo(null);
             jScrollPane5.setVisible(true);
             GUI.t.interrupt();
             GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript, " + username + ".", 20, 40, 1200, false);
         }
+        jTextField1.setText("");
+        jPasswordField1.setText("");
+        jTextField1.requestFocus();
     }
 }

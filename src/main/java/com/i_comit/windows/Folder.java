@@ -44,6 +44,29 @@ public class Folder {
         Main.refreshTreeView(Statics.sendFolder, TreeView.sendCaretPos);
     }
 
+    public static File appLockFile = new File(Main.root + Main.masterFolder + "app" + File.separator + ".app.🔒");
+    public static boolean appLockBool = true;
+
+    public static void appLock() {
+        if (appLockBool) {
+            new Thread(() -> {
+                try {
+                    while (!appLockFile.exists()) {
+                        Files.createFile(appLockFile.toPath());
+                        Files.setAttribute(appLockFile.toPath(), "dos:hidden", true);
+                        System.out.println("creating app lock file");
+                    }
+                    Thread.sleep(100);
+                    appLock();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }).start();
+        }
+    }
+
     private static String firstLastChar(String username) {
         String a = username.substring(0, 1);
         String b = username.substring(username.length() - 1, username.length());

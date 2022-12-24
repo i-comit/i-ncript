@@ -2,8 +2,9 @@
  * Here comes the text of your license
  * Each line should be prefixed with  * 
  */
-package com.i_comit.shared;
+package com.i_comit.server;
 
+import com.i_comit.shared.Miscs;
 import static com.i_comit.shared.Enums.getOS;
 import com.i_comit.windows.Main;
 import com.i_comit.windows.Statics;
@@ -25,8 +26,10 @@ import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.swing.DefaultListModel;
 
 /**
  * @author Khiem Luong <khiemluong@i-comit.com>
@@ -37,38 +40,57 @@ public class Client {
     private static ObjectOutputStream oos = null;
     private static ObjectInputStream ois = null;
 
-    public static boolean userRequest(String username) {
-        boolean b = true;
-        try {
+    private static void getServerSocket() throws IOException {
+        if (Main.adminBool) {
             clientSocket = new Socket(Server.getIP(), Statics.portNumber);
-            oos = new ObjectOutputStream(clientSocket.getOutputStream());
-            byte[] requestType_B = "GET_USER".getBytes();
-            byte[] userName_B = username.getBytes();
-            byte[][] userRequest_B = {requestType_B, userName_B};
-            oos.writeObject(userRequest_B);
-            //read the server response message
-            ois = new ObjectInputStream(clientSocket.getInputStream());
-            List<String> message = (List<String>) ois.readObject();
-            if (message.isEmpty()) {
-                System.out.println("no files found.");
-                b = false;
+        } else {
+            if (getClientIP()) {
+                clientSocket = new Socket(Server.getIP(), Statics.portNumber);
             } else {
-                for (String fileName : message) {
-                    getRecords(username, new File(fileName));
-                    System.out.println("server found: " + fileName);
+                if (Main.jList2.getSelectedValue().equals("GO OFFLINE")) {
+                    internetBool = false;
+                } else {
+                    clientSocket = new Socket(Main.jList2.getSelectedValue(), Statics.portNumber);
                 }
             }
-        } catch (IOException | ClassNotFoundException | InterruptedException ex) {
-//            ex.printStackTrace();
-            System.out.println("switching to offline mode");
+//            Main.jList2.setVisible(true);
+//            Main.jScrollPane8.setVisible(true);
+        }
+        oos = new ObjectOutputStream(clientSocket.getOutputStream());
+
+    }
+
+    public static boolean userRequest(String username) {
+        boolean b = true;
+        if (internetBool) {
+            try {
+                getServerSocket();
+                byte[] requestType_B = "GET_USER".getBytes();
+                byte[] userName_B = username.getBytes();
+                byte[][] userRequest_B = {requestType_B, userName_B};
+                oos.writeObject(userRequest_B);
+                //read the server response message
+                ois = new ObjectInputStream(clientSocket.getInputStream());
+                List<String> message = (List<String>) ois.readObject();
+                if (message.isEmpty()) {
+                    System.out.println("no files found.");
+                    b = false;
+                } else {
+                    for (String fileName : message) {
+                        getRecords(username, new File(fileName));
+                        System.out.println("server found: " + fileName);
+                    }
+                }
+            } catch (IOException | ClassNotFoundException | InterruptedException ex) {
+//                System.out.println("going to offline mode");
+            }
         }
         return b;
     }
 
     public static void getRecords(String username, File inputFile) throws IOException, InterruptedException, ClassNotFoundException {
         if (internetBool) {
-            clientSocket = new Socket(Server.getIP(), Statics.portNumber);
-            oos = new ObjectOutputStream(clientSocket.getOutputStream());
+            getServerSocket();
             byte[] requestType_B = "GET_RECD".getBytes();
             byte[] userName_B = SQLHasher(username).getBytes();
             byte[] inputFileName_B = inputFile.getName().getBytes();
@@ -95,8 +117,7 @@ public class Client {
 
     public static void postRecords(String username, File inputFile) throws IOException, InterruptedException, ClassNotFoundException {
         if (internetBool) {
-            clientSocket = new Socket(Server.getIP(), Statics.portNumber);
-            oos = new ObjectOutputStream(clientSocket.getOutputStream());
+            getServerSocket();
             byte[] requestType_B = "PST_RECD".getBytes();
             byte[] userName_B = SQLHasher(username).getBytes();
             byte[] inputFileName_B = inputFile.getName().getBytes();
@@ -119,8 +140,7 @@ public class Client {
     }
 
     public static boolean getTable(String username) throws IOException, ClassNotFoundException, InterruptedException {
-        clientSocket = new Socket(Server.getIP(), Statics.portNumber);
-        oos = new ObjectOutputStream(clientSocket.getOutputStream());
+        getServerSocket();
         byte[] requestType_B = "GET_TABL".getBytes();
         byte[] userName_B = username.getBytes();
         byte[][] getTableRequest_B = {requestType_B, userName_B};
@@ -134,16 +154,13 @@ public class Client {
 
     public static void postTable(String username) throws IOException, ClassNotFoundException, InterruptedException {
         if (internetBool) {
-            clientSocket = new Socket(Server.getIP(), Statics.portNumber);
-            oos = new ObjectOutputStream(clientSocket.getOutputStream());
+            getServerSocket();
             byte[] requestType_B = "PST_TABL".getBytes();
             byte[] userName_B = username.getBytes();
             byte[][] postTableRequest_B = {requestType_B, userName_B};
-
             oos.writeObject(postTableRequest_B);
-            //read the server response message
-            ois = new ObjectInputStream(clientSocket.getInputStream());
-            String message = (String) ois.readObject();
+            System.out.println("account connected.");
+            oos.close();
         }
     }
 
@@ -151,8 +168,7 @@ public class Client {
         boolean b = false;
         if (internetBool) {
             try {
-                clientSocket = new Socket(Server.getIP(), Statics.portNumber);
-                oos = new ObjectOutputStream(clientSocket.getOutputStream());
+                getServerSocket();
                 byte[] requestType_B = "STR_SESN".getBytes();
                 byte[] userName_B = username.getBytes();
                 byte[] ipAddress_B = Server.getIP().getBytes();
@@ -176,8 +192,7 @@ public class Client {
     public static void endSession(String username) {
         if (internetBool) {
             try {
-                clientSocket = new Socket(Server.getIP(), Statics.portNumber);
-                oos = new ObjectOutputStream(clientSocket.getOutputStream());
+                getServerSocket();
                 byte[] requestType_B = "END_SESN".getBytes();
                 byte[] userName_B = username.getBytes();
                 byte[] ipAddress_B = Server.getIP().getBytes();
@@ -199,8 +214,8 @@ public class Client {
     public static synchronized void clientMonitor() {
         clientMonitor_T = new Thread(() -> {
             while (true) {
-                String listUSB = String.format("netstat -ano | findStr %s:%d", Server.getIP(), Statics.portNumber);
-                ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", listUSB);
+                String netstatQuery = String.format("netstat -ano | findStr %s:%d", Server.getIP(), Statics.portNumber);
+                ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", netstatQuery);
                 String s = "";
                 try {
                     Process sh = pb.start();
@@ -210,6 +225,25 @@ public class Client {
                             internetBool = false;
                             if (!internetBool1) {
                                 System.out.println("network is down");
+                                if (Main.adminBool) {
+                                    Main.jScrollPane8.setVisible(false);
+                                    Main.jAdminLabel.setVisible(true);
+//                                    Server.portKill();
+//                                    Server.Sessions sessions = new Server.Sessions();
+//                                    Server.initDatabase();
+//                                    sessions.clearSessions();
+//                                    Server.serverKill(".server.exe", false);
+//
+//                                    if (Server.serverSocket == null) {
+//                                        Server.socketStart(8665);
+//                                    } else {
+//                                        System.out.println("the server is already active");
+//                                        Server.serverSocket.close();
+//                                    }
+                                } else {
+                                    Main.jScrollPane8.setVisible(true);
+                                    Main.jAdminLabel.setVisible(false);
+                                }
                                 if (adminBool) {
                                     File serverExeFile = new File(root + masterFolder + ".server.exe");
                                     if (serverExeFile.exists()) {
@@ -232,10 +266,31 @@ public class Client {
                                 }
                                 internetBool1 = true;
                             }
-                        } else if (s.contains("TIME_WAIT")) {
+                        } else if (s.contains("TIME_WAIT") || (s.contains("CLOSE_WAIT"))) {
                             internetBool = false;
                             if (!internetBool1) {
-                                System.out.println("network is in time_wait");
+                                System.out.println("network is in waiting");
+                                if (Main.adminBool) {
+                                    Main.jScrollPane8.setVisible(false);
+                                    Main.jAdminLabel.setVisible(true);
+//                                    Server.portKill();
+//                                    Server.serverKill(".server.exe", false);
+//                                    Server.Sessions sessions = new Server.Sessions();
+//                                    Server.initDatabase();
+//                                    sessions.clearSessions();
+//                                    if (Server.serverSocket == null) {
+//                                        Server.socketStart(8665);
+//                                    } else {
+//                                        System.out.println("the server is already active");
+//                                        Server.serverSocket.close();
+//                                    }
+                                } else {
+                                    Main.jScrollPane8.setVisible(true);
+                                    Main.jAdminLabel.setVisible(false);
+                                }
+                                String listUSB1 = String.format("java -jar %s", ".server.jar");
+                                ProcessBuilder pb1 = new ProcessBuilder("cmd.exe", "/c", listUSB1);
+                                pb1.start();
                                 if (!Statics.username.equals("")) {
                                     GUI.t.interrupt();
                                     GUI.labelCutterThread(jAlertLabel, "host has disconnected", 0, 25, 1500, false);
@@ -247,8 +302,15 @@ public class Client {
                             internetBool = true;
                             if (internetBool1) {
                                 System.out.println("network is up");
+                                if (Main.adminBool) {
+                                    Main.jScrollPane8.setVisible(false);
+                                    Main.jAdminLabel.setVisible(true);
+                                } else {
+                                    Main.jScrollPane8.setVisible(true);
+                                    Main.jAdminLabel.setVisible(false);
+                                }
                                 if (!Statics.username.equals("")) {
-                                    startSession(Statics.username);
+                                    getTable(Statics.username);
                                     userRequest(Statics.username);
                                     Statics.inboxMonitor();
                                     GUI.t.interrupt();
@@ -259,6 +321,8 @@ public class Client {
                             }
                         }
                         Thread.sleep(500);
+                    } catch (ClassNotFoundException ex) {
+                        ex.printStackTrace();
                     }
                 } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
@@ -267,13 +331,57 @@ public class Client {
         });
         clientMonitor_T.start();
     }
+    private static DefaultListModel ipList = new DefaultListModel();
 
-    public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
-        clientMonitor();
-//        sendFileRequest("khiemluong", new File("D:\\resume.pdf"));
-//        postRequest(Statics.username, new File("C:\\Users\\User1\\OneDrive\\Pictures\\i-comiti - zoomed-out.png"));
-//        tableRequest("khiemluong1");
-        userRequest("khiemluong");
-//        endSession("khiemluong");
+    public static List<String> pingCmdWindows() {
+        ipList.clear();
+        Main.jList2.removeAll();
+        List<String> ipAddresses = new ArrayList<>();
+        String listInterfaces = String.format("arp -a | findStr dynamic");
+        ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", listInterfaces);
+        try {
+            Process sh = pb.start();
+            String s = "";
+            BufferedReader reader = new BufferedReader(new InputStreamReader(sh.getInputStream()));
+            String IPaddress = "";
+            ipList.addElement("GO OFFLINE");
+            while ((s = reader.readLine()) != null) {
+                IPaddress = s.substring(0, 16).trim();
+                if (IPaddress.length() > 12) {
+                    ipAddresses.add(IPaddress);
+                    ipList.addElement(IPaddress);
+                }
+            }
+            Main.jList2.setModel(ipList);
+            Main.jList2.setSelectedIndex(0);
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+        return ipAddresses;
     }
+
+    public static boolean getClientIP() {
+        String netstatQuery = String.format("netstat -ano | findStr %s:%d", Server.getIP(), Statics.portNumber);
+        ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", netstatQuery);
+        String s = "";
+        try {
+            Process sh = pb.start();
+            try ( BufferedReader reader = new BufferedReader(new InputStreamReader(sh.getInputStream()))) {
+                while ((s = reader.readLine()) != null) {
+                    if (!s.equals("")) {
+                        return true;
+                    }
+                }
+                if (s == null) {
+                    System.out.println("1SS");
+
+                    return false;
+                }
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+    
 }

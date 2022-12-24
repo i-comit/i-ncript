@@ -103,8 +103,22 @@ public class Miscs {
         FileTime fileTime = null;
         String str = new String(fileTimeArr, StandardCharsets.UTF_8);
         try {
-            milis = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SS'Z'").parse(str).getTime();
-            fileTime = FileTime.fromMillis(milis);
+            if (str.length() == 2) {
+            }
+            switch (str.length()) {
+                case 20:
+                    milis = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(str).getTime();
+                    fileTime = FileTime.fromMillis(milis);
+                    break;
+                case 22:
+                    milis = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SS'Z'").parse(str).getTime();
+                    fileTime = FileTime.fromMillis(milis);
+                    break;
+                case 23:
+                    milis = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(str).getTime();
+                    fileTime = FileTime.fromMillis(milis);
+                    break;
+            }
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

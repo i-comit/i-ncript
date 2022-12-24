@@ -253,9 +253,6 @@ public class Hasher {
     }
 
     public static void main(String[] args) throws UnsupportedEncodingException {
-//        System.out.println(SQLHasher("khiemluong"));
-//        System.out.println(SQLHasher("khiemluong2"));
-//
 //        System.out.println(getHash64("khiemluong1"));
 //        System.out.println(getHash64("khiemluong2"));
 
