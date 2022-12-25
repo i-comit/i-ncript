@@ -134,7 +134,7 @@ public class Login {
         recipientPassword = new String(password).trim();
         if (!"".equals(recipientUsername)) {
             if (!"".equals(recipientPassword)) {
-                if (recipientUsername.length() >= 5 && recipientUsername.length() <= 11) {
+                if (recipientUsername.length() >= 6) {
                     if (!recipientUsername.equals(Statics.recipientPassword)) {
                         resetStaticInts();
                         Hasher.hashedUsername = Hasher.getHash(recipientUsername, true);
@@ -151,9 +151,7 @@ public class Login {
                         } else {
                             List<Path> treeViewPaths = TreeView.convertTreePathToPath(Main.jTree1.getSelectionPaths());
                             List<Path> filteredSendPath = new ArrayList<>();
-                            System.out.println("ORIG PATH " + treeViewPaths);
                             treeViewPaths.forEach(x -> {
-//                                System.out.println(x.toFile().getName());
                                 if (!x.toFile().getName().endsWith(".enc") && !x.toFile().getName().endsWith(".i-cc")) {
                                     filteredSendPath.add(x);
                                 }
@@ -163,7 +161,6 @@ public class Login {
                                 GUI.labelCutterThread(jAlertLabel, "folder can't contain .enc files", 20, 30, 1500, false);
                                 b = false;
                             } else {
-                                System.out.println("FILTERED PATH " + filteredSendPath);
                                 System.out.println(recipientUsername);
                                 AES.AESThread(filteredSendPath, sendFolder.toFile(), true, 2);
                                 b = true;

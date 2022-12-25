@@ -25,6 +25,7 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -94,39 +95,29 @@ class DragDrop implements DropTargetListener {
                         // Get all of the dropped files
                         List files = (List) transferable.getTransferData(flavor);
                         List<Path> paths = new ArrayList<>();
-                        if (files.size() <= 10) {
-                            // Loop them through
-                            for (int i = 0; i < files.size(); i++) {
-                                String sf = files.get(i).toString();
-                                filesf = new File(sf);
-                                paths.add(filesf.toPath());
-                                if (Statics.toolMode == 0 || Statics.toolMode == 3) {
-                                    if (i >= paths.size() - 1) {
-                                        if (!b) {
-                                            Statics.dragDropBool = true;
-                                            if (!filesf.isDirectory()) {
-                                                if (!filesf.getName().endsWith(".i-cc")) {
-                                                    storeDropBool = true;
-                                                    if (!filesf.getAbsolutePath().equals(root + masterFolder + "i-ncript.exe")
-                                                            && !filesf.getAbsolutePath().equals(root + masterFolder + ".server.exe")
-                                                            && !filesf.getAbsolutePath().equals(root + masterFolder + Statics.keyName)) {
-                                                        Main.jButton2.setVisible(true);
-                                                        Main.jProgressBar1.setMaximum(0);
-                                                        jProgressBar1.setString("0% | 0/" + files.size());
-                                                        AES.AESThread(paths, Statics.directory, false, 0);
-                                                    } else {
-                                                        GUI.t.interrupt();
-                                                        GUI.labelCutterThread(Main.jAlertLabel, "can't encrypt app files", 10, 25, 1000, false);
-                                                    }
+                        // Loop them through
+                        for (int i = 0; i < files.size(); i++) {
+                            String sf = files.get(i).toString();
+                            filesf = new File(sf);
+                            paths.add(filesf.toPath());
+                            if (Statics.toolMode == 0 || Statics.toolMode == 3) {
+                                if (i >= paths.size() - 1) {
+                                    if (!b) {
+                                        Statics.dragDropBool = true;
+                                        if (!filesf.isDirectory()) {
+                                            if (!filesf.getName().endsWith(".i-cc")) {
+                                                if (!filesf.getAbsolutePath().equals(root + masterFolder + "i-ncript.exe")
+                                                        && !filesf.getAbsolutePath().equals(root + masterFolder + ".server.exe")
+                                                        && !filesf.getAbsolutePath().equals(root + masterFolder + Statics.keyName)) {
+                                                    Main.jButton2.setVisible(true);
+                                                    Main.jProgressBar1.setMaximum(0);
+                                                    jProgressBar1.setString("0% | 0/" + files.size());
+                                                    AES.AESThread(paths, Statics.directory, false, 0);
                                                 } else {
                                                     GUI.t.interrupt();
-                                                    GUI.labelCutterThread(Main.jAlertLabel, ".i-cc files are not allowed", 10, 25, 1000, false);
+                                                    GUI.labelCutterThread(Main.jAlertLabel, "can't encrypt app files", 10, 25, 1000, false);
                                                 }
                                             } else {
-                                                if (!filesf.getAbsolutePath().endsWith(masterFolder + "ᴠᴀᴜʟᴛ")
-                                                        && !filesf.getAbsolutePath().endsWith(masterFolder + Statics.nBoxName)
-                                                        && !filesf.getAbsolutePath().endsWith(masterFolder + Statics.oBoxName)
-                                                        && !filesf.getAbsolutePath().endsWith(masterFolder + "app")
                                                 GUI.t.interrupt();
                                                 GUI.labelCutterThread(Main.jAlertLabel, ".i-cc files are not allowed", 10, 25, 1000, false);
                                             }
@@ -239,10 +230,10 @@ class DragDrop_T implements Runnable {
             Audio.audioPlayerThread("ding-sfx.wav");
             GUI.labelCutterThread(jAlertLabel, decFiles + " encrypted | " + encFiles + " decrypted", 15, 30, 600, false);
             Main.jTextArea1.append("--------------------------------------------\n");
-            Main.jTextArea1.append(decFiles + " encrypted | " + encFiles + " decrypted | " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
+            Main.jTextArea1.append(decFiles + " encrypted | " + encFiles + " decrypted | " + ZonedDateTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
             Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
 
-            Thread.sleep(300);
+            Thread.sleep(250);
 
             for (int x = jProgressBar1.getMaximum(); x >= 0; x--) {
                 Thread.sleep(4);

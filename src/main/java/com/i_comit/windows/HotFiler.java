@@ -85,7 +85,7 @@ class HotFiler_T implements Runnable {
                     boolean b = true;
                     while (b) {
                         int paths0 = countRegFiles(Statics.path);
-                        Thread.sleep(2000);
+                        Thread.sleep(3000);
                         Statics.fileCount = countRegFiles(Statics.path);
                         if (Statics.fileCount == paths0) {
                             if (paths0 != 0 && Statics.fileCount != 0) {

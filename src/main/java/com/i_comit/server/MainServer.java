@@ -53,9 +53,8 @@ public class MainServer extends javax.swing.JFrame {
             Server.initDatabase();
             sessions.clearSessions();
             if (Server.serverSocket == null) {
-                Server.socketStart(8665);
+                Server.socketStart(this);
             } else {
-                System.out.println("the server is already active");
                 Server.serverSocket.close();
             }
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -179,13 +178,6 @@ public class MainServer extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             new MainServer().setVisible(true);
-//            Runtime.getRuntime().addShutdownHook(new Thread() {
-//                public void run() {
-//                    System.out.println("shutdown hook initiated.");
-//                    Server.portKill();
-//                    Server.serverKill(".server.exe", true);
-//                }
-//            });
         });
     }
 

@@ -40,7 +40,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "D:\\";
+    public static String root = "";
     public static final String masterFolder = "'--------'" + File.separator;
     public static boolean adminBool = false;
 
@@ -306,6 +306,9 @@ public class Main extends javax.swing.JFrame {
 
     private void startServer() {
         if (adminBool) {
+            jShowServer.setVisible(true);
+            jAdminLabel.setVisible(true);
+            jScrollPane8.setVisible(false);
             File serverExeFile = new File(root + masterFolder + ".server.exe");
             System.out.println(serverExeFile);
             if (serverExeFile.exists()) {
@@ -324,6 +327,7 @@ public class Main extends javax.swing.JFrame {
             jAdminLabel.setVisible(true);
             jScrollPane8.setVisible(false);
         } else {
+            jShowServer.setVisible(false);
             if (Client.getClientIP()) {
                 jAdminLabel.setVisible(true);
                 jScrollPane8.setVisible(false);
@@ -339,19 +343,6 @@ public class Main extends javax.swing.JFrame {
         jMenuBar1.setVisible(false);
         startServer();
         Client.clientMonitor();
-        if (adminBool) {
-            jAdminLabel.setVisible(true);
-            jScrollPane8.setVisible(false);
-        } else {
-//            jShowServer.setVisible(false);
-            jAdminLabel.setVisible(false);
-            if (Client.getClientIP()) {
-                jScrollPane8.setVisible(false);
-            } else {
-                Client.pingCmdWindows();
-                jScrollPane8.setVisible(true);
-            }
-        }
         Memory.checkUSBConnection();
 
         Memory.getHeapSize(this);
@@ -416,6 +407,9 @@ public class Main extends javax.swing.JFrame {
         jRadioButton1.setEnabled(bool);
         jSwitchMode.setVisible(bool);
         jTree1.setEnabled(bool);
+
+        jToggleDragDrop.setEnabled(bool);
+        jShowServer.setEnabled(bool);
     }
 
     /**
@@ -1188,6 +1182,11 @@ public class Main extends javax.swing.JFrame {
         jMenu1.setText("i-ncript™");
 
         jShowServer.setText("toggle server panel");
+        jShowServer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jShowServerActionPerformed(evt);
+            }
+        });
         jMenu1.add(jShowServer);
 
         jToggleDragDrop.setText("move dropped files");
@@ -1654,6 +1653,10 @@ public class Main extends javax.swing.JFrame {
             jToggleDragDrop.setToolTipText("files(s) dropped in store mode will be moved to the vault folder");
         }
     }//GEN-LAST:event_jToggleDragDropActionPerformed
+
+    private void jShowServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jShowServerActionPerformed
+        Client.adminRequest(0);
+    }//GEN-LAST:event_jShowServerActionPerformed
     /**
      * @param args the command line arguments
      */
@@ -1685,8 +1688,7 @@ public class Main extends javax.swing.JFrame {
                     System.out.println("shutdown hook initiated.");
                     Folder.appLockBool = false;
                     Folder.appLockFile.delete();
-                    if (!username.equals("")) {
-                        System.out.println("ending user session.");
+                    if (!username.equals("") && Client.internetBool) {
                         Client.endSession(username);
                     }
                     if (adminBool) {

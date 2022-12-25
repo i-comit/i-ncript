@@ -360,6 +360,24 @@ public class Client {
         return ipAddresses;
     }
 
+    public static void adminRequest(int requestType) {
+        if (internetBool) {
+            try {
+                getServerSocket();
+                byte[] adminReq_B = "ADMIN".getBytes();
+                if (requestType == 0) {
+                    byte[] serverReq_B = "SERVR".getBytes();
+                    byte[][] startSession_B = {adminReq_B, serverReq_B};
+                    oos.writeObject(startSession_B);
+                }
+                //read the server response message
+                oos.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
     public static boolean getClientIP() {
         String netstatQuery = String.format("netstat -ano | findStr %s:%d", Server.getIP(), Statics.portNumber);
         ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", netstatQuery);
@@ -373,8 +391,6 @@ public class Client {
                     }
                 }
                 if (s == null) {
-                    System.out.println("1SS");
-
                     return false;
                 }
             }
@@ -383,5 +399,5 @@ public class Client {
         }
         return false;
     }
-    
+
 }

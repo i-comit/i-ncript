@@ -287,6 +287,9 @@ class recursiveFileDrop_T implements Runnable {
     public static int fileDropIter;
 
     public static void recursiveFileDrop(File filesf, Path path) throws IOException, InterruptedException {
+        if (Main.jToggleButton1.isSelected()) {
+            HotFiler.t.interrupt();
+        }
         Paths.get(path + File.separator + filesf.getName()).toFile().mkdir();
         File[] filesArr = filesf.listFiles();
         for (File filesArr1 : filesArr) {

@@ -21,6 +21,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.sql.Connection;
@@ -42,14 +43,16 @@ public class Server {
     public static ServerSocket serverSocket;
     public static Socket clientSocket;
 
-    public static synchronized void socketStart(int port) {
+    public static synchronized void socketStart(MainServer main) {
         System.out.println("server started");
         Sessions session = new Sessions();
         Tables table = new Tables();
         Records record = new Records();
+        Admin admin = new Admin();
+
         try {
             InetAddress addr = InetAddress.getByName(Server.getIP());
-            serverSocket = new ServerSocket(port, 50, addr);
+            serverSocket = new ServerSocket(8665, 50, addr);
             Thread serverConnection = new Thread(() -> {
                 while (true) {
                     try {
@@ -127,7 +130,7 @@ public class Server {
                             boolean b = session.requestSession(userName, ipAddress, OS);
                             if (b) {
                                 System.out.println(userName + " has connected to a session.");
-                                MainServer.jTextArea1.append(userName + " has connected to a session.\n");
+                                MainServer.jTextArea1.append(userName + " has started their session.\n");
                                 MainServer.jTextArea1.setCaretPosition(MainServer.jTextArea1.getText().length());
 
                             } else {
@@ -148,6 +151,16 @@ public class Server {
                             oos.close();
                             clientSocket.close();
                         }
+
+                        if (Arrays.equals(message[0], "ADMIN".getBytes())) {
+                            if(Arrays.equals(message[1], "SERVR".getBytes())){
+                                admin.showServerPanel(main);
+                            }
+                            ois.close();
+                            oos.close();
+                            clientSocket.close();
+                        }
+
                         Thread.sleep(50);
                     } catch (EOFException ex) {
                     } catch (SocketException ex) {
@@ -169,8 +182,8 @@ public class Server {
     }
 //
     private static String dbFileName = ".💽🗄️.db";
-//    private static String dbPath = Paths.get("").toAbsolutePath().toString() + File.separator + "runtime" + File.separator + "bin" + File.separator + "server" + File.separator + dbFileName;
-    private static String dbPath = root + masterFolder + "runtime" + File.separator + "bin" + File.separator + "server" + File.separator + dbFileName;
+    private static String dbPath = Paths.get("").toAbsolutePath().toString() + File.separator + "runtime" + File.separator + "bin" + File.separator + "server" + File.separator + dbFileName;
+//    private static String dbPath = root + masterFolder + "runtime" + File.separator + "bin" + File.separator + "server" + File.separator + dbFileName;
 
     public static String url = "jdbc:sqlite:" + dbPath;
 
@@ -527,5 +540,17 @@ public class Server {
                 ex.printStackTrace();
             }
         }
+    }
+
+    static class Admin {
+
+        public void showServerPanel(MainServer main) {
+            if (main.getOpacity() == 1) {
+                main.setOpacity(0);
+            } else {
+                main.setOpacity(1);
+            }
+        }
+
     }
 }

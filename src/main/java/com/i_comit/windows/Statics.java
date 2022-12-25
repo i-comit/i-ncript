@@ -162,7 +162,7 @@ public class Statics {
         GUI.getGB();
 
         switch (toolMode) {
-            case 1:
+            case 1 -> {
                 jSwitchMode.setText("N-BOX");
                 jSwitchMode.setToolTipText("current panel can decrypt .i-cc files inside n-box (inbox) folder");
                 jStorePanel.setVisible(false);
@@ -181,8 +181,8 @@ public class Statics {
                 FileHider.cleanUp(receiveFolder);
                 TreeView.setRootName("ɴ-ʙᴏx");
                 Main.refreshTreeView(receiveFolder, TreeView.receiveCaretPos);
-                break;
-            case 2:
+            }
+            case 2 -> {
                 resetSendTools(2);
                 jSwitchMode.setText("O-BOX");
                 jSwitchMode.setToolTipText("current panel can encrypt files for sending from o-box (outbox) folder");
@@ -207,8 +207,8 @@ public class Statics {
                 FileHider.cleanUp(sendFolder);
                 TreeView.setRootName("ᴏ-ʙᴏx");
                 Main.refreshTreeView(sendFolder, TreeView.sendCaretPos);
-                break;
-            case 3:
+            }
+            case 3 -> {
                 jSwitchMode.setText("STORE");
                 jSwitchMode.setToolTipText("current panel can encrypt & decrypt personal files");
                 jStorePanel.setVisible(true);
@@ -225,7 +225,7 @@ public class Statics {
                 TreeView.setRootName("ᴠᴀᴜʟᴛ");
                 Main.refreshTreeView(path, TreeView.nodeCaretPos);
                 toolMode = 0;
-                break;
+            }
         }
     }
 
