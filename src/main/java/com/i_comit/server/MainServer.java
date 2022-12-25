@@ -31,14 +31,14 @@ import javax.swing.UnsupportedLookAndFeelException;
  *
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
-public class Main extends javax.swing.JFrame {
+public class MainServer extends javax.swing.JFrame {
 
     /**
-     * Creates new form ServerGUI
+     * Creates new form MainServer
      */
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
     
-    public Main() {
+    public MainServer() {
         try {
             initComponents();
             this.setBackground(new Color(0, 0, 0, 0));
@@ -90,7 +90,6 @@ public class Main extends javax.swing.JFrame {
         setFocusable(false);
         setFont(Statics.registerCustomFont(13, fontFile));
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(245, 170));
         setResizable(false);
         setType(java.awt.Window.Type.UTILITY);
 
@@ -160,13 +159,13 @@ public class Main extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
@@ -179,7 +178,7 @@ public class Main extends javax.swing.JFrame {
         }
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new Main().setVisible(true);
+            new MainServer().setVisible(true);
 //            Runtime.getRuntime().addShutdownHook(new Thread() {
 //                public void run() {
 //                    System.out.println("shutdown hook initiated.");

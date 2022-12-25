@@ -40,7 +40,6 @@ class DragDrop implements DropTargetListener {
     static int decFiles = 0;
 
     public static File filesf;
-    public static boolean storeDropBool = false;
 
     @Override
     public void drop(DropTargetDropEvent event) {
@@ -128,62 +127,69 @@ class DragDrop implements DropTargetListener {
                                                         && !filesf.getAbsolutePath().endsWith(masterFolder + Statics.nBoxName)
                                                         && !filesf.getAbsolutePath().endsWith(masterFolder + Statics.oBoxName)
                                                         && !filesf.getAbsolutePath().endsWith(masterFolder + "app")
-                                                        && !filesf.getAbsolutePath().endsWith(masterFolder + "runtime")) {
-                                                    storeDropBool = false;
+                                                GUI.t.interrupt();
+                                                GUI.labelCutterThread(Main.jAlertLabel, ".i-cc files are not allowed", 10, 25, 1000, false);
+                                            }
+                                        } else {
+                                            if (!filesf.getAbsolutePath().endsWith(masterFolder + "ᴠᴀᴜʟᴛ")
+                                                    && !filesf.getAbsolutePath().endsWith(masterFolder + Statics.nBoxName)
+                                                    && !filesf.getAbsolutePath().endsWith(masterFolder + Statics.oBoxName)
+                                                    && !filesf.getAbsolutePath().endsWith(masterFolder + "app")
+                                                    && !filesf.getAbsolutePath().endsWith(masterFolder + "runtime")) {
+                                                if (Main.toggleDragDropBool) {
                                                     Folder.getFileDropCount(filesf);
+                                                    Folder.recursiveFileDropThread(filesf, Statics.path);
+                                                    filesf.delete();
+                                                } else {
                                                     recursiveFileDrop_T.recursiveFileStoreDrop(filesf, Statics.path, paths);
                                                     paths.remove(0);
                                                     Main.jButton2.setVisible(true);
                                                     Main.jProgressBar1.setMaximum(0);
                                                     jProgressBar1.setString("0% | 0/" + files.size());
                                                     AES.AESThread(paths, Statics.directory, false, 0);
-                                                } else {
-                                                    GUI.t.interrupt();
-                                                    GUI.labelCutterThread(Main.jAlertLabel, "can't encrypt app folders", 10, 25, 1000, false);
                                                 }
+
+                                            } else {
+                                                GUI.t.interrupt();
+                                                GUI.labelCutterThread(Main.jAlertLabel, "can't encrypt app folders", 10, 25, 1000, false);
                                             }
-                                            b = true;
                                         }
-                                    }
-                                }
-                                if (Statics.toolMode == 1) {
-                                    if (files.size() <= 10) {
-                                        if (filesf.toString().endsWith(".i-cc")) {
-                                            Files.move(filesf.toPath(), Paths.get(Statics.receiveFolder + File.separator + filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
-                                            Main.jTextArea1.append(filesf.getName() + " has been moved to the n-box folder\n");
-                                            Folder.listZipFiles();
-                                        } else {
-                                            GUI.t.interrupt();
-                                            GUI.labelCutterThread(Main.jAlertLabel, "only .i-cc files are allowed", 10, 25, 1000, false);
-                                        }
-                                    } else {
-                                        GUI.t.interrupt();
-                                        GUI.labelCutterThread(Main.jAlertLabel, "only 10 file is allowed at once", 10, 25, 1000, false);
-                                    }
-                                }
-                                if (Statics.toolMode == 2) {
-                                    if (!filesf.getParent().equals(Statics.sendFolder.toString())) {
-                                        if (filesf.isDirectory()) {
-                                            Folder.getFileDropCount(filesf);
-                                            Folder.recursiveFileDropSendThread(filesf, Statics.sendFolder);
-                                            filesf.delete();
-                                        } else {
-                                            Files.move(filesf.toPath(), Paths.get(Statics.sendFolder + File.separator + filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
-                                            Main.refreshTreeView(Statics.sendFolder, TreeView.sendCaretPos);
-                                        }
-                                    } else {
-                                        GUI.t.interrupt();
-                                        GUI.labelCutterThread(Main.jAlertLabel, "files/folders already in o-box", 10, 25, 750, false);
+                                        b = true;
                                     }
                                 }
                             }
-                        } else {
-                            if (GUI.t.isAlive()) {
-                                GUI.t.interrupt();
+                            if (Statics.toolMode == 1) {
+                                if (files.size() <= 10) {
+                                    if (filesf.toString().endsWith(".i-cc")) {
+                                        Files.move(filesf.toPath(), Paths.get(Statics.receiveFolder + File.separator + filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
+                                        Main.jTextArea1.append(filesf.getName() + " has been moved to the n-box folder\n");
+                                        Folder.listZipFiles();
+                                    } else {
+                                        GUI.t.interrupt();
+                                        GUI.labelCutterThread(Main.jAlertLabel, "only .i-cc files are allowed", 10, 25, 1000, false);
+                                    }
+                                } else {
+                                    GUI.t.interrupt();
+                                    GUI.labelCutterThread(Main.jAlertLabel, "only 10 file is allowed at once", 10, 25, 1000, false);
+                                }
                             }
-                            GUI.labelCutterThread(Main.jAlertLabel, "only 10 files are allowed at once", 10, 25, 750, false);
-                            Main.jTextArea1.append("For security reasons, you can only drop up to 10 files at once\n");
+                            if (Statics.toolMode == 2) {
+                                if (!filesf.getParent().equals(Statics.sendFolder.toString())) {
+                                    if (filesf.isDirectory()) {
+                                        Folder.getFileDropCount(filesf);
+                                        Folder.recursiveFileDropThread(filesf, Statics.sendFolder);
+                                        filesf.delete();
+                                    } else {
+                                        Files.move(filesf.toPath(), Paths.get(Statics.sendFolder + File.separator + filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
+                                        Main.refreshTreeView(Statics.sendFolder, TreeView.sendCaretPos);
+                                    }
+                                } else {
+                                    GUI.t.interrupt();
+                                    GUI.labelCutterThread(Main.jAlertLabel, "files/folders already in o-box", 10, 25, 750, false);
+                                }
+                            }
                         }
+
                     }
 
                 } catch (UnsupportedFlavorException | IOException e) {

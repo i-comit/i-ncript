@@ -38,35 +38,25 @@ public class Login {
             if (!"".equals(username)) {
                 if (!"".equals(Statics.password)) {
                     if (username.length() >= 6) {
-                        if (username.length() <= 11) {
-                            if (Statics.password.length() >= 8) {
-                                if (Statics.password.length() <= 15) {
-                                    if (!username.equals(Statics.password)) {
-                                        String regex = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!<>~:;])";
-                                        Pattern p = Pattern.compile(regex);
-                                        Matcher m = p.matcher(Statics.password);
-                                        if (m.lookingAt()) {
-                                            Login.Authenticator();
-                                            b = true;
-                                        } else {
-                                            GUI.t.interrupt();
-                                            GUI.labelCutterThread(jAlertLabel, "password failed regex check", 20, 20, 1200, false);
-                                        }
-                                    } else {
-                                        GUI.t.interrupt();
-                                        GUI.labelCutterThread(jAlertLabel, "password can't be username", 20, 20, 1200, false);
-                                    }
+                        if (Statics.password.length() >= 8) {
+                            if (!username.equals(Statics.password)) {
+                                String regex = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!<>~:;])";
+                                Pattern p = Pattern.compile(regex);
+                                Matcher m = p.matcher(Statics.password);
+                                if (m.lookingAt()) {
+                                    Login.Authenticator();
+                                    b = true;
                                 } else {
                                     GUI.t.interrupt();
-                                    GUI.labelCutterThread(jAlertLabel, "password is too long", 20, 20, 1200, false);
+                                    GUI.labelCutterThread(jAlertLabel, "password failed regex check", 20, 20, 1200, false);
                                 }
                             } else {
                                 GUI.t.interrupt();
-                                GUI.labelCutterThread(jAlertLabel, "password is too short", 20, 20, 1200, false);
+                                GUI.labelCutterThread(jAlertLabel, "password can't be username", 20, 20, 1200, false);
                             }
                         } else {
                             GUI.t.interrupt();
-                            GUI.labelCutterThread(jAlertLabel, "username is too long", 20, 20, 1200, false);
+                            GUI.labelCutterThread(jAlertLabel, "password is too short", 20, 20, 1200, false);
                         }
                     } else {
                         GUI.t.interrupt();

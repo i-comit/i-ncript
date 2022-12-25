@@ -344,7 +344,7 @@ public class Client {
             String s = "";
             BufferedReader reader = new BufferedReader(new InputStreamReader(sh.getInputStream()));
             String IPaddress = "";
-            ipList.addElement("GO OFFLINE");
+            ipList.addElement("⇒ offline mode");
             while ((s = reader.readLine()) != null) {
                 IPaddress = s.substring(0, 16).trim();
                 if (IPaddress.length() > 12) {

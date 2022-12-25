@@ -71,8 +71,8 @@ public class Server {
                             String fileName = new String(message[2], StandardCharsets.UTF_8);
                             if (findRecord(userName, fileName)) {
                                 byte[][] b = getFileBlob(userName, fileName);
-                                Main.jTextArea1.append("delivered: " + fileName + "\n");
-                                Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
+                                MainServer.jTextArea1.append("delivered: " + fileName + "\n");
+                                MainServer.jTextArea1.setCaretPosition(MainServer.jTextArea1.getText().length());
 
                                 oos.writeObject(b);
                                 record.deleteRecord(userName, fileName);
@@ -91,8 +91,8 @@ public class Server {
                                 String fileDate = new String(message[3], StandardCharsets.UTF_8);
                                 insertClientRecord(userName, fileName, fileDate, message[4]);
                                 oos.writeObject(fileName + " has been received");
-                                Main.jTextArea1.append("received: " + fileName + "\n");
-                                Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
+                                MainServer.jTextArea1.append("received: " + fileName + "\n");
+                                MainServer.jTextArea1.setCaretPosition(MainServer.jTextArea1.getText().length());
                                 ois.close();
                                 oos.close();
                                 clientSocket.close();
@@ -127,8 +127,8 @@ public class Server {
                             boolean b = session.requestSession(userName, ipAddress, OS);
                             if (b) {
                                 System.out.println(userName + " has connected to a session.");
-                                Main.jTextArea1.append(userName + " has connected to a session.\n");
-                                Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
+                                MainServer.jTextArea1.append(userName + " has connected to a session.\n");
+                                MainServer.jTextArea1.setCaretPosition(MainServer.jTextArea1.getText().length());
 
                             } else {
                                 System.out.println(userName + " already has an active session.");
@@ -142,7 +142,7 @@ public class Server {
                             String userName = new String(message[1], StandardCharsets.UTF_8);
                             session.endSession(userName);
                             System.out.println(userName + " has ended their session.");
-                            Main.jTextArea1.append(userName + " has ended their session.\n");
+                            MainServer.jTextArea1.append(userName + " has ended their session.\n");
 
                             ois.close();
                             oos.close();
@@ -382,7 +382,7 @@ public class Server {
                     str = rs.getString(1);
                     if (rs.getString(1).equals(SQLHasher(username))) {
 //                    System.out.println();
-                        Main.jTextArea1.append(username + " is connected to session\n");
+                        MainServer.jTextArea1.append(username + " is connected to session\n");
                     }
                 }
                 if (str.equals("")) {

@@ -8,6 +8,7 @@ package com.i_comit.windows;
  *
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
+import static com.i_comit.windows.GUI.listAESPaths;
 import static com.i_comit.windows.Statics.zipFileCount;
 import java.io.File;
 import java.io.FileInputStream;
@@ -246,15 +247,24 @@ public class Folder {
         }
     }
 
-    public static void recursiveFileDropSendThread(File filesf, Path path) {
-        Thread t = new Thread(() -> recursiveFileDrop_T.recursiveFileSendDrop(filesf, path));
-        t.start();
-    }
-
     public static void recursiveFileDropStoreThread(File filesf, Path path, List<Path> paths) {
         Thread t = new Thread(() -> recursiveFileDrop_T.recursiveFileStoreDrop(filesf, path, paths));
         t.start();
     }
+
+    public static void recursiveFileDropThread(File filesf, Path path) {
+        Thread t = new Thread(() -> {
+            try {
+                recursiveFileDrop_T.recursiveFileDrop(filesf, path);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+        });
+        t.start();
+    }
+
     public static int fileDropCount;
 
     public static int getFileDropCount(File filesf) {
@@ -276,7 +286,7 @@ class recursiveFileDrop_T implements Runnable {
     }
     public static int fileDropIter;
 
-    public static void recursiveFileSendDrop(File filesf, Path path) {
+    public static void recursiveFileDrop(File filesf, Path path) throws IOException, InterruptedException {
         Paths.get(path + File.separator + filesf.getName()).toFile().mkdir();
         File[] filesArr = filesf.listFiles();
         for (File filesArr1 : filesArr) {
@@ -294,15 +304,26 @@ class recursiveFileDrop_T implements Runnable {
             } else {
                 String parentStr = filesArr1.getParent();
                 String parentFile = Paths.get(parentStr).toFile().getName();
-                recursiveFileSendDrop(filesArr1, Paths.get(path + File.separator + parentFile));
+                recursiveFileDrop(filesArr1, Paths.get(path + File.separator + parentFile));
             }
         }
         if (fileDropIter == Folder.fileDropCount) {
             GUI.t.interrupt();
-            GUI.labelCutterThread(Main.jAlertLabel, recursiveFileDrop_T.fileDropIter + " files moved to o-box", 10, 25, 750, false);
-            Main.jTextArea1.append(recursiveFileDrop_T.fileDropIter + " files moved to o-box\n");
+            if (Statics.toolMode == 2) {
+                GUI.labelCutterThread(Main.jAlertLabel, recursiveFileDrop_T.fileDropIter + " files moved to o-box", 10, 25, 750, false);
+                Main.jTextArea1.append(recursiveFileDrop_T.fileDropIter + " files moved to o-box\n");
+                TreeView.populateStoreTree(Statics.sendFolder);
+            }
+            if (Statics.toolMode == 0 || Statics.toolMode == 3) {
+                Main.jAlertLabel.setText("");
+                Main.jTextArea1.append(recursiveFileDrop_T.fileDropIter + " files moved to vault\n");
+                Statics.dragDropBool = false;
+                Main.jButton2.setVisible(true);
+                Statics.AESMode = 0;
+                Statics.fileCount = GUI.countFiles(Statics.path);
+                AES.AESThread(listAESPaths(Statics.path), Statics.directory, false, 0);
+            }
             recursiveFileDrop_T.fileDropIter = 0;
-            TreeView.populateStoreTree(Statics.sendFolder);
         }
         filesf.delete();
     }
@@ -316,22 +337,12 @@ class recursiveFileDrop_T implements Runnable {
                 }
             } else {
                 recursiveFileStoreDrop(filesArr1, path, recursiveStorePaths);
-            }
-        }
-        System.out.println("files all encrypted in folder");
-    }
-
-    public static void recursiveFileStoreDrop2(File filesf, Path path, List<Path> recursiveStorePaths) {
-        File[] filesArr = filesf.listFiles();
-        for (File filesArr1 : filesArr) {
-            if (!filesArr1.isDirectory()) {
-                if (!filesArr1.getName().endsWith("Thumbs.db")) {
-                    recursiveStorePaths.add(filesArr1.toPath());
+                if (Statics.toolMode == 2) {
+                    GUI.labelCutterThread(Main.jAlertLabel, recursiveFileDrop_T.fileDropIter + " files moved to o-box", 10, 25, 750, false);
+                    Main.jTextArea1.append(recursiveFileDrop_T.fileDropIter + " files moved to o-box\n");
+                    TreeView.populateStoreTree(Statics.sendFolder);
                 }
-            } else {
-                recursiveFileStoreDrop(filesArr1, path, recursiveStorePaths);
             }
         }
-        System.out.println("files all encrypted in folder");
     }
 }

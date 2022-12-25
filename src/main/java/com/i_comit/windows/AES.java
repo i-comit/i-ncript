@@ -288,17 +288,7 @@ class AES_T implements Runnable {
                         Main.jProgressBar2.setVisible(true);
                         Main.jAlertLabel.setText("decrypting " + x.toFile().getName());
                     }
-                    if (DragDrop.storeDropBool) {
-                        try {
-                            Files.move(file.toPath(), Paths.get(Statics.path + File.separator + file.getName()), StandardCopyOption.REPLACE_EXISTING);
-                            AES.decrypt(Hasher.hashedPassword, file, file);
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
-                    } else {
-                        AES.decrypt(Hasher.hashedPassword, file, file);
-                    }
-//                    System.out.println("encrypting "+);
+                    AES.decrypt(Hasher.hashedPassword, file, file);
                 }
                 if (!x.toString().endsWith(".enc") || x.toString().startsWith("Thumbs.db")) {
                     decFiles++;
@@ -309,16 +299,7 @@ class AES_T implements Runnable {
                         Main.jProgressBar2.setVisible(true);
                         Main.jAlertLabel.setText("encrypting " + x.toFile().getName());
                     }
-                    if (DragDrop.storeDropBool) {
-                        try {
-                            Files.move(file.toPath(), Paths.get(Statics.path + File.separator + file.getName()), StandardCopyOption.REPLACE_EXISTING);
-                            AES.encrypt(Hasher.hashedPassword, Paths.get(Statics.path + File.separator + file.getName()).toFile(), Paths.get(Statics.path + File.separator + file.getName()).toFile());
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
-                    } else {
-                        AES.encrypt(Hasher.hashedPassword, file, file);
-                    }
+                    AES.encrypt(Hasher.hashedPassword, file, file);
                 }
             });
             if (fileIter == 0) {

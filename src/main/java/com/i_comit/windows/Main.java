@@ -42,7 +42,7 @@ public class Main extends javax.swing.JFrame {
 
     public static String root = "D:\\";
     public static final String masterFolder = "'--------'" + File.separator;
-    public static boolean adminBool = true;
+    public static boolean adminBool = false;
 
     private final String appVer = "1.8.8";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
@@ -336,12 +336,14 @@ public class Main extends javax.swing.JFrame {
     }
 
     private void generateApp() {
+        jMenuBar1.setVisible(false);
         startServer();
         Client.clientMonitor();
         if (adminBool) {
             jAdminLabel.setVisible(true);
             jScrollPane8.setVisible(false);
         } else {
+//            jShowServer.setVisible(false);
             jAdminLabel.setVisible(false);
             if (Client.getClientIP()) {
                 jScrollPane8.setVisible(false);
@@ -501,6 +503,10 @@ public class Main extends javax.swing.JFrame {
         jButton7 = new javax.swing.JButton();
         jScrollPane5 = new javax.swing.JScrollPane();
         jTree1 = new javax.swing.JTree();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jShowServer = new javax.swing.JMenuItem();
+        jToggleDragDrop = new javax.swing.JRadioButtonMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("i-ncript™");
@@ -827,11 +833,6 @@ public class Main extends javax.swing.JFrame {
         jList2.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         jList2.setFocusable(false);
         jList2.setSelectionBackground(new java.awt.Color(51, 51, 51));
-        jList2.addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentMoved(java.awt.event.ComponentEvent evt) {
-                jList2ComponentMoved(evt);
-            }
-        });
         jScrollPane8.setViewportView(jList2);
 
         jLoginPanel.add(jScrollPane8, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 65, 114, 18));
@@ -1182,6 +1183,26 @@ public class Main extends javax.swing.JFrame {
         getContentPane().add(jScrollPane5);
         jScrollPane5.setBounds(22, 12, 225, 158);
 
+        jMenuBar1.setFocusable(false);
+
+        jMenu1.setText("i-ncript™");
+
+        jShowServer.setText("toggle server panel");
+        jMenu1.add(jShowServer);
+
+        jToggleDragDrop.setText("move dropped files");
+        jToggleDragDrop.setToolTipText("files dropped in store mode will stay at their current directory");
+        jToggleDragDrop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleDragDropActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jToggleDragDrop);
+
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
+
         setSize(new java.awt.Dimension(775, 234));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
@@ -1211,7 +1232,7 @@ public class Main extends javax.swing.JFrame {
                 if (Login.loginCheck(this)) {
                     if (!Folder.appLockFile.exists()) {
                         if (Login.verifyLogin()) {
-//                            Folder.appLock();
+                            Folder.appLock();
                             collapseLogin(this);
                         } else {
                             GUI.t.interrupt();
@@ -1271,7 +1292,7 @@ public class Main extends javax.swing.JFrame {
                 if (Login.loginCheck(this)) {
                     if (!Folder.appLockFile.exists()) {
                         if (Login.verifyLogin()) {
-//                            Folder.appLock();
+                            Folder.appLock();
                             collapseLogin(this);
                         } else {
                             GUI.t.interrupt();
@@ -1615,12 +1636,6 @@ public class Main extends javax.swing.JFrame {
         sendSQLToggle();
     }//GEN-LAST:event_jTextField2KeyTyped
 
-    private void jList2ComponentMoved(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jList2ComponentMoved
-        // TODO add your handling code here:
-        //        System.out.println("amoggg");
-        //        System.out.println(jScrollPane8.getVerticalScrollBar().getValue());
-    }//GEN-LAST:event_jList2ComponentMoved
-
     private void jScrollPane8MouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_jScrollPane8MouseWheelMoved
         if (evt.getWheelRotation() == -1) {
             jList2.setSelectedIndex(jList2.getSelectedIndex() - 1);
@@ -1629,6 +1644,16 @@ public class Main extends javax.swing.JFrame {
             jList2.setSelectedIndex(jList2.getSelectedIndex() + 1);
         }
     }//GEN-LAST:event_jScrollPane8MouseWheelMoved
+    public static boolean toggleDragDropBool = false;
+    private void jToggleDragDropActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleDragDropActionPerformed
+        toggleDragDropBool ^= true;
+        System.out.println(toggleDragDropBool);
+        if (toggleDragDropBool) {
+            jToggleDragDrop.setToolTipText("file(s) dropped in store mode will be kept in their current folder");
+        } else {
+            jToggleDragDrop.setToolTipText("files(s) dropped in store mode will be moved to the vault folder");
+        }
+    }//GEN-LAST:event_jToggleDragDropActionPerformed
     /**
      * @param args the command line arguments
      */
@@ -1707,6 +1732,8 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JList<String> jList1;
     public static javax.swing.JList<String> jList2;
     public static javax.swing.JPanel jLoginPanel;
+    protected static javax.swing.JMenu jMenu1;
+    protected static javax.swing.JMenuBar jMenuBar1;
     protected static javax.swing.JPanel jPanel1;
     protected static javax.swing.JPanel jPanel2;
     protected static javax.swing.JPanel jPanel3;
@@ -1734,6 +1761,7 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JRadioButton jSendSQL;
     protected static javax.swing.JSeparator jSeparator1;
     protected static javax.swing.JSeparator jSeparator2;
+    protected static javax.swing.JMenuItem jShowServer;
     protected static javax.swing.JSlider jSlider1;
     protected static javax.swing.JPanel jStorePanel;
     protected static javax.swing.JButton jSwitchMode;
@@ -1747,6 +1775,7 @@ public class Main extends javax.swing.JFrame {
     public static javax.swing.JTextField jTextField2;
     public static javax.swing.JToggleButton jToggleButton1;
     protected static javax.swing.JToggleButton jToggleButton2;
+    protected static javax.swing.JRadioButtonMenuItem jToggleDragDrop;
     public static javax.swing.JPanel jToolPanel;
     protected static javax.swing.JTree jTree1;
     protected static javax.swing.JLabel jUsernameLabel;
