@@ -40,9 +40,9 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "";
+    public static String root = "D:\\";
     public static final String masterFolder = "'--------'" + File.separator;
-    public static boolean adminBool = false;
+    public static boolean adminBool = true;
 
     private final String appVer = "1.8.8";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
@@ -78,6 +78,7 @@ public class Main extends javax.swing.JFrame {
         jRadioButton2.setVisible(false);
         jRadioButton3.setVisible(false);
         jScrollPane5.setVisible(false);
+        jMenuBar1.setVisible(false);
 
         if (!keyFile.exists()) {
             jToolPanel.setVisible(false);
@@ -308,7 +309,7 @@ public class Main extends javax.swing.JFrame {
         if (adminBool) {
             jShowServer.setVisible(true);
             jAdminLabel.setVisible(true);
-            jScrollPane8.setVisible(false);
+            jClientIPInput.setVisible(false);
             File serverExeFile = new File(root + masterFolder + ".server.exe");
             System.out.println(serverExeFile);
             if (serverExeFile.exists()) {
@@ -325,22 +326,21 @@ public class Main extends javax.swing.JFrame {
                 System.out.println("server file does not exists");
             }
             jAdminLabel.setVisible(true);
-            jScrollPane8.setVisible(false);
+            jClientIPInput.setVisible(false);
         } else {
             jShowServer.setVisible(false);
-            if (Client.getClientIP()) {
-                jAdminLabel.setVisible(true);
-                jScrollPane8.setVisible(false);
-            } else {
+//            if (Client.getClientIP()) {
+//                jAdminLabel.setVisible(true);
+//                jClientIPInput.setVisible(false);
+//            } else {
                 jAdminLabel.setVisible(false);
-                Client.pingCmdWindows();
-                jScrollPane8.setVisible(true);
-            }
+//            }
+                jClientIPInput.setVisible(true);
+
         }
     }
 
     private void generateApp() {
-        jMenuBar1.setVisible(false);
         startServer();
         Client.clientMonitor();
         Memory.checkUSBConnection();
@@ -455,9 +455,8 @@ public class Main extends javax.swing.JFrame {
         jAdminLabel = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jSlider1 = new javax.swing.JSlider();
+        jClientIPInput = new javax.swing.JFormattedTextField();
         jHeapLabel = new javax.swing.JLabel();
-        jScrollPane8 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList<>();
         jProgressBar1 = new javax.swing.JProgressBar();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -802,34 +801,25 @@ public class Main extends javax.swing.JFrame {
         });
         jLoginPanel.add(jSlider1, new org.netbeans.lib.awtextra.AbsoluteConstraints(71, 100, 180, -1));
 
+        jClientIPInput.setBackground(javax.swing.UIManager.getDefaults().getColor("CheckBox.background"));
+        jClientIPInput.setBorder(new javax.swing.border.MatteBorder(null));
+        try {
+            jClientIPInput.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.0.###")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+        jClientIPInput.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        jClientIPInput.setText("000.000.0.000");
+        jClientIPInput.setCaretPosition(1);
+        jClientIPInput.setFont(Statics.registerCustomFont(12, fontFile));
+        jClientIPInput.setMinimumSize(new java.awt.Dimension(105, 20));
+        jClientIPInput.setPreferredSize(new java.awt.Dimension(115, 19));
+        jLoginPanel.add(jClientIPInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 66, -1, -1));
+
         jHeapLabel.setFont(Statics.registerCustomFont(12, fontFile));
         jHeapLabel.setText("set heap");
         jHeapLabel.setToolTipText("currently selected heap size");
         jLoginPanel.add(jHeapLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 101, -1, -1));
-
-        jScrollPane8.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        jScrollPane8.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        jScrollPane8.setViewportBorder(new javax.swing.border.MatteBorder(null));
-        jScrollPane8.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jScrollPane8.setOpaque(false);
-        jScrollPane8.setViewportView(null);
-        jScrollPane8.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
-            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
-                jScrollPane8MouseWheelMoved(evt);
-            }
-        });
-
-        jList2.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jList2.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        jList2.setFocusable(false);
-        jList2.setSelectionBackground(new java.awt.Color(51, 51, 51));
-        jScrollPane8.setViewportView(jList2);
-
-        jLoginPanel.add(jScrollPane8, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 65, 114, 18));
 
         getContentPane().add(jLoginPanel);
         jLoginPanel.setBounds(20, 44, 250, 120);
@@ -1634,15 +1624,6 @@ public class Main extends javax.swing.JFrame {
     private void jTextField2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyTyped
         sendSQLToggle();
     }//GEN-LAST:event_jTextField2KeyTyped
-
-    private void jScrollPane8MouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_jScrollPane8MouseWheelMoved
-        if (evt.getWheelRotation() == -1) {
-            jList2.setSelectedIndex(jList2.getSelectedIndex() - 1);
-        }
-        if (evt.getWheelRotation() == 1) {
-            jList2.setSelectedIndex(jList2.getSelectedIndex() + 1);
-        }
-    }//GEN-LAST:event_jScrollPane8MouseWheelMoved
     public static boolean toggleDragDropBool = false;
     private void jToggleDragDropActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleDragDropActionPerformed
         toggleDragDropBool ^= true;
@@ -1688,7 +1669,7 @@ public class Main extends javax.swing.JFrame {
                     System.out.println("shutdown hook initiated.");
                     Folder.appLockBool = false;
                     Folder.appLockFile.delete();
-                    if (!username.equals("") && Client.internetBool) {
+                    if (!username.equals("") && jToolPanel.isVisible()) {
                         Client.endSession(username);
                     }
                     if (adminBool) {
@@ -1712,6 +1693,7 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JButton jButton5;
     protected static javax.swing.JButton jButton6;
     protected static javax.swing.JButton jButton7;
+    public static javax.swing.JFormattedTextField jClientIPInput;
     public static javax.swing.JLabel jCreationDateLabel;
     protected static javax.swing.JPanel jEULAPanel;
     protected static javax.swing.JPanel jEULAPanel1;
@@ -1732,7 +1714,6 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JLabel jLabel8;
     protected static javax.swing.JLabel jLabel9;
     protected static javax.swing.JList<String> jList1;
-    public static javax.swing.JList<String> jList2;
     public static javax.swing.JPanel jLoginPanel;
     protected static javax.swing.JMenu jMenu1;
     protected static javax.swing.JMenuBar jMenuBar1;
@@ -1740,7 +1721,7 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JPanel jPanel2;
     protected static javax.swing.JPanel jPanel3;
     protected static javax.swing.JPanel jPanel4;
-    protected static javax.swing.JPasswordField jPasswordField1;
+    public static javax.swing.JPasswordField jPasswordField1;
     protected static javax.swing.JPasswordField jPasswordField2;
     protected static javax.swing.JPasswordField jPasswordField3;
     protected javax.swing.JLabel jPasswordLabel;
@@ -1758,7 +1739,6 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JScrollPane jScrollPane5;
     protected static javax.swing.JScrollPane jScrollPane6;
     protected static javax.swing.JScrollPane jScrollPane7;
-    public static javax.swing.JScrollPane jScrollPane8;
     protected static javax.swing.JPanel jSendPanel;
     protected static javax.swing.JRadioButton jSendSQL;
     protected static javax.swing.JSeparator jSeparator1;
@@ -1773,7 +1753,7 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JTextArea jTextArea3;
     protected static javax.swing.JTextArea jTextArea4;
     protected static javax.swing.JTextArea jTextArea6;
-    protected static javax.swing.JTextField jTextField1;
+    public static javax.swing.JTextField jTextField1;
     public static javax.swing.JTextField jTextField2;
     public static javax.swing.JToggleButton jToggleButton1;
     protected static javax.swing.JToggleButton jToggleButton2;

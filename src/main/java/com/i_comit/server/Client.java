@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import java.nio.file.Paths;
@@ -41,23 +42,25 @@ public class Client {
     private static ObjectInputStream ois = null;
 
     private static void getServerSocket() throws IOException {
-        if (Main.adminBool) {
-            clientSocket = new Socket(Server.getIP(), Statics.portNumber);
-        } else {
-            if (getClientIP()) {
+        try {
+            if (Main.adminBool) {
                 clientSocket = new Socket(Server.getIP(), Statics.portNumber);
             } else {
-                if (Main.jList2.getSelectedValue().equals("GO OFFLINE")) {
+//            if (getClientIP()) {
+                clientSocket = new Socket(Server.getIP(), Statics.portNumber);
+//            } else {
+                if (Main.jClientIPInput.getText().equals("000.000.0.000")) {
                     internetBool = false;
                 } else {
-                    clientSocket = new Socket(Main.jList2.getSelectedValue(), Statics.portNumber);
+                    clientSocket = new Socket(Main.jClientIPInput.getText(), Statics.portNumber);
                 }
-            }
+//            }
 //            Main.jList2.setVisible(true);
-//            Main.jScrollPane8.setVisible(true);
+//            Main.jClientIPInput.setVisible(true);
+            }
+            oos = new ObjectOutputStream(clientSocket.getOutputStream());
+        } catch (UnknownHostException ex) {
         }
-        oos = new ObjectOutputStream(clientSocket.getOutputStream());
-
     }
 
     public static boolean userRequest(String username) {
@@ -182,6 +185,13 @@ public class Client {
                 System.out.println("you have started your session.");
                 ois.close();
                 oos.close();
+            } catch (UnknownHostException ex) {
+                GUI.t.interrupt();
+                GUI.labelCutterThread(jAlertLabel, "invalid IP address.", 20, 40, 2000, false);
+                Main.jTextField1.setText("");
+                Main.jPasswordField1.setText("");
+                Main.jTextField1.requestFocus();
+
             } catch (IOException | ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
@@ -226,7 +236,7 @@ public class Client {
                             if (!internetBool1) {
                                 System.out.println("network is down");
                                 if (Main.adminBool) {
-                                    Main.jScrollPane8.setVisible(false);
+                                    Main.jClientIPInput.setVisible(false);
                                     Main.jAdminLabel.setVisible(true);
 //                                    Server.portKill();
 //                                    Server.Sessions sessions = new Server.Sessions();
@@ -241,7 +251,7 @@ public class Client {
 //                                        Server.serverSocket.close();
 //                                    }
                                 } else {
-                                    Main.jScrollPane8.setVisible(true);
+                                    Main.jClientIPInput.setVisible(true);
                                     Main.jAdminLabel.setVisible(false);
                                 }
                                 if (adminBool) {
@@ -271,21 +281,10 @@ public class Client {
                             if (!internetBool1) {
                                 System.out.println("network is in waiting");
                                 if (Main.adminBool) {
-                                    Main.jScrollPane8.setVisible(false);
+                                    Main.jClientIPInput.setVisible(false);
                                     Main.jAdminLabel.setVisible(true);
-//                                    Server.portKill();
-//                                    Server.serverKill(".server.exe", false);
-//                                    Server.Sessions sessions = new Server.Sessions();
-//                                    Server.initDatabase();
-//                                    sessions.clearSessions();
-//                                    if (Server.serverSocket == null) {
-//                                        Server.socketStart(8665);
-//                                    } else {
-//                                        System.out.println("the server is already active");
-//                                        Server.serverSocket.close();
-//                                    }
                                 } else {
-                                    Main.jScrollPane8.setVisible(true);
+                                    Main.jClientIPInput.setVisible(true);
                                     Main.jAdminLabel.setVisible(false);
                                 }
                                 String listUSB1 = String.format("java -jar %s", ".server.jar");
@@ -303,10 +302,10 @@ public class Client {
                             if (internetBool1) {
                                 System.out.println("network is up");
                                 if (Main.adminBool) {
-                                    Main.jScrollPane8.setVisible(false);
+                                    Main.jClientIPInput.setVisible(false);
                                     Main.jAdminLabel.setVisible(true);
                                 } else {
-                                    Main.jScrollPane8.setVisible(true);
+                                    Main.jClientIPInput.setVisible(true);
                                     Main.jAdminLabel.setVisible(false);
                                 }
                                 if (!Statics.username.equals("")) {
@@ -330,34 +329,6 @@ public class Client {
             }
         });
         clientMonitor_T.start();
-    }
-    private static DefaultListModel ipList = new DefaultListModel();
-
-    public static List<String> pingCmdWindows() {
-        ipList.clear();
-        Main.jList2.removeAll();
-        List<String> ipAddresses = new ArrayList<>();
-        String listInterfaces = String.format("arp -a | findStr dynamic");
-        ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", listInterfaces);
-        try {
-            Process sh = pb.start();
-            String s = "";
-            BufferedReader reader = new BufferedReader(new InputStreamReader(sh.getInputStream()));
-            String IPaddress = "";
-            ipList.addElement("⇒ offline mode");
-            while ((s = reader.readLine()) != null) {
-                IPaddress = s.substring(0, 16).trim();
-                if (IPaddress.length() > 12) {
-                    ipAddresses.add(IPaddress);
-                    ipList.addElement(IPaddress);
-                }
-            }
-            Main.jList2.setModel(ipList);
-            Main.jList2.setSelectedIndex(0);
-        } catch (IOException e) {
-            System.out.println(e);
-        }
-        return ipAddresses;
     }
 
     public static void adminRequest(int requestType) {

@@ -398,6 +398,7 @@ public class Statics {
                     Main.jToolPanel.setVisible(true);
                     Main.jProgressBar2.setVisible(true);
                     jScrollPane5.setVisible(true);
+                    main.setLocationRelativeTo(null);
                     GUI.t.interrupt();
                     GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript, " + username + ".", 20, 40, 1200, false);
                 } catch (IOException ex) {
@@ -422,11 +423,11 @@ public class Statics {
             jLabel1.setLocation(265, 10);
             jLabel3.setLocation(367, 4);
             jAlertLabel.setLocation(265, 174);
-
             Main.jLoginPanel.setVisible(false);
             Main.jToolPanel.setVisible(true);
             Main.jProgressBar2.setVisible(true);
             jScrollPane5.setVisible(true);
+            main.setLocationRelativeTo(null);
             GUI.t.interrupt();
             GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript, " + username + ".", 20, 40, 1200, false);
         }

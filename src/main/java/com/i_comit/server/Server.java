@@ -153,7 +153,7 @@ public class Server {
                         }
 
                         if (Arrays.equals(message[0], "ADMIN".getBytes())) {
-                            if(Arrays.equals(message[1], "SERVR".getBytes())){
+                            if (Arrays.equals(message[1], "SERVR".getBytes())) {
                                 admin.showServerPanel(main);
                             }
                             ois.close();
@@ -180,10 +180,9 @@ public class Server {
 //            ex.printStackTrace();
         }
     }
-//
-    private static String dbFileName = ".💽🗄️.db";
-    private static String dbPath = Paths.get("").toAbsolutePath().toString() + File.separator + "runtime" + File.separator + "bin" + File.separator + "server" + File.separator + dbFileName;
-//    private static String dbPath = root + masterFolder + "runtime" + File.separator + "bin" + File.separator + "server" + File.separator + dbFileName;
+
+    private static String dbPath = Paths.get("").toAbsolutePath() + File.separator + "runtime" + File.separator + "bin" + File.separator + "server" + File.separator + ".💽🗄️.db";
+//    private static String dbPath = root + masterFolder + "runtime" + File.separator + "bin" + File.separator + "server" + File.separator + ".💽🗄️.db";
 
     public static String url = "jdbc:sqlite:" + dbPath;
 
@@ -329,7 +328,7 @@ public class Server {
             Process sh = pb.start();
             try ( BufferedReader reader = new BufferedReader(new InputStreamReader(sh.getInputStream()))) {
                 while ((s = reader.readLine()) != null) {
-                    s = reader.readLine().substring(29, 35).trim();
+                    s = reader.readLine().substring(28, 35).trim();
                     System.out.println(s);
                     String killTask = String.format("taskkill /PID %s /F", s);
                     ProcessBuilder pb1 = new ProcessBuilder("cmd.exe", "/c", killTask);
