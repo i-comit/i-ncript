@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
@@ -44,17 +45,17 @@ public class Client {
             if (Main.adminBool) {
                 clientSocket = new Socket(Server.getIP(), Statics.portNumber);
             } else {
-                if (getClientIP()) {
-                    clientSocket = new Socket(Server.getIP(), Statics.portNumber);
-                } else {
-                    if (Main.jClientIPInput.getText().equals("000.000.0.000")) {
-                    } else {
-                        clientSocket = new Socket(Main.jClientIPInput.getText(), Statics.portNumber);
-                    }
-                }
+//                if (getClientIP()) {
+//                } else {
+//                if (Main.jClientIPInput.getText().equals("000.000.0.000")) {
+//                } else {
+                clientSocket = new Socket(Main.jClientIPInput.getText(), Statics.portNumber);
+//                }
+//                }
             }
             oos = new ObjectOutputStream(clientSocket.getOutputStream());
-        } catch (UnknownHostException ex) {
+        } catch (UnknownHostException | ConnectException ex) {
+            System.out.println("connection exception");
         }
     }
 
@@ -143,6 +144,7 @@ public class Client {
         //read the server response message
         ois = new ObjectInputStream(clientSocket.getInputStream());
         boolean message = (boolean) ois.readObject();
+        System.out.println("bool "+ message);
         return message;
     }
 
@@ -202,87 +204,6 @@ public class Client {
         }
     }
     public static boolean internetBool1 = true;
-    public static Thread clientMonitor_T;
-
-    public static synchronized void clientMonitor() {
-        clientMonitor_T = new Thread(() -> {
-            while (true) {
-                String netstatQuery = String.format("netstat -ano | findStr %s:%d", Server.getIP(), Statics.portNumber);
-                ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", netstatQuery);
-                String s = "";
-                try {
-                    Process sh = pb.start();
-                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(sh.getInputStream()))) {
-                        s = reader.readLine();
-                        if (s == null) {
-                            if (internetBool1) {
-                                System.out.println("network is down");
-                                if (Main.adminBool) {
-                                    Main.jClientIPInput.setVisible(false);
-                                    Main.jAdminLabel.setVisible(true);
-//                                    Server.portKill();
-                                } else {
-                                    Main.jClientIPInput.setVisible(true);
-                                    Main.jAdminLabel.setVisible(false);
-                                }
-                                if (!Statics.username.equals("")) {
-                                    GUI.t.interrupt();
-                                    GUI.labelCutterThread(jAlertLabel, "host has disconnected", 0, 25, 1500, false);
-                                    Main.sendSQLToggle();
-                                }
-                                internetBool1 = false;
-                            }
-                        } else if (s.contains("TIME_WAIT") || (s.contains("CLOSE_WAIT"))) {
-                            if (internetBool1) {
-                                System.out.println("network is in waiting");
-                                if (Main.adminBool) {
-                                    Main.jClientIPInput.setVisible(false);
-                                    Main.jAdminLabel.setVisible(true);
-                                } else {
-                                    Main.jClientIPInput.setVisible(true);
-                                    Main.jAdminLabel.setVisible(false);
-                                }
-                                String listUSB1 = String.format("java -jar %s", ".server.jar");
-                                ProcessBuilder pb1 = new ProcessBuilder("cmd.exe", "/c", listUSB1);
-                                pb1.start();
-                                if (!Statics.username.equals("")) {
-                                    GUI.t.interrupt();
-                                    GUI.labelCutterThread(jAlertLabel, "host has disconnected", 0, 25, 1500, false);
-                                    Main.sendSQLToggle();
-                                }
-                                internetBool1 = false;
-                            }
-                        } else {
-                            if (!internetBool1) {
-                                System.out.println("network is up");
-                                if (Main.adminBool) {
-                                    Main.jClientIPInput.setVisible(false);
-                                    Main.jAdminLabel.setVisible(true);
-                                } else {
-                                    Main.jClientIPInput.setVisible(true);
-                                    Main.jAdminLabel.setVisible(false);
-                                }
-                                if (!Statics.username.equals("")) {
-                                    getTable(Statics.username);
-                                    userRequest(Statics.username);
-                                    GUI.t.interrupt();
-                                    GUI.labelCutterThread(jAlertLabel, "host has connected", 0, 25, 1500, false);
-                                    Main.sendSQLToggle();
-                                }
-                                internetBool1 = true;
-                            }
-                        }
-                        Thread.sleep(500);
-                    } catch (ClassNotFoundException ex) {
-                        ex.printStackTrace();
-                    }
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        clientMonitor_T.start();
-    }
 
     public static void adminRequest(int requestType) {
         try {

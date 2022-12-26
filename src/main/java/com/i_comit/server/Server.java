@@ -449,10 +449,9 @@ public class Server {
     static class Tables {
 
         public String createTable(String username) throws UnsupportedEncodingException {
-            String tbl = String.format("CREATE TABLE IF NOT EXISTS \"%s\" ('recipient-name' text NOT NULL, 'comm-text' text NOT NULL, 'comm-date' text NOT NULL);", SQLHasher(username));
+            String tbl = String.format("CREATE TABLE IF NOT EXISTS '%s' ('recipient-name' text NOT NULL, 'comm-text' text NOT NULL, 'comm-date' text NOT NULL);", SQLHasher(username));
             try ( Connection conn = DriverManager.getConnection(Server.url);  Statement stmt = conn.createStatement()) {
                 stmt.execute(tbl);
-                System.out.println(username + " has connect to their account.");
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             }
