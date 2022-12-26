@@ -37,20 +37,19 @@ public class MainServer extends javax.swing.JFrame {
      * Creates new form MainServer
      */
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
-    
+
     public MainServer() {
         try {
             initComponents();
+            Server.portKill();
+            Server.serverKill("server.exe", false);
             this.setBackground(new Color(0, 0, 0, 0));
 //            this.setOpacity(0);
             jTextArea1.setBackground(new Color(0, 0, 0, (float) 0.1));
-            Server.portKill();
-            Server.serverKill("server.exe", false);
-            
+
             Server.Sessions sessions = new Server.Sessions();
             Server.Tables tables = new Server.Tables();
             Server.Records records = new Server.Records();
-            tables.listTables("khiemluong");
             Server.initDatabase();
             sessions.clearSessions();
             if (Server.serverSocket == null) {

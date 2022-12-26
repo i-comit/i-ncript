@@ -42,7 +42,7 @@ public class Main extends javax.swing.JFrame {
 
     public static String root = "D:\\";
     public static final String masterFolder = "'--------'" + File.separator;
-    public static boolean adminBool = true;
+    public static boolean adminBool = false;
 
     private final String appVer = "1.9.0";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
