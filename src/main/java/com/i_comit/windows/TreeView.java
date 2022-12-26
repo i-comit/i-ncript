@@ -412,6 +412,19 @@ public class TreeView {
         return filePath;
     }
 
+    public static boolean treePathContainsDirs(TreePath[] treePaths) {
+        for (int i = 0; i < treePaths.length; i++) {
+            Path filePath = convertTreePathToFile(Main.jTree1.getSelectionPaths(), i).toPath();
+            if (filePath.toFile().isDirectory()) {
+                System.out.println("treePaths has folders.");
+                return false;
+
+            }
+        }
+        System.out.println("treePaths has no folders.");
+        return true;
+    }
+
     public static List<Path> convertTreePathToPath(TreePath[] treePaths) throws IOException {
         List<Path> pathLists = new ArrayList<>();
         for (int i = 0; i < treePaths.length; i++) {

@@ -118,11 +118,11 @@ class DragDrop implements DropTargetListener {
                                                 GUI.labelCutterThread(Main.jAlertLabel, ".i-cc files are not allowed", 10, 25, 1000, false);
                                             }
                                         } else {
-                                            if (!filesf.getAbsolutePath().endsWith(masterFolder + "ᴠᴀᴜʟᴛ")
-                                                    && !filesf.getAbsolutePath().endsWith(masterFolder + Statics.nBoxName)
-                                                    && !filesf.getAbsolutePath().endsWith(masterFolder + Statics.oBoxName)
-                                                    && !filesf.getAbsolutePath().endsWith(masterFolder + "app")
-                                                    && !filesf.getAbsolutePath().endsWith(masterFolder + "runtime")) {
+                                            if (!filesf.getAbsolutePath().equals(root + masterFolder + "ᴠᴀᴜʟᴛ")
+                                                    && !filesf.getAbsolutePath().equals(root + masterFolder + Statics.nBoxName)
+                                                    && !filesf.getAbsolutePath().equals(root + masterFolder + Statics.oBoxName)
+                                                    && !filesf.getAbsolutePath().equals(root + masterFolder + "app")
+                                                    && !filesf.getAbsolutePath().equals(root + masterFolder + "runtime")) {
                                                 if (Main.toggleDragDropBool) {
                                                     Folder.getFileDropCount(filesf);
                                                     Folder.recursiveFileDropThread(filesf, Statics.path);
@@ -135,7 +135,6 @@ class DragDrop implements DropTargetListener {
                                                     jProgressBar1.setString("0% | 0/" + files.size());
                                                     AES.AESThread(paths, Statics.directory, false, 0);
                                                 }
-
                                             } else {
                                                 GUI.t.interrupt();
                                                 GUI.labelCutterThread(Main.jAlertLabel, "can't encrypt app folders", 10, 25, 1000, false);

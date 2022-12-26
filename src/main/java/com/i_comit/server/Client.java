@@ -169,16 +169,20 @@ public class Client {
             //read the server response message
             ois = new ObjectInputStream(clientSocket.getInputStream());
             b = (boolean) ois.readObject();
-            System.out.println("you have started your session.");
+            if (b) {
+                System.out.println("you have started your session.");
+            } else {
+                GUI.t.interrupt();
+                GUI.labelCutterThread(jAlertLabel, "user is already logged in.", 20, 40, 2000, false);
+            }
             ois.close();
             oos.close();
-        } catch (UnknownHostException ex) {
+        } catch (UnknownHostException | SocketException | NullPointerException ex) {
             GUI.t.interrupt();
-            GUI.labelCutterThread(jAlertLabel, "invalid IP address.", 20, 40, 2000, false);
+            GUI.labelCutterThread(jAlertLabel, "invalid IP address provided.", 20, 40, 2000, false);
             Main.jTextField1.setText("");
             Main.jPasswordField1.setText("");
             Main.jTextField1.requestFocus();
-
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
@@ -236,7 +240,6 @@ public class Client {
 //        });
 //        clientMonitor_T.start();
 //    }
-
     public static boolean getClientIP() {
         String netstatQuery = String.format("netstat -ano | findStr %s:%d", Server.getIP(), Statics.portNumber);
         ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", netstatQuery);

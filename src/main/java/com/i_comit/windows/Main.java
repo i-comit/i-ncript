@@ -25,6 +25,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Year;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
@@ -679,13 +680,14 @@ public class Main extends javax.swing.JFrame {
         jSendPanel.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 50, -1, -1));
 
         jSendSQL.setFont(Statics.registerCustomFont(12, fontFile));
-        jSendSQL.setText("SEND TO ->");
+        jSendSQL.setText("SEND TO :");
+        jSendSQL.setFocusable(false);
         jSendSQL.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jSendSQLActionPerformed(evt);
             }
         });
-        jSendPanel.add(jSendSQL, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 16, 100, -1));
+        jSendPanel.add(jSendSQL, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 16, 110, -1));
 
         jRadioButton2.setFont(Statics.registerCustomFont(12, fontFile));
         jRadioButton2.setText("ENCRYPT");
@@ -801,7 +803,8 @@ public class Main extends javax.swing.JFrame {
         jLoginPanel.add(jSlider1, new org.netbeans.lib.awtextra.AbsoluteConstraints(71, 100, 180, -1));
 
         jClientIPInput.setBackground(javax.swing.UIManager.getDefaults().getColor("CheckBox.background"));
-        jClientIPInput.setBorder(new javax.swing.border.MatteBorder(null));
+        jClientIPInput.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 3, 1, 1, javax.swing.UIManager.getDefaults().getColor("CheckBox.background")));
+        jClientIPInput.setForeground(new java.awt.Color(140, 140, 140));
         try {
             jClientIPInput.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.0.###")));
         } catch (java.text.ParseException ex) {
@@ -809,11 +812,11 @@ public class Main extends javax.swing.JFrame {
         }
         jClientIPInput.setHorizontalAlignment(javax.swing.JTextField.LEFT);
         jClientIPInput.setText("000.000.0.000");
-        jClientIPInput.setCaretPosition(1);
-        jClientIPInput.setFont(Statics.registerCustomFont(12, fontFile));
+        jClientIPInput.setToolTipText("enter the host's IP address here");
+        jClientIPInput.setFont(new java.awt.Font("Agency FB", 0, 14)); // NOI18N
         jClientIPInput.setMinimumSize(new java.awt.Dimension(105, 20));
-        jClientIPInput.setPreferredSize(new java.awt.Dimension(115, 19));
-        jLoginPanel.add(jClientIPInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 66, -1, -1));
+        jClientIPInput.setPreferredSize(new java.awt.Dimension(115, 18));
+        jLoginPanel.add(jClientIPInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(-2, 67, 80, -1));
 
         jHeapLabel.setFont(Statics.registerCustomFont(12, fontFile));
         jHeapLabel.setText("set heap");
@@ -1441,7 +1444,6 @@ public class Main extends javax.swing.JFrame {
                 TreeView.openFile(jTree1.getSelectionPath());
             }
         }
-        System.out.println(Arrays.toString(jTree1.getSelectionPaths()));
         sendSQLToggle();
     }//GEN-LAST:event_jTree1MouseClicked
     //HOT FILER
@@ -1570,30 +1572,32 @@ public class Main extends javax.swing.JFrame {
     private void jSendSQLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSendSQLActionPerformed
         new Thread(() -> {
             try {
-                if (Client.getTable(Main.jTextField2.getText().trim())) {
-                    List<Path> paths = TreeView.convertTreePathToPath(jTree1.getSelectionPaths());
-                    jAlertLabel.setText("");
-                    Main.jTextField2.setEnabled(false);
-                    Main.jPasswordField2.setEnabled(false);
-                    if (!paths.isEmpty()) {
-                        for (Path path : paths) {
-                            Client.postRecords(Main.jTextField2.getText().trim(), path.toFile());
-                            path.toFile().delete();
-                            refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                if (jTree1.getSelectionPaths() != null) {
+                    if (TreeView.treePathContainsDirs(jTree1.getSelectionPaths())) {
+                        if (Client.getTable(Main.jTextField2.getText().trim())) {
+                            List<Path> paths = TreeView.convertTreePathToPath(jTree1.getSelectionPaths());
+                            jAlertLabel.setText("");
+                            Main.jTextField2.setEnabled(false);
+                            Main.jPasswordField2.setEnabled(false);
+                            for (Path path : paths) {
+                                Client.postRecords(Main.jTextField2.getText().trim(), path.toFile());
+                                path.toFile().delete();
+                                refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                            }
+                            GUI.t.interrupt();
+                            GUI.labelCutterThread(jAlertLabel, paths.size() + " files sent to " + Main.jTextField2.getText().trim(), 20, 25, 1000, false);
+                            Main.jTextArea1.append(paths.size() + " files sent to " + Main.jTextField2.getText().trim() + " at " + ZonedDateTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
+                            Statics.resetSendTools(2);
+                        } else {
+                            Statics.resetSendTools(2);
+                            GUI.t.interrupt();
+                            GUI.labelCutterThread(jAlertLabel, "user is not in this network", 20, 25, 1000, false);
                         }
                     } else {
-                        GUI.t.interrupt();
-                        GUI.labelCutterThread(jAlertLabel, paths.size() + " files sent to " + Main.jTextField2.getText().trim(), 20, 25, 1000, false);
                         Statics.resetSendTools(2);
+                        GUI.t.interrupt();
+                        GUI.labelCutterThread(jAlertLabel, "you can only send files", 20, 25, 1000, false);
                     }
-                    GUI.t.interrupt();
-                    GUI.labelCutterThread(jAlertLabel, paths.size() + " files sent to " + Main.jTextField2.getText().trim(), 20, 25, 1000, false);
-                    Main.jTextArea1.append(paths.size() + " files sent to " + Main.jTextField2.getText().trim() + " at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
-                    Statics.resetSendTools(2);
-                } else {
-                    Statics.resetSendTools(2);
-                    GUI.t.interrupt();
-                    GUI.labelCutterThread(jAlertLabel, "user is not in this network", 20, 25, 1000, false);
                 }
             } catch (IOException | ClassNotFoundException | InterruptedException ex) {
                 Statics.resetSendTools(2);
@@ -1605,14 +1609,18 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jSendSQLActionPerformed
 
     public static void sendSQLToggle() {
-        if (jTextField2.getText().length() < 4) {
-            jSendSQL.setVisible(false);
-            jSendSQL.setSelected(false);
-            jLabel5.setVisible(true);
+        if (!Main.jClientIPInput.getText().equals("000.000.0.000")) {
+            if (jTextField2.getText().length() < 4) {
+                jSendSQL.setVisible(false);
+                jSendSQL.setSelected(false);
+                jLabel5.setVisible(true);
+            } else {
+                jSendSQL.setVisible(true);
+                jSendSQL.setSelected(false);
+                jLabel5.setVisible(false);
+            }
         } else {
-            jSendSQL.setVisible(true);
-            jSendSQL.setSelected(false);
-            jLabel5.setVisible(false);
+            jSendSQL.setVisible(false);
         }
     }
     private void jTextField2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyTyped

@@ -379,38 +379,41 @@ public class Statics {
         }
     }
 
+    private static void initAppGUI(Main main) {
+        main.setSize(779, 240);
+        jLabel1.setLocation(265, 10);
+        jLabel3.setLocation(367, 4);
+        jAlertLabel.setLocation(265, 174);
+        Main.jLoginPanel.setVisible(false);
+        Main.jToolPanel.setVisible(true);
+        Main.jProgressBar2.setVisible(true);
+        jScrollPane5.setVisible(true);
+        main.setLocationRelativeTo(null);
+        GUI.t.interrupt();
+        GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript, " + username + ".", 20, 40, 1200, false);
+    }
+
     public static void initLogin(Main main) {
-        if (Client.startSession(username)) {
-            try {
-                Client.postTable(username);
-                main.setSize(779, 240);
-                jLabel1.setLocation(265, 10);
-                jLabel3.setLocation(367, 4);
-                jAlertLabel.setLocation(265, 174);
-                Main.jLoginPanel.setVisible(false);
-                Main.jToolPanel.setVisible(true);
-                Main.jProgressBar2.setVisible(true);
-                jScrollPane5.setVisible(true);
-                main.setLocationRelativeTo(null);
-                GUI.t.interrupt();
-                GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript, " + username + ".", 20, 40, 1200, false);
-                Folder.appLock();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            } catch (ClassNotFoundException ex) {
-                ex.printStackTrace();
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
+        if (!Main.jClientIPInput.getText().equals("000.000.0.000")) {
+            if (Client.startSession(username)) {
+                try {
+                    Client.postTable(username);
+                    initAppGUI(main);
+                    Folder.appLock();
+                } catch (IOException | ClassNotFoundException | InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            } else {
+                Memory.getHeapSize(main);
+                Main.jLoginPanel.setVisible(true);
+                Main.jToolPanel.setVisible(false);
+                Main.jProgressBar2.setVisible(false);
+                jAlertLabel.setHorizontalAlignment(LEFT);
+                username = "";
             }
         } else {
-            Memory.getHeapSize(main);
-            Main.jLoginPanel.setVisible(true);
-            Main.jToolPanel.setVisible(false);
-            Main.jProgressBar2.setVisible(false);
-            jAlertLabel.setHorizontalAlignment(LEFT);
-            username = "";
-            GUI.t.interrupt();
-            GUI.labelCutterThread(jAlertLabel, "user is already logged in network.", 20, 40, 2000, false);
+            initAppGUI(main);
+            Folder.appLock();
         }
         jTextField1.setText("");
         jPasswordField1.setText("");

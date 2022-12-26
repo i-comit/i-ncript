@@ -44,6 +44,9 @@ public class Miscs {
             case "12/28":
                 GUI.labelCutterThread(jAlertLabel, "happy birthday linus torvalds!", 80, 80, 100, true);
                 return true;
+            case "11/08":
+                GUI.labelCutterThread(jAlertLabel, "i-comit's " + (Main.year-2021) + " year anniversary!", 80, 80, 100, true);
+                return true;
         }
         return false;
     }
