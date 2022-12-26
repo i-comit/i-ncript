@@ -48,13 +48,14 @@ public class Client {
             } else {
                 if (getClientIP()) {
                     jAdminLabel.setVisible(true);
+                    jAdminLabel.setToolTipText(Server.getIP());
                     jClientIPInput.setVisible(false);
-                    clientSocket = new Socket(Server.getIP(), Statics.portNumber);
+                    Main.jClientIPInput.setText(Server.getIP());
                 } else {
                     jAdminLabel.setVisible(false);
                     jClientIPInput.setVisible(true);
-                    clientSocket = new Socket(Main.jClientIPInput.getText(), Statics.portNumber);
                 }
+                clientSocket = new Socket(Main.jClientIPInput.getText(), Statics.portNumber);
             }
             oos = new ObjectOutputStream(clientSocket.getOutputStream());
         } catch (UnknownHostException | ConnectException ex) {

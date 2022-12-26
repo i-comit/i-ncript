@@ -42,7 +42,7 @@ public class Main extends javax.swing.JFrame {
 
     public static String root = "D:\\";
     public static final String masterFolder = "'--------'" + File.separator;
-    public static boolean adminBool = false;
+    public static boolean adminBool = true;
 
     private final String appVer = "1.9.0";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
@@ -328,26 +328,23 @@ public class Main extends javax.swing.JFrame {
         adminBool = false;
     }
 
-    private void startServer() {
+    private synchronized void startServer() {
         File serverExeFile = new File(root + masterFolder + "server.exe");
+        adminBool = true;
         if (serverExeFile.exists()) {
-            try {
-                Files.setAttribute(serverExeFile.toPath(), "dos:hidden", true);
-                if (!Folder.appLockFile.exists()) {
-                    try {
-                        jAdminLabel.setVisible(true);
-                        jServerButton.setVisible(false);
-                        adminBool = true;
-                        String listUSB = String.format("start %s", serverExeFile);
-                        ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", listUSB);
-                        pb.start();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
+            System.out.println(serverExeFile);
+            if (!Folder.appLockFile.exists()) {
+                try {
+                    String listUSB = String.format("start %s", serverExeFile);
+                    ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", listUSB);
+                    pb.start();
+                    
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
-            } catch (IOException ex) {
-                ex.printStackTrace();
             }
+            jAdminLabel.setVisible(true);
+            jServerButton.setVisible(false);
         } else {
             GUI.t.interrupt();
             GUI.labelCutterThread(jAlertLabel, "unable to start local server.", 25, 50, 1500, false);
@@ -1728,6 +1725,7 @@ public class Main extends javax.swing.JFrame {
                         Client.endSession(username);
                     }
                     if (adminBool) {
+                        System.out.println("killing server");
                         Server.portKill();
                         Server.serverKill("server.exe", true);
                     }
