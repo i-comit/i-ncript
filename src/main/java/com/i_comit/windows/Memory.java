@@ -65,9 +65,18 @@ public class Memory {
 
     public static void readIPAddress() {
         try {
-            List<String> lines = Files.readAllLines(Paths.get(root + Main.masterFolder + "app\\.miscs.txt"), StandardCharsets.UTF_8);
-            System.out.println("last line " + lines.get(lines.size() - 1));
-            Main.jClientIPInput.setText(Miscs.hexToString(lines.get(lines.size() - 1)));
+            File miscsFile = new File(root + Main.masterFolder + "app\\.miscs.txt");
+            if (!miscsFile.exists()) {
+                miscsFile.createNewFile();
+                FileWriter myWriter = new FileWriter(miscsFile);
+                myWriter.write(Miscs.stringToHex("000.000.0.000"));
+                myWriter.close();
+                List<String> lines = Files.readAllLines(miscsFile.toPath(), StandardCharsets.UTF_8);
+                Main.jClientIPInput.setText(Miscs.hexToString(lines.get(lines.size() - 1)));
+            } else {
+                List<String> lines = Files.readAllLines(miscsFile.toPath(), StandardCharsets.UTF_8);
+                Main.jClientIPInput.setText(Miscs.hexToString(lines.get(lines.size() - 1)));
+            }
         } catch (IOException ex) {
             ex.printStackTrace();
         }
