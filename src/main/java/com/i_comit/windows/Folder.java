@@ -57,7 +57,7 @@ public class Folder {
                         Files.setAttribute(appLockFile.toPath(), "dos:hidden", true);
                         System.out.println("creating app lock file");
                     }
-                    Thread.sleep(100);
+                    Thread.sleep(1000);
                     appLock();
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();

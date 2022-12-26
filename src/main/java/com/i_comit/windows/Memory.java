@@ -220,9 +220,8 @@ public class Memory {
                             if ((s = reader.readLine()) == null) {
                                 Folder.appLockBool = false;
                                 Folder.appLockFile.delete();
-                                System.exit(0);
                                 Client.endSession(username);
-                                Client.clientMonitor_T.stop();
+                                System.exit(0);
                                 if (Main.adminBool) {
                                     Server.portKill();
                                     Server.serverKill(".server.exe", true);
@@ -233,7 +232,7 @@ public class Memory {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    Thread.sleep(500);
+                    Thread.sleep(1000);
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }

@@ -10,7 +10,9 @@ import com.i_comit.windows.Main;
 import com.i_comit.windows.Statics;
 import static com.i_comit.shared.Hasher.SQLHasher;
 import com.i_comit.windows.GUI;
+import static com.i_comit.windows.Main.jAdminLabel;
 import static com.i_comit.windows.Main.jAlertLabel;
+import static com.i_comit.windows.Main.jClientIPInput;
 import static com.i_comit.windows.Main.root;
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,16 +22,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ConnectException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.swing.DefaultListModel;
 
 /**
  * @author Khiem Luong <khiemluong@i-comit.com>
@@ -45,17 +46,19 @@ public class Client {
             if (Main.adminBool) {
                 clientSocket = new Socket(Server.getIP(), Statics.portNumber);
             } else {
-//                if (getClientIP()) {
-//                } else {
-//                if (Main.jClientIPInput.getText().equals("000.000.0.000")) {
-//                } else {
-                clientSocket = new Socket(Main.jClientIPInput.getText(), Statics.portNumber);
-//                }
-//                }
+                if (getClientIP()) {
+                    jAdminLabel.setVisible(true);
+                    jClientIPInput.setVisible(false);
+                    clientSocket = new Socket(Server.getIP(), Statics.portNumber);
+                } else {
+                    jAdminLabel.setVisible(false);
+                    jClientIPInput.setVisible(true);
+                    clientSocket = new Socket(Main.jClientIPInput.getText(), Statics.portNumber);
+                }
             }
             oos = new ObjectOutputStream(clientSocket.getOutputStream());
         } catch (UnknownHostException | ConnectException ex) {
-            System.out.println("connection exception");
+            Main.sendSQLToggle();
         }
     }
 
@@ -125,13 +128,7 @@ public class Client {
 
         oos.writeObject(posRequest_B);
         //read the server response message
-        ois = new ObjectInputStream(clientSocket.getInputStream());
-        String message = (String) ois.readObject();
-        //close resources
-        ois.close();
         oos.close();
-        Thread.sleep(10);
-
     }
 
     public static boolean getTable(String username) throws IOException, ClassNotFoundException, InterruptedException {
@@ -144,7 +141,7 @@ public class Client {
         //read the server response message
         ois = new ObjectInputStream(clientSocket.getInputStream());
         boolean message = (boolean) ois.readObject();
-        System.out.println("bool "+ message);
+        System.out.println("bool " + message);
         return message;
     }
 
@@ -203,7 +200,6 @@ public class Client {
             ex.printStackTrace();
         }
     }
-    public static boolean internetBool1 = true;
 
     public static void adminRequest(int requestType) {
         try {
@@ -221,13 +217,33 @@ public class Client {
         }
     }
 
+//    public static Thread clientMonitor_T;
+//
+//    public static void clientMonitor() {
+//        clientMonitor_T = new Thread(() -> {
+//            while (true) {
+//                try {
+//                    getServerSocket();
+//                    Thread.sleep(1500);
+//                } catch (SocketException ex) {
+//                } catch (InterruptedException ex) {
+//                    Thread.currentThread().interrupt();
+//                } catch (IOException ex) {
+//                    ex.printStackTrace();
+//                }
+//                System.out.println("network state: " + networkBool);
+//            }
+//        });
+//        clientMonitor_T.start();
+//    }
+
     public static boolean getClientIP() {
         String netstatQuery = String.format("netstat -ano | findStr %s:%d", Server.getIP(), Statics.portNumber);
         ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", netstatQuery);
         String s = "";
         try {
             Process sh = pb.start();
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(sh.getInputStream()))) {
+            try ( BufferedReader reader = new BufferedReader(new InputStreamReader(sh.getInputStream()))) {
                 while ((s = reader.readLine()) != null) {
                     if (!s.equals("")) {
                         return true;

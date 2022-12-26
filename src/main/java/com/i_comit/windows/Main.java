@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import javax.swing.AbstractAction;
@@ -40,7 +41,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "F:\\";
+    public static String root = "D:\\";
     public static final String masterFolder = "'--------'" + File.separator;
     public static boolean adminBool = false;
 
@@ -329,20 +330,18 @@ public class Main extends javax.swing.JFrame {
             jClientIPInput.setVisible(false);
         } else {
             jShowServer.setVisible(false);
-//            if (Client.getClientIP()) {
-//                jAdminLabel.setVisible(true);
-//                jClientIPInput.setVisible(false);
-//            } else {
-            jAdminLabel.setVisible(false);
-//            }
-            jClientIPInput.setVisible(true);
-
+            if (Client.getClientIP()) {
+                jAdminLabel.setVisible(true);
+                jClientIPInput.setVisible(false);
+            } else {
+                jAdminLabel.setVisible(false);
+                jClientIPInput.setVisible(true);
+            }
         }
     }
 
     private void generateApp() {
         startServer();
-        Client.clientMonitor();
         Memory.checkUSBConnection();
 
         Memory.getHeapSize(this);
@@ -641,7 +640,7 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(jStorePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
+                .addGap(13, 13, 13)
                 .addGroup(jStorePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jRadioButton0)
                     .addComponent(jRadioButton1)))
@@ -680,13 +679,13 @@ public class Main extends javax.swing.JFrame {
         jSendPanel.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 50, -1, -1));
 
         jSendSQL.setFont(Statics.registerCustomFont(12, fontFile));
-        jSendSQL.setText("SEND TO:");
+        jSendSQL.setText("SEND TO ->");
         jSendSQL.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jSendSQLActionPerformed(evt);
             }
         });
-        jSendPanel.add(jSendSQL, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 16, -1, -1));
+        jSendPanel.add(jSendSQL, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 16, 100, -1));
 
         jRadioButton2.setFont(Statics.registerCustomFont(12, fontFile));
         jRadioButton2.setText("ENCRYPT");
@@ -1221,8 +1220,7 @@ public class Main extends javax.swing.JFrame {
                 if (Login.loginCheck(this)) {
                     if (!Folder.appLockFile.exists()) {
                         if (Login.verifyLogin()) {
-                            collapseLogin(this);
-                            Folder.appLock();
+                            initLogin(this);
                         } else {
                             GUI.t.interrupt();
                             GUI.labelCutterThread(jAlertLabel, "username or password is invalid.", 20, 40, 2000, false);
@@ -1281,8 +1279,7 @@ public class Main extends javax.swing.JFrame {
                 if (Login.loginCheck(this)) {
                     if (!Folder.appLockFile.exists()) {
                         if (Login.verifyLogin()) {
-                            collapseLogin(this);
-                            Folder.appLock();
+                            initLogin(this);
                         } else {
                             GUI.t.interrupt();
                             GUI.labelCutterThread(jAlertLabel, "username or password is invalid.", 20, 40, 2000, false);
@@ -1336,17 +1333,14 @@ public class Main extends javax.swing.JFrame {
     private void jPasswordField2Evt(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField2Evt
         if (jPasswordField2.getPassword().length < 5) {
             jLabel6.setVisible(true);
-            if (!Client.internetBool1) {
-                jLabel5.setVisible(true);
-            }
+            jLabel5.setVisible(true);
             jRadioButton2.setVisible(false);
         } else {
             jLabel6.setVisible(false);
-            if (!Client.internetBool1) {
-                jLabel5.setVisible(false);
-            }
+            jLabel5.setVisible(false);
             jRadioButton2.setVisible(true);
         }
+        sendSQLToggle();
     }//GEN-LAST:event_jPasswordField2Evt
     //RECEIVE PANEL PW
     private void jPasswordField3Evt(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField3Evt
@@ -1447,6 +1441,7 @@ public class Main extends javax.swing.JFrame {
                 TreeView.openFile(jTree1.getSelectionPath());
             }
         }
+        System.out.println(Arrays.toString(jTree1.getSelectionPaths()));
         sendSQLToggle();
     }//GEN-LAST:event_jTree1MouseClicked
     //HOT FILER
@@ -1601,6 +1596,9 @@ public class Main extends javax.swing.JFrame {
                     GUI.labelCutterThread(jAlertLabel, "user is not in this network", 20, 25, 1000, false);
                 }
             } catch (IOException | ClassNotFoundException | InterruptedException ex) {
+                Statics.resetSendTools(2);
+                GUI.t.interrupt();
+                GUI.labelCutterThread(jAlertLabel, "host has disconnected.", 25, 50, 1250, false);
             }
         }
         ).start();
