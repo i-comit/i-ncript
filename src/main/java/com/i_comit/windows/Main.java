@@ -1647,7 +1647,21 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jSendSQLActionPerformed
 
     public static void sendSQLToggle() {
-        if (!Main.jClientIPInput.getText().equals("000.000.0.000")) {
+        if (!adminBool) {
+            if (!Main.jClientIPInput.getText().equals("000.000.0.000")) {
+                if (jTextField2.getText().length() < 4) {
+                    jSendSQL.setVisible(false);
+                    jSendSQL.setSelected(false);
+                    jLabel5.setVisible(true);
+                } else {
+                    jSendSQL.setVisible(true);
+                    jSendSQL.setSelected(false);
+                    jLabel5.setVisible(false);
+                }
+            } else {
+                jSendSQL.setVisible(false);
+            }
+        } else {
             if (jTextField2.getText().length() < 4) {
                 jSendSQL.setVisible(false);
                 jSendSQL.setSelected(false);
@@ -1657,8 +1671,6 @@ public class Main extends javax.swing.JFrame {
                 jSendSQL.setSelected(false);
                 jLabel5.setVisible(false);
             }
-        } else {
-            jSendSQL.setVisible(false);
         }
     }
     private void jTextField2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyTyped

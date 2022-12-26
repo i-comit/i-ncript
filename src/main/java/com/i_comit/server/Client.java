@@ -151,7 +151,10 @@ public class Client {
         byte[] userName_B = username.getBytes();
         byte[][] postTableRequest_B = {requestType_B, userName_B};
         oos.writeObject(postTableRequest_B);
-        System.out.println("account connected.");
+        ois = new ObjectInputStream(clientSocket.getInputStream());
+        String message = (String) ois.readObject();
+        System.out.println(message + " account connected");
+        ois.close();
         oos.close();
     }
 
