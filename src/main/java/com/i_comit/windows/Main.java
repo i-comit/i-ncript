@@ -23,11 +23,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.Year;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import javax.swing.AbstractAction;
@@ -44,19 +42,21 @@ public class Main extends javax.swing.JFrame {
 
     public static String root = "D:\\";
     public static final String masterFolder = "'--------'" + File.separator;
-    public static boolean adminBool = false;
+    public static boolean adminBool = true;
 
     private final String appVer = "1.8.8";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
     public static final int year = Year.now().getValue();
 
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
+    private URL fontFile1 = getClass().getResource("/robot-font.otf");
 
     public Main() {
 //        root = Paths.get("").toAbsolutePath().toString();
 //        if (Memory.checkWMIC()) {
         root = root.substring(0, 3);
         initComponents();
+        Memory.readIPAddress();
         TreeView.renderTreeCells();
 
         Path runtime = Paths.get(root + masterFolder + "runtime");
@@ -316,13 +316,13 @@ public class Main extends javax.swing.JFrame {
             System.out.println(serverExeFile);
             if (serverExeFile.exists()) {
                 if (!Folder.appLockFile.exists()) {
-                    try {
-                        String listUSB = String.format("start %s", serverExeFile);
-                        ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", listUSB);
-                        pb.start();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
+//                    try {
+//                        String listUSB = String.format("start %s", serverExeFile);
+//                        ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", listUSB);
+//                        pb.start();
+//                    } catch (IOException ex) {
+//                        ex.printStackTrace();
+//                    }
                 }
             } else {
                 System.out.println("server file does not exists");
@@ -806,17 +806,17 @@ public class Main extends javax.swing.JFrame {
         jClientIPInput.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 3, 1, 1, javax.swing.UIManager.getDefaults().getColor("CheckBox.background")));
         jClientIPInput.setForeground(new java.awt.Color(140, 140, 140));
         try {
-            jClientIPInput.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.0.###")));
+            jClientIPInput.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.#.###")));
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
         jClientIPInput.setHorizontalAlignment(javax.swing.JTextField.LEFT);
         jClientIPInput.setText("000.000.0.000");
         jClientIPInput.setToolTipText("enter the host's IP address here");
-        jClientIPInput.setFont(new java.awt.Font("Agency FB", 0, 14)); // NOI18N
+        jClientIPInput.setFont(Statics.registerCustomFont(12, fontFile1));
         jClientIPInput.setMinimumSize(new java.awt.Dimension(105, 20));
         jClientIPInput.setPreferredSize(new java.awt.Dimension(115, 18));
-        jLoginPanel.add(jClientIPInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(-2, 67, 80, -1));
+        jLoginPanel.add(jClientIPInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(-2, 69, 110, -1));
 
         jHeapLabel.setFont(Statics.registerCustomFont(12, fontFile));
         jHeapLabel.setText("set heap");

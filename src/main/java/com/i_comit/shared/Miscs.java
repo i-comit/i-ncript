@@ -45,7 +45,7 @@ public class Miscs {
                 GUI.labelCutterThread(jAlertLabel, "happy birthday linus torvalds!", 80, 80, 100, true);
                 return true;
             case "11/08":
-                GUI.labelCutterThread(jAlertLabel, "i-comit's " + (Main.year-2021) + " year anniversary!", 80, 80, 100, true);
+                GUI.labelCutterThread(jAlertLabel, "i-comit's " + (Main.year - 2021) + " year anniversary!", 80, 80, 100, true);
                 return true;
         }
         return false;
@@ -127,5 +127,30 @@ public class Miscs {
             e.printStackTrace();
         }
         return fileTime;
+    }
+
+    public static String stringToHex(String str) {
+        StringBuffer sb = new StringBuffer();
+        //Converting string to character array
+        char ch[] = str.toCharArray();
+        for (int i = 0; i < ch.length; i++) {
+            String hexString = Integer.toHexString(ch[i]);
+            sb.append(hexString);
+        }
+        String result = sb.toString();
+        System.out.println(result);
+        return result;
+    }
+
+    public static String hexToString(String str) {
+        String result = new String();
+        char[] charArray = str.toCharArray();
+        for (int i = 0; i < charArray.length; i = i + 2) {
+            String st = "" + charArray[i] + "" + charArray[i + 1];
+            char ch = (char) Integer.parseInt(st, 16);
+            result = result + ch;
+        }
+        System.out.println(result);
+        return result;
     }
 }

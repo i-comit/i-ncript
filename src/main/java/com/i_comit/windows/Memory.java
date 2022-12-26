@@ -6,6 +6,7 @@ package com.i_comit.windows;
 
 import com.i_comit.server.Client;
 import com.i_comit.server.Server;
+import com.i_comit.shared.Miscs;
 import static com.i_comit.windows.Main.jProgressBar2;
 import static com.i_comit.windows.Main.root;
 import static com.i_comit.windows.Memory.byteFormatter;
@@ -14,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -61,8 +63,29 @@ public class Memory {
         return percentageStr;
     }
 
+    public static void readIPAddress() {
+        try {
+            List<String> lines = Files.readAllLines(Paths.get(root + Main.masterFolder + "app\\.miscs.txt"), StandardCharsets.UTF_8);
+            System.out.println("last line " + lines.get(lines.size() - 1));
+            Main.jClientIPInput.setText(Miscs.hexToString(lines.get(lines.size() - 1)));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static void saveIPAddress() {
+        try {
+            FileWriter myWriter = new FileWriter(root + Main.masterFolder + "app\\.miscs.txt");
+            myWriter.write(Miscs.stringToHex(Main.jClientIPInput.getText()));
+            myWriter.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
     public static void getHeapSize(Main main) {
-        File cfgFile = new File(root + Main.masterFolder + "\\app\\i-ncript.cfg");
+        File cfgFile = new File(root + Main.masterFolder + "app\\i-ncript.cfg");
         if (cfgFile.exists()) {
             try ( BufferedReader br = new BufferedReader(new FileReader(cfgFile))) {
                 String line = "";
@@ -90,9 +113,9 @@ public class Memory {
     }
 
     public static void changeHeapSize() {
-        if (new File(root + Main.masterFolder + "\\app\\i-ncript.cfg").exists()) {
+        if (new File(root + Main.masterFolder + "app\\i-ncript.cfg").exists()) {
             try {
-                List<String> lines = Files.readAllLines(Paths.get(root + Main.masterFolder + "\\app\\i-ncript.cfg"), StandardCharsets.UTF_8);
+                List<String> lines = Files.readAllLines(Paths.get(root + Main.masterFolder + "app\\i-ncript.cfg"), StandardCharsets.UTF_8);
                 lines.remove(6);
                 lines.add(6, "java-options=-Xms" + selectedHeap + "g");
                 switch (selectedHeap) {
@@ -130,7 +153,7 @@ public class Memory {
                         break;
 
                 }
-                Files.write(Paths.get(root + Main.masterFolder + "\\app\\i-ncript.cfg"), lines, StandardCharsets.UTF_8);
+                Files.write(Paths.get(root + Main.masterFolder + "app\\i-ncript.cfg"), lines, StandardCharsets.UTF_8);
                 Runtime.getRuntime().exec("cmd /c " + root + Main.masterFolder + "i-ncript.exe");
                 System.exit(0);
             } catch (IOException ex) {

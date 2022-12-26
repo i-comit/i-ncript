@@ -412,6 +412,24 @@ public class Statics {
                 username = "";
             }
         } else {
+            if (Client.getClientIP()) {
+                if (Client.startSession(username)) {
+                    try {
+                        Client.postTable(username);
+                        initAppGUI(main);
+                        Folder.appLock();
+                    } catch (IOException | ClassNotFoundException | InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                } else {
+                    Memory.getHeapSize(main);
+                    Main.jLoginPanel.setVisible(true);
+                    Main.jToolPanel.setVisible(false);
+                    Main.jProgressBar2.setVisible(false);
+                    jAlertLabel.setHorizontalAlignment(LEFT);
+                    username = "";
+                }
+            }
             initAppGUI(main);
             Folder.appLock();
         }
@@ -420,5 +438,6 @@ public class Statics {
         jTextField1.requestFocus();
         main.setTitle("");
         Main.jMenuBar1.setVisible(true);
+        Memory.saveIPAddress();
     }
 }
