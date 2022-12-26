@@ -42,7 +42,7 @@ public class Main extends javax.swing.JFrame {
 
     public static String root = "D:\\";
     public static final String masterFolder = "'--------'" + File.separator;
-    public static boolean adminBool = true;
+    public static boolean adminBool = false;
 
     private final String appVer = "1.8.8";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
@@ -307,30 +307,16 @@ public class Main extends javax.swing.JFrame {
         jTabbedPane1.setVisible(b);
     }
 
-    private void startServer() {
+    private void adminLabelToggle() {
         if (adminBool) {
             jShowServer.setVisible(true);
-            jAdminLabel.setVisible(true);
+            jAdminLabel.setVisible(false);
+            jServerButton.setVisible(true);
             jClientIPInput.setVisible(false);
-            File serverExeFile = new File(root + masterFolder + ".server.exe");
-            System.out.println(serverExeFile);
-            if (serverExeFile.exists()) {
-                if (!Folder.appLockFile.exists()) {
-//                    try {
-//                        String listUSB = String.format("start %s", serverExeFile);
-//                        ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", listUSB);
-//                        pb.start();
-//                    } catch (IOException ex) {
-//                        ex.printStackTrace();
-//                    }
-                }
-            } else {
-                System.out.println("server file does not exists");
-            }
-            jAdminLabel.setVisible(true);
             jClientIPInput.setVisible(false);
         } else {
             jShowServer.setVisible(false);
+            jServerButton.setVisible(false);
             if (Client.getClientIP()) {
                 jAdminLabel.setVisible(true);
                 jClientIPInput.setVisible(false);
@@ -339,10 +325,34 @@ public class Main extends javax.swing.JFrame {
                 jClientIPInput.setVisible(true);
             }
         }
+        adminBool = false;
+    }
+
+    private void startServer() {
+        File serverExeFile = new File(root + masterFolder + ".server.exe");
+        System.out.println(serverExeFile);
+        if (serverExeFile.exists()) {
+            if (!Folder.appLockFile.exists()) {
+                try {
+                    jAdminLabel.setVisible(true);
+                    jServerButton.setVisible(false);
+                    adminBool = true;
+                    String listUSB = String.format("start %s", serverExeFile);
+                    ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", listUSB);
+                    pb.start();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        } else {
+            GUI.t.interrupt();
+            GUI.labelCutterThread(jAlertLabel, "unable to start local server.", 25, 50, 1500, false);
+            adminBool = false;
+        }
     }
 
     private void generateApp() {
-        startServer();
+        adminLabelToggle();
         Memory.checkUSBConnection();
 
         Memory.getHeapSize(this);
@@ -452,6 +462,7 @@ public class Main extends javax.swing.JFrame {
         jPasswordField1 = new javax.swing.JPasswordField();
         jUsernameLabel = new javax.swing.JLabel();
         jPasswordLabel = new javax.swing.JLabel();
+        jServerButton = new javax.swing.JButton();
         jAdminLabel = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jSlider1 = new javax.swing.JSlider();
@@ -774,6 +785,28 @@ public class Main extends javax.swing.JFrame {
         jPasswordLabel.setText("enter password");
         jLoginPanel.add(jPasswordLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 35, -1, -1));
 
+        jServerButton.setBackground(javax.swing.UIManager.getDefaults().getColor("CheckBox.background"));
+        jServerButton.setFont(Statics.registerCustomFont(12, fontFile1));
+        jServerButton.setForeground(new java.awt.Color(153, 153, 153));
+        jServerButton.setText("INIT SERVER");
+        jServerButton.setToolTipText("start the local data server as admin");
+        jServerButton.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 0, 1, javax.swing.UIManager.getDefaults().getColor("CheckBox.background")));
+        jServerButton.setBorderPainted(false);
+        jServerButton.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        jServerButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        jServerButton.setMargin(new java.awt.Insets(0, 2, 6, 2));
+        jServerButton.setMaximumSize(new java.awt.Dimension(85, 13));
+        jServerButton.setMinimumSize(new java.awt.Dimension(81, 13));
+        jServerButton.setPreferredSize(new java.awt.Dimension(85, 13));
+        jServerButton.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        jServerButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jServerButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jServerButtonActionPerformed(evt);
+            }
+        });
+        jLoginPanel.add(jServerButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 66, 72, 19));
+
         jAdminLabel.setFont(Statics.registerCustomFont(11, fontFile));
         jAdminLabel.setForeground(new java.awt.Color(102, 102, 102));
         jAdminLabel.setText("ADMIN USB DRIVE");
@@ -782,6 +815,7 @@ public class Main extends javax.swing.JFrame {
         jButton1.setFont(Statics.registerCustomFont(12, fontFile));
         jButton1.setText("ENTER");
         jButton1.setToolTipText("log into i-ncript");
+        jButton1.setMargin(new java.awt.Insets(2, 14, 2, 14));
         jButton1.setPreferredSize(new java.awt.Dimension(73, 22));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1629,7 +1663,6 @@ public class Main extends javax.swing.JFrame {
     public static boolean toggleDragDropBool = false;
     private void jToggleDragDropActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleDragDropActionPerformed
         toggleDragDropBool ^= true;
-        System.out.println(toggleDragDropBool);
         if (toggleDragDropBool) {
             jToggleDragDrop.setToolTipText("file(s) dropped in store mode will be kept in their current folder");
         } else {
@@ -1640,6 +1673,10 @@ public class Main extends javax.swing.JFrame {
     private void jShowServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jShowServerActionPerformed
         Client.adminRequest(0);
     }//GEN-LAST:event_jShowServerActionPerformed
+
+    private void jServerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jServerButtonActionPerformed
+        startServer();
+    }//GEN-LAST:event_jServerButtonActionPerformed
     /**
      * @param args the command line arguments
      */
@@ -1745,6 +1782,7 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JRadioButton jSendSQL;
     protected static javax.swing.JSeparator jSeparator1;
     protected static javax.swing.JSeparator jSeparator2;
+    protected static javax.swing.JButton jServerButton;
     protected static javax.swing.JMenuItem jShowServer;
     protected static javax.swing.JSlider jSlider1;
     protected static javax.swing.JPanel jStorePanel;
