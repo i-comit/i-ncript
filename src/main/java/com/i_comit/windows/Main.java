@@ -329,22 +329,25 @@ public class Main extends javax.swing.JFrame {
     }
 
     private synchronized void startServer() {
-        File serverExeFile = new File(root + masterFolder + "server.exe");
-        adminBool = true;
+        File serverExeFile = new File(root + masterFolder + ".server.exe");
         if (serverExeFile.exists()) {
-            System.out.println(serverExeFile);
-            if (!Folder.appLockFile.exists()) {
-                try {
-                    String listUSB = String.format("start %s", serverExeFile);
-                    ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", listUSB);
-                    pb.start();
-                    
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+            try {
+                Files.setAttribute(serverExeFile.toPath(), "dos:hidden", true);
+                if (!Folder.appLockFile.exists()) {
+                    adminBool = true;
+                    try {
+                        String listUSB = String.format("start %s", serverExeFile);
+                        ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", listUSB);
+                        pb.start();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                 }
+                jAdminLabel.setVisible(true);
+                jServerButton.setVisible(false);
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-            jAdminLabel.setVisible(true);
-            jServerButton.setVisible(false);
         } else {
             GUI.t.interrupt();
             GUI.labelCutterThread(jAlertLabel, "unable to start local server.", 25, 50, 1500, false);
@@ -1725,9 +1728,8 @@ public class Main extends javax.swing.JFrame {
                         Client.endSession(username);
                     }
                     if (adminBool) {
-                        System.out.println("killing server");
                         Server.portKill();
-                        Server.serverKill("server.exe", true);
+                        Server.serverKill(".server.exe", true);
                     }
                 }
             });

@@ -103,7 +103,7 @@ class DragDrop implements DropTargetListener {
                                         if (!filesf.isDirectory()) {
                                             if (!filesf.getName().endsWith(".i-cc")) {
                                                 if (!filesf.getAbsolutePath().equals(root + masterFolder + "i-ncript.exe")
-                                                        && !filesf.getAbsolutePath().equals(root + masterFolder + "server.exe")
+                                                        && !filesf.getAbsolutePath().equals(root + masterFolder + ".server.exe")
                                                         && !filesf.getAbsolutePath().equals(root + masterFolder + Statics.keyName)) {
                                                     Main.jButton2.setVisible(true);
                                                     Main.jProgressBar1.setMaximum(0);

@@ -255,7 +255,7 @@ public class Memory {
                                 Client.endSession(username);
                                 if (Main.adminBool) {
                                     Server.portKill();
-                                    Server.serverKill("server.exe", true);
+                                    Server.serverKill(".server.exe", true);
                                 }
                                 System.exit(0);
                             }

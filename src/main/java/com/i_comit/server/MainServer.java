@@ -41,11 +41,8 @@ public class MainServer extends javax.swing.JFrame {
     public MainServer() {
         try {
             initComponents();
-
             this.setBackground(new Color(0, 0, 0, 0));
             jTextArea1.setBackground(new Color(0, 0, 0, (float) 0.1));
-            Server.portKill();
-            Server.serverKill("server.exe", false);
             Server.Sessions sessions = new Server.Sessions();
             Server.Tables tables = new Server.Tables();
             Server.Records records = new Server.Records();
@@ -55,7 +52,10 @@ public class MainServer extends javax.swing.JFrame {
             if (Server.serverSocket == null) {
                 Server.socketStart(this);
             } else {
+                Server.portKill();
+                Server.serverKill("server.exe", false);
                 Server.serverSocket.close();
+                Server.socketStart(this);
             }
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
@@ -177,6 +177,7 @@ public class MainServer extends javax.swing.JFrame {
         }
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
+            Server.portKill();
             new MainServer().setVisible(true);
         });
     }
