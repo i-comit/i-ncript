@@ -42,9 +42,9 @@ public class Main extends javax.swing.JFrame {
 
     public static String root = "D:\\";
     public static final String masterFolder = "'--------'" + File.separator;
-    public static boolean adminBool = false;
+    public static boolean adminBool = true;
 
-    private final String appVer = "1.8.8";
+    private final String appVer = "1.9.0";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
     public static final int year = Year.now().getValue();
 
@@ -329,20 +329,24 @@ public class Main extends javax.swing.JFrame {
     }
 
     private void startServer() {
-        File serverExeFile = new File(root + masterFolder + ".server.exe");
-        System.out.println(serverExeFile);
+        File serverExeFile = new File(root + masterFolder + "server.exe");
         if (serverExeFile.exists()) {
-            if (!Folder.appLockFile.exists()) {
-                try {
-                    jAdminLabel.setVisible(true);
-                    jServerButton.setVisible(false);
-                    adminBool = true;
-                    String listUSB = String.format("start %s", serverExeFile);
-                    ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", listUSB);
-                    pb.start();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+            try {
+                Files.setAttribute(serverExeFile.toPath(), "dos:hidden", true);
+                if (!Folder.appLockFile.exists()) {
+                    try {
+                        jAdminLabel.setVisible(true);
+                        jServerButton.setVisible(false);
+                        adminBool = true;
+                        String listUSB = String.format("start %s", serverExeFile);
+                        ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", listUSB);
+                        pb.start();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                 }
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
         } else {
             GUI.t.interrupt();
@@ -1713,7 +1717,7 @@ public class Main extends javax.swing.JFrame {
                     }
                     if (adminBool) {
                         Server.portKill();
-                        Server.serverKill(".server.exe", true);
+                        Server.serverKill("server.exe", true);
                     }
                 }
             });

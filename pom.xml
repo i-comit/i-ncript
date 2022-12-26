@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.i-comit.windows.client</groupId>
-    <version>1.8.8</version>
+    <groupId>com.i-comit.server</groupId>
+    <version>1.9.0</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <exec.mainClass>com.i_comit.main.Windows</exec.mainClass>
+        <exec.mainClass>com.i_comit.server.MainServer</exec.mainClass>
     </properties>
     <build>
         <plugins>
@@ -30,7 +30,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.i_comit.windows.Main</mainClass>
+                            <mainClass>com.i_comit.server.MainServer</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
