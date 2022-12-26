@@ -40,9 +40,9 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "D:\\";
+    public static String root = "F:\\";
     public static final String masterFolder = "'--------'" + File.separator;
-    public static boolean adminBool = true;
+    public static boolean adminBool = false;
 
     private final String appVer = "1.8.8";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
@@ -333,9 +333,9 @@ public class Main extends javax.swing.JFrame {
 //                jAdminLabel.setVisible(true);
 //                jClientIPInput.setVisible(false);
 //            } else {
-                jAdminLabel.setVisible(false);
+            jAdminLabel.setVisible(false);
 //            }
-                jClientIPInput.setVisible(true);
+            jClientIPInput.setVisible(true);
 
         }
     }
@@ -1221,8 +1221,8 @@ public class Main extends javax.swing.JFrame {
                 if (Login.loginCheck(this)) {
                     if (!Folder.appLockFile.exists()) {
                         if (Login.verifyLogin()) {
-                            Folder.appLock();
                             collapseLogin(this);
+                            Folder.appLock();
                         } else {
                             GUI.t.interrupt();
                             GUI.labelCutterThread(jAlertLabel, "username or password is invalid.", 20, 40, 2000, false);
@@ -1281,8 +1281,8 @@ public class Main extends javax.swing.JFrame {
                 if (Login.loginCheck(this)) {
                     if (!Folder.appLockFile.exists()) {
                         if (Login.verifyLogin()) {
-                            Folder.appLock();
                             collapseLogin(this);
+                            Folder.appLock();
                         } else {
                             GUI.t.interrupt();
                             GUI.labelCutterThread(jAlertLabel, "username or password is invalid.", 20, 40, 2000, false);
@@ -1336,13 +1336,13 @@ public class Main extends javax.swing.JFrame {
     private void jPasswordField2Evt(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField2Evt
         if (jPasswordField2.getPassword().length < 5) {
             jLabel6.setVisible(true);
-            if (!Client.internetBool) {
+            if (!Client.internetBool1) {
                 jLabel5.setVisible(true);
             }
             jRadioButton2.setVisible(false);
         } else {
             jLabel6.setVisible(false);
-            if (!Client.internetBool) {
+            if (!Client.internetBool1) {
                 jLabel5.setVisible(false);
             }
             jRadioButton2.setVisible(true);
@@ -1607,18 +1607,14 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jSendSQLActionPerformed
 
     public static void sendSQLToggle() {
-        if (Client.internetBool) {
-            if (jTextField2.getText().length() < 4) {
-                jSendSQL.setVisible(false);
-                jSendSQL.setSelected(false);
-                jLabel5.setVisible(true);
-            } else {
-                jSendSQL.setVisible(true);
-                jLabel5.setVisible(false);
-            }
-        } else {
+        if (jTextField2.getText().length() < 4) {
             jSendSQL.setVisible(false);
             jSendSQL.setSelected(false);
+            jLabel5.setVisible(true);
+        } else {
+            jSendSQL.setVisible(true);
+            jSendSQL.setSelected(false);
+            jLabel5.setVisible(false);
         }
     }
     private void jTextField2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyTyped

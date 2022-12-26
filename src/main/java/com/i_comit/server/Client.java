@@ -10,9 +10,7 @@ import com.i_comit.windows.Main;
 import com.i_comit.windows.Statics;
 import static com.i_comit.shared.Hasher.SQLHasher;
 import com.i_comit.windows.GUI;
-import static com.i_comit.windows.Main.adminBool;
 import static com.i_comit.windows.Main.jAlertLabel;
-import static com.i_comit.windows.Main.masterFolder;
 import static com.i_comit.windows.Main.root;
 import java.io.BufferedReader;
 import java.io.File;
@@ -46,17 +44,14 @@ public class Client {
             if (Main.adminBool) {
                 clientSocket = new Socket(Server.getIP(), Statics.portNumber);
             } else {
-//            if (getClientIP()) {
-                clientSocket = new Socket(Server.getIP(), Statics.portNumber);
-//            } else {
-                if (Main.jClientIPInput.getText().equals("000.000.0.000")) {
-                    internetBool = false;
+                if (getClientIP()) {
+                    clientSocket = new Socket(Server.getIP(), Statics.portNumber);
                 } else {
-                    clientSocket = new Socket(Main.jClientIPInput.getText(), Statics.portNumber);
+                    if (Main.jClientIPInput.getText().equals("000.000.0.000")) {
+                    } else {
+                        clientSocket = new Socket(Main.jClientIPInput.getText(), Statics.portNumber);
+                    }
                 }
-//            }
-//            Main.jList2.setVisible(true);
-//            Main.jClientIPInput.setVisible(true);
             }
             oos = new ObjectOutputStream(clientSocket.getOutputStream());
         } catch (UnknownHostException ex) {
@@ -65,81 +60,77 @@ public class Client {
 
     public static boolean userRequest(String username) {
         boolean b = true;
-        if (internetBool) {
-            try {
-                getServerSocket();
-                byte[] requestType_B = "GET_USER".getBytes();
-                byte[] userName_B = username.getBytes();
-                byte[][] userRequest_B = {requestType_B, userName_B};
-                oos.writeObject(userRequest_B);
-                //read the server response message
-                ois = new ObjectInputStream(clientSocket.getInputStream());
-                List<String> message = (List<String>) ois.readObject();
-                if (message.isEmpty()) {
-                    System.out.println("no files found.");
-                    b = false;
-                } else {
-                    for (String fileName : message) {
-                        getRecords(username, new File(fileName));
-                        System.out.println("server found: " + fileName);
-                    }
+        try {
+            getServerSocket();
+            byte[] requestType_B = "GET_USER".getBytes();
+            byte[] userName_B = username.getBytes();
+            byte[][] userRequest_B = {requestType_B, userName_B};
+            oos.writeObject(userRequest_B);
+            //read the server response message
+            ois = new ObjectInputStream(clientSocket.getInputStream());
+            List<String> message = (List<String>) ois.readObject();
+            if (message.isEmpty()) {
+                System.out.println("no files found.");
+                b = false;
+            } else {
+                for (String fileName : message) {
+                    getRecords(username, new File(fileName));
+                    System.out.println("server found: " + fileName);
                 }
-            } catch (IOException | ClassNotFoundException | InterruptedException ex) {
-//                System.out.println("going to offline mode");
             }
+        } catch (IOException | ClassNotFoundException | InterruptedException ex) {
+//                System.out.println("going to offline mode");
         }
+//        }
         return b;
     }
 
     public static void getRecords(String username, File inputFile) throws IOException, InterruptedException, ClassNotFoundException {
-        if (internetBool) {
-            getServerSocket();
-            byte[] requestType_B = "GET_RECD".getBytes();
-            byte[] userName_B = SQLHasher(username).getBytes();
-            byte[] inputFileName_B = inputFile.getName().getBytes();
-            byte[][] getRequest_B = {requestType_B, userName_B, inputFileName_B};
+        getServerSocket();
+        byte[] requestType_B = "GET_RECD".getBytes();
+        byte[] userName_B = SQLHasher(username).getBytes();
+        byte[] inputFileName_B = inputFile.getName().getBytes();
+        byte[][] getRequest_B = {requestType_B, userName_B, inputFileName_B};
 
-            oos.writeObject(getRequest_B);
-            //read the server response message
-            ois = new ObjectInputStream(clientSocket.getInputStream());
-            byte[][] message = (byte[][]) ois.readObject();
-            byte[][] bytes = {"NA".getBytes()};
+        oos.writeObject(getRequest_B);
+        //read the server response message
+        ois = new ObjectInputStream(clientSocket.getInputStream());
+        byte[][] message = (byte[][]) ois.readObject();
+        byte[][] bytes = {"NA".getBytes()};
 
-            if (!Arrays.equals(message[0], bytes[0])) {
-                Files.write(Paths.get(root + Main.masterFolder + Statics.nBoxName + File.separator + inputFile.getName()), message[1]);
-                Files.setAttribute(Paths.get(root + Main.masterFolder + Statics.nBoxName + File.separator + inputFile.getName()), "basic:creationTime", Miscs.byteArrToFileTime(message[0]), NOFOLLOW_LINKS);
-                System.out.println(Miscs.byteArrToFileTime(message[0]));
-            } else {
-                System.out.println("File not found");
-            }
-            //close resources
-            ois.close();
-            oos.close();
+        if (!Arrays.equals(message[0], bytes[0])) {
+            Files.write(Paths.get(root + Main.masterFolder + Statics.nBoxName + File.separator + inputFile.getName()), message[1]);
+            Files.setAttribute(Paths.get(root + Main.masterFolder + Statics.nBoxName + File.separator + inputFile.getName()), "basic:creationTime", Miscs.byteArrToFileTime(message[0]), NOFOLLOW_LINKS);
+            System.out.println(Miscs.byteArrToFileTime(message[0]));
+        } else {
+            System.out.println("File not found");
         }
+        //close resources
+        ois.close();
+        oos.close();
     }
 
     public static void postRecords(String username, File inputFile) throws IOException, InterruptedException, ClassNotFoundException {
-        if (internetBool) {
-            getServerSocket();
-            byte[] requestType_B = "PST_RECD".getBytes();
-            byte[] userName_B = SQLHasher(username).getBytes();
-            byte[] inputFileName_B = inputFile.getName().getBytes();
-            BasicFileAttributes attr = Files.readAttributes(inputFile.toPath(), BasicFileAttributes.class);
-            FileTime fileTime = attr.creationTime();
-            String fileTimeS = fileTime.toString();
-            byte[] inputFileDate_B = fileTimeS.getBytes();
-            byte[] inputFileBytes_B = Files.readAllBytes(inputFile.toPath());
-            byte[][] posRequest_B = {requestType_B, userName_B, inputFileName_B, inputFileDate_B, inputFileBytes_B};
+        getServerSocket();
+        byte[] requestType_B = "PST_RECD".getBytes();
+        byte[] userName_B = SQLHasher(username).getBytes();
+        byte[] inputFileName_B = inputFile.getName().getBytes();
+        BasicFileAttributes attr = Files.readAttributes(inputFile.toPath(), BasicFileAttributes.class);
+        FileTime fileTime = attr.creationTime();
+        String fileTimeS = fileTime.toString();
+        byte[] inputFileDate_B = fileTimeS.getBytes();
+        byte[] inputFileBytes_B = Files.readAllBytes(inputFile.toPath());
+        byte[][] posRequest_B = {requestType_B, userName_B, inputFileName_B, inputFileDate_B, inputFileBytes_B};
 
-            oos.writeObject(posRequest_B);
-            //read the server response message
-            ois = new ObjectInputStream(clientSocket.getInputStream());
-            String message = (String) ois.readObject();
-            //close resources
-            ois.close();
-            oos.close();
-            Thread.sleep(10);
-        }
+        oos.writeObject(posRequest_B);
+        //read the server response message
+        ois = new ObjectInputStream(clientSocket.getInputStream());
+        String message = (String) ois.readObject();
+        //close resources
+        ois.close();
+        oos.close();
+        Thread.sleep(10);
+
     }
 
     public static boolean getTable(String username) throws IOException, ClassNotFoundException, InterruptedException {
@@ -156,69 +147,61 @@ public class Client {
     }
 
     public static void postTable(String username) throws IOException, ClassNotFoundException, InterruptedException {
-        if (internetBool) {
-            getServerSocket();
-            byte[] requestType_B = "PST_TABL".getBytes();
-            byte[] userName_B = username.getBytes();
-            byte[][] postTableRequest_B = {requestType_B, userName_B};
-            oos.writeObject(postTableRequest_B);
-            System.out.println("account connected.");
-            oos.close();
-        }
+        getServerSocket();
+        byte[] requestType_B = "PST_TABL".getBytes();
+        byte[] userName_B = username.getBytes();
+        byte[][] postTableRequest_B = {requestType_B, userName_B};
+        oos.writeObject(postTableRequest_B);
+        System.out.println("account connected.");
+        oos.close();
     }
 
     public static boolean startSession(String username) {
         boolean b = false;
-        if (internetBool) {
-            try {
-                getServerSocket();
-                byte[] requestType_B = "STR_SESN".getBytes();
-                byte[] userName_B = username.getBytes();
-                byte[] ipAddress_B = Server.getIP().getBytes();
-                byte[] os_B = getOS().getBytes();
+        try {
+            getServerSocket();
+            byte[] requestType_B = "STR_SESN".getBytes();
+            byte[] userName_B = username.getBytes();
+            byte[] ipAddress_B = Server.getIP().getBytes();
+            byte[] os_B = getOS().getBytes();
 
-                byte[][] startSession_B = {requestType_B, userName_B, ipAddress_B, os_B};
-                oos.writeObject(startSession_B);
-                //read the server response message
-                ois = new ObjectInputStream(clientSocket.getInputStream());
-                b = (boolean) ois.readObject();
-                System.out.println("you have started your session.");
-                ois.close();
-                oos.close();
-            } catch (UnknownHostException ex) {
-                GUI.t.interrupt();
-                GUI.labelCutterThread(jAlertLabel, "invalid IP address.", 20, 40, 2000, false);
-                Main.jTextField1.setText("");
-                Main.jPasswordField1.setText("");
-                Main.jTextField1.requestFocus();
+            byte[][] startSession_B = {requestType_B, userName_B, ipAddress_B, os_B};
+            oos.writeObject(startSession_B);
+            //read the server response message
+            ois = new ObjectInputStream(clientSocket.getInputStream());
+            b = (boolean) ois.readObject();
+            System.out.println("you have started your session.");
+            ois.close();
+            oos.close();
+        } catch (UnknownHostException ex) {
+            GUI.t.interrupt();
+            GUI.labelCutterThread(jAlertLabel, "invalid IP address.", 20, 40, 2000, false);
+            Main.jTextField1.setText("");
+            Main.jPasswordField1.setText("");
+            Main.jTextField1.requestFocus();
 
-            } catch (IOException | ClassNotFoundException ex) {
-                ex.printStackTrace();
-            }
+        } catch (IOException | ClassNotFoundException ex) {
+            ex.printStackTrace();
         }
         return b;
     }
 
     public static void endSession(String username) {
-        if (internetBool) {
-            try {
-                getServerSocket();
-                byte[] requestType_B = "END_SESN".getBytes();
-                byte[] userName_B = username.getBytes();
-                byte[] ipAddress_B = Server.getIP().getBytes();
-                byte[] os_B = getOS().getBytes();
+        try {
+            getServerSocket();
+            byte[] requestType_B = "END_SESN".getBytes();
+            byte[] userName_B = username.getBytes();
+            byte[] ipAddress_B = Server.getIP().getBytes();
+            byte[] os_B = getOS().getBytes();
 
-                byte[][] endSession_B = {requestType_B, userName_B, ipAddress_B, os_B};
-                oos.writeObject(endSession_B);
+            byte[][] endSession_B = {requestType_B, userName_B, ipAddress_B, os_B};
+            oos.writeObject(endSession_B);
 
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
-        System.exit(0);
     }
-    public static boolean internetBool = true;
-    private static boolean internetBool1 = false;
+    public static boolean internetBool1 = true;
     public static Thread clientMonitor_T;
 
     public static synchronized void clientMonitor() {
@@ -229,56 +212,28 @@ public class Client {
                 String s = "";
                 try {
                     Process sh = pb.start();
-                    try ( BufferedReader reader = new BufferedReader(new InputStreamReader(sh.getInputStream()))) {
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(sh.getInputStream()))) {
                         s = reader.readLine();
                         if (s == null) {
-                            internetBool = false;
-                            if (!internetBool1) {
+                            if (internetBool1) {
                                 System.out.println("network is down");
                                 if (Main.adminBool) {
                                     Main.jClientIPInput.setVisible(false);
                                     Main.jAdminLabel.setVisible(true);
 //                                    Server.portKill();
-//                                    Server.Sessions sessions = new Server.Sessions();
-//                                    Server.initDatabase();
-//                                    sessions.clearSessions();
-//                                    Server.serverKill(".server.exe", false);
-//
-//                                    if (Server.serverSocket == null) {
-//                                        Server.socketStart(8665);
-//                                    } else {
-//                                        System.out.println("the server is already active");
-//                                        Server.serverSocket.close();
-//                                    }
                                 } else {
                                     Main.jClientIPInput.setVisible(true);
                                     Main.jAdminLabel.setVisible(false);
-                                }
-                                if (adminBool) {
-                                    File serverExeFile = new File(root + masterFolder + ".server.exe");
-                                    if (serverExeFile.exists()) {
-                                        try {
-                                            String exeServer = String.format("start %s", serverExeFile);
-                                            ProcessBuilder pb1 = new ProcessBuilder("cmd.exe", "/c", exeServer);
-                                            pb1.start();
-                                        } catch (IOException ex) {
-                                            ex.printStackTrace();
-                                        }
-                                    } else {
-                                        System.out.println("server file does not exists");
-                                    }
-                                } else {
                                 }
                                 if (!Statics.username.equals("")) {
                                     GUI.t.interrupt();
                                     GUI.labelCutterThread(jAlertLabel, "host has disconnected", 0, 25, 1500, false);
                                     Main.sendSQLToggle();
                                 }
-                                internetBool1 = true;
+                                internetBool1 = false;
                             }
                         } else if (s.contains("TIME_WAIT") || (s.contains("CLOSE_WAIT"))) {
-                            internetBool = false;
-                            if (!internetBool1) {
+                            if (internetBool1) {
                                 System.out.println("network is in waiting");
                                 if (Main.adminBool) {
                                     Main.jClientIPInput.setVisible(false);
@@ -295,11 +250,10 @@ public class Client {
                                     GUI.labelCutterThread(jAlertLabel, "host has disconnected", 0, 25, 1500, false);
                                     Main.sendSQLToggle();
                                 }
-                                internetBool1 = true;
+                                internetBool1 = false;
                             }
                         } else {
-                            internetBool = true;
-                            if (internetBool1) {
+                            if (!internetBool1) {
                                 System.out.println("network is up");
                                 if (Main.adminBool) {
                                     Main.jClientIPInput.setVisible(false);
@@ -311,12 +265,11 @@ public class Client {
                                 if (!Statics.username.equals("")) {
                                     getTable(Statics.username);
                                     userRequest(Statics.username);
-                                    Statics.inboxMonitor();
                                     GUI.t.interrupt();
                                     GUI.labelCutterThread(jAlertLabel, "host has connected", 0, 25, 1500, false);
                                     Main.sendSQLToggle();
                                 }
-                                internetBool1 = false;
+                                internetBool1 = true;
                             }
                         }
                         Thread.sleep(500);
@@ -332,20 +285,18 @@ public class Client {
     }
 
     public static void adminRequest(int requestType) {
-        if (internetBool) {
-            try {
-                getServerSocket();
-                byte[] adminReq_B = "ADMIN".getBytes();
-                if (requestType == 0) {
-                    byte[] serverReq_B = "SERVR".getBytes();
-                    byte[][] startSession_B = {adminReq_B, serverReq_B};
-                    oos.writeObject(startSession_B);
-                }
-                //read the server response message
-                oos.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
+        try {
+            getServerSocket();
+            byte[] adminReq_B = "ADMIN".getBytes();
+            if (requestType == 0) {
+                byte[] serverReq_B = "SERVR".getBytes();
+                byte[][] startSession_B = {adminReq_B, serverReq_B};
+                oos.writeObject(startSession_B);
             }
+            //read the server response message
+            oos.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -355,7 +306,7 @@ public class Client {
         String s = "";
         try {
             Process sh = pb.start();
-            try ( BufferedReader reader = new BufferedReader(new InputStreamReader(sh.getInputStream()))) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(sh.getInputStream()))) {
                 while ((s = reader.readLine()) != null) {
                     if (!s.equals("")) {
                         return true;

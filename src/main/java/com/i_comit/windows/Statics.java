@@ -189,7 +189,7 @@ public class Statics {
                 jStorePanel.setVisible(false);
                 jSendPanel.setVisible(true);
                 jLabel6.setVisible(true);
-                if (!Client.internetBool) {
+                if (!Client.internetBool1) {
                     jLabel5.setVisible(true);
                 }
                 jReceivePanel.setVisible(false);
@@ -386,7 +386,58 @@ public class Statics {
     }
 
     public static void collapseLogin(Main main) {
-        if (Client.internetBool) {
+        if (Main.adminBool) {
+            if (Client.internetBool1) {
+                if (Client.startSession(username)) {
+                    try {
+                        Client.postTable(username);
+                        main.setSize(779, 240);
+                        jLabel1.setLocation(265, 10);
+                        jLabel3.setLocation(367, 4);
+                        jAlertLabel.setLocation(265, 174);
+                        Main.jLoginPanel.setVisible(false);
+                        Main.jToolPanel.setVisible(true);
+                        Main.jProgressBar2.setVisible(true);
+                        jScrollPane5.setVisible(true);
+                        main.setLocationRelativeTo(null);
+                        GUI.t.interrupt();
+                        GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript, " + username + ".", 20, 40, 1200, false);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    } catch (ClassNotFoundException ex) {
+                        ex.printStackTrace();
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                } else {
+                    Memory.getHeapSize(main);
+                    Main.jLoginPanel.setVisible(true);
+                    Main.jToolPanel.setVisible(false);
+                    Main.jProgressBar2.setVisible(false);
+                    jAlertLabel.setHorizontalAlignment(LEFT);
+                    username = "";
+                    GUI.t.interrupt();
+                    GUI.labelCutterThread(jAlertLabel, "user is already logged in network.", 20, 40, 2000, false);
+                }
+            } else {
+                main.setSize(779, 240);
+                jLabel1.setLocation(265, 10);
+                jLabel3.setLocation(367, 4);
+                jAlertLabel.setLocation(265, 174);
+                Main.jLoginPanel.setVisible(false);
+                Main.jToolPanel.setVisible(true);
+                Main.jProgressBar2.setVisible(true);
+                jScrollPane5.setVisible(true);
+                main.setLocationRelativeTo(null);
+                GUI.t.interrupt();
+                GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript, " + username + ".", 20, 40, 1200, false);
+            }
+            jTextField1.setText("");
+            jPasswordField1.setText("");
+            jTextField1.requestFocus();
+            main.setTitle("");
+            Main.jMenuBar1.setVisible(true);
+        } else {
             if (Client.startSession(username)) {
                 try {
                     Client.postTable(username);
@@ -418,24 +469,7 @@ public class Statics {
                 GUI.t.interrupt();
                 GUI.labelCutterThread(jAlertLabel, "user is already logged in network.", 20, 40, 2000, false);
             }
-        } else {
-            main.setSize(779, 240);
-            jLabel1.setLocation(265, 10);
-            jLabel3.setLocation(367, 4);
-            jAlertLabel.setLocation(265, 174);
-            Main.jLoginPanel.setVisible(false);
-            Main.jToolPanel.setVisible(true);
-            Main.jProgressBar2.setVisible(true);
-            jScrollPane5.setVisible(true);
-            main.setLocationRelativeTo(null);
-            GUI.t.interrupt();
-            GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript, " + username + ".", 20, 40, 1200, false);
         }
-        jTextField1.setText("");
-        jPasswordField1.setText("");
-        jTextField1.requestFocus();
-        main.setTitle("");
-        Main.jMenuBar1.setVisible(true);
     }
 
 }
