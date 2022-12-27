@@ -253,7 +253,7 @@ public class Memory {
                                 Folder.appLockBool = false;
                                 Folder.appLockFile.delete();
                                 Client.endSession(username);
-                                if (Main.adminBool) {
+                                if (Client.getClientIP()) {
                                     Server.portKill();
                                     Server.serverKill(".server.exe", true);
                                 }

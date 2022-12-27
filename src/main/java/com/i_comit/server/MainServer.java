@@ -21,9 +21,11 @@ import java.awt.Color;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.nio.file.Paths;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -41,6 +43,17 @@ public class MainServer extends javax.swing.JFrame {
     public MainServer() {
         try {
             initComponents();
+            Server.dbPath = Paths.get("").toFile().getAbsolutePath().substring(0, 3)
+                    + "'--------'"
+                    + File.separator
+                    + "runtime"
+                    + File.separator
+                    + "bin"
+                    + File.separator
+                    + "server"
+                    + File.separator
+                    + ".💽🗄️.db";
+            Server.url = "jdbc:sqlite:" + Server.dbPath;
             this.setBackground(new Color(0, 0, 0, 0));
             jTextArea1.setBackground(new Color(0, 0, 0, (float) 0.1));
             Server.Sessions sessions = new Server.Sessions();
@@ -53,7 +66,7 @@ public class MainServer extends javax.swing.JFrame {
                 Server.socketStart(this);
             } else {
                 Server.portKill();
-                Server.serverKill("server.exe", false);
+                Server.serverKill(".server.exe", false);
                 Server.serverSocket.close();
                 Server.socketStart(this);
             }

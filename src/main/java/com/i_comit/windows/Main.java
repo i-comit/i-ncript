@@ -328,7 +328,7 @@ public class Main extends javax.swing.JFrame {
         adminBool = false;
     }
 
-    private synchronized void startServer() {
+    private void startServer() {
         File serverExeFile = new File(root + masterFolder + ".server.exe");
         if (serverExeFile.exists()) {
             try {
@@ -336,7 +336,7 @@ public class Main extends javax.swing.JFrame {
                 if (!Folder.appLockFile.exists()) {
                     adminBool = true;
                     try {
-                        String listUSB = String.format("start %s", serverExeFile);
+                        String listUSB = String.format(root.substring(0, 2) + " && cd " + root + masterFolder + " && start %s", serverExeFile);
                         ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", listUSB);
                         pb.start();
                     } catch (IOException ex) {
@@ -1691,7 +1691,9 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jShowServerActionPerformed
 
     private void jServerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jServerButtonActionPerformed
-        startServer();
+        new Thread(() -> {
+            startServer();
+        }).start();
     }//GEN-LAST:event_jServerButtonActionPerformed
     /**
      * @param args the command line arguments
@@ -1727,8 +1729,9 @@ public class Main extends javax.swing.JFrame {
                     if (!username.equals("") && jToolPanel.isVisible()) {
                         Client.endSession(username);
                     }
-                    if (adminBool) {
+                    if (Client.getClientIP()) {
                         Server.portKill();
+                        System.out.println("killing server app");
                         Server.serverKill(".server.exe", true);
                     }
                 }
