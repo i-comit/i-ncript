@@ -123,7 +123,7 @@ class DragDrop implements DropTargetListener {
                                                     && !filesf.getAbsolutePath().equals(root + masterFolder + Statics.oBoxName)
                                                     && !filesf.getAbsolutePath().equals(root + masterFolder + "app")
                                                     && !filesf.getAbsolutePath().equals(root + masterFolder + "runtime")) {
-                                                if (Main.toggleDragDropBool) {
+                                                if (!Main.toggleDragDropBool) {
                                                     Folder.getFileDropCount(filesf);
                                                     Folder.recursiveFileDropThread(filesf, Statics.path);
                                                     filesf.delete();
