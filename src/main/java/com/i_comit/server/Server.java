@@ -42,18 +42,18 @@ public class Server {
 
     public static ServerSocket serverSocket;
     public static Socket clientSocket;
-//    public static String dbPath = Paths.get("").toFile().getAbsolutePath().substring(0, 3)
-//            + "'--------'"
-//            + File.separator
-//            + "runtime"
-//            + File.separator
-//            + "bin"
-//            + File.separator
-//            + "server"
-//            + File.separator
-//            + ".💽🗄️.db";
-    private static String dbPath = root + masterFolder + "runtime" + File.separator + "bin" + File.separator + "server" + File.separator + ".💽🗄️.db";
-    public static String url = "jdbc:sqlite:" + Server.dbPath;
+    public static String dbPath = Paths.get("").toFile().getAbsolutePath().substring(0, 3)
+            + "'--------'"
+            + File.separator
+            + "runtime"
+            + File.separator
+            + "bin"
+            + File.separator
+            + "server"
+            + File.separator
+            + ".💽🗄️.db";
+//    private static String dbPath = root + masterFolder + "runtime" + File.separator + "bin" + File.separator + "server" + File.separator + ".💽🗄️.db";
+    public static String url = "jdbc:sqlite:" + dbPath;
     private static boolean serverBool = true;
 
     public static synchronized void socketStart(Main main) {

@@ -228,4 +228,25 @@ public class Client {
         }
         return false;
     }
+
+    private static byte[] adminReq_B = "ADMIN".getBytes();
+
+    public static void adminRequests(int requestType) {
+        try {
+            getServerSocket();
+            if (requestType == 0) {
+                byte[] serverReq_B = "SERVR".getBytes();
+                byte[][] startSession_B = {adminReq_B, serverReq_B};
+                oos.writeObject(startSession_B);
+            }
+            if (requestType == 1) {
+                byte[] serverReq_B = "CLOSE".getBytes();
+                byte[][] startSession_B = {adminReq_B, serverReq_B};
+                oos.writeObject(startSession_B);
+            }
+            oos.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
 }

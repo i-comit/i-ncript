@@ -16,6 +16,7 @@
  */
 package com.i_comit.server;
 
+import static com.i_comit.windows.Folder.executor;
 import com.i_comit.windows.Statics;
 import java.awt.Color;
 import java.awt.GraphicsDevice;
@@ -26,6 +27,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -39,24 +44,16 @@ public class Main extends javax.swing.JFrame {
      * Creates new form Main
      */
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
+    private static int second = 0;
+    private static String timeString = "";
+    public static Executor executor = Executors.newSingleThreadExecutor();
 
     public Main() {
         try {
             initComponents();
-//            Server.dbPath = Paths.get("").toFile().getAbsolutePath().substring(0, 3)
-//                    + "'--------'"
-//                    + File.separator
-//                    + "runtime"
-//                    + File.separator
-//                    + "bin"
-//                    + File.separator
-//                    + "server"
-//                    + File.separator
-//                    + ".💽🗄️.db";
-//            Server.url = "jdbc:sqlite:" + Server.dbPath;
+            uptimeTimer();
             this.setBackground(new Color(0, 0, 0, 0));
             jTextArea1.setBackground(new Color(0, 0, 0, (float) 0.2));
-            jTextArea1.append("sus amogs");
             Server.Sessions sessions = new Server.Sessions();
             Server.initDatabase();
             sessions.clearSessions();
@@ -69,6 +66,7 @@ public class Main extends javax.swing.JFrame {
                 Server.serverSocket.close();
                 Server.socketStart(this);
             }
+
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
             Rectangle rect = defaultScreen.getDefaultConfiguration().getBounds();
@@ -79,6 +77,31 @@ public class Main extends javax.swing.JFrame {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    private void uptimeTimer() {
+        executor.execute(() -> {
+            Timer timer = new Timer();
+            TimerTask timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    second++;
+                    int hours = second / 3600;
+                    int minutes = (second % 3600) / 60;
+                    int seconds = second % 60;
+                    if (second < 60) {
+                        timeString = String.format("%2d seconds", seconds);
+                    } else if (second >= 3600) {
+                        timeString = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+                    } else {
+                        timeString = String.format("%2d mins %2d secs".trim(), minutes, seconds);
+                    }
+                    jLabel4.setText(timeString);
+                }
+            };
+            timer.schedule(timerTask,
+                    1, 1000);
+        });
     }
 
     /**
@@ -94,6 +117,8 @@ public class Main extends javax.swing.JFrame {
         jTextArea1 = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("i-ncript server");
@@ -124,20 +149,36 @@ public class Main extends javax.swing.JFrame {
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel2.setText("i-ncript™ server");
 
+        jLabel3.setFont(Statics.registerCustomFont(12, fontFile));
+        jLabel3.setForeground(new java.awt.Color(128, 128, 128));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel3.setText("up time: ");
+
+        jLabel4.setFont(Statics.registerCustomFont(12, fontFile));
+        jLabel4.setForeground(new java.awt.Color(128, 128, 128));
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel4.setText(timeString);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 4, Short.MAX_VALUE)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(5, 5, 5)))
+                        .addGap(5, 5, 5))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -148,7 +189,11 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 18, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -183,6 +228,7 @@ public class Main extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
+
         try {
             //</editor-fold>
             UIManager.setLookAndFeel("com.formdev.flatlaf.FlatDarkLaf");
@@ -200,6 +246,8 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected static javax.swing.JLabel jLabel1;
     protected static javax.swing.JLabel jLabel2;
+    protected static javax.swing.JLabel jLabel3;
+    protected static javax.swing.JLabel jLabel4;
     protected static javax.swing.JScrollPane jScrollPane1;
     protected static javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables

@@ -4,7 +4,6 @@
  */
 package com.i_comit.windows;
 
-import com.i_comit.server.Admin;
 import com.i_comit.server.Client;
 import com.i_comit.shared.Miscs;
 import com.i_comit.server.Server;
@@ -42,11 +41,11 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "E:\\";
+    public static String root = "D:\\";
     public static final String masterFolder = "'--------'" + File.separator;
-    public static boolean adminBool = false;
+    public static boolean adminBool = true;
 
-    private final String appVer = "2.0.0";
+    private final String appVer = "2.0.1";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
     public static final int year = Year.now().getValue();
 
@@ -800,7 +799,7 @@ public class Main extends javax.swing.JFrame {
         jServerButton.setBorderPainted(false);
         jServerButton.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
         jServerButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-        jServerButton.setMargin(new java.awt.Insets(0, 2, 6, 2));
+        jServerButton.setMargin(new java.awt.Insets(0, 2, 6, 0));
         jServerButton.setMaximumSize(new java.awt.Dimension(85, 13));
         jServerButton.setMinimumSize(new java.awt.Dimension(81, 13));
         jServerButton.setPreferredSize(new java.awt.Dimension(85, 13));
@@ -811,7 +810,7 @@ public class Main extends javax.swing.JFrame {
                 jServerButtonActionPerformed(evt);
             }
         });
-        jLoginPanel.add(jServerButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 66, 72, 19));
+        jLoginPanel.add(jServerButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 66, 69, 19));
 
         jAdminLabel.setFont(Statics.registerCustomFont(11, fontFile));
         jAdminLabel.setForeground(new java.awt.Color(102, 102, 102));
@@ -1695,7 +1694,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jToggleDragDropActionPerformed
 
     private void jShowServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jShowServerActionPerformed
-        Admin.showHidePanel(0);
+        Client.adminRequests(0);
     }//GEN-LAST:event_jShowServerActionPerformed
 
     private void jServerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jServerButtonActionPerformed
@@ -1741,6 +1740,7 @@ public class Main extends javax.swing.JFrame {
                         }
                     }
                     if (Client.getClientIP() && adminBool) {
+                        Client.adminRequests(1);
                         Server.portKill();
                         System.out.println("killing server app");
                         Server.serverKill(".server.exe", true);
