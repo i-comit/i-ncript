@@ -14,6 +14,7 @@ import static com.i_comit.windows.Main.jAdminLabel;
 import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.jClientIPInput;
 import static com.i_comit.windows.Main.root;
+import com.i_comit.windows.TreeView;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -37,11 +38,11 @@ import java.util.List;
  */
 public class Client {
 
-    private static Socket clientSocket;
+    public static Socket clientSocket;
     private static ObjectOutputStream oos = null;
     private static ObjectInputStream ois = null;
 
-    private static void getServerSocket() throws IOException {
+    public static void getServerSocket() throws IOException {
         try {
             if (Main.adminBool) {
                 clientSocket = new Socket(Server.getIP(), Statics.portNumber);
@@ -80,7 +81,8 @@ public class Client {
             } else {
                 for (String fileName : message) {
                     getRecords(username, new File(fileName));
-                    System.out.println("server found: " + fileName);
+                    System.out.println("retrieved: " + fileName);
+                    Main.refreshTreeView(Statics.receiveFolder, TreeView.receiveCaretPos);
                 }
             }
         } catch (IOException | ClassNotFoundException | InterruptedException ex) {
@@ -128,7 +130,6 @@ public class Client {
         byte[][] posRequest_B = {requestType_B, userName_B, inputFileName_B, inputFileDate_B, inputFileBytes_B};
 
         oos.writeObject(posRequest_B);
-        //read the server response message
         oos.close();
     }
 
@@ -139,10 +140,8 @@ public class Client {
         byte[][] getTableRequest_B = {requestType_B, userName_B};
 
         oos.writeObject(getTableRequest_B);
-        //read the server response message
         ois = new ObjectInputStream(clientSocket.getInputStream());
         boolean message = (boolean) ois.readObject();
-        System.out.println("bool " + message);
         return message;
     }
 
@@ -170,7 +169,6 @@ public class Client {
 
             byte[][] startSession_B = {requestType_B, userName_B, ipAddress_B, os_B};
             oos.writeObject(startSession_B);
-            //read the server response message
             ois = new ObjectInputStream(clientSocket.getInputStream());
             b = (boolean) ois.readObject();
             if (b) {
@@ -200,50 +198,15 @@ public class Client {
             byte[] userName_B = username.getBytes();
             byte[] ipAddress_B = Server.getIP().getBytes();
             byte[] os_B = getOS().getBytes();
-
             byte[][] endSession_B = {requestType_B, userName_B, ipAddress_B, os_B};
             oos.writeObject(endSession_B);
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public static void adminRequest(int requestType) {
-        try {
-            getServerSocket();
-            byte[] adminReq_B = "ADMIN".getBytes();
-            if (requestType == 0) {
-                byte[] serverReq_B = "SERVR".getBytes();
-                byte[][] startSession_B = {adminReq_B, serverReq_B};
-                oos.writeObject(startSession_B);
-            }
-            //read the server response message
             oos.close();
+            clientSocket.close();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 
-//    public static Thread clientMonitor_T;
-//
-//    public static void clientMonitor() {
-//        clientMonitor_T = new Thread(() -> {
-//            while (true) {
-//                try {
-//                    getServerSocket();
-//                    Thread.sleep(1500);
-//                } catch (SocketException ex) {
-//                } catch (InterruptedException ex) {
-//                    Thread.currentThread().interrupt();
-//                } catch (IOException ex) {
-//                    ex.printStackTrace();
-//                }
-//                System.out.println("network state: " + networkBool);
-//            }
-//        });
-//        clientMonitor_T.start();
-//    }
     public static boolean getClientIP() {
         String netstatQuery = String.format("netstat -ano | findStr %s:%d", Server.getIP(), Statics.portNumber);
         ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", netstatQuery);
@@ -265,5 +228,4 @@ public class Client {
         }
         return false;
     }
-
 }

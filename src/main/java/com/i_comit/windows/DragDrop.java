@@ -225,8 +225,8 @@ class DragDrop_T implements Runnable {
             Audio.audioPlayerThread("ding-sfx.wav");
             GUI.labelCutterThread(jAlertLabel, decFiles + " encrypted | " + encFiles + " decrypted", 15, 30, 600, false);
             Main.jTextArea1.append("--------------------------------------------\n");
-            Main.jTextArea1.append(decFiles + " encrypted | " + encFiles + " decrypted | " + ZonedDateTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
             Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
+            Main.jTextArea1.append(decFiles + " encrypted | " + encFiles + " decrypted | " + ZonedDateTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
 
             Thread.sleep(250);
 

@@ -20,6 +20,8 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.swing.JLabel;
@@ -33,8 +35,9 @@ public class GUI {
 
     public static Thread t;
     public static Thread tb;
-    public static Thread t1;
     public static Thread t2;
+
+    public static ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
 
     public static void getGB() {
         File diskPartition = new File(root).toPath().getRoot().toFile();
@@ -52,11 +55,8 @@ public class GUI {
         tb.start();
     }
 
-    public static void loggerThread(File outputFile, int toolMode) {
-        t1 = new Thread(() -> {
-            logger_T.logger_T(outputFile, toolMode);
-        });
-        t1.start();
+    public static void loggerThread(File outputFile) {
+        cachedThreadPool.submit(new Logger_T(outputFile));
     }
 
     public static int countAllFiles(Path path) throws IOException {
@@ -190,21 +190,19 @@ public class GUI {
                 Thread.sleep(50);
                 Audio.audioPlayerThread("ding-sfx.wav");
                 Main.jTextArea1.append("--------------------------------------------\n");
+                Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
                 switch (Statics.AESMode) {
-                    case 0:
+                    case 0 -> {
                         GUI.t.interrupt();
-                        GUI.t1.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "encrypted " + Statics.fileIter + " files", 10, 20, 400, false);
                         Main.jTextArea1.append("encrypted " + Statics.fileIter + " file(s) at " + ZonedDateTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
-                        break;
-                    case 1:
+                    }
+                    case 1 -> {
                         GUI.t.interrupt();
-                        GUI.t1.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "decrypted " + Statics.fileIter + " files", 10, 20, 400, false);
                         Main.jTextArea1.append("decrypted " + Statics.fileIter + " file(s) at " + ZonedDateTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
-                        break;
+                    }
                 }
-                Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
                 Thread.sleep(150);
                 if (Statics.fileIter <= 100) {
                     for (int x = progressBar.getMaximum(); x >= 0; x--) {
@@ -250,6 +248,7 @@ public class GUI {
                 Thread.sleep(50);
                 Audio.audioPlayerThread("ding-sfx.wav");
                 Main.jTextArea1.append("--------------------------------------------\n");
+                Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
                 String fileName = new File(Folder.sendFolderStr).getName();
                 if (Statics.toolMode == 2) {
                     GUI.t.interrupt();
@@ -261,7 +260,6 @@ public class GUI {
                     GUI.labelCutterThread(jAlertLabel, "unpacked " + fileName + ".i-cc", 10, 15, 300, false);
                     Main.jTextArea1.append("unpacked " + fileName + ".i-cc at " + ZonedDateTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
                 }
-                Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
                 progressBar = Main.jProgressBar1;
                 Thread.sleep(200);
                 if (Statics.fileIter <= 100) {
@@ -366,13 +364,15 @@ class labelCutterTree_T implements Runnable {
     }
 }
 
-class logger_T implements Runnable {
+class Logger_T implements Runnable {
 
-    public void run() {
+    File outputFile;
 
+    public Logger_T(File outputFile) {
+        this.outputFile = outputFile;
     }
 
-    public static void logger_T(File outputFile, int toolMode) {
+    public void run() {
         try {
             Thread.sleep(30);
             if (!Statics.dragDropBool) {

@@ -6,6 +6,7 @@ package com.i_comit.server;
 
 import static com.i_comit.shared.Hasher.SQLHasher;
 import static com.i_comit.windows.Main.masterFolder;
+import static com.i_comit.windows.Main.root;
 import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.File;
@@ -41,11 +42,21 @@ public class Server {
 
     public static ServerSocket serverSocket;
     public static Socket clientSocket;
-    public static String dbPath = "";
-    public static String url = "";
+//    public static String dbPath = Paths.get("").toFile().getAbsolutePath().substring(0, 3)
+//            + "'--------'"
+//            + File.separator
+//            + "runtime"
+//            + File.separator
+//            + "bin"
+//            + File.separator
+//            + "server"
+//            + File.separator
+//            + ".💽🗄️.db";
+    private static String dbPath = root + masterFolder + "runtime" + File.separator + "bin" + File.separator + "server" + File.separator + ".💽🗄️.db";
+    public static String url = "jdbc:sqlite:" + Server.dbPath;
+    private static boolean serverBool = true;
 
-//    private static String dbPath = root + masterFolder + "runtime" + File.separator + "bin" + File.separator + "server" + File.separator + ".💽🗄️.db";
-    public static synchronized void socketStart(MainServer main) {
+    public static synchronized void socketStart(Main main) {
         Sessions session = new Sessions();
         Tables table = new Tables();
         Records record = new Records();
@@ -53,9 +64,9 @@ public class Server {
 
         try {
             InetAddress addr = InetAddress.getByName(Server.getIP());
-            serverSocket = new ServerSocket(8665, 50, addr);
+            serverSocket = new ServerSocket(8665, 100, addr);
             Thread serverConnection = new Thread(() -> {
-                while (true) {
+                while (serverBool) {
                     try {
                         clientSocket = serverSocket.accept();
                         ObjectInputStream ois = new ObjectInputStream(clientSocket.getInputStream());
@@ -75,8 +86,8 @@ public class Server {
                             String fileName = new String(message[2], StandardCharsets.UTF_8);
                             if (findRecord(userName, fileName)) {
                                 byte[][] b = getFileBlob(userName, fileName);
-                                MainServer.jTextArea1.append("delivered: " + fileName + "\n");
-                                MainServer.jTextArea1.setCaretPosition(MainServer.jTextArea1.getText().length());
+                                Main.jTextArea1.append("delivered: " + fileName + "\n");
+                                Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
 
                                 oos.writeObject(b);
                                 record.deleteRecord(userName, fileName);
@@ -94,11 +105,10 @@ public class Server {
                                 String fileName = new String(message[2], StandardCharsets.UTF_8);
                                 String fileDate = new String(message[3], StandardCharsets.UTF_8);
                                 insertClientRecord(userName, fileName, fileDate, message[4]);
-                                oos.writeObject(fileName + " has been received");
-                                MainServer.jTextArea1.append("received: " + fileName + "\n");
-                                MainServer.jTextArea1.setCaretPosition(MainServer.jTextArea1.getText().length());
+                                Main.jTextArea1.append("received: " + fileName + "\n");
+                                Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
+
                                 ois.close();
-                                oos.close();
                                 clientSocket.close();
                             } catch (UnsupportedEncodingException ex) {
 //                                ex.printStackTrace();
@@ -131,8 +141,8 @@ public class Server {
                             boolean b = session.requestSession(userName, ipAddress, OS);
                             if (b) {
                                 System.out.println(userName + " has connected to a session.");
-                                MainServer.jTextArea1.append(userName + " has started their session.\n");
-                                MainServer.jTextArea1.setCaretPosition(MainServer.jTextArea1.getText().length());
+                                Main.jTextArea1.append(userName + " has started their session.\n");
+                                Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
 
                             } else {
                                 System.out.println(userName + " already has an active session.");
@@ -146,7 +156,7 @@ public class Server {
                             String userName = new String(message[1], StandardCharsets.UTF_8);
                             session.endSession(userName);
                             System.out.println(userName + " has ended their session.");
-                            MainServer.jTextArea1.append(userName + " has ended their session.\n");
+                            Main.jTextArea1.append(userName + " has ended their session.\n");
 
                             ois.close();
                             oos.close();
@@ -156,6 +166,9 @@ public class Server {
                         if (Arrays.equals(message[0], "ADMIN".getBytes())) {
                             if (Arrays.equals(message[1], "SERVR".getBytes())) {
                                 admin.showServerPanel(main);
+                            }
+                            if (Arrays.equals(message[1], "CLOSE".getBytes())) {
+                                admin.closeSocket();
                             }
                             ois.close();
                             oos.close();
@@ -389,7 +402,7 @@ public class Server {
                     str = rs.getString(1);
                     if (rs.getString(1).equals(SQLHasher(username))) {
 //                    System.out.println();
-                        MainServer.jTextArea1.append(username + " is connected to session\n");
+                        Main.jTextArea1.append(username + " is connected to session\n");
                     }
                 }
                 if (str.equals("")) {
@@ -443,18 +456,6 @@ public class Server {
 
     static class Tables {
 
-        String dbPath = Paths.get("").toFile().getAbsolutePath().substring(0, 3)
-                + "'--------'"
-                + File.separator
-                + "runtime"
-                + File.separator
-                + "bin"
-                + File.separator
-                + "server"
-                + File.separator
-                + ".💽🗄️.db";
-        String url = "jdbc:sqlite:" + dbPath;
-
         public String createTable(String username) throws UnsupportedEncodingException {
             String tbl = String.format("CREATE TABLE IF NOT EXISTS '%s' ('recipient-name' text NOT NULL, 'comm-text' text NOT NULL, 'comm-date' text NOT NULL);", SQLHasher(username));
             try ( Connection conn = DriverManager.getConnection(url);  Statement stmt = conn.createStatement()) {
@@ -497,18 +498,6 @@ public class Server {
     }
 
     static class Records {
-
-        static String dbPath = Paths.get("").toFile().getAbsolutePath().substring(0, 3)
-                + "'--------'"
-                + File.separator
-                + "runtime"
-                + File.separator
-                + "bin"
-                + File.separator
-                + "server"
-                + File.separator
-                + ".💽🗄️.db";
-        static String url = "jdbc:sqlite:" + dbPath;
 
         public void listRecords(String username) throws UnsupportedEncodingException {
             String sql = "SELECT * FROM 'FILES-DB'";
@@ -561,11 +550,23 @@ public class Server {
 
     static class Admin {
 
-        public void showServerPanel(MainServer main) {
+        public void showServerPanel(Main main) {
             if (main.getOpacity() == 1) {
                 main.setOpacity(0);
             } else {
                 main.setOpacity(1);
+            }
+        }
+
+        public void closeSocket() {
+            try {
+                serverBool = false;
+                serverSocket.close();
+                portKill();
+                serverKill(".server.exe", true);
+                System.exit(0);
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
         }
 

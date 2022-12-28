@@ -33,32 +33,31 @@ import javax.swing.UnsupportedLookAndFeelException;
  *
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
-public class MainServer extends javax.swing.JFrame {
+public class Main extends javax.swing.JFrame {
 
     /**
-     * Creates new form MainServer
+     * Creates new form Main
      */
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
 
-    public MainServer() {
+    public Main() {
         try {
             initComponents();
-            Server.dbPath = Paths.get("").toFile().getAbsolutePath().substring(0, 3)
-                    + "'--------'"
-                    + File.separator
-                    + "runtime"
-                    + File.separator
-                    + "bin"
-                    + File.separator
-                    + "server"
-                    + File.separator
-                    + ".💽🗄️.db";
-            Server.url = "jdbc:sqlite:" + Server.dbPath;
+//            Server.dbPath = Paths.get("").toFile().getAbsolutePath().substring(0, 3)
+//                    + "'--------'"
+//                    + File.separator
+//                    + "runtime"
+//                    + File.separator
+//                    + "bin"
+//                    + File.separator
+//                    + "server"
+//                    + File.separator
+//                    + ".💽🗄️.db";
+//            Server.url = "jdbc:sqlite:" + Server.dbPath;
             this.setBackground(new Color(0, 0, 0, 0));
-            jTextArea1.setBackground(new Color(0, 0, 0, (float) 0.1));
+            jTextArea1.setBackground(new Color(0, 0, 0, (float) 0.2));
+            jTextArea1.append("sus amogs");
             Server.Sessions sessions = new Server.Sessions();
-            Server.Tables tables = new Server.Tables();
-            Server.Records records = new Server.Records();
             Server.initDatabase();
             sessions.clearSessions();
 
@@ -109,16 +108,19 @@ public class MainServer extends javax.swing.JFrame {
 
         jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
+        jTextArea1.setForeground(new java.awt.Color(128, 128, 128));
         jTextArea1.setRows(5);
         jTextArea1.setFocusable(false);
         jTextArea1.setMargin(new java.awt.Insets(2, 3, 2, 3));
         jScrollPane1.setViewportView(jTextArea1);
 
         jLabel1.setFont(Statics.registerCustomFont(12, fontFile));
+        jLabel1.setForeground(new java.awt.Color(128, 128, 128));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText(Server.getIP());
 
         jLabel2.setFont(Statics.registerCustomFont(12, fontFile));
+        jLabel2.setForeground(new java.awt.Color(128, 128, 128));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel2.setText("i-ncript™ server");
 
@@ -171,13 +173,13 @@ public class MainServer extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainServer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
@@ -191,7 +193,7 @@ public class MainServer extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             Server.portKill();
-            new MainServer().setVisible(true);
+            new Main().setVisible(true);
         });
     }
 

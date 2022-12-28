@@ -132,16 +132,9 @@ public class Statics {
         if (toolMode == 1) {
             new Thread(() -> {
                 try {
-                    Thread.sleep(500);
-//                    if (Client.internetBool) {
-                    if (Client.userRequest(username)) {
-                        TreeView.populateStoreTree(receiveFolder);
-                        Thread.sleep(500);
-                    } else {
-                        System.out.println("waiting for inbox to populate");
-                        Thread.sleep(500);
-                        inboxMonitor();
-                    }
+                    Client.userRequest(username);
+                    Thread.sleep(300);
+                    inboxMonitor();
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }

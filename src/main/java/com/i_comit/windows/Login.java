@@ -161,11 +161,9 @@ public class Login {
                                 GUI.labelCutterThread(jAlertLabel, "folder can't contain .enc files", 20, 30, 1500, false);
                                 b = false;
                             } else {
-                                System.out.println(recipientUsername);
                                 AES.AESThread(filteredSendPath, sendFolder.toFile(), true, 2);
                                 b = true;
                             }
-                            filteredSendPath.clear();
                         }
                     } else {
                         GUI.t.interrupt();

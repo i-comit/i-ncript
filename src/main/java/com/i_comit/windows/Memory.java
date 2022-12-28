@@ -208,17 +208,17 @@ public class Memory {
                                     } else {
                                         DriveCheck.driveState = 3;
                                         new DriveCheck().setVisible(true);
-                                        checkUSBConnection();
+                                        monitorUSBConnection();
                                     }
                                 } else {
                                     DriveCheck.driveState = 2;
                                     new DriveCheck().setVisible(true);
-                                    checkUSBConnection();
+                                    monitorUSBConnection();
                                 }
                             } else {
                                 DriveCheck.driveState = 2;
                                 new DriveCheck().setVisible(true);
-                                checkUSBConnection();
+                                monitorUSBConnection();
                             }
                         } else {
                             DriveCheck.driveState = 1;
@@ -234,7 +234,7 @@ public class Memory {
         return b;
     }
 
-    public static synchronized void checkUSBConnection() {
+    public static void monitorUSBConnection() {
         Thread usbConnectionT = new Thread(() -> {
             while (!(root + Main.masterFolder).equals("")) {
                 try {

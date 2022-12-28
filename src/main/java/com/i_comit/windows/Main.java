@@ -4,6 +4,7 @@
  */
 package com.i_comit.windows;
 
+import com.i_comit.server.Admin;
 import com.i_comit.server.Client;
 import com.i_comit.shared.Miscs;
 import com.i_comit.server.Server;
@@ -31,6 +32,7 @@ import java.util.Random;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
+import static javax.swing.SwingConstants.CENTER;
 import static javax.swing.SwingConstants.LEFT;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -40,9 +42,9 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "D:\\";
+    public static String root = "E:\\";
     public static final String masterFolder = "'--------'" + File.separator;
-    public static boolean adminBool = true;
+    public static boolean adminBool = false;
 
     private final String appVer = "2.0.0";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
@@ -54,51 +56,51 @@ public class Main extends javax.swing.JFrame {
     public Main() {
 //        root = Paths.get("").toAbsolutePath().toString();
 //        if (Memory.checkWMIC()) {
-            root = root.substring(0, 3);
-            initComponents();
-            Memory.readIPAddress();
-            TreeView.renderTreeCells();
+        root = root.substring(0, 3);
+        initComponents();
+        Memory.readIPAddress();
+        TreeView.renderTreeCells();
 
-            Path runtime = Paths.get(root + masterFolder + "runtime");
-            Path app = Paths.get(root + masterFolder + "app");
-            if (runtime.toFile().exists()) {
-                try {
-                    Files.setAttribute(runtime, "dos:hidden", true);
-                } catch (IOException ex) {
-                }
+        Path runtime = Paths.get(root + masterFolder + "runtime");
+        Path app = Paths.get(root + masterFolder + "app");
+        if (runtime.toFile().exists()) {
+            try {
+                Files.setAttribute(runtime, "dos:hidden", true);
+            } catch (IOException ex) {
             }
-            if (app.toFile().exists()) {
-                try {
-                    Files.setAttribute(app, "dos:hidden", true);
-                } catch (IOException ex) {
-                }
+        }
+        if (app.toFile().exists()) {
+            try {
+                Files.setAttribute(app, "dos:hidden", true);
+            } catch (IOException ex) {
             }
+        }
 
-            jStorePanel.setVisible(true);
-            jSendPanel.setVisible(false);
-            jReceivePanel.setVisible(false);
-            jRadioButton2.setVisible(false);
-            jRadioButton3.setVisible(false);
-            jScrollPane5.setVisible(false);
-            jMenuBar1.setVisible(false);
+        jStorePanel.setVisible(true);
+        jSendPanel.setVisible(false);
+        jReceivePanel.setVisible(false);
+        jRadioButton2.setVisible(false);
+        jRadioButton3.setVisible(false);
+        jScrollPane5.setVisible(false);
+        jMenuBar1.setVisible(false);
 
-            if (!keyFile.exists()) {
-                jToolPanel.setVisible(false);
-                loginLabelVisibleBool(false);
-                this.setSize(540, 240);
-                this.setLocationRelativeTo(null);
-            } else {
-                loginLabelVisibleBool(true);
-                jUsernameLabel.setText("enter username");
-                jPasswordLabel.setText("enter password");
-                generateApp();
+        if (!keyFile.exists()) {
+            jToolPanel.setVisible(false);
+            loginLabelVisibleBool(false);
+            this.setSize(540, 240);
+            this.setLocationRelativeTo(null);
+        } else {
+            loginLabelVisibleBool(true);
+            jUsernameLabel.setText("enter username");
+            jPasswordLabel.setText("enter password");
+            generateApp();
 
-                jToolPanel.setVisible(false);
-                jButton2.setVisible(false);
-            }
-            jProgressBar2.setVisible(false);
-            dragDrop.setVisible(false);
-            jSendSQL.setVisible(false);
+            jToolPanel.setVisible(false);
+            jButton2.setVisible(false);
+        }
+        jProgressBar2.setVisible(false);
+        dragDrop.setVisible(false);
+        jSendSQL.setVisible(false);
 //        }
     }
 
@@ -357,7 +359,7 @@ public class Main extends javax.swing.JFrame {
 
     private void generateApp() {
         adminLabelToggle();
-        Memory.checkUSBConnection();
+        Memory.monitorUSBConnection();
 
         Memory.getHeapSize(this);
         Memory.getUSBName(this);
@@ -1261,6 +1263,7 @@ public class Main extends javax.swing.JFrame {
                 if (Login.loginCheck(this)) {
                     if (!Folder.appLockFile.exists()) {
                         if (Login.verifyLogin()) {
+                            jAlertLabel.setHorizontalAlignment(CENTER);
                             initLogin(this);
                         } else {
                             GUI.t.interrupt();
@@ -1320,6 +1323,7 @@ public class Main extends javax.swing.JFrame {
                 if (Login.loginCheck(this)) {
                     if (!Folder.appLockFile.exists()) {
                         if (Login.verifyLogin()) {
+                            jAlertLabel.setHorizontalAlignment(CENTER);
                             initLogin(this);
                         } else {
                             GUI.t.interrupt();
@@ -1623,8 +1627,8 @@ public class Main extends javax.swing.JFrame {
                                 refreshTreeView(sendFolder, TreeView.sendCaretPos);
                             }
                             GUI.t.interrupt();
-                            GUI.labelCutterThread(jAlertLabel, paths.size() + " files sent to " + Main.jTextField2.getText().trim(), 20, 25, 1000, false);
-                            Main.jTextArea1.append(paths.size() + " files sent to " + Main.jTextField2.getText().trim() + " at " + ZonedDateTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
+                            GUI.labelCutterThread(jAlertLabel, paths.size() + " file(s) sent to " + Main.jTextField2.getText().trim(), 20, 25, 1000, false);
+                            Main.jTextArea1.append(paths.size() + " file(s) sent to " + Main.jTextField2.getText().trim() + " at " + ZonedDateTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
                             Statics.resetSendTools(2);
                         } else {
                             Statics.resetSendTools(2);
@@ -1636,6 +1640,10 @@ public class Main extends javax.swing.JFrame {
                         GUI.t.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "you can only send files", 20, 25, 1000, false);
                     }
+                } else {
+                    Statics.resetSendTools(2);
+                    GUI.t.interrupt();
+                    GUI.labelCutterThread(jAlertLabel, "you must select some files", 20, 25, 1000, false);
                 }
             } catch (IOException | ClassNotFoundException | InterruptedException ex) {
                 Statics.resetSendTools(2);
@@ -1687,13 +1695,11 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jToggleDragDropActionPerformed
 
     private void jShowServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jShowServerActionPerformed
-        Client.adminRequest(0);
+        Admin.showHidePanel(0);
     }//GEN-LAST:event_jShowServerActionPerformed
 
     private void jServerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jServerButtonActionPerformed
-        new Thread(() -> {
-            startServer();
-        }).start();
+        startServer();
     }//GEN-LAST:event_jServerButtonActionPerformed
     /**
      * @param args the command line arguments
@@ -1727,9 +1733,14 @@ public class Main extends javax.swing.JFrame {
                     Folder.appLockBool = false;
                     Folder.appLockFile.delete();
                     if (!username.equals("") && jToolPanel.isVisible()) {
-                        Client.endSession(username);
+                        try {
+                            Client.clientSocket.close();
+                            Client.endSession(username);
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
                     }
-                    if (Client.getClientIP()) {
+                    if (Client.getClientIP() && adminBool) {
                         Server.portKill();
                         System.out.println("killing server app");
                         Server.serverKill(".server.exe", true);

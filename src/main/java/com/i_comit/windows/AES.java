@@ -126,7 +126,7 @@ public class AES {
             String percentageStr = format.format(percentage);
             Main.jProgressBar1.setString(percentageStr + "% | " + fileIter + "/" + AES_T.paths.size());
             Main.jProgressBar1.setValue(fileIter);
-            GUI.loggerThread(outputFile, Statics.toolMode);
+            GUI.loggerThread(outputFile);
             getFileAttr(inputFile, outputFile);
 
         } catch (NoSuchPaddingException | NoSuchAlgorithmException
@@ -151,17 +151,11 @@ public class AES {
 
 class AES_T implements Runnable {
 
-    public int threadIterator;
-
-    public void run() {
-//        try {
-//            AESQuery();
-//        } catch (IOException ex) {
-//            ex.printStackTrace();
-//        }
-    }
-
     public static List<Path> paths = null;
+    
+    public void run() {
+        
+    }
 
     public static void AESQuery(List<Path> paths, File dirFile, boolean AESBool, int toolMode) throws InterruptedException {
         AES_T.paths = paths;
@@ -174,7 +168,7 @@ class AES_T implements Runnable {
                         switch (AESMode) {
                             case 0:
                                 Main.jProgressBar1.setStringPainted(true);
-                                Main.jProgressBar1.setString("0% | " + "0/" + AES_T.paths.size());
+                                Main.jProgressBar1.setString("0% | " + "0/" + paths.size());
                                 if (paths.size() >= 30) {
                                     GUI.labelCutterThread(jAlertLabel, "encrypting " + paths.size() + " files", 0, 15, 1500, false);
                                 }
