@@ -43,7 +43,7 @@ public class Main extends javax.swing.JFrame {
 
     public static String root = "D:\\";
     public static final String masterFolder = "'--------'" + File.separator;
-    public static boolean adminBool = false;
+    public static boolean adminBool = true;
 
     private final String appVer = "2.0.1";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
@@ -53,54 +53,54 @@ public class Main extends javax.swing.JFrame {
     private URL fontFile1 = getClass().getResource("/robot-font.otf");
 
     public Main() {
-//        root = Paths.get("").toAbsolutePath().toString();
-//        if (Memory.checkWMIC()) {
-        root = root.substring(0, 3);
-        initComponents();
-        Memory.readIPAddress();
-        TreeView.renderTreeCells();
+        root = Paths.get("").toAbsolutePath().toString();
+        if (Memory.checkWMIC()) {
+            root = root.substring(0, 3);
+            initComponents();
+            Memory.readIPAddress();
+            TreeView.renderTreeCells();
 
-        Path runtime = Paths.get(root + masterFolder + "runtime");
-        Path app = Paths.get(root + masterFolder + "app");
-        if (runtime.toFile().exists()) {
-            try {
-                Files.setAttribute(runtime, "dos:hidden", true);
-            } catch (IOException ex) {
+            Path runtime = Paths.get(root + masterFolder + "runtime");
+            Path app = Paths.get(root + masterFolder + "app");
+            if (runtime.toFile().exists()) {
+                try {
+                    Files.setAttribute(runtime, "dos:hidden", true);
+                } catch (IOException ex) {
+                }
             }
-        }
-        if (app.toFile().exists()) {
-            try {
-                Files.setAttribute(app, "dos:hidden", true);
-            } catch (IOException ex) {
+            if (app.toFile().exists()) {
+                try {
+                    Files.setAttribute(app, "dos:hidden", true);
+                } catch (IOException ex) {
+                }
             }
+
+            jStorePanel.setVisible(true);
+            jSendPanel.setVisible(false);
+            jReceivePanel.setVisible(false);
+            jRadioButton2.setVisible(false);
+            jRadioButton3.setVisible(false);
+            jScrollPane5.setVisible(false);
+            jMenuBar1.setVisible(false);
+
+            if (!keyFile.exists()) {
+                jToolPanel.setVisible(false);
+                loginLabelVisibleBool(false);
+                this.setSize(540, 240);
+                this.setLocationRelativeTo(null);
+            } else {
+                loginLabelVisibleBool(true);
+                jUsernameLabel.setText("enter username");
+                jPasswordLabel.setText("enter password");
+                generateApp();
+
+                jToolPanel.setVisible(false);
+                jButton2.setVisible(false);
+            }
+            jProgressBar2.setVisible(false);
+            dragDrop.setVisible(false);
+            jSendSQL.setVisible(false);
         }
-
-        jStorePanel.setVisible(true);
-        jSendPanel.setVisible(false);
-        jReceivePanel.setVisible(false);
-        jRadioButton2.setVisible(false);
-        jRadioButton3.setVisible(false);
-        jScrollPane5.setVisible(false);
-        jMenuBar1.setVisible(false);
-
-        if (!keyFile.exists()) {
-            jToolPanel.setVisible(false);
-            loginLabelVisibleBool(false);
-            this.setSize(540, 240);
-            this.setLocationRelativeTo(null);
-        } else {
-            loginLabelVisibleBool(true);
-            jUsernameLabel.setText("enter username");
-            jPasswordLabel.setText("enter password");
-            generateApp();
-
-            jToolPanel.setVisible(false);
-            jButton2.setVisible(false);
-        }
-        jProgressBar2.setVisible(false);
-        dragDrop.setVisible(false);
-        jSendSQL.setVisible(false);
-//        }
     }
 
     private void getKeyBinding(int keyCode, JPanel jPanel, AbstractAction action) {
@@ -330,6 +330,8 @@ public class Main extends javax.swing.JFrame {
     }
 
     private void startServer() {
+        jClientIPInput.setText(Server.getIP());
+        System.out.println("new client IP: " + jClientIPInput.getText());
         File serverExeFile = new File(root + masterFolder + ".server.exe");
         if (serverExeFile.exists()) {
             try {
@@ -1728,27 +1730,31 @@ public class Main extends javax.swing.JFrame {
             new Main().setVisible(true);
             Runtime.getRuntime().addShutdownHook(new Thread() {
                 public synchronized void run() {
-                    System.out.println("shutdown hook initiated.");
                     Folder.appLockBool = false;
                     Folder.appLockFile.delete();
-                    if (!username.equals("") && jToolPanel.isVisible()) {
-                        try {
-                            Client.endSession(username);
-                            Client.clientSocket.close();
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
+                    if (!jClientIPInput.getText().equals("000.000.0.000")) {
+                        if (!username.equals("") && jToolPanel.isVisible()) {
+                            System.out.println("closing socket.");
+                            try {
+                                Client.endSession(username);
+                                Client.clientSocket.close();
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
                         }
-                    }
-                    if (Client.getClientIP() && adminBool) {
-                        try {
-                            Client.adminRequests(1);
-                            Server.portKill();
-                            System.out.println("killing server app");
-                            Server.serverKill(".server.exe", true);
-                            Client.clientSocket.close();
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
+                        if (Client.getClientIP() && adminBool) {
+                            System.out.println("closing server.");
+                            try {
+                                Client.adminRequests(1);
+                                Server.portKill();
+                                Server.serverKill(".server.exe", true);
+                                Client.clientSocket.close();
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
                         }
+                    } else {
+                        System.out.println("quitting offline mode.");
                     }
                 }
             });

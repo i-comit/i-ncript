@@ -47,13 +47,14 @@ public class Main extends javax.swing.JFrame {
     private static int second = 0;
     private static String timeString = "";
     public static Executor executor = Executors.newSingleThreadExecutor();
+    public static Executor executor1 = Executors.newFixedThreadPool(2);
 
     public Main() {
         try {
             initComponents();
             uptimeTimer();
             this.setBackground(new Color(0, 0, 0, 0));
-            jTextArea1.setBackground(new Color(0, 0, 0, (float) 0.2));
+            jTextArea1.setBackground(new Color(0, 0, 0, (float) 0.5));
             Server.Sessions sessions = new Server.Sessions();
             Server.initDatabase();
             sessions.clearSessions();

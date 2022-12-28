@@ -149,7 +149,9 @@ public class Statics {
                 jRadioButton2.setVisible(false);
                 jRadioButton2.setSelected(false);
                 new Thread(() -> {
-                    Client.userRequest(username);
+                    if (!jClientIPInput.getText().equals("000.000.0.000")) {
+                        Client.userRequest(username);
+                    }
                 }).start();
                 Folder.listZipFiles();
                 jLabel10.setText("N-BOX MODE");
@@ -393,6 +395,7 @@ public class Statics {
                 username = "";
             }
         } else {
+            jShowServer.setVisible(false);
             if (Client.getClientIP()) {
                 if (Client.startSession(username)) {
                     try {
