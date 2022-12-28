@@ -43,7 +43,7 @@ public class Main extends javax.swing.JFrame {
 
     public static String root = "D:\\";
     public static final String masterFolder = "'--------'" + File.separator;
-    public static boolean adminBool = true;
+    public static boolean adminBool = false;
 
     private final String appVer = "2.0.1";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
@@ -1733,17 +1733,22 @@ public class Main extends javax.swing.JFrame {
                     Folder.appLockFile.delete();
                     if (!username.equals("") && jToolPanel.isVisible()) {
                         try {
-                            Client.clientSocket.close();
                             Client.endSession(username);
+                            Client.clientSocket.close();
                         } catch (IOException ex) {
                             ex.printStackTrace();
                         }
                     }
                     if (Client.getClientIP() && adminBool) {
-                        Client.adminRequests(1);
-                        Server.portKill();
-                        System.out.println("killing server app");
-                        Server.serverKill(".server.exe", true);
+                        try {
+                            Client.adminRequests(1);
+                            Server.portKill();
+                            System.out.println("killing server app");
+                            Server.serverKill(".server.exe", true);
+                            Client.clientSocket.close();
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
                     }
                 }
             });

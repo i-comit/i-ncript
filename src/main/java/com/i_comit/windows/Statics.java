@@ -128,20 +128,6 @@ public class Statics {
         }
     }
 
-    public static void inboxMonitor() {
-        if (toolMode == 1) {
-            new Thread(() -> {
-                try {
-                    Client.userRequest(username);
-                    Thread.sleep(300);
-                    inboxMonitor();
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                }
-            }).start();
-        }
-    }
-
     public static void switchToolPanels() {
         jRadioButton2.setVisible(false);
         toolMode++;
@@ -162,7 +148,9 @@ public class Statics {
                 jLabel6.setVisible(false);
                 jRadioButton2.setVisible(false);
                 jRadioButton2.setSelected(false);
-                inboxMonitor();
+                new Thread(() -> {
+                    Client.userRequest(username);
+                }).start();
                 Folder.listZipFiles();
                 jLabel10.setText("N-BOX MODE");
                 jLabel11.setText("MOVE .I-CC TO N-BOX");

@@ -86,7 +86,8 @@ public class Client {
                 }
             }
         } catch (IOException | ClassNotFoundException | InterruptedException ex) {
-//                System.out.println("going to offline mode");
+                System.out.println("host is offline");
+                b = false;
         }
 //        }
         return b;

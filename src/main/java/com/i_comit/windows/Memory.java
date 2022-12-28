@@ -257,6 +257,7 @@ public class Memory {
                                     Server.portKill();
                                     Server.serverKill(".server.exe", true);
                                 }
+                                Client.clientSocket.close();
                                 System.exit(0);
                             }
                         }

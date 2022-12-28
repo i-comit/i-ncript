@@ -50,7 +50,7 @@ public class Folder {
     public static File appLockFile = new File(Main.root + Main.masterFolder + "app" + File.separator + ".app.🔒");
     public static boolean appLockBool = true;
 
-    public static Executor executor = Executors.newSingleThreadExecutor();
+    public static Executor executor = Executors.newSingleThreadScheduledExecutor();
 
     public static void appLock() {
         if (appLockBool) {
