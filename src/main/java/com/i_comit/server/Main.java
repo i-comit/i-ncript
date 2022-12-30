@@ -229,13 +229,11 @@ public class Main extends javax.swing.JFrame {
         try {
             //</editor-fold>
             UIManager.setLookAndFeel("com.formdev.flatlaf.FlatDarkLaf");
-            UIManager.put("ProgressBar.selectionForeground", Color.black);
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
             ex.printStackTrace();
         }
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            Server.portKill();
             new Main().setVisible(true);
         });
     }

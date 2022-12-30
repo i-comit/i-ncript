@@ -30,7 +30,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.i_comit.windows.Main</mainClass>
+                            <mainClass>com.i_comit.server.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

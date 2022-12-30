@@ -42,17 +42,17 @@ public class Server {
 
     public static ServerSocket serverSocket;
     public static Socket clientSocket;
-//    public static String dbPath = Paths.get("").toFile().getAbsolutePath().substring(0, 3)
-//            + "'--------'"
-//            + File.separator
-//            + "runtime"
-//            + File.separator
-//            + "bin"
-//            + File.separator
-//            + "server"
-//            + File.separator
-//            + ".💽🗄️.db";
-    private static String dbPath = root + masterFolder + "runtime" + File.separator + "bin" + File.separator + "server" + File.separator + ".💽🗄️.db";
+    public static String dbPath = Paths.get("").toFile().getAbsolutePath().substring(0, 3)
+            + "'--------'"
+            + File.separator
+            + "runtime"
+            + File.separator
+            + "bin"
+            + File.separator
+            + "server"
+            + File.separator
+            + ".💽🗄️.db";
+//    private static String dbPath = root + masterFolder + "runtime" + File.separator + "bin" + File.separator + "server" + File.separator + ".💽🗄️.db";
 
     private static String url = "jdbc:hsqldb:file:" + dbPath + ";hsqldb.lock_file=false;shutdown=true";
     private static boolean serverBool = true;

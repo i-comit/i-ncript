@@ -56,6 +56,7 @@ public class Main extends javax.swing.JFrame {
     public Main() {
 //        root = Paths.get("").toAbsolutePath().toString();
 //        if (Memory.checkWMIC()) {
+        System.out.println(Memory.getUsableSpaceLong());
         root = root.substring(0, 3);
         initComponents();
         Memory.readIPAddress();
@@ -369,8 +370,11 @@ public class Main extends javax.swing.JFrame {
         Memory.getUSBName(this);
         setKeybinding();
         GUI.getGB();
-        System.out.println(Memory.getUsableSpaceLong());
-
+        if (Memory.getUsableSpaceLong() <= 1024000000) {
+            jLabel3.setForeground(new Color(191, 83, 73));
+        } else {
+            jLabel3.setForeground(new Color(187, 187, 187));
+        }
         jAlertLabel.setHorizontalAlignment(LEFT);
         jEULAPanel1.setVisible(false);
         jEULAPanel.setVisible(false);
@@ -1550,10 +1554,16 @@ public class Main extends javax.swing.JFrame {
 
     private void jLabel3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseEntered
         jLabel3.setText("VER " + appVer);
+        jLabel3.setForeground(new Color(187, 187, 187));
     }//GEN-LAST:event_jLabel3MouseEntered
 
     private void jLabel3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseExited
         jLabel3.setText(root.substring(0, 2) + " " + GB);
+        if (Memory.getUsableSpaceLong() <= 1024000000) {
+            jLabel3.setForeground(new Color(191, 83, 73));
+        } else {
+            jLabel3.setForeground(new Color(187, 187, 187));
+        }
     }//GEN-LAST:event_jLabel3MouseExited
 
     private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
