@@ -43,8 +43,9 @@ public class Folder {
         Statics.resetSendTools(2);
         Main.dragDrop.setVisible(true);
         Statics.resetStaticInts();
-        GUI.getGB();
         Main.refreshTreeView(Statics.sendFolder, TreeView.sendCaretPos);
+        GUI.getGB();
+        Memory.getDataSizePercentage();
     }
 
     public static File appLockFile = new File(Main.root + Main.masterFolder + "app" + File.separator + ".app.🔒");
@@ -127,6 +128,7 @@ public class Folder {
             Main.jList1.setSelectedIndex(0);
             Main.refreshTreeView(Statics.receiveFolder, TreeView.receiveCaretPos);
             GUI.getGB();
+            Memory.getDataSizePercentage();
         }
     }
 

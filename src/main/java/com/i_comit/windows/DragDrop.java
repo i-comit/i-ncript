@@ -5,6 +5,7 @@
 package com.i_comit.windows;
 
 import com.i_comit.shared.Audio;
+import com.i_comit.shared.Miscs;
 import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.jProgressBar1;
 import static com.i_comit.windows.Main.jTree1;
@@ -21,8 +22,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.tree.TreePath;
@@ -225,8 +224,8 @@ class DragDrop_T implements Runnable {
             Audio.audioPlayerThread("ding-sfx.wav");
             GUI.labelCutterThread(jAlertLabel, decFiles + " encrypted | " + encFiles + " decrypted", 15, 30, 600, false);
             Main.jTextArea1.append("--------------------------------------------\n");
-            Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
-            Main.jTextArea1.append(decFiles + " encrypted | " + encFiles + " decrypted | " + ZonedDateTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
+            Main.jTextArea1.append(decFiles + " encrypted | " + encFiles + " decrypted | " + Miscs.getCurrentTime() + "\n\n");
+            Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length() - 1);
 
             Thread.sleep(250);
 

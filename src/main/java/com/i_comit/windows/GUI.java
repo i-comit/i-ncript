@@ -5,6 +5,7 @@
 package com.i_comit.windows;
 
 import com.i_comit.shared.Audio;
+import com.i_comit.shared.Miscs;
 import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.root;
 import static com.i_comit.windows.Statics.AESMode;
@@ -13,12 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.attribute.FileTime;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -68,7 +63,7 @@ public class GUI {
         int result;
         try ( Stream<Path> walk = Files.walk(path)) {
             result = Math.toIntExact(walk.filter(Files::isRegularFile)
-                    .filter(p -> p.toFile().length() < (1024 * 200000))
+                    .filter(p -> p.toFile().length() < ((Memory.getUsableSpaceLong() / 2) - 1024))
                     .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
                     .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
                     .count());
@@ -83,7 +78,7 @@ public class GUI {
             switch (Statics.AESMode) {
                 case 0:
                     result2 = Math.toIntExact(walk.filter(Files::isRegularFile)
-                            .filter(p -> p.toFile().length() < (1024 * 200000))
+                            .filter(p -> p.toFile().length() < ((Memory.getUsableSpaceLong() / 2) - 1024))
                             .filter(p -> !p.getFileName().toString().endsWith(".enc"))
                             .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
                             .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
@@ -92,7 +87,7 @@ public class GUI {
                     break;
                 case 1:
                     result2 = Math.toIntExact(walk.filter(Files::isRegularFile)
-                            .filter(p -> p.toFile().length() < (1024 * 200000))
+                            .filter(p -> p.toFile().length() < ((Memory.getUsableSpaceLong() / 2) - 1024))
                             .filter(p -> p.getFileName().toString().endsWith(".enc"))
                             .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
                             .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
@@ -133,7 +128,7 @@ public class GUI {
         List<Path> result;
         try ( Stream<Path> walk = Files.walk(path)) {
             result = walk.filter(Files::isRegularFile)
-                    .filter(p -> p.toFile().length() < (1024 * 200000))
+                    .filter(p -> p.toFile().length() < ((Memory.getUsableSpaceLong() / 2) - 1024))
                     .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
                     .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
                     .collect(Collectors.toList());
@@ -147,7 +142,7 @@ public class GUI {
             switch (AESMode) {
                 case 0:
                     result = walk.filter(Files::isRegularFile)
-                            .filter(p -> p.toFile().length() < (1024 * 200000))
+                            .filter(p -> p.toFile().length() < ((Memory.getUsableSpaceLong() / 2) - 1024))
                             .filter(p -> !p.getFileName().toString().endsWith(".enc"))
                             .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
                             .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
@@ -155,7 +150,7 @@ public class GUI {
                     break;
                 case 1:
                     result = walk.filter(Files::isRegularFile)
-                            .filter(p -> p.toFile().length() < (1024 * 200000))
+                            .filter(p -> p.toFile().length() < ((Memory.getUsableSpaceLong() / 2) - 1024))
                             .filter(p -> p.getFileName().toString().endsWith(".enc"))
                             .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
                             .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
@@ -182,6 +177,7 @@ public class GUI {
         }
         Main.refreshTreeView(Statics.receiveFolder, TreeView.receiveCaretPos);
         GUI.getGB();
+        Memory.getDataSizePercentage();
         Main.jList1.setSelectedIndex(0);
     }
 
@@ -195,19 +191,20 @@ public class GUI {
                 Thread.sleep(50);
                 Audio.audioPlayerThread("ding-sfx.wav");
                 Main.jTextArea1.append("--------------------------------------------\n");
-                Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
                 switch (Statics.AESMode) {
                     case 0 -> {
                         GUI.t.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "encrypted " + Statics.fileIter + " files", 10, 20, 400, false);
-                        Main.jTextArea1.append("encrypted " + Statics.fileIter + " file(s) at " + ZonedDateTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
+                        Main.jTextArea1.append("encrypted " + Statics.fileIter + " file(s) at " + Miscs.getCurrentTime() + "\n\n");
                     }
                     case 1 -> {
                         GUI.t.interrupt();
                         GUI.labelCutterThread(jAlertLabel, "decrypted " + Statics.fileIter + " files", 10, 20, 400, false);
-                        Main.jTextArea1.append("decrypted " + Statics.fileIter + " file(s) at " + ZonedDateTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
+                        Main.jTextArea1.append("decrypted " + Statics.fileIter + " file(s) at " + Miscs.getCurrentTime() + "\n\n");
                     }
                 }
+                Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length() - 1);
+
                 Thread.sleep(150);
                 if (Statics.fileIter <= 100) {
                     for (int x = progressBar.getMaximum(); x >= 0; x--) {
@@ -253,18 +250,19 @@ public class GUI {
                 Thread.sleep(50);
                 Audio.audioPlayerThread("ding-sfx.wav");
                 Main.jTextArea1.append("--------------------------------------------\n");
-                Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
                 String fileName = new File(Folder.sendFolderStr).getName();
                 if (Statics.toolMode == 2) {
                     GUI.t.interrupt();
                     GUI.labelCutterThread(jAlertLabel, "packaged " + fileName + ".i-cc", 10, 15, 300, false);
-                    Main.jTextArea1.append("packaged " + fileName + ".i-cc at " + ZonedDateTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
+                    Main.jTextArea1.append("packaged " + fileName + ".i-cc at " + Miscs.getCurrentTime() + "\n\n");
                 }
                 if (Statics.toolMode == 1) {
                     GUI.t.interrupt();
                     GUI.labelCutterThread(jAlertLabel, "unpacked " + fileName + ".i-cc", 10, 15, 300, false);
-                    Main.jTextArea1.append("unpacked " + fileName + ".i-cc at " + ZonedDateTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
+                    Main.jTextArea1.append("unpacked " + fileName + ".i-cc at " + Miscs.getCurrentTime() + "\n\n");
                 }
+                Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length() - 1);
+
                 progressBar = Main.jProgressBar1;
                 Thread.sleep(200);
                 if (Statics.fileIter <= 100) {
@@ -297,15 +295,6 @@ public class GUI {
                 ex.printStackTrace();
             }
         }
-    }
-
-    public static String formatDateTime(FileTime fileTime) {
-        LocalDateTime localDateTime = fileTime
-                .toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime();
-
-        return localDateTime.format(DateTimeFormatter.ofPattern("MM/dd/yy HH:mm"));
     }
 }
 
@@ -360,9 +349,9 @@ class labelCutter_T implements Runnable {
                 Thread.sleep(sleep);
             }
             if (cfgFile.exists()) {
-                main.setSize(120, 218);
+                main.setSize(120, 217);
             } else {
-                main.setSize(120, 198);
+                main.setSize(120, 197);
             }
         } catch (InterruptedException ex) {
         }

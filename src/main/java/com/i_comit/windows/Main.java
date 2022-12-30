@@ -298,6 +298,8 @@ public class Main extends javax.swing.JFrame {
             caretPos = jScrollPane5.getVerticalScrollBar().getValue();
             TreeView.expandTreeNode(path);
             TreeView.renderTreeCells();
+            GUI.getGB();
+            Memory.getDataSizePercentage();
         }
     }
 
@@ -367,6 +369,8 @@ public class Main extends javax.swing.JFrame {
         Memory.getUSBName(this);
         setKeybinding();
         GUI.getGB();
+        System.out.println(Memory.getUsableSpaceLong());
+
         jAlertLabel.setHorizontalAlignment(LEFT);
         jEULAPanel1.setVisible(false);
         jEULAPanel.setVisible(false);
@@ -391,7 +395,7 @@ public class Main extends javax.swing.JFrame {
         } else {
             Random rand = new Random();
             int rand_int1 = rand.nextInt(5);
-            if (!Miscs.holidayCheck()) {
+            if (!Miscs.holidayCheck(this)) {
                 switch (rand_int1) {
                     case 0 ->
                         GUI.labelCutterLoginThread(jAlertLabel, "a data encryption app.", 80, 80, 1200, this);
@@ -909,16 +913,16 @@ public class Main extends javax.swing.JFrame {
         getContentPane().add(jLabel3);
         jLabel3.setBounds(125, 4, 135, 30);
 
-        jCreationDateLabel.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        jCreationDateLabel.setFont(Statics.registerCustomFont(12, fontFile));
         jCreationDateLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         getContentPane().add(jCreationDateLabel);
-        jCreationDateLabel.setBounds(22, 172, 130, 27);
+        jCreationDateLabel.setBounds(22, 173, 130, 27);
 
-        jFileSizeLabel.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        jFileSizeLabel.setFont(Statics.registerCustomFont(12, fontFile));
         jFileSizeLabel.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jFileSizeLabel.setFocusable(false);
         getContentPane().add(jFileSizeLabel);
-        jFileSizeLabel.setBounds(146, 172, 100, 27);
+        jFileSizeLabel.setBounds(146, 173, 100, 27);
 
         jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
         jTabbedPane1.setFocusable(false);

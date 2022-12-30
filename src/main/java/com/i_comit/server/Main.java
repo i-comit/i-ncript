@@ -50,8 +50,11 @@ public class Main extends javax.swing.JFrame {
             initComponents();
             uptimeTimer();
             this.setBackground(new Color(0, 0, 0, 0));
-            jTextArea1.setBackground(new Color(0, 0, 0, (float) 0.5));
-
+            jTextArea1.setBackground(new Color(0, 0, 0, (float) 0.6));
+            Server.Sessions sessions = new Server.Sessions();
+            Server.initDatabase();
+            sessions.clearSessions();
+            
             if (Server.serverSocket == null) {
                 Server.socketStart(this);
             } else {
@@ -60,9 +63,6 @@ public class Main extends javax.swing.JFrame {
                 Server.serverSocket.close();
                 Server.socketStart(this);
             }
-            Server.Sessions sessions = new Server.Sessions();
-            Server.initDatabase();
-            sessions.clearSessions();
 
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();

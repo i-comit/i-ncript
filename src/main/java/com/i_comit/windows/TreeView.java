@@ -22,6 +22,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -340,6 +344,15 @@ public class TreeView {
         }
     }
 
+    private static String formatDateTime(FileTime fileTime) {
+        LocalDateTime localDateTime = fileTime
+                .toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+
+        return localDateTime.format(DateTimeFormatter.ofPattern("MM/dd/yy HH:mm"));
+    }
+
     public static void getFileCreationNSize() throws IOException {
         if (Main.jTree1.getSelectionPaths() != null) {
             Main.jAlertLabel.setText("");
@@ -348,8 +361,9 @@ public class TreeView {
                 Path file = fileFormat.toPath();
 
                 if (!fileFormat.isDirectory()) {
-                    BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
-                    GUI.labelCutterTreeThread(Main.jCreationDateLabel, GUI.formatDateTime(attr.lastModifiedTime()), 0, 16, 64, true);
+                    BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class
+                    );
+                    GUI.labelCutterTreeThread(Main.jCreationDateLabel, formatDateTime(attr.lastModifiedTime()), 0, 16, 64, true);
                     GUI.labelCutterTreeThread(Main.jFileSizeLabel, Memory.byteFormatter(fileFormat.length()), 0, 16, 64, true);
                 } else {
                     List<Long> fileSizes = new ArrayList<>();
@@ -359,8 +373,11 @@ public class TreeView {
                         long fileSize = xf.length();
                         fileSizes.add(fileSize);
                     });
-                    GUI.labelCutterTreeThread(Main.jCreationDateLabel, fileSizes.size() + " files", 0, 16, 64, true);
-
+                    if (fileSizes.size() == 1) {
+                        GUI.labelCutterTreeThread(Main.jCreationDateLabel, fileSizes.size() + " FILE", 0, 16, 64, true);
+                    } else {
+                        GUI.labelCutterTreeThread(Main.jCreationDateLabel, fileSizes.size() + " FILES", 0, 16, 64, true);
+                    }
                     long sum = fileSizes.stream().mapToLong(Long::longValue).sum();
                     GUI.labelCutterTreeThread(Main.jFileSizeLabel, Memory.byteFormatter(sum), 0, 16, 64, true);
                 }
@@ -371,8 +388,9 @@ public class TreeView {
 
                     if (i == Main.jTree1.getSelectionPaths().length) {
                         Path file = fileFormat.toPath();
-                        BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
-                        Main.jCreationDateLabel.setText(GUI.formatDateTime(attr.lastModifiedTime()));
+                        BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class
+                        );
+                        Main.jCreationDateLabel.setText(formatDateTime(attr.lastModifiedTime()));
                     }
 
                     if (!fileFormat.isDirectory()) {

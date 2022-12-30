@@ -308,6 +308,7 @@ class AES_T implements Runnable {
             } else {
                 DragDrop_T.resetProgressBar(encFiles, decFiles);
                 GUI.getGB();
+                Memory.getDataSizePercentage();
             }
         }
     }

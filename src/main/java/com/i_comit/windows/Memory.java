@@ -63,6 +63,17 @@ public class Memory {
         return percentageStr;
     }
 
+    public static long getUsableSpaceLong() {
+        File diskPartition = new File(root).toPath().getRoot().toFile();
+        long remainingSpace = 0;
+        if (remainingSpace % 2 == 0) {
+            remainingSpace = diskPartition.getUsableSpace();/*pass 0 to print even number */
+        } else {
+            remainingSpace = diskPartition.getUsableSpace() + 1;/*pass 1 to print odd number*/
+        }
+        return remainingSpace;
+    }
+
     public static void readIPAddress() {
         try {
             File miscsFile = new File(root + Main.masterFolder + "app\\.miscs.txt");

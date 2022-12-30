@@ -318,25 +318,25 @@ public class Main extends javax.swing.JFrame {
         } else {
             Random rand = new Random();
             int rand_int1 = rand.nextInt(5);
-            if (!Miscs.holidayCheck()) {
-                switch (rand_int1) {
-                    case 0:
-                        GUI.labelCutterThread(jAlertLabel, "a data encryption app.", 80, 80, 100, true);
-                        break;
-                    case 1:
-                        GUI.labelCutterThread(jAlertLabel, "developed by i-comit LLC.", 80, 80, 100, true);
-                        break;
-                    case 2:
-                        GUI.labelCutterThread(jAlertLabel, "USB drive, reimagined.", 60, 80, 100, true);
-                        break;
-                    case 3:
-                        GUI.labelCutterThread(jAlertLabel, "also available on windows.", 60, 80, 100, true);
-                        break;
-                    case 4:
-                        GUI.labelCutterThread(jAlertLabel, "also available on linux.", 60, 80, 100, true);
-                        break;
-                }
+//            if (!Miscs.holidayCheck(this)) {
+            switch (rand_int1) {
+                case 0:
+                    GUI.labelCutterThread(jAlertLabel, "a data encryption app.", 80, 80, 100, true);
+                    break;
+                case 1:
+                    GUI.labelCutterThread(jAlertLabel, "developed by i-comit LLC.", 80, 80, 100, true);
+                    break;
+                case 2:
+                    GUI.labelCutterThread(jAlertLabel, "USB drive, reimagined.", 60, 80, 100, true);
+                    break;
+                case 3:
+                    GUI.labelCutterThread(jAlertLabel, "also available on windows.", 60, 80, 100, true);
+                    break;
+                case 4:
+                    GUI.labelCutterThread(jAlertLabel, "also available on linux.", 60, 80, 100, true);
+                    break;
             }
+//            }
             FileHider.cleanUp(path);
             FileHider.cleanUp(sendFolder);
             FileHider.cleanUp(receiveFolder);

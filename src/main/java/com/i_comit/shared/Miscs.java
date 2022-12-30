@@ -18,7 +18,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.attribute.FileTime;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.swing.JLabel;
@@ -29,23 +31,23 @@ import javax.swing.JLabel;
  */
 public class Miscs {
 
-    public static boolean holidayCheck() {
+    public static boolean holidayCheck(Main main) {
         String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd"));
         switch (today) {
             case "01/01":
-                GUI.labelCutterThread(jAlertLabel, "happy new year " + Main.year + "!", 80, 80, 100, true);
+                GUI.labelCutterLoginThread(jAlertLabel, "happy new year " + Main.year + "!", 80, 80, 1600, main);
                 return true;
             case "11/24":
-                GUI.labelCutterThread(jAlertLabel, "happy thanksgiving " + Main.year + "!", 80, 80, 100, true);
+                GUI.labelCutterLoginThread(jAlertLabel, "happy thanksgiving " + Main.year + "!", 80, 80, 1600, main);
                 return true;
             case "12/25":
-                GUI.labelCutterThread(jAlertLabel, "happy holidays " + Main.year + "!", 80, 80, 100, true);
+                GUI.labelCutterLoginThread(jAlertLabel, "happy holidays " + Main.year + "!", 80, 80, 1600, main);
                 return true;
             case "12/28":
-                GUI.labelCutterThread(jAlertLabel, "happy birthday linus torvalds!", 80, 80, 100, true);
+                GUI.labelCutterLoginThread(jAlertLabel, "happy birthday linus torvalds!", 80, 80, 1600, main);
                 return true;
             case "11/08":
-                GUI.labelCutterThread(jAlertLabel, "i-comit's " + (Main.year - 2021) + " year anniversary!", 80, 80, 100, true);
+                GUI.labelCutterLoginThread(jAlertLabel, "i-comit's " + (Main.year - 2021) + " year anniversary!", 80, 80, 1600, main);
                 return true;
         }
         return false;
@@ -150,5 +152,18 @@ public class Miscs {
             result = result + ch;
         }
         return result;
+    }
+
+    public static String getCurrentTime() {
+        Instant instant = Instant.now();
+        System.out.println(instant);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm a")
+                .withZone(ZoneId.systemDefault());
+
+        String formattedInstant = formatter.format(instant);
+
+        return formattedInstant;
+
     }
 }

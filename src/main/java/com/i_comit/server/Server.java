@@ -54,7 +54,7 @@ public class Server {
 //            + ".💽🗄️.db";
     private static String dbPath = root + masterFolder + "runtime" + File.separator + "bin" + File.separator + "server" + File.separator + ".💽🗄️.db";
 
-    private static String url = "jdbc:hsqldb:file:" + dbPath + ";hsqldb.lock_file=false";
+    private static String url = "jdbc:hsqldb:file:" + dbPath + ";hsqldb.lock_file=false;shutdown=true";
     private static boolean serverBool = true;
 
     public static synchronized void socketStart(Main main) {
@@ -88,7 +88,7 @@ public class Server {
                             String fileName = new String(message[2], StandardCharsets.UTF_8);
                             if (findRecord(userName, fileName)) {
                                 byte[][] b = getFileBlob(userName, fileName);
-                                Main.jTextArea1.append("delivered: " + fileName + "\n");
+                                Main.jTextArea1.append("delivered: " + fileName + " -> " + userName + "\n");
                                 Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
 
                                 oos.writeObject(b);
@@ -107,7 +107,7 @@ public class Server {
                                 String fileName = new String(message[2], StandardCharsets.UTF_8);
                                 String fileDate = new String(message[3], StandardCharsets.UTF_8);
                                 insertClientRecord(userName, fileName, fileDate, message[4]);
-                                Main.jTextArea1.append("received: " + fileName + "\n");
+                                Main.jTextArea1.append("received: " + userName + " -> " + fileName + "\n");
                                 Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
 
                                 ois.close();
@@ -118,7 +118,6 @@ public class Server {
                         }
                         if (Arrays.equals(message[0], "GET_TABL".getBytes())) {
                             String userName = new String(message[1], StandardCharsets.UTF_8);
-                            System.out.println("get_tbl username " + userName);
                             boolean b = table.listUsers(userName);
                             oos.writeObject(b);
                             ois.close();
@@ -134,7 +133,7 @@ public class Server {
                                 oos.close();
                                 clientSocket.close();
                             } catch (SocketException ex) {
-//                                System.out.println("issue with PST_TABL");
+                                System.out.println("issue with PST_TABL");
                             }
                         }
                         if (Arrays.equals(message[0], "STR_SESN".getBytes())) {

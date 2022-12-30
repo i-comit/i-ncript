@@ -135,7 +135,7 @@ public class Statics {
         jPasswordField2.setText("");
         jPasswordField3.setText("");
         GUI.getGB();
-
+        Memory.getDataSizePercentage();
         switch (toolMode) {
             case 1 -> {
                 jSwitchMode.setText("N-BOX");
@@ -362,8 +362,17 @@ public class Statics {
         }
     }
 
-    private static void initAppGUI(Main main) {
-        main.setSize(779, 240);
+    private static synchronized void initAppGUI(Main main) {
+        for (int i = 120; i <= 779; i++) {
+            int i2 = i * 4;
+            main.setSize(i2, 240);
+            main.setLocationRelativeTo(null);
+            if (i2 >= 779) {
+                main.setSize(779, 240);
+                break;
+            }
+        }
+
         jLabel1.setLocation(265, 10);
         jLabel3.setLocation(367, 4);
         jAlertLabel.setLocation(265, 174);
@@ -371,7 +380,6 @@ public class Statics {
         Main.jToolPanel.setVisible(true);
         Main.jProgressBar2.setVisible(true);
         jScrollPane5.setVisible(true);
-        main.setLocationRelativeTo(null);
         GUI.t.interrupt();
         GUI.labelCutterThread(jAlertLabel, "welcome to i-ncript, " + username + ".", 20, 40, 1200, false);
     }
