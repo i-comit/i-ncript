@@ -503,7 +503,7 @@ public class Server {
     static class Records {
 
         public void listRecords(String username) throws UnsupportedEncodingException {
-            String sql = "SELECT * FROM 'FILES-DB'";
+            String sql = "SELECT * FROM \"FILES-DB\"";
             String s = "";
             try ( Connection conn = DriverManager.getConnection(url);  Statement stmt = conn.createStatement()) {
                 ResultSet rs = stmt.executeQuery(sql);
@@ -518,7 +518,7 @@ public class Server {
                     System.out.println("no files found.");
                 }
             } catch (SQLException ex) {
-//            ex.printStackTrace();
+                ex.printStackTrace();
             }
         }
 
@@ -563,10 +563,11 @@ public class Server {
 
         public void closeSocket() {
             try {
-                serverBool = false;
-                serverSocket.close();
                 portKill();
                 serverKill(".server.exe", true);
+                System.out.println("server socket closed.");
+                serverBool = false;
+                serverSocket.close();
                 System.exit(0);
             } catch (IOException ex) {
                 ex.printStackTrace();
