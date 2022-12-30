@@ -86,8 +86,8 @@ public class Client {
                 }
             }
         } catch (IOException | ClassNotFoundException | InterruptedException ex) {
-                System.out.println("host is offline");
-                b = false;
+            System.out.println("host is offline");
+            b = false;
         }
 //        }
         return b;
@@ -143,6 +143,11 @@ public class Client {
         oos.writeObject(getTableRequest_B);
         ois = new ObjectInputStream(clientSocket.getInputStream());
         boolean message = (boolean) ois.readObject();
+        if (message) {
+            System.out.println("recipient account found");
+        } else {
+            System.out.println("recipient account not found");
+        }
         return message;
     }
 

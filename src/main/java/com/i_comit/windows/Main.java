@@ -43,7 +43,7 @@ public class Main extends javax.swing.JFrame {
 
     public static String root = "D:\\";
     public static final String masterFolder = "'--------'" + File.separator;
-    public static boolean adminBool = true;
+    public static boolean adminBool = false;
 
     private final String appVer = "2.0.1";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
@@ -53,8 +53,8 @@ public class Main extends javax.swing.JFrame {
     private URL fontFile1 = getClass().getResource("/robot-font.otf");
 
     public Main() {
-        root = Paths.get("").toAbsolutePath().toString();
-        if (Memory.checkWMIC()) {
+//        root = Paths.get("").toAbsolutePath().toString();
+//        if (Memory.checkWMIC()) {
             root = root.substring(0, 3);
             initComponents();
             Memory.readIPAddress();
@@ -100,7 +100,7 @@ public class Main extends javax.swing.JFrame {
             jProgressBar2.setVisible(false);
             dragDrop.setVisible(false);
             jSendSQL.setVisible(false);
-        }
+//        }
     }
 
     private void getKeyBinding(int keyCode, JPanel jPanel, AbstractAction action) {

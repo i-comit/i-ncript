@@ -418,7 +418,6 @@ public class TreeView {
             if (filePath.toFile().isDirectory()) {
                 System.out.println("treePaths has folders.");
                 return false;
-
             }
         }
         System.out.println("treePaths has no folders.");

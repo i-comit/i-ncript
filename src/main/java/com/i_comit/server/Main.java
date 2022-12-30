@@ -46,8 +46,7 @@ public class Main extends javax.swing.JFrame {
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
     private static int second = 0;
     private static String timeString = "";
-    public static Executor executor = Executors.newSingleThreadExecutor();
-    public static Executor executor1 = Executors.newFixedThreadPool(2);
+    public static Executor executor = Executors.newSingleThreadScheduledExecutor();
 
     public Main() {
         try {
@@ -55,9 +54,6 @@ public class Main extends javax.swing.JFrame {
             uptimeTimer();
             this.setBackground(new Color(0, 0, 0, 0));
             jTextArea1.setBackground(new Color(0, 0, 0, (float) 0.5));
-            Server.Sessions sessions = new Server.Sessions();
-            Server.initDatabase();
-            sessions.clearSessions();
 
             if (Server.serverSocket == null) {
                 Server.socketStart(this);
@@ -67,6 +63,9 @@ public class Main extends javax.swing.JFrame {
                 Server.serverSocket.close();
                 Server.socketStart(this);
             }
+            Server.Sessions sessions = new Server.Sessions();
+            Server.initDatabase();
+            sessions.clearSessions();
 
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();

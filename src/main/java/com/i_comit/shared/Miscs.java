@@ -138,7 +138,6 @@ public class Miscs {
             sb.append(hexString);
         }
         String result = sb.toString();
-        System.out.println(result);
         return result;
     }
 
@@ -150,7 +149,6 @@ public class Miscs {
             char ch = (char) Integer.parseInt(st, 16);
             result = result + ch;
         }
-        System.out.println(result);
         return result;
     }
 }
