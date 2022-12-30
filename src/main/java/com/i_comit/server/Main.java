@@ -16,17 +16,14 @@
  */
 package com.i_comit.server;
 
-import static com.i_comit.windows.Folder.executor;
 import com.i_comit.windows.Statics;
 import java.awt.Color;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executor;

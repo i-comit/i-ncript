@@ -223,6 +223,7 @@ public class Folder {
         }
         FileInputStream fis;
         //buffer for read and write data to file
+        byte[] buffer = new byte[1024];
         try {
             fis = new FileInputStream(zipFilePath);
             ZipInputStream zis = new ZipInputStream(fis);
@@ -230,9 +231,9 @@ public class Folder {
             while (ze != null) {
                 String fileName = ze.getName();
                 File newFile = new File(destDir + File.separator + fileName);
+                System.out.println("Unzipping to " + newFile.getAbsolutePath());
                 new File(newFile.getParent()).mkdirs();
                 FileOutputStream fos = new FileOutputStream(newFile);
-                byte[] buffer = new byte[1024];
                 int len;
                 while ((len = zis.read(buffer)) > 0) {
                     fos.write(buffer, 0, len);

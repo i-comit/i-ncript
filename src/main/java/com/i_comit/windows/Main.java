@@ -26,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import javax.swing.AbstractAction;
@@ -45,7 +46,7 @@ public class Main extends javax.swing.JFrame {
     public static final String masterFolder = "'--------'" + File.separator;
     public static boolean adminBool = false;
 
-    private final String appVer = "2.0.1";
+    private final String appVer = "2.0.2";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
     public static final int year = Year.now().getValue();
 
@@ -55,51 +56,51 @@ public class Main extends javax.swing.JFrame {
     public Main() {
 //        root = Paths.get("").toAbsolutePath().toString();
 //        if (Memory.checkWMIC()) {
-            root = root.substring(0, 3);
-            initComponents();
-            Memory.readIPAddress();
-            TreeView.renderTreeCells();
+        root = root.substring(0, 3);
+        initComponents();
+        Memory.readIPAddress();
+        TreeView.renderTreeCells();
 
-            Path runtime = Paths.get(root + masterFolder + "runtime");
-            Path app = Paths.get(root + masterFolder + "app");
-            if (runtime.toFile().exists()) {
-                try {
-                    Files.setAttribute(runtime, "dos:hidden", true);
-                } catch (IOException ex) {
-                }
+        Path runtime = Paths.get(root + masterFolder + "runtime");
+        Path app = Paths.get(root + masterFolder + "app");
+        if (runtime.toFile().exists()) {
+            try {
+                Files.setAttribute(runtime, "dos:hidden", true);
+            } catch (IOException ex) {
             }
-            if (app.toFile().exists()) {
-                try {
-                    Files.setAttribute(app, "dos:hidden", true);
-                } catch (IOException ex) {
-                }
+        }
+        if (app.toFile().exists()) {
+            try {
+                Files.setAttribute(app, "dos:hidden", true);
+            } catch (IOException ex) {
             }
+        }
 
-            jStorePanel.setVisible(true);
-            jSendPanel.setVisible(false);
-            jReceivePanel.setVisible(false);
-            jRadioButton2.setVisible(false);
-            jRadioButton3.setVisible(false);
-            jScrollPane5.setVisible(false);
-            jMenuBar1.setVisible(false);
+        jStorePanel.setVisible(true);
+        jSendPanel.setVisible(false);
+        jReceivePanel.setVisible(false);
+        jRadioButton2.setVisible(false);
+        jRadioButton3.setVisible(false);
+        jScrollPane5.setVisible(false);
+        jMenuBar1.setVisible(false);
 
-            if (!keyFile.exists()) {
-                jToolPanel.setVisible(false);
-                loginLabelVisibleBool(false);
-                this.setSize(540, 240);
-                this.setLocationRelativeTo(null);
-            } else {
-                loginLabelVisibleBool(true);
-                jUsernameLabel.setText("enter username");
-                jPasswordLabel.setText("enter password");
-                generateApp();
+        if (!keyFile.exists()) {
+            jToolPanel.setVisible(false);
+            loginLabelVisibleBool(false);
+            this.setSize(540, 240);
+            this.setLocationRelativeTo(null);
+        } else {
+            loginLabelVisibleBool(true);
+            jUsernameLabel.setText("enter username");
+            jPasswordLabel.setText("enter password");
+            generateApp();
 
-                jToolPanel.setVisible(false);
-                jButton2.setVisible(false);
-            }
-            jProgressBar2.setVisible(false);
-            dragDrop.setVisible(false);
-            jSendSQL.setVisible(false);
+            jToolPanel.setVisible(false);
+            jButton2.setVisible(false);
+        }
+        jProgressBar2.setVisible(false);
+        dragDrop.setVisible(false);
+        jSendSQL.setVisible(false);
 //        }
     }
 
@@ -353,7 +354,7 @@ public class Main extends javax.swing.JFrame {
             }
         } else {
             GUI.t.interrupt();
-            GUI.labelCutterThread(jAlertLabel, "unable to start local server.", 25, 50, 1500, false);
+            GUI.labelCutterLoginThread(jAlertLabel, "unable to start local server.", 25, 50, 1500, this);
             adminBool = false;
         }
     }
@@ -393,15 +394,15 @@ public class Main extends javax.swing.JFrame {
             if (!Miscs.holidayCheck()) {
                 switch (rand_int1) {
                     case 0 ->
-                        GUI.labelCutterThread(jAlertLabel, "a data encryption app.", 80, 80, 100, true);
+                        GUI.labelCutterLoginThread(jAlertLabel, "a data encryption app.", 80, 80, 1200, this);
                     case 1 ->
-                        GUI.labelCutterThread(jAlertLabel, "developed by i-comit LLC.", 80, 80, 100, true);
+                        GUI.labelCutterLoginThread(jAlertLabel, "developed by i-comit LLC.", 80, 80, 1200, this);
                     case 2 ->
-                        GUI.labelCutterThread(jAlertLabel, "USB drive, reimagined.", 60, 80, 100, true);
+                        GUI.labelCutterLoginThread(jAlertLabel, "USB drive, reimagined.", 60, 80, 1200, this);
                     case 3 ->
-                        GUI.labelCutterThread(jAlertLabel, "also available on mac os.", 60, 80, 100, true);
+                        GUI.labelCutterLoginThread(jAlertLabel, "also available on mac os.", 60, 80, 1200, this);
                     case 4 ->
-                        GUI.labelCutterThread(jAlertLabel, "also available on linux.", 60, 80, 100, true);
+                        GUI.labelCutterLoginThread(jAlertLabel, "also available on linux.", 60, 80, 1200, this);
                 }
             }
             FileHider.cleanUp(path);
@@ -535,8 +536,10 @@ public class Main extends javax.swing.JFrame {
 
         jAlertLabel.setFont(Statics.registerCustomFont(12, fontFile));
         jAlertLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jAlertLabel.setFocusable(false);
+        jAlertLabel.setRequestFocusEnabled(false);
         getContentPane().add(jAlertLabel);
-        jAlertLabel.setBounds(21, 174, 236, 27);
+        jAlertLabel.setBounds(18, 174, 240, 27);
 
         jToolPanel.setOpaque(false);
         jToolPanel.setPreferredSize(new java.awt.Dimension(252, 150));
@@ -785,10 +788,12 @@ public class Main extends javax.swing.JFrame {
         jLoginPanel.add(jPasswordField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(137, 32, 103, -1));
 
         jUsernameLabel.setFont(Statics.registerCustomFont(12, fontFile));
+        jUsernameLabel.setForeground(new java.awt.Color(153, 153, 153));
         jUsernameLabel.setText("enter username");
         jLoginPanel.add(jUsernameLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 6, -1, 21));
 
         jPasswordLabel.setFont(Statics.registerCustomFont(12, fontFile));
+        jPasswordLabel.setForeground(new java.awt.Color(153, 153, 153));
         jPasswordLabel.setText("enter password");
         jLoginPanel.add(jPasswordLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 35, -1, -1));
 
@@ -904,12 +909,12 @@ public class Main extends javax.swing.JFrame {
         getContentPane().add(jLabel3);
         jLabel3.setBounds(125, 4, 135, 30);
 
-        jCreationDateLabel.setFont(Statics.registerCustomFont(13, fontFile));
+        jCreationDateLabel.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         jCreationDateLabel.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
         getContentPane().add(jCreationDateLabel);
         jCreationDateLabel.setBounds(22, 172, 130, 27);
 
-        jFileSizeLabel.setFont(Statics.registerCustomFont(13, fontFile));
+        jFileSizeLabel.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         jFileSizeLabel.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jFileSizeLabel.setFocusable(false);
         getContentPane().add(jFileSizeLabel);
@@ -1194,6 +1199,9 @@ public class Main extends javax.swing.JFrame {
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 jTree1MouseExited(evt);
             }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jTree1MousePressed(evt);
+            }
         });
         jTree1.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
             public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
@@ -1268,15 +1276,15 @@ public class Main extends javax.swing.JFrame {
                             initLogin(this);
                         } else {
                             GUI.t.interrupt();
-                            GUI.labelCutterThread(jAlertLabel, "username or password is invalid.", 20, 40, 2000, false);
+                            GUI.labelCutterLoginThread(jAlertLabel, "username or password is invalid.", 20, 40, 1600, this);
                         }
                     } else {
                         GUI.t.interrupt();
-                        GUI.labelCutterThread(jAlertLabel, "an instance of this app is active.", 20, 40, 2000, false);
+                        GUI.labelCutterLoginThread(jAlertLabel, "an instance of this app is active.", 20, 40, 1600, this);
                     }
                 } else {
                     GUI.t.interrupt();
-                    GUI.labelCutterThread(jAlertLabel, "username or password is invalid.", 20, 40, 2000, false);
+                    GUI.labelCutterLoginThread(jAlertLabel, "username or password is invalid.", 20, 40, 1600, this);
                 }
                 jTextField1.setText("");
                 jPasswordField1.setText("");
@@ -1328,15 +1336,15 @@ public class Main extends javax.swing.JFrame {
                             initLogin(this);
                         } else {
                             GUI.t.interrupt();
-                            GUI.labelCutterThread(jAlertLabel, "username or password is invalid.", 20, 40, 2000, false);
+                            GUI.labelCutterLoginThread(jAlertLabel, "username or password is invalid.", 20, 40, 1600, this);
                         }
                     } else {
                         GUI.t.interrupt();
-                        GUI.labelCutterThread(jAlertLabel, "an instance of this app is active.", 20, 40, 2000, false);
+                        GUI.labelCutterLoginThread(jAlertLabel, "an instance of this app is active.", 20, 40, 1600, this);
                     }
                 } else {
                     GUI.t.interrupt();
-                    GUI.labelCutterThread(jAlertLabel, "username or password is invalid.", 20, 40, 2000, false);
+                    GUI.labelCutterLoginThread(jAlertLabel, "username or password is invalid.", 20, 40, 1600, this);
                 }
                 jTextField1.setText("");
                 jPasswordField1.setText("");
@@ -1377,7 +1385,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jSwitchModeActionEvt
     //SEND PANEL PW
     private void jPasswordField2Evt(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField2Evt
-        if (jPasswordField2.getPassword().length < 5) {
+        if (jPasswordField2.getPassword().length < 4) {
             jLabel6.setVisible(true);
             jLabel5.setVisible(true);
             jRadioButton2.setVisible(false);
@@ -1390,7 +1398,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jPasswordField2Evt
     //RECEIVE PANEL PW
     private void jPasswordField3Evt(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField3Evt
-        if (jPasswordField3.getPassword().length < 5) {
+        if (jPasswordField3.getPassword().length < 4) {
             jLabel7.setVisible(true);
             jLabel8.setVisible(true);
             jRadioButton3.setVisible(false);
@@ -1618,6 +1626,8 @@ public class Main extends javax.swing.JFrame {
                 if (jTree1.getSelectionPaths() != null) {
                     if (TreeView.treePathContainsDirs(jTree1.getSelectionPaths())) {
                         if (Client.getTable(Main.jTextField2.getText().trim())) {
+                            jCreationDateLabel.setText("");
+                            jFileSizeLabel.setText("");
                             List<Path> paths = TreeView.convertTreePathToPath(jTree1.getSelectionPaths());
                             jAlertLabel.setText("");
                             Main.jTextField2.setEnabled(false);
@@ -1702,6 +1712,14 @@ public class Main extends javax.swing.JFrame {
     private void jServerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jServerButtonActionPerformed
         startServer();
     }//GEN-LAST:event_jServerButtonActionPerformed
+
+    private void jTree1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTree1MousePressed
+        if (toolMode == 1 && jTree1.getSelectionPaths() != null) {
+            if (TreeView.convertTreePathToFile(jTree1.getSelectionPaths(), 0).getName().endsWith(".i-cc")) {
+                jList1.setSelectedValue(TreeView.convertTreePathToFile(jTree1.getSelectionPaths(), 0).getName().replaceAll(".i-cc", ""), true);
+            }
+        }
+    }//GEN-LAST:event_jTree1MousePressed
     /**
      * @param args the command line arguments
      */

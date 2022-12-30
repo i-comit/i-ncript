@@ -50,6 +50,11 @@ public class GUI {
         t.start();
     }
 
+    public static void labelCutterLoginThread(JLabel jLabel, String labelMsg, int initSleep, int sleep, int pause, Main main) {
+        t = new Thread(() -> labelCutter_T.labelCutter2_T(jLabel, labelMsg, initSleep, sleep, pause, main));
+        t.start();
+    }
+
     public static void labelCutterTreeThread(JLabel jLabel, String labelMsg, int initSleep, int sleep, int pause, boolean stayAlive) {
         tb = new Thread(() -> labelCutterTree_T.labelCutterTree_T(jLabel, labelMsg, initSleep, sleep, pause, stayAlive));
         tb.start();
@@ -330,8 +335,39 @@ class labelCutter_T implements Runnable {
             }
         } catch (InterruptedException ex) {
         }
-
     }
+
+    public static void labelCutter2_T(JLabel jLabel, String labelMsg, int initSleep, int sleep, int pause, Main main) {
+        jLabel.setText("");
+        File cfgFile = new File(root + Main.masterFolder + "app\\i-ncript.cfg");
+        if (cfgFile.exists()) {
+            main.setSize(120, 241);
+        } else {
+            main.setSize(120, 221);
+        }
+        int msgL = labelMsg.length();
+        try {
+            Thread.sleep(initSleep);
+            for (int i = 0; i <= msgL; i++) {
+                CharSequence cutLabel = labelMsg.subSequence(0, i);
+                jLabel.setText(cutLabel.toString());
+                Thread.sleep(sleep);
+            }
+            Thread.sleep(pause);
+            for (int i = msgL; i >= 0; i--) {
+                CharSequence cutLabel = labelMsg.subSequence(0, i);
+                jLabel.setText(cutLabel.toString());
+                Thread.sleep(sleep);
+            }
+            if (cfgFile.exists()) {
+                main.setSize(120, 218);
+            } else {
+                main.setSize(120, 198);
+            }
+        } catch (InterruptedException ex) {
+        }
+    }
+
 }
 
 class labelCutterTree_T implements Runnable {

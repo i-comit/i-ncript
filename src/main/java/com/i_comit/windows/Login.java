@@ -48,27 +48,27 @@ public class Login {
                                     b = true;
                                 } else {
                                     GUI.t.interrupt();
-                                    GUI.labelCutterThread(jAlertLabel, "password failed regex check", 20, 20, 1200, false);
+                                    GUI.labelCutterLoginThread(jAlertLabel, "password failed regex check", 20, 20, 1200, main);
                                 }
                             } else {
                                 GUI.t.interrupt();
-                                GUI.labelCutterThread(jAlertLabel, "password can't be username", 20, 20, 1200, false);
+                                GUI.labelCutterLoginThread(jAlertLabel, "password can't be username", 20, 20, 1200, main);
                             }
                         } else {
                             GUI.t.interrupt();
-                            GUI.labelCutterThread(jAlertLabel, "password is too short", 20, 20, 1200, false);
+                            GUI.labelCutterLoginThread(jAlertLabel, "password is too short", 20, 20, 1200, main);
                         }
                     } else {
                         GUI.t.interrupt();
-                        GUI.labelCutterThread(jAlertLabel, "username is too short", 20, 20, 1200, false);
+                        GUI.labelCutterLoginThread(jAlertLabel, "username is too short", 20, 20, 1200, main);
                     }
                 } else {
                     GUI.t.interrupt();
-                    GUI.labelCutterThread(jAlertLabel, "please enter a password", 20, 20, 1200, false);
+                    GUI.labelCutterLoginThread(jAlertLabel, "please enter a password", 20, 20, 1200, main);
                 }
             } else {
                 GUI.t.interrupt();
-                GUI.labelCutterThread(jAlertLabel, "please enter a username", 20, 20, 1200, false);
+                GUI.labelCutterLoginThread(jAlertLabel, "please enter a username", 20, 20, 1200, main);
             }
             jTextField1.setText("");
             jPasswordField1.setText("");
@@ -134,7 +134,7 @@ public class Login {
         recipientPassword = new String(password).trim();
         if (!"".equals(recipientUsername)) {
             if (!"".equals(recipientPassword)) {
-                if (recipientUsername.length() >= 6) {
+                if (recipientUsername.length() >= 5) {
                     if (!recipientUsername.equals(Statics.recipientPassword)) {
                         resetStaticInts();
                         Hasher.hashedUsername = Hasher.getHash(recipientUsername, true);
@@ -236,6 +236,7 @@ public class Login {
                 Main.jPasswordField3.setText("");
                 Main.jRadioButton3.setEnabled(false);
                 unzipFile(Statics.zipFileName + ".i-cc", Statics.zipFileName.replaceAll(".i-cc", ""));
+                System.out.println("unzipped "+Statics.zipFileName);
                 Main.toolBtnsBool(true);
                 try {
                     BufferedReader brTest = new BufferedReader(new FileReader(zipFileName + File.separator + keyName));
@@ -244,7 +245,7 @@ public class Login {
 
                     BufferedReader brTest1 = new BufferedReader(new FileReader(keyFile));
                     String usernameRead1 = Hasher.readKey(brTest1.readLine(), username);
-//
+
                     if (usernameRead.equals(usernameRead1)) {
                         if (passwordRead.equals(Hasher.getHash(recipientPasswordStr, false))) {
                             Hasher.hashedPassword = Hasher.getHash(recipientPasswordStr, false);
