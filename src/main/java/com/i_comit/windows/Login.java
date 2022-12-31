@@ -4,7 +4,6 @@
  */
 package com.i_comit.windows;
 
-import com.i_comit.server.Client;
 import com.i_comit.shared.Hasher;
 import static com.i_comit.windows.Folder.unzipFile;
 import static com.i_comit.windows.GUI.listAESPaths;

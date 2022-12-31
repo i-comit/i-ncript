@@ -88,12 +88,16 @@ public class Memory {
                 List<String> lines = Files.readAllLines(miscsFile.toPath(), StandardCharsets.UTF_8);
                 Main.jClientIPInput.setText(Miscs.hexToString(lines.get(lines.size() - 1)));
             }
+            Files.setAttribute(miscsFile.toPath(), "dos:hidden", true);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 
     public static void saveIPAddress() {
+        File miscsFile = new File(root + Main.masterFolder + "app\\.miscs.txt");
+        miscsFile.setWritable(true);
+
         try {
             FileWriter myWriter = new FileWriter(root + Main.masterFolder + "app\\.miscs.txt");
             myWriter.write(Miscs.stringToHex(Main.jClientIPInput.getText()));
@@ -107,7 +111,7 @@ public class Memory {
     public static void getHeapSize(Main main) {
         File cfgFile = new File(root + Main.masterFolder + "app\\i-ncript.cfg");
         if (cfgFile.exists()) {
-            try ( BufferedReader br = new BufferedReader(new FileReader(cfgFile))) {
+            try (BufferedReader br = new BufferedReader(new FileReader(cfgFile))) {
                 String line = "";
                 for (int i = 0; i < 7; i++) {
                     line = br.readLine();
@@ -187,7 +191,7 @@ public class Memory {
         String s = "";
         try {
             Process process = Runtime.getRuntime().exec(usbName);
-            try ( BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 reader.readLine();
                 while ((s = reader.readLine()) != null) {
                     if (s.trim().length() != 0) {
@@ -207,7 +211,7 @@ public class Memory {
         String s;
         try {
             Process process = Runtime.getRuntime().exec(logicaldisk);
-            try ( BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 reader.readLine();
                 while ((s = reader.readLine()) != null) {
                     if (s.trim().length() != 0) {
@@ -253,7 +257,7 @@ public class Memory {
                     String s = "";
                     try {
                         Process process = Runtime.getRuntime().exec(logicaldisk);
-                        try ( BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                             reader.readLine();
                             while ((s = reader.readLine()) != null) {
                                 if (s.trim().length() != 0) {
