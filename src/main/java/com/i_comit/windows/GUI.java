@@ -38,6 +38,7 @@ public class GUI {
         File diskPartition = new File(root).toPath().getRoot().toFile();
         GB = Memory.byteFormatter(diskPartition.getUsableSpace());
         Main.jLabel3.setText(root.substring(0, 2) + " " + GB);
+        Main.jLabel3.setToolTipText(Memory.getDataSizePercentage());
     }
 
     public static void labelCutterThread(JLabel jLabel, String labelMsg, int initSleep, int sleep, int pause, boolean stayAlive) {
@@ -177,7 +178,6 @@ public class GUI {
         }
         Main.refreshTreeView(Statics.receiveFolder, TreeView.receiveCaretPos);
         GUI.getGB();
-        Memory.getDataSizePercentage();
         Main.jList1.setSelectedIndex(0);
     }
 

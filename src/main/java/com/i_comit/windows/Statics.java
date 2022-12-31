@@ -135,7 +135,6 @@ public class Statics {
         jPasswordField2.setText("");
         jPasswordField3.setText("");
         GUI.getGB();
-        Memory.getDataSizePercentage();
         switch (toolMode) {
             case 1 -> {
                 jSwitchMode.setText("N-BOX");

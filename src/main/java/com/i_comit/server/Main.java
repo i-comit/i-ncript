@@ -16,8 +16,9 @@
  */
 package com.i_comit.server;
 
-import com.i_comit.windows.Statics;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
@@ -54,7 +55,7 @@ public class Main extends javax.swing.JFrame {
             Server.Sessions sessions = new Server.Sessions();
             Server.initDatabase();
             sessions.clearSessions();
-            
+
             if (Server.serverSocket == null) {
                 Server.socketStart(this);
             } else {
@@ -74,6 +75,19 @@ public class Main extends javax.swing.JFrame {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    private static Font customFont;
+
+    public static Font registerCustomFont(float fontSize, URL fontFile) {
+        try {
+            customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile.openStream()).deriveFont(fontSize);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(customFont);
+        } catch (IOException | FontFormatException e) {
+            e.printStackTrace();
+        }
+        return customFont;
     }
 
     private void uptimeTimer() {
@@ -121,7 +135,6 @@ public class Main extends javax.swing.JFrame {
         setTitle("i-ncript server");
         setAlwaysOnTop(true);
         setFocusable(false);
-        setFont(Statics.registerCustomFont(13, fontFile));
         setUndecorated(true);
         setResizable(false);
         setType(java.awt.Window.Type.UTILITY);
@@ -136,22 +149,22 @@ public class Main extends javax.swing.JFrame {
         jTextArea1.setMargin(new java.awt.Insets(2, 3, 2, 3));
         jScrollPane1.setViewportView(jTextArea1);
 
-        jLabel1.setFont(Statics.registerCustomFont(12, fontFile));
+        jLabel1.setFont(registerCustomFont(12, fontFile));
         jLabel1.setForeground(new java.awt.Color(128, 128, 128));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText(Server.getIP());
 
-        jLabel2.setFont(Statics.registerCustomFont(12, fontFile));
+        jLabel2.setFont(registerCustomFont(12, fontFile));
         jLabel2.setForeground(new java.awt.Color(128, 128, 128));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel2.setText("i-ncript™ server");
 
-        jLabel3.setFont(Statics.registerCustomFont(12, fontFile));
+        jLabel3.setFont(registerCustomFont(12, fontFile));
         jLabel3.setForeground(new java.awt.Color(128, 128, 128));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel3.setText("up time: ");
 
-        jLabel4.setFont(Statics.registerCustomFont(12, fontFile));
+        jLabel4.setFont(registerCustomFont(12, fontFile));
         jLabel4.setForeground(new java.awt.Color(128, 128, 128));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel4.setText(timeString);

@@ -26,7 +26,6 @@ import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import javax.swing.AbstractAction;
@@ -42,7 +41,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "D:\\";
+    public static String root = "";
     public static final String masterFolder = "'--------'" + File.separator;
     public static boolean adminBool = false;
 
@@ -54,55 +53,55 @@ public class Main extends javax.swing.JFrame {
     private URL fontFile1 = getClass().getResource("/robot-font.otf");
 
     public Main() {
-//        root = Paths.get("").toAbsolutePath().toString();
-//        if (Memory.checkWMIC()) {
-        System.out.println(Memory.getUsableSpaceLong());
-        root = root.substring(0, 3);
-        initComponents();
-        Memory.readIPAddress();
-        TreeView.renderTreeCells();
+        root = Paths.get("").toAbsolutePath().toString();
+        if (Memory.checkWMIC()) {
+            System.out.println(Memory.getUsableSpaceLong());
+            root = root.substring(0, 3);
+            initComponents();
+            Memory.readIPAddress();
+            TreeView.renderTreeCells();
 
-        Path runtime = Paths.get(root + masterFolder + "runtime");
-        Path app = Paths.get(root + masterFolder + "app");
-        if (runtime.toFile().exists()) {
-            try {
-                Files.setAttribute(runtime, "dos:hidden", true);
-            } catch (IOException ex) {
+            Path runtime = Paths.get(root + masterFolder + "runtime");
+            Path app = Paths.get(root + masterFolder + "app");
+            if (runtime.toFile().exists()) {
+                try {
+                    Files.setAttribute(runtime, "dos:hidden", true);
+                } catch (IOException ex) {
+                }
             }
-        }
-        if (app.toFile().exists()) {
-            try {
-                Files.setAttribute(app, "dos:hidden", true);
-            } catch (IOException ex) {
+            if (app.toFile().exists()) {
+                try {
+                    Files.setAttribute(app, "dos:hidden", true);
+                } catch (IOException ex) {
+                }
             }
+
+            jStorePanel.setVisible(true);
+            jSendPanel.setVisible(false);
+            jReceivePanel.setVisible(false);
+            jRadioButton2.setVisible(false);
+            jRadioButton3.setVisible(false);
+            jScrollPane5.setVisible(false);
+            jMenuBar1.setVisible(false);
+
+            if (!keyFile.exists()) {
+                jToolPanel.setVisible(false);
+                loginLabelVisibleBool(false);
+                this.setSize(540, 240);
+                this.setLocationRelativeTo(null);
+            } else {
+                loginLabelVisibleBool(true);
+                jUsernameLabel.setText("enter username");
+                jPasswordLabel.setText("enter password");
+                generateApp();
+
+                jToolPanel.setVisible(false);
+                jButton2.setVisible(false);
+            }
+            jProgressBar2.setVisible(false);
+            dragDrop.setVisible(false);
+            jSendSQL.setVisible(false);
         }
-
-        jStorePanel.setVisible(true);
-        jSendPanel.setVisible(false);
-        jReceivePanel.setVisible(false);
-        jRadioButton2.setVisible(false);
-        jRadioButton3.setVisible(false);
-        jScrollPane5.setVisible(false);
-        jMenuBar1.setVisible(false);
-
-        if (!keyFile.exists()) {
-            jToolPanel.setVisible(false);
-            loginLabelVisibleBool(false);
-            this.setSize(540, 240);
-            this.setLocationRelativeTo(null);
-        } else {
-            loginLabelVisibleBool(true);
-            jUsernameLabel.setText("enter username");
-            jPasswordLabel.setText("enter password");
-            generateApp();
-
-            jToolPanel.setVisible(false);
-            jButton2.setVisible(false);
-        }
-        jProgressBar2.setVisible(false);
-        dragDrop.setVisible(false);
-        jSendSQL.setVisible(false);
-//        }
     }
 
     private void getKeyBinding(int keyCode, JPanel jPanel, AbstractAction action) {
@@ -300,7 +299,6 @@ public class Main extends javax.swing.JFrame {
             TreeView.expandTreeNode(path);
             TreeView.renderTreeCells();
             GUI.getGB();
-            Memory.getDataSizePercentage();
         }
     }
 
@@ -1554,16 +1552,10 @@ public class Main extends javax.swing.JFrame {
 
     private void jLabel3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseEntered
         jLabel3.setText("VER " + appVer);
-        jLabel3.setForeground(new Color(187, 187, 187));
     }//GEN-LAST:event_jLabel3MouseEntered
 
     private void jLabel3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseExited
         jLabel3.setText(root.substring(0, 2) + " " + GB);
-        if (Memory.getUsableSpaceLong() <= 1024000000) {
-            jLabel3.setForeground(new Color(191, 83, 73));
-        } else {
-            jLabel3.setForeground(new Color(187, 187, 187));
-        }
     }//GEN-LAST:event_jLabel3MouseExited
 
     private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
@@ -1646,15 +1638,22 @@ public class Main extends javax.swing.JFrame {
                             jAlertLabel.setText("");
                             Main.jTextField2.setEnabled(false);
                             Main.jPasswordField2.setEnabled(false);
-                            for (Path path : paths) {
-                                Client.postRecords(Main.jTextField2.getText().trim(), path.toFile());
-                                path.toFile().delete();
-                                refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                            if (!paths.isEmpty()) {
+                                for (Path path : paths) {
+                                    Client.postRecords(Main.jTextField2.getText().trim(), path.toFile());
+                                    path.toFile().delete();
+                                    refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                                    GUI.getGB();
+                                }
+                                GUI.t.interrupt();
+                                GUI.labelCutterThread(jAlertLabel, paths.size() + " file(s) sent to " + Main.jTextField2.getText().trim(), 20, 25, 1000, false);
+                                Main.jTextArea1.append(paths.size() + " file(s) sent to " + Main.jTextField2.getText().trim() + " at " + ZonedDateTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
+                                Statics.resetSendTools(2);
+                            } else {
+                                GUI.t.interrupt();
+                                GUI.labelCutterThread(jAlertLabel, "cannot send files over 1GB", 20, 25, 1000, false);
+                                Statics.resetSendTools(2);
                             }
-                            GUI.t.interrupt();
-                            GUI.labelCutterThread(jAlertLabel, paths.size() + " file(s) sent to " + Main.jTextField2.getText().trim(), 20, 25, 1000, false);
-                            Main.jTextArea1.append(paths.size() + " file(s) sent to " + Main.jTextField2.getText().trim() + " at " + ZonedDateTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
-                            Statics.resetSendTools(2);
                         } else {
                             Statics.resetSendTools(2);
                             GUI.t.interrupt();

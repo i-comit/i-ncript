@@ -14,6 +14,7 @@ import static com.i_comit.windows.Main.jAdminLabel;
 import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.jClientIPInput;
 import static com.i_comit.windows.Main.root;
+import com.i_comit.windows.Memory;
 import com.i_comit.windows.TreeView;
 import java.io.BufferedReader;
 import java.io.File;
@@ -83,6 +84,7 @@ public class Client {
                     getRecords(username, new File(fileName));
                     System.out.println("retrieved: " + fileName);
                     Main.refreshTreeView(Statics.receiveFolder, TreeView.receiveCaretPos);
+                    GUI.getGB();
                 }
             }
         } catch (IOException | ClassNotFoundException | InterruptedException ex) {
@@ -143,11 +145,6 @@ public class Client {
         oos.writeObject(getTableRequest_B);
         ois = new ObjectInputStream(clientSocket.getInputStream());
         boolean message = (boolean) ois.readObject();
-        if (message) {
-            System.out.println("recipient account found");
-        } else {
-            System.out.println("recipient account not found");
-        }
         return message;
     }
 

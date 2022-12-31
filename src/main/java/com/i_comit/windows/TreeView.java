@@ -449,10 +449,14 @@ public class TreeView {
             if (filePath.toFile().isDirectory()) {
                 List<Path> paths = GUI.listPaths(filePath);
                 paths.forEach(x -> {
-                    pathLists.add(x);
+                    if (x.toFile().length() <= 1024000000) {
+                        pathLists.add(x);
+                    }
                 });
             } else {
-                pathLists.add(filePath);
+                if (filePath.toFile().length() <= 1024000000) {
+                    pathLists.add(filePath);
+                }
             }
         }
         return pathLists;
