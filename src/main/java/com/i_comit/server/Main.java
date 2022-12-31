@@ -26,8 +26,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -52,6 +50,18 @@ public class Main extends javax.swing.JFrame {
 
     public Main() {
         try {
+            Server.dbPath = Paths.get("").toFile().getAbsolutePath().substring(0, 3)
+                    + "'--------'"
+                    + File.separator
+                    + "runtime"
+                    + File.separator
+                    + "bin"
+                    + File.separator
+                    + "server"
+                    + File.separator
+                    + "i-ncript️.db";
+            Server.url = "jdbc:sqlite:" + Server.dbPath;
+
             initComponents();
             uptimeTimer();
             this.setBackground(new Color(0, 0, 0, 0));
@@ -59,8 +69,6 @@ public class Main extends javax.swing.JFrame {
             Server.Sessions sessions = new Server.Sessions();
             Server.initDatabase();
             sessions.clearSessions();
-            Path dbPathF = Paths.get(Server.dbPath);
-            Files.setAttribute(dbPathF, "dos:hidden", true);
 
             if (Server.serverSocket == null) {
                 Server.socketStart(this);
@@ -253,6 +261,7 @@ public class Main extends javax.swing.JFrame {
         }
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
+            Server.portKill();
             new Main().setVisible(true);
         });
     }

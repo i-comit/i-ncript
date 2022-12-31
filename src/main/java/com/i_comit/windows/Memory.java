@@ -101,6 +101,7 @@ public class Memory {
     public static void saveIPAddress() {
         if (!Main.adminBool) {
             File miscsFile = new File(root + Main.masterFolder + "app\\.miscs.txt");
+            miscsFile.setReadable(true);
             miscsFile.setWritable(true);
             try {
                 FileWriter myWriter = new FileWriter(root + Main.masterFolder + "app\\.miscs.txt");

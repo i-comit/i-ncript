@@ -26,7 +26,6 @@ import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import javax.swing.AbstractAction;
@@ -42,9 +41,9 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "E:\\";
+    public static String root = "";
     public static final String masterFolder = "'--------'" + File.separator;
-    public static boolean adminBool = false;
+    public static boolean adminBool = true;
 
     private final String appVer = "2.0.2";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
@@ -54,55 +53,55 @@ public class Main extends javax.swing.JFrame {
     private URL fontFile1 = getClass().getResource("/robot-font.otf");
 
     public Main() {
-//        root = Paths.get("").toAbsolutePath().toString();
-//        if (Memory.checkWMIC()) {
-        System.out.println(Memory.getUsableSpaceLong());
-        root = root.substring(0, 3);
-        initComponents();
-        Memory.readIPAddress();
-        TreeView.renderTreeCells();
+        root = Paths.get("").toAbsolutePath().toString();
+        if (Memory.checkWMIC()) {
+            System.out.println(Memory.getUsableSpaceLong());
+            root = root.substring(0, 3);
+            initComponents();
+            Memory.readIPAddress();
+            TreeView.renderTreeCells();
 
-        Path runtime = Paths.get(root + masterFolder + "runtime");
-        Path app = Paths.get(root + masterFolder + "app");
-        if (runtime.toFile().exists()) {
-            try {
-                Files.setAttribute(runtime, "dos:hidden", true);
-            } catch (IOException ex) {
+            Path runtime = Paths.get(root + masterFolder + "runtime");
+            Path app = Paths.get(root + masterFolder + "app");
+            if (runtime.toFile().exists()) {
+                try {
+                    Files.setAttribute(runtime, "dos:hidden", true);
+                } catch (IOException ex) {
+                }
             }
-        }
-        if (app.toFile().exists()) {
-            try {
-                Files.setAttribute(app, "dos:hidden", true);
-            } catch (IOException ex) {
+            if (app.toFile().exists()) {
+                try {
+                    Files.setAttribute(app, "dos:hidden", true);
+                } catch (IOException ex) {
+                }
             }
+
+            jStorePanel.setVisible(true);
+            jSendPanel.setVisible(false);
+            jReceivePanel.setVisible(false);
+            jRadioButton2.setVisible(false);
+            jRadioButton3.setVisible(false);
+            jScrollPane5.setVisible(false);
+            jMenuBar1.setVisible(false);
+
+            if (!keyFile.exists()) {
+                jToolPanel.setVisible(false);
+                loginLabelVisibleBool(false);
+                this.setSize(540, 240);
+                this.setLocationRelativeTo(null);
+            } else {
+                loginLabelVisibleBool(true);
+                jUsernameLabel.setText("enter username");
+                jPasswordLabel.setText("enter password");
+                generateApp();
+
+                jToolPanel.setVisible(false);
+                jButton2.setVisible(false);
+            }
+            jProgressBar2.setVisible(false);
+            dragDrop.setVisible(false);
+            jSendSQL.setVisible(false);
         }
-
-        jStorePanel.setVisible(true);
-        jSendPanel.setVisible(false);
-        jReceivePanel.setVisible(false);
-        jRadioButton2.setVisible(false);
-        jRadioButton3.setVisible(false);
-        jScrollPane5.setVisible(false);
-        jMenuBar1.setVisible(false);
-
-        if (!keyFile.exists()) {
-            jToolPanel.setVisible(false);
-            loginLabelVisibleBool(false);
-            this.setSize(540, 240);
-            this.setLocationRelativeTo(null);
-        } else {
-            loginLabelVisibleBool(true);
-            jUsernameLabel.setText("enter username");
-            jPasswordLabel.setText("enter password");
-            generateApp();
-
-            jToolPanel.setVisible(false);
-            jButton2.setVisible(false);
-        }
-        jProgressBar2.setVisible(false);
-        dragDrop.setVisible(false);
-        jSendSQL.setVisible(false);
-//        }
     }
 
     private void getKeyBinding(int keyCode, JPanel jPanel, AbstractAction action) {
@@ -313,6 +312,28 @@ public class Main extends javax.swing.JFrame {
     }
 
     private void adminLabelToggle() {
+        if (Client.clientSocket != null) {
+            try {
+                Client.clientSocket.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        if (Client.ois != null) {
+            try {
+                Client.ois.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        if (Client.oos != null) {
+            try {
+                Client.oos.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
         if (adminBool) {
             jShowServer.setVisible(true);
             jAdminLabel.setVisible(false);
@@ -320,27 +341,14 @@ public class Main extends javax.swing.JFrame {
             jClientIPInput.setVisible(false);
             jClientIPInput.setVisible(false);
         } else {
-            try {
-                if (Client.ois != null) {
-                    Client.ois.close();
-                }
-                if (Client.oos != null) {
-                    Client.oos.close();
-                }
-                if (Client.clientSocket != null) {
-                    Client.clientSocket.close();
-                }
-                jShowServer.setVisible(false);
-                jServerButton.setVisible(false);
-                if (Client.getClientIP()) {
-                    jAdminLabel.setVisible(true);
-                    jClientIPInput.setVisible(false);
-                } else {
-                    jAdminLabel.setVisible(false);
-                    jClientIPInput.setVisible(true);
-                }
-            } catch (IOException ex) {
-                System.out.println("issue with closing client sockets");
+            jShowServer.setVisible(false);
+            jServerButton.setVisible(false);
+            if (Client.getClientIP()) {
+                jAdminLabel.setVisible(true);
+                jClientIPInput.setVisible(false);
+            } else {
+                jAdminLabel.setVisible(false);
+                jClientIPInput.setVisible(true);
             }
         }
         adminBool = false;
@@ -1779,31 +1787,43 @@ public class Main extends javax.swing.JFrame {
                     Folder.appLockFile.delete();
                     if (!jClientIPInput.getText().equals("000.000.0.000")) {
                         if (!username.equals("") && jToolPanel.isVisible()) {
-                            System.out.println("closing socket.");
-                            try {
-                                Client.endSession(username);
-                                Client.clientSocket.close();
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                            }
+                            System.out.println("ending session.");
+                            Client.endSession(username);
                         }
                         if (Client.getClientIP() && adminBool) {
                             System.out.println("closing server.");
-                            try {
-                                Client.adminRequests(1);
-                                Server.portKill();
-                                Server.serverKill(".server.exe", true);
-                                Client.clientSocket.close();
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                            }
+                            Client.adminRequests(1);
+                            Server.portKill();
+                            Server.serverKill(".server.exe", true);
+                        }
+                    }
+                    if (Client.clientSocket != null) {
+                        try {
+                            Client.clientSocket.close();
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                    if (Client.ois != null) {
+                        try {
+                            Client.ois.close();
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                    if (Client.oos != null) {
+                        try {
+                            Client.oos.close();
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
                         }
                     } else {
                         System.out.println("quitting offline mode.");
                     }
                 }
             });
-        });
+        }
+        );
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

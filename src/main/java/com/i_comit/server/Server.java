@@ -51,8 +51,8 @@ public class Server {
             + File.separator
             + "server"
             + File.separator
-            + ".i-ncript️.db";
-//    private static String dbPath = root + masterFolder + "runtime" + File.separator + "bin" + File.separator + "server" + File.separator + ".💽🗄️.db";
+            + "i-ncript️.db";
+//    public static String dbPath = root + masterFolder + "runtime" + File.separator + "bin" + File.separator + "server" + File.separator + "i-ncript️.db";
     public static String url = "jdbc:sqlite:" + dbPath;
     private static boolean serverBool = true;
 
