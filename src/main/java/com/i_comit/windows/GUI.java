@@ -351,7 +351,7 @@ class labelCutter_T implements Runnable {
             if (cfgFile.exists()) {
                 main.setSize(120, 217);
             } else {
-                main.setSize(120, 197);
+                main.setSize(120, 187);
             }
         } catch (InterruptedException ex) {
         }

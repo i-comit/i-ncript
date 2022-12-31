@@ -22,9 +22,13 @@ import java.awt.FontFormatException;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executor;
@@ -55,6 +59,8 @@ public class Main extends javax.swing.JFrame {
             Server.Sessions sessions = new Server.Sessions();
             Server.initDatabase();
             sessions.clearSessions();
+            Path dbPathF = Paths.get(Server.dbPath);
+            Files.setAttribute(dbPathF, "dos:hidden", true);
 
             if (Server.serverSocket == null) {
                 Server.socketStart(this);

@@ -333,7 +333,7 @@ public class Main extends javax.swing.JFrame {
 
     private void startServer() {
         jClientIPInput.setText(Server.getIP());
-        System.out.println("new client IP: " + jClientIPInput.getText());
+        System.out.println("server IP: " + jClientIPInput.getText());
         File serverExeFile = new File(root + masterFolder + ".server.exe");
         if (serverExeFile.exists()) {
             try {
@@ -529,7 +529,7 @@ public class Main extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("i-ncript™");
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti.png")));
-        setMinimumSize(new java.awt.Dimension(295, 205));
+        setMinimumSize(new java.awt.Dimension(295, 170));
         setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         setResizable(false);
         setSize(new java.awt.Dimension(320, 0));
@@ -807,12 +807,12 @@ public class Main extends javax.swing.JFrame {
         jServerButton.setFont(Statics.registerCustomFont(12, fontFile1));
         jServerButton.setForeground(new java.awt.Color(153, 153, 153));
         jServerButton.setText("INIT SERVER");
-        jServerButton.setToolTipText("start the local data server as admin");
+        jServerButton.setToolTipText("start a local data server as the admin");
         jServerButton.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 0, 1, javax.swing.UIManager.getDefaults().getColor("CheckBox.background")));
         jServerButton.setBorderPainted(false);
         jServerButton.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
         jServerButton.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-        jServerButton.setMargin(new java.awt.Insets(0, 2, 6, 0));
+        jServerButton.setMargin(new java.awt.Insets(0, 1, 6, 0));
         jServerButton.setMaximumSize(new java.awt.Dimension(85, 13));
         jServerButton.setMinimumSize(new java.awt.Dimension(81, 13));
         jServerButton.setPreferredSize(new java.awt.Dimension(85, 13));
@@ -823,7 +823,7 @@ public class Main extends javax.swing.JFrame {
                 jServerButtonActionPerformed(evt);
             }
         });
-        jLoginPanel.add(jServerButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 66, 69, 19));
+        jLoginPanel.add(jServerButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 66, 66, 19));
 
         jAdminLabel.setFont(Statics.registerCustomFont(11, fontFile));
         jAdminLabel.setForeground(new java.awt.Color(102, 102, 102));

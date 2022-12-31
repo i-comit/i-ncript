@@ -75,43 +75,50 @@ public class Memory {
     }
 
     public static void readIPAddress() {
-        try {
-            File miscsFile = new File(root + Main.masterFolder + "app\\.miscs.txt");
-            if (!miscsFile.exists()) {
-                miscsFile.createNewFile();
-                FileWriter myWriter = new FileWriter(miscsFile);
-                myWriter.write(Miscs.stringToHex("000.000.0.000"));
-                myWriter.close();
-                List<String> lines = Files.readAllLines(miscsFile.toPath(), StandardCharsets.UTF_8);
-                Main.jClientIPInput.setText(Miscs.hexToString(lines.get(lines.size() - 1)));
-            } else {
-                List<String> lines = Files.readAllLines(miscsFile.toPath(), StandardCharsets.UTF_8);
-                Main.jClientIPInput.setText(Miscs.hexToString(lines.get(lines.size() - 1)));
+        if (!Main.adminBool) {
+            try {
+                File miscsFile = new File(root + Main.masterFolder + "app\\.miscs.txt");
+                if (!miscsFile.exists()) {
+                    miscsFile.createNewFile();
+                    FileWriter myWriter = new FileWriter(miscsFile);
+                    myWriter.write(Miscs.stringToHex("000.000.0.000"));
+                    myWriter.close();
+                    List<String> lines = Files.readAllLines(miscsFile.toPath(), StandardCharsets.UTF_8);
+                    Main.jClientIPInput.setText(Miscs.hexToString(lines.get(lines.size() - 1)));
+                } else {
+                    List<String> lines = Files.readAllLines(miscsFile.toPath(), StandardCharsets.UTF_8);
+                    Main.jClientIPInput.setText(Miscs.hexToString(lines.get(lines.size() - 1)));
+                }
+                Files.setAttribute(miscsFile.toPath(), "dos:hidden", true);
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-            Files.setAttribute(miscsFile.toPath(), "dos:hidden", true);
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } else {
+            System.out.println("admin does not need to read IP address.");
         }
     }
 
     public static void saveIPAddress() {
-        File miscsFile = new File(root + Main.masterFolder + "app\\.miscs.txt");
-        miscsFile.setWritable(true);
-
-        try {
-            FileWriter myWriter = new FileWriter(root + Main.masterFolder + "app\\.miscs.txt");
-            myWriter.write(Miscs.stringToHex(Main.jClientIPInput.getText()));
-            myWriter.close();
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+        if (!Main.adminBool) {
+            File miscsFile = new File(root + Main.masterFolder + "app\\.miscs.txt");
+            miscsFile.setWritable(true);
+            try {
+                FileWriter myWriter = new FileWriter(root + Main.masterFolder + "app\\.miscs.txt");
+                myWriter.write(Miscs.stringToHex(Main.jClientIPInput.getText()));
+                myWriter.close();
+            } catch (IOException e) {
+                System.out.println("An error occurred.");
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("admin does not need to save IP address.");
         }
     }
 
     public static void getHeapSize(Main main) {
         File cfgFile = new File(root + Main.masterFolder + "app\\i-ncript.cfg");
         if (cfgFile.exists()) {
-            try (BufferedReader br = new BufferedReader(new FileReader(cfgFile))) {
+            try ( BufferedReader br = new BufferedReader(new FileReader(cfgFile))) {
                 String line = "";
                 for (int i = 0; i < 7; i++) {
                     line = br.readLine();
@@ -191,7 +198,7 @@ public class Memory {
         String s = "";
         try {
             Process process = Runtime.getRuntime().exec(usbName);
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            try ( BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 reader.readLine();
                 while ((s = reader.readLine()) != null) {
                     if (s.trim().length() != 0) {
@@ -211,7 +218,7 @@ public class Memory {
         String s;
         try {
             Process process = Runtime.getRuntime().exec(logicaldisk);
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            try ( BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 reader.readLine();
                 while ((s = reader.readLine()) != null) {
                     if (s.trim().length() != 0) {
@@ -257,7 +264,7 @@ public class Memory {
                     String s = "";
                     try {
                         Process process = Runtime.getRuntime().exec(logicaldisk);
-                        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                        try ( BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                             reader.readLine();
                             while ((s = reader.readLine()) != null) {
                                 if (s.trim().length() != 0) {

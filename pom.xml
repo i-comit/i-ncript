@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.i-comit.server</groupId>
+    <groupId>com.i-comit.windows.stndrd</groupId>
     <version>2.0.2</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <exec.mainClass>com.i_comit.server.Main</exec.mainClass>
+        <exec.mainClass>com.i_comit.windows.Main</exec.mainClass>
     </properties>
     <build>
         <plugins>
@@ -30,7 +30,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.i_comit.server.Main</mainClass>
+                            <mainClass>com.i_comit.windows.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -51,13 +51,13 @@
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
-            <version>1.0</version>
+            <version>2.6</version>
         </dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.8.11.2</version>
-        </dependency>
+        </dependency>-->
     </dependencies>
 </project>
 
