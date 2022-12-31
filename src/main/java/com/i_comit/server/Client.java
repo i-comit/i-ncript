@@ -14,7 +14,6 @@ import static com.i_comit.windows.Main.jAdminLabel;
 import static com.i_comit.windows.Main.jAlertLabel;
 import static com.i_comit.windows.Main.jClientIPInput;
 import static com.i_comit.windows.Main.root;
-import com.i_comit.windows.Memory;
 import com.i_comit.windows.TreeView;
 import java.io.BufferedReader;
 import java.io.File;
@@ -40,8 +39,8 @@ import java.util.List;
 public class Client {
 
     public static Socket clientSocket;
-    private static ObjectOutputStream oos = null;
-    private static ObjectInputStream ois = null;
+    public static ObjectOutputStream oos = null;
+    public static ObjectInputStream ois = null;
 
     public static void getServerSocket() throws IOException {
         try {
