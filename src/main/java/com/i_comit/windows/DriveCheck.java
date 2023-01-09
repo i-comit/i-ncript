@@ -26,7 +26,7 @@ public class DriveCheck extends javax.swing.JFrame {
 
     public DriveCheck(){
         initComponents();
-        this.setBackground(new Color(0, 0, 0, 0));
+        this.setBackground(new Color(0, 0, 0, (float)0.4));
         switch (driveState) {
             case 1:
                 jLabel1.setText("i-ncript can only run");
@@ -119,9 +119,11 @@ public class DriveCheck extends javax.swing.JFrame {
         setResizable(false);
 
         jLabel1.setFont(Statics.registerCustomFont(14, fontFile));
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
         jLabel2.setFont(Statics.registerCustomFont(14, fontFile));
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

@@ -41,7 +41,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "E:\\";
+    public static String root = "";
     public static final String masterFolder = "'--------'" + File.separator;
     public static boolean adminBool = false;
 
@@ -143,6 +143,7 @@ public class Main extends javax.swing.JFrame {
                 if (toolMode == 0 || toolMode == 3) {
                     jRadioButton0.setSelected(true);
                     if (jRadioButton0.isEnabled()) {
+                        Statics.resetStaticInts();
                         try {
                             AESMode = 0;
                             fileCount = GUI.countFiles(path);
@@ -150,6 +151,7 @@ public class Main extends javax.swing.JFrame {
                                 Main.this.setSize(779, 266);
                                 encryptFunction(Main.this);
                             } else {
+                                Statics.resetStaticInts();
                                 GUI.t.interrupt();
                                 GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 10, 20, 400, false);
                                 Main.this.setSize(779, 240);
@@ -167,6 +169,7 @@ public class Main extends javax.swing.JFrame {
                 if (toolMode == 0 || toolMode == 3) {
                     jRadioButton1.setSelected(true);
                     if (jRadioButton1.isEnabled()) {
+                        Statics.resetStaticInts();
                         try {
                             AESMode = 1;
                             fileCount = GUI.countFiles(path);
@@ -174,6 +177,7 @@ public class Main extends javax.swing.JFrame {
                                 Main.this.setSize(779, 266);
                                 decryptFunction(Main.this);
                             } else {
+                                Statics.resetStaticInts();
                                 GUI.t.interrupt();
                                 GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400, false);
                                 Main.this.setSize(779, 240);
