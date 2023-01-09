@@ -328,7 +328,7 @@ public class Server {
         return IPv4Addresses.get(IPv4Addresses.size() - 1);
     }
 
-    public static void serverKill(String appName, boolean exitAppBool) {
+    public static void appKill(String appName, boolean exitAppBool) {
         String listTasks = String.format("tasklist | findStr %s", appName);
         ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", listTasks);
         String s = "";
@@ -561,7 +561,8 @@ public class Server {
         public void closeSocket() {
             try {
                 portKill();
-                serverKill(".server.exe", true);
+                appKill(".server.exe", true);
+                Server.appKill("i-ncript.exe", true);
                 serverBool = false;
                 serverSocket.close();
                 Client.clientSocket.close();

@@ -74,7 +74,8 @@ public class Main extends javax.swing.JFrame {
                 Server.socketStart(this);
             } else {
                 Server.portKill();
-                Server.serverKill(".server.exe", false);
+                Server.appKill(".server.exe", false);
+                Server.appKill("i-ncript.exe", true);
                 Server.serverSocket.close();
                 Server.socketStart(this);
             }

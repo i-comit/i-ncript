@@ -1800,7 +1800,8 @@ public class Main extends javax.swing.JFrame {
                             System.out.println("closing server.");
                             Client.adminRequests(1);
                             Server.portKill();
-                            Server.serverKill(".server.exe", true);
+                            Server.appKill(".server.exe", true);
+                            Server.appKill("i-ncript.exe", true);
                         }
                     }
                     if (Client.clientSocket != null) {

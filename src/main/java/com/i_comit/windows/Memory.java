@@ -277,7 +277,9 @@ public class Memory {
                                 Client.endSession(username);
                                 if (Client.getClientIP()) {
                                     Server.portKill();
-                                    Server.serverKill(".server.exe", true);
+                                    Server.appKill(".server.exe", true);
+                                    Server.appKill("i-ncript.exe", true);
+
                                 }
                                 Client.clientSocket.close();
                                 System.exit(0);
