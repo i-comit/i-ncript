@@ -414,8 +414,7 @@ public class TreeView {
             pathNames.add(pathName);
         }
         for (String s : pathNames) {
-            if (!s.equals(pathNames.get(0))) {
-                System.out.println("Found mismatched folder");
+            if (!s.startsWith(Statics.path.toString())) {
                 b = false;
             } else {
                 b = true;

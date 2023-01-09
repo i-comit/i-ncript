@@ -100,10 +100,8 @@ public class Memory {
 
     public static void saveIPAddress() {
         File miscsFile = new File(root + Main.masterFolder + "app\\.miscs.txt");
-        miscsFile.setReadable(true);
-        miscsFile.setWritable(true);
         if (!Main.adminBool && miscsFile.exists()) {
-
+            miscsFile.setWritable(true);
             try {
                 FileWriter myWriter = new FileWriter(root + Main.masterFolder + "app\\.miscs.txt");
                 myWriter.write(Miscs.stringToHex(Main.jClientIPInput.getText()));

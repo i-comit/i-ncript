@@ -299,6 +299,7 @@ class recursiveFileDrop_T implements Runnable {
                 if (!filesArr1.isDirectory()) {
                     if (!filesArr1.getName().endsWith("Thumbs.db")) {
                         try {
+                            DragDrop.dragDropPaths.add(Paths.get(path + File.separator + filesf.getName() + File.separator + filesArr1.getName()));
                             Files.move(filesArr1.toPath(), Paths.get(path + File.separator + filesf.getName() + File.separator + filesArr1.getName()), StandardCopyOption.REPLACE_EXISTING);
                             AES.getFileAttr(new File(path + File.separator + filesf.getName() + File.separator + filesArr1.getName()), new File(path + File.separator + filesf.getName() + File.separator + filesArr1.getName()));
                             fileDropIter++;
@@ -315,9 +316,12 @@ class recursiveFileDrop_T implements Runnable {
             }
             if (fileDropIter == Folder.fileDropCount) {
                 GUI.t.interrupt();
+                Main.jTextArea1.append("--------------------------------------------\n");
+
                 if (Statics.toolMode == 2) {
                     GUI.labelCutterThread(Main.jAlertLabel, recursiveFileDrop_T.fileDropIter + " files moved to o-box", 10, 25, 750, false);
                     Main.jTextArea1.append(recursiveFileDrop_T.fileDropIter + " file(s) moved to o-box at " + Miscs.getCurrentTime() + "\n\n");
+                    Main.jTree1.setEnabled(true);
                     TreeView.populateStoreTree(Statics.sendFolder);
                 }
                 if (Statics.toolMode == 0 || Statics.toolMode == 3) {
@@ -326,8 +330,8 @@ class recursiveFileDrop_T implements Runnable {
                     Statics.dragDropBool = false;
                     Main.jButton2.setVisible(true);
                     Statics.AESMode = 0;
-                    Statics.fileCount = GUI.countFiles(Statics.path);
-                    AES.AESThread(listAESPaths(Statics.path), Statics.directory, false, 0);
+                    Statics.fileCount = fileDropIter;
+                    AES.AESThread(DragDrop.dragDropPaths, Statics.directory, false, 0);
                 }
             }
             filesf.delete();
@@ -343,9 +347,12 @@ class recursiveFileDrop_T implements Runnable {
             }
             if (fileDropIter == dirInt) {
                 GUI.t.interrupt();
+                Main.jTextArea1.append("--------------------------------------------\n");
+
                 if (Statics.toolMode == 2) {
                     GUI.labelCutterThread(Main.jAlertLabel, recursiveFileDrop_T.fileDropIter + " files moved to o-box", 10, 25, 750, false);
                     Main.jTextArea1.append(recursiveFileDrop_T.fileDropIter + " file(s) moved to o-box at " + Miscs.getCurrentTime() + "\n\n");
+                    Main.jTree1.setEnabled(true);
                     TreeView.populateStoreTree(Statics.sendFolder);
                 }
                 if (Statics.toolMode == 0 || Statics.toolMode == 3) {
@@ -354,8 +361,8 @@ class recursiveFileDrop_T implements Runnable {
                     Statics.dragDropBool = false;
                     Main.jButton2.setVisible(true);
                     Statics.AESMode = 0;
-                    Statics.fileCount = GUI.countFiles(Statics.path);
-                    AES.AESThread(listAESPaths(Statics.path), Statics.directory, false, 0);
+                    Statics.fileCount = dirInt;
+                    AES.AESThread(DragDrop.dragDropPaths, Statics.directory, false, 0);
                 }
             }
         }

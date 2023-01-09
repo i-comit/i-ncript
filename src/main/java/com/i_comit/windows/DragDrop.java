@@ -37,12 +37,13 @@ class DragDrop implements DropTargetListener {
 
     public static File filesf;
 
+    public static List<Path> dragDropPaths = new ArrayList<>();
+
     @Override
-    public void drop(DropTargetDropEvent event) {
+    public synchronized void drop(DropTargetDropEvent event) {
         if (Main.jToggleButton1.isSelected()) {
             Main.jToggleButton1.setSelected(false);
             Main.jRadioButton1.setVisible(true);
-//            hotFilerFunction(main);
         }
         boolean b = false;
         Statics.resetStaticInts();
@@ -72,6 +73,7 @@ class DragDrop implements DropTargetListener {
                         } else {
                             GUI.t.interrupt();
                             GUI.labelCutterThread(jAlertLabel, "all files must be in same folder", 10, 20, 800, false);
+                            break;
                         }
                     } else {
                         try {
@@ -111,15 +113,13 @@ class DragDrop implements DropTargetListener {
                                                         && !filesf.getAbsolutePath().equals(root + masterFolder + ".server.exe")
                                                         && !filesf.getAbsolutePath().equals(root + masterFolder + Statics.keyName)) {
 
-                                                    System.out.println("Drag drop bool " + Main.toggleDragDropBool);
                                                     if (!Main.toggleDragDropBool) {
-//                                                        Folder.getFileDropCount(filesf);
                                                         for (Object file : files) {
+                                                            Path fileP = Paths.get(Statics.path + File.separator + new File(file.toString()).getName());
                                                             File fileF = new File(file.toString());
-                                                            System.out.println(file.toString());
+                                                            dragDropPaths.add(fileP);
                                                             Folder.recursiveFileDropThread(fileF, Statics.path, files.size());
                                                         }
-//                                                        filesf.delete();
                                                     } else {
                                                         Main.jButton2.setVisible(true);
                                                         Main.jProgressBar1.setMaximum(0);

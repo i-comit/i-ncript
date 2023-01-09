@@ -54,6 +54,7 @@ public class AES {
                 try {
                     outputFile = new File(outputFile + ".enc");
                     doCrypto(Cipher.ENCRYPT_MODE, key, inputFile, outputFile);
+                    outputFile.setWritable(false);
                     inputFile.delete();
                 } catch (CryptoException ex) {
                     ex.printStackTrace();
@@ -65,6 +66,7 @@ public class AES {
     public static void decrypt(String key, File inputFile, File outputFile) {
         if (inputFile.exists()) {
             if (inputFile.toString().endsWith(".enc")) {
+                inputFile.setReadable(true);
                 try {
                     outputFile = new File(inputFile.toString().replaceAll(".enc", ""));
                     doCrypto(Cipher.DECRYPT_MODE, key, inputFile, outputFile);
@@ -312,6 +314,7 @@ class AES_T implements Runnable {
             } else {
                 DragDrop_T.resetProgressBar(encFiles, decFiles);
                 GUI.getGB();
+                DragDrop.dragDropPaths.clear();
             }
         }
     }

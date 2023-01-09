@@ -43,9 +43,9 @@ public class Main extends javax.swing.JFrame {
 
     public static String root = "E:\\";
     public static final String masterFolder = "'--------'" + File.separator;
-    public static boolean adminBool = true;
+    public static boolean adminBool = false;
 
-    private final String appVer = "2.0.2";
+    private final String appVer = "2.0.3";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
     public static final int year = Year.now().getValue();
 
@@ -53,55 +53,55 @@ public class Main extends javax.swing.JFrame {
     private URL fontFile1 = getClass().getResource("/robot-font.otf");
 
     public Main() {
-//        root = Paths.get("").toAbsolutePath().toString();
-//        if (Memory.checkWMIC()) {
-        System.out.println(Memory.getUsableSpaceLong());
-        root = root.substring(0, 3);
-        initComponents();
-        Memory.readIPAddress();
-        TreeView.renderTreeCells();
+        root = Paths.get("").toAbsolutePath().toString();
+        if (Memory.checkWMIC()) {
+            System.out.println(Memory.getUsableSpaceLong());
+            root = root.substring(0, 3);
+            initComponents();
+            Memory.readIPAddress();
+            TreeView.renderTreeCells();
 
-        Path runtime = Paths.get(root + masterFolder + "runtime");
-        Path app = Paths.get(root + masterFolder + "app");
-        if (runtime.toFile().exists()) {
-            try {
-                Files.setAttribute(runtime, "dos:hidden", true);
-            } catch (IOException ex) {
+            Path runtime = Paths.get(root + masterFolder + "runtime");
+            Path app = Paths.get(root + masterFolder + "app");
+            if (runtime.toFile().exists()) {
+                try {
+                    Files.setAttribute(runtime, "dos:hidden", true);
+                } catch (IOException ex) {
+                }
             }
-        }
-        if (app.toFile().exists()) {
-            try {
-                Files.setAttribute(app, "dos:hidden", true);
-            } catch (IOException ex) {
+            if (app.toFile().exists()) {
+                try {
+                    Files.setAttribute(app, "dos:hidden", true);
+                } catch (IOException ex) {
+                }
             }
+
+            jStorePanel.setVisible(true);
+            jSendPanel.setVisible(false);
+            jReceivePanel.setVisible(false);
+            jRadioButton2.setVisible(false);
+            jRadioButton3.setVisible(false);
+            jScrollPane5.setVisible(false);
+            jMenuBar1.setVisible(false);
+
+            if (!keyFile.exists()) {
+                jToolPanel.setVisible(false);
+                loginLabelVisibleBool(false);
+                this.setSize(540, 240);
+                this.setLocationRelativeTo(null);
+            } else {
+                loginLabelVisibleBool(true);
+                jUsernameLabel.setText("enter username");
+                jPasswordLabel.setText("enter password");
+                generateApp();
+
+                jToolPanel.setVisible(false);
+                jButton2.setVisible(false);
+            }
+            jProgressBar2.setVisible(false);
+            dragDrop.setVisible(false);
+            jSendSQL.setVisible(false);
         }
-
-        jStorePanel.setVisible(true);
-        jSendPanel.setVisible(false);
-        jReceivePanel.setVisible(false);
-        jRadioButton2.setVisible(false);
-        jRadioButton3.setVisible(false);
-        jScrollPane5.setVisible(false);
-        jMenuBar1.setVisible(false);
-
-        if (!keyFile.exists()) {
-            jToolPanel.setVisible(false);
-            loginLabelVisibleBool(false);
-            this.setSize(540, 240);
-            this.setLocationRelativeTo(null);
-        } else {
-            loginLabelVisibleBool(true);
-            jUsernameLabel.setText("enter username");
-            jPasswordLabel.setText("enter password");
-            generateApp();
-
-            jToolPanel.setVisible(false);
-            jButton2.setVisible(false);
-        }
-        jProgressBar2.setVisible(false);
-        dragDrop.setVisible(false);
-        jSendSQL.setVisible(false);
-//        }
     }
 
     private void getKeyBinding(int keyCode, JPanel jPanel, AbstractAction action) {
@@ -1731,7 +1731,7 @@ public class Main extends javax.swing.JFrame {
     private void jTextField2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyTyped
         sendSQLToggle();
     }//GEN-LAST:event_jTextField2KeyTyped
-    public static boolean toggleDragDropBool = false;
+    public static boolean toggleDragDropBool = true;
     private void jToggleDragDropActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleDragDropActionPerformed
         toggleDragDropBool ^= true;
         if (toggleDragDropBool) {
