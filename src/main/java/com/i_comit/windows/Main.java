@@ -41,7 +41,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "";
+    public static String root = "E:\\";
     public static final String masterFolder = "'--------'" + File.separator;
     public static boolean adminBool = true;
 
@@ -53,55 +53,55 @@ public class Main extends javax.swing.JFrame {
     private URL fontFile1 = getClass().getResource("/robot-font.otf");
 
     public Main() {
-        root = Paths.get("").toAbsolutePath().toString();
-        if (Memory.checkWMIC()) {
-            System.out.println(Memory.getUsableSpaceLong());
-            root = root.substring(0, 3);
-            initComponents();
-            Memory.readIPAddress();
-            TreeView.renderTreeCells();
+//        root = Paths.get("").toAbsolutePath().toString();
+//        if (Memory.checkWMIC()) {
+        System.out.println(Memory.getUsableSpaceLong());
+        root = root.substring(0, 3);
+        initComponents();
+        Memory.readIPAddress();
+        TreeView.renderTreeCells();
 
-            Path runtime = Paths.get(root + masterFolder + "runtime");
-            Path app = Paths.get(root + masterFolder + "app");
-            if (runtime.toFile().exists()) {
-                try {
-                    Files.setAttribute(runtime, "dos:hidden", true);
-                } catch (IOException ex) {
-                }
+        Path runtime = Paths.get(root + masterFolder + "runtime");
+        Path app = Paths.get(root + masterFolder + "app");
+        if (runtime.toFile().exists()) {
+            try {
+                Files.setAttribute(runtime, "dos:hidden", true);
+            } catch (IOException ex) {
             }
-            if (app.toFile().exists()) {
-                try {
-                    Files.setAttribute(app, "dos:hidden", true);
-                } catch (IOException ex) {
-                }
-            }
-
-            jStorePanel.setVisible(true);
-            jSendPanel.setVisible(false);
-            jReceivePanel.setVisible(false);
-            jRadioButton2.setVisible(false);
-            jRadioButton3.setVisible(false);
-            jScrollPane5.setVisible(false);
-            jMenuBar1.setVisible(false);
-
-            if (!keyFile.exists()) {
-                jToolPanel.setVisible(false);
-                loginLabelVisibleBool(false);
-                this.setSize(540, 240);
-                this.setLocationRelativeTo(null);
-            } else {
-                loginLabelVisibleBool(true);
-                jUsernameLabel.setText("enter username");
-                jPasswordLabel.setText("enter password");
-                generateApp();
-
-                jToolPanel.setVisible(false);
-                jButton2.setVisible(false);
-            }
-            jProgressBar2.setVisible(false);
-            dragDrop.setVisible(false);
-            jSendSQL.setVisible(false);
         }
+        if (app.toFile().exists()) {
+            try {
+                Files.setAttribute(app, "dos:hidden", true);
+            } catch (IOException ex) {
+            }
+        }
+
+        jStorePanel.setVisible(true);
+        jSendPanel.setVisible(false);
+        jReceivePanel.setVisible(false);
+        jRadioButton2.setVisible(false);
+        jRadioButton3.setVisible(false);
+        jScrollPane5.setVisible(false);
+        jMenuBar1.setVisible(false);
+
+        if (!keyFile.exists()) {
+            jToolPanel.setVisible(false);
+            loginLabelVisibleBool(false);
+            this.setSize(540, 240);
+            this.setLocationRelativeTo(null);
+        } else {
+            loginLabelVisibleBool(true);
+            jUsernameLabel.setText("enter username");
+            jPasswordLabel.setText("enter password");
+            generateApp();
+
+            jToolPanel.setVisible(false);
+            jButton2.setVisible(false);
+        }
+        jProgressBar2.setVisible(false);
+        dragDrop.setVisible(false);
+        jSendSQL.setVisible(false);
+//        }
     }
 
     private void getKeyBinding(int keyCode, JPanel jPanel, AbstractAction action) {
@@ -262,7 +262,7 @@ public class Main extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (jSwitchMode.isVisible()) {
-                    switchToolPanels();
+                    switchToolPanels(Main.this);
                 }
             }
         });
@@ -454,7 +454,6 @@ public class Main extends javax.swing.JFrame {
         jRadioButton1.setEnabled(bool);
         jSwitchMode.setVisible(bool);
         jTree1.setEnabled(bool);
-
         jToggleDragDrop.setEnabled(bool);
         jShowServer.setEnabled(bool);
     }
@@ -1277,6 +1276,7 @@ public class Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     //DECRYPT
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+        Statics.resetStaticInts();
         try {
             AESMode = 1;
             fileCount = GUI.countFiles(path);
@@ -1333,6 +1333,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_jToggleButton2ActionPerformed
     //ENCRYPT
     private void jRadioButton0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton0ActionPerformed
+        Statics.resetStaticInts();
         try {
             AESMode = 0;
             fileCount = GUI.countFiles(path);
@@ -1410,7 +1411,7 @@ public class Main extends javax.swing.JFrame {
 
     //SWITCH STORE/SEND/RECEIVE MODE
     private void jSwitchModeActionEvt(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSwitchModeActionEvt
-        switchToolPanels();
+        switchToolPanels(this);
     }//GEN-LAST:event_jSwitchModeActionEvt
     //SEND PANEL PW
     private void jPasswordField2Evt(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPasswordField2Evt
@@ -1730,7 +1731,7 @@ public class Main extends javax.swing.JFrame {
     private void jTextField2KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyTyped
         sendSQLToggle();
     }//GEN-LAST:event_jTextField2KeyTyped
-    public static boolean toggleDragDropBool = true;
+    public static boolean toggleDragDropBool = false;
     private void jToggleDragDropActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleDragDropActionPerformed
         toggleDragDropBool ^= true;
         if (toggleDragDropBool) {
@@ -1738,6 +1739,7 @@ public class Main extends javax.swing.JFrame {
         } else {
             jToggleDragDrop.setToolTipText("files(s) dropped in store mode will be moved to the vault folder");
         }
+        System.out.println(toggleDragDropBool);
     }//GEN-LAST:event_jToggleDragDropActionPerformed
 
     private void jShowServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jShowServerActionPerformed

@@ -8,6 +8,7 @@ package com.i_comit.windows;
  *
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
+import com.i_comit.shared.Miscs;
 import static com.i_comit.windows.GUI.listAESPaths;
 import static com.i_comit.windows.Statics.zipFileCount;
 import java.io.File;
@@ -59,10 +60,11 @@ public class Folder {
                     while (!appLockFile.exists()) {
                         Files.createFile(appLockFile.toPath());
                         Files.setAttribute(appLockFile.toPath(), "dos:hidden", true);
-                        System.out.println("creating app lock file");
                     }
                     Thread.sleep(1000);
                     appLock();
+                } catch (NoSuchFileException ex) {
+                    System.out.println("creating app lock file");
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 } catch (IOException ex) {
@@ -257,13 +259,11 @@ public class Folder {
         t.start();
     }
 
-    public static void recursiveFileDropThread(File filesf, Path path) {
+    public static void recursiveFileDropThread(File filesf, Path path, int dirInt) {
         Thread t = new Thread(() -> {
             try {
-                recursiveFileDrop_T.recursiveFileDrop(filesf, path);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            } catch (InterruptedException ex) {
+                recursiveFileDrop_T.recursiveFileDrop(filesf, path, dirInt);
+            } catch (IOException | InterruptedException ex) {
                 ex.printStackTrace();
             }
         });
@@ -291,49 +291,74 @@ class recursiveFileDrop_T implements Runnable {
     }
     public static int fileDropIter;
 
-    public static void recursiveFileDrop(File filesf, Path path) throws IOException, InterruptedException {
-        if (Main.jToggleButton1.isSelected()) {
-            HotFiler.t.interrupt();
-        }
-        Paths.get(path + File.separator + filesf.getName()).toFile().mkdir();
-        File[] filesArr = filesf.listFiles();
-        for (File filesArr1 : filesArr) {
-            if (!filesArr1.isDirectory()) {
-                if (!filesArr1.getName().endsWith("Thumbs.db")) {
-                    try {
-                        Files.move(filesArr1.toPath(), Paths.get(path + File.separator + filesf.getName() + File.separator + filesArr1.getName()), StandardCopyOption.REPLACE_EXISTING);
-                        AES.getFileAttr(new File(path + File.separator + filesf.getName() + File.separator + filesArr1.getName()), new File(path + File.separator + filesf.getName() + File.separator + filesArr1.getName()));
-                        fileDropIter++;
-                        Main.jAlertLabel.setText("moved " + fileDropIter + " files");
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
+    public static void recursiveFileDrop(File filesf, Path path, int dirInt) throws IOException, InterruptedException {
+        if (dirInt == 0) {
+            Paths.get(path + File.separator + filesf.getName()).toFile().mkdir();
+            File[] filesArr = filesf.listFiles();
+            for (File filesArr1 : filesArr) {
+                if (!filesArr1.isDirectory()) {
+                    if (!filesArr1.getName().endsWith("Thumbs.db")) {
+                        try {
+                            Files.move(filesArr1.toPath(), Paths.get(path + File.separator + filesf.getName() + File.separator + filesArr1.getName()), StandardCopyOption.REPLACE_EXISTING);
+                            AES.getFileAttr(new File(path + File.separator + filesf.getName() + File.separator + filesArr1.getName()), new File(path + File.separator + filesf.getName() + File.separator + filesArr1.getName()));
+                            fileDropIter++;
+                            Main.jAlertLabel.setText("moved " + fileDropIter + " files");
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
                     }
+                } else {
+                    String parentStr = filesArr1.getParent();
+                    String parentFile = Paths.get(parentStr).toFile().getName();
+                    recursiveFileDrop(filesArr1, Paths.get(path + File.separator + parentFile), 0);
                 }
-            } else {
-                String parentStr = filesArr1.getParent();
-                String parentFile = Paths.get(parentStr).toFile().getName();
-                recursiveFileDrop(filesArr1, Paths.get(path + File.separator + parentFile));
+            }
+            if (fileDropIter == Folder.fileDropCount) {
+                GUI.t.interrupt();
+                if (Statics.toolMode == 2) {
+                    GUI.labelCutterThread(Main.jAlertLabel, recursiveFileDrop_T.fileDropIter + " files moved to o-box", 10, 25, 750, false);
+                    Main.jTextArea1.append(recursiveFileDrop_T.fileDropIter + " file(s) moved to o-box at " + Miscs.getCurrentTime() + "\n\n");
+                    TreeView.populateStoreTree(Statics.sendFolder);
+                }
+                if (Statics.toolMode == 0 || Statics.toolMode == 3) {
+                    Main.jAlertLabel.setText("");
+                    Main.jTextArea1.append(recursiveFileDrop_T.fileDropIter + " file(s) moved to vault at " + Miscs.getCurrentTime() + "\n\n");
+                    Statics.dragDropBool = false;
+                    Main.jButton2.setVisible(true);
+                    Statics.AESMode = 0;
+                    Statics.fileCount = GUI.countFiles(Statics.path);
+                    AES.AESThread(listAESPaths(Statics.path), Statics.directory, false, 0);
+                }
+            }
+            filesf.delete();
+        } else {
+            try {
+                Files.move(filesf.toPath(), Paths.get(path + File.separator + filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
+                AES.getFileAttr(new File(path + File.separator + filesf.getName()), new File(path + File.separator + filesf.getName()));
+                fileDropIter++;
+                System.out.println(fileDropIter);
+                Main.jAlertLabel.setText("moved " + fileDropIter + " files");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            if (fileDropIter == dirInt) {
+                GUI.t.interrupt();
+                if (Statics.toolMode == 2) {
+                    GUI.labelCutterThread(Main.jAlertLabel, recursiveFileDrop_T.fileDropIter + " files moved to o-box", 10, 25, 750, false);
+                    Main.jTextArea1.append(recursiveFileDrop_T.fileDropIter + " file(s) moved to o-box at " + Miscs.getCurrentTime() + "\n\n");
+                    TreeView.populateStoreTree(Statics.sendFolder);
+                }
+                if (Statics.toolMode == 0 || Statics.toolMode == 3) {
+                    Main.jAlertLabel.setText("");
+                    Main.jTextArea1.append(recursiveFileDrop_T.fileDropIter + " file(s) moved to vault at " + Miscs.getCurrentTime() + "\n\n");
+                    Statics.dragDropBool = false;
+                    Main.jButton2.setVisible(true);
+                    Statics.AESMode = 0;
+                    Statics.fileCount = GUI.countFiles(Statics.path);
+                    AES.AESThread(listAESPaths(Statics.path), Statics.directory, false, 0);
+                }
             }
         }
-        if (fileDropIter == Folder.fileDropCount) {
-            GUI.t.interrupt();
-            if (Statics.toolMode == 2) {
-                GUI.labelCutterThread(Main.jAlertLabel, recursiveFileDrop_T.fileDropIter + " files moved to o-box", 10, 25, 750, false);
-                Main.jTextArea1.append(recursiveFileDrop_T.fileDropIter + " files moved to o-box\n");
-                TreeView.populateStoreTree(Statics.sendFolder);
-            }
-            if (Statics.toolMode == 0 || Statics.toolMode == 3) {
-                Main.jAlertLabel.setText("");
-                Main.jTextArea1.append(recursiveFileDrop_T.fileDropIter + " files moved to vault\n");
-                Statics.dragDropBool = false;
-                Main.jButton2.setVisible(true);
-                Statics.AESMode = 0;
-                Statics.fileCount = GUI.countFiles(Statics.path);
-                AES.AESThread(listAESPaths(Statics.path), Statics.directory, false, 0);
-            }
-            recursiveFileDrop_T.fileDropIter = 0;
-        }
-        filesf.delete();
     }
 
     public static void recursiveFileStoreDrop(File filesf, Path path, List<Path> recursiveStorePaths) {

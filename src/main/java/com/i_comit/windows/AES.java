@@ -152,9 +152,9 @@ public class AES {
 class AES_T implements Runnable {
 
     public static List<Path> paths = null;
-    
+
     public void run() {
-        
+
     }
 
     public static void AESQuery(List<Path> paths, File dirFile, boolean AESBool, int toolMode) throws InterruptedException {
@@ -303,8 +303,12 @@ class AES_T implements Runnable {
                 Main.jProgressBar2.setVisible(true);
                 GUI.t.interrupt();
                 GUI.labelCutterThread(Main.jAlertLabel, "incorrect key", 10, 25, 500, true);
+                Path deleteCorruptedFile = Paths.get(paths.get(0).toString().replaceAll(".enc", ""));
+                deleteCorruptedFile.toFile().delete();
                 FileHider.cleanUp(path);
                 GUI.resetIncorrectKeyProgressBar(jProgressBar1);
+                Main.jButton2.setVisible(false);
+                Main.toolBtnsBool(true);
             } else {
                 DragDrop_T.resetProgressBar(encFiles, decFiles);
                 GUI.getGB();

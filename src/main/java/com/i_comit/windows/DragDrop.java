@@ -39,6 +39,11 @@ class DragDrop implements DropTargetListener {
 
     @Override
     public void drop(DropTargetDropEvent event) {
+        if (Main.jToggleButton1.isSelected()) {
+            Main.jToggleButton1.setSelected(false);
+            Main.jRadioButton1.setVisible(true);
+//            hotFilerFunction(main);
+        }
         boolean b = false;
         Statics.resetStaticInts();
         event.acceptDrop(DnDConstants.ACTION_COPY);
@@ -83,6 +88,7 @@ class DragDrop implements DropTargetListener {
             }
             jTree1.clearSelection();
         } else {
+            recursiveFileDrop_T.fileDropIter = 0;
             for (DataFlavor flavor : flavors) {
                 try {
                     // If the drop items are files
@@ -104,10 +110,23 @@ class DragDrop implements DropTargetListener {
                                                 if (!filesf.getAbsolutePath().equals(root + masterFolder + "i-ncript.exe")
                                                         && !filesf.getAbsolutePath().equals(root + masterFolder + ".server.exe")
                                                         && !filesf.getAbsolutePath().equals(root + masterFolder + Statics.keyName)) {
-                                                    Main.jButton2.setVisible(true);
-                                                    Main.jProgressBar1.setMaximum(0);
-                                                    jProgressBar1.setString("0% | 0/" + files.size());
-                                                    AES.AESThread(paths, Statics.directory, false, 0);
+
+                                                    System.out.println("Drag drop bool " + Main.toggleDragDropBool);
+                                                    if (!Main.toggleDragDropBool) {
+//                                                        Folder.getFileDropCount(filesf);
+                                                        for (Object file : files) {
+                                                            File fileF = new File(file.toString());
+                                                            System.out.println(file.toString());
+                                                            Folder.recursiveFileDropThread(fileF, Statics.path, files.size());
+                                                        }
+//                                                        filesf.delete();
+                                                    } else {
+                                                        Main.jButton2.setVisible(true);
+                                                        Main.jProgressBar1.setMaximum(0);
+                                                        jProgressBar1.setString("0% | 0/" + files.size());
+                                                        AES.AESThread(paths, Statics.directory, false, 0);
+                                                    }
+
                                                 } else {
                                                     GUI.t.interrupt();
                                                     GUI.labelCutterThread(Main.jAlertLabel, "can't encrypt app files", 10, 25, 1000, false);
@@ -124,7 +143,7 @@ class DragDrop implements DropTargetListener {
                                                     && !filesf.getAbsolutePath().equals(root + masterFolder + "runtime")) {
                                                 if (!Main.toggleDragDropBool) {
                                                     Folder.getFileDropCount(filesf);
-                                                    Folder.recursiveFileDropThread(filesf, Statics.path);
+                                                    Folder.recursiveFileDropThread(filesf, Statics.path, 0);
                                                     filesf.delete();
                                                 } else {
                                                     recursiveFileDrop_T.recursiveFileStoreDrop(filesf, Statics.path, paths);
@@ -160,13 +179,13 @@ class DragDrop implements DropTargetListener {
                             }
                             if (Statics.toolMode == 2) {
                                 if (!filesf.getParent().equals(Statics.sendFolder.toString())) {
-                                    if (filesf.isDirectory()) {
-                                        Folder.getFileDropCount(filesf);
-                                        Folder.recursiveFileDropThread(filesf, Statics.sendFolder);
-                                        filesf.delete();
-                                    } else {
-                                        Files.move(filesf.toPath(), Paths.get(Statics.sendFolder + File.separator + filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
+                                    if (!filesf.isDirectory()) {
+                                        Folder.recursiveFileDropThread(filesf, Statics.sendFolder, files.size());
                                         Main.refreshTreeView(Statics.sendFolder, TreeView.sendCaretPos);
+                                    } else {
+                                        Folder.getFileDropCount(filesf);
+                                        Folder.recursiveFileDropThread(filesf, Statics.sendFolder, 0);
+                                        filesf.delete();
                                     }
                                 } else {
                                     GUI.t.interrupt();

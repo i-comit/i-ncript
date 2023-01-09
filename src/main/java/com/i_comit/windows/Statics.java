@@ -5,6 +5,7 @@
 package com.i_comit.windows;
 
 import com.i_comit.server.Client;
+import com.i_comit.shared.Miscs;
 import static com.i_comit.windows.GUI.listAESPaths;
 import static com.i_comit.windows.HotFiler_T.watchService;
 import static com.i_comit.windows.Main.*;
@@ -128,13 +129,18 @@ public class Statics {
         }
     }
 
-    public static void switchToolPanels() {
+    public static void switchToolPanels(Main main) {
         jRadioButton2.setVisible(false);
         toolMode++;
         jTextField2.setText("");
         jPasswordField2.setText("");
         jPasswordField3.setText("");
         GUI.getGB();
+        if (jToggleButton1.isSelected()) {
+            jToggleButton1.setSelected(false);
+            jRadioButton1.setVisible(true);
+            hotFilerFunction(main);
+        }
         switch (toolMode) {
             case 1 -> {
                 jSwitchMode.setText("N-BOX");
@@ -209,7 +215,7 @@ public class Statics {
         if (jToggleButton1.isSelected()) {
             jToggleButton1.setSelected(false);
             jRadioButton1.setVisible(true);
-            HotFiler.t.interrupt();
+            hotFilerFunction(main);
             GUI.labelCutterThread(jAlertLabel, "hot filer disabled", 0, 25, 1000, false);
         }
         AES.t.interrupt();
@@ -261,10 +267,10 @@ public class Statics {
             Main.jTextArea1.append("--------------------------------------------\n");
             switch (AESMode) {
                 case 0:
-                    jTextArea1.append("encryption of " + fileIter + " files stopped at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
+                    jTextArea1.append("encryption of " + fileIter + " files stopped at " + Miscs.getCurrentTime() + "\n\n");
                     break;
                 case 1:
-                    jTextArea1.append("decryption of " + fileIter + " files stopped at " + LocalTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
+                    jTextArea1.append("decryption of " + fileIter + " files stopped at " + Miscs.getCurrentTime() + "\n\n");
                     break;
             }
             Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
