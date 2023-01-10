@@ -319,13 +319,15 @@ class AES_T implements Runnable {
         }
     }
 
-    private static void buttonRestart() {
+    public static void buttonRestart() {
         Main.toolBtnsBool(false);
         Main.jButton2.setVisible(true);
         Main.jTabbedPane1.setSelectedIndex(1);
         Main.dragDrop.setVisible(false);
         Main.jSwitchMode.setVisible(false);
         Main.jProgressBar1.setVisible(true);
-        Main.jProgressBar2.setVisible(false);
+        if (!Statics.dragDropBool) {
+            Main.jProgressBar2.setVisible(false);
+        }
     }
 }

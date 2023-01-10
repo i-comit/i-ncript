@@ -107,6 +107,7 @@ class DragDrop implements DropTargetListener {
                                 if (i >= paths.size() - 1) {
                                     if (!b) {
                                         Statics.dragDropBool = true;
+                                        AES_T.buttonRestart();
                                         if (!filesf.isDirectory()) {
                                             if (!filesf.getName().endsWith(".i-cc")) {
                                                 if (!filesf.getAbsolutePath().equals(root + masterFolder + "i-ncript.exe")
@@ -273,6 +274,7 @@ class DragDrop_T implements Runnable {
                 if (!Main.mouseOverLog) {
                     Main.jTabbedPane1.setSelectedIndex(0);
                 }
+                Statics.resetStaticInts();
                 AES_T.paths.clear();
             }
         } catch (InterruptedException ex) {

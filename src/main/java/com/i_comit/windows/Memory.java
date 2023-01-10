@@ -13,7 +13,9 @@ import static com.i_comit.windows.Memory.byteFormatter;
 import static com.i_comit.windows.Statics.username;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -328,6 +330,48 @@ public class Memory {
                 Main.jAlertLabel.setText("");
                 jProgressBar2.setVisible(false);
             }
+        }
+    }
+
+    public static void moveFileMonitor(File inputFile, File outputFile) {
+        Main.jAlertLabel.setText("moving " + inputFile.getName());
+        jProgressBar2.setMaximum((int) inputFile.length());
+        jProgressBar2.setStringPainted(true);
+        try ( FileInputStream inputStream = new FileInputStream(inputFile);  FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+            byte[] inputBytes = AES.dynamicBytes(inputFile);
+            int nread;
+            long maxFileSize = inputFile.length();
+            while ((nread = inputStream.read(inputBytes)) > 0) {
+                outputStream.write(inputBytes);
+                long iterator = maxFileSize - inputStream.available();
+                float percentage = ((float) iterator / maxFileSize * 100);
+                DecimalFormat format = new DecimalFormat("0.#");
+                String percentageStr = format.format(percentage);
+                jProgressBar2.setValue((int) iterator);
+                jProgressBar2.setString(percentageStr + "% | " + byteFormatter(iterator));
+            }
+            inputFile.delete();
+            if (inputStream.available() == 0) {
+                try {
+                    Thread.sleep(50);
+                    jProgressBar2.setMaximum(50);
+                    jProgressBar2.setValue(Main.jProgressBar2.getMaximum());
+                    for (int x = jProgressBar2.getMaximum(); x >= 0; x--) {
+                        Thread.sleep(5);
+                        jProgressBar2.setValue(x);
+                    }
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+                if (jProgressBar2.getValue() == 0) {
+                    maxFileSize = 0;
+                    jProgressBar2.setStringPainted(false);
+                    Main.jAlertLabel.setText("");
+                    jProgressBar2.setVisible(true);
+                }
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 }

@@ -9,7 +9,6 @@ package com.i_comit.windows;
  * @author Khiem Luong <khiemluong@i-comit.com>
  */
 import com.i_comit.shared.Miscs;
-import static com.i_comit.windows.GUI.listAESPaths;
 import static com.i_comit.windows.Statics.zipFileCount;
 import java.io.File;
 import java.io.FileInputStream;
@@ -259,15 +258,17 @@ public class Folder {
         t.start();
     }
 
+    public static Thread recursiveFileDropT;
+
     public static void recursiveFileDropThread(File filesf, Path path, int dirInt) {
-        Thread t = new Thread(() -> {
+        recursiveFileDropT = new Thread(() -> {
             try {
                 recursiveFileDrop_T.recursiveFileDrop(filesf, path, dirInt);
             } catch (IOException | InterruptedException ex) {
                 ex.printStackTrace();
             }
         });
-        t.start();
+        recursiveFileDropT.start();
     }
 
     public static int fileDropCount;
@@ -299,9 +300,14 @@ class recursiveFileDrop_T implements Runnable {
                 if (!filesArr1.isDirectory()) {
                     if (!filesArr1.getName().endsWith("Thumbs.db")) {
                         try {
-                            DragDrop.dragDropPaths.add(Paths.get(path + File.separator + filesf.getName() + File.separator + filesArr1.getName()));
-                            Files.move(filesArr1.toPath(), Paths.get(path + File.separator + filesf.getName() + File.separator + filesArr1.getName()), StandardCopyOption.REPLACE_EXISTING);
-                            AES.getFileAttr(new File(path + File.separator + filesf.getName() + File.separator + filesArr1.getName()), new File(path + File.separator + filesf.getName() + File.separator + filesArr1.getName()));
+                            if (filesArr1.length() < Statics.maxFileBytes) {
+                                DragDrop.dragDropPaths.add(Paths.get(path + File.separator + filesf.getName() + File.separator + filesArr1.getName()));
+                                Files.move(filesArr1.toPath(), Paths.get(path + File.separator + filesf.getName() + File.separator + filesArr1.getName()), StandardCopyOption.REPLACE_EXISTING);
+                                AES.getFileAttr(new File(path + File.separator + filesf.getName() + File.separator + filesArr1.getName()), new File(path + File.separator + filesf.getName() + File.separator + filesArr1.getName()));
+                            } else {
+                                Memory.moveFileMonitor(filesArr1, new File(path + File.separator + filesf.getName()));
+                                filesArr1.delete();
+                            }
                             fileDropIter++;
                             Main.jAlertLabel.setText("moved " + fileDropIter + " files");
                         } catch (IOException ex) {
@@ -319,7 +325,7 @@ class recursiveFileDrop_T implements Runnable {
                 Main.jTextArea1.append("--------------------------------------------\n");
 
                 if (Statics.toolMode == 2) {
-                    GUI.labelCutterThread(Main.jAlertLabel, recursiveFileDrop_T.fileDropIter + " files moved to o-box", 10, 25, 750, false);
+                    GUI.labelCutterThread(Main.jAlertLabel, recursiveFileDrop_T.fileDropIter + " file(s) moved to o-box", 10, 25, 750, false);
                     Main.jTextArea1.append(recursiveFileDrop_T.fileDropIter + " file(s) moved to o-box at " + Miscs.getCurrentTime() + "\n\n");
                     Main.jTree1.setEnabled(true);
                     TreeView.populateStoreTree(Statics.sendFolder);
@@ -331,14 +337,20 @@ class recursiveFileDrop_T implements Runnable {
                     Main.jButton2.setVisible(true);
                     Statics.AESMode = 0;
                     Statics.fileCount = fileDropIter;
+                    Main.jProgressBar1.setString("0% | 0/" + Statics.fileCount);
                     AES.AESThread(DragDrop.dragDropPaths, Statics.directory, false, 0);
                 }
             }
             filesf.delete();
         } else {
             try {
-                Files.move(filesf.toPath(), Paths.get(path + File.separator + filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
-                AES.getFileAttr(new File(path + File.separator + filesf.getName()), new File(path + File.separator + filesf.getName()));
+                if (filesf.length() < Statics.maxFileBytes) {
+                    Files.move(filesf.toPath(), Paths.get(path + File.separator + filesf.getName()), StandardCopyOption.REPLACE_EXISTING);
+                    AES.getFileAttr(new File(path + File.separator + filesf.getName()), new File(path + File.separator + filesf.getName()));
+                } else {
+                    Memory.moveFileMonitor(filesf, new File(path + File.separator + filesf.getName()));
+                    filesf.delete();
+                }
                 fileDropIter++;
                 System.out.println(fileDropIter);
                 Main.jAlertLabel.setText("moved " + fileDropIter + " files");
@@ -350,7 +362,7 @@ class recursiveFileDrop_T implements Runnable {
                 Main.jTextArea1.append("--------------------------------------------\n");
 
                 if (Statics.toolMode == 2) {
-                    GUI.labelCutterThread(Main.jAlertLabel, recursiveFileDrop_T.fileDropIter + " files moved to o-box", 10, 25, 750, false);
+                    GUI.labelCutterThread(Main.jAlertLabel, recursiveFileDrop_T.fileDropIter + " file(s) moved to o-box", 10, 25, 750, false);
                     Main.jTextArea1.append(recursiveFileDrop_T.fileDropIter + " file(s) moved to o-box at " + Miscs.getCurrentTime() + "\n\n");
                     Main.jTree1.setEnabled(true);
                     TreeView.populateStoreTree(Statics.sendFolder);
@@ -362,6 +374,7 @@ class recursiveFileDrop_T implements Runnable {
                     Main.jButton2.setVisible(true);
                     Statics.AESMode = 0;
                     Statics.fileCount = dirInt;
+                    Main.jProgressBar1.setString("0% | 0/" + Statics.fileCount);
                     AES.AESThread(DragDrop.dragDropPaths, Statics.directory, false, 0);
                 }
             }

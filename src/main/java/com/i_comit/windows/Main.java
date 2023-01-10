@@ -41,11 +41,11 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "";
+    public static String root = "E:\\";
     public static final String masterFolder = "'--------'" + File.separator;
     public static boolean adminBool = false;
 
-    private final String appVer = "2.0.3";
+    private final String appVer = "2.0.4";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
     public static final int year = Year.now().getValue();
 
@@ -53,8 +53,8 @@ public class Main extends javax.swing.JFrame {
     private URL fontFile1 = getClass().getResource("/robot-font.otf");
 
     public Main() {
-        root = Paths.get("").toAbsolutePath().toString();
-        if (Memory.checkWMIC()) {
+//        root = Paths.get("").toAbsolutePath().toString();
+//        if (Memory.checkWMIC()) {
             System.out.println(Memory.getUsableSpaceLong());
             root = root.substring(0, 3);
             initComponents();
@@ -101,7 +101,7 @@ public class Main extends javax.swing.JFrame {
             jProgressBar2.setVisible(false);
             dragDrop.setVisible(false);
             jSendSQL.setVisible(false);
-        }
+//        }
     }
 
     private void getKeyBinding(int keyCode, JPanel jPanel, AbstractAction action) {
@@ -571,7 +571,7 @@ public class Main extends javax.swing.JFrame {
         jAlertLabel.setFocusable(false);
         jAlertLabel.setRequestFocusEnabled(false);
         getContentPane().add(jAlertLabel);
-        jAlertLabel.setBounds(18, 174, 240, 27);
+        jAlertLabel.setBounds(17, 174, 240, 27);
 
         jToolPanel.setOpaque(false);
         jToolPanel.setPreferredSize(new java.awt.Dimension(252, 150));

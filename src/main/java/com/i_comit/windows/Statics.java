@@ -218,8 +218,20 @@ public class Statics {
             hotFilerFunction(main);
             GUI.labelCutterThread(jAlertLabel, "hot filer disabled", 0, 25, 1000, false);
         }
-        AES.t.interrupt();
-        AES.t.stop();
+        if (dragDropBool) {
+            Folder.recursiveFileDropT.interrupt();
+            Folder.recursiveFileDropT.stop();
+            for (Path path : DragDrop.dragDropPaths) {
+                if (path.toFile().exists()) {
+                    path.toFile().delete();
+                    System.out.println(path.toFile().getName() + " deleted.");
+                }
+            }
+        } else {
+            AES.t.interrupt();
+            AES.t.stop();
+        }
+
         if (GUI.t.isAlive()) {
             GUI.t.interrupt();
         }
@@ -263,18 +275,24 @@ public class Statics {
         }
         main.setSize(779, 240);
 
-        if (!AES.t.isAlive()) {
-            Main.jTextArea1.append("--------------------------------------------\n");
-            switch (AESMode) {
-                case 0:
-                    jTextArea1.append("encryption of " + fileIter + " files stopped at " + Miscs.getCurrentTime() + "\n\n");
-                    break;
-                case 1:
-                    jTextArea1.append("decryption of " + fileIter + " files stopped at " + Miscs.getCurrentTime() + "\n\n");
-                    break;
+        if (!dragDropBool) {
+            if (!AES.t.isAlive()) {
+                Main.jTextArea1.append("--------------------------------------------\n");
+                switch (AESMode) {
+                    case 0:
+                        jTextArea1.append("encryption of " + fileIter + " file(s) stopped at " + Miscs.getCurrentTime() + "\n\n");
+                        break;
+                    case 1:
+                        jTextArea1.append("decryption of " + fileIter + " file(s) stopped at " + Miscs.getCurrentTime() + "\n\n");
+                        break;
+                }
             }
-            Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
+        } else {
+            jTextArea1.append("moving of " + DragDrop.dragDropPaths.size() + " file(s) stopped at " + Miscs.getCurrentTime() + "\n\n");
         }
+        Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
+        DragDrop.dragDropPaths.clear();
+        dragDropBool = false;
         resetStaticInts();
     }
 
