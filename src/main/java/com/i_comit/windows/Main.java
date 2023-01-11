@@ -1666,26 +1666,32 @@ public class Main extends javax.swing.JFrame {
             try {
                 if (jTree1.getSelectionPaths() != null) {
                     if (TreeView.treePathContainsDirs(jTree1.getSelectionPaths())) {
-                        if (Client.getTable(Main.jTextField2.getText().trim())) {
-                            jCreationDateLabel.setText("");
-                            jFileSizeLabel.setText("");
-                            List<Path> paths = TreeView.convertTreePathToPath(jTree1.getSelectionPaths());
-                            jAlertLabel.setText("");
-                            Main.jTextField2.setEnabled(false);
-                            Main.jPasswordField2.setEnabled(false);
-                            for (Path path : paths) {
-                                Client.postRecords(Main.jTextField2.getText().trim(), path.toFile());
-                                path.toFile().delete();
-                                refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                        if (Client.getServerCap(jTree1.getSelectionPaths())) {
+                            if (Client.getTable(Main.jTextField2.getText().trim())) {
+                                jCreationDateLabel.setText("");
+                                jFileSizeLabel.setText("");
+                                List<Path> paths = TreeView.convertTreePathToPath(jTree1.getSelectionPaths());
+                                jAlertLabel.setText("");
+                                Main.jTextField2.setEnabled(false);
+                                Main.jPasswordField2.setEnabled(false);
+                                for (Path path : paths) {
+                                    Client.postRecords(Main.jTextField2.getText().trim(), path.toFile());
+                                    path.toFile().delete();
+                                    refreshTreeView(sendFolder, TreeView.sendCaretPos);
+                                }
+                                GUI.t.interrupt();
+                                GUI.labelCutterThread(jAlertLabel, paths.size() + " file(s) sent to " + Main.jTextField2.getText().trim(), 20, 25, 1000, false);
+                                Main.jTextArea1.append(paths.size() + " file(s) sent to " + Main.jTextField2.getText().trim() + " at " + ZonedDateTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
+                                Statics.resetSendTools(2);
+                            } else {
+                                Statics.resetSendTools(2);
+                                GUI.t.interrupt();
+                                GUI.labelCutterThread(jAlertLabel, "user is not in this network", 20, 25, 1000, false);
                             }
-                            GUI.t.interrupt();
-                            GUI.labelCutterThread(jAlertLabel, paths.size() + " file(s) sent to " + Main.jTextField2.getText().trim(), 20, 25, 1000, false);
-                            Main.jTextArea1.append(paths.size() + " file(s) sent to " + Main.jTextField2.getText().trim() + " at " + ZonedDateTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
-                            Statics.resetSendTools(2);
                         } else {
                             Statics.resetSendTools(2);
                             GUI.t.interrupt();
-                            GUI.labelCutterThread(jAlertLabel, "user is not in this network", 20, 25, 1000, false);
+                            GUI.labelCutterThread(jAlertLabel, "server has no more memory", 20, 25, 1000, false);
                         }
                     } else {
                         Statics.resetSendTools(2);
@@ -1700,7 +1706,7 @@ public class Main extends javax.swing.JFrame {
             } catch (IOException | ClassNotFoundException | InterruptedException ex) {
                 Statics.resetSendTools(2);
                 GUI.t.interrupt();
-                GUI.labelCutterThread(jAlertLabel, "host has disconnected.", 25, 50, 1250, false);
+                GUI.labelCutterThread(jAlertLabel, "admin has disconnected", 25, 50, 1250, false);
             }
         }
         ).start();
@@ -1792,20 +1798,17 @@ public class Main extends javax.swing.JFrame {
                 public synchronized void run() {
                     Folder.appLockBool = false;
                     Folder.appLockFile.delete();
-                    if (Main.jToggleButton1.isSelected()) {
-                        Main.jToggleButton1.setSelected(false);
+                    if (Client.getClientIP() && adminBool) {
+                        System.out.println("closing server.");
+                        Client.adminRequests(1);
+                        Server.portKill();
+                        Server.appKill(".server.exe", true);
+                        Server.appKill("i-ncript.exe", true);
                     }
                     if (!jClientIPInput.getText().equals("000.000.0.000")) {
                         if (!username.equals("") && jToolPanel.isVisible()) {
                             System.out.println("ending session.");
                             Client.endSession(username);
-                        }
-                        if (Client.getClientIP() && adminBool) {
-                            System.out.println("closing server.");
-                            Client.adminRequests(1);
-                            Server.portKill();
-                            Server.appKill(".server.exe", true);
-                            Server.appKill("i-ncript.exe", true);
                         }
                     }
                     if (Client.clientSocket != null) {
@@ -1916,7 +1919,7 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JToggleButton jToggleButton2;
     protected static javax.swing.JRadioButtonMenuItem jToggleDragDrop;
     public static javax.swing.JPanel jToolPanel;
-    protected static javax.swing.JTree jTree1;
+    public static javax.swing.JTree jTree1;
     protected static javax.swing.JLabel jUsernameLabel;
     // End of variables declaration//GEN-END:variables
 

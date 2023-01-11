@@ -20,6 +20,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -99,6 +100,20 @@ public class Server {
                             ois.close();
                             oos.close();
                             clientSocket.close();
+                        }
+                        if (Arrays.equals(message[0], "PST_FILESIZE".getBytes())) {
+                            try {
+                                ByteBuffer fileSize = ByteBuffer.allocate(Long.BYTES);
+                                fileSize.put(message[1]);
+                                fileSize.flip();//need flip 
+                                boolean b = admin.getServerMemCap(fileSize.getLong());
+                                oos.writeObject(b);
+                                ois.close();
+                                oos.close();
+                                clientSocket.close();
+                            } catch (UnsupportedEncodingException ex) {
+                                ex.printStackTrace();
+                            }
                         }
                         if (Arrays.equals(message[0], "PST_RECD".getBytes())) {
                             try {
@@ -539,10 +554,12 @@ public class Server {
             }
         }
 
-        public void getServerMemCap() {
+        public boolean getServerMemCap(long fileSizes) {
             File diskPartition = new File(dbPath).toPath().getRoot().toFile();
-            String GB = Memory.byteFormatter(diskPartition.getUsableSpace() / 3);
+            long memCap = diskPartition.getUsableSpace() / 3;
+            String GB = Memory.byteFormatter(memCap);
             System.out.println("available GB " + GB);
+            return fileSizes < memCap;
         }
 
         public void closeSocket() {

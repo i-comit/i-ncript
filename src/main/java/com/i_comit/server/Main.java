@@ -105,10 +105,10 @@ public class Main extends javax.swing.JFrame {
 
         initComponents();
         uptimeTimer();
+        this.setBackground(new Color(0, 0, 0, 0));
         jTextArea1.setBackground(new Color(0, 0, 0, (float) 0.6));
         Server.initDatabase();
         sessions.clearSessions();
-        admin.getServerMemCap();
     }
 
     private void uptimeTimer() {

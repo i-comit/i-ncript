@@ -25,13 +25,17 @@ import java.net.ConnectException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.swing.tree.TreePath;
 
 /**
  * @author Khiem Luong <khiemluong@i-comit.com>
@@ -119,6 +123,36 @@ public class Client {
         oos.close();
     }
 
+    public static boolean getServerCap(TreePath[] treePaths) throws IOException, ClassNotFoundException {
+        List<Long> fileSizes = new ArrayList<>();
+
+        for (int i = 0; i < treePaths.length; i++) {
+            Path filePath = TreeView.convertTreePathToFile(Main.jTree1.getSelectionPaths(), i).toPath();
+            long fileSize = filePath.toFile().length();
+            fileSizes.add(fileSize);
+        }
+        long sum = fileSizes.stream().mapToLong(Long::longValue).sum();
+        System.out.println("filesizeSum " + sum);
+        getServerSocket();
+        byte[] requestType_B = "PST_FILESIZE".getBytes();
+        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+        buffer.putLong(sum);
+        byte[] bytesNum = buffer.array();
+        byte[][] postRequest_B = {requestType_B, bytesNum};
+        oos.writeObject(postRequest_B);
+        ois = new ObjectInputStream(clientSocket.getInputStream());
+        boolean message = (boolean) ois.readObject();
+        ois.close();
+        oos.close();
+        if (message) {
+            System.out.println("server has enough space");
+            return true;
+        } else {
+            System.out.println("server does not have enough space");
+            return false;
+        }
+    }
+
     public static void postRecords(String username, File inputFile) throws IOException, InterruptedException, ClassNotFoundException {
         getServerSocket();
         byte[] requestType_B = "PST_RECD".getBytes();
@@ -129,9 +163,9 @@ public class Client {
         String fileTimeS = fileTime.toString();
         byte[] inputFileDate_B = fileTimeS.getBytes();
         byte[] inputFileBytes_B = Files.readAllBytes(inputFile.toPath());
-        byte[][] posRequest_B = {requestType_B, userName_B, inputFileName_B, inputFileDate_B, inputFileBytes_B};
+        byte[][] postRequest_B = {requestType_B, userName_B, inputFileName_B, inputFileDate_B, inputFileBytes_B};
 
-        oos.writeObject(posRequest_B);
+        oos.writeObject(postRequest_B);
         oos.close();
     }
 
@@ -144,6 +178,8 @@ public class Client {
         oos.writeObject(getTableRequest_B);
         ois = new ObjectInputStream(clientSocket.getInputStream());
         boolean message = (boolean) ois.readObject();
+        ois.close();
+        oos.close();
         return message;
     }
 
