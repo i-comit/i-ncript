@@ -33,6 +33,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.WindowConstants;
 
 /**
  *
@@ -50,33 +51,15 @@ public class Main extends javax.swing.JFrame {
 
     public Main() {
         try {
-            Server.dbPath = Paths.get("").toFile().getAbsolutePath().substring(0, 3)
-                    + "'--------'"
-                    + File.separator
-                    + "runtime"
-                    + File.separator
-                    + "bin"
-                    + File.separator
-                    + "server"
-                    + File.separator
-                    + "i-ncript️.db";
-            Server.url = "jdbc:sqlite:" + Server.dbPath;
-
-            initComponents();
-            uptimeTimer();
-            this.setBackground(new Color(0, 0, 0, 0));
-            jTextArea1.setBackground(new Color(0, 0, 0, (float) 0.6));
-            Server.Sessions sessions = new Server.Sessions();
-            Server.initDatabase();
-            sessions.clearSessions();
-
             if (Server.serverSocket == null) {
+                initServer();
                 Server.socketStart(this);
             } else {
                 Server.portKill();
                 Server.appKill(".server.exe", false);
                 Server.appKill("i-ncript.exe", true);
                 Server.serverSocket.close();
+                Server.socketStart(this);
                 Server.socketStart(this);
             }
 
@@ -104,6 +87,28 @@ public class Main extends javax.swing.JFrame {
         }
         return customFont;
     }
+
+    private void initServer() throws UnsupportedEncodingException {
+        Server.dbPath = "E:\\"
+                + "'--------'"
+                + File.separator
+                + "runtime"
+                + File.separator
+                + "bin"
+                + File.separator
+                + "server"
+                + File.separator
+                + "i-ncript️.db";
+        Server.url = "jdbc:sqlite:" + Server.dbPath;
+
+        initComponents();
+        uptimeTimer();
+        jTextArea1.setBackground(new Color(0, 0, 0, (float) 0.6));
+        Server.Sessions sessions = new Server.Sessions();
+        Server.initDatabase();
+        sessions.clearSessions();
+    }
+
 
     private void uptimeTimer() {
         executor.execute(() -> {
@@ -153,6 +158,14 @@ public class Main extends javax.swing.JFrame {
         setUndecorated(true);
         setResizable(false);
         setType(java.awt.Window.Type.UTILITY);
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                formMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                formMouseExited(evt);
+            }
+        });
 
         jScrollPane1.setOpaque(false);
 
@@ -225,6 +238,14 @@ public class Main extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseEntered
+
+    }//GEN-LAST:event_formMouseEntered
+
+    private void formMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formMouseExited
 
     /**
      * @param args the command line arguments

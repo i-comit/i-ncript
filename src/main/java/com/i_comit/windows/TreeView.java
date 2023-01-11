@@ -361,8 +361,7 @@ public class TreeView {
                 Path file = fileFormat.toPath();
 
                 if (!fileFormat.isDirectory()) {
-                    BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class
-                    );
+                    BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
                     GUI.labelCutterTreeThread(Main.jCreationDateLabel, formatDateTime(attr.lastModifiedTime()), 0, 16, 64, true);
                     GUI.labelCutterTreeThread(Main.jFileSizeLabel, Memory.byteFormatter(fileFormat.length()), 0, 16, 64, true);
                 } else {
@@ -388,8 +387,7 @@ public class TreeView {
 
                     if (i == Main.jTree1.getSelectionPaths().length) {
                         Path file = fileFormat.toPath();
-                        BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class
-                        );
+                        BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
                         Main.jCreationDateLabel.setText(formatDateTime(attr.lastModifiedTime()));
                     }
 

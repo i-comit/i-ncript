@@ -55,52 +55,52 @@ public class Main extends javax.swing.JFrame {
     public Main() {
 //        root = Paths.get("").toAbsolutePath().toString();
 //        if (Memory.checkWMIC()) {
-            System.out.println(Memory.getUsableSpaceLong());
-            root = root.substring(0, 3);
-            initComponents();
-            Memory.readIPAddress();
-            TreeView.renderTreeCells();
+        System.out.println(Memory.getUsableSpaceLong());
+        root = root.substring(0, 3);
+        initComponents();
+        Memory.readIPAddress();
+        TreeView.renderTreeCells();
 
-            Path runtime = Paths.get(root + masterFolder + "runtime");
-            Path app = Paths.get(root + masterFolder + "app");
-            if (runtime.toFile().exists()) {
-                try {
-                    Files.setAttribute(runtime, "dos:hidden", true);
-                } catch (IOException ex) {
-                }
+        Path runtime = Paths.get(root + masterFolder + "runtime");
+        Path app = Paths.get(root + masterFolder + "app");
+        if (runtime.toFile().exists()) {
+            try {
+                Files.setAttribute(runtime, "dos:hidden", true);
+            } catch (IOException ex) {
             }
-            if (app.toFile().exists()) {
-                try {
-                    Files.setAttribute(app, "dos:hidden", true);
-                } catch (IOException ex) {
-                }
+        }
+        if (app.toFile().exists()) {
+            try {
+                Files.setAttribute(app, "dos:hidden", true);
+            } catch (IOException ex) {
             }
+        }
 
-            jStorePanel.setVisible(true);
-            jSendPanel.setVisible(false);
-            jReceivePanel.setVisible(false);
-            jRadioButton2.setVisible(false);
-            jRadioButton3.setVisible(false);
-            jScrollPane5.setVisible(false);
-            jMenuBar1.setVisible(false);
+        jStorePanel.setVisible(true);
+        jSendPanel.setVisible(false);
+        jReceivePanel.setVisible(false);
+        jRadioButton2.setVisible(false);
+        jRadioButton3.setVisible(false);
+        jScrollPane5.setVisible(false);
+        jMenuBar1.setVisible(false);
 
-            if (!keyFile.exists()) {
-                jToolPanel.setVisible(false);
-                loginLabelVisibleBool(false);
-                this.setSize(540, 240);
-                this.setLocationRelativeTo(null);
-            } else {
-                loginLabelVisibleBool(true);
-                jUsernameLabel.setText("enter username");
-                jPasswordLabel.setText("enter password");
-                generateApp();
+        if (!keyFile.exists()) {
+            jToolPanel.setVisible(false);
+            loginLabelVisibleBool(false);
+            this.setSize(540, 240);
+            this.setLocationRelativeTo(null);
+        } else {
+            loginLabelVisibleBool(true);
+            jUsernameLabel.setText("enter username");
+            jPasswordLabel.setText("enter password");
+            generateApp();
 
-                jToolPanel.setVisible(false);
-                jButton2.setVisible(false);
-            }
-            jProgressBar2.setVisible(false);
-            dragDrop.setVisible(false);
-            jSendSQL.setVisible(false);
+            jToolPanel.setVisible(false);
+            jButton2.setVisible(false);
+        }
+        jProgressBar2.setVisible(false);
+        dragDrop.setVisible(false);
+        jSendSQL.setVisible(false);
 //        }
     }
 
@@ -359,6 +359,7 @@ public class Main extends javax.swing.JFrame {
     }
 
     private void startServer() {
+
         jClientIPInput.setText(Server.getIP());
         System.out.println("server IP: " + jClientIPInput.getText());
         File serverExeFile = new File(root + masterFolder + ".server.exe");
@@ -725,7 +726,7 @@ public class Main extends javax.swing.JFrame {
 
         jLabel5.setFont(Statics.registerCustomFont(12, fontFile));
         jLabel5.setText("set file username");
-        jLabel5.setToolTipText("the name must match your recipient's username");
+        jLabel5.setToolTipText("the file name must match your recipient's username");
         jSendPanel.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 18, -1, -1));
 
         jLabel6.setFont(Statics.registerCustomFont(12, fontFile));
@@ -1791,6 +1792,9 @@ public class Main extends javax.swing.JFrame {
                 public synchronized void run() {
                     Folder.appLockBool = false;
                     Folder.appLockFile.delete();
+                    if (Main.jToggleButton1.isSelected()) {
+                        Main.jToggleButton1.setSelected(false);
+                    }
                     if (!jClientIPInput.getText().equals("000.000.0.000")) {
                         if (!username.equals("") && jToolPanel.isVisible()) {
                             System.out.println("ending session.");

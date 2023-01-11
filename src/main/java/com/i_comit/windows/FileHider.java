@@ -116,6 +116,7 @@ class FileHider_T implements Runnable {
             Main.toolBtnsBool(true);
             Main.jProgressBar1.setValue(0);
             Main.jProgressBar2.setMaximum(0);
+            Main.jProgressBar2.setVisible(true);
             folderWatcher();
         }
         if (fileHideBool) {

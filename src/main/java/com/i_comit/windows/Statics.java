@@ -355,7 +355,7 @@ public class Statics {
                 HotFiler.t.interrupt();
                 Main.buttonGroup1.clearSelection();
             } catch (NullPointerException | IOException ex) {
-                GUI.labelCutterThread(jAlertLabel, "press hot filer one more time", 0, 25, 500, false);
+                //GUI.labelCutterThread(jAlertLabel, "press hot filer one more time", 0, 25, 500, false);
             }
 
         }
@@ -398,7 +398,7 @@ public class Statics {
 
         jLabel1.setLocation(265, 10);
         jLabel3.setLocation(367, 4);
-        jAlertLabel.setLocation(265, 174);
+        jAlertLabel.setLocation(264, 174);
         Main.jLoginPanel.setVisible(false);
         Main.jToolPanel.setVisible(true);
         Main.jProgressBar2.setVisible(true);

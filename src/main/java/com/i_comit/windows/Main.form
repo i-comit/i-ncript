@@ -419,7 +419,7 @@
                   <Connection code="Statics.registerCustomFont(12, fontFile)" type="code"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="set file username"/>
-                <Property name="toolTipText" type="java.lang.String" value="the name must match your recipient&apos;s username"/>
+                <Property name="toolTipText" type="java.lang.String" value="the file name must match your recipient&apos;s username"/>
               </Properties>
               <Constraints>
                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">

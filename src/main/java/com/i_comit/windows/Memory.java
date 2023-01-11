@@ -284,6 +284,9 @@ public class Memory {
 
                                 }
                                 Client.clientSocket.close();
+                                if (Main.jToggleButton1.isSelected()) {
+                                    Main.jToggleButton1.setSelected(false);
+                                }
                                 System.exit(0);
                             }
                         }

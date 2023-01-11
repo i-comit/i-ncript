@@ -194,12 +194,12 @@ public class GUI {
                 switch (Statics.AESMode) {
                     case 0 -> {
                         GUI.t.interrupt();
-                        GUI.labelCutterThread(jAlertLabel, "encrypted " + Statics.fileIter + " files", 10, 20, 400, false);
+                        GUI.labelCutterThread(jAlertLabel, "encrypted " + Statics.fileIter + " file(s)", 10, 20, 400, false);
                         Main.jTextArea1.append("encrypted " + Statics.fileIter + " file(s) at " + Miscs.getCurrentTime() + "\n\n");
                     }
                     case 1 -> {
                         GUI.t.interrupt();
-                        GUI.labelCutterThread(jAlertLabel, "decrypted " + Statics.fileIter + " files", 10, 20, 400, false);
+                        GUI.labelCutterThread(jAlertLabel, "decrypted " + Statics.fileIter + " file(s)", 10, 20, 400, false);
                         Main.jTextArea1.append("decrypted " + Statics.fileIter + " file(s) at " + Miscs.getCurrentTime() + "\n\n");
                     }
                 }

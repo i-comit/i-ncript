@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.stream.Stream;
 import java.io.IOException;
 import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
+import java.util.ArrayList;
 
 /**
  * @author Khiem Luong <khiemluong@i-comit.com>
@@ -63,6 +66,7 @@ class HotFiler_T implements Runnable {
     }
 
     public static WatchService watchService;
+    public static FileTime originalFT = null;
 
     public static void folderWatcher() throws IOException {
         System.out.println("Folder Watcher Enabled");
@@ -78,6 +82,7 @@ class HotFiler_T implements Runnable {
             WatchKey key;
             while ((key = watchService.take()) != null && Main.jToggleButton1.isSelected()) {
                 GUI.labelCutterThread(jAlertLabel, "hot filer detected new files", 15, 25, 550, false);
+                originalFT = getFileTime();
                 Statics.fileCount = 0;
 
                 for (WatchEvent<?> event : key.pollEvents()) {
@@ -85,18 +90,22 @@ class HotFiler_T implements Runnable {
                     boolean b = true;
                     while (b) {
                         int paths0 = countRegFiles(Statics.path);
-                        Thread.sleep(3000);
+                        Thread.sleep(2500);
                         Statics.fileCount = countRegFiles(Statics.path);
                         if (Statics.fileCount == paths0) {
                             if (paths0 != 0 && Statics.fileCount != 0) {
-                                GUI.getGB();
-                                key.cancel();
-                                watchService.close();
-                                Statics.fileIter = 0;
-                                Statics.fileCount = GUI.countFiles(Statics.path);
-                                Main.jProgressBar1.setMaximum(Statics.fileCount);
-                                AES.AESThread(listAESPaths(Statics.path), Statics.directory, true, 0);
-                                b = false;
+                                if (compareFileTimes(getLargestFile())) {
+                                    GUI.getGB();
+                                    key.cancel();
+                                    watchService.close();
+                                    Statics.fileIter = 0;
+                                    Statics.fileCount = GUI.countFiles(Statics.path);
+                                    Main.jProgressBar1.setMaximum(Statics.fileCount);
+                                    AES.AESThread(listAESPaths(Statics.path), Statics.directory, true, 0);
+                                    b = false;
+                                } else {
+                                    System.out.println("file times not synchronized.");
+                                }
                             }
                         }
                     }
@@ -110,5 +119,46 @@ class HotFiler_T implements Runnable {
         } catch (ClosedWatchServiceException ex) {
             System.out.println("Watch Service Closed");
         }
+    }
+
+    private static FileTime getFileTime() throws IOException {
+        Long aLargestFileSize = 0L;
+        List<Path> paths = GUI.listAESPaths(Statics.path);
+        Path largestFilePath = null;
+        for (Path path : paths) {
+            if (aLargestFileSize < path.toFile().length()) {
+                aLargestFileSize = path.toFile().length();
+                largestFilePath = path;
+            }
+        }
+        BasicFileAttributes attr = Files.readAttributes(largestFilePath, BasicFileAttributes.class);
+        FileTime lastModifiedFT = attr.lastModifiedTime();
+
+        return lastModifiedFT;
+    }
+
+    private static List<FileTime> getLargestFile() throws IOException {
+        List<Path> paths = GUI.listAESPaths(Statics.path);
+        List<FileTime> fileTimes = new ArrayList<>();
+
+        for (Path path : paths) {
+            BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
+            FileTime lastModifiedFT = attr.lastModifiedTime();
+            fileTimes.add(lastModifiedFT);
+        }
+        return fileTimes;
+    }
+
+    private static boolean compareFileTimes(List<FileTime> fileTimes) {
+        boolean b = false;
+        for (FileTime fileTime : fileTimes) {
+            if (fileTime.compareTo(originalFT) < 0) {
+                System.out.println("all file times synchronized.");
+                b = true;
+            } else {
+                b = false;
+            }
+        }
+        return b;
     }
 }
