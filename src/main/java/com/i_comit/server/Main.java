@@ -26,14 +26,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.WindowConstants;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -48,7 +47,10 @@ public class Main extends javax.swing.JFrame {
     private static int second = 0;
     private static String timeString = "";
     public static Executor executor = Executors.newSingleThreadScheduledExecutor();
-
+    Server.Sessions sessions = new Server.Sessions();
+    Server.Admin admin = new Server.Admin();
+    Server.Tables tables = new Server.Tables();
+    
     public Main() {
         try {
             if (Server.serverSocket == null) {
@@ -62,7 +64,7 @@ public class Main extends javax.swing.JFrame {
                 initServer();
                 Server.socketStart(this);
             }
-
+            
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
             Rectangle rect = defaultScreen.getDefaultConfiguration().getBounds();
@@ -74,9 +76,9 @@ public class Main extends javax.swing.JFrame {
             ex.printStackTrace();
         }
     }
-
+    
     private static Font customFont;
-
+    
     public static Font registerCustomFont(float fontSize, URL fontFile) {
         try {
             customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile.openStream()).deriveFont(fontSize);
@@ -87,10 +89,8 @@ public class Main extends javax.swing.JFrame {
         }
         return customFont;
     }
-
+    
     private void initServer() throws UnsupportedEncodingException {
-        Server.Sessions sessions = new Server.Sessions();
-        Server.Admin admin = new Server.Admin();
         Server.dbPath = "E:\\"
                 + "'--------'"
                 + File.separator
@@ -102,15 +102,16 @@ public class Main extends javax.swing.JFrame {
                 + File.separator
                 + "i-ncript️.db";
         Server.url = "jdbc:sqlite:" + Server.dbPath;
-
+        
         initComponents();
         uptimeTimer();
         this.setBackground(new Color(0, 0, 0, 0));
         jTextArea1.setBackground(new Color(0, 0, 0, (float) 0.6));
         Server.initDatabase();
         sessions.clearSessions();
+//        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
     }
-
+    
     private void uptimeTimer() {
         executor.execute(() -> {
             Timer timer = new Timer();
@@ -145,12 +146,19 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("i-ncript server");
@@ -168,16 +176,6 @@ public class Main extends javax.swing.JFrame {
                 formMouseExited(evt);
             }
         });
-
-        jScrollPane1.setOpaque(false);
-
-        jTextArea1.setEditable(false);
-        jTextArea1.setColumns(20);
-        jTextArea1.setForeground(new java.awt.Color(128, 128, 128));
-        jTextArea1.setRows(5);
-        jTextArea1.setFocusable(false);
-        jTextArea1.setMargin(new java.awt.Insets(2, 3, 2, 3));
-        jScrollPane1.setViewportView(jTextArea1);
 
         jLabel1.setFont(registerCustomFont(12, fontFile));
         jLabel1.setForeground(new java.awt.Color(128, 128, 128));
@@ -199,27 +197,101 @@ public class Main extends javax.swing.JFrame {
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel4.setText(timeString);
 
+        jTabbedPane1.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
+        jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.LEFT);
+
+        jScrollPane1.setOpaque(false);
+
+        jTextArea1.setEditable(false);
+        jTextArea1.setColumns(18);
+        jTextArea1.setForeground(new java.awt.Color(128, 128, 128));
+        jTextArea1.setRows(5);
+        jTextArea1.setFocusable(false);
+        jTextArea1.setMargin(new java.awt.Insets(2, 3, 2, 3));
+        jScrollPane1.setViewportView(jTextArea1);
+
+        jTabbedPane1.addTab("LOG", jScrollPane1);
+
+        jLabel5.setFont(registerCustomFont(12, fontFile));
+        jLabel5.setText(admin.getServerCap(false) + " available");
+
+        jLabel6.setFont(registerCustomFont(12, fontFile));
+        jLabel6.setText(admin.getServerCap(true) + " per user");
+
+        jLabel7.setFont(registerCustomFont(12, fontFile));
+        jLabel7.setText(admin.countTables() + " user(s) in db");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel7))
+                .addContainerGap(138, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel7)
+                .addGap(12, 12, 12)
+                .addComponent(jLabel6)
+                .addContainerGap(16, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("SYS", jPanel1);
+
+        jButton1.setText("CLR LOG");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton1)
+                .addContainerGap(131, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap(71, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("UTIL", jPanel2);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 4, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(5, 5, 5))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(8, 8, 8))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -228,9 +300,9 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(2, 2, 2)
+                .addComponent(jTabbedPane1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 18, Short.MAX_VALUE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -248,6 +320,10 @@ public class Main extends javax.swing.JFrame {
     private void formMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseExited
         // TODO add your handling code here:
     }//GEN-LAST:event_formMouseExited
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -291,11 +367,18 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    protected static javax.swing.JButton jButton1;
     protected static javax.swing.JLabel jLabel1;
     protected static javax.swing.JLabel jLabel2;
     protected static javax.swing.JLabel jLabel3;
     protected static javax.swing.JLabel jLabel4;
+    protected static javax.swing.JLabel jLabel5;
+    protected static javax.swing.JLabel jLabel6;
+    protected static javax.swing.JLabel jLabel7;
+    protected static javax.swing.JPanel jPanel1;
+    protected static javax.swing.JPanel jPanel2;
     protected static javax.swing.JScrollPane jScrollPane1;
+    protected static javax.swing.JTabbedPane jTabbedPane1;
     protected static javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
 }

@@ -431,8 +431,6 @@ public class Statics {
                 if (Client.startSession(username)) {
                     try {
                         Client.postTable(username);
-//                        initAppGUI(main);
-//                        Folder.appLock();
                     } catch (IOException | ClassNotFoundException | InterruptedException ex) {
                         ex.printStackTrace();
                     }

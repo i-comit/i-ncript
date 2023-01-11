@@ -191,15 +191,14 @@ public class Hasher {
     public static String SQLHasher(String username) throws UnsupportedEncodingException {
         int mod = username.length() % 2;
         String finalStr = "";
-        StringBuffer SQLHasher = caesarCipher(getHash64(username), mod);
+        StringBuffer SQLHasher = caesarCipher(getHash32(username), mod);
         String reverser = stringReverser(SQLHasher.toString());
 
         if (mod == 1) {
             finalStr = splitString(reverser, true);
-}
+        }
         if (mod == 0) {
             finalStr = splitString(reverser, false);
-
         }
         return finalStr;
     }
