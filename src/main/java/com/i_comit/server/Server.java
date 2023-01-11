@@ -7,6 +7,7 @@ package com.i_comit.server;
 import static com.i_comit.shared.Hasher.SQLHasher;
 import static com.i_comit.windows.Main.masterFolder;
 import static com.i_comit.windows.Main.root;
+import com.i_comit.windows.Memory;
 import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.File;
@@ -42,17 +43,17 @@ public class Server {
 
     public static ServerSocket serverSocket;
     public static Socket clientSocket;
-    public static String dbPath = Paths.get("").toFile().getAbsolutePath().substring(0, 3)
-            + "'--------'"
-            + File.separator
-            + "runtime"
-            + File.separator
-            + "bin"
-            + File.separator
-            + "server"
-            + File.separator
-            + "i-ncript️.db";
-//    public static String dbPath = root + masterFolder + "runtime" + File.separator + "bin" + File.separator + "server" + File.separator + "i-ncript️.db";
+//    public static String dbPath = Paths.get("").toFile().getAbsolutePath().substring(0, 3)
+//            + "'--------'"
+//            + File.separator
+//            + "runtime"
+//            + File.separator
+//            + "bin"
+//            + File.separator
+//            + "server"
+//            + File.separator
+//            + "i-ncript️.db";
+    public static String dbPath = "E:\\" + masterFolder + "runtime" + File.separator + "bin" + File.separator + "server" + File.separator + "i-ncript️.db";
     public static String url = "jdbc:sqlite:" + dbPath;
     private static boolean serverBool = true;
 
@@ -84,8 +85,8 @@ public class Server {
                         if (Arrays.equals(message[0], "GET_RECD".getBytes())) {
                             String userName = new String(message[1], StandardCharsets.UTF_8);
                             String fileName = new String(message[2], StandardCharsets.UTF_8);
-                            if (findRecord(userName, fileName)) {
-                                byte[][] b = getFileBlob(userName, fileName);
+                            if (record.findRecord(userName, fileName)) {
+                                byte[][] b = record.retrieveRecord(userName, fileName);
                                 Main.jTextArea1.append("delivered: " + fileName + "\n");
                                 Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
 
@@ -104,7 +105,7 @@ public class Server {
                                 String userName = new String(message[1], StandardCharsets.UTF_8);
                                 String fileName = new String(message[2], StandardCharsets.UTF_8);
                                 String fileDate = new String(message[3], StandardCharsets.UTF_8);
-                                insertClientRecord(userName, fileName, fileDate, message[4]);
+                                record.insertRecord(userName, fileName, fileDate, message[4]);
                                 Main.jTextArea1.append("received: " + fileName + "\n");
                                 Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
 
@@ -228,19 +229,6 @@ public class Server {
 
     }
 
-    private static void insertClientRecord(String clientUsername, String fileName, String fileDate, byte[] fileBytes) throws UnsupportedEncodingException {
-        String sql = "INSERT INTO 'FILES-DB' ('user-name', 'file-name', 'file-date', 'file-bytes') VALUES( ?, ?, ?, ?)";
-        try ( Connection conn = DriverManager.getConnection(url);  PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, clientUsername);
-            pstmt.setString(2, fileName);
-            pstmt.setString(3, fileDate);
-            pstmt.setBytes(4, fileBytes);
-            pstmt.execute();
-        } catch (SQLException e) {
-//            System.out.println(e.getMessage());
-        }
-    }
-
     private static List<String> findFiles(String username) throws UnsupportedEncodingException {
         List<String> fileRecords = new ArrayList<>();
         String sql = String.format("SELECT * FROM \"FILES-DB\" WHERE \"user-name\" = \"%s\"", SQLHasher(username));
@@ -260,51 +248,6 @@ public class Server {
 
         }
         return fileRecords;
-    }
-
-    private static boolean findRecord(String username, String fileName) throws UnsupportedEncodingException {
-        String sql = String.format("SELECT * FROM \"FILES-DB\" WHERE \"user-name\" = \"%s\" AND \"file-name\" = \"%s\"", username, fileName);
-        String blob = "";
-        try ( Connection conn = DriverManager.getConnection(url);  Statement stmt = conn.createStatement()) {
-            ResultSet rs = stmt.executeQuery(sql);
-            // loop through the result set
-            while (rs.next()) {
-                blob = rs.getString(2);
-                return true;
-            }
-            if (blob.equals("")) {
-                System.out.println("No file found");
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-//        } catch (IOException ex) {
-//            ex.printStackTrace();
-        }
-        return false;
-    }
-
-    private static byte[][] getFileBlob(String clientUsername, String fileName) throws UnsupportedEncodingException {
-        String sql = String.format("SELECT * FROM \"FILES-DB\" WHERE \"user-name\" = \"%s\" AND \"file-name\" = \"%s\"", clientUsername, fileName);
-        String blob = "";
-        try ( Connection conn = DriverManager.getConnection(url);  Statement stmt = conn.createStatement()) {
-            ResultSet rs = stmt.executeQuery(sql);
-            // loop through the result set
-            while (rs.next()) {
-                blob = rs.getString(2);
-//                System.out.println(rs.getString(1) + "\t"
-//                        + rs.getString(2) + "\t");
-                byte[] dataForWriting = rs.getBytes(3);
-                byte[] fileDateByte = rs.getBytes(4);
-                byte[][] byteArr = {dataForWriting, fileDateByte};
-                return byteArr;
-            }
-            if (blob.equals("")) {
-                System.out.println("No file found");
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        return null;
     }
 
     public static String getIP() {
@@ -519,21 +462,37 @@ public class Server {
             }
         }
 
-        public static void insertRecord(String username, File inputFile) throws UnsupportedEncodingException {
+        public boolean findRecord(String username, String fileName) throws UnsupportedEncodingException {
+            String sql = String.format("SELECT * FROM \"FILES-DB\" WHERE \"user-name\" = \"%s\" AND \"file-name\" = \"%s\"", username, fileName);
+            String blob = "";
+            try ( Connection conn = DriverManager.getConnection(url);  Statement stmt = conn.createStatement()) {
+                ResultSet rs = stmt.executeQuery(sql);
+                // loop through the result set
+                while (rs.next()) {
+                    blob = rs.getString(2);
+                    return true;
+                }
+                if (blob.equals("")) {
+                    System.out.println("No file found");
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+            }
+            return false;
+        }
+
+        public void insertRecord(String clientUsername, String fileName, String fileDate, byte[] fileBytes) throws UnsupportedEncodingException {
             String sql = "INSERT INTO 'FILES-DB' ('user-name', 'file-name', 'file-date', 'file-bytes') VALUES( ?, ?, ?, ?)";
             try ( Connection conn = DriverManager.getConnection(url);  PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setString(1, SQLHasher(username));
-                pstmt.setString(2, inputFile.getName());
-                BasicFileAttributes attr = Files.readAttributes(inputFile.toPath(), BasicFileAttributes.class);
-                FileTime time = attr.creationTime();
-                pstmt.setString(3, time.toString());
-                byte[] fileByte = Files.readAllBytes(inputFile.toPath());
-                pstmt.setBytes(4, fileByte);
-                pstmt.executeUpdate();
+                pstmt.setString(1, clientUsername);
+                pstmt.setString(2, fileName);
+                pstmt.setString(3, fileDate);
+                pstmt.setBytes(4, fileBytes);
+                pstmt.execute();
             } catch (SQLException e) {
 //            System.out.println(e.getMessage());
-            } catch (IOException ex) {
-//            ex.printStackTrace();
             }
         }
 
@@ -546,6 +505,28 @@ public class Server {
                 ex.printStackTrace();
             }
         }
+
+        public byte[][] retrieveRecord(String clientUsername, String fileName) throws UnsupportedEncodingException {
+            String sql = String.format("SELECT * FROM \"FILES-DB\" WHERE \"user-name\" = \"%s\" AND \"file-name\" = \"%s\"", clientUsername, fileName);
+            String blob = "";
+            try ( Connection conn = DriverManager.getConnection(url);  Statement stmt = conn.createStatement()) {
+                ResultSet rs = stmt.executeQuery(sql);
+                // loop through the result set
+                while (rs.next()) {
+                    blob = rs.getString(2);
+                    byte[] dataForWriting = rs.getBytes(3);
+                    byte[] fileDateByte = rs.getBytes(4);
+                    byte[][] byteArr = {dataForWriting, fileDateByte};
+                    return byteArr;
+                }
+                if (blob.equals("")) {
+                    System.out.println("No file found");
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            return null;
+        }
     }
 
     static class Admin {
@@ -556,6 +537,12 @@ public class Server {
             } else {
                 main.setOpacity(1);
             }
+        }
+
+        public void getServerMemCap() {
+            File diskPartition = new File(dbPath).toPath().getRoot().toFile();
+            String GB = Memory.byteFormatter(diskPartition.getUsableSpace() / 3);
+            System.out.println("available GB " + GB);
         }
 
         public void closeSocket() {

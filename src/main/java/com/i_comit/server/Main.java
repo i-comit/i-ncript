@@ -59,7 +59,7 @@ public class Main extends javax.swing.JFrame {
                 Server.appKill(".server.exe", false);
                 Server.appKill("i-ncript.exe", true);
                 Server.serverSocket.close();
-                Server.socketStart(this);
+                initServer();
                 Server.socketStart(this);
             }
 
@@ -89,6 +89,8 @@ public class Main extends javax.swing.JFrame {
     }
 
     private void initServer() throws UnsupportedEncodingException {
+        Server.Sessions sessions = new Server.Sessions();
+        Server.Admin admin = new Server.Admin();
         Server.dbPath = "E:\\"
                 + "'--------'"
                 + File.separator
@@ -104,11 +106,10 @@ public class Main extends javax.swing.JFrame {
         initComponents();
         uptimeTimer();
         jTextArea1.setBackground(new Color(0, 0, 0, (float) 0.6));
-        Server.Sessions sessions = new Server.Sessions();
         Server.initDatabase();
         sessions.clearSessions();
+        admin.getServerMemCap();
     }
-
 
     private void uptimeTimer() {
         executor.execute(() -> {
@@ -155,6 +156,7 @@ public class Main extends javax.swing.JFrame {
         setTitle("i-ncript server");
         setAlwaysOnTop(true);
         setFocusable(false);
+        setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         setUndecorated(true);
         setResizable(false);
         setType(java.awt.Window.Type.UTILITY);
