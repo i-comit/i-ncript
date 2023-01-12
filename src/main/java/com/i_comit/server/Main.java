@@ -159,6 +159,7 @@ public class Main extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("i-ncript server");
@@ -212,13 +213,13 @@ public class Main extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("LOG", jScrollPane1);
 
-        jLabel5.setFont(registerCustomFont(12, fontFile));
+        jLabel5.setFont(registerCustomFont(11, fontFile));
         jLabel5.setText(admin.getServerCap(false) + " available");
 
-        jLabel6.setFont(registerCustomFont(12, fontFile));
+        jLabel6.setFont(registerCustomFont(11, fontFile));
         jLabel6.setText(admin.getServerCap(true) + " per user");
 
-        jLabel7.setFont(registerCustomFont(12, fontFile));
+        jLabel7.setFont(registerCustomFont(11, fontFile));
         jLabel7.setText(admin.countTables() + " user(s) in db");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -254,6 +255,13 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setText("CLR DB");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -261,13 +269,17 @@ public class Main extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jButton1)
-                .addContainerGap(131, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap(71, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addContainerGap())
         );
 
@@ -325,6 +337,10 @@ public class Main extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        Client.adminRequests(2);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -368,6 +384,7 @@ public class Main extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     protected static javax.swing.JButton jButton1;
+    protected static javax.swing.JButton jButton2;
     protected static javax.swing.JLabel jLabel1;
     protected static javax.swing.JLabel jLabel2;
     protected static javax.swing.JLabel jLabel3;

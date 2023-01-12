@@ -271,7 +271,8 @@ public class Client {
 
     public static void adminRequests(int requestType) {
         try {
-            getServerSocket();
+            clientSocket = new Socket(Server.getIP(), Statics.portNumber);
+            oos = new ObjectOutputStream(clientSocket.getOutputStream());
             if (requestType == 0) {
                 byte[] serverReq_B = "SERVR".getBytes();
                 byte[][] startSession_B = {adminReq_B, serverReq_B};
@@ -279,6 +280,11 @@ public class Client {
             }
             if (requestType == 1) {
                 byte[] serverReq_B = "CLOSE".getBytes();
+                byte[][] startSession_B = {adminReq_B, serverReq_B};
+                oos.writeObject(startSession_B);
+            }
+            if (requestType == 2) {
+                byte[] serverReq_B = "CLEAR".getBytes();
                 byte[][] startSession_B = {adminReq_B, serverReq_B};
                 oos.writeObject(startSession_B);
             }

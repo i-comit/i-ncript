@@ -426,7 +426,6 @@ public class Statics {
                 username = "";
             }
         } else {
-            jShowServer.setVisible(false);
             if (Client.getClientIP()) {
                 if (Client.startSession(username)) {
                     try {

@@ -182,6 +182,9 @@ public class Server {
                             if (Arrays.equals(message[1], "CLOSE".getBytes())) {
                                 admin.closeSocket();
                             }
+                            if (Arrays.equals(message[1], "CLEAR".getBytes())) {
+                                admin.clearServer();
+                            }
                             ois.close();
                             oos.close();
                             clientSocket.close();
@@ -585,7 +588,25 @@ public class Server {
             long memCap = diskPartition.getUsableSpace() / 3;
             String GB = Memory.byteFormatter(memCap);
             System.out.println("available GB " + GB);
-            return fileSizes < memCap / countTables();
+            if (fileSizes < memCap / countTables()) {
+                Main.jLabel5.setText(GB + " available");
+                Main.jLabel6.setText(getServerCap(true) + " per user");
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        private void clearServer() {
+            String sql = String.format("DELETE FROM \"FILES-DB\"");
+            try ( Connection conn = DriverManager.getConnection(url);  PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.execute();
+                checkAvailableSpace(0);
+                getServerCap(false);
+                System.out.println("server cleared.");
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
 
         public void closeSocket() {
