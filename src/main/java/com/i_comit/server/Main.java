@@ -16,6 +16,8 @@
  */
 package com.i_comit.server;
 
+import com.i_comit.windows.GUI;
+import static com.i_comit.windows.Main.jAlertLabel;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -44,11 +46,15 @@ public class Main extends javax.swing.JFrame {
      * Creates new form Main
      */
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
+    private URL fontFile1 = getClass().getResource("/robot-font.otf");
+
     private static int second = 0;
     private static String timeString = "";
     private final String appVer = "1.1.0";
     public static Executor executor = Executors.newSingleThreadScheduledExecutor();
     Server.Sessions sessions = new Server.Sessions();
+    Server.Records records = new Server.Records();
+    Server.Tables tables = new Server.Tables();
     Server.Admin admin = new Server.Admin();
 
     public Main() {
@@ -108,21 +114,23 @@ public class Main extends javax.swing.JFrame {
         this.setBackground(new Color(0, 0, 0, 0));
         jTextArea1.setBackground(new Color(0, 0, 0, (float) 0.5));
         jPanel1.setBackground(new Color(0, 0, 0, (float) 0.5));
-        jPanel2.setBackground(new Color(0, 0, 0, (float) 0.5));
-
         jPanel3.setBackground(new Color(0, 0, 0, 0));
         jTabbedPane1.setBackground(new Color(0, 0, 0, (float) 0.5));
+        jButton5.setVisible(false);
         Server.initDatabase();
         sessions.clearSessions();
+        tables.listTables("khiemluong");
+        records.listRecords("khiemluong");
         admin.checkAvailableSpace(0);
-        if (admin.countTables() == 1) {
+        if (admin.userCount == 1) {
             Main.jLabel7.setText(admin.countTables() + " user in network");
-        } else if (admin.countTables() == 0) {
+        } else if (admin.userCount == 0) {
             Main.jLabel7.setText("no user in network");
         }
-        if (admin.countTables() > 1) {
+        if (admin.userCount > 1) {
             Main.jLabel7.setText(admin.countTables() + " users in network");
         }
+        GUI.labelCutterThread(jAlertLabel, "", 10, 10, 10, false);
     }
 
     private void uptimeTimer() {
@@ -160,6 +168,7 @@ public class Main extends javax.swing.JFrame {
     private void initComponents() {
 
         jOptionPane1 = new javax.swing.JOptionPane();
+        jButton5 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -178,9 +187,9 @@ public class Main extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jAlertLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("i-ncript server");
         setAlwaysOnTop(true);
         setFocusable(false);
         setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
@@ -192,12 +201,17 @@ public class Main extends javax.swing.JFrame {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 formMouseEntered(evt);
             }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                formMouseExited(evt);
+        });
+
+        jButton5.setBackground(new java.awt.Color(51, 51, 51));
+        jButton5.setText("SET LOCATION");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
             }
         });
 
-        jPanel3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(70, 106, 146), 1, true));
+        jPanel3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(70, 106, 146), 2, true));
         jPanel3.setOpaque(false);
 
         jLabel3.setFont(registerCustomFont(12, fontFile));
@@ -243,7 +257,7 @@ public class Main extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(51, 51, 51));
 
         jLabel5.setFont(registerCustomFont(11, fontFile));
-        jLabel5.setForeground(new java.awt.Color(70, 106, 146));
+        jLabel5.setForeground(new java.awt.Color(68, 110, 158));
         jLabel5.setText("bytes availalbe");
 
         jLabel6.setFont(registerCustomFont(11, fontFile));
@@ -253,7 +267,7 @@ public class Main extends javax.swing.JFrame {
         jLabel7.setText("x user(s) in network");
 
         jAppVerLabel.setFont(registerCustomFont(11, fontFile));
-        jAppVerLabel.setForeground(new java.awt.Color(70, 106, 146));
+        jAppVerLabel.setForeground(new java.awt.Color(68, 110, 158));
         jAppVerLabel.setText("ver: "+appVer + " - © i-comit LLC");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -267,7 +281,7 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(jLabel6)
                     .addComponent(jLabel7)
                     .addComponent(jAppVerLabel))
-                .addContainerGap(96, Short.MAX_VALUE))
+                .addContainerGap(98, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -287,32 +301,53 @@ public class Main extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(51, 51, 51));
 
+        jButton1.setBackground(new java.awt.Color(51, 51, 51));
         jButton1.setText("CLR LOG");
+        jButton1.setMargin(new java.awt.Insets(2, 14, 2, 14));
+        jButton1.setMaximumSize(new java.awt.Dimension(77, 24));
+        jButton1.setMinimumSize(new java.awt.Dimension(77, 24));
+        jButton1.setPreferredSize(new java.awt.Dimension(77, 24));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
 
+        jButton2.setBackground(new java.awt.Color(51, 51, 51));
         jButton2.setText("CLR SERVER");
+        jButton2.setToolTipText("clear all files in the database & compress it");
+        jButton2.setMargin(new java.awt.Insets(2, 14, 2, 14));
+        jButton2.setMaximumSize(new java.awt.Dimension(95, 24));
+        jButton2.setMinimumSize(new java.awt.Dimension(95, 24));
+        jButton2.setName(""); // NOI18N
+        jButton2.setPreferredSize(new java.awt.Dimension(95, 24));
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
 
-        jButton3.setText("COMPRESS");
-        jButton3.setToolTipText("compress/repack the database to optimize space");
+        jButton3.setBackground(new java.awt.Color(51, 51, 51));
+        jButton3.setText("RELOCATE");
+        jButton3.setToolTipText("allows the server panel to be  movable");
+        jButton3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton3.setMargin(new java.awt.Insets(2, 6, 2, 6));
+        jButton3.setMaximumSize(new java.awt.Dimension(63, 24));
+        jButton3.setMinimumSize(new java.awt.Dimension(63, 24));
+        jButton3.setPreferredSize(new java.awt.Dimension(63, 24));
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
 
-        jButton4.setBackground(javax.swing.UIManager.getDefaults().getColor("CheckBox.icon.disabledBackground"));
+        jButton4.setBackground(new java.awt.Color(51, 51, 51));
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/help-icon_1.png"))); // NOI18N
         jButton4.setText("HELP");
         jButton4.setBorder(null);
+
+        jAlertLabel.setFont(registerCustomFont(12, fontFile));
+        jAlertLabel.setForeground(new java.awt.Color(68, 110, 158));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -321,12 +356,15 @@ public class Main extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(jButton4))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jAlertLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton4))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -334,12 +372,14 @@ public class Main extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3)
+                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jAlertLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -349,8 +389,8 @@ public class Main extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(120, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap(122, Short.MAX_VALUE)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -377,7 +417,7 @@ public class Main extends javax.swing.JFrame {
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(137, Short.MAX_VALUE)
+                .addContainerGap(135, Short.MAX_VALUE)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -406,13 +446,21 @@ public class Main extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(80, 80, 80)
+                    .addComponent(jButton5)
+                    .addContainerGap(81, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jButton5)
+                    .addContainerGap(132, Short.MAX_VALUE)))
         );
 
         pack();
@@ -423,23 +471,52 @@ public class Main extends javax.swing.JFrame {
 
     }//GEN-LAST:event_formMouseEntered
 
-    private void formMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseExited
-        // TODO add your handling code here:
-    }//GEN-LAST:event_formMouseExited
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        jTextArea1.setText("");
+        GUI.t.interrupt();
+        GUI.labelCutterThread(jAlertLabel, "output log cleared.", 0, 20, 800, false);
     }//GEN-LAST:event_jButton1ActionPerformed
-    
+
     //CLR SERVER
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        admin.clearServer();
+        if (jAlertLabel.getText().equals("")) {
+            GUI.t.interrupt();
+            GUI.labelCutterThread(jAlertLabel, "click once more to confirm.", 0, 20, 800, false);
+        } else {
+            GUI.t.interrupt();
+            GUI.labelCutterThread(jAlertLabel, "clearing files from server..", 0, 20, 800, false);
+            admin.clearServer();
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
-    
-    //COMPRESS
+
+    //RELOCATE
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        admin.vacuumDB();
+        if (jAlertLabel.getText().equals("")) {
+            GUI.t.interrupt();
+            GUI.labelCutterThread(jAlertLabel, "click once more to confirm.", 0, 20, 800, false);
+        } else {
+            this.dispose();
+            this.setBackground(Color.GRAY);
+            this.setUndecorated(false);
+            this.setVisible(true);
+            this.setDefaultCloseOperation(0);
+            jPanel3.setVisible(false);
+            jButton5.setVisible(true);
+            this.setSize(282, 95);
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        this.dispose();
+        this.setUndecorated(true);
+        this.setBackground(new Color(0, 0, 0, 0));
+        this.setVisible(true);
+        jPanel3.setVisible(true);
+        jButton5.setVisible(false);
+        this.setSize(282, 155);
+        GUI.t.interrupt();
+        GUI.labelCutterThread(jAlertLabel, "server panel moved.", 0, 20, 800, false);
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -483,11 +560,13 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    protected static javax.swing.JLabel jAlertLabel;
     protected static javax.swing.JLabel jAppVerLabel;
     protected static javax.swing.JButton jButton1;
     protected static javax.swing.JButton jButton2;
     protected static javax.swing.JButton jButton3;
     protected static javax.swing.JButton jButton4;
+    protected static javax.swing.JButton jButton5;
     protected static javax.swing.JLabel jLabel1;
     protected static javax.swing.JLabel jLabel2;
     protected static javax.swing.JLabel jLabel3;

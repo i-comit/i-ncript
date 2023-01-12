@@ -5,6 +5,8 @@
 package com.i_comit.server;
 
 import static com.i_comit.shared.Hasher.SQLHasher;
+import com.i_comit.shared.Miscs;
+import com.i_comit.windows.GUI;
 import static com.i_comit.windows.Main.masterFolder;
 import com.i_comit.windows.Memory;
 import java.io.BufferedReader;
@@ -51,6 +53,7 @@ public class Server {
 //            + File.separator
 //            + "i-ncript️.db";
     public static String dbPath = "E:\\" + masterFolder + "runtime" + File.separator + "bin" + File.separator + "server" + File.separator + "i-ncript️.db";
+    private static File dbFile = new File(dbPath);
     public static String url = "jdbc:sqlite:" + dbPath;
     private static boolean serverBool = true;
 
@@ -89,6 +92,7 @@ public class Server {
 
                                 oos.writeObject(b);
                                 record.deleteRecord(userName, fileName);
+                                admin.vacuumDB();
                             } else {
                                 byte[][] b = {"NA".getBytes()};
                                 oos.writeObject(b);
@@ -152,8 +156,7 @@ public class Server {
                             String OS = new String(message[3], StandardCharsets.UTF_8);
                             boolean b = session.startSession(userName, ipAddress, OS);
                             if (b) {
-                                System.out.println(userName + " has connected to a session.");
-                                Main.jTextArea1.append(userName + " has started their session.\n");
+                                Main.jTextArea1.append(userName + " started their session at " + Miscs.getCurrentTime() + "\n");
                                 Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
 
                             } else {
@@ -167,9 +170,8 @@ public class Server {
                         if (Arrays.equals(message[0], "END_SESN".getBytes())) {
                             String userName = new String(message[1], StandardCharsets.UTF_8);
                             session.endSession(userName);
-                            System.out.println(userName + " has ended their session.");
-                            Main.jTextArea1.append(userName + " has ended their session.\n");
-
+                            Main.jTextArea1.append(userName + " ended their session at " + Miscs.getCurrentTime() + "\n");
+                            Main.jTextArea1.setCaretPosition(Main.jTextArea1.getText().length());
                             ois.close();
                             oos.close();
                             clientSocket.close();
@@ -461,7 +463,9 @@ public class Server {
 
     static class Records {
 
-        private void listRecords(String username) throws UnsupportedEncodingException {
+        Admin admin = new Admin();
+
+        public void listRecords(String username) throws UnsupportedEncodingException {
             String sql = "SELECT * FROM 'FILES-DB'";
             String s = "";
             try ( Connection conn = DriverManager.getConnection(url);  Statement stmt = conn.createStatement()) {
@@ -510,6 +514,7 @@ public class Server {
                 pstmt.setString(3, fileDate);
                 pstmt.setBytes(4, fileBytes);
                 pstmt.execute();
+                admin.checkAvailableSpace(0);
             } catch (SQLException e) {
 //            System.out.println(e.getMessage());
             }
@@ -550,20 +555,21 @@ public class Server {
 
     static class Admin {
 
+        public int userCount = 0;
+
         public void vacuumDB() {
             String sql = "VACUUM;";
             try ( Connection conn = DriverManager.getConnection(Server.url);  PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                ResultSet rs = pstmt.executeQuery();
-                while (rs.next()) {
-                    System.out.println(rs);
-                }
+                pstmt.execute();
+                checkAvailableSpace(0);
+                getServerCap(false);
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
         }
 
         public int countTables() {
-            int userCount = 0;
+            userCount = 0;
             try ( Connection conn = DriverManager.getConnection(url)) {
                 ResultSet rs = conn.getMetaData().getTables(null, null, null, null);
                 while (rs.next()) {
@@ -573,6 +579,9 @@ public class Server {
                 }
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
+            }
+            if (userCount == 0) {
+                return 1;
             }
             return userCount;
         }
@@ -603,7 +612,6 @@ public class Server {
             File diskPartition = new File(dbPath).toPath().getRoot().toFile();
             long memCap = diskPartition.getUsableSpace() / 3;
             String GB = Memory.byteFormatter(memCap);
-            File dbFile = new File(dbPath);
             System.out.println("available GB " + GB);
             if (fileSizes < memCap / countTables()) {
                 Main.jLabel5.setText(String.format("%.1f", dbFile.length() / 1000000.0) + "/" + GB + " used");
@@ -615,12 +623,15 @@ public class Server {
         }
 
         public void clearServer() {
+            long initialDbSize = dbFile.length();
             String sql = String.format("DELETE FROM \"FILES-DB\"");
             try ( Connection conn = DriverManager.getConnection(url);  PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.execute();
-                checkAvailableSpace(0);
-                getServerCap(false);
-                System.out.println("server cleared.");
+                vacuumDB();
+                long finalDbSize = initialDbSize - dbFile.length();
+                Main.jTextArea1.append(Memory.byteFormatter(finalDbSize) + "s cleared from server at " + Miscs.getCurrentTime() + "\n");
+                GUI.t.interrupt();
+                GUI.labelCutterThread(Main.jAlertLabel, "server data cleared.", 0, 20, 400, false);
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
