@@ -46,11 +46,11 @@ public class Main extends javax.swing.JFrame {
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
     private static int second = 0;
     private static String timeString = "";
+    private final String appVer = "1.1.0";
     public static Executor executor = Executors.newSingleThreadScheduledExecutor();
     Server.Sessions sessions = new Server.Sessions();
     Server.Admin admin = new Server.Admin();
-    Server.Tables tables = new Server.Tables();
-    
+
     public Main() {
         try {
             if (Server.serverSocket == null) {
@@ -64,7 +64,7 @@ public class Main extends javax.swing.JFrame {
                 initServer();
                 Server.socketStart(this);
             }
-            
+
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
             Rectangle rect = defaultScreen.getDefaultConfiguration().getBounds();
@@ -76,9 +76,9 @@ public class Main extends javax.swing.JFrame {
             ex.printStackTrace();
         }
     }
-    
+
     private static Font customFont;
-    
+
     public static Font registerCustomFont(float fontSize, URL fontFile) {
         try {
             customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile.openStream()).deriveFont(fontSize);
@@ -89,7 +89,7 @@ public class Main extends javax.swing.JFrame {
         }
         return customFont;
     }
-    
+
     private void initServer() throws UnsupportedEncodingException {
         Server.dbPath = "E:\\"
                 + "'--------'"
@@ -102,16 +102,29 @@ public class Main extends javax.swing.JFrame {
                 + File.separator
                 + "i-ncript️.db";
         Server.url = "jdbc:sqlite:" + Server.dbPath;
-        
+
         initComponents();
         uptimeTimer();
         this.setBackground(new Color(0, 0, 0, 0));
-        jTextArea1.setBackground(new Color(0, 0, 0, (float) 0.6));
+        jTextArea1.setBackground(new Color(0, 0, 0, (float) 0.5));
+        jPanel1.setBackground(new Color(0, 0, 0, (float) 0.5));
+        jPanel2.setBackground(new Color(0, 0, 0, (float) 0.5));
+
+        jPanel3.setBackground(new Color(0, 0, 0, 0));
+        jTabbedPane1.setBackground(new Color(0, 0, 0, (float) 0.5));
         Server.initDatabase();
         sessions.clearSessions();
-//        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        admin.checkAvailableSpace(0);
+        if (admin.countTables() == 1) {
+            Main.jLabel7.setText(admin.countTables() + " user in network");
+        } else if (admin.countTables() == 0) {
+            Main.jLabel7.setText("no user in network");
+        }
+        if (admin.countTables() > 1) {
+            Main.jLabel7.setText(admin.countTables() + " users in network");
+        }
     }
-    
+
     private void uptimeTimer() {
         executor.execute(() -> {
             Timer timer = new Timer();
@@ -146,10 +159,12 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        jOptionPane1 = new javax.swing.JOptionPane();
+        jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
@@ -157,9 +172,12 @@ public class Main extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        jAppVerLabel = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("i-ncript server");
@@ -167,6 +185,7 @@ public class Main extends javax.swing.JFrame {
         setFocusable(false);
         setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         setUndecorated(true);
+        setPreferredSize(new java.awt.Dimension(282, 155));
         setResizable(false);
         setType(java.awt.Window.Type.UTILITY);
         addMouseListener(new java.awt.event.MouseAdapter() {
@@ -178,15 +197,8 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setFont(registerCustomFont(12, fontFile));
-        jLabel1.setForeground(new java.awt.Color(128, 128, 128));
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel1.setText(Server.getIP());
-
-        jLabel2.setFont(registerCustomFont(12, fontFile));
-        jLabel2.setForeground(new java.awt.Color(128, 128, 128));
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel2.setText("i-ncript™ server");
+        jPanel3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(70, 106, 146), 1, true));
+        jPanel3.setOpaque(false);
 
         jLabel3.setFont(registerCustomFont(12, fontFile));
         jLabel3.setForeground(new java.awt.Color(128, 128, 128));
@@ -198,14 +210,29 @@ public class Main extends javax.swing.JFrame {
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel4.setText(timeString);
 
+        jLabel1.setFont(registerCustomFont(12, fontFile));
+        jLabel1.setForeground(new java.awt.Color(128, 128, 128));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel1.setText(Server.getIP());
+
+        jLabel2.setFont(registerCustomFont(12, fontFile));
+        jLabel2.setForeground(new java.awt.Color(128, 128, 128));
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel2.setText("i-ncript™ server");
+
+        jTabbedPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
         jTabbedPane1.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
         jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.LEFT);
+        jTabbedPane1.setFocusable(false);
+        jTabbedPane1.setFont(registerCustomFont(12, fontFile));
+        jTabbedPane1.setPreferredSize(new java.awt.Dimension(256, 100));
 
+        jScrollPane1.setBorder(null);
         jScrollPane1.setOpaque(false);
 
         jTextArea1.setEditable(false);
+        jTextArea1.setBackground(new java.awt.Color(51, 51, 51));
         jTextArea1.setColumns(18);
-        jTextArea1.setForeground(new java.awt.Color(128, 128, 128));
         jTextArea1.setRows(5);
         jTextArea1.setFocusable(false);
         jTextArea1.setMargin(new java.awt.Insets(2, 3, 2, 3));
@@ -213,14 +240,21 @@ public class Main extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("LOG", jScrollPane1);
 
+        jPanel1.setBackground(new java.awt.Color(51, 51, 51));
+
         jLabel5.setFont(registerCustomFont(11, fontFile));
-        jLabel5.setText(admin.getServerCap(false) + " available");
+        jLabel5.setForeground(new java.awt.Color(70, 106, 146));
+        jLabel5.setText("bytes availalbe");
 
         jLabel6.setFont(registerCustomFont(11, fontFile));
-        jLabel6.setText(admin.getServerCap(true) + " per user");
+        jLabel6.setText("bytes per user");
 
         jLabel7.setFont(registerCustomFont(11, fontFile));
-        jLabel7.setText(admin.countTables() + " user(s) in db");
+        jLabel7.setText("x user(s) in network");
+
+        jAppVerLabel.setFont(registerCustomFont(11, fontFile));
+        jAppVerLabel.setForeground(new java.awt.Color(70, 106, 146));
+        jAppVerLabel.setText("ver: "+appVer + " - © i-comit LLC");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -231,22 +265,27 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5)
                     .addComponent(jLabel6)
-                    .addComponent(jLabel7))
-                .addContainerGap(138, Short.MAX_VALUE))
+                    .addComponent(jLabel7)
+                    .addComponent(jAppVerLabel))
+                .addContainerGap(96, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(12, 12, 12)
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel7)
-                .addGap(12, 12, 12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel6)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jAppVerLabel)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("SYS", jPanel1);
+
+        jPanel2.setBackground(new java.awt.Color(51, 51, 51));
 
         jButton1.setText("CLR LOG");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -255,12 +294,25 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("CLR DB");
+        jButton2.setText("CLR SERVER");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
+
+        jButton3.setText("COMPRESS");
+        jButton3.setToolTipText("compress/repack the database to optimize space");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setBackground(javax.swing.UIManager.getDefaults().getColor("CheckBox.icon.disabledBackground"));
+        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/help-icon_1.png"))); // NOI18N
+        jButton4.setText("HELP");
+        jButton4.setBorder(null);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -268,15 +320,23 @@ public class Main extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1)
+                    .addComponent(jButton4))
                 .addGap(18, 18, 18)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(71, Short.MAX_VALUE)
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton3)
+                    .addComponent(jButton4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
@@ -285,40 +345,74 @@ public class Main extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("UTIL", jPanel2);
 
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(120, Short.MAX_VALUE)
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+                    .addContainerGap()))
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                    .addContainerGap(151, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap()))
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(105, Short.MAX_VALUE)))
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jLabel3)
+                    .addContainerGap(213, Short.MAX_VALUE)))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(137, Short.MAX_VALUE)
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addGap(27, 27, 27)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(30, Short.MAX_VALUE)))
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jLabel1)
+                    .addContainerGap(131, Short.MAX_VALUE)))
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jLabel2)
+                    .addContainerGap(131, Short.MAX_VALUE)))
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                    .addContainerGap(131, Short.MAX_VALUE)
+                    .addComponent(jLabel3)
+                    .addContainerGap()))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(8, 8, 8))
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(2, 2, 2)
-                .addComponent(jTabbedPane1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 18, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -336,10 +430,16 @@ public class Main extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
-
+    
+    //CLR SERVER
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        Client.adminRequests(2);
+        admin.clearServer();
     }//GEN-LAST:event_jButton2ActionPerformed
+    
+    //COMPRESS
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        admin.vacuumDB();
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -383,8 +483,11 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    protected static javax.swing.JLabel jAppVerLabel;
     protected static javax.swing.JButton jButton1;
     protected static javax.swing.JButton jButton2;
+    protected static javax.swing.JButton jButton3;
+    protected static javax.swing.JButton jButton4;
     protected static javax.swing.JLabel jLabel1;
     protected static javax.swing.JLabel jLabel2;
     protected static javax.swing.JLabel jLabel3;
@@ -392,8 +495,10 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JLabel jLabel5;
     protected static javax.swing.JLabel jLabel6;
     protected static javax.swing.JLabel jLabel7;
+    protected static javax.swing.JOptionPane jOptionPane1;
     protected static javax.swing.JPanel jPanel1;
     protected static javax.swing.JPanel jPanel2;
+    protected static javax.swing.JPanel jPanel3;
     protected static javax.swing.JScrollPane jScrollPane1;
     protected static javax.swing.JTabbedPane jTabbedPane1;
     protected static javax.swing.JTextArea jTextArea1;

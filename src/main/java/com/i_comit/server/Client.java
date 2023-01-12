@@ -283,11 +283,6 @@ public class Client {
                 byte[][] startSession_B = {adminReq_B, serverReq_B};
                 oos.writeObject(startSession_B);
             }
-            if (requestType == 2) {
-                byte[] serverReq_B = "CLEAR".getBytes();
-                byte[][] startSession_B = {adminReq_B, serverReq_B};
-                oos.writeObject(startSession_B);
-            }
             oos.close();
         } catch (IOException ex) {
             ex.printStackTrace();

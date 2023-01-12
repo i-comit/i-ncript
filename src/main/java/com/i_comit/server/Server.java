@@ -150,7 +150,7 @@ public class Server {
                             String userName = new String(message[1], StandardCharsets.UTF_8);
                             String ipAddress = new String(message[2], StandardCharsets.UTF_8);
                             String OS = new String(message[3], StandardCharsets.UTF_8);
-                            boolean b = session.requestSession(userName, ipAddress, OS);
+                            boolean b = session.startSession(userName, ipAddress, OS);
                             if (b) {
                                 System.out.println(userName + " has connected to a session.");
                                 Main.jTextArea1.append(userName + " has started their session.\n");
@@ -181,9 +181,6 @@ public class Server {
                             }
                             if (Arrays.equals(message[1], "CLOSE".getBytes())) {
                                 admin.closeSocket();
-                            }
-                            if (Arrays.equals(message[1], "CLEAR".getBytes())) {
-                                admin.clearServer();
                             }
                             ois.close();
                             oos.close();
@@ -339,10 +336,8 @@ public class Server {
 
         public void clearSessions() throws UnsupportedEncodingException {
             String sql = "DELETE FROM \"SESSIONS\";";
-            String sql1 = "VACUUM;";
-            try ( Connection conn = DriverManager.getConnection(Server.url);  PreparedStatement pstmt = conn.prepareStatement(sql);  PreparedStatement pstmt1 = conn.prepareStatement(sql1)) {
+            try ( Connection conn = DriverManager.getConnection(Server.url);  PreparedStatement pstmt = conn.prepareStatement(sql);) {
                 pstmt.executeUpdate();
-                pstmt1.executeUpdate();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
@@ -369,7 +364,7 @@ public class Server {
             }
         }
 
-        private boolean requestSession(String username, String ipAddress, String OS) throws UnsupportedEncodingException {
+        private boolean startSession(String username, String ipAddress, String OS) throws UnsupportedEncodingException {
             String sql = String.format("SELECT * FROM \"SESSIONS\" WHERE \"user-name\"  = \"%s\";", SQLHasher(username));
             String str = "";
             try ( Connection conn = DriverManager.getConnection(Server.url);  Statement stmt = conn.createStatement()) {
@@ -412,10 +407,19 @@ public class Server {
 
     static class Tables {
 
+        Admin admin = new Admin();
+
         private String createTable(String username) throws UnsupportedEncodingException {
             String tbl = String.format("CREATE TABLE IF NOT EXISTS '%s' ('recipient-name' text NOT NULL, 'comm-text' text NOT NULL, 'comm-date' text NOT NULL);", SQLHasher(username));
             try ( Connection conn = DriverManager.getConnection(url);  Statement stmt = conn.createStatement()) {
                 stmt.execute(tbl);
+                Main.jLabel6.setText(admin.getServerCap(true) + " per user");
+                if (admin.countTables() == 1) {
+                    Main.jLabel7.setText(admin.countTables() + " user in network");
+                }
+                if (admin.countTables() > 1) {
+                    Main.jLabel7.setText(admin.countTables() + " users in network");
+                }
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             }
@@ -546,6 +550,18 @@ public class Server {
 
     static class Admin {
 
+        public void vacuumDB() {
+            String sql = "VACUUM;";
+            try ( Connection conn = DriverManager.getConnection(Server.url);  PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                ResultSet rs = pstmt.executeQuery();
+                while (rs.next()) {
+                    System.out.println(rs);
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+
         public int countTables() {
             int userCount = 0;
             try ( Connection conn = DriverManager.getConnection(url)) {
@@ -583,13 +599,14 @@ public class Server {
             }
         }
 
-        private boolean checkAvailableSpace(long fileSizes) {
+        public boolean checkAvailableSpace(long fileSizes) {
             File diskPartition = new File(dbPath).toPath().getRoot().toFile();
             long memCap = diskPartition.getUsableSpace() / 3;
             String GB = Memory.byteFormatter(memCap);
+            File dbFile = new File(dbPath);
             System.out.println("available GB " + GB);
             if (fileSizes < memCap / countTables()) {
-                Main.jLabel5.setText(GB + " available");
+                Main.jLabel5.setText(String.format("%.1f", dbFile.length() / 1000000.0) + "/" + GB + " used");
                 Main.jLabel6.setText(getServerCap(true) + " per user");
                 return true;
             } else {
@@ -597,7 +614,7 @@ public class Server {
             }
         }
 
-        private void clearServer() {
+        public void clearServer() {
             String sql = String.format("DELETE FROM \"FILES-DB\"");
             try ( Connection conn = DriverManager.getConnection(url);  PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.execute();
