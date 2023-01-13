@@ -24,6 +24,7 @@ import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -41,20 +42,20 @@ import java.util.List;
 public class Server {
 
     public static ServerSocket serverSocket;
-    public static Socket clientSocket;
-//    public static String dbPath = Paths.get("").toFile().getAbsolutePath().substring(0, 3)
-//            + "'--------'"
-//            + File.separator
-//            + "runtime"
-//            + File.separator
-//            + "bin"
-//            + File.separator
-//            + "server"
-//            + File.separator
-//            + "i-ncript️.db";
-    public static String dbPath = "E:\\" + masterFolder + "runtime" + File.separator + "bin" + File.separator + "server" + File.separator + "i-ncript️.db";
+    private static Socket clientSocket;
+    private static String dbPath = Paths.get("").toFile().getAbsolutePath().substring(0, 3)
+            + "'--------'"
+            + File.separator
+            + "runtime"
+            + File.separator
+            + "bin"
+            + File.separator
+            + "server"
+            + File.separator
+            + "i-ncript️.db";
+//    private static String dbPath = "D:\\" + masterFolder + "runtime" + File.separator + "bin" + File.separator + "server" + File.separator + "i-ncript️.db";
     private static File dbFile = new File(dbPath);
-    public static String url = "jdbc:sqlite:" + dbPath;
+    private static String url = "jdbc:sqlite:" + dbPath;
     private static boolean serverBool = true;
 
     public static synchronized void socketStart(Main main) {
@@ -664,7 +665,7 @@ public class Server {
                 long finalDbSize = initialDbSize - dbFile.length();
                 Main.jTextArea1.append(Memory.byteFormatter(finalDbSize) + "s cleared from server at " + Miscs.getCurrentTime() + "\n");
                 GUI.t.interrupt();
-                GUI.labelCutterThread(Main.jAlertLabel, "server data cleared.", 0, 20, 400, false);
+                GUI.labelCutterThread(Main.jAlertLabel, "server data cleared.", 0, 20, 1200, false);
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }

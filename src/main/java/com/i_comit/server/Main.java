@@ -23,6 +23,7 @@ import java.awt.FontFormatException;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -46,17 +47,15 @@ public class Main extends javax.swing.JFrame {
      * Creates new form Main
      */
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
-    
+
     private static int second = 0;
     private static String timeString = "";
     private final String appVer = "1.1.0";
     public static Executor executor = Executors.newSingleThreadScheduledExecutor();
     Server.Sessions sessions = new Server.Sessions();
-    Server.Records records = new Server.Records();
-    Server.Tables tables = new Server.Tables();
     Server.Admin admin = new Server.Admin();
     Popup popup;
-    
+
     public Main() {
         try {
             if (Server.serverSocket == null) {
@@ -70,7 +69,7 @@ public class Main extends javax.swing.JFrame {
                 initServer();
                 Server.socketStart(this);
             }
-            
+
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
             Rectangle rect = defaultScreen.getDefaultConfiguration().getBounds();
@@ -82,9 +81,9 @@ public class Main extends javax.swing.JFrame {
             ex.printStackTrace();
         }
     }
-    
+
     private static Font customFont;
-    
+
     public static Font registerCustomFont(float fontSize, URL fontFile) {
         try {
             customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile.openStream()).deriveFont(fontSize);
@@ -95,20 +94,8 @@ public class Main extends javax.swing.JFrame {
         }
         return customFont;
     }
-    
+
     private void initServer() throws UnsupportedEncodingException {
-        Server.dbPath = "E:\\"
-                + "'--------'"
-                + File.separator
-                + "runtime"
-                + File.separator
-                + "bin"
-                + File.separator
-                + "server"
-                + File.separator
-                + "i-ncript️.db";
-        Server.url = "jdbc:sqlite:" + Server.dbPath;
-        
         initComponents();
         uptimeTimer();
         this.setBackground(new Color(0, 0, 0, 0));
@@ -130,7 +117,7 @@ public class Main extends javax.swing.JFrame {
         }
         GUI.labelCutterThread(jAlertLabel, "", 10, 10, 10, false);
     }
-    
+
     private void uptimeTimer() {
         executor.execute(() -> {
             Timer timer = new Timer();
@@ -203,7 +190,7 @@ public class Main extends javax.swing.JFrame {
         jTextArea2.setColumns(20);
         jTextArea2.setLineWrap(true);
         jTextArea2.setRows(5);
-        jTextArea2.setText("Last Updated: 01/10/2023\n\nOVERVIEW OF TABS:\nThe i-ncript server panel has 3 tabs: LOG, SYS, and UTIL, representing as the activity log output, system properties, and server utility tools respectively.\n\nLOG:\nThe LOG panel tracks any activity detected by the server, such as when a user has started or ended a session, or what files have been uploaded to or retrieved from the server.\n\nSYS:\nThe SYS, or System panel, provides data about the server state itself. Such as how much space is used and available in the server (the available server space is based on the total usable space of the USB that the server is in divided by 3), how many users are in the network and how much memory is allocated per user (which is the available server space divided by how many users are in the network).");
+        jTextArea2.setText("Last Updated: 01/10/2023\n\n[OVERVIEW OF TABS]:\nThe i-ncript server panel has 3 tabs: LOG, SYS, and UTIL, representing as the activity log output, system properties, and server utility tools respectively.\n\nLOG:\nThe LOG panel tracks any activity detected by the server, such as when a user has started or ended a session, or what files have been uploaded to or retrieved from the server.\n\nSYS:\nThe SYS, or System panel, provides data about the server state itself. Such as how much space is used and available in the server (the available server space is based on the total usable space of the USB that the server is in divided by 3), how many users are in the network and how much memory is allocated per user (which is the available server space divided by how many users are in the network).\n\nUTIL:\nThe UTIL, or Utility panel, has 4 buttons listed below:\n- HELP\nThis is the button which shows the user manual, the one being read right now.\n- RELOCATE\nThis button allows the title bar of the server panel to be visible, allowing you to relocate the panel to a different location. Once you are satisfied with your new location, you can press the SET LOCATION button that appears during this state, which will convert the server panel back to an undecorated state at the new location.\n- CLR LOG\nClears the output log in the LOG panel\n- CLR SERVER\nClears all data from the server and repacks the database, optimizing space. Since this is action should be done with caution you must double click this button to run the command.\n");
         jTextArea2.setWrapStyleWord(true);
         jTextArea2.setCaretPosition(0);
         jScrollPane2.setViewportView(jTextArea2);
@@ -235,16 +222,12 @@ public class Main extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAlwaysOnTop(true);
         setFocusable(false);
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/i-comiti.png")));
         setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         setUndecorated(true);
         setPreferredSize(new java.awt.Dimension(280, 156));
         setResizable(false);
         setType(java.awt.Window.Type.UTILITY);
-        addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                formMouseEntered(evt);
-            }
-        });
 
         jButton5.setBackground(new java.awt.Color(51, 51, 51));
         jButton5.setText("SET LOCATION");
@@ -345,7 +328,7 @@ public class Main extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(51, 51, 51));
 
         jButton1.setBackground(new java.awt.Color(51, 51, 51));
-        jButton1.setText("CLR USR");
+        jButton1.setText("CLR LOG");
         jButton1.setMargin(new java.awt.Insets(2, 14, 2, 14));
         jButton1.setMaximumSize(new java.awt.Dimension(77, 24));
         jButton1.setMinimumSize(new java.awt.Dimension(77, 24));
@@ -515,15 +498,11 @@ public class Main extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void formMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseEntered
-
-    }//GEN-LAST:event_formMouseEntered
-
     //CLR LOG
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         jTextArea1.setText("");
         GUI.t.interrupt();
-        GUI.labelCutterThread(jAlertLabel, "output log cleared.", 0, 20, 800, false);
+        GUI.labelCutterThread(jAlertLabel, "output log cleared.", 0, 20, 1200, false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     //CLR SERVER
@@ -532,27 +511,20 @@ public class Main extends javax.swing.JFrame {
             GUI.t.interrupt();
             GUI.labelCutterThread(jAlertLabel, "click once more to confirm.", 0, 20, 800, false);
         } else {
-            GUI.t.interrupt();
-            GUI.labelCutterThread(jAlertLabel, "clearing files from server..", 0, 20, 800, false);
             admin.clearServer();
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     //RELOCATE
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        if (jAlertLabel.getText().equals("")) {
-            GUI.t.interrupt();
-            GUI.labelCutterThread(jAlertLabel, "click once more to confirm.", 0, 20, 800, false);
-        } else {
-            this.dispose();
-            this.setBackground(Color.GRAY);
-            this.setUndecorated(false);
-            this.setVisible(true);
-            this.setDefaultCloseOperation(0);
-            jPanel3.setVisible(false);
-            jButton5.setVisible(true);
-            this.setSize(282, 95);
-        }
+        this.dispose();
+        this.setBackground(Color.GRAY);
+        this.setUndecorated(false);
+        this.setVisible(true);
+        this.setDefaultCloseOperation(0);
+        jPanel3.setVisible(false);
+        jButton5.setVisible(true);
+        this.setSize(282, 95);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -564,9 +536,9 @@ public class Main extends javax.swing.JFrame {
         jButton5.setVisible(false);
         this.setSize(282, 155);
         GUI.t.interrupt();
-        GUI.labelCutterThread(jAlertLabel, "server panel moved.", 0, 20, 800, false);
+        GUI.labelCutterThread(jAlertLabel, "server panel moved.", 0, 20, 1200, false);
     }//GEN-LAST:event_jButton5ActionPerformed
-    
+
     private boolean popupBool = false;
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         if (!popupBool) {
