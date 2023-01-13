@@ -17,7 +17,6 @@
 package com.i_comit.server;
 
 import com.i_comit.windows.GUI;
-import static com.i_comit.windows.Main.jAlertLabel;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -32,9 +31,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import javax.swing.Popup;
+import javax.swing.PopupFactory;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -46,8 +46,7 @@ public class Main extends javax.swing.JFrame {
      * Creates new form Main
      */
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
-    private URL fontFile1 = getClass().getResource("/robot-font.otf");
-
+    
     private static int second = 0;
     private static String timeString = "";
     private final String appVer = "1.1.0";
@@ -56,7 +55,8 @@ public class Main extends javax.swing.JFrame {
     Server.Records records = new Server.Records();
     Server.Tables tables = new Server.Tables();
     Server.Admin admin = new Server.Admin();
-
+    Popup popup;
+    
     public Main() {
         try {
             if (Server.serverSocket == null) {
@@ -70,7 +70,7 @@ public class Main extends javax.swing.JFrame {
                 initServer();
                 Server.socketStart(this);
             }
-
+            
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
             Rectangle rect = defaultScreen.getDefaultConfiguration().getBounds();
@@ -82,9 +82,9 @@ public class Main extends javax.swing.JFrame {
             ex.printStackTrace();
         }
     }
-
+    
     private static Font customFont;
-
+    
     public static Font registerCustomFont(float fontSize, URL fontFile) {
         try {
             customFont = Font.createFont(Font.TRUETYPE_FONT, fontFile.openStream()).deriveFont(fontSize);
@@ -95,7 +95,7 @@ public class Main extends javax.swing.JFrame {
         }
         return customFont;
     }
-
+    
     private void initServer() throws UnsupportedEncodingException {
         Server.dbPath = "E:\\"
                 + "'--------'"
@@ -108,7 +108,7 @@ public class Main extends javax.swing.JFrame {
                 + File.separator
                 + "i-ncript️.db";
         Server.url = "jdbc:sqlite:" + Server.dbPath;
-
+        
         initComponents();
         uptimeTimer();
         this.setBackground(new Color(0, 0, 0, 0));
@@ -119,8 +119,6 @@ public class Main extends javax.swing.JFrame {
         jButton5.setVisible(false);
         Server.initDatabase();
         sessions.clearSessions();
-        tables.listTables("khiemluong");
-        records.listRecords("khiemluong");
         admin.checkAvailableSpace(0);
         if (admin.userCount == 1) {
             Main.jLabel7.setText(admin.countTables() + " user in network");
@@ -132,7 +130,7 @@ public class Main extends javax.swing.JFrame {
         }
         GUI.labelCutterThread(jAlertLabel, "", 10, 10, 10, false);
     }
-
+    
     private void uptimeTimer() {
         executor.execute(() -> {
             Timer timer = new Timer();
@@ -167,7 +165,11 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jOptionPane1 = new javax.swing.JOptionPane();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextArea2 = new javax.swing.JTextArea();
+        jSeparator1 = new javax.swing.JSeparator();
         jButton5 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
@@ -189,12 +191,53 @@ public class Main extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jAlertLabel = new javax.swing.JLabel();
 
+        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(70, 106, 146), 2));
+        jPanel4.setFocusable(false);
+        jPanel4.setPreferredSize(new java.awt.Dimension(280, 260));
+
+        jLabel8.setFont(registerCustomFont(13, fontFile));
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel8.setText("i-ncript server user manual");
+
+        jTextArea2.setEditable(false);
+        jTextArea2.setColumns(20);
+        jTextArea2.setLineWrap(true);
+        jTextArea2.setRows(5);
+        jTextArea2.setText("Last Updated: 01/10/2023\n\nOVERVIEW OF TABS:\nThe i-ncript server panel has 3 tabs: LOG, SYS, and UTIL, representing as the activity log output, system properties, and server utility tools respectively.\n\nLOG:\nThe LOG panel tracks any activity detected by the server, such as when a user has started or ended a session, or what files have been uploaded to or retrieved from the server.\n\nSYS:\nThe SYS, or System panel, provides data about the server state itself. Such as how much space is used and available in the server (the available server space is based on the total usable space of the USB that the server is in divided by 3), how many users are in the network and how much memory is allocated per user (which is the available server space divided by how many users are in the network).");
+        jTextArea2.setWrapStyleWord(true);
+        jTextArea2.setCaretPosition(0);
+        jScrollPane2.setViewportView(jTextArea2);
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
+                    .addComponent(jSeparator1)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAlwaysOnTop(true);
         setFocusable(false);
         setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(282, 155));
+        setPreferredSize(new java.awt.Dimension(280, 156));
         setResizable(false);
         setType(java.awt.Window.Type.UTILITY);
         addMouseListener(new java.awt.event.MouseAdapter() {
@@ -211,7 +254,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        jPanel3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(70, 106, 146), 2, true));
+        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(70, 106, 146), 2));
         jPanel3.setOpaque(false);
 
         jLabel3.setFont(registerCustomFont(12, fontFile));
@@ -302,7 +345,7 @@ public class Main extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(51, 51, 51));
 
         jButton1.setBackground(new java.awt.Color(51, 51, 51));
-        jButton1.setText("CLR LOG");
+        jButton1.setText("CLR USR");
         jButton1.setMargin(new java.awt.Insets(2, 14, 2, 14));
         jButton1.setMaximumSize(new java.awt.Dimension(77, 24));
         jButton1.setMinimumSize(new java.awt.Dimension(77, 24));
@@ -345,6 +388,11 @@ public class Main extends javax.swing.JFrame {
         jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/help-icon_1.png"))); // NOI18N
         jButton4.setText("HELP");
         jButton4.setBorder(null);
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         jAlertLabel.setFont(registerCustomFont(12, fontFile));
         jAlertLabel.setForeground(new java.awt.Color(68, 110, 158));
@@ -417,7 +465,7 @@ public class Main extends javax.swing.JFrame {
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(135, Short.MAX_VALUE)
+                .addContainerGap(130, Short.MAX_VALUE)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -451,7 +499,7 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(layout.createSequentialGroup()
                     .addGap(80, 80, 80)
                     .addComponent(jButton5)
-                    .addContainerGap(81, Short.MAX_VALUE)))
+                    .addContainerGap(89, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -460,7 +508,7 @@ public class Main extends javax.swing.JFrame {
                 .addGroup(layout.createSequentialGroup()
                     .addContainerGap()
                     .addComponent(jButton5)
-                    .addContainerGap(132, Short.MAX_VALUE)))
+                    .addContainerGap(127, Short.MAX_VALUE)))
         );
 
         pack();
@@ -471,6 +519,7 @@ public class Main extends javax.swing.JFrame {
 
     }//GEN-LAST:event_formMouseEntered
 
+    //CLR LOG
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         jTextArea1.setText("");
         GUI.t.interrupt();
@@ -517,6 +566,26 @@ public class Main extends javax.swing.JFrame {
         GUI.t.interrupt();
         GUI.labelCutterThread(jAlertLabel, "server panel moved.", 0, 20, 800, false);
     }//GEN-LAST:event_jButton5ActionPerformed
+    
+    private boolean popupBool = false;
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        if (!popupBool) {
+            PopupFactory pf = new PopupFactory();
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            GraphicsDevice defaultScreen = ge.getDefaultScreenDevice();
+            Rectangle rect = defaultScreen.getDefaultConfiguration().getBounds();
+            int x = (int) rect.getMaxX() - this.getWidth() - this.getWidth() / 4;
+            int y = (int) rect.getMaxY() / 2 - this.getHeight() + this.getHeight() * 2;
+            popup = pf.getPopup(this, jPanel4, x, y);
+            popup.show();
+            System.out.println("true");
+            popupBool = true;
+        } else {
+            popup.hide();
+            System.out.println("false");
+            popupBool = false;
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -574,12 +643,16 @@ public class Main extends javax.swing.JFrame {
     protected static javax.swing.JLabel jLabel5;
     protected static javax.swing.JLabel jLabel6;
     protected static javax.swing.JLabel jLabel7;
-    protected static javax.swing.JOptionPane jOptionPane1;
+    protected static javax.swing.JLabel jLabel8;
     protected static javax.swing.JPanel jPanel1;
     protected static javax.swing.JPanel jPanel2;
     protected static javax.swing.JPanel jPanel3;
+    protected static javax.swing.JPanel jPanel4;
     protected static javax.swing.JScrollPane jScrollPane1;
+    protected static javax.swing.JScrollPane jScrollPane2;
+    protected static javax.swing.JSeparator jSeparator1;
     protected static javax.swing.JTabbedPane jTabbedPane1;
     protected static javax.swing.JTextArea jTextArea1;
+    protected static javax.swing.JTextArea jTextArea2;
     // End of variables declaration//GEN-END:variables
 }

@@ -23,8 +23,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.time.Year;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Random;
@@ -41,13 +39,12 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "E:\\";
+    public static String root = "D:\\";
     public static final String masterFolder = "'--------'" + File.separator;
     public static boolean adminBool = false;
-
-    private final String appVer = "2.0.4";
+        
+    private final String appVer = "2.0.5";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
-    public static final int year = Year.now().getValue();
 
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
     private URL fontFile1 = getClass().getResource("/robot-font.otf");
@@ -359,7 +356,6 @@ public class Main extends javax.swing.JFrame {
     }
 
     private void startServer() {
-
         jClientIPInput.setText(Server.getIP());
         System.out.println("server IP: " + jClientIPInput.getText());
         File serverExeFile = new File(root + masterFolder + ".server.exe");
@@ -1303,8 +1299,8 @@ public class Main extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (jButton1.getText().equals("ENTER")) {
             try {
-                if (Login.loginCheck(this)) {
-                    if (!Folder.appLockFile.exists()) {
+                if (!Folder.appLockFile.exists()) {
+                    if (Login.loginCheck(this)) {
                         if (Login.verifyLogin()) {
                             jAlertLabel.setHorizontalAlignment(CENTER);
                             initLogin(this);
@@ -1314,11 +1310,11 @@ public class Main extends javax.swing.JFrame {
                         }
                     } else {
                         GUI.t.interrupt();
-                        GUI.labelCutterLoginThread(jAlertLabel, "an instance of this app is active.", 20, 40, 1600, this);
+                        GUI.labelCutterLoginThread(jAlertLabel, "username or password is invalid.", 20, 40, 1600, this);
                     }
                 } else {
                     GUI.t.interrupt();
-                    GUI.labelCutterLoginThread(jAlertLabel, "username or password is invalid.", 20, 40, 1600, this);
+                    GUI.labelCutterLoginThread(jAlertLabel, "an instance of this app is active.", 20, 40, 1600, this);
                 }
                 jTextField1.setText("");
                 jPasswordField1.setText("");
@@ -1681,7 +1677,7 @@ public class Main extends javax.swing.JFrame {
                                 }
                                 GUI.t.interrupt();
                                 GUI.labelCutterThread(jAlertLabel, paths.size() + " file(s) sent to " + Main.jTextField2.getText().trim(), 20, 25, 1000, false);
-                                Main.jTextArea1.append(paths.size() + " file(s) sent to " + Main.jTextField2.getText().trim() + " at " + ZonedDateTime.now().format(DateTimeFormatter.ofPattern("hh:ss a")) + "\n\n");
+                                Main.jTextArea1.append(paths.size() + " file(s) sent to " + Main.jTextField2.getText().trim() + " at " + Miscs.getCurrentTime() + "\n\n");
                                 Statics.resetSendTools(2);
                             } else {
                                 Statics.resetSendTools(2);

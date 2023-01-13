@@ -7,6 +7,7 @@ package com.i_comit.shared;
 import com.i_comit.windows.GUI;
 import com.i_comit.windows.Main;
 import static com.i_comit.windows.Main.jAlertLabel;
+import com.i_comit.windows.Statics;
 import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.event.MouseAdapter;
@@ -35,19 +36,19 @@ public class Miscs {
         String today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd"));
         switch (today) {
             case "01/01":
-                GUI.labelCutterLoginThread(jAlertLabel, "happy new year " + Main.year + "!", 80, 80, 1600, main);
+                GUI.labelCutterLoginThread(jAlertLabel, "happy new year " + Statics.year + "!", 80, 80, 1600, main);
                 return true;
             case "11/24":
-                GUI.labelCutterLoginThread(jAlertLabel, "happy thanksgiving " + Main.year + "!", 80, 80, 1600, main);
+                GUI.labelCutterLoginThread(jAlertLabel, "happy thanksgiving " + Statics.year + "!", 80, 80, 1600, main);
                 return true;
             case "12/25":
-                GUI.labelCutterLoginThread(jAlertLabel, "happy holidays " + Main.year + "!", 80, 80, 1600, main);
+                GUI.labelCutterLoginThread(jAlertLabel, "happy holidays " + Statics.year + "!", 80, 80, 1600, main);
                 return true;
             case "12/28":
                 GUI.labelCutterLoginThread(jAlertLabel, "happy birthday linus torvalds!", 80, 80, 1600, main);
                 return true;
             case "11/08":
-                GUI.labelCutterLoginThread(jAlertLabel, "i-comit's " + (Main.year - 2021) + " year anniversary!", 80, 80, 1600, main);
+                GUI.labelCutterLoginThread(jAlertLabel, "i-comit's " + (Statics.year - 2021) + " year anniversary!", 80, 80, 1600, main);
                 return true;
         }
         return false;
@@ -69,7 +70,7 @@ public class Miscs {
                     try {
                         Desktop.getDesktop().browse(new URI(url));
                     } catch (URISyntaxException | IOException ex) {
-                        //It looks like there's a problem
+                        ex.printStackTrace();
                     }
                 }
 

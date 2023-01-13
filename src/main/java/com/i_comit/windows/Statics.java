@@ -18,6 +18,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalTime;
+import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import static javax.swing.SwingConstants.LEFT;
 
@@ -27,6 +28,7 @@ import static javax.swing.SwingConstants.LEFT;
 public class Statics {
 
     public static int toolMode = 0;
+    public static final int year = Year.now().getValue();
 
     public static final String folderName = "ᴠᴀᴜʟᴛ";
     public static String rootFolder = root.substring(0, 3) + Main.masterFolder + folderName;
@@ -409,47 +411,55 @@ public class Statics {
 
     public static void initLogin(Main main) {
         if (!Main.jClientIPInput.getText().equals("000.000.0.000")) {
-            if (Client.startSession(username)) {
+            if (Client.startSession(username, main)) {
                 try {
-                    Client.postTable(username);
-                    initAppGUI(main);
-                    Folder.appLock();
+                    if (Client.postTable(username, main)) {
+                        initAppGUI(main);
+                        Folder.appLock();
+                    } else {
+                        resetLogin(main);
+                    }
                 } catch (IOException | ClassNotFoundException | InterruptedException ex) {
                     ex.printStackTrace();
                 }
             } else {
-                Memory.getHeapSize(main);
-                Main.jLoginPanel.setVisible(true);
-                Main.jToolPanel.setVisible(false);
-                Main.jProgressBar2.setVisible(false);
-                jAlertLabel.setHorizontalAlignment(LEFT);
-                username = "";
+                resetLogin(main);
             }
         } else {
             if (Client.getClientIP()) {
-                if (Client.startSession(username)) {
+                if (Client.startSession(username, main)) {
                     try {
-                        Client.postTable(username);
+                        if (Client.postTable(username, main)) {
+                            initAppGUI(main);
+                            Folder.appLock();
+                        } else {
+                            resetLogin(main);
+                        }
                     } catch (IOException | ClassNotFoundException | InterruptedException ex) {
                         ex.printStackTrace();
                     }
                 } else {
-                    Memory.getHeapSize(main);
-                    Main.jLoginPanel.setVisible(true);
-                    Main.jToolPanel.setVisible(false);
-                    Main.jProgressBar2.setVisible(false);
-                    jAlertLabel.setHorizontalAlignment(LEFT);
-                    username = "";
+                    resetLogin(main);
                 }
+            } else {
+                initAppGUI(main);
+                Folder.appLock();
+                Memory.saveIPAddress();
             }
-            initAppGUI(main);
-            Folder.appLock();
         }
         jTextField1.setText("");
         jPasswordField1.setText("");
         jTextField1.requestFocus();
         main.setTitle("");
         Main.jMenuBar1.setVisible(true);
-        Memory.saveIPAddress();
+    }
+
+    private static void resetLogin(Main main) {
+        Memory.getHeapSize(main);
+        Main.jLoginPanel.setVisible(true);
+        Main.jToolPanel.setVisible(false);
+        Main.jProgressBar2.setVisible(false);
+        jAlertLabel.setHorizontalAlignment(LEFT);
+        username = "";
     }
 }

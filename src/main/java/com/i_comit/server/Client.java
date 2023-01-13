@@ -183,7 +183,7 @@ public class Client {
         return message;
     }
 
-    public static void postTable(String username) throws IOException, ClassNotFoundException, InterruptedException {
+    public static boolean postTable(String username, Main main) throws IOException, ClassNotFoundException, InterruptedException {
         getServerSocket();
         byte[] requestType_B = "PST_TABL".getBytes();
         byte[] userName_B = username.getBytes();
@@ -191,12 +191,20 @@ public class Client {
         oos.writeObject(postTableRequest_B);
         ois = new ObjectInputStream(clientSocket.getInputStream());
         String message = (String) ois.readObject();
-        System.out.println(message + " account connected");
+        System.out.println(message);
         ois.close();
         oos.close();
+        if (!message.equals("MAX_USER_ERROR")) {
+            System.out.println(message + " account connected");
+            return true;
+        } else {
+            GUI.t.interrupt();
+            GUI.labelCutterLoginThread(jAlertLabel, "server has max amount of users.", 20, 40, 1600, main);
+            return false;
+        }
     }
 
-    public static boolean startSession(String username) {
+    public static boolean startSession(String username, Main main) {
         boolean b = false;
         try {
             getServerSocket();
@@ -213,13 +221,13 @@ public class Client {
                 System.out.println("you have started your session.");
             } else {
                 GUI.t.interrupt();
-                GUI.labelCutterThread(jAlertLabel, "user is already logged in.", 20, 40, 2000, false);
+                GUI.labelCutterLoginThread(jAlertLabel, "user is already logged in.", 30, 50, 1500, main);
             }
             ois.close();
             oos.close();
         } catch (UnknownHostException | SocketException | NullPointerException ex) {
             GUI.t.interrupt();
-            GUI.labelCutterThread(jAlertLabel, "invalid IP address provided.", 20, 40, 2000, false);
+            GUI.labelCutterLoginThread(jAlertLabel, "invalid IP address provided.", 20, 40, 2000, main);
             Main.jTextField1.setText("");
             Main.jPasswordField1.setText("");
             Main.jTextField1.requestFocus();
