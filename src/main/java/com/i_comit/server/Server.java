@@ -76,11 +76,6 @@ public class Server {
                         byte[][] message = (byte[][]) ois.readObject();
                         ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream());
 
-//                        if (Arrays.equals(message[0], "LST_USER".getBytes())) {
-//                            String userName = new String(message[1], StandardCharsets.UTF_8);
-//                            boolean b = table.listTables(userName);
-//                            oos.writeObject(b);
-//                        }
                         if (Arrays.equals(message[0], "GET_USER".getBytes())) {
                             String userName = new String(message[1], StandardCharsets.UTF_8);
                             List<String> fileRecords = findFiles(userName);

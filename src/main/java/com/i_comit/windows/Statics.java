@@ -397,7 +397,11 @@ public class Statics {
                 break;
             }
         }
-
+        if (adminBool) {
+            jShowServer.setVisible(true);
+        } else {
+            jShowServer.setVisible(false);
+        }
         jLabel1.setLocation(265, 10);
         jLabel3.setLocation(367, 4);
         jAlertLabel.setLocation(264, 174);

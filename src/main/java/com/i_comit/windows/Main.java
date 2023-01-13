@@ -42,7 +42,7 @@ public class Main extends javax.swing.JFrame {
     public static String root = "D:\\";
     public static final String masterFolder = "'--------'" + File.separator;
     public static boolean adminBool = false;
-        
+
     private final String appVer = "2.0.5";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
 
@@ -334,7 +334,6 @@ public class Main extends javax.swing.JFrame {
                 ex.printStackTrace();
             }
         }
-
         if (adminBool) {
             jShowServer.setVisible(true);
             jAdminLabel.setVisible(false);
@@ -1794,18 +1793,21 @@ public class Main extends javax.swing.JFrame {
                 public synchronized void run() {
                     Folder.appLockBool = false;
                     Folder.appLockFile.delete();
+
+                    if (!jClientIPInput.getText().equals("000.000.0.000")) {
+                        if (!username.equals("") && jToolPanel.isVisible()) {
+                            System.out.println("ending session.");
+                            Client.endSession(username);
+                        }
+                    } else {
+                        System.out.println("quitting offline mode.");
+                    }
                     if (Client.getClientIP() && adminBool) {
                         System.out.println("closing server.");
                         Client.adminRequests(1);
                         Server.portKill();
                         Server.appKill(".server.exe", true);
                         Server.appKill("i-ncript.exe", true);
-                    }
-                    if (!jClientIPInput.getText().equals("000.000.0.000")) {
-                        if (!username.equals("") && jToolPanel.isVisible()) {
-                            System.out.println("ending session.");
-                            Client.endSession(username);
-                        }
                     }
                     if (Client.clientSocket != null) {
                         try {
@@ -1827,8 +1829,6 @@ public class Main extends javax.swing.JFrame {
                         } catch (IOException ex) {
                             ex.printStackTrace();
                         }
-                    } else {
-                        System.out.println("quitting offline mode.");
                     }
                 }
             });
