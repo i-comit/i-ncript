@@ -296,7 +296,7 @@ public class Server {
                     ProcessBuilder pb1 = new ProcessBuilder("cmd.exe", "/c", killTask);
                     pb1.start();
                     if (reader.readLine() == null) {
-                        System.out.println("killed server " + s);
+                        System.out.println("killed app PID: " + s);
                         break;
                     }
                 }

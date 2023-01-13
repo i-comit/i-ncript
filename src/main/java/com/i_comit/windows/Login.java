@@ -36,8 +36,8 @@ public class Login {
         if (!Main.jUsernameLabel.getText().equals("enter username")) {
             if (!"".equals(username)) {
                 if (!"".equals(Statics.password)) {
-                    if (username.length() >= 6) {
-                        if (Statics.password.length() >= 8) {
+                    if (username.length() >= 6 && username.length() < 15) {
+                        if (Statics.password.length() >= 8 && Statics.password.length() < 15) {
                             if (!username.equals(Statics.password)) {
                                 String regex = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!<>~:;])";
                                 Pattern p = Pattern.compile(regex);
@@ -45,29 +45,11 @@ public class Login {
                                 if (m.lookingAt()) {
                                     Login.Authenticator();
                                     b = true;
-                                } else {
-                                    GUI.t.interrupt();
-                                    GUI.labelCutterLoginThread(jAlertLabel, "password failed regex check", 20, 20, 1200, main);
                                 }
-                            } else {
-                                GUI.t.interrupt();
-                                GUI.labelCutterLoginThread(jAlertLabel, "password can't be username", 20, 20, 1200, main);
                             }
-                        } else {
-                            GUI.t.interrupt();
-                            GUI.labelCutterLoginThread(jAlertLabel, "password is too short", 20, 20, 1200, main);
                         }
-                    } else {
-                        GUI.t.interrupt();
-                        GUI.labelCutterLoginThread(jAlertLabel, "username is too short", 20, 20, 1200, main);
                     }
-                } else {
-                    GUI.t.interrupt();
-                    GUI.labelCutterLoginThread(jAlertLabel, "please enter a password", 20, 20, 1200, main);
                 }
-            } else {
-                GUI.t.interrupt();
-                GUI.labelCutterLoginThread(jAlertLabel, "please enter a username", 20, 20, 1200, main);
             }
             jTextField1.setText("");
             jPasswordField1.setText("");
@@ -235,7 +217,7 @@ public class Login {
                 Main.jPasswordField3.setText("");
                 Main.jRadioButton3.setEnabled(false);
                 unzipFile(Statics.zipFileName + ".i-cc", Statics.zipFileName.replaceAll(".i-cc", ""));
-                System.out.println("unzipped "+Statics.zipFileName);
+                System.out.println("unzipped " + Statics.zipFileName);
                 Main.toolBtnsBool(true);
                 try {
                     BufferedReader brTest = new BufferedReader(new FileReader(zipFileName + File.separator + keyName));
