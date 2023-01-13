@@ -39,9 +39,9 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class Main extends javax.swing.JFrame {
 
-    public static String root = "D:\\";
+    public static String root = "";
     public static final String masterFolder = "'--------'" + File.separator;
-    public static boolean adminBool = false;
+    public static boolean adminBool = true;
 
     private final String appVer = "2.0.5";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
@@ -50,55 +50,55 @@ public class Main extends javax.swing.JFrame {
     private URL fontFile1 = getClass().getResource("/robot-font.otf");
 
     public Main() {
-//        root = Paths.get("").toAbsolutePath().toString();
-//        if (Memory.checkWMIC()) {
-        System.out.println(Memory.getUsableSpaceLong());
-        root = root.substring(0, 3);
-        initComponents();
-        Memory.readIPAddress();
-        TreeView.renderTreeCells();
+        root = Paths.get("").toAbsolutePath().toString();
+        if (Memory.checkWMIC()) {
+            System.out.println(Memory.getUsableSpaceLong());
+            root = root.substring(0, 3);
+            initComponents();
+            Memory.readIPAddress();
+            TreeView.renderTreeCells();
 
-        Path runtime = Paths.get(root + masterFolder + "runtime");
-        Path app = Paths.get(root + masterFolder + "app");
-        if (runtime.toFile().exists()) {
-            try {
-                Files.setAttribute(runtime, "dos:hidden", true);
-            } catch (IOException ex) {
+            Path runtime = Paths.get(root + masterFolder + "runtime");
+            Path app = Paths.get(root + masterFolder + "app");
+            if (runtime.toFile().exists()) {
+                try {
+                    Files.setAttribute(runtime, "dos:hidden", true);
+                } catch (IOException ex) {
+                }
             }
-        }
-        if (app.toFile().exists()) {
-            try {
-                Files.setAttribute(app, "dos:hidden", true);
-            } catch (IOException ex) {
+            if (app.toFile().exists()) {
+                try {
+                    Files.setAttribute(app, "dos:hidden", true);
+                } catch (IOException ex) {
+                }
             }
+
+            jStorePanel.setVisible(true);
+            jSendPanel.setVisible(false);
+            jReceivePanel.setVisible(false);
+            jRadioButton2.setVisible(false);
+            jRadioButton3.setVisible(false);
+            jScrollPane5.setVisible(false);
+            jMenuBar1.setVisible(false);
+
+            if (!keyFile.exists()) {
+                jToolPanel.setVisible(false);
+                loginLabelVisibleBool(false);
+                this.setSize(540, 240);
+                this.setLocationRelativeTo(null);
+            } else {
+                loginLabelVisibleBool(true);
+                jUsernameLabel.setText("enter username");
+                jPasswordLabel.setText("enter password");
+                generateApp();
+
+                jToolPanel.setVisible(false);
+                jButton2.setVisible(false);
+            }
+            jProgressBar2.setVisible(false);
+            dragDrop.setVisible(false);
+            jSendSQL.setVisible(false);
         }
-
-        jStorePanel.setVisible(true);
-        jSendPanel.setVisible(false);
-        jReceivePanel.setVisible(false);
-        jRadioButton2.setVisible(false);
-        jRadioButton3.setVisible(false);
-        jScrollPane5.setVisible(false);
-        jMenuBar1.setVisible(false);
-
-        if (!keyFile.exists()) {
-            jToolPanel.setVisible(false);
-            loginLabelVisibleBool(false);
-            this.setSize(540, 240);
-            this.setLocationRelativeTo(null);
-        } else {
-            loginLabelVisibleBool(true);
-            jUsernameLabel.setText("enter username");
-            jPasswordLabel.setText("enter password");
-            generateApp();
-
-            jToolPanel.setVisible(false);
-            jButton2.setVisible(false);
-        }
-        jProgressBar2.setVisible(false);
-        dragDrop.setVisible(false);
-        jSendSQL.setVisible(false);
-//        }
     }
 
     private void getKeyBinding(int keyCode, JPanel jPanel, AbstractAction action) {
@@ -1793,42 +1793,23 @@ public class Main extends javax.swing.JFrame {
                 public synchronized void run() {
                     Folder.appLockBool = false;
                     Folder.appLockFile.delete();
-
                     if (!jClientIPInput.getText().equals("000.000.0.000")) {
                         if (!username.equals("") && jToolPanel.isVisible()) {
                             System.out.println("ending session.");
                             Client.endSession(username);
+                            Miscs.closeServerStreams(adminBool);
                         }
+                        if (Client.getClientIP() && adminBool) {
+                            System.out.println("closing server.");
+                            Client.adminRequests(1);
+                            Server.portKill();
+                            Miscs.closeServerStreams(adminBool);
+                            Server.appKill(".server.exe", false);
+                            Server.appKill("i-ncript.exe", true);
+                        }
+                        Miscs.closeServerStreams(adminBool);
                     } else {
                         System.out.println("quitting offline mode.");
-                    }
-                    if (Client.getClientIP() && adminBool) {
-                        System.out.println("closing server.");
-                        Client.adminRequests(1);
-                        Server.portKill();
-                        Server.appKill(".server.exe", true);
-                        Server.appKill("i-ncript.exe", true);
-                    }
-                    if (Client.clientSocket != null) {
-                        try {
-                            Client.clientSocket.close();
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                    if (Client.ois != null) {
-                        try {
-                            Client.ois.close();
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                    if (Client.oos != null) {
-                        try {
-                            Client.oos.close();
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
                     }
                 }
             });

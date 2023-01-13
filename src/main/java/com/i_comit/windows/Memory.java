@@ -279,9 +279,9 @@ public class Memory {
                                 Client.endSession(username);
                                 if (Client.getClientIP()) {
                                     Server.portKill();
-                                    Main.closeServerStreams(Main.adminBool);
+                                    Miscs.closeServerStreams(Main.adminBool);
+                                    Server.appKill(".server.exe", false);
                                     Server.appKill("i-ncript.exe", true);
-                                    Server.appKill(".server.exe", true);
                                 }
                                 Client.clientSocket.close();
                                 if (Main.jToggleButton1.isSelected()) {

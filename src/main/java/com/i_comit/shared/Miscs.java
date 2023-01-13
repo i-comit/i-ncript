@@ -4,6 +4,8 @@
  */
 package com.i_comit.shared;
 
+import com.i_comit.server.Client;
+import com.i_comit.server.Server;
 import com.i_comit.windows.GUI;
 import com.i_comit.windows.Main;
 import static com.i_comit.windows.Main.jAlertLabel;
@@ -165,6 +167,38 @@ public class Miscs {
         String formattedInstant = formatter.format(instant);
 
         return formattedInstant;
+    }
 
+    public static void closeServerStreams(boolean adminBool) {
+        if (adminBool) {
+            if (Server.serverSocket != null) {
+                try {
+                    Server.serverSocket.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+        if (Client.clientSocket != null) {
+            try {
+                Client.clientSocket.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        if (Client.ois != null) {
+            try {
+                Client.ois.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        if (Client.oos != null) {
+            try {
+                Client.oos.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 }
