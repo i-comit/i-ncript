@@ -36,7 +36,7 @@ public class Login {
         if (!Main.jUsernameLabel.getText().equals("enter username")) {
             if (!"".equals(username)) {
                 if (!"".equals(Statics.password)) {
-                    if (username.length() >= 6 && username.length() < 15) {
+                    if (username.length() >= 5 && username.length() < 15) {
                         if (Statics.password.length() >= 8 && Statics.password.length() < 15) {
                             if (!username.equals(Statics.password)) {
                                 String regex = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%!<>~:;])";
@@ -115,45 +115,51 @@ public class Login {
         recipientPassword = new String(password).trim();
         if (!"".equals(recipientUsername)) {
             if (!"".equals(recipientPassword)) {
-                if (recipientUsername.length() >= 5) {
-                    if (!recipientUsername.equals(Statics.recipientPassword)) {
-                        resetStaticInts();
-                        Hasher.hashedUsername = Hasher.getHash(recipientUsername, true);
-                        Hasher.hashedPassword = Hasher.getHash(recipientPassword, false);
-                        Main.jSendSQL.setEnabled(false);
-                        Main.jRadioButton2.setEnabled(false);
-                        Main.jTextField2.setText("");
-                        Main.jPasswordField2.setText("");
-                        Main.jTextField2.setEnabled(false);
-                        Main.jPasswordField2.setEnabled(false);
-                        if (jTreeBool) {
-                            AES.AESThread(listAESPaths(sendFolder), sendFolder.toFile(), true, 2);
-                            b = true;
-                        } else {
-                            List<Path> treeViewPaths = TreeView.convertTreePathToPath(Main.jTree1.getSelectionPaths());
-                            List<Path> filteredSendPath = new ArrayList<>();
-                            treeViewPaths.forEach(x -> {
-                                if (!x.toFile().getName().endsWith(".enc") && !x.toFile().getName().endsWith(".i-cc")) {
-                                    filteredSendPath.add(x);
-                                }
-                            });
-                            if (filteredSendPath.isEmpty()) {
-                                GUI.t.interrupt();
-                                GUI.labelCutterThread(jAlertLabel, "folder can't contain .enc files", 20, 30, 1500, false);
-                                b = false;
-                            } else {
-                                AES.AESThread(filteredSendPath, sendFolder.toFile(), true, 2);
+                if (recipientPassword.length() >= 5 && recipientPassword.length() < 15) {
+                    if (recipientUsername.length() >= 5 && recipientUsername.length() < 15) {
+                        if (!recipientUsername.equals(Statics.recipientPassword)) {
+                            resetStaticInts();
+                            Hasher.hashedUsername = Hasher.getHash(recipientUsername, true);
+                            Hasher.hashedPassword = Hasher.getHash(recipientPassword, false);
+                            Main.jSendSQL.setEnabled(false);
+                            Main.jRadioButton2.setEnabled(false);
+                            Main.jTextField2.setText("");
+                            Main.jPasswordField2.setText("");
+                            Main.jTextField2.setEnabled(false);
+                            Main.jPasswordField2.setEnabled(false);
+                            if (jTreeBool) {
+                                AES.AESThread(listAESPaths(sendFolder), sendFolder.toFile(), true, 2);
                                 b = true;
+                            } else {
+                                List<Path> treeViewPaths = TreeView.convertTreePathToPath(Main.jTree1.getSelectionPaths());
+                                List<Path> filteredSendPath = new ArrayList<>();
+                                treeViewPaths.forEach(x -> {
+                                    if (!x.toFile().getName().endsWith(".enc") && !x.toFile().getName().endsWith(".i-cc")) {
+                                        filteredSendPath.add(x);
+                                    }
+                                });
+                                if (filteredSendPath.isEmpty()) {
+                                    GUI.t.interrupt();
+                                    GUI.labelCutterThread(jAlertLabel, "folder can't contain .enc files", 20, 30, 1500, false);
+                                    b = false;
+                                } else {
+                                    AES.AESThread(filteredSendPath, sendFolder.toFile(), true, 2);
+                                    b = true;
+                                }
                             }
+                        } else {
+                            GUI.t.interrupt();
+                            GUI.labelCutterThread(jAlertLabel, "password can't be username", 20, 20, 1200, false);
+                            sendPanelTools();
                         }
                     } else {
                         GUI.t.interrupt();
-                        GUI.labelCutterThread(jAlertLabel, "password can't be username", 20, 20, 1200, false);
+                        GUI.labelCutterThread(jAlertLabel, "username is invalid", 20, 20, 1200, false);
                         sendPanelTools();
                     }
                 } else {
                     GUI.t.interrupt();
-                    GUI.labelCutterThread(jAlertLabel, "invalid username", 20, 20, 1200, false);
+                    GUI.labelCutterThread(jAlertLabel, "password is invalid", 20, 20, 1200, false);
                     sendPanelTools();
                 }
             } else {
@@ -167,6 +173,7 @@ public class Login {
             sendPanelTools();
         }
         return b;
+
     }
 
     public static void sendKey() {
