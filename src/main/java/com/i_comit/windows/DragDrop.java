@@ -107,13 +107,12 @@ class DragDrop implements DropTargetListener {
                                 if (i >= paths.size() - 1) {
                                     if (!b) {
                                         Statics.dragDropBool = true;
-                                        AES_T.buttonRestart();
                                         if (!filesf.isDirectory()) {
                                             if (!filesf.getName().endsWith(".i-cc")) {
                                                 if (!filesf.getAbsolutePath().equals(root + masterFolder + "i-ncript.exe")
                                                         && !filesf.getAbsolutePath().equals(root + masterFolder + ".server.exe")
                                                         && !filesf.getAbsolutePath().equals(root + masterFolder + Statics.keyName)) {
-
+                                                    AES_T.buttonRestart();
                                                     if (!Main.toggleDragDropBool) {
                                                         for (Object file : files) {
                                                             Path fileP = Paths.get(Statics.path + File.separator + new File(file.toString()).getName());
@@ -134,7 +133,7 @@ class DragDrop implements DropTargetListener {
                                                 }
                                             } else {
                                                 GUI.t.interrupt();
-                                                GUI.labelCutterThread(Main.jAlertLabel, ".i-cc files are not allowed", 10, 25, 1000, false);
+                                                GUI.labelCutterThread(Main.jAlertLabel, ".i-cc files can't be stored", 10, 25, 1000, false);
                                             }
                                         } else {
                                             if (!filesf.getAbsolutePath().equals(root + masterFolder + "ᴠᴀᴜʟᴛ")
@@ -142,6 +141,7 @@ class DragDrop implements DropTargetListener {
                                                     && !filesf.getAbsolutePath().equals(root + masterFolder + Statics.oBoxName)
                                                     && !filesf.getAbsolutePath().equals(root + masterFolder + "app")
                                                     && !filesf.getAbsolutePath().equals(root + masterFolder + "runtime")) {
+                                                AES_T.buttonRestart();
                                                 if (!Main.toggleDragDropBool) {
                                                     Folder.getFileDropCount(filesf);
                                                     Folder.recursiveFileDropThread(filesf, Statics.path, 0);
