@@ -63,12 +63,21 @@ class DragDrop implements DropTargetListener {
                     if (!fileFormat.isDirectory()) {
                         treepaths.add(fileFormat.toPath());
                         if (TreeView.checkFilesAreFromSameFolder(treepaths)) {
-                            if (!b) {
-                                Main.jButton2.setVisible(true);
-                                Main.jProgressBar1.setMaximum(treepaths.size());
-                                jProgressBar1.setString("0% | 0/" + treepaths.size());
-                                AES.AESThread(treepaths, new File(path.replaceAll(fileName, "")), false, 0);
-                                b = true;
+                            if (!fileFormat.getName().endsWith(".i-cc") && !fileFormat.getName().equals("Thumbs.db")) {
+                                if (!b) {
+                                    Main.jButton2.setVisible(true);
+                                    Main.jProgressBar1.setMaximum(treepaths.size());
+                                    jProgressBar1.setString("0% | 0/" + treepaths.size());
+                                    AES.AESThread(treepaths, new File(path.replaceAll(fileName, "")), false, 0);
+                                    b = true;
+                                }
+                            } else {
+                                GUI.t.interrupt();
+                                if (jTree1.getSelectionPaths().length <= 1) {
+                                    GUI.labelCutterThread(Main.jAlertLabel, "dropped file is not valid", 10, 25, 1000, false);
+                                } else {
+                                    GUI.labelCutterThread(Main.jAlertLabel, "dropped files are not valid", 10, 25, 1000, false);
+                                }
                             }
                         } else {
                             GUI.t.interrupt();
@@ -133,7 +142,7 @@ class DragDrop implements DropTargetListener {
                                                 }
                                             } else {
                                                 GUI.t.interrupt();
-                                                GUI.labelCutterThread(Main.jAlertLabel, ".i-cc files can't be stored", 10, 25, 1000, false);
+                                                GUI.labelCutterThread(Main.jAlertLabel, ".i-cc files are not valid", 10, 25, 1000, false);
                                             }
                                         } else {
                                             if (!filesf.getAbsolutePath().equals(root + masterFolder + "ᴠᴀᴜʟᴛ")

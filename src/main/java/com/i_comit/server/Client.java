@@ -68,7 +68,7 @@ public class Client {
         }
     }
 
-    public static boolean userRequest(String username) {
+    public static synchronized boolean userRequest(String username) {
         boolean b = true;
         try {
             getServerSocket();
@@ -80,13 +80,14 @@ public class Client {
             ois = new ObjectInputStream(clientSocket.getInputStream());
             List<String> message = (List<String>) ois.readObject();
             if (message.isEmpty()) {
-                System.out.println("no files found.");
                 b = false;
             } else {
                 for (String fileName : message) {
                     getRecords(username, new File(fileName));
                     System.out.println("retrieved: " + fileName);
-                    Main.refreshTreeView(Statics.receiveFolder, TreeView.receiveCaretPos);
+                    if (Statics.toolMode == 1) {
+                        Main.refreshTreeView(Statics.receiveFolder, TreeView.receiveCaretPos);
+                    }
                     GUI.getGB();
                 }
             }
@@ -94,7 +95,6 @@ public class Client {
             System.out.println("host is offline");
             b = false;
         }
-//        }
         return b;
     }
 
@@ -221,7 +221,7 @@ public class Client {
                 System.out.println("you have started your session.");
             } else {
                 GUI.t.interrupt();
-                GUI.labelCutterLoginThread(jAlertLabel, "user is already logged in.", 30, 50, 1500, main);
+                GUI.labelCutterLoginThread(jAlertLabel, "user is already logged in.", 10, 50, 2000, main);
             }
             ois.close();
             oos.close();

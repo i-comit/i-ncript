@@ -1313,6 +1313,7 @@ public class Main extends javax.swing.JFrame {
                     }
                 } else {
                     GUI.t.interrupt();
+                    jAlertLabel.setHorizontalAlignment(LEFT);
                     GUI.labelCutterLoginThread(jAlertLabel, "an instance of this app is active.", 20, 40, 1600, this);
                 }
                 jTextField1.setText("");
@@ -1370,6 +1371,7 @@ public class Main extends javax.swing.JFrame {
                         }
                     } else {
                         GUI.t.interrupt();
+                        jAlertLabel.setHorizontalAlignment(LEFT);
                         GUI.labelCutterLoginThread(jAlertLabel, "an instance of this app is active.", 20, 40, 1600, this);
                     }
                 } else {
