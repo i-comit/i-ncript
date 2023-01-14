@@ -43,7 +43,7 @@ public class Main extends javax.swing.JFrame {
     public static final String masterFolder = "'--------'" + File.separator;
     public static boolean adminBool = true;
 
-    private final String appVer = "2.0.5";
+    private final String appVer = "2.0.6";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
 
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
@@ -1286,7 +1286,7 @@ public class Main extends javax.swing.JFrame {
             } else {
                 resetStaticInts();
                 GUI.t.interrupt();
-                GUI.labelCutterThread(jAlertLabel, "no files to decrypt", 10, 20, 400, false);
+                GUI.labelCutterThread(jAlertLabel, "no valid files to decrypt", 10, 25, 750, false);
                 this.setSize(779, 240);
             }
         } catch (IOException ex) {
@@ -1343,7 +1343,7 @@ public class Main extends javax.swing.JFrame {
             } else {
                 resetStaticInts();
                 GUI.t.interrupt();
-                GUI.labelCutterThread(jAlertLabel, "no files to encrypt", 10, 20, 400, false);
+                GUI.labelCutterThread(jAlertLabel, "no valid files to encrypt", 10, 25, 750, false);
                 this.setSize(779, 240);
             }
         } catch (IOException ex) {

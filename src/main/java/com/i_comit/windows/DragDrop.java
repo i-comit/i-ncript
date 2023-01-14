@@ -106,13 +106,13 @@ class DragDrop implements DropTargetListener {
                             if (Statics.toolMode == 0 || Statics.toolMode == 3) {
                                 if (i >= paths.size() - 1) {
                                     if (!b) {
-                                        Statics.dragDropBool = true;
                                         if (!filesf.isDirectory()) {
                                             if (!filesf.getName().endsWith(".i-cc")) {
                                                 if (!filesf.getAbsolutePath().equals(root + masterFolder + "i-ncript.exe")
                                                         && !filesf.getAbsolutePath().equals(root + masterFolder + ".server.exe")
                                                         && !filesf.getAbsolutePath().equals(root + masterFolder + Statics.keyName)) {
                                                     AES_T.buttonRestart();
+                                                    Statics.dragDropBool = true;
                                                     if (!Main.toggleDragDropBool) {
                                                         for (Object file : files) {
                                                             Path fileP = Paths.get(Statics.path + File.separator + new File(file.toString()).getName());
@@ -142,6 +142,7 @@ class DragDrop implements DropTargetListener {
                                                     && !filesf.getAbsolutePath().equals(root + masterFolder + "app")
                                                     && !filesf.getAbsolutePath().equals(root + masterFolder + "runtime")) {
                                                 AES_T.buttonRestart();
+                                                Statics.dragDropBool = true;
                                                 if (!Main.toggleDragDropBool) {
                                                     Folder.getFileDropCount(filesf);
                                                     Folder.recursiveFileDropThread(filesf, Statics.path, 0);
