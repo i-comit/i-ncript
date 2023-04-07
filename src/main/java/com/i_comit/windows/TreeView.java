@@ -4,6 +4,7 @@
  */
 package com.i_comit.windows;
 
+import static com.i_comit.shared.Miscs.isUnimportantFile;
 import static com.i_comit.windows.Main.jTree1;
 import static com.i_comit.windows.Main.masterFolder;
 import static com.i_comit.windows.Main.root;
@@ -277,11 +278,11 @@ public class TreeView {
         for (File filesArr1 : filesArr) {
             DefaultMutableTreeNode dirNodes = new DefaultMutableTreeNode(filesArr1.getName());
             if (!filesArr1.isDirectory()) {
-                if (!filesArr1.getName().endsWith("Thumbs.db")) {
+                if (isUnimportantFile(filesArr1)) {
                     DefaultMutableTreeNode fileNodes = new DefaultMutableTreeNode(filesArr1.getName());
                     treeRoot.add(fileNodes);
                 }
-            } else {
+            } else if (filesArr1.isDirectory() && !filesArr1.getName().equals(".Trash-1000")) {
                 treeRoot.add(dirNodes);
                 listFiles(filesArr1, dirNodes);
                 expandedNodesSwitch(Statics.toolMode, dirNodes);
@@ -293,11 +294,11 @@ public class TreeView {
         File[] filesArr = file.listFiles();
         for (File filesArr1 : filesArr) {
             if (!filesArr1.isDirectory()) {
-                if (!filesArr1.getName().endsWith("Thumbs.db")) {
+                if (isUnimportantFile(filesArr1)) {
                     DefaultMutableTreeNode fileNodes = new DefaultMutableTreeNode(filesArr1.getName());
                     dirNodes.add(fileNodes);
                 }
-            } else {
+            } else if (filesArr1.isDirectory() && !filesArr1.getName().equals(".Trash-1000")) {
                 listFilesRecursively(filesArr1, dirNodes);
             }
         }
@@ -309,19 +310,17 @@ public class TreeView {
         File[] filesArr = file.listFiles();
         for (File filesArr1 : filesArr) {
             if (!filesArr1.isDirectory()) {
-                if (!filesArr1.getName().endsWith("Thumbs.db")) {
+                if (isUnimportantFile(filesArr1)) {
                     DefaultMutableTreeNode fileNodes = new DefaultMutableTreeNode(filesArr1.getName());
                     subDirNodes.add(fileNodes);
                 }
-            } else {
+            } else if (filesArr1.isDirectory() && !filesArr1.getName().equals(".Trash-1000")) {
                 DefaultMutableTreeNode subDirNodes0 = new DefaultMutableTreeNode(filesArr1.getName());
                 subDirNodes.add(subDirNodes0);
-//                dirNodeList.add(subDirNodes0);
                 expandedNodesSwitch(Statics.toolMode, subDirNodes0);
                 listFiles(filesArr1, subDirNodes0);
             }
         }
-//        dirNodeList.add(subDirNodes);
         expandedNodesSwitch(Statics.toolMode, subDirNodes);
 
         dirNodes.add(subDirNodes);
@@ -372,13 +371,20 @@ public class TreeView {
                         long fileSize = xf.length();
                         fileSizes.add(fileSize);
                     });
-                    if (fileSizes.size() == 1) {
+                    switch (fileSizes.size()) {
+                        case 1 ->
                         GUI.labelCutterTreeThread(Main.jCreationDateLabel, fileSizes.size() + " FILE", 0, 16, 64, true);
-                    } else {
+                        case 0 ->
+                            GUI.labelCutterTreeThread(Main.jCreationDateLabel, "EMPTY", 0, 16, 128, true);
+                        default ->
                         GUI.labelCutterTreeThread(Main.jCreationDateLabel, fileSizes.size() + " FILES", 0, 16, 64, true);
                     }
                     long sum = fileSizes.stream().mapToLong(Long::longValue).sum();
+                    if (sum != 0) {
                     GUI.labelCutterTreeThread(Main.jFileSizeLabel, Memory.byteFormatter(sum), 0, 16, 64, true);
+                    } else {
+                        Main.jFileSizeLabel.setText("");
+                }
                 }
             } else {
                 List<Long> fileSizes = new ArrayList<>();
@@ -397,9 +403,13 @@ public class TreeView {
                     }
                 }
                 long sum = fileSizes.stream().mapToLong(Long::longValue).sum();
+                if (sum != 0) {
                 GUI.labelCutterTreeThread(Main.jFileSizeLabel, Memory.byteFormatter(sum), 0, 16, 64, true);
+                } else {
+                    Main.jFileSizeLabel.setText("");
             }
         }
+    }
     }
 
     public static boolean checkFilesAreFromSameFolder(List<Path> treepaths) {

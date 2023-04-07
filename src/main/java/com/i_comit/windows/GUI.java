@@ -67,6 +67,7 @@ public class GUI {
                     .filter(p -> p.toFile().length() < ((Memory.getUsableSpaceLong() / 2) - 1024))
                     .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
                     .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
+                    .filter(Miscs.isUnimportantFilterFile().negate())
                     .count());
         }
         return result;
@@ -82,7 +83,7 @@ public class GUI {
                             .filter(p -> p.toFile().length() < ((Memory.getUsableSpaceLong() / 2) - 1024))
                             .filter(p -> !p.getFileName().toString().endsWith(".enc"))
                             .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
-                            .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
+                            .filter(Miscs.isUnimportantFilterFile().negate())
                             .count());
                     result = result2;
                     break;
@@ -91,7 +92,7 @@ public class GUI {
                             .filter(p -> p.toFile().length() < ((Memory.getUsableSpaceLong() / 2) - 1024))
                             .filter(p -> p.getFileName().toString().endsWith(".enc"))
                             .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
-                            .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
+                            .filter(Miscs.isUnimportantFilterFile().negate())
                             .count());
                     result = result2;
                     break;
@@ -104,9 +105,14 @@ public class GUI {
         List<Path> result;
         try ( Stream<Path> walk = Files.walk(path)) {
             result = walk.filter(Files::isDirectory)
+                    .filter(p -> isNotTrash(p))
                     .collect(Collectors.toList());
             return result;
         }
+    }
+
+    private static boolean isNotTrash(Path path) {
+        return !(path.toFile().isDirectory() && path.getFileName().equals(".Trash-1000"));
     }
 
     public static List<Path> listAllPaths(Path path) throws IOException {
@@ -132,6 +138,7 @@ public class GUI {
                     .filter(p -> p.toFile().length() < ((Memory.getUsableSpaceLong() / 2) - 1024))
                     .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
                     .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
+                    .filter(Miscs.isUnimportantFilterFile().negate())
                     .collect(Collectors.toList());
             return result;
         }
@@ -145,16 +152,16 @@ public class GUI {
                     result = walk.filter(Files::isRegularFile)
                             .filter(p -> p.toFile().length() < ((Memory.getUsableSpaceLong() / 2) - 1024))
                             .filter(p -> !p.getFileName().toString().endsWith(".enc"))
-                            .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
                             .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
+                            .filter(Miscs.isUnimportantFilterFile().negate())
                             .collect(Collectors.toList());
                     break;
                 case 1:
                     result = walk.filter(Files::isRegularFile)
                             .filter(p -> p.toFile().length() < ((Memory.getUsableSpaceLong() / 2) - 1024))
                             .filter(p -> p.getFileName().toString().endsWith(".enc"))
-                            .filter(p -> !p.getFileName().toString().startsWith("Thumbs.db"))
                             .filter(p -> !p.getFileName().toString().endsWith(".i-cc"))
+                            .filter(Miscs.isUnimportantFilterFile().negate())
                             .collect(Collectors.toList());
                     break;
             }

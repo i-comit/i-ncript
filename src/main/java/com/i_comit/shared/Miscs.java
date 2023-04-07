@@ -14,10 +14,12 @@ import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -26,6 +28,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.function.Predicate;
 import javax.swing.JLabel;
 
 /**
@@ -200,5 +203,59 @@ public class Miscs {
                 ex.printStackTrace();
             }
         }
+    }
+
+    public static boolean isUnimportantFile(File file) {
+        String fileName = file.getName();
+        String[] unimportantFileTypes = {"ini", "db", "db-journal", "log"};
+
+        if (fileName.equalsIgnoreCase(".DS_Store")) {
+            return false;
+}
+
+        int dotIndex = fileName.lastIndexOf(".");
+        if (dotIndex < 0 || dotIndex == fileName.length() - 1) {
+            // File has no file extension
+            return false;
+        }
+
+        String fileExtension = fileName.substring(dotIndex + 1);
+        for (String type : unimportantFileTypes) {
+            if (fileExtension.equalsIgnoreCase(type)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static Predicate<Path> isUnimportantFilterFile() {
+        String[] unimportantFileNames = {"Thumbs.db", ".DS_Store"};
+        String[] unimportantFileExtensions = {"ini", "db", "db-journal", "log"};
+
+        return path -> {
+            String fileName = path.getFileName().toString();
+
+            for (String name : unimportantFileNames) {
+                if (fileName.equalsIgnoreCase(name)) {
+                    return true;
+                }
+            }
+
+            int dotIndex = fileName.lastIndexOf(".");
+            if (dotIndex < 0 || dotIndex == fileName.length() - 1) {
+                // File has no file extension
+                return true;
+            }
+
+            String fileExtension = fileName.substring(dotIndex + 1);
+            for (String type : unimportantFileExtensions) {
+                if (fileExtension.equalsIgnoreCase(type)) {
+                    return true;
+                }
+            }
+
+            return false;
+        };
     }
 }

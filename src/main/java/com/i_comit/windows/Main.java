@@ -41,9 +41,9 @@ public class Main extends javax.swing.JFrame {
 
     public static String root = "";
     public static final String masterFolder = "'--------'" + File.separator;
-    public static boolean adminBool = true;
+    public static boolean adminBool = false;
 
-    private final String appVer = "2.0.6";
+    private final String appVer = "2.0.8";
     private final String latestDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
 
     private URL fontFile = getClass().getResource("/polentical-neon.ttf");
