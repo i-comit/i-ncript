@@ -1,6 +1,6 @@
 <script>
-  import LoginForm from '../src/components/LoginForm.svelte';
-  import MainForm from '../src/components/MainForm.svelte';
+  import Login from './components/Login.svelte';
+  import Vault from '../src/components/Vault.svelte';
   
   let loggedIn = false;
 
@@ -12,8 +12,8 @@
 
 <main>
   {#if !loggedIn}
-    <LoginForm on:loginSuccess={handleLoginSuccess} />
+    <Login on:loginSuccess={handleLoginSuccess} />
   {:else}
-    <MainForm />
+    <Vault />
   {/if}
 </main>

@@ -73,8 +73,6 @@ func (a *App) Login(username string, password string) {
 }
 
 func encrypt(data []byte) (string, error) {
-	// Replace this with your 32-byte AES key for AES-256.
-	// For AES-128, use a 16-byte key.
 	key := []byte("your-32-byte-long-aes-key-here..")
 
 	block, err := aes.NewCipher(key)

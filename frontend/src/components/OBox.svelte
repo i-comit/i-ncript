@@ -1,4 +1,4 @@
-<!-- MainForm.svelte -->
+<!-- OBox.svelte -->
 <script>
     import { user } from "../stores/userStore";
     let loggedInUser;

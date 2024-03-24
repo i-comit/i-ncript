@@ -1,4 +1,4 @@
-<!-- LoginForm.svelte -->
+<!-- Login.svelte -->
 <script>
     import { createEventDispatcher } from "svelte";
     import { user } from "../stores/userStore";
@@ -13,7 +13,7 @@
         try {
             const result = await Login(username, password);
             user.set({ username }); // Update the user store with the logged-in user's info
-            dispatch('loginSuccess'); // Emit an event for successful login
+            dispatch("loginSuccess"); // Emit an event for successful login
         } catch (error) {
             console.error("Error calling Login method:", error);
         }
@@ -51,6 +51,7 @@
         width: 100%;
         padding: 0.5rem;
         box-sizing: border-box;
+        color: black;
     }
     .btn {
         display: inline-block;
