@@ -1,7 +1,7 @@
 <!-- Login.svelte -->
 <script>
     import { createEventDispatcher } from "svelte";
-    import { user } from "../stores/userStore";
+    import { userStore } from "../stores/userStore";
     import { Login } from "../../wailsjs/go/main/App";
 
     const dispatch = createEventDispatcher();
@@ -12,7 +12,7 @@
         event.preventDefault();
         try {
             const result = await Login(username, password);
-            user.set({ username }); // Update the user store with the logged-in user's info
+            userStore.set({ username }); // Update the user store with the logged-in user's info
             dispatch("loginSuccess"); // Emit an event for successful login
         } catch (error) {
             console.error("Error calling Login method:", error);

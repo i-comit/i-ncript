@@ -1,18 +1,18 @@
 <!-- OBox.svelte -->
 <script>
-    import { user } from "../stores/userStore";
+    import { userStore } from "../stores/userStore";
     import { AppPage } from "../enums/AppPage";
     import { GradientButton } from "flowbite-svelte";
     import { switchFormButton } from "../utils";
 
     let loggedInUser;
     // Subscribe to the user store
-    user.subscribe(($user) => {
+    userStore.subscribe(($user) => {
         loggedInUser = $user;
     });
 
     function logout() {
-        user.set(null); // Clear the user store on logout
+        userStore.set(null); // Clear the user store on logout
     }
     function buttonAction(actionName) {
         console.log(`Action for ${actionName}`);
@@ -21,7 +21,7 @@
 </script>
 
 <div class="app-container">
-    <div class="side-menu min-w-60">
+    <div class="side-menu w-50 max-w-50">
         <div class="vault-info">
             <p>O-BOX</p>
             <p>3.6GB</p>
@@ -73,7 +73,6 @@
         height: 100vh;
     }
     .side-menu {
-        min-width: 200px;
         background-color: #f0f0f0;
         padding: 1rem;
     }

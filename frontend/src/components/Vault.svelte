@@ -2,28 +2,40 @@
 <script>
     import { Button, GradientButton } from "flowbite-svelte";
     import { AppPage } from "../enums/AppPage";
-    import { user } from "../stores/userStore";
+    import { userStore } from "../stores/userStore";
     import { switchFormButton } from "../utils";
-    // import { ThumbsUpSolid, ArrowRightOutline } from "flowbite-svelte-icons";
+    import { CaretUpSolid } from "flowbite-svelte-icons";
+    import { settingsOpened } from "../stores/settingsOpened";
+    import LogPanel from "./LogPanel.svelte";
+    import Settings from "./Settings.svelte";
 
     let loggedInUser;
     // Subscribe to the user store
-    user.subscribe(($user) => {
+    userStore.subscribe(($user) => {
         loggedInUser = $user;
     });
 
     function logout() {
-        user.set(null); // Clear the user store on logout
+        userStore.set(null); // Clear the user store on logout
     }
     function buttonAction(actionName) {
         console.log(`Action for ${actionName}`);
         // Define additional logic for button actions here
     }
-    const buttonClasses = "max-w-48 min-h-2 max-h-5 pt-3 px-3";
+    const buttonClasses = "max-w-48 min-h-3 max-h-5 pt-3 px-3";
+
+    function toggleSettings() {
+        settingsOpened.update((value) => !value);
+    }
+
+    let _settingsOpened;
+    settingsOpened.subscribe((value) => {
+        _settingsOpened = value;
+    });
 </script>
 
 <div class="app-container">
-    <div class="side-menu w-60">
+    <div class="side-menu w-45 max-w-45">
         <div class="vault-info">
             <p>VAULT</p>
             <p>3.6GB</p>
@@ -53,13 +65,21 @@
                     >HOT FILER</GradientButton
                 >
             </div>
-            <div class="h-4"></div>
-            <div class="row space-x-5">
+            <div class="h-8"></div>
+            <div class="row space-x-3">
                 <GradientButton
                     color="cyanToBlue"
                     class={buttonClasses}
                     on:click={() => switchFormButton(AppPage.OBox)}
                     >O-BOX</GradientButton
+                >
+                <Button
+                    pill={true}
+                    outline={true}
+                    class="!p-1"
+                    color="dark"
+                    on:click={() => toggleSettings()}
+                    ><CaretUpSolid class="w-5 h-5 m-0" color="dark" /></Button
                 >
                 <GradientButton
                     color="cyanToBlue"
@@ -71,7 +91,11 @@
         </div>
     </div>
     <div class="main-panel">
-        <h3>Welcome! Select an option.</h3>
+        {#if !_settingsOpened}
+            <LogPanel />
+        {:else}
+            <Settings />
+        {/if}
     </div>
 </div>
 

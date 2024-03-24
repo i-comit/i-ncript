@@ -1,18 +1,19 @@
 <!-- NBox.svelte -->
 <script>
-    import { user } from "../stores/userStore";
+    import { userStore } from "../stores/userStore";
     import { AppPage } from "../enums/AppPage";
     import { Label, Input, GradientButton } from "flowbite-svelte";
     import { switchFormButton } from "../utils";
+    import { ThumbsUpSolid, CaretUpSolid } from "flowbite-svelte-icons";
 
     let loggedInUser;
     // Subscribe to the user store
-    user.subscribe(($user) => {
+    userStore.subscribe(($user) => {
         loggedInUser = $user;
     });
 
     function logout() {
-        user.set(null); // Clear the user store on logout
+        userStore.set(null); // Clear the user store on logout
     }
     function buttonAction(actionName) {
         console.log(`Action for ${actionName}`);
@@ -22,7 +23,7 @@
 </script>
 
 <div class="app-container">
-    <div class="side-menu min-w-60">
+    <div class="side-menu max-w-45">
         <div class="vault-info">
             <p>N-BOX</p>
             <p>3.6GB</p>
@@ -31,7 +32,7 @@
             <div class="row">
                 <Label for="small-input" class="block mb-2">Default</Label>
                 <Input
-                    class="max-h-1"
+                    class="max-h-1 max-w-32"
                     id="small-input"
                     placeholder="Default input"
                 />
@@ -39,7 +40,7 @@
             <div class="row">
                 <Label for="small-input" class="block mb-2">Default</Label>
                 <Input
-                    class="max-h-1"
+                    class="max-h-1 max-w-32"
                     id="small-input"
                     placeholder="Default input"
                 />
@@ -81,7 +82,6 @@
         height: 100vh;
     }
     .side-menu {
-        min-width: 200px;
         background-color: #f0f0f0;
         padding: 1rem;
     }
