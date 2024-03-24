@@ -1,6 +1,10 @@
 <!-- OBox.svelte -->
 <script>
     import { user } from "../stores/userStore";
+    import { AppPage } from "../enums/AppPage";
+    import { GradientButton } from "flowbite-svelte";
+    import { switchFormButton } from "../utils";
+
     let loggedInUser;
     // Subscribe to the user store
     user.subscribe(($user) => {
@@ -18,18 +22,45 @@
 
 <div class="app-container">
     <div class="side-menu">
-        <button class="btn" on:click={() => buttonAction("Button 1")}
-            >Button 1</button
-        >
-        <button class="btn" on:click={() => buttonAction("Button 2")}
-            >Button 2</button
-        >
-        <button class="btn" on:click={() => buttonAction("Button 3")}
-            >Button 3</button
-        >
-        <button class="btn" on:click={() => buttonAction("Button 4")}
-            >Button 4</button
-        >
+        <div class="vault-info">
+            <p>O-BOX</p>
+            <p>3.6GB</p>
+        </div>
+        <div class="buttons">
+            <div class="row">
+                <GradientButton
+                    color="cyanToBlue"
+                    pill
+                    on:click={() => buttonAction("ENCRYPT")}
+                    >Button 1</GradientButton
+                >
+                <GradientButton
+                    color="cyanToBlue"
+                    pill
+                    on:click={() => buttonAction("DECRYPT")}
+                    >Button2</GradientButton
+                >
+            </div>
+            <div class="row center">
+                <button class="btn" on:click={() => buttonAction("HOT FILER")}
+                    >HOT FILER</button
+                >
+            </div>
+            <div class="row">
+                <GradientButton
+                    color="cyanToBlue"
+                    pill
+                    on:click={() => switchFormButton(AppPage.NBox)}
+                    >N-BOX</GradientButton
+                >
+                <GradientButton
+                    color="cyanToBlue"
+                    pill
+                    on:click={() => switchFormButton(AppPage.Vault)}
+                    >VAULT</GradientButton
+                >
+            </div>
+        </div>
     </div>
     <div class="main-panel">
         <h3>Welcome! Select an option.</h3>
@@ -62,5 +93,22 @@
     }
     .btn:hover {
         background-color: #0056b3;
+    }
+
+    .vault-info {
+        display: flex;
+        justify-content: space-between; /* Adjust as needed for your design */
+        align-items: center;
+        margin-bottom: 20px; /* Provides spacing between this section and the buttons */
+    }
+
+    .buttons .row {
+        display: flex;
+        justify-content: space-between; /* Spread the buttons evenly */
+        margin-bottom: 10px; /* Spacing between rows of buttons */
+    }
+
+    .buttons .row.center {
+        justify-content: center; /* Center the button in this row */
     }
 </style>

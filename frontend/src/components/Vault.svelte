@@ -1,8 +1,10 @@
 <!-- Vault.svelte -->
 <script>
-    import { GradientButton } from "flowbite-svelte";
-
+    import {  GradientButton } from "flowbite-svelte";
+    import { AppPage } from "../enums/AppPage";
     import { user } from "../stores/userStore";
+    import { switchFormButton } from '../utils';
+
     let loggedInUser;
     // Subscribe to the user store
     user.subscribe(($user) => {
@@ -13,11 +15,6 @@
         user.set(null); // Clear the user store on logout
     }
     function buttonAction(actionName) {
-        console.log(`Action for ${actionName}`);
-        // Define additional logic for button actions here
-    }
-
-    function switchFormButton(actionName) {
         console.log(`Action for ${actionName}`);
         // Define additional logic for button actions here
     }
@@ -32,29 +29,35 @@
         <div class="buttons">
             <div class="row">
                 <GradientButton
-                    color="purpleToBlue"
-                    on:click={() => buttonAction("Button 1")}
-                    >Button 1</GradientButton
+                    color="cyanToBlue"
+                    pill
+                    on:click={() => buttonAction("ENCRYPT")}
+                    >ENCRYPT</GradientButton
                 >
                 <GradientButton
                     color="cyanToBlue"
-                    on:click={() => buttonAction("Button 2")}
-                    >Button2</GradientButton
+                    pill
+                    on:click={() => buttonAction("DECRYPT")}
+                    >DECRYPT</GradientButton
                 >
             </div>
             <div class="row center">
-                <button
-                    class="btn"
-                    on:click={() => buttonAction("Another Button")}
-                    >Another Button</button
+                <button class="btn" on:click={() => buttonAction("HOT FILER")}
+                    >HOT FILER</button
                 >
             </div>
             <div class="row">
-                <button class="btn" on:click={() => switchFormButton("O-BOX")}
-                    >O-BOX</button
+                <GradientButton
+                    color="cyanToBlue"
+                    pill
+                    on:click={() => switchFormButton(AppPage.OBox)}
+                    >O-BOX</GradientButton
                 >
-                <button class="btn" on:click={() => switchFormButton("N-BOX")}
-                    >N-BOX</button
+                <GradientButton
+                    color="cyanToBlue"
+                    pill
+                    on:click={() => switchFormButton(AppPage.NBox)}
+                    >N-BOX</GradientButton
                 >
             </div>
         </div>
