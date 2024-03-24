@@ -2,7 +2,7 @@
 <script>
     import { user } from "../stores/userStore";
     import { AppPage } from "../enums/AppPage";
-    import { GradientButton } from "flowbite-svelte";
+    import { Label, Input, GradientButton } from "flowbite-svelte";
     import { switchFormButton } from "../utils";
 
     let loggedInUser;
@@ -18,44 +18,52 @@
         console.log(`Action for ${actionName}`);
         // Define additional logic for button actions here
     }
+    const buttonClasses = "max-w-48 min-h-2 max-h-5 pt-3 px-3";
 </script>
 
 <div class="app-container">
-    <div class="side-menu">
+    <div class="side-menu min-w-60">
         <div class="vault-info">
             <p>N-BOX</p>
             <p>3.6GB</p>
         </div>
         <div class="buttons">
             <div class="row">
-                <GradientButton
-                    color="cyanToBlue"
-                    pill
-                    on:click={() => buttonAction("ENCRYPT")}
-                    >Button 1</GradientButton
-                >
-                <GradientButton
-                    color="cyanToBlue"
-                    pill
-                    on:click={() => buttonAction("DECRYPT")}
-                    >Button2</GradientButton
-                >
-            </div>
-            <div class="row center">
-                <button class="btn" on:click={() => buttonAction("HOT FILER")}
-                    >HOT FILER</button
-                >
+                <Label for="small-input" class="block mb-2">Default</Label>
+                <Input
+                    class="max-h-1"
+                    id="small-input"
+                    placeholder="Default input"
+                />
             </div>
             <div class="row">
+                <Label for="small-input" class="block mb-2">Default</Label>
+                <Input
+                    class="max-h-1"
+                    id="small-input"
+                    placeholder="Default input"
+                />
+            </div>
+            <div class="row center">
                 <GradientButton
                     color="cyanToBlue"
-                    pill
+                    class="max-h-1"
+                    on:click={() => buttonAction("HOT FILER")}
+                    >ENTER</GradientButton
+                >
+            </div>
+            <div class="h-2"></div>
+
+            <div class="row space-x-5">
+                <GradientButton
+                    color="cyanToBlue"
+                    class={buttonClasses}
                     on:click={() => switchFormButton(AppPage.Vault)}
                     >VAULT</GradientButton
                 >
                 <GradientButton
                     color="cyanToBlue"
-                    pill
+                    class={buttonClasses}
                     on:click={() => switchFormButton(AppPage.OBox)}
                     >O-BOX</GradientButton
                 >

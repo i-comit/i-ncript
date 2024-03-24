@@ -1,9 +1,10 @@
 <!-- Vault.svelte -->
 <script>
-    import {  GradientButton } from "flowbite-svelte";
+    import { Button, GradientButton } from "flowbite-svelte";
     import { AppPage } from "../enums/AppPage";
     import { user } from "../stores/userStore";
-    import { switchFormButton } from '../utils';
+    import { switchFormButton } from "../utils";
+    // import { ThumbsUpSolid, ArrowRightOutline } from "flowbite-svelte-icons";
 
     let loggedInUser;
     // Subscribe to the user store
@@ -18,44 +19,51 @@
         console.log(`Action for ${actionName}`);
         // Define additional logic for button actions here
     }
+    const buttonClasses = "max-w-48 min-h-2 max-h-5 pt-3 px-3";
 </script>
 
 <div class="app-container">
-    <div class="side-menu">
+    <div class="side-menu w-60">
         <div class="vault-info">
             <p>VAULT</p>
             <p>3.6GB</p>
         </div>
         <div class="buttons">
-            <div class="row">
+            <div class="row space-x-5">
                 <GradientButton
                     color="cyanToBlue"
-                    pill
+                    class={buttonClasses}
                     on:click={() => buttonAction("ENCRYPT")}
                     >ENCRYPT</GradientButton
                 >
                 <GradientButton
                     color="cyanToBlue"
-                    pill
+                    class={buttonClasses}
                     on:click={() => buttonAction("DECRYPT")}
                     >DECRYPT</GradientButton
                 >
             </div>
+            <div class="h-4"></div>
             <div class="row center">
-                <button class="btn" on:click={() => buttonAction("HOT FILER")}
-                    >HOT FILER</button
-                >
-            </div>
-            <div class="row">
                 <GradientButton
                     color="cyanToBlue"
+                    class="min-w-24 max-h-3 m-0 px-0 pt-3"
                     pill
+                    on:click={() => buttonAction("HOT FILER")}
+                    >HOT FILER</GradientButton
+                >
+            </div>
+            <div class="h-4"></div>
+            <div class="row space-x-5">
+                <GradientButton
+                    color="cyanToBlue"
+                    class={buttonClasses}
                     on:click={() => switchFormButton(AppPage.OBox)}
                     >O-BOX</GradientButton
                 >
                 <GradientButton
                     color="cyanToBlue"
-                    pill
+                    class={buttonClasses}
                     on:click={() => switchFormButton(AppPage.NBox)}
                     >N-BOX</GradientButton
                 >
@@ -73,26 +81,13 @@
         height: 100vh;
     }
     .side-menu {
-        min-width: 200px;
+        /* min-width: 200px; */
         background-color: #f0f0f0;
         padding: 1rem;
     }
     .main-panel {
         flex-grow: 1;
         padding: 1rem;
-    }
-    .btn {
-        display: block;
-        width: 100%;
-        margin-bottom: 0.5rem;
-        padding: 0.5rem;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        cursor: pointer;
-    }
-    .btn:hover {
-        background-color: #0056b3;
     }
 
     .vault-info {

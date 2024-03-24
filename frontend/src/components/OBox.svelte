@@ -21,7 +21,7 @@
 </script>
 
 <div class="app-container">
-    <div class="side-menu">
+    <div class="side-menu min-w-60">
         <div class="vault-info">
             <p>O-BOX</p>
             <p>3.6GB</p>
