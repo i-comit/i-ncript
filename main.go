@@ -18,11 +18,11 @@ func main() {
 	// Create application with options
 	err := wails.Run(&options.App{
 		Title:         "i-ncript",
-		Width:         300,
-		Height:        250,
+		Width:         250,
+		Height:        225,
 		DisableResize: true,
 		Fullscreen:    false,
-		Frameless:     false, // You can set this to true if you want to hide the window decorations
+		Frameless:     true, // You can set this to true if you want to hide the window decorations
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},

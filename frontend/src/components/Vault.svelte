@@ -3,7 +3,7 @@
     import { Button, GradientButton } from "flowbite-svelte";
     import { AppPage } from "../enums/AppPage";
     import { userStore } from "../stores/userStore";
-    import { switchFormButton } from "../utils";
+    import { switchFormButton, toggleSettings } from "../utils";
     import { CaretUpSolid } from "flowbite-svelte-icons";
     import { settingsOpened } from "../stores/settingsOpened";
     import LogPanel from "./LogPanel.svelte";
@@ -23,10 +23,6 @@
         // Define additional logic for button actions here
     }
     const buttonClasses = "max-w-48 min-h-3 max-h-5 pt-3 px-3";
-
-    function toggleSettings() {
-        settingsOpened.update((value) => !value);
-    }
 
     let _settingsOpened;
     settingsOpened.subscribe((value) => {

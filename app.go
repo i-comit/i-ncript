@@ -30,6 +30,7 @@ func (a *App) startup(ctx context.Context) {
 }
 
 func (b *App) shutdown(ctx context.Context) {}
+
 func (a *App) Login(username string, password string) {
 	if username == "" || password == "" {
 		log.Println("Username or password is empty")
@@ -103,7 +104,15 @@ func (a *App) GetPassword(password string) string {
 	return fmt.Sprintf("password %s", password)
 }
 
-// Greet returns a greeting for the given name
 func (a *App) Greet(name string) string {
 	return fmt.Sprintf("Hello %s, It's show time!", name)
 }
+func (a *App) MinimizeApp() {
+	runtime.WindowMinimise(a.ctx)
+}
+
+func (a *App) CloseApp() {
+	os.Exit(0)
+}
+
+// Greet returns a greeting for the given name
