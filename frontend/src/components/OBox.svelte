@@ -1,18 +1,18 @@
 <!-- OBox.svelte -->
 <script>
-    import { userStore } from "../stores/userStore";
+    import { usernameStore } from "../stores/usernameStore";
     import { AppPage } from "../enums/AppPage";
     import { GradientButton } from "flowbite-svelte";
     import { switchFormButton } from "../utils";
 
     let loggedInUser;
     // Subscribe to the user store
-    userStore.subscribe(($user) => {
+    usernameStore.subscribe(($user) => {
         loggedInUser = $user;
     });
 
     function logout() {
-        userStore.set(null); // Clear the user store on logout
+        usernameStore.set(null); // Clear the user store on logout
     }
     function buttonAction(actionName) {
         console.log(`Action for ${actionName}`);

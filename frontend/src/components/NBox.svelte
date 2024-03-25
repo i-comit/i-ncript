@@ -1,6 +1,6 @@
 <!-- NBox.svelte -->
 <script>
-    import { userStore } from "../stores/userStore";
+    import { usernameStore } from "../stores/usernameStore";
     import { AppPage } from "../enums/AppPage";
     import { Label, Input, GradientButton } from "flowbite-svelte";
     import { switchFormButton } from "../utils";
@@ -8,13 +8,10 @@
 
     let loggedInUser;
     // Subscribe to the user store
-    userStore.subscribe(($user) => {
+    usernameStore.subscribe(($user) => {
         loggedInUser = $user;
     });
 
-    function logout() {
-        userStore.set(null); // Clear the user store on logout
-    }
     function buttonAction(actionName) {
         console.log(`Action for ${actionName}`);
         // Define additional logic for button actions here

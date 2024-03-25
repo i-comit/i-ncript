@@ -3,7 +3,7 @@
     import { Button, GradientButton, Popover } from "flowbite-svelte";
     import { AppPage } from "../enums/AppPage";
 
-    import { userStore } from "../stores/userStore";
+    import { usernameStore } from "../stores/usernameStore";
 
     import { switchFormButton, switchModals } from "../utils";
     import {
@@ -13,10 +13,10 @@
     import LogPanel from "./LogPanel.svelte";
     import Options from "./Settings.svelte";
     import Frame from "./Frame.svelte";
-    import { Modals } from "src/enums/Modals";
+    import { Modals } from "../enums/Modals";
 
     let loggedInUser;
-    userStore.subscribe(($user) => {
+    usernameStore.subscribe(($user) => {
         loggedInUser = $user;
     });
 
@@ -30,7 +30,7 @@
 <div class="app-container h-screen rounded-lg">
     <Frame />
     <div class="side-menu w-45 max-w-45">
-        <div class="vault-info">
+        <div class="vault-info static">
             <p>VAULT</p>
             <p>3.6GB</p>
         </div>
@@ -108,9 +108,9 @@
         display: flex;
     }
     .side-menu {
-        /* min-width: 200px; */
-        background-color: #f0f0f0;
+        background-color: aliceblue;
         padding: 1rem;
+        padding-top: 0.2rem;
     }
     .main-panel {
         flex-grow: 1;

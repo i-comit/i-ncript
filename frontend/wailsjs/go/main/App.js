@@ -6,6 +6,14 @@ export function CloseApp() {
   return window['go']['main']['App']['CloseApp']();
 }
 
+export function EncryptString(arg1) {
+  return window['go']['main']['App']['EncryptString'](arg1);
+}
+
+export function GetAppPath() {
+  return window['go']['main']['App']['GetAppPath']();
+}
+
 export function GetPassword(arg1) {
   return window['go']['main']['App']['GetPassword'](arg1);
 }

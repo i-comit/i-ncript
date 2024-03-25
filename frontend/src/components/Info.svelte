@@ -11,46 +11,54 @@
         Range,
     } from "flowbite-svelte";
     import { switchFormButton } from "../utils";
-    import {
-        InfoCircleOutline,
-        AdjustmentsVerticalOutline,
-        ChevronDownOutline,
-        SunSolid,
-        MoonSolid,
-    } from "flowbite-svelte-icons";
-    function closeSettingsPanel() {}
-    function toggleLightDarkMode() {}
+    import { DownloadSolid, GithubSolid } from "flowbite-svelte-icons";
 
+    import { onMount } from "svelte";
+    let cwd = "";
+    import { GetAppPath } from "../../wailsjs/go/main/App";
+    onMount(async () => {
+        cwd = "CWD: " + (await GetAppPath());
+    });
     let stepValue = 2.5;
+    const buttonClasses = "max-w-48 min-h-3 max-h-5 pt-3 px-3";
 </script>
 
-<div class="settings-panel bg-gray-200 rounded-lg mb-3">
-    <div id="changeUsername" class=" px-4">
-        <p>CWD:</p>
+<div class="info-panel bg-gray-200 rounded-lg mb-1">
+    <div id="cwd" class=" px-0 m-0 bg-gray-100">
+        {cwd}
     </div>
-    <div id="changePassword" class=" px-4">
-        <Input
-            class="max-h-6 w-full"
-            id="small-input"
-            placeholder="change password.."
-            type="password"
-        />
+    <div id="viewLog" class=" px-4">
+        <GradientButton
+            color="cyanToBlue"
+            class={buttonClasses}
+            on:click={() => {}}>VIEW LOG</GradientButton
+        >
     </div>
+    <div id="driveFormat" class=" px-0 m-0 bg-gray-100">format: NTFS</div>
     <div class="h-1" />
     <div id="darkLightMode"></div>
-    <div id="accentColor flex" class="p-0 m-0">
-        <p class="p-0 m-0">accent color</p>
-        <ButtonGroup class="space-x-px">
-            <Button pill color="blue"></Button>
-            <Button pill color="green"></Button>
-            <Button pill color="red"></Button>
-            <!-- <Button pill color="primary"></Button> -->
-            <Button pill color="yellow"></Button>
-        </ButtonGroup>
+    <div id="reportBug" class="flex justify-between px-4">
+        <p class="p-0 m-0">report a bug</p>
+        <Button pill={true} outline={true} class="!p-1" color="dark"
+            ><GithubSolid class="w-4 h-4 m-0" color="dark" /></Button
+        >
     </div>
-    <div id="transparency">
-        <p class="p-0 m-0">transparency</p>
-        <Range id="range1" min="0" max="100" bind:value={stepValue} size="md" />
+    <div class="h-1" />
+
+    <div id="checkUpdate" class="flex justify-between px-4">
+        <p class="p-0 m-0">check for updates</p>
+        <Button pill={true} outline={true} class="!p-1" color="dark"
+            ><DownloadSolid class="w-4 h-4 m-0" color="dark" /></Button
+        >
+    </div>
+    <div class="h-1" />
+
+    <div id="credits" >
+        <ul class="flex justify-start">
+            <li>GUI: Wails</li>
+            <li>Frontend: Svelte</li>
+            <li>CSS: Flowbite</li>
+        </ul>
     </div>
     <div class="h-1" />
 </div>

@@ -18,8 +18,20 @@ var assets embed.FS
 func (m *App) onSecondInstanceLaunch(data options.SecondInstanceData) {
 	// Your code to handle the second instance launch
 }
+
+// var rootFolder = "------";
+
+// func (a *App) checkRootFolder() (bool, error) {
+// 	path, err := os.Getwd()
+// 	if err != nil {
+// 		return "", err
+// 	}
+// 	return path, nil
+// }
+
 func main() {
 	// Create an instance of the app structure
+	// handle err
 	app := NewApp()
 
 	// Create application with options

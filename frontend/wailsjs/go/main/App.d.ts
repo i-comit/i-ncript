@@ -3,6 +3,10 @@
 
 export function CloseApp():Promise<void>;
 
+export function EncryptString(arg1:string):Promise<string>;
+
+export function GetAppPath():Promise<string>;
+
 export function GetPassword(arg1:string):Promise<string>;
 
 export function GetUsername(arg1:string):Promise<string>;

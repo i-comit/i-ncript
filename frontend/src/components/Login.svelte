@@ -1,15 +1,22 @@
 <!-- Login.svelte -->
 <script>
     import { createEventDispatcher } from "svelte";
-    import { userStore } from "../stores/userStore";
-    import { Login, ResizeWindow } from "../../wailsjs/go/main/App";
+
+    import { usernameStore } from "../stores/usernameStore";
+    import { passwordStore } from "../stores/passwordStore";
+    import { currentModal } from "../stores/currentModal";
+
+    import {
+        Login,
+        ResizeWindow,
+        EncryptString,
+    } from "../../wailsjs/go/main/App";
     import { Button, Input, GradientButton, Tooltip } from "flowbite-svelte";
-    import { switchModals} from "../utils";
+    import { switchModals } from "../utils";
     import {
         InfoCircleOutline,
         AdjustmentsVerticalOutline,
     } from "flowbite-svelte-icons";
-    import { currentModal } from "../stores/currentModal";
     import { Modals } from "../enums/Modals";
 
     import Frame from "./Frame.svelte";
@@ -23,7 +30,10 @@
         event.preventDefault();
         try {
             const result = await Login(username, password);
-            userStore.set({ username }); // Update the user store with the logged-in user's info
+            const encryptedUsername = await EncryptString(username);
+            usernameStore.set({ encryptedUsername });
+            const encryptedPassowrd = await EncryptString(password);
+            passwordStore.set({ encryptedPassowrd });
             dispatch("loginSuccess"); // Emit an event for successful login
         } catch (error) {
             console.error("Error calling Login method:", error);

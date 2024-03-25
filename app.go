@@ -24,6 +24,14 @@ func NewApp() *App {
 	return &App{}
 }
 
+func (a *App) GetAppPath() (string, error) {
+	path, err := os.Getwd()
+	if err != nil {
+		return "", err
+	}
+	return path, nil
+}
+
 // WailsInit is called to pass the runtime to your application
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
@@ -77,6 +85,11 @@ func (a *App) ResizeWindow(width int, height int) {
 	if a.ctx != nil {
 		runtime.WindowSetSize(a.ctx, width, height)
 	}
+}
+
+func (a *App) EncryptString(stringToEncrypt string) string {
+	encryptedString, _ := encrypt([]byte(stringToEncrypt))
+	return encryptedString
 }
 
 func encrypt(data []byte) (string, error) {
