@@ -4,6 +4,13 @@ import {
 import {
     settingsOpened
 } from './stores/settingsOpened';
+import {
+    userStore
+} from './stores/userStore';
+
+import {
+    AppPage
+} from './enums/AppPage';
 
 export function switchFormButton(page) {
     console.log(`Switching to ${page}`);
@@ -13,3 +20,12 @@ export function switchFormButton(page) {
 export function toggleSettings() {
     settingsOpened.update((value) => !value);
 }
+
+// export function logout() {
+//     // let _loggedIn;
+//     // loggedIn.subscribe((value) => {
+//     //     _loggedIn = value;
+//     // });
+//     loggedIn.set(false);
+//     userStore.set(null);
+// }

@@ -17,7 +17,7 @@
   }
 </script>
 
-<main>
+<main class="rounded-2xl">
   {#if !loggedIn}
     <Login on:loginSuccess={handleLoginSuccess} />
   {:else}

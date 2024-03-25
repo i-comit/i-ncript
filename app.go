@@ -68,9 +68,15 @@ func (a *App) Login(username string, password string) {
 
 	log.Printf("File created: %s", filePath)
 	if a.ctx != nil {
-		runtime.WindowSetSize(a.ctx, 500, 250)
+		a.ResizeWindow(500, 155)
 	}
 	// return "Login successful"
+}
+
+func (a *App) ResizeWindow(width int, height int) {
+	if a.ctx != nil {
+		runtime.WindowSetSize(a.ctx, width, height)
+	}
 }
 
 func encrypt(data []byte) (string, error) {

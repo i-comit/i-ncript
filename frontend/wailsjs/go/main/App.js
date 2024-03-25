@@ -25,3 +25,7 @@ export function Login(arg1, arg2) {
 export function MinimizeApp() {
   return window['go']['main']['App']['MinimizeApp']();
 }
+
+export function ResizeWindow(arg1, arg2) {
+  return window['go']['main']['App']['ResizeWindow'](arg1, arg2);
+}

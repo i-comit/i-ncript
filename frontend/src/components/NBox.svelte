@@ -22,7 +22,7 @@
     const buttonClasses = "max-w-48 min-h-2 max-h-5 pt-3 px-3";
 </script>
 
-<div class="app-container">
+<div class="flex h-screen rounded-2xl">
     <div class="side-menu max-w-45">
         <div class="vault-info">
             <p>N-BOX</p>
@@ -77,10 +77,6 @@
 </div>
 
 <style>
-    .app-container {
-        display: flex;
-        height: 100vh;
-    }
     .side-menu {
         background-color: #f0f0f0;
         padding: 1rem;

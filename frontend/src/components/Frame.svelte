@@ -23,22 +23,21 @@
     }
 </script>
 
-<div class="window-controls" style="--wails-draggable:drag">
+<div
+    class=" window-controls h-6 w-screen flex justify-end py-0.5 px-0"
+    style="--wails-draggable:drag"
+>
     <Button
         pill={true}
-        outline={true}
         class="!p-1 control-button"
-        color="dark"
         on:click={minimizeApp}
-        ><MinusOutline class="w-5 h-5 m-0" color="white" /></Button
+        ><MinusOutline class="w-5 h-5 m-0 p-0" color="white" /></Button
     >
     <Button
         pill={true}
-        outline={true}
         class="!p-1 control-button"
-        color="dark"
         on:click={closeApp}
-        ><CloseOutline class="w-5 h-5 m-0" color="white" /></Button
+        ><CloseOutline class="w-5 h-5 m-0 p-0" color="white" /></Button
     >
 </div>
 
@@ -47,11 +46,13 @@
         position: absolute;
         top: 0;
         right: 0;
-        padding: 0.5rem;
+        /* padding: 0.5rem; */
     }
 
     .control-button {
         cursor: pointer;
-        margin-left: 0.5rem;
+        padding: 0;
+        margin: 0;
+        /* margin-left: 0.5rem; */
     }
 </style>

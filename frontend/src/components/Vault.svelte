@@ -1,23 +1,25 @@
 <!-- Vault.svelte -->
 <script>
-    import { Button, GradientButton } from "flowbite-svelte";
+    import { Button, GradientButton, Popover } from "flowbite-svelte";
     import { AppPage } from "../enums/AppPage";
+
     import { userStore } from "../stores/userStore";
-    import { switchFormButton, toggleSettings } from "../utils";
-    import { CaretUpSolid } from "flowbite-svelte-icons";
     import { settingsOpened } from "../stores/settingsOpened";
+
+    import { switchFormButton, toggleSettings } from "../utils";
+    import {
+        CaretUpSolid,
+        AdjustmentsVerticalOutline,
+    } from "flowbite-svelte-icons";
     import LogPanel from "./LogPanel.svelte";
-    import Settings from "./Settings.svelte";
+    import Options from "./Settings.svelte";
+    import Frame from "./Frame.svelte";
 
     let loggedInUser;
-    // Subscribe to the user store
     userStore.subscribe(($user) => {
         loggedInUser = $user;
     });
 
-    function logout() {
-        userStore.set(null); // Clear the user store on logout
-    }
     function buttonAction(actionName) {
         console.log(`Action for ${actionName}`);
         // Define additional logic for button actions here
@@ -30,7 +32,8 @@
     });
 </script>
 
-<div class="app-container">
+<div class="app-container h-screen rounded-lg">
+    <Frame />
     <div class="side-menu w-45 max-w-45">
         <div class="vault-info">
             <p>VAULT</p>
@@ -75,8 +78,18 @@
                     class="!p-1"
                     color="dark"
                     on:click={() => toggleSettings()}
-                    ><CaretUpSolid class="w-5 h-5 m-0" color="dark" /></Button
+                    ><AdjustmentsVerticalOutline
+                        class="w-5 h-5 m-0"
+                        color="dark"
+                    /></Button
                 >
+                <Popover
+                    class="w-64 text-sm font-light "
+                    placement="bottom"
+                    title="Popover left"
+                    >And here's some amazing content. It's very engaging. Right?</Popover
+                >
+
                 <GradientButton
                     color="cyanToBlue"
                     class={buttonClasses}
@@ -90,7 +103,7 @@
         {#if !_settingsOpened}
             <LogPanel />
         {:else}
-            <Settings />
+            <Options />
         {/if}
     </div>
 </div>
@@ -98,7 +111,6 @@
 <style>
     .app-container {
         display: flex;
-        height: 100vh;
     }
     .side-menu {
         /* min-width: 200px; */

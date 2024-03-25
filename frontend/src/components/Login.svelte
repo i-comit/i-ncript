@@ -3,11 +3,15 @@
     import { createEventDispatcher } from "svelte";
     import { userStore } from "../stores/userStore";
     import { Login } from "../../wailsjs/go/main/App";
-    import { Button, Input, GradientButton } from "flowbite-svelte";
+    import { Button, Input, GradientButton, Tooltip } from "flowbite-svelte";
+    import { settingsOpened } from "../stores/settingsOpened";
     import { switchFormButton, toggleSettings } from "../utils";
-    import { CaretUpSolid } from "flowbite-svelte-icons";
+    import {
+        InfoCircleOutline,
+        AdjustmentsVerticalOutline,
+    } from "flowbite-svelte-icons";
     import Frame from "./Frame.svelte";
-
+    import Settings from "./Settings.svelte";
     const dispatch = createEventDispatcher();
     let username = "";
     let password = "";
@@ -22,81 +26,103 @@
             console.error("Error calling Login method:", error);
         }
     }
+
+    let _settingsOpened;
+    settingsOpened.subscribe((value) => {
+        _settingsOpened = value;
+    });
 </script>
 
-<form on:submit={submit} autocomplete="off" class="login-form flex flex-col">
-    <!-- Use flex-col for vertical stacking -->
+<form
+    on:submit={submit}
+    autocomplete="off"
+    class="login-form flex-col rounded-lg"
+>
+    <!-- <p class="bg-gray-100">alert text</p> -->
     <Frame />
-    <div class="flex space-x-5">
-        <!-- This will align the two <p> tags horizontally -->
-        <p class="flex-1">i-ncript</p>
-        <p class="flex-1">3.6GB</p>
+    <!-- <div class=" pt-5"></div> -->
+    <div class="loginField">
+        {#if !_settingsOpened}
+            <div class="flex items-center mx-auto">
+                <!-- This will align the two <p> tags horizontally -->
+                <p class="shrink-0 text-left mr-auto">i-ncript</p>
+                <p class="shrink-0 text-right ml-auto">3.6GB</p>
+                <Tooltip
+                    placement="left"
+                    type="custom"
+                    defaultClass=""
+                    class="px-0.5 text-s font-medium bg-gray-600 text-gray-100"
+                    arrow={false}>99%</Tooltip
+                >
+            </div>
+            <div class=" pt-1"></div>
+            <div class="field">
+                <Input
+                    class="max-h-6 w-full"
+                    id="small-input"
+                    placeholder="enter username.."
+                    type="text"
+                    bind:value={username}
+                    required
+                />
+            </div>
+            <div class="field">
+                <Input
+                    class="max-h-6 w-full"
+                    id="small-input"
+                    placeholder="enter password.."
+                    type="password"
+                    bind:value={password}
+                    required
+                />
+            </div>
+        {:else}
+            <Settings />
+        {/if}
     </div>
-    <div class="field">
-        <Input
-            class="max-h-8 w-full"
-            id="small-input"
-            placeholder="Enter password"
-            bind:value={username}
-            required
-        />
-    </div>
-    <div class="field">
-        <Input
-            class="max-h-8 w-full"
-            id="small-input"
-            placeholder="Enter password"
-            bind:value={password}
-            required
-        />
-    </div>
-    <div class="space-x-5 mt-0 pt-0">
-        <!-- Removed flex-1 to not force flex grow -->
-        <GradientButton
-            color="cyanToBlue"
-            class="max-w-48 min-h-5 max-h-7 pt-3 px-3"
-            type="submit">Login</GradientButton
-        >
-        <Button
-            pill={true}
-            outline={true}
-            class="!p-1"
-            color="dark"
-            on:click={toggleSettings}
-            ><CaretUpSolid class="w-5 h-5 m-0" color="white" /></Button
-        >
+    <div class="flex justify-between items-center">
+        <div class="flex space-x-1">
+            <!-- First two buttons -->
+            <Button
+                pill={true}
+                outline={true}
+                class="!p-1"
+                color="dark"
+                on:click={toggleSettings}
+                ><InfoCircleOutline class="w-5 h-5" color="white" /></Button
+            >
+            <Button
+                pill={true}
+                outline={true}
+                class="!p-1"
+                color="dark"
+                on:click={toggleSettings}
+                ><AdjustmentsVerticalOutline
+                    class="w-5 h-5"
+                    color="white"
+                /></Button
+            >
+        </div>
+
+        <div>
+            <GradientButton
+                color="cyanToBlue"
+                class="!w-100 min-h-5 max-h-7 pt-3 "
+                type="submit">LOGIN</GradientButton
+            >
+        </div>
     </div>
 </form>
 
 <style>
     .login-form {
-        max-width: 400px;
         margin: auto;
-        padding: 1rem;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 0.5rem;
+        padding-top: 1.5rem;
+        padding-bottom: .3rem;
+        background-color: gray;
     }
     .field {
-        margin-bottom: 1rem;
-    }
-    label {
-        display: block;
-        margin-bottom: 0.5rem;
-    }
-    input {
-        width: 100%;
-        padding: 0.5rem;
-        box-sizing: border-box;
-        color: black;
-    }
-    .btn {
-        display: inline-block;
-        padding: 0.5rem 1rem;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        cursor: pointer;
-    }
-    .btn:hover {
-        background-color: #0056b3;
+        margin-bottom: 0.6rem;
     }
 </style>
