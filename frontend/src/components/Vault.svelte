@@ -4,6 +4,7 @@
     import { AppPage } from "../enums/AppPage";
 
     import { usernameStore } from "../stores/usernameStore";
+    import { GetDirectoryStructure } from "wailsjs/go/main/App";
 
     import { switchFormButton, switchModals } from "../utils";
     import {
@@ -15,6 +16,29 @@
     import Frame from "./Frame.svelte";
     import { Modals } from "../enums/Modals";
 
+    import TreeView from "./TreeView.svelte";
+    let tree = { label: "Loading...", children: [] };
+
+    // function assignTree() {
+    //     GetDirectoryStructure()
+    //         .then((result) => {
+    //             // Ensure every node has a 'children' property
+    //             const normalizeNode = (node) => {
+    //                 // If 'children' is not present, initialize it as an empty array
+    //                 if (!node.children) {
+    //                     node.children = [];
+    //                 }
+    //                 // Recursively normalize child nodes
+    //                 node.children.forEach(normalizeNode);
+    //             };
+
+    //             normalizeNode(result);
+    //             tree = result;
+    //         })
+    //         .catch((error) => {
+    //             console.error("Failed to get directory structure", error);
+    //         });
+    // }
     let loggedInUser;
     usernameStore.subscribe(($user) => {
         loggedInUser = $user;
@@ -95,11 +119,7 @@
         </div>
     </div>
     <div class="main-panel">
-        <!-- {#if !_settingsOpened}
-            <LogPanel />
-        {:else}
-            <Options />
-        {/if} -->
+        <TreeView {tree} />
     </div>
 </div>
 
@@ -113,8 +133,8 @@
         padding-top: 0.2rem;
     }
     .main-panel {
-        flex-grow: 1;
-        padding: 1rem;
+        padding: 0.1rem;
+        padding-top: 1rem;
     }
 
     .vault-info {

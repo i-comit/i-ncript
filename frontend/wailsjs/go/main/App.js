@@ -14,12 +14,8 @@ export function GetAppPath() {
   return window['go']['main']['App']['GetAppPath']();
 }
 
-export function GetPassword(arg1) {
-  return window['go']['main']['App']['GetPassword'](arg1);
-}
-
-export function GetUsername(arg1) {
-  return window['go']['main']['App']['GetUsername'](arg1);
+export function GetDirectoryStructure() {
+  return window['go']['main']['App']['GetDirectoryStructure']();
 }
 
 export function Greet(arg1) {
