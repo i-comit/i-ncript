@@ -2,23 +2,24 @@ import {
     currentPage
 } from './stores/currentPage'; // Assuming currentPage is a Svelte store
 import {
-    settingsOpened
-} from './stores/settingsOpened';
-import {
-    userStore
-} from './stores/userStore';
+    currentModal
+} from './stores/currentModal';
 
 import {
     AppPage
 } from './enums/AppPage';
+import {
+    Modals
+} from './enums/Modals';
 
 export function switchFormButton(page) {
     console.log(`Switching to ${page}`);
     currentPage.set(page); // Assuming currentPage is a writable store
 }
 
-export function toggleSettings() {
-    settingsOpened.update((value) => !value);
+export function switchModals(modal) {
+    console.log(`Switching to ${modal}`);
+    currentModal.set(modal); // Assuming currentPage is a writable store
 }
 
 // export function logout() {

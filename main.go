@@ -15,6 +15,9 @@ import (
 //go:embed all:frontend/dist
 var assets embed.FS
 
+func (m *App) onSecondInstanceLaunch(data options.SecondInstanceData) {
+	// Your code to handle the second instance launch
+}
 func main() {
 	// Create an instance of the app structure
 	app := NewApp()
@@ -65,6 +68,10 @@ func main() {
 			// OnResume: func(),
 			// // Disable GPU hardware acceleration for the webview
 			// WebviewGpuDisabled: false,
+		},
+		SingleInstanceLock: &options.SingleInstanceLock{
+			UniqueId:               "c9c8fd93-6758-4144-87d1-34bdb0a8bd60",
+			OnSecondInstanceLaunch: app.onSecondInstanceLaunch,
 		},
 		BackgroundColour: &options.RGBA{R: 80, G: 80, B: 80, A: 1},
 	})

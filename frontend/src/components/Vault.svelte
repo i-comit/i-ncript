@@ -4,9 +4,8 @@
     import { AppPage } from "../enums/AppPage";
 
     import { userStore } from "../stores/userStore";
-    import { settingsOpened } from "../stores/settingsOpened";
 
-    import { switchFormButton, toggleSettings } from "../utils";
+    import { switchFormButton, switchModals } from "../utils";
     import {
         CaretUpSolid,
         AdjustmentsVerticalOutline,
@@ -14,6 +13,7 @@
     import LogPanel from "./LogPanel.svelte";
     import Options from "./Settings.svelte";
     import Frame from "./Frame.svelte";
+    import { Modals } from "src/enums/Modals";
 
     let loggedInUser;
     userStore.subscribe(($user) => {
@@ -25,11 +25,6 @@
         // Define additional logic for button actions here
     }
     const buttonClasses = "max-w-48 min-h-3 max-h-5 pt-3 px-3";
-
-    let _settingsOpened;
-    settingsOpened.subscribe((value) => {
-        _settingsOpened = value;
-    });
 </script>
 
 <div class="app-container h-screen rounded-lg">
@@ -77,7 +72,7 @@
                     outline={true}
                     class="!p-1"
                     color="dark"
-                    on:click={() => toggleSettings()}
+                    on:click={() => switchModals(Modals.Settings)}
                     ><AdjustmentsVerticalOutline
                         class="w-5 h-5 m-0"
                         color="dark"
@@ -100,11 +95,11 @@
         </div>
     </div>
     <div class="main-panel">
-        {#if !_settingsOpened}
+        <!-- {#if !_settingsOpened}
             <LogPanel />
         {:else}
             <Options />
-        {/if}
+        {/if} -->
     </div>
 </div>
 

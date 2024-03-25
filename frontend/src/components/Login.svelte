@@ -2,15 +2,18 @@
 <script>
     import { createEventDispatcher } from "svelte";
     import { userStore } from "../stores/userStore";
-    import { Login } from "../../wailsjs/go/main/App";
+    import { Login, ResizeWindow } from "../../wailsjs/go/main/App";
     import { Button, Input, GradientButton, Tooltip } from "flowbite-svelte";
-    import { settingsOpened } from "../stores/settingsOpened";
-    import { switchFormButton, toggleSettings } from "../utils";
+    import { switchModals} from "../utils";
     import {
         InfoCircleOutline,
         AdjustmentsVerticalOutline,
     } from "flowbite-svelte-icons";
+    import { currentModal } from "../stores/currentModal";
+    import { Modals } from "../enums/Modals";
+
     import Frame from "./Frame.svelte";
+    import Info from "./Info.svelte";
     import Settings from "./Settings.svelte";
     const dispatch = createEventDispatcher();
     let username = "";
@@ -26,10 +29,9 @@
             console.error("Error calling Login method:", error);
         }
     }
-
-    let _settingsOpened;
-    settingsOpened.subscribe((value) => {
-        _settingsOpened = value;
+    let _modal;
+    currentModal.subscribe((value) => {
+        _modal = value;
     });
 </script>
 
@@ -42,7 +44,7 @@
     <Frame />
     <!-- <div class=" pt-5"></div> -->
     <div class="loginField">
-        {#if !_settingsOpened}
+        {#if _modal === Modals.None}
             <div class="flex items-center mx-auto">
                 <!-- This will align the two <p> tags horizontally -->
                 <p class="shrink-0 text-left mr-auto">i-ncript</p>
@@ -76,8 +78,10 @@
                     required
                 />
             </div>
-        {:else}
+        {:else if _modal === Modals.Settings}
             <Settings />
+        {:else if _modal === Modals.Info}
+            <Info />
         {/if}
     </div>
     <div class="flex justify-between items-center">
@@ -88,7 +92,7 @@
                 outline={true}
                 class="!p-1"
                 color="dark"
-                on:click={toggleSettings}
+                on:click={() => switchModals(Modals.Info)}
                 ><InfoCircleOutline class="w-5 h-5" color="white" /></Button
             >
             <Button
@@ -96,14 +100,13 @@
                 outline={true}
                 class="!p-1"
                 color="dark"
-                on:click={toggleSettings}
+                on:click={() => switchModals(Modals.Settings)}
                 ><AdjustmentsVerticalOutline
                     class="w-5 h-5"
                     color="white"
                 /></Button
             >
         </div>
-
         <div>
             <GradientButton
                 color="cyanToBlue"
@@ -115,13 +118,17 @@
 </form>
 
 <style>
-    .login-form {
+    .login-form,
+    .modified-login-form {
         margin: auto;
         padding: 0.5rem;
-        padding-top: 1.5rem;
-        padding-bottom: .3rem;
         background-color: gray;
     }
+    .login-form {
+        padding-top: 1.5rem;
+        padding-bottom: 0.3rem;
+    }
+
     .field {
         margin-bottom: 0.6rem;
     }
