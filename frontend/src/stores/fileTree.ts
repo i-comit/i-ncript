@@ -1,8 +1,9 @@
 import { writable } from 'svelte/store';
 
-interface Node {
+interface FileNode {
+    relPath: string;
     label: string;
-    children?: Node[];
+    children?: FileNode[];
 }
 
-export const fileTree = writable<Node>({ label: "empty..", children: [] });
+export const fileTree = writable<FileNode>({ relPath: "", label: "empty..", children: [] });

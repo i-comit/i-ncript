@@ -5,38 +5,57 @@
     };
 </script>
 
-<script>
+<script lang="ts">
     // import { slide } from 'svelte/transition'
-    import { logFrontendMessage, getFilePath } from "../utils.ts";
-    export let tree;
-    const { label, children } = tree;
+    import { onMount } from "svelte";
+
+    import { FolderOpenSolid, FolderSolid } from "flowbite-svelte-icons";
+    import {
+        logFrontendMessage,
+        getFilePath,
+        getFileProperties,
+    } from "../utils.ts";
+    interface FileNode {
+        relPath: string;
+        label: string;
+        children?: FileNode[]; // Make children optional to match the Go structure
+    }
+    export let tree: FileNode;
+    const { relPath, label, children } = tree;
 
     let expanded = false;
     const toggleExpansion = () => {
         expanded = !expanded;
     };
 
-    function logFilePath(treeLabel) {
+    function logFilePath(treeLabel: string) {
         getFilePath(treeLabel).then((filePath) => {
             logFrontendMessage(filePath.toString() + treeLabel);
         });
     }
 
-    function isFile(node) {
-        return (
-            !node.children || (node.children.length === 0 && node.size === 0)
-        );
+    function isFile(node: FileNode) {
+        getFilePath(node.label).then((filePath) => {
+            getFileProperties(filePath + node.relPath).then((fileProps) => {
+                logFrontendMessage(fileProps.fileSize.toString());
+                return fileProps.fileSize > 0;
+            });
+        });
+        return !node.children;
     }
 </script>
 
 <ul>
     <li>
         {#if tree.children && tree.children.length > 0}
-            <span on:click={toggleExpansion}>
-                <!-- Apply the class:arrowDown directive here -->
-                <span class="arrow" class:arrowDown={expanded}>&#x25b6;</span>
+            <button on:click={toggleExpansion} class="flex">
+                {#if !expanded}
+                    <FolderSolid class="w-3 mr-1"></FolderSolid>
+                {:else}
+                    <FolderOpenSolid class="w-3 mr-1"></FolderOpenSolid>
+                {/if}
                 {tree.label}
-            </span>
+            </button>
             {#if expanded}
                 <ul>
                     {#each tree.children as child}
@@ -45,17 +64,15 @@
                 </ul>
             {/if}
         {:else if isFile(tree)}
-            <!-- Render as a button for files (including empty folders as per your criteria) -->
             <button
                 class="bg-gray-800"
-                on:click={() => logFilePath(tree.label)}
+                on:click={() => logFilePath(tree.relPath)}
             >
                 {tree.label}
             </button>
         {:else}
-            <!-- This case handles empty folders that are not considered files by your criteria -->
-            <span>
-                <span class="no-arrow"></span>
+            <span class="flex">
+                <FolderSolid class="w-3 mr-1"></FolderSolid>
                 {tree.label}
             </span>
         {/if}
@@ -72,15 +89,7 @@
         text-align: justify;
         font-size: small;
     }
-    .no-arrow {
-        padding-left: 1rem;
-    }
-    .arrow {
-        cursor: pointer;
-        display: inline-block;
-        /* transition: transform 200ms; */
-    }
-    .arrowDown {
-        transform: rotate(90deg);
+    .hide-root {
+        display: none;
     }
 </style>

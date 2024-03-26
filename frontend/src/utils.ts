@@ -16,7 +16,11 @@ import {
 import {
     ResizeWindow, BuildDirectoryFileTree
 } from "../wailsjs/go/main/App";
-import { GetAppPath, GetDirectoryPath } from "../wailsjs/go/main/Getters";
+import {
+    GetAppPath,
+    GetDirectoryPath,
+    GetFileProperties
+} from "../wailsjs/go/main/Getters";
 import { LogMessage } from "../wailsjs/go/main/Logger";
 import { get } from 'svelte/store';
 
@@ -62,6 +66,7 @@ export function switchModals(modal: Modals) {
 
 export function loadDirectoryTree(index: number) {
     interface Node {
+        relPath: string;
         label: string;
         children?: Node[]; // Make children optional to match the Go structure
     }
@@ -74,6 +79,24 @@ export function loadDirectoryTree(index: number) {
             console.error("Failed to get directory structure", error);
             // LogMessage(error);
         });
+}
+
+interface FileProperties {
+    modifiedDate: string;
+    fileSize: number;
+    fileType?: string; // Optional
+}
+
+export async function getFileProperties(filePath: string): Promise<FileProperties> {
+    // logFrontendMessage("File PATH " + filePath);
+    try {
+        const properties: FileProperties = await GetFileProperties(filePath);
+        logFrontendMessage(`File properties for ${filePath}: ${JSON.stringify(properties)}`);
+        return properties;
+    } catch (error) {
+        logFrontendMessage("Failed to get file properties" + error);
+        throw error; // Rethrow or handle as needed
+    }
 }
 
 export async function getFilePath(label: string): Promise<string> {

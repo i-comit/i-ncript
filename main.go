@@ -20,7 +20,6 @@ func (m *App) onSecondInstanceLaunch(data options.SecondInstanceData) {
 }
 
 func main() {
-
 	app := NewApp()
 	getters := &Getters{}
 	logger := &Logger{}

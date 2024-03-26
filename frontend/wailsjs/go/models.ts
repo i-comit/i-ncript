@@ -1,17 +1,19 @@
 export namespace main {
 	
-	export class Node {
+	export class FileNode {
+	    relPath: string;
 	    label: string;
-	    children?: Node[];
+	    children?: FileNode[];
 	
 	    static createFrom(source: any = {}) {
-	        return new Node(source);
+	        return new FileNode(source);
 	    }
 	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.relPath = source["relPath"];
 	        this.label = source["label"];
-	        this.children = this.convertValues(source["children"], Node);
+	        this.children = this.convertValues(source["children"], FileNode);
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {

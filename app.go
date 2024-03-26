@@ -8,11 +8,13 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
 	"encoding/hex"
+	"encoding/json"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
@@ -125,6 +127,21 @@ func (a *App) Login(username string, password string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	tree, err := a.BuildDirectoryFileTree(0)
+	if err != nil {
+		fmt.Println("Error building file tree:", err)
+		return
+	}
+
+	data, err := json.MarshalIndent(tree, "", "  ")
+	if err != nil {
+		fmt.Println("Error marshaling tree to JSON:", err)
+		return
+	}
+
+	jsonStr := string(data)
+	fmt.Println(jsonStr)
 }
 
 func (a *App) ResizeWindow(width int, height int, recenter bool) {
@@ -170,7 +187,13 @@ func (a *App) CloseApp() {
 	os.Exit(0)
 }
 
-func (a *App) BuildDirectoryFileTree(dirIndex int) (*Node, error) {
+type FileNode struct {
+	RelPath  string      `json:"relPath"`
+	Label    string      `json:"label"`
+	Children []*FileNode `json:"children,omitempty"`
+}
+
+func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 	if dirIndex < 0 {
 		dirIndex = 0
 	} else if dirIndex >= len(directories) {
@@ -179,7 +202,7 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*Node, error) {
 	var rootDir = directories[dirIndex]
 	rootDir = filepath.Clean(rootDir)
 	// Initialize rootNode. It does not represent the rootDir itself but its contents.
-	rootNode := &Node{Label: filepath.Base(rootDir), Children: []*Node{}}
+	rootNode := &FileNode{RelPath: rootDir, Label: filepath.Base(rootDir), Children: []*FileNode{}}
 	err := filepath.Walk(rootDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -196,7 +219,7 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*Node, error) {
 		}
 		// Split the relative path into parts
 		parts := strings.Split(relativePath, string(filepath.Separator))
-		addPath(rootNode, parts)
+		addPath(rootNode, parts, "")
 		return nil
 	})
 
@@ -204,6 +227,32 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*Node, error) {
 		return nil, err
 	}
 	return rootNode, nil
+}
+
+func addPath(node *FileNode, parts []string, currentPath string) {
+	if len(parts) == 0 {
+		return
+	}
+	if currentPath != "" {
+		currentPath += string(filepath.Separator) + parts[0]
+	} else {
+		currentPath = parts[0]
+	}
+
+	for _, child := range node.Children {
+		if child.Label == parts[0] {
+			// If the child matches the next part, recursively call addPath on the child.
+			addPath(child, parts[1:], currentPath)
+			return
+		}
+	}
+	newNode := &FileNode{
+		RelPath:  currentPath,
+		Label:    parts[0],
+		Children: []*FileNode{},
+	}
+	node.Children = append(node.Children, newNode)
+	addPath(newNode, parts[1:], currentPath)
 }
 
 // GETTER STRUCT
@@ -221,9 +270,37 @@ func (b *Getters) GetDirectoryPath(dirIndex int) (string, error) {
 	} else if dirIndex >= len(directories) {
 		dirIndex = len(directories) - 1
 	}
-
 	return directories[dirIndex] + string(filepath.Separator), nil
 }
+
+type FileProperties struct {
+	ModifiedDate time.Time
+	Size         int64
+	FileType     string
+}
+
+func (b *Getters) GetFileProperties(filePath string) (FileProperties, error) {
+	var props FileProperties
+	fileInfo, err := os.Stat(filePath)
+	fmt.Println("\033[33mFilePath", filePath, "\033[0m")
+
+	if err != nil {
+		fmt.Println("\033[33mError accessing file:", err, "\033[0m") // This will print the error in yellow
+		return props, err                                            // Return zero value of props and the error
+	}
+
+	props.ModifiedDate = fileInfo.ModTime()
+	props.Size = fileInfo.Size()
+	fmt.Println("\033[32mFILE PROPS: ", props.ModifiedDate.String()+" ", "\033[0m")
+
+	if fileInfo.IsDir() {
+		props.FileType = "directory"
+	} else {
+		props.FileType = "file"
+	}
+	return props, nil
+}
+
 func (g *Getters) GetRootFolder() string {
 	return rootFolder
 }
@@ -257,27 +334,5 @@ func printFilesRecursively(dirs ...string) error {
 }
 
 func (l *Logger) LogMessage(message string) {
-	fmt.Println("Frontend says:", message)
-}
-
-type Node struct {
-	Label    string  `json:"label"`
-	Children []*Node `json:"children,omitempty"`
-}
-
-func addPath(node *Node, parts []string) {
-	if len(parts) == 0 {
-		return
-	}
-
-	for _, child := range node.Children {
-		if child.Label == parts[0] {
-			addPath(child, parts[1:])
-			return
-		}
-	}
-
-	newNode := &Node{Label: parts[0]}
-	node.Children = append(node.Children, newNode)
-	addPath(newNode, parts[1:])
+	fmt.Println("\033[32mFRONTEND: ", message, "\033[0m")
 }

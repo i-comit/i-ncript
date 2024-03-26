@@ -10,6 +10,10 @@ export function GetDirectoryPath(arg1) {
   return window['go']['main']['Getters']['GetDirectoryPath'](arg1);
 }
 
+export function GetFileProperties(arg1) {
+  return window['go']['main']['Getters']['GetFileProperties'](arg1);
+}
+
 export function GetRootFolder() {
   return window['go']['main']['Getters']['GetRootFolder']();
 }
