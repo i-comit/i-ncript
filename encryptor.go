@@ -28,7 +28,7 @@ func (a *App) EncryptFilesInDir(dirIndex int) error {
 	if err != nil {
 		return err
 	}
-	dirFileCt, err := a.getters.GetDirectoryFileCt(dirIndex)
+	// dirFileCt, err := a.getters.GetDirectoryFileCt(dirIndex)
 	if err != nil {
 		return err
 	}
@@ -41,10 +41,7 @@ func (a *App) EncryptFilesInDir(dirIndex int) error {
 		if strings.HasSuffix(filePath, ".enc") {
 			continue
 		}
-		if a.ctx != nil {
-			runtime.EventsEmit(a.ctx, "fileProcessed", i+1, dirFileCt)
-			// fmt.Println("\033[31mfileCount ", dirFileCt, "\033[0m")
-		}
+
 		// s := fmt.Sprintf("%f", i+1)
 		// runtime.LogError(e.ctx, "current fileCount "+s)
 		// fmt.Println("\033[32mfileCount ", i+1, "\033[0m")
@@ -53,10 +50,16 @@ func (a *App) EncryptFilesInDir(dirIndex int) error {
 		if err != nil {
 			return err
 		}
-
 		defer encryptedFile.Close()
-
+		if a.ctx != nil {
+			runtime.EventsEmit(a.ctx, "fileProcessed", i+1, 161)
+			fmt.Println("\033[31mfileCount ", 161, "\033[0m")
+		}
 		// fmt.Println("Encrypted file created:", encryptedFile.Name())
+	}
+	if a.ctx != nil {
+		// runtime.EventsEmit(a.ctx, "fileProcessed", 0, 0)
+		runtime.EventsOff(a.ctx, "fileProcessed")
 	}
 	return nil
 }
@@ -67,6 +70,7 @@ func (a *App) DecryptFilesInDir() error {
 	if err != nil {
 		return err
 	}
+	// dirFileCt, err := a.getters.GetDirectoryFileCt(0)
 	for i, filePath := range filePaths {
 		// Read the file content into a byte slice
 		// fmt.Println("\033[31mdecrypt filePath ", filePath, "\033[0m")
@@ -81,12 +85,16 @@ func (a *App) DecryptFilesInDir() error {
 		if err != nil {
 			return err
 		}
+
+		defer decryptFile.Close()
 		if a.ctx != nil {
 			runtime.EventsEmit(a.ctx, "fileProcessed", i+1, 161)
-			// fmt.Println("\033[31mfileCount ", 162, "\033[0m")
+			fmt.Println("\033[31mfileCount ", 161, "\033[0m")
 		}
-		defer decryptFile.Close()
-		// fmt.Println("Decrypted file created:", decryptFile.Name())
+	}
+	if a.ctx != nil {
+		// runtime.EventsEmit(a.ctx, "fileProcessed", 0, 0)
+		runtime.EventsOff(a.ctx, "fileProcessed")
 	}
 	return nil
 }

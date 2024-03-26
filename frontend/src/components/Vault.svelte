@@ -42,31 +42,36 @@
     import { EventsOn } from "../../wailsjs/runtime/runtime";
 
     let _fileCt: number;
-    _fileCt = 0;
+    _fileCt = 161;
     onMount(() => {
         loadDirectoryTree(0);
-        
-        EventsOn("fileProcessed", (currentCount) => {
-            encryptProgress.set(currentCount);
-            LogMessage(`Processed ${currentCount} of 123 files.`);
 
+        EventsOn("fileProcessed", (currentCount, totalFiles) => {
+            encryptProgress.set(currentCount);
+            // _fileCt = totalFiles;
+            _encryptPercent = (_encryptProgress / _fileCt) * 100;
+            LogMessage(
+                `Processed ${_encryptProgress} of ${_fileCt} files. ${_encryptPercent}`,
+            );
         });
     });
     let _username;
     usernameStore.subscribe(($user) => {
         _username = $user;
     });
+
     let _encryptProgress: number;
+    _encryptProgress = 0;
     encryptProgress.subscribe(($encryptProgress) => {
-        _encryptProgress = $encryptProgress * 10;
+        _encryptProgress = $encryptProgress;
     });
+    let _encryptPercent: number;
+
     function encryptDecrypt(encryptDecrypt: boolean) {
-        GetDirectoryFileCt(0).then((fileCt) => {
-            _fileCt = fileCt;
-            if (encryptDecrypt) EncryptFilesInDir(0);
-            else DecryptFilesInDir();
-            ResizeWindow(500, 260, false);
-        });
+        // _fileCt = fileCt;
+        if (encryptDecrypt) EncryptFilesInDir(0);
+        else DecryptFilesInDir();
+        ResizeWindow(500, 260, false);
     }
 </script>
 
@@ -141,7 +146,7 @@
     </div>
     {#if _encryptProgress !== 0}
         <Progressbar
-            {_encryptProgress}
+            progress={_encryptPercent}
             animate
             precision={0}
             labelInside
