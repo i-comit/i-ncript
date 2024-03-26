@@ -21,7 +21,6 @@
         children?: FileNode[]; // Make children optional to match the Go structure
     }
     export let tree: FileNode;
-    const { relPath, label, children } = tree;
 
     let expanded = false;
     const toggleExpansion = () => {

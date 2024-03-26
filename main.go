@@ -23,6 +23,7 @@ func main() {
 	app := NewApp()
 	getters := &Getters{}
 	logger := &Logger{}
+	encryptor := &Encryptor{}
 
 	// Create application with options
 	err := wails.Run(&options.App{
@@ -40,7 +41,7 @@ func main() {
 		OnStartup: app.startup,
 		// OnShutdown: app.shutdown,
 		Bind: []interface{}{
-			app, getters, logger,
+			app, getters, logger, encryptor,
 		},
 		Windows: &windows.Options{
 			WebviewIsTransparent:              false,

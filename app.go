@@ -3,17 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
-	"io"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
 
-	"crypto/aes"
-	"crypto/cipher"
-	"crypto/rand"
-	"encoding/hex"
 	"encoding/json"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
@@ -34,6 +29,8 @@ func NewApp() *App {
 
 var directories = []string{"VAULT", "N-BOX", "O-BOX"}
 var rootFolder = "i-ncript"
+var encryptedUsername = ""
+var encryptedPassword = ""
 
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
@@ -97,14 +94,16 @@ func (a *App) Login(username string, password string) {
 	}
 	defer file.Close()
 
-	encryptedUsername, err := encrypt([]byte(username))
+	_encryptedUsername, err := encryptString([]byte(username))
 	if err != nil {
 		log.Fatalf("Failed to encrypt username: %s", err)
 	}
-	encryptedPassword, err := encrypt([]byte(password))
+	_encryptedPassword, err := encryptString([]byte(password))
 	if err != nil {
 		log.Fatalf("Failed to encrypt password: %s", err)
 	}
+	encryptedUsername = _encryptedUsername
+	encryptedPassword = _encryptedPassword
 
 	_, err = file.WriteString(encryptedUsername + "\n" + encryptedPassword + "\n")
 	if err != nil {
@@ -123,10 +122,17 @@ func (a *App) Login(username string, password string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = printFilesRecursively(directories...)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// filePaths, err = getFilesRecursively(directories...)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	// for _, filePath := range filePaths {
+	//     // Read the file content into a byte slice
+	//     data, err := os.ReadFile(filePath)
+	//     if err != nil {
+	//         return err
+	//     }
 
 	tree, err := a.BuildDirectoryFileTree(0)
 	if err != nil {
@@ -154,29 +160,8 @@ func (a *App) ResizeWindow(width int, height int, recenter bool) {
 }
 
 func (a *App) EncryptString(stringToEncrypt string) string {
-	encryptedString, _ := encrypt([]byte(stringToEncrypt))
+	encryptedString, _ := encryptString([]byte(stringToEncrypt))
 	return encryptedString
-}
-
-func encrypt(data []byte) (string, error) {
-	key := []byte("your-32-byte-long-aes-key-here..")
-	block, err := aes.NewCipher(key)
-	if err != nil {
-		return "", err
-	}
-
-	aesGCM, err := cipher.NewGCM(block)
-	if err != nil {
-		return "", err
-	}
-
-	nonce := make([]byte, aesGCM.NonceSize())
-	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
-		return "", err
-	}
-
-	encrypted := aesGCM.Seal(nonce, nonce, data, nil)
-	return hex.EncodeToString(encrypted), nil
 }
 
 func (a *App) MinimizeApp() {
@@ -312,22 +297,6 @@ func createDirectories(dirs ...string) error {
 			if err != nil {
 				return err
 			}
-		}
-	}
-	return nil
-}
-
-func printFilesRecursively(dirs ...string) error {
-	for _, dir := range dirs {
-		err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
-			if err != nil {
-				return err
-			}
-			fmt.Println(path)
-			return nil
-		})
-		if err != nil {
-			return err
 		}
 	}
 	return nil

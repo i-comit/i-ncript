@@ -13,7 +13,10 @@
     import { usernameStore } from "../stores/usernameStore";
     import { fileTree } from "../stores/fileTree.ts";
     import { defaultBtn } from "../stores/defaultBtn.js";
-    // import { GetDirectoryStructure } from "../../wailsjs/go/main/App";
+    import {
+        EncryptFilesInDir,
+        DecryptFilesInDir,
+    } from "../../wailsjs/go/main/Encryptor";
     import { LogMessage } from "../../wailsjs/go/main/Logger";
 
     import {
@@ -35,9 +38,6 @@
         loggedInUser = $user;
     });
 
-    function buttonAction(actionName: string) {
-        console.log(`Action for ${actionName}`);
-    }
 </script>
 
 <div class="app-container h-screen rounded-lg">
@@ -52,14 +52,12 @@
                 <GradientButton
                     color="cyanToBlue"
                     class={defaultBtn}
-                    on:click={() => buttonAction("ENCRYPT")}
-                    >ENCRYPT</GradientButton
+                    on:click={() => EncryptFilesInDir(0)}>ENCRYPT</GradientButton
                 >
                 <GradientButton
                     color="cyanToBlue"
                     class={defaultBtn}
-                    on:click={() => buttonAction("DECRYPT")}
-                    >DECRYPT</GradientButton
+                    on:click={() => DecryptFilesInDir()}>DECRYPT</GradientButton
                 >
             </div>
             <div class="h-2"></div>
