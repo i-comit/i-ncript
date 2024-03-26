@@ -2,6 +2,8 @@ package main
 
 import (
 	"embed"
+	"fmt"
+	"os"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -29,13 +31,29 @@ func (m *App) onSecondInstanceLaunch(data options.SecondInstanceData) {
 // 	return path, nil
 // }
 
+func idK() {
+	filePath := "B:\\--------\\CODE\\go\\i-ncript\\build\\bin\\treeFile.json"
+
+	// Read the file
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		fmt.Println("Error reading file:", err)
+		return
+	}
+
+	// Print the contents of the file
+	fmt.Println(string(data))
+}
+
 func main() {
-	// Create an instance of the app structure
-	// handle err
+
+	idK()
 	app := NewApp()
+	logger := &Logger{}
 
 	// Create application with options
 	err := wails.Run(&options.App{
+
 		Title:         "i-ncript",
 		Width:         220,
 		Height:        155,
@@ -48,7 +66,7 @@ func main() {
 		},
 		OnStartup: app.startup,
 		Bind: []interface{}{
-			app,
+			app, logger,
 		},
 		Windows: &windows.Options{
 			WebviewIsTransparent:              false,

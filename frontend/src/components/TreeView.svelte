@@ -15,25 +15,47 @@
         expanded = _expansionState[label] = !expanded;
     };
     $: arrowDown = expanded;
+    function getFullPath(node) {
+        // Assuming each node has a 'path' or you have a method to construct it
+        return `Full path for ${node.label}`;
+    }
+
+    function logFilePath(node) {
+        const fullPath = getFullPath(node);
+        console.log(fullPath);
+    }
+
+    function isFile(node) {
+        return (
+            !node.children || (node.children.length === 0 && node.size === 0)
+        );
+    }
 </script>
 
 <ul>
-    <!-- transition:slide -->
     <li>
-        {#if children}
+        {#if tree.children && tree.children.length > 0}
             <span on:click={toggleExpansion}>
-                <span class="arrow" class:arrowDown>&#x25b6</span>
-                {label}
+                <span class="arrow" class:expanded>&#x25b6;</span>
+                {tree.label}
             </span>
             {#if expanded}
-                {#each children as child}
-                    <svelte:self tree={child} />
-                {/each}
+                <ul>
+                    {#each tree.children as child}
+                        <svelte:self tree={child} />
+                    {/each}
+                </ul>
             {/if}
+        {:else if isFile(tree)}
+            <!-- Render as a button for files (including empty folders as per your criteria) -->
+            <button class="bg-gray-800" on:click={() => logFilePath(tree)}>
+                {tree.label}
+            </button>
         {:else}
+            <!-- This case handles empty folders that are not considered files by your criteria -->
             <span>
-                <span class="no-arrow" />
-                {label}
+                <span class="no-arrow"></span>
+                {tree.label}
             </span>
         {/if}
     </li>
@@ -43,10 +65,11 @@
     ul {
         margin: 0;
         list-style: none;
-        padding-left: 1.2rem;
+        padding-left: .5rem;
         user-select: none;
         background-color: gray;
         text-align: justify;
+        font-size: small;
     }
     .no-arrow {
         padding-left: 1rem;

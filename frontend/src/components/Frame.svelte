@@ -46,13 +46,14 @@
         position: absolute;
         top: 0;
         right: 0;
-        /* padding: 0.5rem; */
+        z-index: 10;
     }
 
     .control-button {
         cursor: pointer;
         padding: 0;
         margin: 0;
+
         /* margin-left: 0.5rem; */
     }
 </style>

@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"crypto/aes"
 	"crypto/cipher"
@@ -99,17 +100,28 @@ func (a *App) Login(username string, password string) {
 		fmt.Println("Error building file tree:", err)
 		return
 	}
-	treeJSON, err := json.MarshalIndent(tree, "", "  ")
+
+	data, err := json.MarshalIndent(tree, "", "  ")
 	if err != nil {
-		fmt.Println("Error marshalling tree to JSON:", err)
+		fmt.Println("Error marshaling tree to JSON:", err)
 		return
 	}
-	fmt.Println(string(treeJSON))
 
+	// Convert byte slice to a string for printing
+	jsonStr := string(data)
+	fmt.Println(jsonStr)
 }
 
 func (a *App) GetDirectoryStructure() (*Node, error) {
-	return buildFileTree(dirsToCreate[0])
+	tree, err := buildFileTree(dirsToCreate[0])
+	if err != nil {
+		fmt.Println("Error building file tree:", err)
+	}
+	// data, err := json.MarshalIndent(tree, "", "  ")
+
+	// jsonStr := string(data)
+	// fmt.Println(jsonStr)
+	return tree, nil
 }
 
 func (a *App) ResizeWindow(width int, height int) {
@@ -184,46 +196,72 @@ func printFilesRecursively(dirs ...string) error {
 	return nil
 }
 
+type Logger struct{}
+
+func (l *Logger) LogMessage(message string) {
+	fmt.Println("Frontend says:", message)
+}
+
 type Node struct {
 	Label    string  `json:"label"`
 	Children []*Node `json:"children,omitempty"`
 }
 
+// Add or find a child node recursively
+func addPath(node *Node, parts []string) {
+	if len(parts) == 0 {
+		return
+	}
+
+	for _, child := range node.Children {
+		if child.Label == parts[0] {
+			addPath(child, parts[1:])
+			return
+		}
+	}
+
+	newNode := &Node{Label: parts[0]}
+	node.Children = append(node.Children, newNode)
+	addPath(newNode, parts[1:])
+}
+
 func buildFileTree(rootDir string) (*Node, error) {
-	rootNode := &Node{Label: filepath.Base(rootDir)}
+	rootDir = filepath.Clean(rootDir)
+
+	// Initialize rootNode. It does not represent the rootDir itself but its contents.
+	rootNode := &Node{Label: filepath.Base(rootDir), Children: []*Node{}}
+
 	err := filepath.Walk(rootDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
-		// Skip the root directory since it's already added as the rootNode
+
+		// Normalize the current path
+		path = filepath.Clean(path)
+
+		// Check if the current path is the rootDir. If so, skip.
 		if path == rootDir {
 			return nil
 		}
+
+		// Get the relative path from the rootDir to the current path
 		relativePath, err := filepath.Rel(rootDir, path)
 		if err != nil {
 			return err
 		}
-		parts := filepath.SplitList(relativePath)
-		currentNode := rootNode
-		for _, part := range parts {
-			found := false
-			for _, child := range currentNode.Children {
-				if child.Label == part {
-					currentNode = child
-					found = true
-					break
-				}
-			}
-			if !found {
-				newNode := &Node{Label: part}
-				currentNode.Children = append(currentNode.Children, newNode)
-				currentNode = newNode
-			}
-		}
+
+		// Split the relative path into parts
+		parts := strings.Split(relativePath, string(filepath.Separator))
+
+		// Add the current file or directory to the tree
+		addPath(rootNode, parts)
+
 		return nil
 	})
+
 	if err != nil {
 		return nil, err
 	}
+
 	return rootNode, nil
 }
