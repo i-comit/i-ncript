@@ -80,9 +80,9 @@
 
 <style>
     ul {
-        margin: 0;
+        margin: 0px;
         list-style: none;
-        padding-left: 0.5rem;
+        padding-left: 0.4rem;
         user-select: none;
         background-color: gray;
         text-align: justify;

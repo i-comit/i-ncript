@@ -6,6 +6,10 @@ export function GetAppPath() {
   return window['go']['main']['Getters']['GetAppPath']();
 }
 
+export function GetDirectoryFileCt(arg1) {
+  return window['go']['main']['Getters']['GetDirectoryFileCt'](arg1);
+}
+
 export function GetDirectoryPath(arg1) {
   return window['go']['main']['Getters']['GetDirectoryPath'](arg1);
 }

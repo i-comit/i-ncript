@@ -8,6 +8,10 @@ export function CheckDirName():Promise<boolean>;
 
 export function CloseApp():Promise<void>;
 
+export function DecryptFilesInDir():Promise<void>;
+
+export function EncryptFilesInDir(arg1:number):Promise<void>;
+
 export function EncryptString(arg1:string):Promise<string>;
 
 export function InitializeRootFolder():Promise<void>;

@@ -15,7 +15,8 @@ import (
 )
 
 type App struct {
-	ctx context.Context
+	ctx     context.Context
+	getters *Getters
 }
 
 type Getters struct {
@@ -112,7 +113,7 @@ func (a *App) Login(username string, password string) {
 
 	log.Printf("File created: %s", filePath)
 	if a.ctx != nil {
-		a.ResizeWindow(500, 200, true)
+		a.ResizeWindow(500, 220, true)
 	}
 	for i, dir := range directories {
 		directories[i] = cwd + string(os.PathSeparator) + dir
@@ -256,6 +257,20 @@ func (b *Getters) GetDirectoryPath(dirIndex int) (string, error) {
 		dirIndex = len(directories) - 1
 	}
 	return directories[dirIndex] + string(filepath.Separator), nil
+}
+
+func (b *Getters) GetDirectoryFileCt(dirIndex int) (int, error) {
+	entries, err := os.ReadDir(directories[dirIndex])
+	if err != nil {
+		return 0, err
+	}
+	fileCount := 0
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			fileCount++
+		}
+	}
+	return fileCount, nil
 }
 
 type FileProperties struct {

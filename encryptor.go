@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
@@ -13,18 +14,81 @@ import (
 	// "log"
 	"os"
 	"path/filepath"
-	// 	"strings"
-	// 	"time"
-	// 	"crypto/aes"
-	// 	"crypto/cipher"
-	// 	"crypto/rand"
-	// 	"encoding/hex"
-	// 	"encoding/json"
-	// 	"github.com/wailsapp/wails/v2/pkg/runtime"
+
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 type Encryptor struct {
-	// ctx context.Context
+	ctx context.Context
+}
+
+func (a *App) EncryptFilesInDir(dirIndex int) error {
+	filePaths, err := getFilesRecursively(directories[0])
+	fmt.Println("\033[32mdirectories[0] ", directories[0], "\033[0m")
+	if err != nil {
+		return err
+	}
+	dirFileCt, err := a.getters.GetDirectoryFileCt(dirIndex)
+	if err != nil {
+		return err
+	}
+	for i, filePath := range filePaths {
+		// Read the file content into a byte slice
+		// fmt.Println("\033[31mencrypt filePath ", filePath, "\033[0m")
+		if err != nil {
+			return err
+		}
+		if strings.HasSuffix(filePath, ".enc") {
+			continue
+		}
+		if a.ctx != nil {
+			runtime.EventsEmit(a.ctx, "fileProcessed", i+1, dirFileCt)
+			// fmt.Println("\033[31mfileCount ", dirFileCt, "\033[0m")
+		}
+		// s := fmt.Sprintf("%f", i+1)
+		// runtime.LogError(e.ctx, "current fileCount "+s)
+		// fmt.Println("\033[32mfileCount ", i+1, "\033[0m")
+		// }
+		encryptedFile, err := encryptFile(filePath)
+		if err != nil {
+			return err
+		}
+
+		defer encryptedFile.Close()
+
+		// fmt.Println("Encrypted file created:", encryptedFile.Name())
+	}
+	return nil
+}
+
+func (a *App) DecryptFilesInDir() error {
+	filePaths, err := getFilesRecursively(directories[0])
+	fmt.Println("\033[32mdirectories[0] ", directories[0], "\033[0m")
+	if err != nil {
+		return err
+	}
+	for i, filePath := range filePaths {
+		// Read the file content into a byte slice
+		// fmt.Println("\033[31mdecrypt filePath ", filePath, "\033[0m")
+		if err != nil {
+			return err
+		}
+		if !strings.HasSuffix(filePath, ".enc") {
+			continue
+		}
+		// Encrypt the file content
+		decryptFile, err := decryptFile(filePath)
+		if err != nil {
+			return err
+		}
+		if a.ctx != nil {
+			runtime.EventsEmit(a.ctx, "fileProcessed", i+1, 161)
+			// fmt.Println("\033[31mfileCount ", 162, "\033[0m")
+		}
+		defer decryptFile.Close()
+		// fmt.Println("Decrypted file created:", decryptFile.Name())
+	}
+	return nil
 }
 
 func getFilesRecursively(dirs ...string) ([]string, error) {
@@ -45,60 +109,6 @@ func getFilesRecursively(dirs ...string) ([]string, error) {
 	}
 	return files, nil
 }
-
-func (e *Encryptor) EncryptFilesInDir(dirIndex int) error {
-	filePaths, err := getFilesRecursively(directories[0])
-	fmt.Println("\033[32mdirectories[0] ", directories[0], "\033[0m")
-	if err != nil {
-		return err
-	}
-	for _, filePath := range filePaths {
-		// Read the file content into a byte slice
-		fmt.Println("\033[31mencrypt filePath ", filePath, "\033[0m")
-		if err != nil {
-			return err
-		}
-		if strings.HasSuffix(filePath, ".enc") {
-			continue
-		}
-		encryptedFile, err := encryptFile(filePath)
-		if err != nil {
-			return err
-		}
-		// Close the encrypted file when done to release resources
-		defer encryptedFile.Close()
-		fmt.Println("Encrypted file created:", encryptedFile.Name())
-	}
-	return nil
-}
-
-func (e *Encryptor) DecryptFilesInDir() error {
-	filePaths, err := getFilesRecursively(directories[0])
-	fmt.Println("\033[32mdirectories[0] ", directories[0], "\033[0m")
-	if err != nil {
-		return err
-	}
-	for _, filePath := range filePaths {
-		// Read the file content into a byte slice
-		fmt.Println("\033[31mencrypt filePath ", filePath, "\033[0m")
-		if err != nil {
-			return err
-		}
-		if !strings.HasSuffix(filePath, ".enc") {
-			continue
-		}
-		// Encrypt the file content
-		decryptFile, err := decryptFile(filePath)
-		if err != nil {
-			return err
-		}
-		// Close the encrypted file when done to release resources
-		defer decryptFile.Close()
-		fmt.Println("Encrypted file created:", decryptFile.Name())
-	}
-	return nil
-}
-
 func encryptFile(filePath string) (*os.File, error) {
 	data, err := os.ReadFile(filePath)
 	if err != nil {

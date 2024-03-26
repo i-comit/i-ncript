@@ -1,7 +1,14 @@
 <!-- Vault.svelte -->
 <script lang="ts">
-    import { onMount } from "svelte";
-    import { Button, GradientButton, Popover } from "flowbite-svelte";
+    import { onMount, onDestroy } from "svelte";
+    import {
+        Button,
+        GradientButton,
+        Popover,
+        Progressbar,
+    } from "flowbite-svelte";
+    import { sineOut } from "svelte/easing";
+
     import {
         CaretUpSolid,
         AdjustmentsVerticalOutline,
@@ -11,12 +18,15 @@
     import { Modals } from "../enums/Modals.ts";
 
     import { usernameStore } from "../stores/usernameStore";
-    import { fileTree } from "../stores/fileTree.ts";
-    import { defaultBtn } from "../stores/defaultBtn.js";
+    import { fileTree } from "../stores/fileTree";
+    import { defaultBtn } from "../stores/defaultBtn";
+    import { encryptProgress } from "../stores/encryptProgress";
     import {
+        ResizeWindow,
         EncryptFilesInDir,
         DecryptFilesInDir,
-    } from "../../wailsjs/go/main/Encryptor";
+    } from "../../wailsjs/go/main/App";
+    import { GetDirectoryFileCt } from "../../wailsjs/go/main/Getters";
     import { LogMessage } from "../../wailsjs/go/main/Logger";
 
     import {
@@ -29,15 +39,35 @@
     import LogPanel from "./LogPanel.svelte";
     import Options from "./Settings.svelte";
     import TreeView from "./TreeView.svelte";
+    import { EventsOn } from "../../wailsjs/runtime/runtime";
 
+    let _fileCt: number;
+    _fileCt = 0;
     onMount(() => {
         loadDirectoryTree(0);
-    });
-    let loggedInUser;
-    usernameStore.subscribe(($user) => {
-        loggedInUser = $user;
-    });
+        
+        EventsOn("fileProcessed", (currentCount) => {
+            encryptProgress.set(currentCount);
+            LogMessage(`Processed ${currentCount} of 123 files.`);
 
+        });
+    });
+    let _username;
+    usernameStore.subscribe(($user) => {
+        _username = $user;
+    });
+    let _encryptProgress: number;
+    encryptProgress.subscribe(($encryptProgress) => {
+        _encryptProgress = $encryptProgress * 10;
+    });
+    function encryptDecrypt(encryptDecrypt: boolean) {
+        GetDirectoryFileCt(0).then((fileCt) => {
+            _fileCt = fileCt;
+            if (encryptDecrypt) EncryptFilesInDir(0);
+            else DecryptFilesInDir();
+            ResizeWindow(500, 260, false);
+        });
+    }
 </script>
 
 <div class="app-container h-screen rounded-lg">
@@ -52,12 +82,14 @@
                 <GradientButton
                     color="cyanToBlue"
                     class={defaultBtn}
-                    on:click={() => EncryptFilesInDir(0)}>ENCRYPT</GradientButton
+                    on:click={() => encryptDecrypt(true)}
+                    >ENCRYPT</GradientButton
                 >
                 <GradientButton
                     color="cyanToBlue"
                     class={defaultBtn}
-                    on:click={() => DecryptFilesInDir()}>DECRYPT</GradientButton
+                    on:click={() => encryptDecrypt(false)}
+                    >DECRYPT</GradientButton
                 >
             </div>
             <div class="h-2"></div>
@@ -107,6 +139,19 @@
     <div class="main-panel bg-white mt-6">
         <TreeView tree={$fileTree} />
     </div>
+    {#if _encryptProgress !== 0}
+        <Progressbar
+            {_encryptProgress}
+            animate
+            precision={0}
+            labelInside
+            tweenDuration={1000}
+            easing={sineOut}
+            size="h-6"
+            labelInsideClass="bg-blue-600 text-blue-100 text-base font-medium text-center p-1 leading-none rounded-lg"
+            class="absolute bottom-0 w-screen"
+        />
+    {/if}
 </div>
 
 <style>

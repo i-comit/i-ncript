@@ -5,4 +5,4 @@ import {
     Modals
 } from '../enums/Modals';
 
-export const currentModal = writable(Modals.None);
+export const currentModal = writable<Modals>(Modals.None);
