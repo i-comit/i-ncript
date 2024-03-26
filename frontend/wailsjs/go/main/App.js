@@ -26,10 +26,6 @@ export function GetRootFolder() {
   return window['go']['main']['App']['GetRootFolder']();
 }
 
-export function Greet(arg1) {
-  return window['go']['main']['App']['Greet'](arg1);
-}
-
 export function InitializeRootFolder() {
   return window['go']['main']['App']['InitializeRootFolder']();
 }
@@ -42,6 +38,6 @@ export function MinimizeApp() {
   return window['go']['main']['App']['MinimizeApp']();
 }
 
-export function ResizeWindow(arg1, arg2) {
-  return window['go']['main']['App']['ResizeWindow'](arg1, arg2);
+export function ResizeWindow(arg1, arg2, arg3) {
+  return window['go']['main']['App']['ResizeWindow'](arg1, arg2, arg3);
 }

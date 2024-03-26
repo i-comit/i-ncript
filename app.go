@@ -27,7 +27,7 @@ func NewApp() *App {
 }
 
 var dirsToCreate = []string{"VAULT", "N-BOX", "O-BOX"}
-var rootFolder = "------"
+var rootFolder = "i-ncript"
 
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
@@ -54,7 +54,6 @@ func (a *App) GetRootFolder() string {
 }
 
 func (a *App) InitializeRootFolder() error {
-	// Get the current working directory
 	executablePath, err := os.Executable()
 	if err != nil {
 		return err
@@ -95,7 +94,7 @@ func (a *App) Login(username string, password string) {
 	if err != nil {
 		log.Fatalf("Failed to get current working directory: %s", err)
 	}
-	keyFile := "➫.🔑"
+	keyFile := ".➫.🔑"
 	filePath := filepath.Join(cwd, keyFile)
 
 	file, err := os.Create(filePath)
@@ -120,7 +119,7 @@ func (a *App) Login(username string, password string) {
 
 	log.Printf("File created: %s", filePath)
 	if a.ctx != nil {
-		a.ResizeWindow(500, 155)
+		a.ResizeWindow(500, 200, true)
 	}
 	for i, dir := range dirsToCreate {
 		dirsToCreate[i] = cwd + string(os.PathSeparator) + dir
@@ -160,9 +159,16 @@ func (a *App) GetDirectoryStructure() (*Node, error) {
 	return tree, nil
 }
 
-func (a *App) ResizeWindow(width int, height int) {
+func (a *App) ResizeWindow(width int, height int, recenter ...bool) {
+	center := false
+	if len(recenter) > 0 {
+		center = recenter[0]
+	}
 	if a.ctx != nil {
 		runtime.WindowSetSize(a.ctx, width, height)
+		if center {
+			runtime.WindowCenter(a.ctx)
+		}
 	}
 }
 

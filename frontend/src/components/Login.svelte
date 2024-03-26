@@ -22,6 +22,9 @@
     import Frame from "./Frame.svelte";
     import Info from "./Info.svelte";
     import Settings from "./Settings.svelte";
+
+    const appName = __APP_NAME__;
+    const appVersion = __APP_VERSION__;
     const dispatch = createEventDispatcher();
     let username = "";
     let password = "";
@@ -57,7 +60,14 @@
         {#if _modal === Modals.None}
             <div class="flex items-center mx-auto">
                 <!-- This will align the two <p> tags horizontally -->
-                <p class="shrink-0 text-left mr-auto">i-ncript</p>
+                <p class="shrink-0 text-left mr-auto">{appName}</p>
+                <Tooltip
+                    placement="right"
+                    type="custom"
+                    defaultClass=""
+                    class="px-0.5 text-s font-medium bg-gray-600 text-gray-100"
+                    arrow={false}>{appVersion}</Tooltip
+                >
                 <p class="shrink-0 text-right ml-auto">3.6GB</p>
                 <Tooltip
                     placement="left"
