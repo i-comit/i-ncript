@@ -1,0 +1,1 @@
+export const defaultBtn = "max-w-48 min-h-3 max-h-5 pt-3 px-3";

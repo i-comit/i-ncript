@@ -21,27 +21,14 @@ func (m *App) onSecondInstanceLaunch(data options.SecondInstanceData) {
 	// Your code to handle the second instance launch
 }
 
-// var rootFolder = "------";
-
-// func (a *App) checkRootFolder() (bool, error) {
-// 	path, err := os.Getwd()
-// 	if err != nil {
-// 		return "", err
-// 	}
-// 	return path, nil
-// }
-
 func idK() {
 	filePath := "B:\\--------\\CODE\\go\\i-ncript\\build\\bin\\treeFile.json"
-
 	// Read the file
 	data, err := os.ReadFile(filePath)
 	if err != nil {
 		fmt.Println("Error reading file:", err)
 		return
 	}
-
-	// Print the contents of the file
 	fmt.Println(string(data))
 }
 
@@ -100,7 +87,7 @@ func main() {
 			// WebviewGpuDisabled: false,
 		},
 		SingleInstanceLock: &options.SingleInstanceLock{
-			UniqueId:               "c9c8fd93-6758-4144-87d1-34bdb0a8bd60",
+			UniqueId:               "f56bcbf2-db56-481b-a722-11c21a4b3ae2",
 			OnSecondInstanceLaunch: app.onSecondInstanceLaunch,
 		},
 		BackgroundColour: &options.RGBA{R: 80, G: 80, B: 80, A: 1},

@@ -27,6 +27,7 @@ func NewApp() *App {
 }
 
 var dirsToCreate = []string{"VAULT", "N-BOX", "O-BOX"}
+var rootFolder = "------"
 
 func (a *App) GetAppPath() (string, error) {
 	cwd, err := os.Getwd()
@@ -35,8 +36,38 @@ func (a *App) GetAppPath() (string, error) {
 	}
 	return cwd, nil
 }
+func (a *App) CheckDirName() (bool, error) {
+	path, err := os.Getwd()
+	if err != nil {
+		return false, err
+	}
+	fmt.Println(path)
 
-// WailsInit is called to pass the runtime to your application
+	match := (path == rootFolder)
+	return match, nil
+}
+func (a *App) GetRootFolder() string {
+	return rootFolder
+}
+
+func (a *App) CreateRootFolder() error {
+	executablePath, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+	newFolderPath := filepath.Join(executablePath, rootFolder)
+
+	if _, err := os.Stat(newFolderPath); os.IsNotExist(err) {
+		err = os.MkdirAll(newFolderPath, os.ModePerm)
+		if err != nil {
+			return err
+		}
+	} else if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 }
@@ -117,10 +148,7 @@ func (a *App) GetDirectoryStructure() (*Node, error) {
 	if err != nil {
 		fmt.Println("Error building file tree:", err)
 	}
-	// data, err := json.MarshalIndent(tree, "", "  ")
 
-	// jsonStr := string(data)
-	// fmt.Println(jsonStr)
 	return tree, nil
 }
 
@@ -236,15 +264,12 @@ func buildFileTree(rootDir string) (*Node, error) {
 			return err
 		}
 
-		// Normalize the current path
 		path = filepath.Clean(path)
 
-		// Check if the current path is the rootDir. If so, skip.
 		if path == rootDir {
 			return nil
 		}
 
-		// Get the relative path from the rootDir to the current path
 		relativePath, err := filepath.Rel(rootDir, path)
 		if err != nil {
 			return err
@@ -253,9 +278,7 @@ func buildFileTree(rootDir string) (*Node, error) {
 		// Split the relative path into parts
 		parts := strings.Split(relativePath, string(filepath.Separator))
 
-		// Add the current file or directory to the tree
 		addPath(rootNode, parts)
-
 		return nil
 	})
 

@@ -10,16 +10,16 @@
         DropdownItem,
         Range,
     } from "flowbite-svelte";
+    import { onMount } from "svelte";
+
     import { switchFormButton } from "../utils";
     import { DownloadSolid, GithubSolid } from "flowbite-svelte-icons";
 
-    import { onMount } from "svelte";
     let cwd = "";
     import { GetAppPath } from "../../wailsjs/go/main/App";
     onMount(async () => {
         cwd = "CWD: " + (await GetAppPath());
     });
-    let stepValue = 2.5;
     const buttonClasses = "max-w-48 min-h-3 max-h-5 pt-3 px-3";
 </script>
 

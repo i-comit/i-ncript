@@ -1,7 +1,7 @@
 <!-- Vault.svelte -->
 <script lang="ts">
     import { Button, GradientButton, Popover } from "flowbite-svelte";
-    import { AppPage } from "../enums/AppPage";
+    import { AppPage } from "../enums/AppPage.ts";
     import { onMount } from "svelte";
 
     import { usernameStore } from "../stores/usernameStore";
@@ -16,10 +16,11 @@
     import LogPanel from "./LogPanel.svelte";
     import Options from "./Settings.svelte";
     import Frame from "./Frame.svelte";
-    import { Modals } from "../enums/Modals";
+    import { Modals } from "../enums/Modals.ts";
 
     import TreeView from "./TreeView.svelte";
     import { tree } from "../stores/fileTree.ts";
+    import { defaultBtn } from "../stores/defaultBtn.js";
     interface Node {
         label: string;
         children?: Node[]; // Make children optional to match the Go structure
@@ -30,7 +31,7 @@
             .then((result: Node) => {
                 if (result.children && result.children.length > 0) {
                     tree.set(result);
-                    LogMessage(JSON.stringify(tree, null, 2)); // Should show the updated structure
+                    // LogMessage(JSON.stringify(tree, null, 2)); // Should show the updated structure
                 } else {
                     LogMessage("No children found.");
                 }
@@ -53,7 +54,6 @@
         console.log(`Action for ${actionName}`);
         // Define additional logic for button actions here
     }
-    const buttonClasses = "max-w-48 min-h-3 max-h-5 pt-3 px-3";
 </script>
 
 <div class="app-container h-screen rounded-lg">
@@ -67,13 +67,13 @@
             <div class="row space-x-5">
                 <GradientButton
                     color="cyanToBlue"
-                    class={buttonClasses}
+                    class={defaultBtn}
                     on:click={() => buttonAction("ENCRYPT")}
                     >ENCRYPT</GradientButton
                 >
                 <GradientButton
                     color="cyanToBlue"
-                    class={buttonClasses}
+                    class={defaultBtn}
                     on:click={() => buttonAction("DECRYPT")}
                     >DECRYPT</GradientButton
                 >
@@ -91,7 +91,7 @@
             <div class="row space-x-3">
                 <GradientButton
                     color="cyanToBlue"
-                    class={buttonClasses}
+                    class={defaultBtn}
                     on:click={() => switchFormButton(AppPage.OBox)}
                     >O-BOX</GradientButton
                 >
@@ -115,7 +115,7 @@
 
                 <GradientButton
                     color="cyanToBlue"
-                    class={buttonClasses}
+                    class={defaultBtn}
                     on:click={() => switchFormButton(AppPage.NBox)}
                     >N-BOX</GradientButton
                 >
