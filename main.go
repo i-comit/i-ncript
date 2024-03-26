@@ -22,6 +22,7 @@ func (m *App) onSecondInstanceLaunch(data options.SecondInstanceData) {
 func main() {
 
 	app := NewApp()
+	getters := &Getters{}
 	logger := &Logger{}
 
 	// Create application with options
@@ -40,7 +41,7 @@ func main() {
 		OnStartup: app.startup,
 		// OnShutdown: app.shutdown,
 		Bind: []interface{}{
-			app, logger,
+			app, getters, logger,
 		},
 		Windows: &windows.Options{
 			WebviewIsTransparent:              false,

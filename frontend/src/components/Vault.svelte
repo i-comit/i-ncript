@@ -13,7 +13,7 @@
     import { usernameStore } from "../stores/usernameStore";
     import { fileTree } from "../stores/fileTree.ts";
     import { defaultBtn } from "../stores/defaultBtn.js";
-    import { GetDirectoryStructure } from "../../wailsjs/go/main/App";
+    // import { GetDirectoryStructure } from "../../wailsjs/go/main/App";
     import { LogMessage } from "../../wailsjs/go/main/Logger";
 
     import {

@@ -3,11 +3,9 @@
     import { onMount } from "svelte";
     import { Button, GradientButton, Popover } from "flowbite-svelte";
 
-    import {
-        GetRootFolder,
-        InitializeRootFolder,
-        CloseApp,
-    } from "../../wailsjs/go/main/App";
+    import { InitializeRootFolder, CloseApp } from "../../wailsjs/go/main/App";
+    import { GetRootFolder } from "../../wailsjs/go/main/Getters";
+
     import { defaultBtn } from "../stores/defaultBtn";
     import Frame from "./Frame.svelte";
     let rootFolder = "";

@@ -14,10 +14,10 @@ import {
 } from './enums/Modals';
 
 import {
-    ResizeWindow, GetDirectoryStructure
+    ResizeWindow, BuildDirectoryFileTree
 } from "../wailsjs/go/main/App";
+import { GetAppPath, GetDirectoryPath } from "../wailsjs/go/main/Getters";
 import { LogMessage } from "../wailsjs/go/main/Logger";
-
 import { get } from 'svelte/store';
 
 export function switchFormButton(page: AppPage) {
@@ -34,33 +34,38 @@ export function switchModals(modal: Modals) {
     }
 
     const newModal = get(currentModal);
-    if (newModal === Modals.Info) {
-        try {
-            ResizeWindow(220, 275, false)
-        } catch (error) {
-            console.error("Error calling ResizeWindow", error);
-        }
-    } else if (newModal === Modals.Settings) {
-        try {
-            ResizeWindow(220, 274, false)
-        } catch (error) {
-            console.error("Error calling ResizeWindow", error);
-        }
-    } else if (newModal === Modals.None) {
-        try {
-            ResizeWindow(220, 155, false)
-        } catch (error) {
-            console.error("Error calling ResizeWindow", error);
-        }
+    switch (newModal) {
+        case Modals.Info:
+            try {
+                ResizeWindow(220, 275, false)
+            } catch (error) {
+                console.error("Error calling ResizeWindow", error);
+            }
+            break;
+        case Modals.Settings:
+            try {
+                ResizeWindow(220, 274, false)
+            } catch (error) {
+                console.error("Error calling ResizeWindow", error);
+            }
+            break;
+        case Modals.None:
+        default:
+            try {
+                ResizeWindow(220, 155, false)
+            } catch (error) {
+                console.error("Error calling ResizeWindow", error);
+            }
+            break;
     }
 }
 
-export function loadDirectoryTree(i: number) {
+export function loadDirectoryTree(index: number) {
     interface Node {
         label: string;
         children?: Node[]; // Make children optional to match the Go structure
     }
-    GetDirectoryStructure(i)
+    BuildDirectoryFileTree(index)
         .then((result: Node) => {
             fileTree.set(result);
             LogMessage(JSON.stringify(fileTree, null, 2)); // Should show the updated structure
@@ -71,8 +76,19 @@ export function loadDirectoryTree(i: number) {
         });
 }
 
-export function getFilePath(){
-    
+export async function getFilePath(label: string): Promise<string> {
+    var index = 0;
+
+    const _currentPage = get(currentPage);
+    switch (_currentPage) {
+        case AppPage.Vault:
+            index = 0; break;
+        case AppPage.NBox:
+            index = 1; break;
+        case AppPage.OBox:
+            index = 2; break;
+    }
+    return await GetDirectoryPath(index); // Await the promise to resolve
 }
 
 export function logFrontendMessage(str: string) {
