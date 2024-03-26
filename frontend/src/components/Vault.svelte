@@ -29,12 +29,8 @@
     function assignTree() {
         GetDirectoryStructure()
             .then((result: Node) => {
-                if (result.children && result.children.length > 0) {
-                    tree.set(result);
-                    // LogMessage(JSON.stringify(tree, null, 2)); // Should show the updated structure
-                } else {
-                    LogMessage("No children found.");
-                }
+                tree.set(result);
+                // LogMessage(JSON.stringify(tree, null, 2)); // Should show the updated structure
             })
             .catch((error) => {
                 console.error("Failed to get directory structure", error);

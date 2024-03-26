@@ -29,6 +29,10 @@ func NewApp() *App {
 var dirsToCreate = []string{"VAULT", "N-BOX", "O-BOX"}
 var rootFolder = "------"
 
+func (a *App) startup(ctx context.Context) {
+	a.ctx = ctx
+}
+
 func (a *App) GetAppPath() (string, error) {
 	cwd, err := os.Getwd()
 	if err != nil {
@@ -41,21 +45,23 @@ func (a *App) CheckDirName() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	fmt.Println(path)
-
-	match := (path == rootFolder)
+	dirName := filepath.Base(path)
+	match := (dirName == rootFolder)
 	return match, nil
 }
 func (a *App) GetRootFolder() string {
 	return rootFolder
 }
 
-func (a *App) CreateRootFolder() error {
-	executablePath, err := os.Getwd()
+func (a *App) InitializeRootFolder() error {
+	// Get the current working directory
+	executablePath, err := os.Executable()
 	if err != nil {
 		return err
 	}
-	newFolderPath := filepath.Join(executablePath, rootFolder)
+
+	executableDir := filepath.Dir(executablePath) // Directory of the executable
+	newFolderPath := filepath.Join(executableDir, rootFolder)
 
 	if _, err := os.Stat(newFolderPath); os.IsNotExist(err) {
 		err = os.MkdirAll(newFolderPath, os.ModePerm)
@@ -65,14 +71,19 @@ func (a *App) CreateRootFolder() error {
 	} else if err != nil {
 		return err
 	}
+
+	newFilePath := filepath.Join(newFolderPath, filepath.Base(executablePath))
+
+	if _, err := os.Stat(newFilePath); err == nil {
+		return nil // or return an appropriate message/error if needed
+	} else if !os.IsNotExist(err) {
+		return err
+	}
 	return nil
 }
 
-func (a *App) startup(ctx context.Context) {
-	a.ctx = ctx
-}
-
-func (b *App) shutdown(ctx context.Context) {}
+// func (b *App) shutdown(ctx context.Context) {
+// }
 
 func (a *App) Login(username string, password string) {
 	if username == "" || password == "" {
@@ -93,7 +104,6 @@ func (a *App) Login(username string, password string) {
 	}
 	defer file.Close()
 
-	// Encrypt the username and password
 	encryptedUsername, err := encrypt([]byte(username))
 	if err != nil {
 		log.Fatalf("Failed to encrypt username: %s", err)
@@ -103,7 +113,6 @@ func (a *App) Login(username string, password string) {
 		log.Fatalf("Failed to encrypt password: %s", err)
 	}
 
-	// Write the encrypted values to the file
 	_, err = file.WriteString(encryptedUsername + "\n" + encryptedPassword + "\n")
 	if err != nil {
 		log.Fatalf("Failed to write to file: %s", err)
@@ -138,7 +147,6 @@ func (a *App) Login(username string, password string) {
 		return
 	}
 
-	// Convert byte slice to a string for printing
 	jsonStr := string(data)
 	fmt.Println(jsonStr)
 }
@@ -185,9 +193,6 @@ func encrypt(data []byte) (string, error) {
 	return hex.EncodeToString(encrypted), nil
 }
 
-func (a *App) Greet(name string) string {
-	return fmt.Sprintf("Hello %s, It's show time!", name)
-}
 func (a *App) MinimizeApp() {
 	runtime.WindowMinimise(a.ctx)
 }
@@ -258,7 +263,6 @@ func buildFileTree(rootDir string) (*Node, error) {
 
 	// Initialize rootNode. It does not represent the rootDir itself but its contents.
 	rootNode := &Node{Label: filepath.Base(rootDir), Children: []*Node{}}
-
 	err := filepath.Walk(rootDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -277,7 +281,6 @@ func buildFileTree(rootDir string) (*Node, error) {
 
 		// Split the relative path into parts
 		parts := strings.Split(relativePath, string(filepath.Separator))
-
 		addPath(rootNode, parts)
 		return nil
 	})
@@ -285,6 +288,5 @@ func buildFileTree(rootDir string) (*Node, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	return rootNode, nil
 }

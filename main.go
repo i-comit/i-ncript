@@ -2,8 +2,6 @@ package main
 
 import (
 	"embed"
-	"fmt"
-	"os"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -21,20 +19,8 @@ func (m *App) onSecondInstanceLaunch(data options.SecondInstanceData) {
 	// Your code to handle the second instance launch
 }
 
-func idK() {
-	filePath := "B:\\--------\\CODE\\go\\i-ncript\\build\\bin\\treeFile.json"
-	// Read the file
-	data, err := os.ReadFile(filePath)
-	if err != nil {
-		fmt.Println("Error reading file:", err)
-		return
-	}
-	fmt.Println(string(data))
-}
-
 func main() {
 
-	idK()
 	app := NewApp()
 	logger := &Logger{}
 
@@ -52,6 +38,7 @@ func main() {
 			Assets: assets,
 		},
 		OnStartup: app.startup,
+		// OnShutdown: app.shutdown,
 		Bind: []interface{}{
 			app, logger,
 		},

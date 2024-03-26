@@ -10,10 +10,6 @@ export function CloseApp() {
   return window['go']['main']['App']['CloseApp']();
 }
 
-export function CreateRootFolder() {
-  return window['go']['main']['App']['CreateRootFolder']();
-}
-
 export function EncryptString(arg1) {
   return window['go']['main']['App']['EncryptString'](arg1);
 }
@@ -32,6 +28,10 @@ export function GetRootFolder() {
 
 export function Greet(arg1) {
   return window['go']['main']['App']['Greet'](arg1);
+}
+
+export function InitializeRootFolder() {
+  return window['go']['main']['App']['InitializeRootFolder']();
 }
 
 export function Login(arg1, arg2) {

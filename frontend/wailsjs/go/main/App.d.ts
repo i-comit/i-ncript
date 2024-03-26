@@ -6,8 +6,6 @@ export function CheckDirName():Promise<boolean>;
 
 export function CloseApp():Promise<void>;
 
-export function CreateRootFolder():Promise<void>;
-
 export function EncryptString(arg1:string):Promise<string>;
 
 export function GetAppPath():Promise<string>;
@@ -17,6 +15,8 @@ export function GetDirectoryStructure():Promise<main.Node>;
 export function GetRootFolder():Promise<string>;
 
 export function Greet(arg1:string):Promise<string>;
+
+export function InitializeRootFolder():Promise<void>;
 
 export function Login(arg1:string,arg2:string):Promise<void>;
 
