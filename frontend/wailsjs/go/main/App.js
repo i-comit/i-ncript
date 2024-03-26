@@ -18,8 +18,8 @@ export function GetAppPath() {
   return window['go']['main']['App']['GetAppPath']();
 }
 
-export function GetDirectoryStructure() {
-  return window['go']['main']['App']['GetDirectoryStructure']();
+export function GetDirectoryStructure(arg1) {
+  return window['go']['main']['App']['GetDirectoryStructure'](arg1);
 }
 
 export function GetRootFolder() {

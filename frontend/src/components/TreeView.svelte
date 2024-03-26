@@ -7,6 +7,7 @@
 
 <script>
     //	import { slide } from 'svelte/transition'
+    import { logFrontendMessage } from "../utils.ts";
     export let tree;
     const { label, children } = tree;
 
@@ -22,7 +23,7 @@
 
     function logFilePath(node) {
         const fullPath = getFullPath(node);
-        console.log(fullPath);
+        logFrontendMessage(fullPath.toString());
     }
 
     function isFile(node) {
@@ -65,7 +66,7 @@
     ul {
         margin: 0;
         list-style: none;
-        padding-left: .5rem;
+        padding-left: 0.5rem;
         user-select: none;
         background-color: gray;
         text-align: justify;

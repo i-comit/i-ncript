@@ -1,13 +1,20 @@
 <!-- NBox.svelte -->
 <script>
-    import { usernameStore } from "../stores/usernameStore";
-    import { AppPage } from "../enums/AppPage";
+    import { onMount } from "svelte";
     import { Label, Input, GradientButton } from "flowbite-svelte";
-    import { switchFormButton } from "../utils";
     import { ThumbsUpSolid, CaretUpSolid } from "flowbite-svelte-icons";
 
+    import { AppPage } from "../enums/AppPage";
+
+    import { usernameStore } from "../stores/usernameStore";
+    import { fileTree } from "../stores/fileTree.ts";
+
+    import { switchFormButton, loadDirectoryTree } from "../utils";
+
+    import Frame from "./Frame.svelte";
+    import TreeView from "./TreeView.svelte";
+
     let loggedInUser;
-    // Subscribe to the user store
     usernameStore.subscribe(($user) => {
         loggedInUser = $user;
     });
@@ -16,12 +23,17 @@
         console.log(`Action for ${actionName}`);
         // Define additional logic for button actions here
     }
+
+    onMount(() => {
+        loadDirectoryTree(1);
+    });
     const buttonClasses = "max-w-48 min-h-2 max-h-5 pt-3 px-3";
 </script>
 
 <div class="flex h-screen rounded-2xl">
+    <Frame />
     <div class="side-menu max-w-45">
-        <div class="vault-info">
+        <div>
             <p>N-BOX</p>
             <p>3.6GB</p>
         </div>
@@ -68,8 +80,8 @@
             </div>
         </div>
     </div>
-    <div class="main-panel">
-        <h3>Welcome! Select an option.</h3>
+    <div class="main-panel bg-white mt-6">
+        <TreeView tree={$fileTree} />
     </div>
 </div>
 
@@ -82,27 +94,6 @@
         flex-grow: 1;
         padding: 1rem;
     }
-    .btn {
-        display: block;
-        width: 100%;
-        margin-bottom: 0.5rem;
-        padding: 0.5rem;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        cursor: pointer;
-    }
-    .btn:hover {
-        background-color: #0056b3;
-    }
-
-    .vault-info {
-        display: flex;
-        justify-content: space-between; /* Adjust as needed for your design */
-        align-items: center;
-        margin-bottom: 20px; /* Provides spacing between this section and the buttons */
-    }
-
     .buttons .row {
         display: flex;
         justify-content: space-between; /* Spread the buttons evenly */

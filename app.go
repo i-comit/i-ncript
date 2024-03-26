@@ -13,7 +13,6 @@ import (
 	"crypto/cipher"
 	"crypto/rand"
 	"encoding/hex"
-	"encoding/json"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
@@ -26,7 +25,7 @@ func NewApp() *App {
 	return &App{}
 }
 
-var dirsToCreate = []string{"VAULT", "N-BOX", "O-BOX"}
+var directories = []string{"VAULT", "N-BOX", "O-BOX"}
 var rootFolder = "i-ncript"
 
 func (a *App) startup(ctx context.Context) {
@@ -121,52 +120,56 @@ func (a *App) Login(username string, password string) {
 	if a.ctx != nil {
 		a.ResizeWindow(500, 200, true)
 	}
-	for i, dir := range dirsToCreate {
-		dirsToCreate[i] = cwd + string(os.PathSeparator) + dir
+	for i, dir := range directories {
+		directories[i] = cwd + string(os.PathSeparator) + dir
 	}
 
-	err = createDirectories(dirsToCreate...)
+	err = createDirectories(directories...)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = printFilesRecursively(dirsToCreate...)
+	err = printFilesRecursively(directories...)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	tree, err := buildFileTree(dirsToCreate[0])
-	if err != nil {
-		fmt.Println("Error building file tree:", err)
-		return
-	}
+	// tree, err := buildFileTree(directories[0])
+	// if err != nil {
+	// 	fmt.Println("Error building file tree:", err)
+	// 	return
+	// }
 
-	data, err := json.MarshalIndent(tree, "", "  ")
-	if err != nil {
-		fmt.Println("Error marshaling tree to JSON:", err)
-		return
-	}
+	// data, err := json.MarshalIndent(tree, "", "  ")
+	// if err != nil {
+	// 	fmt.Println("Error marshaling tree to JSON:", err)
+	// 	return
+	// }
 
-	jsonStr := string(data)
-	fmt.Println(jsonStr)
+	// jsonStr := string(data)
+	// fmt.Println(jsonStr)
 }
 
-func (a *App) GetDirectoryStructure() (*Node, error) {
-	tree, err := buildFileTree(dirsToCreate[0])
+func (a *App) GetDirectoryStructure(dirIndex int) (*Node, error) {
+	if dirIndex < 0 {
+		dirIndex = 0
+	} else if dirIndex >= len(directories) {
+		dirIndex = len(directories) - 1
+	}
+	tree, err := buildFileTree(directories[dirIndex])
 	if err != nil {
 		fmt.Println("Error building file tree:", err)
 	}
-
 	return tree, nil
 }
 
-func (a *App) ResizeWindow(width int, height int, recenter ...bool) {
-	center := false
-	if len(recenter) > 0 {
-		center = recenter[0]
-	}
+func (a *App) ResizeWindow(width int, height int, recenter bool) {
+	// center := false
+	// if len(recenter) > 0 {
+	// 	center = recenter[0]
+	// }
 	if a.ctx != nil {
 		runtime.WindowSetSize(a.ctx, width, height)
-		if center {
+		if recenter {
 			runtime.WindowCenter(a.ctx)
 		}
 	}
@@ -266,16 +269,13 @@ func addPath(node *Node, parts []string) {
 
 func buildFileTree(rootDir string) (*Node, error) {
 	rootDir = filepath.Clean(rootDir)
-
 	// Initialize rootNode. It does not represent the rootDir itself but its contents.
 	rootNode := &Node{Label: filepath.Base(rootDir), Children: []*Node{}}
 	err := filepath.Walk(rootDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
-
 		path = filepath.Clean(path)
-
 		if path == rootDir {
 			return nil
 		}
@@ -284,7 +284,6 @@ func buildFileTree(rootDir string) (*Node, error) {
 		if err != nil {
 			return err
 		}
-
 		// Split the relative path into parts
 		parts := strings.Split(relativePath, string(filepath.Separator))
 		addPath(rootNode, parts)

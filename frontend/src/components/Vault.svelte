@@ -1,45 +1,34 @@
 <!-- Vault.svelte -->
 <script lang="ts">
-    import { Button, GradientButton, Popover } from "flowbite-svelte";
-    import { AppPage } from "../enums/AppPage.ts";
     import { onMount } from "svelte";
-
-    import { usernameStore } from "../stores/usernameStore";
-    import { GetDirectoryStructure } from "../../wailsjs/go/main/App";
-    import { LogMessage } from "../../wailsjs/go/main/Logger";
-
-    import { switchFormButton, switchModals } from "../utils";
+    import { Button, GradientButton, Popover } from "flowbite-svelte";
     import {
         CaretUpSolid,
         AdjustmentsVerticalOutline,
     } from "flowbite-svelte-icons";
-    import LogPanel from "./LogPanel.svelte";
-    import Options from "./Settings.svelte";
-    import Frame from "./Frame.svelte";
+
+    import { AppPage } from "../enums/AppPage.ts";
     import { Modals } from "../enums/Modals.ts";
 
-    import TreeView from "./TreeView.svelte";
-    import { tree } from "../stores/fileTree.ts";
+    import { usernameStore } from "../stores/usernameStore";
+    import { fileTree } from "../stores/fileTree.ts";
     import { defaultBtn } from "../stores/defaultBtn.js";
-    interface Node {
-        label: string;
-        children?: Node[]; // Make children optional to match the Go structure
-    }
+    import { GetDirectoryStructure } from "../../wailsjs/go/main/App";
+    import { LogMessage } from "../../wailsjs/go/main/Logger";
 
-    function assignTree() {
-        GetDirectoryStructure()
-            .then((result: Node) => {
-                tree.set(result);
-                // LogMessage(JSON.stringify(tree, null, 2)); // Should show the updated structure
-            })
-            .catch((error) => {
-                console.error("Failed to get directory structure", error);
-                LogMessage(error);
-            });
-    }
+    import {
+        switchFormButton,
+        switchModals,
+        loadDirectoryTree,
+    } from "../utils.ts";
+
+    import Frame from "./Frame.svelte";
+    import LogPanel from "./LogPanel.svelte";
+    import Options from "./Settings.svelte";
+    import TreeView from "./TreeView.svelte";
 
     onMount(() => {
-        assignTree();
+        loadDirectoryTree(0);
     });
     let loggedInUser;
     usernameStore.subscribe(($user) => {
@@ -48,7 +37,6 @@
 
     function buttonAction(actionName: string) {
         console.log(`Action for ${actionName}`);
-        // Define additional logic for button actions here
     }
 </script>
 
@@ -119,7 +107,7 @@
         </div>
     </div>
     <div class="main-panel bg-white mt-6">
-        <TreeView tree={$tree} />
+        <TreeView tree={$fileTree} />
     </div>
 </div>
 

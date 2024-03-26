@@ -1,28 +1,35 @@
 <!-- OBox.svelte -->
 <script>
-    import { usernameStore } from "../stores/usernameStore";
-    import { AppPage } from "../enums/AppPage";
+    import { onMount } from "svelte";
     import { GradientButton } from "flowbite-svelte";
-    import { switchFormButton } from "../utils";
+
+    import { AppPage } from "../enums/AppPage";
+
+    import { usernameStore } from "../stores/usernameStore";
+    import { fileTree } from "../stores/fileTree.ts";
+
+    import { switchFormButton, loadDirectoryTree } from "../utils";
+
+    import Frame from "./Frame.svelte";
+    import TreeView from "./TreeView.svelte";
 
     let loggedInUser;
-    // Subscribe to the user store
     usernameStore.subscribe(($user) => {
         loggedInUser = $user;
     });
 
-    function logout() {
-        usernameStore.set(null); // Clear the user store on logout
-    }
+    onMount(() => {
+        loadDirectoryTree(2);
+    });
     function buttonAction(actionName) {
         console.log(`Action for ${actionName}`);
-        // Define additional logic for button actions here
     }
 </script>
 
 <div class="app-container">
     <div class="side-menu w-50 max-w-50">
-        <div class="vault-info">
+        <Frame />
+        <div>
             <p>O-BOX</p>
             <p>3.6GB</p>
         </div>
@@ -41,11 +48,7 @@
                     >Button2</GradientButton
                 >
             </div>
-            <div class="row center">
-                <button class="btn" on:click={() => buttonAction("HOT FILER")}
-                    >HOT FILER</button
-                >
-            </div>
+            <div class="row center"></div>
             <div class="row">
                 <GradientButton
                     color="cyanToBlue"
@@ -62,8 +65,8 @@
             </div>
         </div>
     </div>
-    <div class="main-panel">
-        <h3>Welcome! Select an option.</h3>
+    <div class="main-panel bg-white mt-6">
+        <TreeView tree={$fileTree} />
     </div>
 </div>
 
@@ -92,13 +95,6 @@
     }
     .btn:hover {
         background-color: #0056b3;
-    }
-
-    .vault-info {
-        display: flex;
-        justify-content: space-between; /* Adjust as needed for your design */
-        align-items: center;
-        margin-bottom: 20px; /* Provides spacing between this section and the buttons */
     }
 
     .buttons .row {

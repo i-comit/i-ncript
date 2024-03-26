@@ -5,6 +5,4 @@ interface Node {
     children?: Node[];
 }
 
-export const tree = writable<Node>({ label: "Loading...", children: [] });
-// When updating
-// tree.set(result); 
+export const fileTree = writable<Node>({ label: "empty..", children: [] });
