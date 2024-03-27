@@ -6,10 +6,6 @@ export function BuildDirectoryFileTree(arg1) {
   return window['go']['main']['App']['BuildDirectoryFileTree'](arg1);
 }
 
-export function CheckDirName() {
-  return window['go']['main']['App']['CheckDirName']();
-}
-
 export function CloseApp() {
   return window['go']['main']['App']['CloseApp']();
 }

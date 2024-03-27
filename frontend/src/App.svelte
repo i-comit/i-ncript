@@ -8,7 +8,7 @@
   import { AppPage } from "./enums/AppPage.ts";
   import { currentPage } from "./stores/currentPage.ts";
   import { onMount } from "svelte";
-  import { CheckDirName } from "../wailsjs/go/main/App";
+  import { GetDirName } from "../wailsjs/go/main/Getters";
   import { LogMessage } from "../wailsjs/go/main/Logger";
 
   let loggedIn = false;
@@ -19,19 +19,20 @@
 
   function handleLoginSuccess() {
     loggedIn = true;
+    currentPage.set(AppPage.Vault);
   }
-  let rightDir = false;
+  let isRightDir = false;
 
   onMount(async () => {
-    rightDir = await CheckDirName();
-    LogMessage(rightDir.toString());
+    isRightDir = await GetDirName();
+    LogMessage(isRightDir.toString());
   });
 </script>
 
 <main class="rounded-2xl">
-  {#if !rightDir}
+  {#if !isRightDir}
     <WrongDir />
-  {:else if !loggedIn}
+  {:else if _page === AppPage.Login}
     <Login on:loginSuccess={handleLoginSuccess} />
   {:else if _page === AppPage.Vault}
     <Vault />

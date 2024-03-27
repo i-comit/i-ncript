@@ -4,8 +4,6 @@ import {main} from '../models';
 
 export function BuildDirectoryFileTree(arg1:number):Promise<main.FileNode>;
 
-export function CheckDirName():Promise<boolean>;
-
 export function CloseApp():Promise<void>;
 
 export function DecryptFilesInDir():Promise<void>;
@@ -14,7 +12,7 @@ export function EncryptFilesInDir(arg1:number):Promise<boolean>;
 
 export function InitializeRootFolder():Promise<void>;
 
-export function Login(arg1:string,arg2:string):Promise<void>;
+export function Login(arg1:string,arg2:string):Promise<boolean>;
 
 export function MinimizeApp():Promise<void>;
 

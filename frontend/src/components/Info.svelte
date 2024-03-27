@@ -23,7 +23,7 @@
     const buttonClasses = "max-w-48 min-h-3 max-h-5 pt-3 px-3";
 </script>
 
-<div class="info-panel bg-gray-200 rounded-lg mb-1">
+<div id="modal-panel" class="bg-gray-200 rounded-lg mt-1 mb-2">
     <div id="cwd" class=" px-0 m-0 bg-gray-100">
         {cwd}
     </div>
@@ -53,7 +53,7 @@
     </div>
     <div class="h-1" />
 
-    <div id="credits" >
+    <div id="credits">
         <ul class="flex justify-start">
             <li>GUI: Wails</li>
             <li>Frontend: Svelte</li>
@@ -62,11 +62,3 @@
     </div>
     <div class="h-1" />
 </div>
-
-<style>
-    .row {
-        display: flex;
-        justify-content: space-between; /* Spread the buttons evenly */
-        margin-bottom: 10px; /* Spacing between rows of buttons */
-    }
-</style>

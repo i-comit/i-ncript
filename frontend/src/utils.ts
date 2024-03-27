@@ -40,15 +40,9 @@ export function switchModals(modal: Modals) {
     const newModal = get(currentModal);
     switch (newModal) {
         case Modals.Info:
-            try {
-                ResizeWindow(220, 275, false)
-            } catch (error) {
-                console.error("Error calling ResizeWindow", error);
-            }
-            break;
         case Modals.Settings:
             try {
-                ResizeWindow(220, 274, false)
+                ResizeWindow(220, 210, false)
             } catch (error) {
                 console.error("Error calling ResizeWindow", error);
             }

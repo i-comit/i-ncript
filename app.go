@@ -37,16 +37,6 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 }
 
-func (a *App) CheckDirName() (bool, error) {
-	path, err := os.Getwd()
-	if err != nil {
-		return false, err
-	}
-	dirName := filepath.Base(path)
-	match := (dirName == rootFolder)
-	return match, nil
-}
-
 func (a *App) InitializeRootFolder() error {
 	executablePath, err := os.Executable()
 	if err != nil {
@@ -77,10 +67,10 @@ func (a *App) InitializeRootFolder() error {
 
 // func (b *App) shutdown(ctx context.Context) {
 // }
-func (a *App) Login(username string, password string) {
+func (a *App) Login(username string, password string) (bool, error) {
 	if username == "" || password == "" {
 		log.Println("Username or password is empty")
-		return
+		return false, nil
 	}
 	cwd, err := os.Getwd()
 	if err != nil {
@@ -113,7 +103,7 @@ func (a *App) Login(username string, password string) {
 
 	log.Printf("File created: %s", filePath)
 	if a.ctx != nil {
-		a.ResizeWindow(500, 220, true)
+		a.ResizeWindow(500, 210, false)
 	}
 	for i, dir := range directories {
 		directories[i] = cwd + string(os.PathSeparator) + dir
@@ -127,17 +117,18 @@ func (a *App) Login(username string, password string) {
 	tree, err := a.BuildDirectoryFileTree(0)
 	if err != nil {
 		fmt.Println("Error building file tree:", err)
-		return
+		return false, err
 	}
 
 	data, err := json.MarshalIndent(tree, "", "  ")
 	if err != nil {
 		fmt.Println("Error marshaling tree to JSON:", err)
-		return
+		return false, err
 	}
 
 	jsonStr := string(data)
 	fmt.Println(jsonStr)
+	return true, nil
 }
 
 func (a *App) ResizeWindow(width int, height int, recenter bool) {
@@ -233,7 +224,15 @@ func (b *Getters) GetAppPath() (string, error) {
 	}
 	return cwd + string(filepath.Separator), nil
 }
-
+func (b *Getters) GetDirName() (bool, error) {
+	path, err := os.Getwd()
+	if err != nil {
+		return false, err
+	}
+	dirName := filepath.Base(path)
+	match := (dirName == rootFolder)
+	return match, nil
+}
 func (b *Getters) GetDirectoryPath(dirIndex int) (string, error) {
 	if dirIndex < 0 {
 		dirIndex = 0

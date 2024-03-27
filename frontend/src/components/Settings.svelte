@@ -24,7 +24,7 @@
     let stepValue = 2.5;
 </script>
 
-<div class="settings-panel bg-gray-200 rounded-lg mb-3">
+<div id="modal-panel" class="bg-gray-200 rounded-lg mt-1 mb-2">
     <div class="row bg-gray-500 rounded-lg">
         <Button
             pill={true}
@@ -65,6 +65,26 @@
     </div>
     <div class="h-1" />
     <div id="darkLightMode"></div>
+    <div id="accentColor flex" class="p-0 m-0">
+        <p class="p-0 m-0">accent color</p>
+        <ButtonGroup class="space-x-px">
+            <Button pill color="blue"></Button>
+            <Button pill color="green"></Button>
+            <Button pill color="red"></Button>
+            <!-- <Button pill color="primary"></Button> -->
+            <Button pill color="yellow"></Button>
+        </ButtonGroup>
+    </div>
+    <div id="accentColor flex" class="p-0 m-0">
+        <p class="p-0 m-0">accent color</p>
+        <ButtonGroup class="space-x-px">
+            <Button pill color="blue"></Button>
+            <Button pill color="green"></Button>
+            <Button pill color="red"></Button>
+            <!-- <Button pill color="primary"></Button> -->
+            <Button pill color="yellow"></Button>
+        </ButtonGroup>
+    </div>
     <div id="accentColor flex" class="p-0 m-0">
         <p class="p-0 m-0">accent color</p>
         <ButtonGroup class="space-x-px">

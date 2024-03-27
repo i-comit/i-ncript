@@ -8,6 +8,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"io"
+	"log"
 	"strings"
 	"time"
 
@@ -16,6 +17,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/fsnotify/fsnotify"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
@@ -45,6 +47,53 @@ func (b *Encryptr) GetDecryptedFiles(dirIndex int) ([]string, error) {
 	}
 	// fmt.Printf("\033[32mUnencrypted files in %s: %v\033[0m\n", directories[dirIndex], unencryptedFiles)
 	return unencryptedFiles, nil
+}
+
+func directoryWatcher() {
+	watcher, err := fsnotify.NewWatcher()
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer watcher.Close()
+
+	done := make(chan bool)
+	go func() {
+		for {
+			select {
+			case event, ok := <-watcher.Events:
+				if !ok {
+					return
+				}
+				fmt.Printf("Event: %s\n", event)
+				if event.Op&fsnotify.Write == fsnotify.Write {
+					fmt.Printf("Modified file: %s\n", event.Name)
+				} else if event.Op&fsnotify.Create == fsnotify.Create {
+					fmt.Printf("Created file: %s\n", event.Name)
+				} else if event.Op&fsnotify.Remove == fsnotify.Remove {
+					fmt.Printf("Deleted file: %s\n", event.Name)
+				}
+				// Add more conditions here for other types of events.
+
+				// Place your event handling logic here.
+				// To ensure an event only executes after all file modifications are complete,
+				// you might need to implement a delay or a way to 'debounce' the event
+				// processing, so it waits for a pause in changes.
+
+			case err, ok := <-watcher.Errors:
+				if !ok {
+					return
+				}
+				fmt.Println(err)
+			}
+		}
+	}()
+
+	// Replace the path below with the directory you want to watch
+	err = watcher.Add("/path/to/directory")
+	if err != nil {
+		log.Fatal(err)
+	}
+	<-done // Keep the program alive
 }
 
 func (b *Encryptr) GetEncryptedFiles(dirIndex int) ([]string, error) {

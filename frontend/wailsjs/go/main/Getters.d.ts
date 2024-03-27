@@ -4,6 +4,8 @@ import {main} from '../models';
 
 export function GetAppPath():Promise<string>;
 
+export function GetDirName():Promise<boolean>;
+
 export function GetDirectoryFileCt(arg1:number):Promise<number>;
 
 export function GetDirectoryPath(arg1:number):Promise<string>;

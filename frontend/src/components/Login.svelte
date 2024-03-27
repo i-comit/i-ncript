@@ -29,12 +29,15 @@
     async function submit(event) {
         event.preventDefault();
         try {
-            const result = await Login(username, password);
-            const encryptedUsername = await EncryptString(username);
-            usernameStore.set({ encryptedUsername });
-            const encryptedPassowrd = await EncryptString(password);
-            passwordStore.set({ encryptedPassowrd });
-            dispatch("loginSuccess"); // Emit an event for successful login
+            await Login(username, password).then((loggedIn) => {
+                if (loggedIn) {
+                    const encryptedUsername = EncryptString(username);
+                    usernameStore.set({ encryptedUsername });
+                    const encryptedPassowrd = EncryptString(password);
+                    passwordStore.set({ encryptedPassowrd });
+                    dispatch("loginSuccess");
+                }
+            });
         } catch (error) {
             console.error("Error calling Login method:", error);
         }
@@ -135,8 +138,7 @@
 </form>
 
 <style>
-    .login-form,
-    .modified-login-form {
+    .login-form {
         margin: auto;
         padding: 0.5rem;
         background-color: gray;
