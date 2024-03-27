@@ -136,13 +136,9 @@ func (a *App) EncryptFilesInDir(dirIndex int) (bool, error) {
 		return false, err
 	}
 	var fileIter = 0
-	if err != nil {
-		return false, err
-	}
+	//
 	for i, filePath := range filePaths {
-		if err != nil {
-			return false, err
-		}
+
 		if strings.HasSuffix(filePath, ".enc") {
 			continue
 		}

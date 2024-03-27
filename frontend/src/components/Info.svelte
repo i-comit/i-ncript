@@ -27,7 +27,7 @@
     <div id="cwd" class=" px-0 m-0 bg-gray-100">
         {cwd}
     </div>
-    <div id="viewLog" class=" px-4">
+    <div id="viewLog" class="px-4">
         <GradientButton
             color="cyanToBlue"
             class={buttonClasses}
@@ -36,7 +36,6 @@
     </div>
     <div id="driveFormat" class=" px-0 m-0 bg-gray-100">format: NTFS</div>
     <div class="h-1" />
-    <div id="darkLightMode"></div>
     <div id="reportBug" class="flex justify-between px-4">
         <p class="p-0 m-0">report a bug</p>
         <Button pill={true} outline={true} class="!p-1" color="dark"
@@ -44,7 +43,6 @@
         >
     </div>
     <div class="h-1" />
-
     <div id="checkUpdate" class="flex justify-between px-4">
         <p class="p-0 m-0">check for updates</p>
         <Button pill={true} outline={true} class="!p-1" color="dark"
@@ -62,3 +60,11 @@
     </div>
     <div class="h-1" />
 </div>
+
+<style>
+    .row {
+        display: flex;
+        justify-content: space-between; /* Spread the buttons evenly */
+        margin-bottom: 10px; /* Spacing between rows of buttons */
+    }
+</style>

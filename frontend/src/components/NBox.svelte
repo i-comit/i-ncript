@@ -8,6 +8,7 @@
 
     import { usernameStore } from "../stores/usernameStore";
     import { fileTree } from "../stores/fileTree.ts";
+    import { defaultBtn } from "../stores/defaultBtn";
 
     import { switchFormButton, loadDirectoryTree } from "../utils";
 
@@ -27,13 +28,12 @@
     onMount(() => {
         loadDirectoryTree(1);
     });
-    const buttonClasses = "max-w-48 min-h-2 max-h-5 pt-3 px-3";
 </script>
 
-<div class="flex h-screen rounded-2xl">
+<div class="flex h-screen rounded-lg">
     <Frame />
-    <div class="side-menu max-w-45">
-        <div>
+    <div id="left-panel" class="max-w-45">
+        <div id="page-info" class="static bg-gray-100">
             <p>N-BOX</p>
             <p>3.6GB</p>
         </div>
@@ -67,33 +67,32 @@
             <div class="row space-x-5">
                 <GradientButton
                     color="cyanToBlue"
-                    class={buttonClasses}
+                    class={defaultBtn}
                     on:click={() => switchFormButton(AppPage.Vault)}
                     >VAULT</GradientButton
                 >
                 <GradientButton
                     color="cyanToBlue"
-                    class={buttonClasses}
+                    class={defaultBtn}
                     on:click={() => switchFormButton(AppPage.OBox)}
                     >O-BOX</GradientButton
                 >
             </div>
         </div>
     </div>
-    <div class="main-panel bg-white mt-6">
+    <div id="right-panel" class="bg-white mt-6">
         <TreeView tree={$fileTree} />
     </div>
 </div>
 
 <style>
-    .side-menu {
-        background-color: #f0f0f0;
-        padding: 1rem;
+    p {
+        color: black;
     }
-    .main-panel {
-        flex-grow: 1;
-        padding: 1rem;
+    #left-panel {
+        background-color: #fcfcfc;
     }
+
     .buttons .row {
         display: flex;
         justify-content: space-between; /* Spread the buttons evenly */

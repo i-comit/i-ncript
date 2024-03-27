@@ -15,6 +15,7 @@
 <style>
     button {
         margin: 0px;
+        height: 1.2rem;
     }
     .custom-btn {
         color: blue;

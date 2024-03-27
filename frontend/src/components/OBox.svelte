@@ -1,12 +1,13 @@
 <!-- OBox.svelte -->
 <script>
     import { onMount } from "svelte";
-    import { GradientButton } from "flowbite-svelte";
+    import { GradientButton, Label, Input } from "flowbite-svelte";
 
     import { AppPage } from "../enums/AppPage";
 
     import { usernameStore } from "../stores/usernameStore";
     import { fileTree } from "../stores/fileTree.ts";
+    import { defaultBtn } from "../stores/defaultBtn";
 
     import { switchFormButton, loadDirectoryTree } from "../utils";
 
@@ -26,75 +27,67 @@
     }
 </script>
 
-<div class="app-container">
-    <div class="side-menu w-50 max-w-50">
-        <Frame />
-        <div>
+<div class="flex h-screen rounded-lg">
+    <Frame />
+    <div id="left-panel" class="max-w-45">
+        <div id="page-info" class="static bg-gray-100">
             <p>O-BOX</p>
-            <p>3.6GB</p>
+            <p>3.5GB</p>
         </div>
         <div class="buttons">
             <div class="row">
+                <Label for="small-input" class="block mb-2">Default</Label>
+                <Input
+                    class="max-h-1 max-w-32"
+                    id="small-input"
+                    placeholder="Default input"
+                />
+            </div>
+            <div class="row">
+                <Label for="small-input" class="block mb-2">Default</Label>
+                <Input
+                    class="max-h-1 max-w-32"
+                    id="small-input"
+                    placeholder="Default input"
+                />
+            </div>
+            <div class="row center">
                 <GradientButton
                     color="cyanToBlue"
-                    pill
-                    on:click={() => buttonAction("ENCRYPT")}
-                    >Button 1</GradientButton
-                >
-                <GradientButton
-                    color="cyanToBlue"
-                    pill
-                    on:click={() => buttonAction("DECRYPT")}
-                    >Button2</GradientButton
+                    class="max-h-1"
+                    on:click={() => buttonAction("HOT FILER")}
+                    >ENTER</GradientButton
                 >
             </div>
-            <div class="row center"></div>
-            <div class="row">
+            <div class="h-2"></div>
+
+            <div class="row space-x-5">
                 <GradientButton
                     color="cyanToBlue"
-                    pill
+                    class={defaultBtn}
                     on:click={() => switchFormButton(AppPage.NBox)}
                     >N-BOX</GradientButton
                 >
                 <GradientButton
                     color="cyanToBlue"
-                    pill
+                    class={defaultBtn}
                     on:click={() => switchFormButton(AppPage.Vault)}
                     >VAULT</GradientButton
                 >
             </div>
         </div>
     </div>
-    <div class="main-panel bg-white mt-6">
+    <div id="right-panel" class="bg-white mt-6">
         <TreeView tree={$fileTree} />
     </div>
 </div>
 
 <style>
-    .app-container {
-        display: flex;
-        height: 100vh;
+    p {
+        color: black;
     }
-    .side-menu {
-        background-color: #f0f0f0;
-        padding: 1rem;
-    }
-    .main-panel {
-        flex-grow: 1;
-        padding: 1rem;
-    }
-    .btn {
-        display: block;
-        width: 100%;
-        margin-bottom: 0.5rem;
-        padding: 0.5rem;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        cursor: pointer;
-    }
-    .btn:hover {
-        background-color: #0056b3;
+    #left-panel {
+        background-color: #f5f5f5;
     }
 
     .buttons .row {

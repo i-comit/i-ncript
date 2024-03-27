@@ -30,6 +30,7 @@ export function switchFormButton(page: AppPage) {
 }
 
 export function switchModals(modal: Modals) {
+    const width = 220
     const _modal = get(currentModal);
     if (_modal === modal) {
         currentModal.set(Modals.None);
@@ -37,12 +38,18 @@ export function switchModals(modal: Modals) {
         currentModal.set(modal);
     }
 
-    const newModal = get(currentModal);
-    switch (newModal) {
+    const _currentModal = get(currentModal);
+    const _currentPage = get(currentPage);
+
+    switch (_currentModal) {
         case Modals.Info:
         case Modals.Settings:
             try {
-                ResizeWindow(220, 210, false)
+                if (_currentPage === AppPage.Login)
+                    ResizeWindow(width, 210, false)
+                else
+                    ResizeWindow(width * 2, 210, false)
+
             } catch (error) {
                 console.error("Error calling ResizeWindow", error);
             }
@@ -50,7 +57,10 @@ export function switchModals(modal: Modals) {
         case Modals.None:
         default:
             try {
-                ResizeWindow(220, 155, false)
+                if (_currentPage === AppPage.Login)
+                    ResizeWindow(width, 155, false)
+                else
+                    ResizeWindow(width * 2, 210, false)
             } catch (error) {
                 console.error("Error calling ResizeWindow", error);
             }
@@ -67,7 +77,6 @@ export function loadDirectoryTree(index: number) {
     BuildDirectoryFileTree(index)
         .then((result: Node) => {
             fileTree.set(result);
-            LogMessage(JSON.stringify(fileTree, null, 2)); // Should show the updated structure
         })
         .catch((error) => {
             console.error("Failed to get directory structure", error);

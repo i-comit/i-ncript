@@ -103,7 +103,7 @@ func (a *App) Login(username string, password string) (bool, error) {
 
 	log.Printf("File created: %s", filePath)
 	if a.ctx != nil {
-		a.ResizeWindow(500, 210, false)
+		a.ResizeWindow(_width*2, 210, false)
 	}
 	for i, dir := range directories {
 		directories[i] = cwd + string(os.PathSeparator) + dir

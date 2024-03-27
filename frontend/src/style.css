@@ -8,8 +8,8 @@ body {
     margin: 0;
     color: white;
     font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+        "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+        sans-serif;
 }
 
 @font-face {
@@ -17,7 +17,7 @@ body {
     font-style: normal;
     font-weight: 400;
     src: local(""),
-    url("assets/fonts/nunito-v16-latin-regular.woff2") format("woff2");
+        url("assets/fonts/nunito-v16-latin-regular.woff2") format("woff2");
 }
 
 #app {
@@ -27,15 +27,59 @@ body {
 
 #modal-panel {
     max-height: 66vh;
-    max-width: 100%; /* Optional: For horizontal scrolling, you might set a max-width */
+    max-width: 100%;
+    /* Optional: For horizontal scrolling, you might set a max-width */
 
     /* Enable scrolling within the div */
-    overflow-y: auto; /* Enables vertical scrolling */
-    overflow-x: auto; /* Enables horizontal scrolling */
+    overflow-y: auto;
+    /* Enables vertical scrolling */
+    overflow-x: auto;
+    /* Enables horizontal scrolling */
 
     /* Other styles for layout and appearance */
     position: relative;
     box-sizing: border-box;
-    scrollbar-width: none; /* For Firefox */
+    scrollbar-width: none;
+    /* For Firefox */
     -ms-overflow-style: none;
+}
+
+#page-info {
+    display: flex;
+    justify-content: space-between;
+    /* Adjust as needed for your design */
+    align-items: center;
+    margin-bottom: 10px;
+    /* Provides spacing between this section and the buttons */
+}
+
+#left-panel {
+    padding: 0.6rem;
+    padding-top: 0rem;
+    width: 45%;
+}
+
+#right-panel {
+    /* max-height: 80vh; */
+    /* 80% of the viewport height */
+    width: 55%;
+    /* Optional: For horizontal scrolling, you might set a max-width */
+    /* Enable scrolling within the div */
+    overflow-y: auto;
+    /* Enables vertical scrolling */
+    overflow-x: auto;
+    /* Enables horizontal scrolling */
+
+    /* Other styles for layout and appearance */
+    position: relative;
+    /* or 'fixed' depending on your layout needs */
+    box-sizing: border-box;
+    scrollbar-width: none;
+    /* For Firefox */
+    -ms-overflow-style: none;
+}
+
+#right-panel::-webkit-scrollbar {
+    width: 0px;
+    /* For vertical scrollbar */
 }
