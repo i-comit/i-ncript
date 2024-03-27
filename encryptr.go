@@ -220,7 +220,7 @@ func (a *App) reverseProgress() {
 	<-done // Wait for the goroutine to signal it's done
 
 	if a.ctx != nil {
-		time.Sleep(900 * time.Millisecond)
+		time.Sleep(time.Second)
 		a.ResizeWindow(_width*2, _height+25, false)
 		runtime.EventsEmit(a.ctx, fileProcessed, 0)
 		runtime.EventsEmit(a.ctx, fileCt, 0)

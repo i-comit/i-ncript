@@ -72,13 +72,12 @@ export function switchModals(modal: Modals) {
 }
 
 export function loadDirectoryTree(index: number) {
-    interface Node {
+    interface FileNode {
         relPath: string;
-        label: string;
-        children?: Node[]; // Make children optional to match the Go structure
+        children?: FileNode[]; // Make children optional to match the Go structure
     }
     BuildDirectoryFileTree(index)
-        .then((result: Node) => {
+        .then((result: FileNode) => {
             fileTree.set(result);
         })
         .catch((error) => {

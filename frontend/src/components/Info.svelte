@@ -32,7 +32,7 @@
 <div
     id="modal-panel"
     class="bg-gray-200 rounded-lg mt-1 mb-2 ml-1 mr-1.5"
-    style="max-height: {_currentPage === AppPage.Login ? '66vh' : '84vh'};"
+    style="max-height: {_currentPage === AppPage.Login ? '66vh' : '85vh'};"
 >
     <div id="cwd" class=" px-0 m-0 bg-gray-100">
         {cwd}

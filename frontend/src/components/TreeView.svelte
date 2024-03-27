@@ -1,8 +1,10 @@
-<script context="module">
+<script context="module" lang="ts">
     // retain module scoped expansion state for each tree node
-    const _expansionState = {
-        /* treeNodeId: expanded <boolean> */
-    };
+    import { writable } from "svelte/store";
+    // Store for expansion states, keyed by node label or a unique ID
+    export const vaultExpansionState = writable<{ [key: string]: boolean }>({});
+    export const nBoxExpansionState = writable<{ [key: string]: boolean }>({});
+    export const oBoxExpansionState = writable<{ [key: string]: boolean }>({});
 </script>
 
 <script lang="ts">
@@ -15,17 +17,60 @@
         getFilePath,
         getFileProperties,
     } from "../utils.ts";
+
     interface FileNode {
         relPath: string;
-        label: string;
         children?: FileNode[]; // Make children optional to match the Go structure
     }
     export let tree: FileNode;
-
+    import { currentPage } from "../stores/currentPage.ts";
+    import { AppPage } from "../enums/AppPage.ts";
+    let _appPage: AppPage;
+    _appPage = AppPage.Vault;
+    currentPage.subscribe((value) => {
+        _appPage = value;
+    });
     let expanded = false;
+
+    function getCurrentPageStore() {
+        switch (
+            _appPage // Assuming _appPage holds the current page enum value
+        ) {
+            case AppPage.Vault:
+                return vaultExpansionState;
+            case AppPage.NBox:
+                return nBoxExpansionState;
+            case AppPage.OBox:
+                return oBoxExpansionState;
+            default:
+                throw new Error("Unrecognized page");
+        }
+    }
+
     const toggleExpansion = () => {
         expanded = !expanded;
+        const currentPageStore = getCurrentPageStore();
+        currentPageStore.update((currentState) => {
+            currentState[basePath(tree.relPath)] = expanded;
+            return currentState;
+        });
     };
+    onMount(() => {
+        const currentPageStore = getCurrentPageStore();
+        const unsubscribe = currentPageStore.subscribe((state) => {
+            const basePathKey = basePath(tree.relPath);
+            if (state[basePathKey] !== undefined) {
+                expanded = state[basePathKey];
+            }
+        });
+
+        return unsubscribe; // Unsubscribe when the component unmounts
+    });
+
+    function basePath(path: string): string {
+        const separator = path.includes("\\") ? "\\" : "/";
+        return path.split(separator).pop() || path;
+    }
 
     function logFilePath(treeLabel: string) {
         getFilePath(treeLabel).then((filePath) => {
@@ -34,7 +79,7 @@
     }
 
     function isFile(node: FileNode) {
-        getFilePath(node.label).then((filePath) => {
+        getFilePath(basePath(tree.relPath)).then((filePath) => {
             getFileProperties(filePath + node.relPath).then((fileProps) => {
                 logFrontendMessage(fileProps.fileSize.toString());
                 return fileProps.fileSize > 0;
@@ -53,7 +98,7 @@
                 {:else}
                     <FolderOpenSolid class="w-3 mr-1"></FolderOpenSolid>
                 {/if}
-                {tree.label}
+                {basePath(tree.relPath)}
             </button>
             {#if expanded}
                 <ul>
@@ -67,12 +112,12 @@
                 class="bg-gray-800"
                 on:click={() => logFilePath(tree.relPath)}
             >
-                {tree.label}
+                {basePath(tree.relPath)}
             </button>
         {:else}
             <span class="flex">
                 <FolderSolid class="w-3 mr-1"></FolderSolid>
-                {tree.label}
+                {basePath(tree.relPath)}
             </span>
         {/if}
     </li>

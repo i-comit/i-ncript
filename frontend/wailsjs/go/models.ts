@@ -2,7 +2,6 @@ export namespace main {
 	
 	export class FileNode {
 	    relPath: string;
-	    label: string;
 	    children?: FileNode[];
 	
 	    static createFrom(source: any = {}) {
@@ -12,7 +11,6 @@ export namespace main {
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.relPath = source["relPath"];
-	        this.label = source["label"];
 	        this.children = this.convertValues(source["children"], FileNode);
 	    }
 	

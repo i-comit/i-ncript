@@ -150,7 +150,6 @@ func (a *App) CloseApp() {
 
 type FileNode struct {
 	RelPath  string      `json:"relPath"`
-	Label    string      `json:"label"`
 	Children []*FileNode `json:"children,omitempty"`
 }
 
@@ -163,7 +162,7 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 	var rootDir = directories[dirIndex]
 	rootDir = filepath.Clean(rootDir)
 	// Initialize rootNode. It does not represent the rootDir itself but its contents.
-	rootNode := &FileNode{RelPath: rootDir, Label: filepath.Base(rootDir), Children: []*FileNode{}}
+	rootNode := &FileNode{RelPath: rootDir, Children: []*FileNode{}}
 	err := filepath.Walk(rootDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -201,7 +200,7 @@ func addPath(node *FileNode, parts []string, currentPath string) {
 	}
 
 	for _, child := range node.Children {
-		if child.Label == parts[0] {
+		if filepath.Base(child.RelPath) == parts[0] {
 			// If the child matches the next part, recursively call addPath on the child.
 			addPath(child, parts[1:], currentPath)
 			return
@@ -209,7 +208,6 @@ func addPath(node *FileNode, parts []string, currentPath string) {
 	}
 	newNode := &FileNode{
 		RelPath:  currentPath,
-		Label:    parts[0],
 		Children: []*FileNode{},
 	}
 	node.Children = append(node.Children, newNode)
