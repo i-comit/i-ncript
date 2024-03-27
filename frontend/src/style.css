@@ -27,8 +27,6 @@ body {
 
 #modal-panel {
     max-width: 100%;
-    /* Optional: For horizontal scrolling, you might set a max-width */
-
     /* Enable scrolling within the div */
     overflow-y: auto;
     /* Enables vertical scrolling */

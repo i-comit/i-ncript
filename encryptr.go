@@ -28,6 +28,7 @@ type Encryptr struct {
 // EVENT consts
 var fileProcessed = "fileProcessed"
 var fileCt = "fileCount"
+var fileName = "fileName"
 
 func (b *Encryptr) EncryptString(stringToEncrypt string) string {
 	encryptedString, _ := encryptString([]byte(stringToEncrypt))
@@ -151,6 +152,8 @@ func (a *App) EncryptFilesInDir(dirIndex int) (bool, error) {
 		fileIter++
 		if a.ctx != nil {
 			runtime.EventsEmit(a.ctx, fileProcessed, i+1)
+			runtime.EventsEmit(a.ctx, fileName, filePath)
+
 			// fmt.Println("\033[31mfileCount ", dirFileCt, "\033[0m")
 		}
 		// fmt.Println("Encrypted file created:", encryptedFile.Name())
@@ -174,9 +177,7 @@ func (a *App) DecryptFilesInDir() error {
 	}
 	var fileIter = 0
 	for i, filePath := range filePaths {
-		if err != nil {
-			return err
-		}
+
 		if !strings.HasSuffix(filePath, ".enc") {
 			continue
 		}
@@ -191,6 +192,7 @@ func (a *App) DecryptFilesInDir() error {
 
 		if a.ctx != nil {
 			runtime.EventsEmit(a.ctx, fileProcessed, i+1)
+			runtime.EventsEmit(a.ctx, fileName, filePath)
 			fmt.Println("\033[31mfileCount ", i+1, "\033[0m")
 		}
 	}
@@ -224,7 +226,7 @@ func (a *App) reverseProgress() {
 		a.ResizeWindow(_width*2, _height+25, false)
 		runtime.EventsEmit(a.ctx, fileProcessed, 0)
 		runtime.EventsEmit(a.ctx, fileCt, 0)
-		runtime.EventsOff(a.ctx, fileProcessed, fileCt)
+		runtime.EventsOff(a.ctx, fileProcessed, fileCt, fileName)
 	}
 }
 

@@ -17,9 +17,10 @@
         SearchOutline,
     } from "flowbite-svelte-icons";
     import {
-        logFrontendMessage,
+        printFrontendMsg,
         getFilePath,
         getFileProperties,
+        basePath
     } from "../utils.ts";
 
     interface FileNode {
@@ -71,21 +72,16 @@
         return unsubscribe; // Unsubscribe when the component unmounts
     });
 
-    function basePath(path: string): string {
-        const separator = path.includes("\\") ? "\\" : "/";
-        return path.split(separator).pop() || path;
-    }
-
     function logFilePath(treeLabel: string) {
         getFilePath(treeLabel).then((filePath) => {
-            logFrontendMessage(filePath.toString() + treeLabel);
+            printFrontendMsg(filePath.toString() + treeLabel);
         });
     }
 
     function isFile(node: FileNode) {
         getFilePath(basePath(tree.relPath)).then((filePath) => {
             getFileProperties(filePath + node.relPath).then((fileProps) => {
-                logFrontendMessage(fileProps.fileSize.toString());
+                printFrontendMsg(fileProps.fileSize.toString());
                 return fileProps.fileSize > 0;
             });
         });

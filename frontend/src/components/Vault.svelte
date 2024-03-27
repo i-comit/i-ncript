@@ -23,6 +23,8 @@
     import { encryptProgress } from "../stores/encryptProgress";
     import { currentModal } from "../stores/currentModal";
 
+    import { addLogEntry } from "../tools/logger.ts";
+
     import {
         ResizeWindow,
         EncryptFilesInDir,
@@ -41,6 +43,7 @@
         loadDirectoryTree,
         height,
         width,
+        basePath,
     } from "../utils.ts";
 
     import Frame from "./Frame.svelte";
@@ -58,13 +61,13 @@
         EventsOn("fileProcessed", (currentCount) => {
             encryptProgress.set(currentCount);
             _encryptPercent = (_encryptProgress / _fileCt) * 100;
-            // LogMessage(
-            //     `Processed ${_encryptProgress} of ${_fileCt} files. ${_encryptPercent}`,
-            // );
         });
         EventsOn("fileCount", (fileCount) => {
             _fileCt = fileCount;
             // LogMessage(`New fileCount ${_fileCt}`);
+        });
+        EventsOn("fileName", (fileName) => {
+            addLogEntry(basePath(fileName));
         });
     });
     let _username: string;
@@ -187,7 +190,7 @@
             </div>
         </div>
     </div>
-    <div id="right-panel" class="bg-white mt-6 px-0">
+    <div id="right-panel" class="bg-gray-500 mt-6 px-0">
         {#if _modal === Modals.None}
             <TreeView tree={$fileTree} />
         {:else if _modal === Modals.Settings}

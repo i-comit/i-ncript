@@ -96,10 +96,10 @@ export async function getFileProperties(filePath: string): Promise<FilePropertie
     // logFrontendMessage("File PATH " + filePath);
     try {
         const properties: FileProperties = await GetFileProperties(filePath);
-        logFrontendMessage(`File properties for ${filePath}: ${JSON.stringify(properties)}`);
+        printFrontendMsg(`File properties for ${filePath}: ${JSON.stringify(properties)}`);
         return properties;
     } catch (error) {
-        logFrontendMessage("Failed to get file properties" + error);
+        printFrontendMsg("Failed to get file properties" + error);
         throw error; // Rethrow or handle as needed
     }
 }
@@ -119,6 +119,11 @@ export async function getFilePath(label: string): Promise<string> {
     return await GetDirectoryPath(index); // Await the promise to resolve
 }
 
-export function logFrontendMessage(str: string) {
+export function printFrontendMsg(str: string) {
     LogMessage(str);
+}
+
+export function basePath(path: string): string {
+    const separator = path.includes("\\") ? "\\" : "/";
+    return path.split(separator).pop() || path;
 }
