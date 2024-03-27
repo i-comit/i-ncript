@@ -7,7 +7,7 @@
 
     import { usernameStore } from "../stores/usernameStore";
     import { fileTree } from "../stores/fileTree.ts";
-    import { defaultBtn } from "../stores/defaultBtn";
+    import { pageChangeBtn } from "../stores/pageChangeBtn.js";
 
     import { switchFormButton, loadDirectoryTree } from "../utils";
 
@@ -64,13 +64,13 @@
             <div class="row space-x-5">
                 <GradientButton
                     color="cyanToBlue"
-                    class={defaultBtn}
+                    class={pageChangeBtn}
                     on:click={() => switchFormButton(AppPage.NBox)}
                     >N-BOX</GradientButton
                 >
                 <GradientButton
                     color="cyanToBlue"
-                    class={defaultBtn}
+                    class={pageChangeBtn}
                     on:click={() => switchFormButton(AppPage.Vault)}
                     >VAULT</GradientButton
                 >

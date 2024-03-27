@@ -18,13 +18,24 @@
         SunSolid,
         MoonSolid,
     } from "flowbite-svelte-icons";
+
+    import { currentPage } from "../stores/currentPage";
+    import { AppPage } from "../enums/AppPage";
+
     function closeSettingsPanel() {}
     function toggleLightDarkMode() {}
-
+    let _currentPage;
+    currentPage.subscribe((value) => {
+        _currentPage = value;
+    });
     let stepValue = 2.5;
 </script>
 
-<div id="modal-panel" class="bg-gray-200 rounded-lg mt-1 mb-2">
+<div
+    id="modal-panel"
+    class="bg-gray-200 rounded-lg mt-1 mb-2 ml-1 mr-1.5"
+    style="max-height: {_currentPage === AppPage.Login ? '66vh' : '84vh'};"
+>
     <div class="row bg-gray-500 rounded-lg">
         <Button
             pill={true}
@@ -39,7 +50,7 @@
                     class="w-3 h-3 ms-2 text-white dark:text-white "
                 /></Button
             >
-            <Dropdown>
+            <Dropdown class="py-1 my-1">
                 <DropdownItem>English</DropdownItem>
                 <DropdownItem>French</DropdownItem>
                 <DropdownItem>German</DropdownItem>
@@ -107,5 +118,8 @@
         display: flex;
         justify-content: space-between; /* Spread the buttons evenly */
         margin-bottom: 10px; /* Spacing between rows of buttons */
+    }
+    #modal-panel.expanded {
+        height: 200px; /* Height when expanded */
     }
 </style>

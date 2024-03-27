@@ -26,7 +26,6 @@ body {
 }
 
 #modal-panel {
-    max-height: 66vh;
     max-width: 100%;
     /* Optional: For horizontal scrolling, you might set a max-width */
 

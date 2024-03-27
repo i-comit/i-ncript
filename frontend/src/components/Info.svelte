@@ -11,6 +11,9 @@
         Range,
     } from "flowbite-svelte";
     import { onMount } from "svelte";
+    import { currentPage } from "../stores/currentPage";
+    import { AppPage } from "../enums/AppPage";
+    import { pageChangeBtn } from "../stores/pageChangeBtn";
 
     import { switchFormButton } from "../utils";
     import { DownloadSolid, GithubSolid } from "flowbite-svelte-icons";
@@ -20,17 +23,24 @@
     onMount(async () => {
         cwd = "CWD: " + (await GetAppPath());
     });
-    const buttonClasses = "max-w-48 min-h-3 max-h-5 pt-3 px-3";
+    let _currentPage;
+    currentPage.subscribe((value) => {
+        _currentPage = value;
+    });
 </script>
 
-<div id="modal-panel" class="bg-gray-200 rounded-lg mt-1 mb-2">
+<div
+    id="modal-panel"
+    class="bg-gray-200 rounded-lg mt-1 mb-2 ml-1 mr-1.5"
+    style="max-height: {_currentPage === AppPage.Login ? '66vh' : '84vh'};"
+>
     <div id="cwd" class=" px-0 m-0 bg-gray-100">
         {cwd}
     </div>
     <div id="viewLog" class="px-4">
         <GradientButton
             color="cyanToBlue"
-            class={buttonClasses}
+            class={pageChangeBtn}
             on:click={() => {}}>VIEW LOG</GradientButton
         >
     </div>

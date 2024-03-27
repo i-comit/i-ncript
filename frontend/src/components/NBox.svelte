@@ -1,16 +1,25 @@
 <!-- NBox.svelte -->
 <script>
     import { onMount } from "svelte";
-    import { Label, Input, GradientButton } from "flowbite-svelte";
-    import { ThumbsUpSolid, CaretUpSolid } from "flowbite-svelte-icons";
+    import { Label, Input, GradientButton, Button } from "flowbite-svelte";
+    import {
+        AdjustmentsVerticalOutline,
+        ThumbsUpSolid,
+        CaretUpSolid,
+    } from "flowbite-svelte-icons";
 
     import { AppPage } from "../enums/AppPage";
+    import { Modals } from "../enums/Modals.ts";
 
     import { usernameStore } from "../stores/usernameStore";
     import { fileTree } from "../stores/fileTree.ts";
-    import { defaultBtn } from "../stores/defaultBtn";
+    import { pageChangeBtn } from "../stores/pageChangeBtn.js";
 
-    import { switchFormButton, loadDirectoryTree } from "../utils";
+    import {
+        switchFormButton,
+        switchModals,
+        loadDirectoryTree,
+    } from "../utils";
 
     import Frame from "./Frame.svelte";
     import TreeView from "./TreeView.svelte";
@@ -64,16 +73,27 @@
             </div>
             <div class="h-2"></div>
 
-            <div class="row space-x-5">
+            <div class="row">
                 <GradientButton
                     color="cyanToBlue"
-                    class={defaultBtn}
+                    class={pageChangeBtn}
                     on:click={() => switchFormButton(AppPage.Vault)}
                     >VAULT</GradientButton
                 >
+                <Button
+                    pill={true}
+                    outline={true}
+                    class="!p-1"
+                    color="dark"
+                    on:click={() => switchModals(Modals.Settings)}
+                    ><AdjustmentsVerticalOutline
+                        class="w-5 h-5"
+                        color="white"
+                    /></Button
+                >
                 <GradientButton
                     color="cyanToBlue"
-                    class={defaultBtn}
+                    class={pageChangeBtn}
                     on:click={() => switchFormButton(AppPage.OBox)}
                     >O-BOX</GradientButton
                 >

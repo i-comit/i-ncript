@@ -3,13 +3,14 @@
     import { onMount, onDestroy } from "svelte";
     import { GradientButton, Popover, Progressbar } from "flowbite-svelte";
     import Button from "../elements/Button.svelte";
-    import Spinner from "../elements/Spinner.svelte";
+    import Toggle from "../elements/Toggle.svelte";
 
     import { sineOut } from "svelte/easing";
 
     import {
         InfoCircleOutline,
         AdjustmentsVerticalOutline,
+        CirclePauseSolid,
     } from "flowbite-svelte-icons";
 
     import { AppPage } from "../enums/AppPage.ts";
@@ -17,7 +18,7 @@
 
     import { usernameStore } from "../stores/usernameStore";
     import { fileTree } from "../stores/fileTree";
-    import { defaultBtn } from "../stores/defaultBtn";
+    import { pageChangeBtn } from "../stores/pageChangeBtn.js";
     import { encryptProgress } from "../stores/encryptProgress";
     import { currentModal } from "../stores/currentModal";
 
@@ -62,16 +63,13 @@
             // LogMessage(`New fileCount ${_fileCt}`);
         });
     });
-    let _username;
-    usernameStore.subscribe(($user) => {
-        _username = $user;
+    let _username: string;
+    usernameStore.subscribe((value) => {
+        _username = value;
     });
 
     let _encryptProgress: number;
-    _encryptProgress = 0;
-    encryptProgress.subscribe(($encryptProgress) => {
-        _encryptProgress = $encryptProgress;
-    });
+    _encryptProgress = $encryptProgress;
 
     let _modal: Modals;
     currentModal.subscribe((value) => {
@@ -124,23 +122,41 @@
         <div class="buttons">
             <div class="row space-x-5">
                 <Button on:click={() => encrypt()}>ENCRYPT</Button>
-                <Button on:click={() => encrypt()}>DECRYPT</Button>
+                <Button on:click={() => decrypt()}>DECRYPT</Button>
             </div>
-            <div class="h-2"></div>
+            <div class="h-1"></div>
+            <div class="flex justify-between items-center">
+                <div class="flex space-x-1">
+                    <Button
+                        pill={true}
+                        outline={true}
+                        color="dark"
+                        class="!p-1 !px-0 !mb-2"
+                        ><CirclePauseSolid
+                            class="w-5 h-5"
+                            color="white"
+                        /></Button
+                    >
+                    <button
+                        class="!p-1  !px-0 !mb-2"
+                        color="dark"
+                        ><AdjustmentsVerticalOutline
+                            class="w-5 h-5"
+                            color="dark"
+                        /></button
+                    >
+                </div>
+                <div>
+                    <Toggle />
+                    <p class="text-sm">HOT FILER</p>
+                </div>
+            </div>
 
-            <div class="row center">
+            <div class="h-2.5"></div>
+            <div class="row">
                 <GradientButton
                     color="cyanToBlue"
-                    class="min-w-24 max-h-3 m-0 px-0 pt-3"
-                    pill
-                    on:click={() => {}}>HOT FILER</GradientButton
-                >
-            </div>
-            <!-- <div class="h-8"></div> -->
-            <div class="row space-x-3">
-                <GradientButton
-                    color="cyanToBlue"
-                    class={defaultBtn}
+                    class={pageChangeBtn}
                     on:click={() => switchFormButton(AppPage.OBox)}
                     >O-BOX</GradientButton
                 >
@@ -157,7 +173,7 @@
                 >
                 <GradientButton
                     color="cyanToBlue"
-                    class={defaultBtn}
+                    class={pageChangeBtn}
                     on:click={() => switchFormButton(AppPage.NBox)}
                     >N-BOX</GradientButton
                 >
@@ -199,8 +215,8 @@
 
     .buttons .row {
         display: flex;
-        justify-content: space-between; /* Spread the buttons evenly */
-        margin-bottom: 10px; /* Spacing between rows of buttons */
+        justify-content: space-between;
+        margin-bottom: 10px; 
     }
 
     .buttons .row.center {
