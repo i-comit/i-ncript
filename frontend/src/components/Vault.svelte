@@ -11,6 +11,7 @@
         InfoCircleOutline,
         AdjustmentsVerticalOutline,
         CirclePauseSolid,
+        BarsFromLeftOutline,
     } from "flowbite-svelte-icons";
 
     import { AppPage } from "../enums/AppPage.ts";
@@ -27,7 +28,6 @@
         EncryptFilesInDir,
         DecryptFilesInDir,
     } from "../../wailsjs/go/main/App";
-    import { GetDirectoryFileCt } from "../../wailsjs/go/main/Getters";
     import {
         GetEncryptedFiles,
         GetDecryptedFiles,
@@ -47,6 +47,8 @@
     import Info from "./Info.svelte";
     import Settings from "./Settings.svelte";
     import TreeView from "./TreeView.svelte";
+    import Logger from "./Logger.svelte";
+
     import { EventsOn } from "../../wailsjs/runtime/runtime";
 
     let _fileCt: number;
@@ -107,7 +109,7 @@
 <div class="flex h-screen rounded-lg">
     <Frame />
     <div id="left-panel" class="w-45">
-        <div id="page-info" class="static bg-gray-100">
+        <div id="page-info" class="static">
             <p>VAULT</p>
             <Button
                 pill={true}
@@ -118,7 +120,7 @@
                 on:click={() => switchModals(Modals.Info)}
                 ><InfoCircleOutline class="w-5 h-5" color="white" /></Button
             >
-            <p>3.6GB</p>
+            <p>32GB</p>
         </div>
         <div class=" !flex !justify-start row center bg-white mb-1">
             <p>encrypted n files</p>
@@ -141,8 +143,11 @@
                             color="white"
                         /></Button
                     >
-                    <button class="!p-1 !px-0 !mb-2" color="dark"
-                        ><AdjustmentsVerticalOutline
+                    <button
+                        class="!p-1 !px-0 !mb-2"
+                        color="dark"
+                        on:click={() => switchModals(Modals.Logger)}
+                        ><BarsFromLeftOutline
                             class="w-5 h-5"
                             color="dark"
                         /></button
@@ -187,6 +192,8 @@
             <TreeView tree={$fileTree} />
         {:else if _modal === Modals.Settings}
             <Settings />
+        {:else if _modal === Modals.Logger}
+            <Logger />
         {:else if _modal === Modals.Info}
             <Info />
         {/if}
@@ -219,9 +226,5 @@
         display: flex;
         justify-content: space-between;
         margin-bottom: 10px;
-    }
-
-    .buttons .row.center {
-        justify-content: center; /* Center the button in this row */
     }
 </style>

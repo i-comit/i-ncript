@@ -30,7 +30,7 @@
 <div class="flex h-screen rounded-lg">
     <Frame />
     <div id="left-panel" class="max-w-45">
-        <div id="page-info" class="static bg-gray-100">
+        <div id="page-info" class="static">
             <p>O-BOX</p>
             <p>3.5GB</p>
         </div>

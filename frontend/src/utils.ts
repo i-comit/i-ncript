@@ -1,6 +1,6 @@
 import {
     currentPage
-} from './stores/currentPage'; // Assuming currentPage is a Svelte store
+} from './stores/currentPage';
 import {
     currentModal
 } from './stores/currentModal';
@@ -17,7 +17,6 @@ import {
     ResizeWindow, BuildDirectoryFileTree
 } from "../wailsjs/go/main/App";
 import {
-    GetAppPath,
     GetDirectoryPath,
     GetFileProperties
 } from "../wailsjs/go/main/Getters";
@@ -47,6 +46,7 @@ export function switchModals(modal: Modals) {
     switch (_currentModal) {
         case Modals.Info:
         case Modals.Settings:
+        case Modals.Logger:
             try {
                 if (_currentPage === AppPage.Login)
                     ResizeWindow(width, height, false)

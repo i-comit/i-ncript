@@ -11,7 +11,11 @@
     // import { slide } from 'svelte/transition'
     import { onMount } from "svelte";
 
-    import { FolderOpenSolid, FolderSolid } from "flowbite-svelte-icons";
+    import {
+        FolderOpenSolid,
+        FolderSolid,
+        SearchOutline,
+    } from "flowbite-svelte-icons";
     import {
         logFrontendMessage,
         getFilePath,
@@ -89,39 +93,48 @@
     }
 </script>
 
-<ul>
-    <li>
-        {#if tree.children && tree.children.length > 0}
-            <button on:click={toggleExpansion} class="flex">
-                {#if !expanded}
-                    <FolderSolid class="w-3 mr-1"></FolderSolid>
-                {:else}
-                    <FolderOpenSolid class="w-3 mr-1"></FolderOpenSolid>
+<div>
+    <button
+        class="z-20 fixed top-0 left-1/2 transform -translate-x-1/2 mt-0.5"
+        style="--wails-draggable:drag"
+    >
+        <SearchOutline class="w-5 h-5" color="dark" />
+    </button>
+
+    <ul>
+        <li>
+            {#if tree.children && tree.children.length > 0}
+                <button on:click={toggleExpansion} class="flex">
+                    {#if !expanded}
+                        <FolderSolid class="w-3 mr-1"></FolderSolid>
+                    {:else}
+                        <FolderOpenSolid class="w-3 mr-1"></FolderOpenSolid>
+                    {/if}
+                    {basePath(tree.relPath)}
+                </button>
+                {#if expanded}
+                    <ul>
+                        {#each tree.children as child}
+                            <svelte:self tree={child} />
+                        {/each}
+                    </ul>
                 {/if}
-                {basePath(tree.relPath)}
-            </button>
-            {#if expanded}
-                <ul>
-                    {#each tree.children as child}
-                        <svelte:self tree={child} />
-                    {/each}
-                </ul>
+            {:else if isFile(tree)}
+                <button
+                    class="bg-gray-800"
+                    on:click={() => logFilePath(tree.relPath)}
+                >
+                    {basePath(tree.relPath)}
+                </button>
+            {:else}
+                <span class="flex">
+                    <FolderSolid class="w-3 mr-1"></FolderSolid>
+                    {basePath(tree.relPath)}
+                </span>
             {/if}
-        {:else if isFile(tree)}
-            <button
-                class="bg-gray-800"
-                on:click={() => logFilePath(tree.relPath)}
-            >
-                {basePath(tree.relPath)}
-            </button>
-        {:else}
-            <span class="flex">
-                <FolderSolid class="w-3 mr-1"></FolderSolid>
-                {basePath(tree.relPath)}
-            </span>
-        {/if}
-    </li>
-</ul>
+        </li>
+    </ul>
+</div>
 
 <style>
     ul {
