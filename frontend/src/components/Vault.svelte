@@ -1,12 +1,10 @@
 <!-- Vault.svelte -->
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
-    import {
-        Button,
-        GradientButton,
-        Popover,
-        Progressbar,
-    } from "flowbite-svelte";
+    import { GradientButton, Popover, Progressbar } from "flowbite-svelte";
+    import Button from "../elements/Button.svelte";
+    import Spinner from "../elements/Spinner.svelte";
+
     import { sineOut } from "svelte/easing";
 
     import {
@@ -27,6 +25,11 @@
         DecryptFilesInDir,
     } from "../../wailsjs/go/main/App";
     import { GetDirectoryFileCt } from "../../wailsjs/go/main/Getters";
+    import {
+        GetEncryptedFiles,
+        GetDecryptedFiles,
+    } from "../../wailsjs/go/main/Encryptr";
+
     import { LogMessage } from "../../wailsjs/go/main/Logger";
 
     import {
@@ -42,17 +45,19 @@
     import { EventsOn } from "../../wailsjs/runtime/runtime";
 
     let _fileCt: number;
-    _fileCt = 161;
+    _fileCt = 0;
     onMount(() => {
         loadDirectoryTree(0);
-
-        EventsOn("fileProcessed", (currentCount, totalFiles) => {
+        EventsOn("fileProcessed", (currentCount) => {
             encryptProgress.set(currentCount);
-            // _fileCt = totalFiles;
             _encryptPercent = (_encryptProgress / _fileCt) * 100;
-            LogMessage(
-                `Processed ${_encryptProgress} of ${_fileCt} files. ${_encryptPercent}`,
-            );
+            // LogMessage(
+            //     `Processed ${_encryptProgress} of ${_fileCt} files. ${_encryptPercent}`,
+            // );
+        });
+        EventsOn("fileCount", (fileCount) => {
+            _fileCt = fileCount;
+            // LogMessage(`New fileCount ${_fileCt}`);
         });
     });
     let _username;
@@ -66,12 +71,26 @@
         _encryptProgress = $encryptProgress;
     });
     let _encryptPercent: number;
+    let encrypting: boolean;
+    encrypting = false;
+    function encrypt() {
+        GetDecryptedFiles(0).then((filePaths) => {
+            if (filePaths.length > 0) {
+                _fileCt = filePaths.length;
+                EncryptFilesInDir(0);
+                ResizeWindow(500, 260, false);
+            }
+        });
+    }
 
-    function encryptDecrypt(encryptDecrypt: boolean) {
-        // _fileCt = fileCt;
-        if (encryptDecrypt) EncryptFilesInDir(0);
-        else DecryptFilesInDir();
-        ResizeWindow(500, 260, false);
+    function decrypt() {
+        GetEncryptedFiles(0).then((filePaths) => {
+            if (filePaths.length > 0) {
+                _fileCt = filePaths.length;
+                DecryptFilesInDir();
+                ResizeWindow(500, 260, false);
+            }
+        });
     }
 </script>
 
@@ -82,22 +101,20 @@
             <p>VAULT</p>
             <p>3.6GB</p>
         </div>
+        <div class=" !flex !justify-start row center bg-white">
+            <Spinner />
+        </div>
         <div class="buttons">
             <div class="row space-x-5">
+                <Button on:click={() => encrypt()}>ENCRYPT</Button>
                 <GradientButton
                     color="cyanToBlue"
                     class={defaultBtn}
-                    on:click={() => encryptDecrypt(true)}
-                    >ENCRYPT</GradientButton
-                >
-                <GradientButton
-                    color="cyanToBlue"
-                    class={defaultBtn}
-                    on:click={() => encryptDecrypt(false)}
-                    >DECRYPT</GradientButton
+                    on:click={() => decrypt()}>DECRYPT</GradientButton
                 >
             </div>
             <div class="h-2"></div>
+
             <div class="row center">
                 <GradientButton
                     color="cyanToBlue"
@@ -114,7 +131,7 @@
                     on:click={() => switchFormButton(AppPage.OBox)}
                     >O-BOX</GradientButton
                 >
-                <Button
+                <!-- <Button
                     pill={true}
                     outline={true}
                     class="!p-1"
@@ -123,8 +140,8 @@
                     ><AdjustmentsVerticalOutline
                         class="w-5 h-5 m-0"
                         color="dark"
-                    /></Button
-                >
+                    /></Button -->
+                <!-- > -->
                 <Popover
                     class="w-64 text-sm font-light "
                     placement="bottom"

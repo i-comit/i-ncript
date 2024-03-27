@@ -6,11 +6,8 @@
     import { passwordStore } from "../stores/passwordStore";
     import { currentModal } from "../stores/currentModal";
 
-    import {
-        Login,
-        ResizeWindow,
-        EncryptString,
-    } from "../../wailsjs/go/main/App";
+    import { Login, ResizeWindow } from "../../wailsjs/go/main/App";
+    import { EncryptString } from "../../wailsjs/go/main/Encryptr";
     import { Button, Input, GradientButton, Tooltip } from "flowbite-svelte";
     import { switchModals } from "../utils";
     import {

@@ -22,10 +22,6 @@ export function EncryptFilesInDir(arg1) {
   return window['go']['main']['App']['EncryptFilesInDir'](arg1);
 }
 
-export function EncryptString(arg1) {
-  return window['go']['main']['App']['EncryptString'](arg1);
-}
-
 export function InitializeRootFolder() {
   return window['go']['main']['App']['InitializeRootFolder']();
 }

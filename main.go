@@ -23,11 +23,10 @@ func main() {
 	app := NewApp()
 	getters := &Getters{}
 	logger := &Logger{}
-	encryptor := &Encryptor{}
+	encryptr := &Encryptr{}
 
 	// Create application with options
 	err := wails.Run(&options.App{
-
 		Title:         "i-ncript",
 		Width:         220,
 		Height:        155,
@@ -41,7 +40,7 @@ func main() {
 		OnStartup: app.startup,
 		// OnShutdown: app.shutdown,
 		Bind: []interface{}{
-			app, getters, logger, encryptor,
+			app, getters, logger, encryptr,
 		},
 		Windows: &windows.Options{
 			WebviewIsTransparent:              false,
@@ -56,7 +55,7 @@ func main() {
 			CustomTheme: &windows.ThemeSettings{
 				DarkModeTitleBar:   windows.RGB(20, 20, 20),
 				DarkModeTitleText:  windows.RGB(200, 200, 200),
-				DarkModeBorder:     windows.RGB(30, 230, 20),
+				DarkModeBorder:     windows.RGB(200, 200, 200),
 				LightModeTitleBar:  windows.RGB(200, 200, 200),
 				LightModeTitleText: windows.RGB(20, 20, 20),
 				LightModeBorder:    windows.RGB(200, 200, 200),

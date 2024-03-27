@@ -123,17 +123,6 @@ func (a *App) Login(username string, password string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// filePaths, err = getFilesRecursively(directories...)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-
-	// for _, filePath := range filePaths {
-	//     // Read the file content into a byte slice
-	//     data, err := os.ReadFile(filePath)
-	//     if err != nil {
-	//         return err
-	//     }
 
 	tree, err := a.BuildDirectoryFileTree(0)
 	if err != nil {
@@ -158,11 +147,6 @@ func (a *App) ResizeWindow(width int, height int, recenter bool) {
 			runtime.WindowCenter(a.ctx)
 		}
 	}
-}
-
-func (a *App) EncryptString(stringToEncrypt string) string {
-	encryptedString, _ := encryptString([]byte(stringToEncrypt))
-	return encryptedString
 }
 
 func (a *App) MinimizeApp() {
@@ -260,16 +244,20 @@ func (b *Getters) GetDirectoryPath(dirIndex int) (string, error) {
 }
 
 func (b *Getters) GetDirectoryFileCt(dirIndex int) (int, error) {
-	entries, err := os.ReadDir(directories[dirIndex])
+	fileCount := 0
+	err := filepath.Walk(directories[dirIndex], func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if !info.IsDir() {
+			fileCount++
+		}
+		return nil
+	})
 	if err != nil {
 		return 0, err
 	}
-	fileCount := 0
-	for _, entry := range entries {
-		if !entry.IsDir() {
-			fileCount++
-		}
-	}
+	fmt.Printf("\033[33mdirectories[dirIndex]: %s %d \033[0m\n", directories[dirIndex], fileCount)
 	return fileCount, nil
 }
 
@@ -318,5 +306,5 @@ func createDirectories(dirs ...string) error {
 }
 
 func (l *Logger) LogMessage(message string) {
-	fmt.Println("\033[32mFRONTEND: ", message, "\033[0m")
+	fmt.Println("\033[31mFRONTEND:\033[0m \033[32m" + message + "\033[0m")
 }

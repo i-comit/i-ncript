@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io"
 	"strings"
+	"time"
 
 	// "io"
 	// "log"
@@ -18,85 +19,46 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
-type Encryptor struct {
+type Encryptr struct {
 	ctx context.Context
 }
 
-func (a *App) EncryptFilesInDir(dirIndex int) error {
-	filePaths, err := getFilesRecursively(directories[0])
-	fmt.Println("\033[32mdirectories[0] ", directories[0], "\033[0m")
-	if err != nil {
-		return err
-	}
-	// dirFileCt, err := a.getters.GetDirectoryFileCt(dirIndex)
-	if err != nil {
-		return err
-	}
-	for i, filePath := range filePaths {
-		// Read the file content into a byte slice
-		// fmt.Println("\033[31mencrypt filePath ", filePath, "\033[0m")
-		if err != nil {
-			return err
-		}
-		if strings.HasSuffix(filePath, ".enc") {
-			continue
-		}
+// EVENT consts
+var fileProcessed = "fileProcessed"
+var fileCt = "fileCount"
 
-		// s := fmt.Sprintf("%f", i+1)
-		// runtime.LogError(e.ctx, "current fileCount "+s)
-		// fmt.Println("\033[32mfileCount ", i+1, "\033[0m")
-		// }
-		encryptedFile, err := encryptFile(filePath)
-		if err != nil {
-			return err
-		}
-		defer encryptedFile.Close()
-		if a.ctx != nil {
-			runtime.EventsEmit(a.ctx, "fileProcessed", i+1, 161)
-			fmt.Println("\033[31mfileCount ", 161, "\033[0m")
-		}
-		// fmt.Println("Encrypted file created:", encryptedFile.Name())
-	}
-	if a.ctx != nil {
-		// runtime.EventsEmit(a.ctx, "fileProcessed", 0, 0)
-		runtime.EventsOff(a.ctx, "fileProcessed")
-	}
-	return nil
+func (b *Encryptr) EncryptString(stringToEncrypt string) string {
+	encryptedString, _ := encryptString([]byte(stringToEncrypt))
+	return encryptedString
 }
 
-func (a *App) DecryptFilesInDir() error {
-	filePaths, err := getFilesRecursively(directories[0])
-	fmt.Println("\033[32mdirectories[0] ", directories[0], "\033[0m")
+func (b *Encryptr) GetDecryptedFiles(dirIndex int) ([]string, error) {
+	filePaths, err := getFilesRecursively(directories[dirIndex])
 	if err != nil {
-		return err
+		return nil, err
 	}
-	// dirFileCt, err := a.getters.GetDirectoryFileCt(0)
-	for i, filePath := range filePaths {
-		// Read the file content into a byte slice
-		// fmt.Println("\033[31mdecrypt filePath ", filePath, "\033[0m")
-		if err != nil {
-			return err
+	var unencryptedFiles []string
+	for _, filePath := range filePaths {
+		if filepath.Ext(filePath) != ".enc" {
+			unencryptedFiles = append(unencryptedFiles, filePath)
 		}
-		if !strings.HasSuffix(filePath, ".enc") {
-			continue
-		}
-		// Encrypt the file content
-		decryptFile, err := decryptFile(filePath)
-		if err != nil {
-			return err
-		}
+	}
+	// fmt.Printf("\033[32mUnencrypted files in %s: %v\033[0m\n", directories[dirIndex], unencryptedFiles)
+	return unencryptedFiles, nil
+}
 
-		defer decryptFile.Close()
-		if a.ctx != nil {
-			runtime.EventsEmit(a.ctx, "fileProcessed", i+1, 161)
-			fmt.Println("\033[31mfileCount ", 161, "\033[0m")
+func (b *Encryptr) GetEncryptedFiles(dirIndex int) ([]string, error) {
+	filePaths, err := getFilesRecursively(directories[dirIndex])
+	if err != nil {
+		return nil, err
+	}
+	var encryptedFiles []string
+	for _, filePath := range filePaths {
+		if filepath.Ext(filePath) == ".enc" {
+			encryptedFiles = append(encryptedFiles, filePath)
 		}
 	}
-	if a.ctx != nil {
-		// runtime.EventsEmit(a.ctx, "fileProcessed", 0, 0)
-		runtime.EventsOff(a.ctx, "fileProcessed")
-	}
-	return nil
+	return encryptedFiles, nil
 }
 
 func getFilesRecursively(dirs ...string) ([]string, error) {
@@ -117,6 +79,108 @@ func getFilesRecursively(dirs ...string) ([]string, error) {
 	}
 	return files, nil
 }
+
+func (a *App) EncryptFilesInDir(dirIndex int) (bool, error) {
+	filePaths, err := getFilesRecursively(directories[0])
+	fmt.Println("\033[32mdirectories[0] ", directories[0], "\033[0m")
+	if err != nil {
+		return false, err
+	}
+	var fileIter = 0
+	if err != nil {
+		return false, err
+	}
+	for i, filePath := range filePaths {
+		if err != nil {
+			return false, err
+		}
+		if strings.HasSuffix(filePath, ".enc") {
+			continue
+		}
+
+		encryptedFile, err := encryptFile(filePath)
+		if err != nil {
+			continue
+		}
+		defer encryptedFile.Close()
+		fileIter++
+		if a.ctx != nil {
+			runtime.EventsEmit(a.ctx, fileProcessed, i+1)
+			// fmt.Println("\033[31mfileCount ", dirFileCt, "\033[0m")
+		}
+		// fmt.Println("Encrypted file created:", encryptedFile.Name())
+	}
+	if fileIter != 0 {
+		if a.ctx != nil {
+			a.reverseProgress()
+			return false, err
+		}
+	} else {
+		return true, err
+	}
+	return false, err
+}
+
+func (a *App) DecryptFilesInDir() error {
+	filePaths, err := getFilesRecursively(directories[0])
+	fmt.Println("\033[32mdirectories[0] ", directories[0], "\033[0m")
+	if err != nil {
+		return err
+	}
+	var fileIter = 0
+	for i, filePath := range filePaths {
+		if err != nil {
+			return err
+		}
+		if !strings.HasSuffix(filePath, ".enc") {
+			continue
+		}
+		// Encrypt the file content
+		decryptFile, err := decryptFile(filePath)
+		if err != nil {
+			return err
+		}
+
+		defer decryptFile.Close()
+		fileIter++
+
+		if a.ctx != nil {
+			runtime.EventsEmit(a.ctx, fileProcessed, i+1)
+			fmt.Println("\033[31mfileCount ", "\033[0m")
+		}
+	}
+	if fileIter != 0 {
+		if a.ctx != nil {
+			a.reverseProgress()
+		}
+	}
+	return nil
+}
+
+func (a *App) reverseProgress() {
+	runtime.EventsEmit(a.ctx, fileCt, 100)
+	time.Sleep(1 * time.Second)
+	done := make(chan bool) // Cr
+	go func() {
+		counter := 100
+		for counter > 0 {
+			counter-- // Decrement the counter
+			if a.ctx != nil {
+				runtime.EventsEmit(a.ctx, "fileProcessed", counter)
+			}
+			time.Sleep(15 * time.Millisecond) // Wait for 0.2 seconds
+		}
+		done <- true // Signal that the loop is done
+	}()
+	<-done // Wait for the goroutine to signal it's done
+
+	if a.ctx != nil {
+		runtime.EventsOff(a.ctx, fileProcessed, fileCt)
+		time.Sleep(time.Second)
+		a.ResizeWindow(500, 220, false)
+	}
+}
+
 func encryptFile(filePath string) (*os.File, error) {
 	data, err := os.ReadFile(filePath)
 	if err != nil {
