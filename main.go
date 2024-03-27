@@ -15,6 +15,7 @@ import (
 //go:embed all:frontend/dist
 var assets embed.FS
 var _width = 220
+var _height = 155
 
 func (m *App) onSecondInstanceLaunch(data options.SecondInstanceData) {
 	// Your code to handle the second instance launch
@@ -30,7 +31,7 @@ func main() {
 	err := wails.Run(&options.App{
 		Title:         "i-ncript",
 		Width:         _width,
-		Height:        155,
+		Height:        _height,
 		DisableResize: true,
 		Fullscreen:    false,
 		Frameless:     true,

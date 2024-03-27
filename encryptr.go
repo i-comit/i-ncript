@@ -191,7 +191,7 @@ func (a *App) DecryptFilesInDir() error {
 
 		if a.ctx != nil {
 			runtime.EventsEmit(a.ctx, fileProcessed, i+1)
-			fmt.Println("\033[31mfileCount ", "\033[0m")
+			fmt.Println("\033[31mfileCount ", i+1, "\033[0m")
 		}
 	}
 	if fileIter != 0 {
@@ -208,21 +208,23 @@ func (a *App) reverseProgress() {
 	done := make(chan bool) // Cr
 	go func() {
 		counter := 100
-		for counter > 0 {
+		for counter > 1 {
 			counter-- // Decrement the counter
 			if a.ctx != nil {
-				runtime.EventsEmit(a.ctx, "fileProcessed", counter)
+				runtime.EventsEmit(a.ctx, fileProcessed, counter)
 			}
-			time.Sleep(15 * time.Millisecond) // Wait for 0.2 seconds
+			time.Sleep(4 * time.Millisecond) // Wait for 0.2 seconds
 		}
 		done <- true // Signal that the loop is done
 	}()
 	<-done // Wait for the goroutine to signal it's done
 
 	if a.ctx != nil {
+		time.Sleep(900 * time.Millisecond)
+		a.ResizeWindow(_width*2, _height+25, false)
+		runtime.EventsEmit(a.ctx, fileProcessed, 0)
+		runtime.EventsEmit(a.ctx, fileCt, 0)
 		runtime.EventsOff(a.ctx, fileProcessed, fileCt)
-		time.Sleep(time.Second)
-		a.ResizeWindow(500, 220, false)
 	}
 }
 

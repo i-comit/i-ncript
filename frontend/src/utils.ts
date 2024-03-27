@@ -24,13 +24,16 @@ import {
 import { LogMessage } from "../wailsjs/go/main/Logger";
 import { get } from 'svelte/store';
 
+export const width = 220
+export const height = 180
+
 export function switchFormButton(page: AppPage) {
     console.log(`Switching to ${page}`);
     currentPage.set(page); // Assuming currentPage is a writable store
 }
 
 export function switchModals(modal: Modals) {
-    const width = 220
+
     const _modal = get(currentModal);
     if (_modal === modal) {
         currentModal.set(Modals.None);
@@ -46,9 +49,9 @@ export function switchModals(modal: Modals) {
         case Modals.Settings:
             try {
                 if (_currentPage === AppPage.Login)
-                    ResizeWindow(width, 210, false)
+                    ResizeWindow(width, height, false)
                 else
-                    ResizeWindow(width * 2, 210, false)
+                    ResizeWindow(width * 2, height, false)
 
             } catch (error) {
                 console.error("Error calling ResizeWindow", error);
@@ -60,7 +63,7 @@ export function switchModals(modal: Modals) {
                 if (_currentPage === AppPage.Login)
                     ResizeWindow(width, 155, false)
                 else
-                    ResizeWindow(width * 2, 210, false)
+                    ResizeWindow(width * 2, height, false)
             } catch (error) {
                 console.error("Error calling ResizeWindow", error);
             }

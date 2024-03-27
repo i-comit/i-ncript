@@ -6,7 +6,7 @@
     import { InitializeRootFolder, CloseApp } from "../../wailsjs/go/main/App";
     import { GetRootFolder } from "../../wailsjs/go/main/Getters";
 
-    import { defaultBtn } from "../stores/pageChangeBtn";
+    import { pageChangeBtn } from "../stores/pageChangeBtn";
     import Frame from "./Frame.svelte";
     let rootFolder = "";
     onMount(async () => {
@@ -24,7 +24,7 @@
     <p>app must run inside a folder named {rootFolder}</p>
     <GradientButton
         color="cyanToBlue"
-        class={defaultBtn}
+        class={pageChangeBtn}
         on:click={initializeRootFolder}>Create Folder</GradientButton
     >
 </div>

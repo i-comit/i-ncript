@@ -39,6 +39,8 @@
         switchFormButton,
         switchModals,
         loadDirectoryTree,
+        height,
+        width,
     } from "../utils.ts";
 
     import Frame from "./Frame.svelte";
@@ -69,7 +71,9 @@
     });
 
     let _encryptProgress: number;
-    _encryptProgress = $encryptProgress;
+    encryptProgress.subscribe(() => {
+        _encryptProgress = $encryptProgress;
+    });
 
     let _modal: Modals;
     currentModal.subscribe((value) => {
@@ -84,7 +88,7 @@
             if (filePaths.length > 0) {
                 _fileCt = filePaths.length;
                 EncryptFilesInDir(0);
-                ResizeWindow(500, 260, false);
+                ResizeWindow(width * 2, height + 15, false);
             }
         });
     }
@@ -94,7 +98,7 @@
             if (filePaths.length > 0) {
                 _fileCt = filePaths.length;
                 DecryptFilesInDir();
-                ResizeWindow(440, 230, false);
+                ResizeWindow(width * 2, height + 15, false);
             }
         });
     }
@@ -137,9 +141,7 @@
                             color="white"
                         /></Button
                     >
-                    <button
-                        class="!p-1  !px-0 !mb-2"
-                        color="dark"
+                    <button class="!p-1 !px-0 !mb-2" color="dark"
                         ><AdjustmentsVerticalOutline
                             class="w-5 h-5"
                             color="dark"
@@ -216,7 +218,7 @@
     .buttons .row {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 10px; 
+        margin-bottom: 10px;
     }
 
     .buttons .row.center {
