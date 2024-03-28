@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 import { get } from "svelte/store";
 import { AppPage, currentPage } from "../enums/AppPage";
-import { basePath } from "../tools/utils";
+import { basePath, removeFileName } from "../tools/utils";
 import {
     BuildDirectoryFileTree
 } from "../../wailsjs/go/main/App";
@@ -9,8 +9,10 @@ import {
     LogDebug,
     LogError,
     LogInfo,
+    LogWarning,
 } from "../../wailsjs/runtime/runtime";
 
+import { getFileProperties } from "../tools/utils";
 import {
     GetDirectoryPath,
     GetFileProperties
@@ -35,6 +37,23 @@ let _appPage: AppPage;
 export const pageName: () => string = () => {
     const _appPage: AppPage = get(currentPage);
     return _appPage;
+};
+
+export const pageIndex: () => number = () => {
+    _appPage = get(currentPage)
+    switch (
+    _appPage // Assuming _appPage holds the current page enum value
+    ) {
+        case AppPage.Vault:
+        default:
+            return 0;
+        case AppPage.NBox:
+            return 1;
+        case AppPage.OBox:
+            return 2;
+        case AppPage.Login:
+            return 3;
+    };
 };
 
 export function getCurrentPageStore() {
@@ -82,23 +101,70 @@ function loadExpansionState(index: number) {
 export const expandRoot: () => void = () => {
     const currentPageStore = getCurrentPageStore();
     _appPage = get(currentPage)
-    var index = 0;
-    switch (
-    _appPage // Assuming _appPage holds the current page enum value
-    ) {
-        case AppPage.Vault:
-        default:
-            index = 0;
-        case AppPage.NBox:
-            index = 1;
-        case AppPage.OBox:
-            index = 2;
-    };
-    GetDirectoryPath(index).then((dirPath) => {
-        currentPageStore.update((currentState) => {
-            currentState[pageName()] = true;
-            return currentState; //returns the currentState to currentPageStore
-        });
-    });
 
+    currentPageStore.update((currentState) => {
+        currentState[pageName()] = true;
+        return currentState; //returns the currentState to currentPageStore
+    });
 };
+
+let draggedOver = false;
+
+export async function getFullFilePath(relPath: string): Promise<string> {
+    GetDirectoryPath(pageIndex()).then((dirPath) => {
+        LogWarning(dirPath + relPath);
+        return dirPath + relPath;
+    });
+    LogError("Error getting full filePath " + relPath);
+    return relPath;
+}
+
+export function handleDragOver(relPath: string, event: DragEvent) {
+    event.preventDefault(); // Necessary to allow for a drop
+    draggedOver = true;
+    LogError("Dragged over lele " + relPath);
+}
+
+export function handleDrop(relPath: string, event: DragEvent) {
+    event.preventDefault();
+    draggedOver = false;
+    if (event.dataTransfer && event.dataTransfer.files) {
+        const files = event.dataTransfer.files;
+        var index = pageIndex();
+        GetDirectoryPath(index).then((dirPath) => {
+            var fullPath = dirPath + relPath;
+            getFileProperties(fullPath).then((fileProps) => {
+                LogError(files.length + " file(s) dropped. " + fullPath);
+                if (fileProps.fileType) {
+                    let pathToMoveTo: string;
+                    if (fileProps.fileType === "dir") {
+                        LogError("Node being used for drop is dir ");
+                        pathToMoveTo = fullPath;
+                    } else {
+                        LogError("Node being used for drop  is file ");
+                        pathToMoveTo = removeFileName(fullPath);
+                    }
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+                        const reader = new FileReader();
+                        reader.onload = (function (theFile) {
+                            return function (e) {
+                                const arrayBuffer = e.target?.result as ArrayBuffer;
+                                const byteArray = new Uint8Array(arrayBuffer);
+                                // e.target.result contains the file's data.
+                                // Send this data to the backend to be saved to the new location.
+                            };
+                        })(file);
+                        // reader.readAsDataURL(file);
+                        LogError("READER " + file.stream());
+                    }
+                }
+            });
+        });
+    }
+}
+
+export function handleDragLeave(event: DragEvent) {
+    event.preventDefault();
+    draggedOver = false;
+}

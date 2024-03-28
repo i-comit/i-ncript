@@ -11,7 +11,7 @@ import {
     GetDirectoryPath,
     GetFileProperties
 } from "../../wailsjs/go/main/Getters";
-import { LogDebug, LogTrace } from "../../wailsjs/runtime/runtime";
+import { LogDebug, LogError, LogTrace } from "../../wailsjs/runtime/runtime";
 
 export const width = 220
 export const height = 180
@@ -57,7 +57,7 @@ export function switchModals(modal: Modals) {
     }
 }
 
-interface FileProperties {
+ interface FileProperties {
     modifiedDate: string;
     fileSize: number;
     fileType?: string; // Optional
@@ -67,26 +67,30 @@ export async function getFileProperties(filePath: string): Promise<FilePropertie
         const properties: FileProperties = await GetFileProperties(filePath);
         return properties;
     } catch (error) {
-        LogTrace("Failed to get file properties; " + error);
+        LogError("Failed to get file properties; " + error);
         throw error; // Rethrow or handle as needed
     }
 }
 
-export async function getFilePath(label: string): Promise<string> {
-    var index = 0;
-    const _currentPage = get(currentPage);
-    switch (_currentPage) {
-        case AppPage.Vault:
-            index = 0; break;
-        case AppPage.NBox:
-            index = 1; break;
-        case AppPage.OBox:
-            index = 2; break;
-    }
-    return await GetDirectoryPath(index); // Await the promise to resolve
-}
+const directoryPathRegex = /^(.*[\\/])/;
 
 export function basePath(path: string): string {
-    const separator = path.includes("\\") ? "\\" : "/";
-    return path.split(separator).pop() || path;
+    return path.split(directoryPathRegex).pop() || path;
 }
+
+export function removeFileName(filePath: string): string {
+    const match = filePath.match(directoryPathRegex);
+    return match ? match[1] : filePath;
+}
+
+export function formatFileSize(fileSize: number): string {
+    if (fileSize < 1) return 'no size';
+    const units = ['B', 'KB', 'MB', 'GB', 'TB', 'EB', 'ZB', 'YB'];
+    const digits = Math.floor((Math.log(fileSize) / Math.log(1024)));
+    const unitIndex = Math.min(digits, units.length - 1); // Ensure we don't exceed the units array
+    const sizeInUnit = fileSize / Math.pow(1024, unitIndex);
+    // Format the number to have up to 3 digits (including after the decimal point if applicable)
+    const formattedSize = sizeInUnit.toFixed(sizeInUnit >= 100 ? 0 : sizeInUnit >= 10 ? 1 : 2);
+    return `${formattedSize} ${units[unitIndex]}`;
+}
+

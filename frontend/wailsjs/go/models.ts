@@ -32,6 +32,22 @@ export namespace main {
 		    return a;
 		}
 	}
+	export class FileProperties {
+	    modifiedDate: string;
+	    fileSize: number;
+	    fileType: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new FileProperties(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.modifiedDate = source["modifiedDate"];
+	        this.fileSize = source["fileSize"];
+	        this.fileType = source["fileType"];
+	    }
+	}
 
 }
 

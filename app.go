@@ -147,6 +147,20 @@ func (a *App) CloseApp() {
 	os.Exit(0)
 }
 
+func MoveFiles(srcPaths []string, destDir string) error {
+	for _, srcPath := range srcPaths {
+		filename := filepath.Base(srcPath)
+		destPath := filepath.Join(destDir, filename)
+
+		// Perform the move operation
+		err := os.Rename(srcPath, destPath)
+		if err != nil {
+			return fmt.Errorf("failed to move %s to %s: %w", srcPath, destPath, err)
+		}
+	}
+	return nil
+}
+
 type FileNode struct {
 	RelPath  string      `json:"relPath"`
 	Children []*FileNode `json:"children,omitempty"`
@@ -257,25 +271,29 @@ func (b *Getters) GetDirectoryFileCt(dirIndex int) (int, error) {
 }
 
 type FileProperties struct {
-	ModifiedDate time.Time
-	Size         int64
-	FileType     string
+	ModifiedDate string `json:"modifiedDate"`
+	FileSize     int64  `json:"fileSize"`
+	FileType     string `json:"fileType"`
 }
 
 func (b *Getters) GetFileProperties(filePath string) (FileProperties, error) {
 	var props FileProperties
 	fileInfo, err := os.Stat(filePath)
-	// fmt.Println("\033[33mFilePath", filePath, "\033[0m")
 	if err != nil {
-		fmt.Println("\033[33mError accessing file:", err, "\033[0m") // This will print the error in yellow
-		return props, err                                            // Return zero value of props and the error
+		fmt.Println("\033[33mError accessing file:", err, "\033[0m")
+		return props, err
 	}
-	props.ModifiedDate = fileInfo.ModTime()
-	props.Size = fileInfo.Size()
+
+	// Convert time.Time to RFC3339 formatted string
+	props.ModifiedDate = fileInfo.ModTime().Format(time.DateOnly) + " " + fileInfo.ModTime().Format(time.Kitchen)
+	props.FileSize = fileInfo.Size()
 
 	if fileInfo.IsDir() {
-		props.FileType = "directory"
+		props.FileType = "dir"
 	} else {
+		fmt.Println("\033[33mFileType:", fileInfo.Name(), "\033[0m")
+		// switch(filepath.Ext(fileInfo.Name()))
+
 		props.FileType = "file"
 	}
 	return props, nil

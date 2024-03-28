@@ -22,7 +22,8 @@ import (
 )
 
 type Encryptr struct {
-	ctx context.Context
+	ctx  context.Context
+	stop chan struct{} // Used to signal stopping the goroutine
 }
 
 // EVENT consts
@@ -50,14 +51,18 @@ func (b *Encryptr) GetDecryptedFiles(dirIndex int) ([]string, error) {
 	return unencryptedFiles, nil
 }
 
-func directoryWatcher() {
+func (b *Encryptr) DirectoryWatcher(onOrOff bool) {
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
 		fmt.Println(err)
 	}
 	defer watcher.Close()
+	fmt.Println("\033[32m", "Hot filer started", "\033[0m")
 
 	done := make(chan bool)
+
+	var debounceTimer *time.Timer
+	delayDuration := time.Second // Adjust the
 	go func() {
 		for {
 			select {
@@ -74,6 +79,13 @@ func directoryWatcher() {
 					fmt.Printf("Deleted file: %s\n", event.Name)
 				}
 				// Add more conditions here for other types of events.
+				if debounceTimer != nil {
+					debounceTimer.Stop()
+				}
+				debounceTimer = time.AfterFunc(delayDuration, func() {
+					fmt.Println("No further changes detected. Handling event.")
+					// Handle the event here (e.g., print a message or perform an action)
+				})
 
 				// Place your event handling logic here.
 				// To ensure an event only executes after all file modifications are complete,
@@ -90,7 +102,7 @@ func directoryWatcher() {
 	}()
 
 	// Replace the path below with the directory you want to watch
-	err = watcher.Add("/path/to/directory")
+	err = watcher.Add(directories[0])
 	if err != nil {
 		log.Fatal(err)
 	}

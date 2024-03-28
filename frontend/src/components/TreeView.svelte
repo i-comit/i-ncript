@@ -5,7 +5,7 @@
 <script lang="ts">
     // import { slide } from 'svelte/transition'
     import { onMount } from "svelte";
-    import { LogPrint } from "../../wailsjs/runtime/runtime";
+    import { LogError, LogPrint } from "../../wailsjs/runtime/runtime";
 
     import {
         FolderOpenSolid,
@@ -22,12 +22,16 @@
         pageName,
         expandRoot,
         getCurrentPageStore,
+        handleDragLeave,
+        handleDragOver,
+        handleDrop,
+        pageIndex,
     } from "../stores/treeView.ts";
 
     import {
-        getFilePath,
         getFileProperties,
         basePath,
+        formatFileSize,
     } from "../tools/utils.ts";
 
     interface FileNode {
@@ -36,6 +40,7 @@
     }
     export let tree: FileNode;
     import { AppPage, currentPage } from "../enums/AppPage.ts";
+    import { GetDirectoryPath } from "../../wailsjs/go/main/Getters";
     let _appPage: AppPage;
     _appPage = AppPage.Vault;
     currentPage.subscribe((value) => {
@@ -65,7 +70,6 @@
         _label = basePath(tree.relPath);
         return unsubscribe; // Unsubscribe when the component unmounts
     });
-
     function updateExpansionForNode(node: FileNode, expand: boolean) {
         // Recursive function to update the expansion state for a node and its children
         const currentPageStore = getCurrentPageStore();
@@ -82,28 +86,38 @@
         }
         expandRoot();
     }
+    let _filePropsTooltip: string;
 
-    function logFilePath(treeLabel: string) {
-        getFilePath(treeLabel).then((filePath) => {
-            LogPrint(filePath.toString() + treeLabel);
+    function logFilePath() {
+        GetDirectoryPath(pageIndex()).then((filePath) => {
+            LogPrint(filePath.toString() + tree.relPath);
         });
     }
 
-    function isFile(node: FileNode) {
-        getFilePath(basePath(tree.relPath)).then((filePath) => {
-            getFileProperties(filePath + node.relPath).then((fileProps) => {
-                LogPrint(fileProps.fileSize.toString());
+    function isFile() {
+        GetDirectoryPath(pageIndex()).then((filePath) => {
+            getFileProperties(filePath + tree.relPath).then((fileProps) => {
                 return fileProps.fileSize > 0;
             });
         });
-        return !node.children;
+        return !tree.children;
     }
+    // let parentNode: HTMLLIElement;
+    let buttonRef: HTMLButtonElement;
+
+    function handleMouseEnter() {
+        // changeChildrenBackground(parentNode, "green");
+        GetDirectoryPath(pageIndex()).then((filePath) => {
+            getFileProperties(filePath + tree.relPath).then((fileProps) => {
+                _filePropsTooltip = `${fileProps.modifiedDate} | ${formatFileSize(fileProps.fileSize)}`;
+                LogPrint("RelativePath " + tree.relPath);
+            });
+        });
+    }
+    function handleMouseLeave() {}
+
 </script>
 
-<!-- class={basePath(tree.relPath) === pageName() ? "pl-0.5" : "pl-3"}
-style={basePath(tree.relPath) === pageName()
-    ? "margin-top: -22px;"
-    : "margin-top: 1px;"} -->
 <div>
     <button
         class="z-10 fixed top-0 left-1/2 transform -translate-x-1/2 mt-0.5"
@@ -123,7 +137,13 @@ style={basePath(tree.relPath) === pageName()
     >
         <li>
             {#if tree.children && tree.children.length > 0}
-                <button on:click={toggleExpansion} class="flex">
+                <button
+                    on:click={toggleExpansion}
+                    class="flex"
+                    on:mouseenter={() => handleMouseEnter()}
+                    on:dragover={(event) => handleDragOver(tree.relPath, event)}
+                    on:drop={(event) => handleDrop(tree.relPath, event)}
+                >
                     {#if !expanded}
                         <FolderSolid class="w-3 mr-1"></FolderSolid>
                     {:else}
@@ -138,19 +158,29 @@ style={basePath(tree.relPath) === pageName()
                         {/each}
                     </ul>
                 {/if}
-            {:else if isFile(tree)}
+            {:else if isFile()}
                 <button
                     class="bg-gray-800"
-                    on:click={() => logFilePath(tree.relPath)}
+                    bind:this={buttonRef}
+                    on:click={() => logFilePath()}
+                    on:mouseenter={() => handleMouseEnter()}
+                    on:mouseleave={handleMouseLeave}
+                    on:dragover={(event) => handleDragOver(tree.relPath, event)}
+                    on:dragleave={handleDragLeave}
+                    on:drop={(event) => handleDrop(tree.relPath, event)}
                 >
                     {_label}
                 </button>
-                <Tooltip>{basePath(tree.relPath)}</Tooltip>
+                <Tooltip class="p-0 m-0 text-xs bg-gray-400">{_filePropsTooltip}</Tooltip>
             {:else}
-                <span class="flex">
+                <button
+                    class="flex"
+                    on:dragover={(event) => handleDragOver(tree.relPath, event)}
+                    on:drop={(event) => handleDrop(tree.relPath, event)}
+                >
                     <FolderSolid class="w-3 mr-1"></FolderSolid>
                     {_label}
-                </span>
+                </button>
             {/if}
         </li>
     </ul>
@@ -196,5 +226,12 @@ style={basePath(tree.relPath) === pageName()
         text-align: justify;
         font-size: small;
         text-overflow: clip;
+    }
+    button {
+        text-align: justify;
+        max-width: 12rem;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
 </style>
