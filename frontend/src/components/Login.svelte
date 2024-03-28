@@ -4,7 +4,7 @@
 
     import { usernameStore } from "../stores/usernameStore";
     import { passwordStore } from "../stores/passwordStore";
-    import { currentModal } from "../stores/currentModal";
+    import { Modals, currentModal } from "../enums/Modals";
 
     import { Login, ResizeWindow } from "../../wailsjs/go/main/App";
     import { EncryptString } from "../../wailsjs/go/main/Encryptr";
@@ -14,7 +14,6 @@
         InfoCircleOutline,
         AdjustmentsVerticalOutline,
     } from "flowbite-svelte-icons";
-    import { Modals } from "../enums/Modals";
 
     import Frame from "./Frame.svelte";
     import Info from "./Info.svelte";

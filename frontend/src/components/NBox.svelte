@@ -8,15 +8,12 @@
         CaretUpSolid,
     } from "flowbite-svelte-icons";
 
-    import { AppPage } from "../enums/AppPage";
-    import { Modals } from "../enums/Modals.ts";
+    import { AppPage } from "../enums/AppPage.ts";
+    import { Modals, currentModal } from "../enums/Modals.ts";
 
     import { usernameStore } from "../stores/usernameStore";
     import { pageChangeBtn } from "../stores/pageChangeBtn.js";
-    import { currentModal } from "../stores/currentModal";
-    import {
-       loadFileTree, fileTree,
-    } from "../stores/treeView.ts";
+    import { loadFileTree, fileTree } from "../stores/treeView.ts";
 
     import { switchFormButton, switchModals } from "../tools/utils.ts";
 

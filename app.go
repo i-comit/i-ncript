@@ -22,7 +22,6 @@ type App struct {
 type Getters struct {
 	ctx context.Context
 }
-type Logger struct{}
 
 func NewApp() *App {
 	return &App{}
@@ -266,16 +265,13 @@ type FileProperties struct {
 func (b *Getters) GetFileProperties(filePath string) (FileProperties, error) {
 	var props FileProperties
 	fileInfo, err := os.Stat(filePath)
-	fmt.Println("\033[33mFilePath", filePath, "\033[0m")
-
+	// fmt.Println("\033[33mFilePath", filePath, "\033[0m")
 	if err != nil {
 		fmt.Println("\033[33mError accessing file:", err, "\033[0m") // This will print the error in yellow
 		return props, err                                            // Return zero value of props and the error
 	}
-
 	props.ModifiedDate = fileInfo.ModTime()
 	props.Size = fileInfo.Size()
-	fmt.Println("\033[32mFILE PROPS: ", props.ModifiedDate.String()+" ", "\033[0m")
 
 	if fileInfo.IsDir() {
 		props.FileType = "directory"
@@ -299,8 +295,4 @@ func createDirectories(dirs ...string) error {
 		}
 	}
 	return nil
-}
-
-func (l *Logger) LogMessage(message string) {
-	fmt.Println("\033[31mFRONTEND:\033[0m \033[32m" + message + "\033[0m")
 }

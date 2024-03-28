@@ -5,11 +5,10 @@
   import O_Box from "./components/OBox.svelte";
   import WrongDir from "./components/WrongDir.svelte";
 
-  import { AppPage } from "./enums/AppPage.ts";
-  import { currentPage } from "./stores/currentPage.ts";
+  import { AppPage, currentPage } from "./enums/AppPage.ts";
   import { onMount } from "svelte";
   import { GetDirName } from "../wailsjs/go/main/Getters";
-  import { LogMessage } from "../wailsjs/go/main/Logger";
+  import { LogDebug, LogWarning } from "../wailsjs/runtime/runtime";
 
   let loggedIn = false;
   let _page: AppPage;
@@ -20,13 +19,13 @@
   function handleLoginSuccess() {
     loggedIn = true;
     currentPage.set(AppPage.Vault);
-    LogMessage("LOGGED IN")
+    LogWarning("Logged in");
   }
   let isRightDir = false;
 
   onMount(async () => {
     isRightDir = await GetDirName();
-    LogMessage(isRightDir.toString());
+    LogDebug(isRightDir.toString());
   });
 </script>
 

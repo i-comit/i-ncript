@@ -2,23 +2,15 @@
     import { MinimizeApp, CloseApp } from "../../wailsjs/go/main/App";
     import { MinusOutline, CloseOutline } from "flowbite-svelte-icons";
     import { Button, Input, GradientButton } from "flowbite-svelte";
+    import { LogDebug, LogError } from "../../wailsjs/runtime/runtime";
 
     function minimizeApp() {
         MinimizeApp()
             .then(() => {
-                console.log("Application minimized");
+                LogDebug("Application minimized");
             })
             .catch((error) => {
-                console.error("Failed to minimize application:", error);
-            });
-    }
-    function closeApp() {
-        CloseApp()
-            .then(() => {
-                console.log("Application minimized");
-            })
-            .catch((error) => {
-                console.error("Failed to minimize application:", error);
+                LogError("Failed to minimize application:", error);
             });
     }
 </script>
@@ -27,16 +19,13 @@
     class=" window-controls h-6 w-screen flex justify-end py-0.5 px-0"
     style="--wails-draggable:drag"
 >
-    <Button
-        pill={true}
-        class="!p-1 control-button !z-10"
-        on:click={minimizeApp}
+    <Button pill={true} class="!p-1 control-button !z-10" on:click={minimizeApp}
         ><MinusOutline class="w-5 h-5 m-0 p-0" color="white" /></Button
     >
     <Button
         pill={true}
         class="!p-1 control-button !z-10"
-        on:click={closeApp}
+        on:click={CloseApp}
         ><CloseOutline class="w-5 h-5 m-0 p-0" color="white" /></Button
     >
 </div>
@@ -52,7 +41,5 @@
         cursor: pointer;
         padding: 0;
         margin: 0;
-
-        /* margin-left: 0.5rem; */
     }
 </style>

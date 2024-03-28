@@ -24,7 +24,6 @@ func (m *App) onSecondInstanceLaunch(data options.SecondInstanceData) {
 func main() {
 	app := NewApp()
 	getters := &Getters{}
-	logger := &Logger{}
 	encryptr := &Encryptr{}
 
 	// Create application with options
@@ -42,7 +41,7 @@ func main() {
 		OnStartup: app.startup,
 		// OnShutdown: app.shutdown,
 		Bind: []interface{}{
-			app, getters, logger, encryptr,
+			app, getters, encryptr,
 		},
 		Windows: &windows.Options{
 			WebviewIsTransparent:              false,

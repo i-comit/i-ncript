@@ -5,17 +5,18 @@
 <script lang="ts">
     // import { slide } from 'svelte/transition'
     import { onMount } from "svelte";
+    import { LogPrint } from "../../wailsjs/runtime/runtime";
 
     import {
         FolderOpenSolid,
         FolderSolid,
         SearchOutline,
-        ShareNodesSolid,
-        PrinterOutline,
         DownloadSolid,
         FileCopySolid,
+        ExpandOutline,
+        CompressOutline,
     } from "flowbite-svelte-icons";
-    import { SpeedDial, SpeedDialButton } from "flowbite-svelte";
+    import { SpeedDial, SpeedDialButton, Tooltip } from "flowbite-svelte";
 
     import {
         pageName,
@@ -24,7 +25,6 @@
     } from "../stores/treeView.ts";
 
     import {
-        printFrontendMsg,
         getFilePath,
         getFileProperties,
         basePath,
@@ -35,14 +35,14 @@
         children?: FileNode[]; // Make children optional to match the Go structure
     }
     export let tree: FileNode;
-    import { currentPage } from "../stores/currentPage.ts";
-    import { AppPage } from "../enums/AppPage.ts";
+    import { AppPage, currentPage } from "../enums/AppPage.ts";
     let _appPage: AppPage;
     _appPage = AppPage.Vault;
     currentPage.subscribe((value) => {
         _appPage = value;
     });
-    // _appPage = $currentPage
+
+    let _label: string;
     let expanded = false;
 
     const toggleExpansion = () => {
@@ -62,49 +62,37 @@
                 expanded = state[basePathKey];
             }
         });
+        _label = basePath(tree.relPath);
         return unsubscribe; // Unsubscribe when the component unmounts
     });
 
     function updateExpansionForNode(node: FileNode, expand: boolean) {
         // Recursive function to update the expansion state for a node and its children
         const currentPageStore = getCurrentPageStore();
-        // Update the current node's expansion state
         currentPageStore.update((currentState) => {
             const basePathKey = basePath(node.relPath);
             currentState[basePathKey] = expand;
             return currentState;
         });
-
         // Recurse through children if any
         if (node.children) {
             for (const child of node.children) {
                 updateExpansionForNode(child, expand);
             }
         }
+        expandRoot();
     }
-
-    const collapseAll = () => {
-        updateExpansionForNode(tree, false);
-    };
-    // const expandRoot: () => void = () => {
-    //     const currentPageStore = getCurrentPageStore();
-    //     currentPageStore.update((currentState) => {
-    //         currentState["VAULT"] = true;
-    //         printFrontendMsg("RELPATH " + tree.relPath);
-    //         return currentState; //returns the currentState to currentPageStore
-    //     });
-    // };
 
     function logFilePath(treeLabel: string) {
         getFilePath(treeLabel).then((filePath) => {
-            printFrontendMsg(filePath.toString() + treeLabel);
+            LogPrint(filePath.toString() + treeLabel);
         });
     }
 
     function isFile(node: FileNode) {
         getFilePath(basePath(tree.relPath)).then((filePath) => {
             getFileProperties(filePath + node.relPath).then((fileProps) => {
-                printFrontendMsg(fileProps.fileSize.toString());
+                LogPrint(fileProps.fileSize.toString());
                 return fileProps.fileSize > 0;
             });
         });
@@ -141,7 +129,7 @@ style={basePath(tree.relPath) === pageName()
                     {:else}
                         <FolderOpenSolid class="w-3 mr-1"></FolderOpenSolid>
                     {/if}
-                    {basePath(tree.relPath)}
+                    {_label}
                 </button>
                 {#if expanded}
                     <ul>
@@ -155,12 +143,13 @@ style={basePath(tree.relPath) === pageName()
                     class="bg-gray-800"
                     on:click={() => logFilePath(tree.relPath)}
                 >
-                    {basePath(tree.relPath)}
+                    {_label}
                 </button>
+                <Tooltip>{basePath(tree.relPath)}</Tooltip>
             {:else}
                 <span class="flex">
                     <FolderSolid class="w-3 mr-1"></FolderSolid>
-                    {basePath(tree.relPath)}
+                    {_label}
                 </span>
             {/if}
         </li>
@@ -170,21 +159,23 @@ style={basePath(tree.relPath) === pageName()
             defaultClass="fixed end-0"
             class="bg-gray-800 rounded-full bg-white"
         >
-            <SpeedDialButton name="By Size " class="h-10 w-14">
-                <DownloadSolid class="w-6 h-6" />
-            </SpeedDialButton>
-            <SpeedDialButton name="By Date " class="h-10 w-14">
-                <FileCopySolid class="w-6 h-6" />
-            </SpeedDialButton>
-            <SpeedDialButton name="Collapse " class="h-10 w-14 right-10">
-                <ShareNodesSolid class="w-6 h-6" />
+            <SpeedDialButton
+                name="Collapse "
+                class="h-10 w-14 right-10"
+                on:click={() => {
+                    updateExpansionForNode(tree, false);
+                }}
+            >
+                <CompressOutline class="w-6 h-6" />
             </SpeedDialButton>
             <SpeedDialButton
                 name="Expand "
                 class="h-10 w-14 text-lg"
-                on:click={expandRoot}
+                on:click={() => {
+                    updateExpansionForNode(tree, true);
+                }}
             >
-                <PrinterOutline class="w-6 h-6" />
+                <ExpandOutline class="w-6 h-6" />
             </SpeedDialButton>
         </SpeedDial>
     </div>

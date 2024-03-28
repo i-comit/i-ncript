@@ -28,7 +28,7 @@ type Encryptr struct {
 // EVENT consts
 var fileProcessed = "fileProcessed"
 var fileCt = "fileCount"
-var fileName = "fileName"
+var addLogFile = "addLogFile"
 
 func (b *Encryptr) EncryptString(stringToEncrypt string) string {
 	encryptedString, _ := encryptString([]byte(stringToEncrypt))
@@ -137,9 +137,7 @@ func (a *App) EncryptFilesInDir(dirIndex int) (bool, error) {
 		return false, err
 	}
 	var fileIter = 0
-	//
 	for i, filePath := range filePaths {
-
 		if strings.HasSuffix(filePath, ".enc") {
 			continue
 		}
@@ -152,15 +150,12 @@ func (a *App) EncryptFilesInDir(dirIndex int) (bool, error) {
 		fileIter++
 		if a.ctx != nil {
 			runtime.EventsEmit(a.ctx, fileProcessed, i+1)
-			runtime.EventsEmit(a.ctx, fileName, filePath)
-
-			// fmt.Println("\033[31mfileCount ", dirFileCt, "\033[0m")
+			runtime.EventsEmit(a.ctx, addLogFile, filePath)
 		}
-		// fmt.Println("Encrypted file created:", encryptedFile.Name())
 	}
 	if fileIter != 0 {
 		if a.ctx != nil {
-			a.reverseProgress()
+			a.reverseProgress(true, len(filePaths))
 			return false, err
 		}
 	} else {
@@ -192,19 +187,19 @@ func (a *App) DecryptFilesInDir() error {
 
 		if a.ctx != nil {
 			runtime.EventsEmit(a.ctx, fileProcessed, i+1)
-			runtime.EventsEmit(a.ctx, fileName, filePath)
-			fmt.Println("\033[31mfileCount ", i+1, "\033[0m")
+			runtime.EventsEmit(a.ctx, addLogFile, filePath)
 		}
 	}
 	if fileIter != 0 {
 		if a.ctx != nil {
-			a.reverseProgress()
+			a.reverseProgress(false, len(filePaths))
 		}
 	}
 	return nil
 }
 
-func (a *App) reverseProgress() {
+func (a *App) reverseProgress(encrypt bool, files int) {
+
 	runtime.EventsEmit(a.ctx, fileCt, 100)
 	time.Sleep(1 * time.Second)
 	done := make(chan bool) // Cr
@@ -220,13 +215,20 @@ func (a *App) reverseProgress() {
 		done <- true // Signal that the loop is done
 	}()
 	<-done // Wait for the goroutine to signal it's done
+	if encrypt {
+		response := fmt.Sprintf("encrypted %d files.", files)
+		runtime.EventsEmit(a.ctx, addLogFile, response)
+	} else {
+		response := fmt.Sprintf("decrypted %d files.", files)
+		runtime.EventsEmit(a.ctx, addLogFile, response)
+	}
 
 	if a.ctx != nil {
 		time.Sleep(time.Second)
 		a.ResizeWindow(_width*2, _height+25, false)
 		runtime.EventsEmit(a.ctx, fileProcessed, 0)
 		runtime.EventsEmit(a.ctx, fileCt, 0)
-		runtime.EventsOff(a.ctx, fileProcessed, fileCt, fileName)
+		runtime.EventsOff(a.ctx, fileProcessed, fileCt, addLogFile)
 	}
 }
 

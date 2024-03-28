@@ -1,11 +1,20 @@
 import { writable } from "svelte/store";
 import { get } from "svelte/store";
-import { currentPage } from "./currentPage";
-import { AppPage } from "../enums/AppPage";
-import { basePath, printFrontendMsg } from "../tools/utils";
+import { AppPage, currentPage } from "../enums/AppPage";
+import { basePath } from "../tools/utils";
 import {
     BuildDirectoryFileTree
 } from "../../wailsjs/go/main/App";
+import {
+    LogDebug,
+    LogError,
+    LogInfo,
+} from "../../wailsjs/runtime/runtime";
+
+import {
+    GetDirectoryPath,
+    GetFileProperties
+} from "../../wailsjs/go/main/Getters";
 
 export const vaultExpansionState = writable<{ [key: string]: boolean }>({});
 export const vaultRootExpanded = writable<boolean>(false);
@@ -21,23 +30,11 @@ interface FileNode {
 export const fileTree = writable<FileNode>({ relPath: "", children: [] });
 
 let expanded = false;
-
 let _appPage: AppPage;
 
 export const pageName: () => string = () => {
-    _appPage = get(currentPage)
-    switch (
-    _appPage // Assuming _appPage holds the current page enum value
-    ) {
-        case AppPage.Vault:
-            return "VAULT";
-        case AppPage.NBox:
-            return "N-BOX";
-        case AppPage.OBox:
-            return "O-BOX";
-        default:
-            throw new Error("Unrecognized page");
-    }
+    const _appPage: AppPage = get(currentPage);
+    return _appPage;
 };
 
 export function getCurrentPageStore() {
@@ -56,23 +53,21 @@ export function getCurrentPageStore() {
     }
 }
 
-
-export async function loadFileTree(index: number) {
+export function loadFileTree(index: number) {
     BuildDirectoryFileTree(index)
         .then((result: FileNode) => {
             fileTree.set(result);
             loadExpansionState(index)
         })
         .catch((error) => {
-            printFrontendMsg("Failed to get directory structure" + error);
-            // LogMessage(error);
+            LogError("Failed to get directory structure: " + error);
         });
 }
 
 function loadExpansionState(index: number) {
     const currentPageStore = getCurrentPageStore();
     GetDirectoryPath(index).then((dirPath) => {
-        printFrontendMsg("EXPORTED " + dirPath);
+        LogInfo("Expanded " + dirPath + " file tree.");
         const unsubscribe = currentPageStore.subscribe((state) => {
             const basePathKey = dirPath;
             if (state[basePathKey] !== undefined) {
@@ -86,32 +81,24 @@ function loadExpansionState(index: number) {
 
 export const expandRoot: () => void = () => {
     const currentPageStore = getCurrentPageStore();
-    // let _fileTree = get(fileTree)
     _appPage = get(currentPage)
     var index = 0;
     switch (
     _appPage // Assuming _appPage holds the current page enum value
     ) {
         case AppPage.Vault:
+        default:
             index = 0;
         case AppPage.NBox:
             index = 1;
         case AppPage.OBox:
             index = 2;
-        default:
-            index = 0;
     };
     GetDirectoryPath(index).then((dirPath) => {
         currentPageStore.update((currentState) => {
             currentState[pageName()] = true;
-            printFrontendMsg("RELPATH EXPANDED " + dirPath);
             return currentState; //returns the currentState to currentPageStore
         });
     });
 
 };
-
-import {
-    GetDirectoryPath,
-    GetFileProperties
-} from "../../wailsjs/go/main/Getters";

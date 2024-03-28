@@ -3,11 +3,10 @@
     import { onMount } from "svelte";
     import { GradientButton, Label, Input } from "flowbite-svelte";
 
-    import { AppPage } from "../enums/AppPage";
-    import { Modals } from "../enums/Modals.ts";
+    import { AppPage } from "../enums/AppPage.ts";
+    import { Modals, currentModal } from "../enums/Modals.ts";
 
     import { usernameStore } from "../stores/usernameStore";
-    import { currentModal } from "../stores/currentModal";
     import { pageChangeBtn } from "../stores/pageChangeBtn.js";
     import { loadFileTree, fileTree } from "../stores/treeView";
 
@@ -37,9 +36,6 @@
         //     }, 10);
         // });
     });
-    // function buttonAction(actionName) {
-    //     console.log(`Action for ${actionName}`);
-    // }
 </script>
 
 <div class="flex h-screen rounded-lg">

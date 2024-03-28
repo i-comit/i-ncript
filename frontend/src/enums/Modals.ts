@@ -5,3 +5,7 @@ export enum Modals {
     Filter = "Filter",
     Logger = "Logger",
 }
+
+import { writable } from 'svelte/store';
+
+export const currentModal = writable<Modals>(Modals.None);

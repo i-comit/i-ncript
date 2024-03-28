@@ -1,16 +1,8 @@
-import {
-    currentPage
-} from '../stores/currentPage';
-import {
-    currentModal
-} from '../stores/currentModal';
 
-import {
-    AppPage
-} from '../enums/AppPage';
-import {
-    Modals
-} from '../enums/Modals';
+import { get } from 'svelte/store';
+
+import { AppPage, currentPage } from '../enums/AppPage';
+import { Modals, currentModal } from '../enums/Modals';
 
 import {
     ResizeWindow
@@ -19,14 +11,12 @@ import {
     GetDirectoryPath,
     GetFileProperties
 } from "../../wailsjs/go/main/Getters";
-import { LogMessage } from "../../wailsjs/go/main/Logger";
-import { get } from 'svelte/store';
+import { LogDebug, LogTrace } from "../../wailsjs/runtime/runtime";
 
 export const width = 220
 export const height = 180
 
 export function switchFormButton(page: AppPage) {
-    console.log(`Switching to ${page}`);
     currentPage.set(page); // Assuming currentPage is a writable store
 }
 
@@ -61,7 +51,7 @@ export function switchModals(modal: Modals) {
                 else
                     ResizeWindow(width * 2, height, false)
             } catch (error) {
-                console.error("Error calling ResizeWindow", error);
+                LogTrace("Error calling ResizeWindow: " + error);
             }
             break;
     }
@@ -75,10 +65,9 @@ interface FileProperties {
 export async function getFileProperties(filePath: string): Promise<FileProperties> {
     try {
         const properties: FileProperties = await GetFileProperties(filePath);
-        printFrontendMsg(`File properties for ${filePath}: ${JSON.stringify(properties)}`);
         return properties;
     } catch (error) {
-        printFrontendMsg("Failed to get file properties" + error);
+        LogTrace("Failed to get file properties; " + error);
         throw error; // Rethrow or handle as needed
     }
 }
@@ -95,10 +84,6 @@ export async function getFilePath(label: string): Promise<string> {
             index = 2; break;
     }
     return await GetDirectoryPath(index); // Await the promise to resolve
-}
-
-export function printFrontendMsg(str: string) {
-    LogMessage(str);
 }
 
 export function basePath(path: string): string {

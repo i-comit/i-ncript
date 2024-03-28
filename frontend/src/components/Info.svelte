@@ -11,8 +11,7 @@
         Range,
     } from "flowbite-svelte";
     import { onMount } from "svelte";
-    import { currentPage } from "../stores/currentPage";
-    import { AppPage } from "../enums/AppPage";
+    import { AppPage, currentPage } from "../enums/AppPage";
     import { pageChangeBtn } from "../stores/pageChangeBtn";
 
     import { switchFormButton } from "../tools/utils";

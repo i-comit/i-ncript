@@ -1,12 +1,13 @@
 <!-- https://codepen.io/singhimalaya/pen/EdVzNL -->
 <script lang="ts">
+    import { LogPrint } from "../../wailsjs/runtime/runtime";
+
     let isChecked: boolean;
     isChecked = false;
-    import { LogMessage } from "../../wailsjs/go/main/Logger";
 
     // Function to log the checkbox's state
     function logCheckboxState() {
-        LogMessage("Checkbox is pressed. Current state:" + isChecked);
+        LogPrint("Checkbox is pressed. Current state:" + isChecked);
     }
 </script>
 

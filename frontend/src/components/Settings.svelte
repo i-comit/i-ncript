@@ -19,10 +19,8 @@
         MoonSolid,
     } from "flowbite-svelte-icons";
 
-    import { currentPage } from "../stores/currentPage";
-    import { AppPage } from "../enums/AppPage";
+    import { AppPage, currentPage } from "../enums/AppPage";
 
-    function closeSettingsPanel() {}
     function toggleLightDarkMode() {}
     let _currentPage;
     currentPage.subscribe((value) => {

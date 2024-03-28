@@ -15,12 +15,11 @@
     } from "flowbite-svelte-icons";
 
     import { AppPage } from "../enums/AppPage.ts";
-    import { Modals } from "../enums/Modals.ts";
+    import { Modals, currentModal } from "../enums/Modals.ts";
 
     import { usernameStore } from "../stores/usernameStore";
     import { pageChangeBtn } from "../stores/pageChangeBtn.js";
     import { encryptProgress } from "../stores/encryptProgress";
-    import { currentModal } from "../stores/currentModal";
 
     import { loadFileTree, fileTree } from "../stores/treeView.ts";
 
@@ -36,9 +35,12 @@
         GetDecryptedFiles,
     } from "../../wailsjs/go/main/Encryptr";
 
-    import { LogMessage } from "../../wailsjs/go/main/Logger";
-
-    import { switchFormButton, switchModals, height, width } from "../tools/utils.ts";
+    import {
+        switchFormButton,
+        switchModals,
+        height,
+        width,
+    } from "../tools/utils.ts";
 
     import Frame from "./Frame.svelte";
     import Info from "./Info.svelte";
@@ -46,24 +48,20 @@
     import TreeView from "./TreeView.svelte";
     import Logger from "./Logger.svelte";
 
-    import { EventsOn } from "../../wailsjs/runtime/runtime";
+    import { EventsOn, LogPrint } from "../../wailsjs/runtime/runtime";
 
     let _fileCt: number;
     _fileCt = 0;
     onMount(() => {
         loadFileTree(0);
-
-        //     EventsOn("fileProcessed", (currentCount) => {
-        //         encryptProgress.set(currentCount);
-        //         _encryptPercent = (_encryptProgress / _fileCt) * 100;
-        //     });
-        //     EventsOn("fileCount", (fileCount) => {
-        //         _fileCt = fileCount;
-        //         // LogMessage(`New fileCount ${_fileCt}`);
-        //     });
-        //     EventsOn("fileName", (fileName) => {
-        // addLogEntry(basePath(fileName));
-        //     });
+        EventsOn("fileProcessed", (currentCount) => {
+            encryptProgress.set(currentCount);
+            _encryptPercent = (_encryptProgress / _fileCt) * 100;
+        });
+        EventsOn("fileCount", (fileCount) => {
+            _fileCt = fileCount;
+            LogPrint(`New fileCount ${_fileCt}`);
+        });
     });
     let _username: string;
     usernameStore.subscribe((value) => {
