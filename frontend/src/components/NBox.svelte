@@ -1,5 +1,5 @@
 <!-- NBox.svelte -->
-<script>
+<script lang="ts">
     import { onMount } from "svelte";
     import { Label, Input, GradientButton, Button } from "flowbite-svelte";
     import {
@@ -14,6 +14,7 @@
     import { usernameStore } from "../stores/usernameStore";
     import { fileTree } from "../stores/fileTree.ts";
     import { pageChangeBtn } from "../stores/pageChangeBtn.js";
+    import { currentModal } from "../stores/currentModal";
 
     import {
         switchFormButton,
@@ -22,20 +23,29 @@
     } from "../utils";
 
     import Frame from "./Frame.svelte";
+    import Info from "./Info.svelte";
+    import Settings from "./Settings.svelte";
     import TreeView from "./TreeView.svelte";
+    import Logger from "./Logger.svelte";
+
+    import {loadExpansionState} from "../stores/treeViewStates"
 
     let loggedInUser;
     usernameStore.subscribe(($user) => {
         loggedInUser = $user;
     });
 
-    function buttonAction(actionName) {
-        console.log(`Action for ${actionName}`);
-        // Define additional logic for button actions here
-    }
-
+    // function buttonAction(actionName) {
+    //     console.log(`Action for ${actionName}`);
+    //     // Define additional logic for button actions here
+    // }
+    let _modal: Modals;
+    currentModal.subscribe((value) => {
+        _modal = value;
+    });
     onMount(() => {
         loadDirectoryTree(1);
+        // loadExpansionState();
     });
 </script>
 
@@ -67,8 +77,7 @@
                 <GradientButton
                     color="cyanToBlue"
                     class="max-h-1"
-                    on:click={() => buttonAction("HOT FILER")}
-                    >ENTER</GradientButton
+                    on:click={() => {}}>ENTER</GradientButton
                 >
             </div>
             <div class="h-2"></div>
@@ -100,8 +109,16 @@
             </div>
         </div>
     </div>
-    <div id="right-panel" class="bg-white mt-6">
-        <TreeView tree={$fileTree} />
+    <div id="right-panel" class="bg-gray-500 mt-6 px-0">
+        {#if _modal === Modals.None}
+            <TreeView tree={$fileTree} />
+        {:else if _modal === Modals.Settings}
+            <Settings />
+        {:else if _modal === Modals.Logger}
+            <Logger />
+        {:else if _modal === Modals.Info}
+            <Info />
+        {/if}
     </div>
 </div>
 

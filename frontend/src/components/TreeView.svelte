@@ -15,12 +15,20 @@
         FolderOpenSolid,
         FolderSolid,
         SearchOutline,
+        ShareNodesSolid,
+        PrinterOutline,
+        DownloadSolid,
+        FileCopySolid,
     } from "flowbite-svelte-icons";
+    import { SpeedDial, SpeedDialButton } from "flowbite-svelte";
+
+    // import {pageName, toggleExpansion} from "../stores/treeViewStates"
+
     import {
         printFrontendMsg,
         getFilePath,
         getFileProperties,
-        basePath
+        basePath,
     } from "../utils.ts";
 
     interface FileNode {
@@ -35,6 +43,7 @@
     currentPage.subscribe((value) => {
         _appPage = value;
     });
+    // _appPage = $currentPage
     let expanded = false;
 
     function getCurrentPageStore() {
@@ -60,7 +69,10 @@
             return currentState;
         });
     };
+
     onMount(() => {
+        expandRoot();
+        printFrontendMsg("AMOGUS");
         const currentPageStore = getCurrentPageStore();
         const unsubscribe = currentPageStore.subscribe((state) => {
             const basePathKey = basePath(tree.relPath);
@@ -68,9 +80,54 @@
                 expanded = state[basePathKey];
             }
         });
-
         return unsubscribe; // Unsubscribe when the component unmounts
     });
+
+    function updateExpansionForNode(node: FileNode, expand: boolean) {
+        // Recursive function to update the expansion state for a node and its children
+        // const currentPageStore = getCurrentPageStore();
+        // Update the current node's expansion state
+        currentPageStore.update((currentState) => {
+            const basePathKey = basePath(node.relPath);
+            currentState[basePathKey] = expand;
+            return currentState;
+        });
+
+        // Recurse through children if any
+        if (node.children) {
+            for (const child of node.children) {
+                updateExpansionForNode(child, expand);
+            }
+        }
+    }
+    const currentPageStore = getCurrentPageStore();
+
+    const collapseAll = () => {
+        updateExpansionForNode(tree, false);
+    };
+    const expandRoot: () => void = () => {
+        // const currentPageStore = getCurrentPageStore();
+        currentPageStore.update((currentState) => {
+            currentState[pageName()] = true;
+            printFrontendMsg(" REL PATH " + tree.relPath);
+            return currentState; //returns the currentState to currentPageStore
+        });
+    };
+
+    const pageName: () => string = () => {
+        switch (
+            _appPage // Assuming _appPage holds the current page enum value
+        ) {
+            case AppPage.Vault:
+                return "VAULT";
+            case AppPage.NBox:
+                return "N-BOX";
+            case AppPage.OBox:
+                return "O-BOX";
+            default:
+                throw new Error("Unrecognized page");
+        }
+    };
 
     function logFilePath(treeLabel: string) {
         getFilePath(treeLabel).then((filePath) => {
@@ -89,15 +146,27 @@
     }
 </script>
 
+<!-- class={basePath(tree.relPath) === pageName() ? "pl-0.5" : "pl-3"}
+style={basePath(tree.relPath) === pageName()
+    ? "margin-top: -22px;"
+    : "margin-top: 1px;"} -->
 <div>
     <button
-        class="z-20 fixed top-0 left-1/2 transform -translate-x-1/2 mt-0.5"
+        class="z-10 fixed top-0 left-1/2 transform -translate-x-1/2 mt-0.5"
         style="--wails-draggable:drag"
     >
         <SearchOutline class="w-5 h-5" color="dark" />
     </button>
-
-    <ul>
+    <!-- <div
+        class="w-full absolute top-0 bg-gray-600 h-6"
+        style="--wails-draggable:drag"
+    ></div> -->
+    <ul
+        class={basePath(tree.relPath) === pageName() ? "pl-0.5" : "pl-3"}
+        style={basePath(tree.relPath) === pageName()
+            ? "margin-top: -22px;"
+            : "margin-top: 1px;"}
+    >
         <li>
             {#if tree.children && tree.children.length > 0}
                 <button on:click={toggleExpansion} class="flex">
@@ -130,19 +199,48 @@
             {/if}
         </li>
     </ul>
+    <div id="dial" class="fixed">
+        <SpeedDial
+            defaultClass="fixed end-0"
+            class="bg-gray-800 rounded-full bg-white"
+        >
+            <SpeedDialButton name="By Size " class="h-10 w-14">
+                <DownloadSolid class="w-6 h-6" />
+            </SpeedDialButton>
+            <SpeedDialButton name="By Date " class="h-10 w-14">
+                <FileCopySolid class="w-6 h-6" />
+            </SpeedDialButton>
+            <SpeedDialButton
+                name="Collapse "
+                class="h-10 w-14 right-10"
+            >
+                <ShareNodesSolid class="w-6 h-6" />
+            </SpeedDialButton>
+            <SpeedDialButton
+                name="Expand "
+                class="h-10 w-14 text-lg"
+                on:click={expandRoot}
+            >
+                <PrinterOutline class="w-6 h-6" />
+            </SpeedDialButton>
+        </SpeedDial>
+    </div>
 </div>
 
 <style>
+    #dial {
+        right: -12px !important;
+        bottom: 10vh !important;
+        transform: scale(0.55) !important;
+        z-index: 5;
+    }
+
     ul {
         margin: 0px;
         list-style: none;
-        padding-left: 0.4rem;
         user-select: none;
-        background-color: gray;
         text-align: justify;
         font-size: small;
-    }
-    .hide-root {
-        display: none;
+        text-overflow: clip;
     }
 </style>

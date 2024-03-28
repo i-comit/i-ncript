@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { SpeedDial, SpeedDialButton, Rating } from "flowbite-svelte";
+    import { SpeedDial, SpeedDialButton } from "flowbite-svelte";
     import {
         ShareNodesSolid,
         PrinterOutline,
@@ -20,13 +20,13 @@
             <SpeedDialButton name="Share " class="h-12 w-14 right-10">
                 <ShareNodesSolid class="w-6 h-6" />
             </SpeedDialButton>
-            <SpeedDialButton name="Print" class="h-12 w-14 text-lg">
+            <SpeedDialButton name="Errors " class="h-12 w-14 text-lg">
                 <PrinterOutline class="w-6 h-6" />
             </SpeedDialButton>
-            <SpeedDialButton name="Download" class="h-12 w-14">
+            <SpeedDialButton name="Warnings " class="h-12 w-14">
                 <DownloadSolid class="w-6 h-6" />
             </SpeedDialButton>
-            <SpeedDialButton name="Copy" class="h-12 w-14">
+            <SpeedDialButton name="Export " class="h-12 w-14">
                 <FileCopySolid class="w-6 h-6" />
             </SpeedDialButton>
         </SpeedDial>
@@ -40,9 +40,8 @@
 
 <style>
     #dial {
-        /* Example of explicitly setting top and right values if needed */
-        right: -8px !important;
-        bottom: 9vh !important;
+        right: -12px !important;
+        bottom: 12vh !important;
         /* Ensure the scale transform is applied as you want it */
         transform: scale(0.55) !important;
         z-index: 5;

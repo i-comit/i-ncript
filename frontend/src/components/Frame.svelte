@@ -29,13 +29,13 @@
 >
     <Button
         pill={true}
-        class="!p-1 control-button"
+        class="!p-1 control-button !z-10"
         on:click={minimizeApp}
         ><MinusOutline class="w-5 h-5 m-0 p-0" color="white" /></Button
     >
     <Button
         pill={true}
-        class="!p-1 control-button"
+        class="!p-1 control-button !z-10"
         on:click={closeApp}
         ><CloseOutline class="w-5 h-5 m-0 p-0" color="white" /></Button
     >
@@ -44,9 +44,8 @@
 <style>
     .window-controls {
         position: absolute;
-        top: 0;
-        right: 0;
-        z-index: 0;
+        top: 0px;
+        right: 0px;
     }
 
     .control-button {

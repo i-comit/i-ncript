@@ -20,6 +20,7 @@
   function handleLoginSuccess() {
     loggedIn = true;
     currentPage.set(AppPage.Vault);
+    LogMessage("LOGGED IN")
   }
   let isRightDir = false;
 

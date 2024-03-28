@@ -177,7 +177,6 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 		if err != nil {
 			return err
 		}
-		// Split the relative path into parts
 		parts := strings.Split(relativePath, string(filepath.Separator))
 		addPath(rootNode, parts, "")
 		return nil
