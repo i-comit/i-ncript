@@ -10,7 +10,7 @@
         DropdownItem,
         Range,
     } from "flowbite-svelte";
-    import { switchFormButton } from "../utils";
+    import { switchFormButton } from "../tools/utils";
     import {
         InfoCircleOutline,
         AdjustmentsVerticalOutline,

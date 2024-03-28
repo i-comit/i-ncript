@@ -4,15 +4,25 @@
     import { GradientButton, Label, Input } from "flowbite-svelte";
 
     import { AppPage } from "../enums/AppPage";
+    import { Modals } from "../enums/Modals.ts";
 
     import { usernameStore } from "../stores/usernameStore";
+    import { currentModal } from "../stores/currentModal";
     import { pageChangeBtn } from "../stores/pageChangeBtn.js";
+    import { loadFileTree, fileTree } from "../stores/treeView";
 
-    import { switchFormButton, loadDirectoryTree } from "../utils";
+    import { switchFormButton } from "../tools/utils.ts";
 
     import Frame from "./Frame.svelte";
     import TreeView from "./TreeView.svelte";
-    import { fileTree } from "../stores/treeView";
+    import Info from "./Info.svelte";
+    import Settings from "./Settings.svelte";
+    import Logger from "./Logger.svelte";
+
+    let _modal: Modals;
+    currentModal.subscribe((value) => {
+        _modal = value;
+    });
 
     let loggedInUser;
     usernameStore.subscribe(($user) => {
@@ -20,7 +30,12 @@
     });
 
     onMount(() => {
-        loadDirectoryTree(2);
+        loadFileTree(2);
+        // loadDirectoryTree(2).then(() => {
+        //     setTimeout(() => {
+        //         loadExpansionState(2);
+        //     }, 10);
+        // });
     });
     // function buttonAction(actionName) {
     //     console.log(`Action for ${actionName}`);
@@ -52,9 +67,7 @@
                 />
             </div>
             <div class="row center">
-                <GradientButton
-                    color="cyanToBlue"
-                    class="max-h-1"
+                <GradientButton color="cyanToBlue" class="max-h-1"
                     >ENTER</GradientButton
                 >
             </div>
@@ -76,8 +89,16 @@
             </div>
         </div>
     </div>
-    <div id="right-panel" class="bg-white mt-6">
-        <TreeView tree={$fileTree} />
+    <div id="right-panel" class="bg-gray-500 mt-6 px-0">
+        {#if _modal === Modals.None}
+            <TreeView tree={$fileTree} />
+        {:else if _modal === Modals.Settings}
+            <Settings />
+        {:else if _modal === Modals.Logger}
+            <Logger />
+        {:else if _modal === Modals.Info}
+            <Info />
+        {/if}
     </div>
 </div>
 

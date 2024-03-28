@@ -22,7 +22,7 @@
     import { encryptProgress } from "../stores/encryptProgress";
     import { currentModal } from "../stores/currentModal";
 
-    import { loadExpansionState, fileTree } from "../stores/treeView.ts";
+    import { loadFileTree, fileTree } from "../stores/treeView.ts";
 
     import { addLogEntry } from "../tools/logger.ts";
 
@@ -38,15 +38,7 @@
 
     import { LogMessage } from "../../wailsjs/go/main/Logger";
 
-    import {
-        switchFormButton,
-        switchModals,
-        loadDirectoryTree,
-        height,
-        width,
-        basePath,
-        printFrontendMsg,
-    } from "../utils.ts";
+    import { switchFormButton, switchModals, height, width } from "../tools/utils.ts";
 
     import Frame from "./Frame.svelte";
     import Info from "./Info.svelte";
@@ -59,9 +51,7 @@
     let _fileCt: number;
     _fileCt = 0;
     onMount(() => {
-        printFrontendMsg("LOL!!");
-        loadDirectoryTree(0);
-        // loadExpansionState();
+        loadFileTree(0);
 
         //     EventsOn("fileProcessed", (currentCount) => {
         //         encryptProgress.set(currentCount);

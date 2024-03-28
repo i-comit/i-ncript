@@ -1,26 +1,25 @@
 import {
     currentPage
-} from './stores/currentPage';
+} from '../stores/currentPage';
 import {
     currentModal
-} from './stores/currentModal';
-import { fileTree } from './stores/treeView';
+} from '../stores/currentModal';
 
 import {
     AppPage
-} from './enums/AppPage';
+} from '../enums/AppPage';
 import {
     Modals
-} from './enums/Modals';
+} from '../enums/Modals';
 
 import {
-    ResizeWindow, BuildDirectoryFileTree
-} from "../wailsjs/go/main/App";
+    ResizeWindow
+} from "../../wailsjs/go/main/App";
 import {
     GetDirectoryPath,
     GetFileProperties
-} from "../wailsjs/go/main/Getters";
-import { LogMessage } from "../wailsjs/go/main/Logger";
+} from "../../wailsjs/go/main/Getters";
+import { LogMessage } from "../../wailsjs/go/main/Logger";
 import { get } from 'svelte/store';
 
 export const width = 220
@@ -32,15 +31,12 @@ export function switchFormButton(page: AppPage) {
 }
 
 export function switchModals(modal: Modals) {
-
-    const _modal = get(currentModal);
-    if (_modal === modal) {
+    const _currentModal = get(currentModal);
+    if (_currentModal === modal) {
         currentModal.set(Modals.None);
     } else {
         currentModal.set(modal);
     }
-
-    const _currentModal = get(currentModal);
     const _currentPage = get(currentPage);
 
     switch (_currentModal) {
@@ -71,29 +67,12 @@ export function switchModals(modal: Modals) {
     }
 }
 
-export function loadDirectoryTree(index: number) {
-    interface FileNode {
-        relPath: string;
-        children?: FileNode[]; // Make children optional to match the Go structure
-    }
-    BuildDirectoryFileTree(index)
-        .then((result: FileNode) => {
-            fileTree.set(result);
-        })
-        .catch((error) => {
-            console.error("Failed to get directory structure", error);
-            // LogMessage(error);
-        });
-}
-
 interface FileProperties {
     modifiedDate: string;
     fileSize: number;
     fileType?: string; // Optional
 }
-
 export async function getFileProperties(filePath: string): Promise<FileProperties> {
-    // logFrontendMessage("File PATH " + filePath);
     try {
         const properties: FileProperties = await GetFileProperties(filePath);
         printFrontendMsg(`File properties for ${filePath}: ${JSON.stringify(properties)}`);
@@ -106,7 +85,6 @@ export async function getFileProperties(filePath: string): Promise<FilePropertie
 
 export async function getFilePath(label: string): Promise<string> {
     var index = 0;
-
     const _currentPage = get(currentPage);
     switch (_currentPage) {
         case AppPage.Vault:

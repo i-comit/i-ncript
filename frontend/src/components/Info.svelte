@@ -15,7 +15,7 @@
     import { AppPage } from "../enums/AppPage";
     import { pageChangeBtn } from "../stores/pageChangeBtn";
 
-    import { switchFormButton } from "../utils";
+    import { switchFormButton } from "../tools/utils";
     import { DownloadSolid, GithubSolid } from "flowbite-svelte-icons";
 
     let cwd = "";

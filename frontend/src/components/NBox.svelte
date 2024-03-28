@@ -14,13 +14,11 @@
     import { usernameStore } from "../stores/usernameStore";
     import { pageChangeBtn } from "../stores/pageChangeBtn.js";
     import { currentModal } from "../stores/currentModal";
-    import { loadExpansionState, fileTree } from "../stores/treeView.ts";
-
     import {
-        switchFormButton,
-        switchModals,
-        loadDirectoryTree,
-    } from "../utils";
+       loadFileTree, fileTree,
+    } from "../stores/treeView.ts";
+
+    import { switchFormButton, switchModals } from "../tools/utils.ts";
 
     import Frame from "./Frame.svelte";
     import Info from "./Info.svelte";
@@ -33,17 +31,12 @@
         loggedInUser = $user;
     });
 
-    // function buttonAction(actionName) {
-    //     console.log(`Action for ${actionName}`);
-    //     // Define additional logic for button actions here
-    // }
     let _modal: Modals;
     currentModal.subscribe((value) => {
         _modal = value;
     });
     onMount(() => {
-        loadDirectoryTree(1);
-        // loadExpansionState();
+        loadFileTree(1);
     });
 </script>
 

@@ -1,10 +1,5 @@
 <script context="module" lang="ts">
     // retain module scoped expansion state for each tree node
-    import { writable } from "svelte/store";
-    // Store for expansion states, keyed by node label or a unique ID
-    export const vaultExpansionState = writable<{ [key: string]: boolean }>({});
-    export const nBoxExpansionState = writable<{ [key: string]: boolean }>({});
-    export const oBoxExpansionState = writable<{ [key: string]: boolean }>({});
 </script>
 
 <script lang="ts">
@@ -22,14 +17,18 @@
     } from "flowbite-svelte-icons";
     import { SpeedDial, SpeedDialButton } from "flowbite-svelte";
 
-    import { pageName } from "../stores/treeView.ts";
+    import {
+        pageName,
+        expandRoot,
+        getCurrentPageStore,
+    } from "../stores/treeView.ts";
 
     import {
         printFrontendMsg,
         getFilePath,
         getFileProperties,
         basePath,
-    } from "../utils.ts";
+    } from "../tools/utils.ts";
 
     interface FileNode {
         relPath: string;
@@ -46,21 +45,6 @@
     // _appPage = $currentPage
     let expanded = false;
 
-    function getCurrentPageStore() {
-        switch (
-            _appPage // Assuming _appPage holds the current page enum value
-        ) {
-            case AppPage.Vault:
-                return vaultExpansionState;
-            case AppPage.NBox:
-                return nBoxExpansionState;
-            case AppPage.OBox:
-                return oBoxExpansionState;
-            default:
-                throw new Error("Unrecognized page");
-        }
-    }
-
     const toggleExpansion = () => {
         expanded = !expanded;
         const currentPageStore = getCurrentPageStore();
@@ -71,8 +55,6 @@
     };
 
     onMount(() => {
-        expandRoot();
-        printFrontendMsg("AMOGUS");
         const currentPageStore = getCurrentPageStore();
         const unsubscribe = currentPageStore.subscribe((state) => {
             const basePathKey = basePath(tree.relPath);
@@ -85,7 +67,7 @@
 
     function updateExpansionForNode(node: FileNode, expand: boolean) {
         // Recursive function to update the expansion state for a node and its children
-        // const currentPageStore = getCurrentPageStore();
+        const currentPageStore = getCurrentPageStore();
         // Update the current node's expansion state
         currentPageStore.update((currentState) => {
             const basePathKey = basePath(node.relPath);
@@ -100,19 +82,18 @@
             }
         }
     }
-    const currentPageStore = getCurrentPageStore();
 
     const collapseAll = () => {
         updateExpansionForNode(tree, false);
     };
-    const expandRoot: () => void = () => {
-        // const currentPageStore = getCurrentPageStore();
-        currentPageStore.update((currentState) => {
-            currentState[pageName()] = true;
-            printFrontendMsg(" REL PATH " + tree.relPath);
-            return currentState; //returns the currentState to currentPageStore
-        });
-    };
+    // const expandRoot: () => void = () => {
+    //     const currentPageStore = getCurrentPageStore();
+    //     currentPageStore.update((currentState) => {
+    //         currentState["VAULT"] = true;
+    //         printFrontendMsg("RELPATH " + tree.relPath);
+    //         return currentState; //returns the currentState to currentPageStore
+    //     });
+    // };
 
     function logFilePath(treeLabel: string) {
         getFilePath(treeLabel).then((filePath) => {
