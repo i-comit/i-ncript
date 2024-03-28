@@ -18,10 +18,11 @@
     import { Modals } from "../enums/Modals.ts";
 
     import { usernameStore } from "../stores/usernameStore";
-    import { fileTree } from "../stores/fileTree";
     import { pageChangeBtn } from "../stores/pageChangeBtn.js";
     import { encryptProgress } from "../stores/encryptProgress";
     import { currentModal } from "../stores/currentModal";
+
+    import { loadExpansionState, fileTree } from "../stores/treeView.ts";
 
     import { addLogEntry } from "../tools/logger.ts";
 
@@ -44,7 +45,7 @@
         height,
         width,
         basePath,
-        printFrontendMsg
+        printFrontendMsg,
     } from "../utils.ts";
 
     import Frame from "./Frame.svelte";
@@ -55,26 +56,24 @@
 
     import { EventsOn } from "../../wailsjs/runtime/runtime";
 
-    import { loadExpansionState } from "../stores/treeViewStates";
-
     let _fileCt: number;
     _fileCt = 0;
     onMount(() => {
-        printFrontendMsg("LOL!!")
+        printFrontendMsg("LOL!!");
         loadDirectoryTree(0);
         // loadExpansionState();
 
-    //     EventsOn("fileProcessed", (currentCount) => {
-    //         encryptProgress.set(currentCount);
-    //         _encryptPercent = (_encryptProgress / _fileCt) * 100;
-    //     });
-    //     EventsOn("fileCount", (fileCount) => {
-    //         _fileCt = fileCount;
-    //         // LogMessage(`New fileCount ${_fileCt}`);
-    //     });
-    //     EventsOn("fileName", (fileName) => {
-            // addLogEntry(basePath(fileName));
-    //     });
+        //     EventsOn("fileProcessed", (currentCount) => {
+        //         encryptProgress.set(currentCount);
+        //         _encryptPercent = (_encryptProgress / _fileCt) * 100;
+        //     });
+        //     EventsOn("fileCount", (fileCount) => {
+        //         _fileCt = fileCount;
+        //         // LogMessage(`New fileCount ${_fileCt}`);
+        //     });
+        //     EventsOn("fileName", (fileName) => {
+        // addLogEntry(basePath(fileName));
+        //     });
     });
     let _username: string;
     usernameStore.subscribe((value) => {
@@ -200,7 +199,6 @@
         {#if _modal === Modals.None}
             <TreeView tree={$fileTree} />
             <!-- <Settings /> -->
-
         {:else if _modal === Modals.Settings}
             <Settings />
         {:else if _modal === Modals.Logger}

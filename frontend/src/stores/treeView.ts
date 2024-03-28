@@ -3,7 +3,7 @@ import { get } from "svelte/store";
 import { currentPage } from "./currentPage";
 import { AppPage } from "../enums/AppPage";
 import { basePath, printFrontendMsg } from "../utils";
-import { fileTree } from "./fileTree";
+
 
 export const vaultExpansionState = writable<{ [key: string]: boolean }>({});
 export const vaultRootExpanded = writable<boolean>(false);
@@ -12,12 +12,20 @@ export const nboxRootExpanded = writable<boolean>(false);
 
 export const oBoxExpansionState = writable<{ [key: string]: boolean }>({});
 
+interface FileNode {
+    relPath: string;
+    children?: FileNode[];
+}
+
+export const fileTree = writable<FileNode>({ relPath: "", children: [] });
+
 let expanded = false;
 
 let _appPage: AppPage;
 let _fileTree = get(fileTree)
 
 export const pageName: () => string = () => {
+    _appPage = get(currentPage)
     switch (
     _appPage // Assuming _appPage holds the current page enum value
     ) {
@@ -47,15 +55,6 @@ function getCurrentPageStore() {
             throw new Error("Unrecognized page");
     }
 }
-
-export const toggleExpansion = () => {
-    expanded = !expanded;
-    const currentPageStore = getCurrentPageStore();
-    currentPageStore.update((currentState) => {
-        currentState[basePath(_fileTree.relPath)] = expanded;
-        return currentState;
-    });
-};
 
 const expandRoot: () => void = () => {
     const currentPageStore = getCurrentPageStore();

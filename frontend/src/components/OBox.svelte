@@ -1,18 +1,18 @@
 <!-- OBox.svelte -->
-<script>
+<script lang="ts">
     import { onMount } from "svelte";
     import { GradientButton, Label, Input } from "flowbite-svelte";
 
     import { AppPage } from "../enums/AppPage";
 
     import { usernameStore } from "../stores/usernameStore";
-    import { fileTree } from "../stores/fileTree.ts";
     import { pageChangeBtn } from "../stores/pageChangeBtn.js";
 
     import { switchFormButton, loadDirectoryTree } from "../utils";
 
     import Frame from "./Frame.svelte";
     import TreeView from "./TreeView.svelte";
+    import { fileTree } from "../stores/treeView";
 
     let loggedInUser;
     usernameStore.subscribe(($user) => {
@@ -22,9 +22,9 @@
     onMount(() => {
         loadDirectoryTree(2);
     });
-    function buttonAction(actionName) {
-        console.log(`Action for ${actionName}`);
-    }
+    // function buttonAction(actionName) {
+    //     console.log(`Action for ${actionName}`);
+    // }
 </script>
 
 <div class="flex h-screen rounded-lg">
@@ -55,7 +55,6 @@
                 <GradientButton
                     color="cyanToBlue"
                     class="max-h-1"
-                    on:click={() => buttonAction("HOT FILER")}
                     >ENTER</GradientButton
                 >
             </div>

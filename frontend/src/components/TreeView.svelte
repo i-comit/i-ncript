@@ -22,7 +22,7 @@
     } from "flowbite-svelte-icons";
     import { SpeedDial, SpeedDialButton } from "flowbite-svelte";
 
-    // import {pageName, toggleExpansion} from "../stores/treeViewStates"
+    import { pageName } from "../stores/treeView.ts";
 
     import {
         printFrontendMsg,
@@ -114,21 +114,6 @@
         });
     };
 
-    const pageName: () => string = () => {
-        switch (
-            _appPage // Assuming _appPage holds the current page enum value
-        ) {
-            case AppPage.Vault:
-                return "VAULT";
-            case AppPage.NBox:
-                return "N-BOX";
-            case AppPage.OBox:
-                return "O-BOX";
-            default:
-                throw new Error("Unrecognized page");
-        }
-    };
-
     function logFilePath(treeLabel: string) {
         getFilePath(treeLabel).then((filePath) => {
             printFrontendMsg(filePath.toString() + treeLabel);
@@ -210,10 +195,7 @@ style={basePath(tree.relPath) === pageName()
             <SpeedDialButton name="By Date " class="h-10 w-14">
                 <FileCopySolid class="w-6 h-6" />
             </SpeedDialButton>
-            <SpeedDialButton
-                name="Collapse "
-                class="h-10 w-14 right-10"
-            >
+            <SpeedDialButton name="Collapse " class="h-10 w-14 right-10">
                 <ShareNodesSolid class="w-6 h-6" />
             </SpeedDialButton>
             <SpeedDialButton

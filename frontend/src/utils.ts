@@ -4,7 +4,7 @@ import {
 import {
     currentModal
 } from './stores/currentModal';
-import { fileTree } from './stores/fileTree';
+import { fileTree } from './stores/treeView';
 
 import {
     AppPage

@@ -12,9 +12,9 @@
     import { Modals } from "../enums/Modals.ts";
 
     import { usernameStore } from "../stores/usernameStore";
-    import { fileTree } from "../stores/fileTree.ts";
     import { pageChangeBtn } from "../stores/pageChangeBtn.js";
     import { currentModal } from "../stores/currentModal";
+    import { loadExpansionState, fileTree } from "../stores/treeView.ts";
 
     import {
         switchFormButton,
@@ -27,8 +27,6 @@
     import Settings from "./Settings.svelte";
     import TreeView from "./TreeView.svelte";
     import Logger from "./Logger.svelte";
-
-    import {loadExpansionState} from "../stores/treeViewStates"
 
     let loggedInUser;
     usernameStore.subscribe(($user) => {
