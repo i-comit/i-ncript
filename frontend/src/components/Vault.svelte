@@ -27,19 +27,18 @@
         handleDrop,
         handleDragLeave,
         handleDragOver,
+        setIsInFileTask,
     } from "../stores/treeView.ts";
-
-    import { addLogEntry } from "../tools/logger.ts";
 
     import {
         ResizeWindow,
         EncryptFilesInDir,
         DecryptFilesInDir,
     } from "../../wailsjs/go/main/App";
-    import {
-        GetEncryptedFiles,
-        GetDecryptedFiles,
-    } from "../../wailsjs/go/main/Encryptr";
+    // import {
+    //     GetEncryptedFiles,
+    //     GetDecryptedFiles,
+    // } from "../../wailsjs/go/main/Encrypt";
 
     import {
         pageIndex,
@@ -55,12 +54,11 @@
     import TreeView from "./TreeView.svelte";
     import Logger from "./Logger.svelte";
 
+    import { EventsOn, LogError } from "../../wailsjs/runtime/runtime";
     import {
-        EventsOn,
-        LogError,
-        LogPrint,
-    } from "../../wailsjs/runtime/runtime";
-    import { GetDirectoryPath } from "../../wailsjs/go/main/Getters";
+        GetDirectoryPath,
+        GetFilesByType,
+    } from "../../wailsjs/go/main/Getters";
 
     let _fileCt: number;
     _fileCt = 0;
@@ -91,7 +89,8 @@
     let encrypting: boolean;
     encrypting = false;
     function encrypt() {
-        GetDecryptedFiles(0).then((filePaths) => {
+        GetFilesByType(0, false).then((filePaths) => {
+            setIsInFileTask(true);
             if (filePaths.length > 0) {
                 _fileCt = filePaths.length;
                 EncryptFilesInDir(0);
@@ -101,10 +100,11 @@
     }
 
     function decrypt() {
-        GetEncryptedFiles(0).then((filePaths) => {
+        GetFilesByType(0, true).then((filePaths) => {
+            setIsInFileTask(true);
             if (filePaths.length > 0) {
                 _fileCt = filePaths.length;
-                DecryptFilesInDir();
+                DecryptFilesInDir(0);
                 ResizeWindow(width * 2, height + 15, false);
             }
         });

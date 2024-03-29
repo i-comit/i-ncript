@@ -9,6 +9,7 @@ import {
     LogDebug,
     LogError,
     LogInfo,
+    LogPrint,
     LogWarning,
 } from "../../wailsjs/runtime/runtime";
 
@@ -17,6 +18,7 @@ import {
     GetDirectoryPath,
     GetFileProperties
 } from "../../wailsjs/go/main/Getters";
+import { SetIsInFileTask } from "../../wailsjs/go/main/FileUtils";
 
 export const vaultExpansionState = writable<{ [key: string]: boolean }>({});
 export const vaultRootExpanded = writable<boolean>(false);
@@ -24,6 +26,7 @@ export const nBoxExpansionState = writable<{ [key: string]: boolean }>({});
 export const nboxRootExpanded = writable<boolean>(false);
 export const oBoxExpansionState = writable<{ [key: string]: boolean }>({});
 
+export const isInFileTask = writable<boolean>(false);
 
 export const fileTree = writable<FileNode>({ relPath: "", children: [] });
 
@@ -37,12 +40,7 @@ export function loadFileTree(index: number) {
         .then((result: FileNode) => {
             const sortedTree = sortFileTree(result); // Sort the tree before setting it
             fileTree.set(sortedTree);
-            var _fileTree = get(fileTree);
-            const currentPageStore = getCurrentPageStore();
-            currentPageStore.update((currentState) => {
-                currentState[basePath(_fileTree.relPath)] = expanded;
-                return currentState;
-            });
+            updateExpansionStateStore()
             loadExpansionState(index)
         })
         .catch((error) => {
@@ -50,7 +48,7 @@ export function loadFileTree(index: number) {
         });
 }
 
-export function updateExpansionStateStore(){
+function updateExpansionStateStore() {
     var _fileTree = get(fileTree);
     const currentPageStore = getCurrentPageStore();
     currentPageStore.update((currentState) => {
@@ -63,7 +61,7 @@ export function updateExpansionStateStore(){
 function loadExpansionState(index: number) {
     const currentPageStore = getCurrentPageStore();
     GetDirectoryPath(index).then((dirPath) => {
-        LogInfo("Expanded " + dirPath + " file tree.");
+        // LogInfo("Expanded " + dirPath + " file tree.");
         const unsubscribe = currentPageStore.subscribe((state) => {
             const basePathKey = dirPath;
             if (state[basePathKey] !== undefined) {
@@ -145,6 +143,13 @@ export function handleDragOver(relPath: string, event: DragEvent) {
     draggedOver = true;
 }
 
+export function setIsInFileTask(b: boolean) {
+    SetIsInFileTask(b).then((_isInFileTask) => {
+        isInFileTask.set(_isInFileTask);
+        LogPrint("SetIsInFileTask " + _isInFileTask);
+    })
+};
+
 export function handleDrop(relPath: string, event: DragEvent) {
     event.preventDefault();
     draggedOver = false;
@@ -165,35 +170,49 @@ export function handleDrop(relPath: string, event: DragEvent) {
                         LogDebug("Node being used for drop  is file ");
                         pathToMoveTo = removeFileName(fullPath);
                     }
+                    setIsInFileTask(true)
+                    for (let i = 0; i < droppedFiles.length; i++) {
+                        const file = droppedFiles[i];
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            const arrayBuffer = e.target?.result as ArrayBuffer;
+                            if (arrayBuffer) { // Check if the result is not null or undefined
+                                const byteArray = new Uint8Array(arrayBuffer);
+                                FilesDragNDrop(Array.from(byteArray), file.name, file.lastModified, pathToMoveTo);
+                                LogDebug("frontend file on load" + file.name + " " + file.lastModified);
+                            }
+                        };
+                        reader.readAsArrayBuffer(file);
+                    }
+                    // s
+                    // const byteArrays: number[][] = [];
+                    // const fileNames: string[] = [];
+                    // let filesProcessed = 0; // Counter to keep track of files processed
 
-                    const file = droppedFiles[0];
-                    const reader = new FileReader();
-
-                    reader.onload = function (e) {
-                        const arrayBuffer = e.target?.result as ArrayBuffer;
-                        if (arrayBuffer) { // Check if the result is not null or undefined
-                            const byteArray = new Uint8Array(arrayBuffer);
-                            FilesDragNDrop(Array.from(byteArray), file.name, pathToMoveTo);
-                            LogDebug("frontend file on load" + file.name);
-                        }
-                    };
-                    reader.readAsArrayBuffer(file);
-                    // LogError("front end file " +       reader.readAsArrayBuffer(file));
-
-                    // for (let i = 0; i < droppedFiles.length; i++) {
-                    //     const file = droppedFiles[i];
+                    // // Iterate over each dropped file
+                    // Array.from(droppedFiles).forEach((file) => {
                     //     const reader = new FileReader();
-                    //     reader.onload = (function (theFile) {
-                    //         return function (e) {
-                    //             const arrayBuffer = e.target?.result as ArrayBuffer;
+
+                    //     reader.onload = function (e) {
+                    //         const arrayBuffer = e.target?.result as ArrayBuffer;
+                    //         if (arrayBuffer) { // Check if the result is not null or undefined
                     //             const byteArray = new Uint8Array(arrayBuffer);
-                    //             LogError("front end file " + theFile.name);
-                    //             // e.target.result contains the file's data.
-                    //             // Send this data to the backend to be saved to the new location.
-                    //         };
-                    //     })(file);
-                    //     LogError("READER " + file.stream());
-                    // }
+                    //             byteArrays.push(Array.from(byteArray)); // Add byte array to the list
+                    //             fileNames.push(file.name); // Add file name to the list
+
+                    //             filesProcessed++; // Increment the counter
+
+                    //             // Once all files have been processed, call FilesDragNDrop2
+                    //             if (filesProcessed === droppedFiles.length) {
+                    //                 FilesDragNDrop2(byteArrays, fileNames, pathToMoveTo);
+                    //                 LogDebug("frontend files on load: " + fileNames.join(", "));
+                    //             }
+                    //         }
+                    //     };
+
+                    // Trigger the read operation
+                    // reader.readAsArrayBuffer(file);
+                    // });
                 }
             });
         });

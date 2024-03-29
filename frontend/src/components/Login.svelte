@@ -7,7 +7,7 @@
     import { Modals, currentModal } from "../enums/Modals";
 
     import { Login, ResizeWindow } from "../../wailsjs/go/main/App";
-    import { EncryptString } from "../../wailsjs/go/main/Encryptr";
+    import { EncryptString } from "../../wailsjs/go/main/Encrypt";
     import { Button, Input, GradientButton, Tooltip } from "flowbite-svelte";
     import { switchModals } from "../tools/utils";
     import {

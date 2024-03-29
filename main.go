@@ -26,9 +26,10 @@ func main() {
 	getters := &Getters{
 		directories: app.directories,
 	}
-	encryptr := &Encryptr{
+	encrypt := &Encrypt{
 		directories: app.directories,
 	}
+	fileUtils := &FileUtils{}
 
 	// Create application with options
 	err := wails.Run(&options.App{
@@ -45,7 +46,7 @@ func main() {
 		OnStartup: app.startup,
 		// OnShutdown: app.shutdown,
 		Bind: []interface{}{
-			app, getters, encryptr,
+			app, getters, encrypt, fileUtils,
 		},
 		Windows: &windows.Options{
 			WebviewIsTransparent:              false,

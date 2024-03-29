@@ -3,6 +3,7 @@
     import { onMount, afterUpdate } from "svelte";
     import {
         EventsOn,
+        EventsOnce,
         LogError,
         LogPrint,
     } from "../../wailsjs/runtime/runtime";
@@ -71,7 +72,7 @@
             }
         });
         _label = basePath(tree.relPath);
-        EventsOn("rebuildFileTree", () => {
+        EventsOnce("rebuildFileTree", () => {
             loadFileTree(pageIndex());
             LogPrint("Rebuilt File Tree");
         });

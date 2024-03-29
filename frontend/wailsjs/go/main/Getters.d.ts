@@ -12,4 +12,6 @@ export function GetDirectoryPath(arg1:number):Promise<string>;
 
 export function GetFileProperties(arg1:string):Promise<main.FileProperties>;
 
+export function GetFilesByType(arg1:number,arg2:boolean):Promise<Array<string>>;
+
 export function GetRootFolder():Promise<string>;

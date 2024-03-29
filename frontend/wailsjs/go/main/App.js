@@ -10,8 +10,8 @@ export function CloseApp() {
   return window['go']['main']['App']['CloseApp']();
 }
 
-export function DecryptFilesInDir() {
-  return window['go']['main']['App']['DecryptFilesInDir']();
+export function DecryptFilesInDir(arg1) {
+  return window['go']['main']['App']['DecryptFilesInDir'](arg1);
 }
 
 export function DirectoryWatcher(arg1) {
@@ -22,8 +22,12 @@ export function EncryptFilesInDir(arg1) {
   return window['go']['main']['App']['EncryptFilesInDir'](arg1);
 }
 
-export function FilesDragNDrop(arg1, arg2, arg3) {
-  return window['go']['main']['App']['FilesDragNDrop'](arg1, arg2, arg3);
+export function FilesDragNDrop(arg1, arg2, arg3, arg4) {
+  return window['go']['main']['App']['FilesDragNDrop'](arg1, arg2, arg3, arg4);
+}
+
+export function FilesDragNDrop2(arg1, arg2, arg3) {
+  return window['go']['main']['App']['FilesDragNDrop2'](arg1, arg2, arg3);
 }
 
 export function InitializeRootFolder() {
@@ -40,8 +44,4 @@ export function MinimizeApp() {
 
 export function ResizeWindow(arg1, arg2, arg3) {
   return window['go']['main']['App']['ResizeWindow'](arg1, arg2, arg3);
-}
-
-export function StopWatching() {
-  return window['go']['main']['App']['StopWatching']();
 }
