@@ -1,6 +1,7 @@
 <!-- Vault.svelte -->
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
+    import { get } from "svelte/store";
     import { GradientButton, Popover, Progressbar } from "flowbite-svelte";
     import Button from "../elements/Button.svelte";
     import Toggle from "../elements/Toggle.svelte";
@@ -46,6 +47,7 @@
         switchModals,
         height,
         width,
+        heldDownFiles,
     } from "../tools/utils.ts";
 
     import Frame from "./Frame.svelte";
@@ -117,11 +119,18 @@
             handleDrop("", event);
         }
     }
+
+    function readCurrentHeldNodes() {
+        var _heldDownFiles = get(heldDownFiles);
+        _heldDownFiles.forEach((node) => {
+            LogError("held down node: " + node);
+        });
+    }
 </script>
 
 <div class="flex h-screen rounded-lg">
     <Frame />
-    <div id="left-panel" class="w-45">
+    <div id="left-panel" role="application" class="w-45" on:mouseup={readCurrentHeldNodes}>
         <div id="page-info" class="static">
             <p>VAULT</p>
             <Button

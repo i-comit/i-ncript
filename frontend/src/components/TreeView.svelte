@@ -1,19 +1,13 @@
 <script lang="ts">
     // import { slide } from 'svelte/transition'
     import { onMount, afterUpdate } from "svelte";
-    import {
-        EventsOn,
-        EventsOnce,
-        LogError,
-        LogPrint,
-    } from "../../wailsjs/runtime/runtime";
+    import { get } from "svelte/store";
+    import { EventsOnce, LogPrint } from "../../wailsjs/runtime/runtime";
 
     import {
         FolderOpenSolid,
         FolderSolid,
         SearchOutline,
-        DownloadSolid,
-        FileCopySolid,
         ExpandOutline,
         CompressOutline,
     } from "flowbite-svelte-icons";
@@ -21,7 +15,6 @@
 
     import {
         expandRoot,
-        fileTree,
         getCurrentPageStore,
         handleDragLeave,
         handleDragOver,
@@ -35,6 +28,8 @@
         getFileProperties,
         basePath,
         formatFileSize,
+        addFileToHeldFilesArr,
+        moveFilesToRelPath,
     } from "../tools/utils.ts";
 
     interface FileNode {
@@ -121,9 +116,21 @@
         });
     }
 
+    function handleKeyDown(event: KeyboardEvent) {
+        if (event.key === "Shift") {
+            addFileToHeldFilesArr(tree.relPath);
+        }
+    }
+
+    function handleKeyUp(event: KeyboardEvent) {
+        if (event.key === "Shift") {
+        }
+    }
+
     function handleMouseLeave() {}
 </script>
 
+<svelte:window on:keydown={handleKeyDown} on:keyup={handleKeyUp} />
 <div>
     <button
         class="z-10 fixed top-0 left-1/2 transform -translate-x-1/2 mt-0.5"
@@ -147,6 +154,7 @@
                     on:click={toggleExpansion}
                     class="flex"
                     on:mouseenter={() => handleMouseEnter()}
+                    on:mouseup={() => moveFilesToRelPath(tree.relPath)}
                     on:dragover={(event) => handleDragOver(tree.relPath, event)}
                     on:drop={(event) => handleDrop(tree.relPath, event)}
                 >
@@ -173,6 +181,8 @@
                     on:mouseleave={handleMouseLeave}
                     on:dragover={(event) => handleDragOver(tree.relPath, event)}
                     on:dragleave={handleDragLeave}
+                    on:mouseup={() => moveFilesToRelPath(tree.relPath)}
+                    on:mousedown={() => addFileToHeldFilesArr(tree.relPath)}
                     on:drop={(event) => handleDrop(tree.relPath, event)}
                 >
                     {_label}

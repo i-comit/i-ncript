@@ -11,13 +11,13 @@ import (
 	// "sync/atomic"
 
 	"time"
+
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 type FileUtils struct {
 	app *App
 	ctx context.Context
-
-	directories []string // Your directories list
 }
 
 var isInFileTask = false
@@ -28,26 +28,29 @@ func (f *FileUtils) SetIsInFileTask(b bool) bool {
 	return isInFileTask
 }
 
-func getFilesRecursively(dirs ...string) ([]string, error) {
-	var files []string
-	for _, dir := range dirs {
-		err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+func (f *FileUtils) MoveFilesToPath(filePaths []string, targetPath string) {
+	if f.app.ctx != nil {
+		for _, files := range filePaths {
+			runtime.LogError(f.app.ctx, targetPath+" pathx2 "+filepath.Dir(files))
+
+			if targetPath == filepath.Dir(files)+string(filepath.Separator) {
+				runtime.LogError(f.app.ctx, "This file already belongs in the targetPath")
+				continue
+			}
+
+			newFilePath := filepath.Join(targetPath, filepath.Base(files))
+			// Move the file
+			err := os.Rename(files, newFilePath)
 			if err != nil {
-				return err
+				// Handle errors (e.g., file not found, permission issues, etc.)
+				runtime.LogError(f.app.ctx, "Error moving file: "+err.Error())
+				continue
 			}
-			if !info.IsDir() { // Ensure we're only appending files, not directories
-				files = append(files, path)
-			}
-			return nil
-		})
-		if err != nil {
-			return nil, err
+			runtime.LogError(f.app.ctx, "Successfully moved file to: "+newFilePath)
 		}
 	}
-	return files, nil
 }
 
-// APP STRUCT
 type FileNode struct {
 	RelPath  string      `json:"relPath"`
 	Children []*FileNode `json:"children,omitempty"`
@@ -88,111 +91,8 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 	return rootNode, nil
 }
 
-func addPath(node *FileNode, parts []string, currentPath string) {
-	if len(parts) == 0 {
-		return
-	}
-	if currentPath != "" {
-		currentPath += string(filepath.Separator) + parts[0]
-	} else {
-		currentPath = parts[0]
-	}
-
-	for _, child := range node.Children {
-		if filepath.Base(child.RelPath) == parts[0] {
-			// If the child matches the next part, recursively call addPath on the child.
-			addPath(child, parts[1:], currentPath)
-			return
-		}
-	}
-	newNode := &FileNode{
-		RelPath:  currentPath,
-		Children: []*FileNode{},
-	}
-	node.Children = append(node.Children, newNode)
-	addPath(newNode, parts[1:], currentPath)
-}
-
-func createDirectories(dirs ...string) error {
-	for _, dir := range dirs {
-		if _, err := os.Stat(dir); os.IsNotExist(err) {
-			err := os.Mkdir(dir, 0755)
-			if err != nil {
-				return err
-			}
-		}
-	}
-	return nil
-}
-
-// func (a *App) FilesDragNDrop(fileBytes []byte, fileName string, modifiedDate int64, pathToMoveTo string) error {
-// 	if a.ctx != nil {
-// 		if _, err := os.Stat(pathToMoveTo); os.IsNotExist(err) {
-// 			err := os.MkdirAll(pathToMoveTo, os.ModePerm)
-// 			if err != nil {
-// 				return fmt.Errorf("failed to create target directory: %w", err)
-// 			}
-// 		}
-
-// 		fullPath := filepath.Join(pathToMoveTo, fileName)
-// 		file, err := os.OpenFile(fullPath, os.O_CREATE|os.O_WRONLY, 0644)
-// 		if err != nil {
-// 			return fmt.Errorf("failed to open file for writing: %w", err)
-// 		}
-// 		defer file.Close()
-
-// 		var writtenBytes int64
-// 		done := make(chan bool)
-
-// 		if len(fileBytes) > 5*1024*1024 {
-// 			// Start a goroutine to log file size during writing
-// 			go func() {
-// 				ticker := time.NewTicker(time.Millisecond)
-// 				defer ticker.Stop()
-
-// 				for {
-// 					select {
-// 					case <-ticker.C:
-// 						fmt.Printf("Current size of %s: %d bytes\n", fileName, atomic.LoadInt64(&writtenBytes))
-// 					case <-done:
-// 						// Final log to capture the completion state accurately
-// 						fmt.Printf("Final size of %s: %d bytes\n", fileName, atomic.LoadInt64(&writtenBytes))
-// 						return
-// 					}
-// 				}
-// 			}()
-// 		}
-
-// 		chunkSize := 1024 // Define a suitable chunk size
-// 		for i := 0; i < len(fileBytes); i += chunkSize {
-// 			end := i + chunkSize
-// 			if end > len(fileBytes) {
-// 				end = len(fileBytes)
-// 			}
-// 			n, err := file.Write(fileBytes[i:end])
-// 			if err != nil {
-// 				close(done) // Ensure to signal the goroutine to stop in case of an error
-// 				return fmt.Errorf("failed to write file: %w", err)
-// 			}
-// 			atomic.AddInt64(&writtenBytes, int64(n))
-// 		}
-
-// 		close(done) // Signal the completion of file writing to the goroutine
-
-// 		// Convert the modifiedDate from milliseconds to time.Time
-// 		modTime := time.UnixMilli(modifiedDate)
-
-// 		// Set the last modified time of the file
-// 		if err := os.Chtimes(fullPath, modTime, modTime); err != nil {
-// 			return fmt.Errorf("failed to set last modified date: %w", err)
-// 		}
-// 		return nil
-// 	}
-// 	return nil
-// }
-
 func (f *FileUtils) FilesDragNDrop(fileBytes []byte, fileName string, modifiedDate int64, pathToMoveTo string) error {
-	if f.app.ctx != nil {
+	if f.ctx != nil {
 		if _, err := os.Stat(pathToMoveTo); os.IsNotExist(err) {
 			err := os.MkdirAll(pathToMoveTo, os.ModePerm)
 			if err != nil {
@@ -237,6 +137,7 @@ func (f *FileUtils) FilesDragNDrop(fileBytes []byte, fileName string, modifiedDa
 				return fmt.Errorf("failed to write file: %w", err)
 			}
 			writtenBytes += int64(n) // Safe to update within the mutex-protected block
+			// atomic.AddInt64(&writtenBytes, int64(n)) // Atomic version
 		}
 
 		close(done) // Signal the completion of file writing to the goroutine
@@ -249,4 +150,60 @@ func (f *FileUtils) FilesDragNDrop(fileBytes []byte, fileName string, modifiedDa
 		return nil
 	}
 	return nil
+}
+
+func addPath(node *FileNode, parts []string, currentPath string) {
+	if len(parts) == 0 {
+		return
+	}
+	if currentPath != "" {
+		currentPath += string(filepath.Separator) + parts[0]
+	} else {
+		currentPath = parts[0]
+	}
+
+	for _, child := range node.Children {
+		if filepath.Base(child.RelPath) == parts[0] {
+			// If the child matches the next part, recursively call addPath on the child.
+			addPath(child, parts[1:], currentPath)
+			return
+		}
+	}
+	newNode := &FileNode{
+		RelPath:  currentPath,
+		Children: []*FileNode{},
+	}
+	node.Children = append(node.Children, newNode)
+	addPath(newNode, parts[1:], currentPath)
+}
+
+func createDirectories(dirs ...string) error {
+	for _, dir := range dirs {
+		if _, err := os.Stat(dir); os.IsNotExist(err) {
+			err := os.Mkdir(dir, 0755)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func getFilesRecursively(dirs ...string) ([]string, error) {
+	var files []string
+	for _, dir := range dirs {
+		err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+			if !info.IsDir() { // Ensure we're only appending files, not directories
+				files = append(files, path)
+			}
+			return nil
+		})
+		if err != nil {
+			return nil, err
+		}
+	}
+	return files, nil
 }

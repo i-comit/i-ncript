@@ -6,6 +6,10 @@ export function FilesDragNDrop(arg1, arg2, arg3, arg4) {
   return window['go']['main']['FileUtils']['FilesDragNDrop'](arg1, arg2, arg3, arg4);
 }
 
+export function MoveFilesToPath(arg1, arg2) {
+  return window['go']['main']['FileUtils']['MoveFilesToPath'](arg1, arg2);
+}
+
 export function SetIsInFileTask(arg1) {
   return window['go']['main']['FileUtils']['SetIsInFileTask'](arg1);
 }

@@ -3,7 +3,8 @@ import { get } from "svelte/store";
 import { AppPage, currentPage } from "../enums/AppPage";
 import { basePath, removeFileName } from "../tools/utils";
 import {
-    BuildDirectoryFileTree, DirectoryWatcher
+    DirectoryWatcher,
+    BuildDirectoryFileTree,
 } from "../../wailsjs/go/main/App";
 import {
     LogDebug,
@@ -18,7 +19,9 @@ import {
     GetDirectoryPath,
     GetFileProperties
 } from "../../wailsjs/go/main/Getters";
-import { SetIsInFileTask, FilesDragNDrop } from "../../wailsjs/go/main/FileUtils";
+import {
+    SetIsInFileTask, FilesDragNDrop,
+} from "../../wailsjs/go/main/FileUtils";
 
 export const vaultExpansionState = writable<{ [key: string]: boolean }>({});
 export const nBoxExpansionState = writable<{ [key: string]: boolean }>({});

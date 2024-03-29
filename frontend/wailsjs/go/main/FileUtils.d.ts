@@ -3,4 +3,6 @@
 
 export function FilesDragNDrop(arg1:Array<number>,arg2:string,arg3:number,arg4:string):Promise<void>;
 
+export function MoveFilesToPath(arg1:Array<string>,arg2:string):Promise<void>;
+
 export function SetIsInFileTask(arg1:boolean):Promise<boolean>;

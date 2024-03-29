@@ -1,5 +1,5 @@
 
-import { get } from 'svelte/store';
+import { get, writable } from 'svelte/store';
 
 import { AppPage, currentPage } from '../enums/AppPage';
 import { Modals, currentModal } from '../enums/Modals';
@@ -12,6 +12,7 @@ import {
     GetFileProperties
 } from "../../wailsjs/go/main/Getters";
 import { LogDebug, LogError, LogTrace, LogWarning } from "../../wailsjs/runtime/runtime";
+import { MoveFilesToPath } from '../../wailsjs/go/main/FileUtils';
 
 export const width = 220
 export const height = 180
@@ -20,6 +21,7 @@ export const pageName: () => string = () => {
     const _appPage: AppPage = get(currentPage);
     return _appPage;
 };
+export const heldDownFiles = writable<string[]>([]);
 
 export const pageIndex: () => number = () => {
     const _appPage = get(currentPage)
@@ -125,3 +127,47 @@ export function formatFileSize(fileSize: number): string {
     return `${formattedSize} ${units[unitIndex]}`;
 }
 
+//LOCAL DRAG AND DROP
+export function addFileToHeldFilesArr(relPath: string) {
+    GetDirectoryPath(pageIndex()).then((dirPath) => {
+        heldDownFiles.update((currentHeldDownFiles) => {
+            // Check if the newString is not already in the array
+            if (!currentHeldDownFiles.includes(dirPath + relPath)) {
+                return [...currentHeldDownFiles, dirPath + relPath];
+            }
+            // If it's already there, just return the current array without adding
+            LogDebug("Added currentHeldDownFiles: " + currentHeldDownFiles);
+            return currentHeldDownFiles;
+        });
+    });
+}
+
+export function moveFilesToRelPath(targetRelPath: string) {
+    GetDirectoryPath(pageIndex()).then((dirPath) => {
+        var fullPath = dirPath + targetRelPath;
+        getFileProperties(fullPath).then((fileProps) => {
+            if (fileProps.fileType) {
+                let pathToMoveTo: string;
+                if (fileProps.fileType === "dir") {
+                    LogDebug("Node being used for drop is dir ");
+                    pathToMoveTo = fullPath;
+                } else {
+                    LogDebug("Node being used for drop  is file ");
+                    pathToMoveTo = removeFileName(fullPath);
+                }
+                var _heldDownFiles = get(heldDownFiles);
+                if (_heldDownFiles.length > 0) {
+                    MoveFilesToPath(_heldDownFiles, pathToMoveTo);
+                    _heldDownFiles.forEach((node) => {
+                        LogError("held down node moveFiles: " + node);
+                    });
+                }
+            }
+        });
+    });
+}
+
+export function clearHeldDownFiles() {
+    heldDownFiles.set([]);
+    LogError("Held down Files Cleared");
+}

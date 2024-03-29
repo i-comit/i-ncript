@@ -9,7 +9,9 @@
   import { onMount } from "svelte";
   import { GetDirName } from "../wailsjs/go/main/Getters";
   import { LogDebug, LogWarning } from "../wailsjs/runtime/runtime";
-    import { DirectoryWatcher } from "../wailsjs/go/main/App";
+  import { DirectoryWatcher } from "../wailsjs/go/main/App";
+
+  import { clearHeldDownFiles } from "./tools/utils.ts";
 
   let loggedIn = false;
   let _page: AppPage;
@@ -21,7 +23,6 @@
     loggedIn = true;
     currentPage.set(AppPage.Vault);
     DirectoryWatcher(0);
-
   }
   let isRightDir = false;
 
@@ -31,7 +32,7 @@
   });
 </script>
 
-<main class="rounded-2xl">
+<main class="rounded-2xl" on:mouseleave={clearHeldDownFiles}>
   {#if !isRightDir}
     <WrongDir />
   {:else if _page === AppPage.Login}
