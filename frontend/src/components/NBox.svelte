@@ -15,7 +15,7 @@
     import { pageChangeBtn } from "../stores/pageChangeBtn.js";
     import { loadFileTree, fileTree } from "../stores/treeView.ts";
 
-    import { switchFormButton, switchModals } from "../tools/utils.ts";
+    import { switchPages, switchModals } from "../tools/utils.ts";
 
     import Frame from "./Frame.svelte";
     import Info from "./Info.svelte";
@@ -74,7 +74,7 @@
                 <GradientButton
                     color="cyanToBlue"
                     class={pageChangeBtn}
-                    on:click={() => switchFormButton(AppPage.Vault)}
+                    on:click={() => switchPages(AppPage.Vault)}
                     >VAULT</GradientButton
                 >
                 <Button
@@ -91,7 +91,7 @@
                 <GradientButton
                     color="cyanToBlue"
                     class={pageChangeBtn}
-                    on:click={() => switchFormButton(AppPage.OBox)}
+                    on:click={() => switchPages(AppPage.OBox)}
                     >O-BOX</GradientButton
                 >
             </div>

@@ -9,6 +9,7 @@
   import { onMount } from "svelte";
   import { GetDirName } from "../wailsjs/go/main/Getters";
   import { LogDebug, LogWarning } from "../wailsjs/runtime/runtime";
+    import { DirectoryWatcher } from "../wailsjs/go/main/App";
 
   let loggedIn = false;
   let _page: AppPage;
@@ -19,7 +20,8 @@
   function handleLoginSuccess() {
     loggedIn = true;
     currentPage.set(AppPage.Vault);
-    LogWarning("Logged in");
+    DirectoryWatcher(0);
+
   }
   let isRightDir = false;
 

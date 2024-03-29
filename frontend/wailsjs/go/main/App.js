@@ -14,6 +14,10 @@ export function DecryptFilesInDir() {
   return window['go']['main']['App']['DecryptFilesInDir']();
 }
 
+export function DirectoryWatcher(arg1) {
+  return window['go']['main']['App']['DirectoryWatcher'](arg1);
+}
+
 export function EncryptFilesInDir(arg1) {
   return window['go']['main']['App']['EncryptFilesInDir'](arg1);
 }
@@ -36,4 +40,8 @@ export function MinimizeApp() {
 
 export function ResizeWindow(arg1, arg2, arg3) {
   return window['go']['main']['App']['ResizeWindow'](arg1, arg2, arg3);
+}
+
+export function StopWatching() {
+  return window['go']['main']['App']['StopWatching']();
 }

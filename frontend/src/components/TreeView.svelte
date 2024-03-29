@@ -19,17 +19,18 @@
     import { SpeedDial, SpeedDialButton, Tooltip } from "flowbite-svelte";
 
     import {
-        pageName,
         expandRoot,
+        fileTree,
         getCurrentPageStore,
         handleDragLeave,
         handleDragOver,
         handleDrop,
-        pageIndex,
         loadFileTree,
     } from "../stores/treeView.ts";
 
     import {
+        pageName,
+        pageIndex,
         getFileProperties,
         basePath,
         formatFileSize,
@@ -40,6 +41,7 @@
         children?: FileNode[]; // Make children optional to match the Go structure
     }
     export let tree: FileNode;
+
     import { AppPage, currentPage } from "../enums/AppPage.ts";
     import { GetDirectoryPath } from "../../wailsjs/go/main/Getters";
     let _appPage: AppPage;
@@ -61,10 +63,6 @@
     };
 
     onMount(() => {
-        EventsOn("rebuildFileTree", () => {
-            loadFileTree(pageIndex());
-            LogPrint("REBUILT FILE TREE");
-        });
         const currentPageStore = getCurrentPageStore();
         const unsubscribe = currentPageStore.subscribe((state) => {
             const basePathKey = basePath(tree.relPath);
@@ -73,10 +71,13 @@
             }
         });
         _label = basePath(tree.relPath);
+        EventsOn("rebuildFileTree", () => {
+            loadFileTree(pageIndex());
+            LogPrint("Rebuilt File Tree");
+        });
         return unsubscribe; // Unsubscribe when the component unmounts
     });
 
-    afterUpdate(() => {});
     function updateExpansionForNode(node: FileNode, expand: boolean) {
         const currentPageStore = getCurrentPageStore();
         currentPageStore.update((currentState) => {

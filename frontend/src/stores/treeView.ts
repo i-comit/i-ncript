@@ -12,7 +12,7 @@ import {
     LogWarning,
 } from "../../wailsjs/runtime/runtime";
 
-import { getFileProperties } from "../tools/utils";
+import { getFileProperties, pageName, pageIndex } from "../tools/utils";
 import {
     GetDirectoryPath,
     GetFileProperties
@@ -27,28 +27,6 @@ export const oBoxExpansionState = writable<{ [key: string]: boolean }>({});
 
 export const fileTree = writable<FileNode>({ relPath: "", children: [] });
 
-export const pageName: () => string = () => {
-    const _appPage: AppPage = get(currentPage);
-    return _appPage;
-};
-
-export const pageIndex: () => number = () => {
-    _appPage = get(currentPage)
-    switch (
-    _appPage
-    ) {
-        case AppPage.Vault:
-        default:
-            return 0;
-        case AppPage.NBox:
-            return 1;
-        case AppPage.OBox:
-            return 2;
-        case AppPage.Login:
-            return 3;
-    };
-};
-
 interface FileNode {
     relPath: string;
     children?: FileNode[];
@@ -59,11 +37,27 @@ export function loadFileTree(index: number) {
         .then((result: FileNode) => {
             const sortedTree = sortFileTree(result); // Sort the tree before setting it
             fileTree.set(sortedTree);
+            var _fileTree = get(fileTree);
+            const currentPageStore = getCurrentPageStore();
+            currentPageStore.update((currentState) => {
+                currentState[basePath(_fileTree.relPath)] = expanded;
+                return currentState;
+            });
             loadExpansionState(index)
         })
         .catch((error) => {
             LogError("Failed to get directory structure: " + error);
         });
+}
+
+export function updateExpansionStateStore(){
+    var _fileTree = get(fileTree);
+    const currentPageStore = getCurrentPageStore();
+    currentPageStore.update((currentState) => {
+        const basePathKey = basePath(_fileTree.relPath);
+        currentState[basePathKey] = expanded;
+        return currentState;
+    });
 }
 
 function loadExpansionState(index: number) {

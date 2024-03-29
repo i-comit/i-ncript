@@ -24,7 +24,6 @@
     import {
         loadFileTree,
         fileTree,
-        pageIndex,
         handleDrop,
         handleDragLeave,
         handleDragOver,
@@ -43,7 +42,8 @@
     } from "../../wailsjs/go/main/Encryptr";
 
     import {
-        switchFormButton,
+        pageIndex,
+        switchPages,
         switchModals,
         height,
         width,
@@ -69,10 +69,6 @@
         EventsOn("fileProcessed", (currentCount) => {
             encryptProgress.set(currentCount);
             _encryptPercent = (_encryptProgress / _fileCt) * 100;
-        });
-        EventsOn("fileCount", (fileCount) => {
-            _fileCt = fileCount;
-            LogPrint(`New fileCount ${_fileCt}`);
         });
     });
 
@@ -181,7 +177,7 @@
                 <GradientButton
                     color="cyanToBlue"
                     class={pageChangeBtn}
-                    on:click={() => switchFormButton(AppPage.OBox)}
+                    on:click={() => switchPages(AppPage.OBox)}
                     >O-BOX</GradientButton
                 >
                 <Button
@@ -198,7 +194,7 @@
                 <GradientButton
                     color="cyanToBlue"
                     class={pageChangeBtn}
-                    on:click={() => switchFormButton(AppPage.NBox)}
+                    on:click={() => switchPages(AppPage.NBox)}
                     >N-BOX</GradientButton
                 >
             </div>

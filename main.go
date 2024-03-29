@@ -23,8 +23,12 @@ func (m *App) onSecondInstanceLaunch(data options.SecondInstanceData) {
 
 func main() {
 	app := NewApp()
-	getters := &Getters{}
-	encryptr := &Encryptr{}
+	getters := &Getters{
+		directories: app.directories,
+	}
+	encryptr := &Encryptr{
+		directories: app.directories,
+	}
 
 	// Create application with options
 	err := wails.Run(&options.App{
@@ -84,4 +88,5 @@ func main() {
 	if err != nil {
 		println("Error:", err.Error())
 	}
+	// encryptr.initializeWatcher(-1)
 }

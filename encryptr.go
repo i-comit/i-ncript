@@ -22,8 +22,8 @@ import (
 )
 
 type Encryptr struct {
-	ctx  context.Context
-	stop chan struct{} // Used to signal stopping the goroutine
+	ctx         context.Context
+	directories []string // Your directories list
 }
 
 // EVENT consts
@@ -37,7 +37,7 @@ func (b *Encryptr) EncryptString(stringToEncrypt string) string {
 }
 
 func (b *Encryptr) GetDecryptedFiles(dirIndex int) ([]string, error) {
-	filePaths, err := getFilesRecursively(directories[dirIndex])
+	filePaths, err := getFilesRecursively(b.directories[dirIndex])
 	if err != nil {
 		return nil, err
 	}
@@ -52,7 +52,7 @@ func (b *Encryptr) GetDecryptedFiles(dirIndex int) ([]string, error) {
 }
 
 func (b *Encryptr) GetEncryptedFiles(dirIndex int) ([]string, error) {
-	filePaths, err := getFilesRecursively(directories[dirIndex])
+	filePaths, err := getFilesRecursively(b.directories[dirIndex])
 	if err != nil {
 		return nil, err
 	}
@@ -65,65 +65,156 @@ func (b *Encryptr) GetEncryptedFiles(dirIndex int) ([]string, error) {
 	return encryptedFiles, nil
 }
 
-func (a *App) DirectoryWatcher(onOrOff bool) {
-	watcher, err := fsnotify.NewWatcher()
+func (a *App) initializeWatcher(dirIndex int) {
+	var err error
+	a.watcher, err = fsnotify.NewWatcher()
 	if err != nil {
-		fmt.Println(err)
+		log.Println("Failed to create watcher:", err)
+		return
 	}
-	defer watcher.Close()
-	fmt.Println("\033[32m", "Hot filer started", "\033[0m")
 
-	done := make(chan bool)
+	a.done = make(chan bool)
+	currentIndex = dirIndex // Initialize with an invalid index
+}
+
+// DirectoryWatcher starts or switches directory watching
+func (a *App) DirectoryWatcher(dirIndex int) {
+	if currentIndex == dirIndex {
+		fmt.Println("Directory already being watched.")
+		return // Directory is already being watched, do nothing
+	}
+
+	if a.watcher != nil {
+		// Remove the current directory from being watched if applicable
+		if currentIndex >= 0 {
+			err := a.watcher.Remove(a.directories[currentIndex])
+			if err != nil {
+				log.Println("Failed to remove directory from watcher:", err)
+				// Handle error appropriately
+			}
+		}
+		s := fmt.Sprintf("%s %d", a.directories[currentIndex], currentIndex)
+		fmt.Println("\033[32mStopped watching directory", s, "\033[0m")
+		a.watcher.Close() // Close the current watcher to clean up resources
+	}
+	// Re-initialize the watcher
+	a.initializeWatcher(dirIndex)
 
 	var debounceTimer *time.Timer
-	delayDuration := time.Second // Adjust the
+	delayDuration := time.Second
+
 	go func() {
 		for {
 			select {
-			case event, ok := <-watcher.Events:
+			case event, ok := <-a.watcher.Events:
 				if !ok {
 					return
 				}
 				fmt.Printf("Event: %s\n", event)
-				if event.Op&fsnotify.Write == fsnotify.Write {
-					fmt.Printf("Modified file: %s\n", event.Name)
-				} else if event.Op&fsnotify.Create == fsnotify.Create {
-					fmt.Printf("Created file: %s\n", event.Name)
-				} else if event.Op&fsnotify.Remove == fsnotify.Remove {
-					fmt.Printf("Deleted file: %s\n", event.Name)
-				}
-				// Add more conditions here for other types of events.
+
+				// Handle the events...
 				if debounceTimer != nil {
 					debounceTimer.Stop()
 				}
 				debounceTimer = time.AfterFunc(delayDuration, func() {
-					fmt.Println("No further changes detected. Handling event.")
-					runtime.EventsEmit(a.ctx, "rebuildFileTree")
-					runtime.EventsOff(a.ctx, "rebuildFileTree")
-					// Handle the event here (e.g., print a message or perform an action)
+					fmt.Println("Handling event after debounce.")
+					if a.ctx != nil {
+						runtime.EventsEmit(a.ctx, "rebuildFileTree")
+						return
+					}
 				})
 
-				// Place your event handling logic here.
-				// To ensure an event only executes after all file modifications are complete,
-				// you might need to implement a delay or a way to 'debounce' the event
-				// processing, so it waits for a pause in changes.
-
-			case err, ok := <-watcher.Errors:
+			case err, ok := <-a.watcher.Errors:
 				if !ok {
 					return
 				}
-				fmt.Println(err)
+				fmt.Println("Error:", err)
 			}
 		}
 	}()
 
-	// Replace the path below with the directory you want to watch
-	err = watcher.Add(directories[0])
+	// Add the new directory to be watched
+	err := a.watcher.Add(a.directories[dirIndex])
 	if err != nil {
 		log.Fatal(err)
 	}
-	<-done // Keep the program alive
+	fmt.Println("\033[32mNow watching directory", a.directories[dirIndex], "\033[0m")
+	// fmt.Printf("Now watching directory: %s\n", a.directories[dirIndex])
+	currentIndex = dirIndex // Update the current index
+
+	<-a.done // Keep the watcher goroutine alive
 }
+
+func (a *App) StopWatching() {
+	s := fmt.Sprintf("%s %d", a.directories[currentIndex], currentIndex)
+	fmt.Println("\033[32mStopped watching directory", s, "\033[0m")
+	if a.done != nil {
+		close(a.done)
+		if a.watcher != nil {
+			a.watcher.Close()
+		}
+	}
+}
+
+// func (a *App) DirectoryWatcher(dirIndex int) {
+// 	watcher, err := fsnotify.NewWatcher()
+// 	if err != nil {
+// 		fmt.Println(err)
+// 	}
+// 	defer watcher.Close()
+// 	fmt.Println("\033[32m", "Hot filer started", "\033[0m")
+
+// 	done := make(chan bool)
+
+// 	var debounceTimer *time.Timer
+// 	delayDuration := time.Second // Adjust the
+// 	go func() {
+// 		for {
+// 			select {
+// 			case event, ok := <-watcher.Events:
+// 				if !ok {
+// 					return
+// 				}
+// 				fmt.Printf("Event: %s\n", event)
+// 				if event.Op&fsnotify.Write == fsnotify.Write {
+// 					fmt.Printf("Modified file: %s\n", event.Name)
+// 				} else if event.Op&fsnotify.Create == fsnotify.Create {
+// 					fmt.Printf("Created file: %s\n", event.Name)
+// 				} else if event.Op&fsnotify.Remove == fsnotify.Remove {
+// 					fmt.Printf("Deleted file: %s\n", event.Name)
+// 				}
+// 				// Add more conditions here for other types of events.
+// 				if debounceTimer != nil {
+// 					debounceTimer.Stop()
+// 				}
+
+// 				// Place your event handling logic here.
+// 				// To ensure an event only executes after all file modifications are complete,
+// 				// you might need to implement a delay or a way to 'debounce' the event
+// 				// processing, so it waits for a pause in changes.
+// 				debounceTimer = time.AfterFunc(delayDuration, func() {
+// 					fmt.Println("No further changes detected. Handling event.")
+// 					runtime.EventsEmit(a.ctx, "rebuildFileTree")
+// 					runtime.EventsOff(a.ctx, "rebuildFileTree")
+// 					// Handle the event here (e.g., print a message or perform an action)
+// 				})
+
+// 			case err, ok := <-watcher.Errors:
+// 				if !ok {
+// 					return
+// 				}
+// 				fmt.Println(err)
+// 			}
+// 		}
+// 	}()
+
+// 	// Replace the path below with the directory you want to watch
+// 	err = watcher.Add(directories[dirIndex])
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	<-done // Keep the program alive
+// }
 
 func getFilesRecursively(dirs ...string) ([]string, error) {
 	var files []string
@@ -145,8 +236,8 @@ func getFilesRecursively(dirs ...string) ([]string, error) {
 }
 
 func (a *App) EncryptFilesInDir(dirIndex int) (bool, error) {
-	filePaths, err := getFilesRecursively(directories[0])
-	fmt.Println("\033[32mdirectories[0] ", directories[0], "\033[0m")
+	filePaths, err := getFilesRecursively(a.directories[0])
+	fmt.Println("\033[32mdirectories[0] ", a.directories[0], "\033[0m")
 	if err != nil {
 		return false, err
 	}
@@ -179,8 +270,8 @@ func (a *App) EncryptFilesInDir(dirIndex int) (bool, error) {
 }
 
 func (a *App) DecryptFilesInDir() error {
-	filePaths, err := getFilesRecursively(directories[0])
-	fmt.Println("\033[32mdirectories[0] ", directories[0], "\033[0m")
+	filePaths, err := getFilesRecursively(a.directories[0])
+	fmt.Println("\033[32mdirectories[0] ", a.directories[0], "\033[0m")
 	if err != nil {
 		return err
 	}

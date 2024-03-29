@@ -5,7 +5,7 @@ import { AppPage, currentPage } from '../enums/AppPage';
 import { Modals, currentModal } from '../enums/Modals';
 
 import {
-    ResizeWindow
+    DirectoryWatcher, ResizeWindow
 } from "../../wailsjs/go/main/App";
 import {
     GetDirectoryPath,
@@ -16,8 +16,31 @@ import { LogDebug, LogError, LogTrace } from "../../wailsjs/runtime/runtime";
 export const width = 220
 export const height = 180
 
-export function switchFormButton(page: AppPage) {
+export const pageName: () => string = () => {
+    const _appPage: AppPage = get(currentPage);
+    return _appPage;
+};
+
+export const pageIndex: () => number = () => {
+    const _appPage = get(currentPage)
+    switch (
+    _appPage
+    ) {
+        case AppPage.Vault:
+        default:
+            return 0;
+        case AppPage.NBox:
+            return 1;
+        case AppPage.OBox:
+            return 2;
+        case AppPage.Login:
+            return 3;
+    };
+};
+
+export function switchPages(page: AppPage) {
     currentPage.set(page); // Assuming currentPage is a writable store
+    DirectoryWatcher(pageIndex());
 }
 
 export function switchModals(modal: Modals) {
@@ -57,7 +80,7 @@ export function switchModals(modal: Modals) {
     }
 }
 
- interface FileProperties {
+interface FileProperties {
     modifiedDate: string;
     fileSize: number;
     fileType?: string; // Optional

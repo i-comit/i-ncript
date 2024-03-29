@@ -8,6 +8,8 @@ export function CloseApp():Promise<void>;
 
 export function DecryptFilesInDir():Promise<void>;
 
+export function DirectoryWatcher(arg1:number):Promise<void>;
+
 export function EncryptFilesInDir(arg1:number):Promise<boolean>;
 
 export function FilesDragNDrop(arg1:Array<number>,arg2:string,arg3:string):Promise<void>;
@@ -19,3 +21,5 @@ export function Login(arg1:string,arg2:string):Promise<boolean>;
 export function MinimizeApp():Promise<void>;
 
 export function ResizeWindow(arg1:number,arg2:number,arg3:boolean):Promise<void>;
+
+export function StopWatching():Promise<void>;

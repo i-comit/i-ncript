@@ -11,23 +11,26 @@ import (
 
 	"encoding/json"
 
+	"github.com/fsnotify/fsnotify"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 type App struct {
-	ctx     context.Context
-	getters *Getters
+	ctx         context.Context
+	directories []string
+	done        chan bool
+	watcher     *fsnotify.Watcher // Hold the watcher instance
 }
 
-type Getters struct {
-	ctx context.Context
-}
+// var directories = []string{"VAULT", "N-BOX", "O-BOX"}
+var currentIndex = 0
 
 func NewApp() *App {
-	return &App{}
+	return &App{
+		directories: []string{"VAULT", "N-BOX", "O-BOX"},
+	}
 }
 
-var directories = []string{"VAULT", "N-BOX", "O-BOX"}
 var rootFolder = "i-ncript"
 var encryptedUsername = ""
 var encryptedPassword = ""
@@ -104,11 +107,11 @@ func (a *App) Login(username string, password string) (bool, error) {
 	if a.ctx != nil {
 		a.ResizeWindow(_width*2, _height+25, false)
 	}
-	for i, dir := range directories {
-		directories[i] = cwd + string(os.PathSeparator) + dir
+	for i, dir := range a.directories {
+		a.directories[i] = cwd + string(os.PathSeparator) + dir
 	}
 
-	err = createDirectories(directories...)
+	err = createDirectories(a.directories...)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -198,10 +201,10 @@ type FileNode struct {
 func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 	if dirIndex < 0 {
 		dirIndex = 0
-	} else if dirIndex >= len(directories) {
-		dirIndex = len(directories) - 1
+	} else if dirIndex >= len(a.directories) {
+		dirIndex = len(a.directories) - 1
 	}
-	var rootDir = directories[dirIndex]
+	var rootDir = a.directories[dirIndex]
 	rootDir = filepath.Clean(rootDir)
 	// Initialize rootNode. It does not represent the rootDir itself but its contents.
 	rootNode := &FileNode{RelPath: rootDir, Children: []*FileNode{}}
@@ -256,6 +259,11 @@ func addPath(node *FileNode, parts []string, currentPath string) {
 }
 
 // GETTER STRUCT
+type Getters struct {
+	ctx         context.Context
+	directories []string
+}
+
 func (b *Getters) GetAppPath() (string, error) {
 	cwd, err := os.Getwd()
 	if err != nil {
@@ -275,15 +283,15 @@ func (b *Getters) GetDirName() (bool, error) {
 func (b *Getters) GetDirectoryPath(dirIndex int) (string, error) {
 	if dirIndex < 0 {
 		dirIndex = 0
-	} else if dirIndex >= len(directories) {
-		dirIndex = len(directories) - 1
+	} else if dirIndex >= len(b.directories) {
+		dirIndex = len(b.directories) - 1
 	}
-	return directories[dirIndex] + string(filepath.Separator), nil
+	return b.directories[dirIndex] + string(filepath.Separator), nil
 }
 
 func (b *Getters) GetDirectoryFileCt(dirIndex int) (int, error) {
 	fileCount := 0
-	err := filepath.Walk(directories[dirIndex], func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(b.directories[dirIndex], func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -295,7 +303,7 @@ func (b *Getters) GetDirectoryFileCt(dirIndex int) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	fmt.Printf("\033[33mdirectories[dirIndex]: %s %d \033[0m\n", directories[dirIndex], fileCount)
+	fmt.Printf("\033[33mdirectories[dirIndex]: %s %d \033[0m\n", b.directories[dirIndex], fileCount)
 	return fileCount, nil
 }
 

@@ -1,7 +1,7 @@
 <!-- https://codepen.io/singhimalaya/pen/EdVzNL -->
 <script lang="ts">
     import { LogPrint } from "../../wailsjs/runtime/runtime";
-    import { DirectoryWatcher } from "../../wailsjs/go/main/Encryptr";
+    // import { DirectoryWatcher } from "../../wailsjs/go/main/Encryptr";
 
     let isChecked: boolean;
     isChecked = false;
@@ -9,7 +9,7 @@
     // Function to log the checkbox's state
     function logCheckboxState() {
         LogPrint("Checkbox is pressed. Current state:" + isChecked);
-        DirectoryWatcher(isChecked);
+        // DirectoryWatcher(isChecked);
     }
 </script>
 
