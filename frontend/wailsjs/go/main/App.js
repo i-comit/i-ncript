@@ -22,14 +22,6 @@ export function EncryptFilesInDir(arg1) {
   return window['go']['main']['App']['EncryptFilesInDir'](arg1);
 }
 
-export function FilesDragNDrop(arg1, arg2, arg3, arg4) {
-  return window['go']['main']['App']['FilesDragNDrop'](arg1, arg2, arg3, arg4);
-}
-
-export function FilesDragNDrop2(arg1, arg2, arg3) {
-  return window['go']['main']['App']['FilesDragNDrop2'](arg1, arg2, arg3);
-}
-
 export function InitializeRootFolder() {
   return window['go']['main']['App']['InitializeRootFolder']();
 }

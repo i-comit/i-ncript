@@ -11,7 +11,7 @@ import {
     GetDirectoryPath,
     GetFileProperties
 } from "../../wailsjs/go/main/Getters";
-import { LogDebug, LogError, LogTrace } from "../../wailsjs/runtime/runtime";
+import { LogDebug, LogError, LogTrace, LogWarning } from "../../wailsjs/runtime/runtime";
 
 export const width = 220
 export const height = 180
@@ -99,6 +99,14 @@ const directoryPathRegex = /^(.*[\\/])/;
 
 export function basePath(path: string): string {
     return path.split(directoryPathRegex).pop() || path;
+}
+export async function getFullFilePath(relPath: string): Promise<string> {
+    GetDirectoryPath(pageIndex()).then((dirPath) => {
+        LogWarning(dirPath + relPath);
+        return dirPath + relPath;
+    });
+    LogError("Error getting full filePath " + relPath);
+    return relPath;
 }
 
 export function removeFileName(filePath: string): string {

@@ -149,46 +149,6 @@ func (a *App) CloseApp() {
 	os.Exit(0)
 }
 
-func (a *App) FilesDragNDrop2(fileBytesArray [][]byte, fileNames []string, pathToMoveTo string) error {
-	if a.ctx != nil {
-		// Check if the path exists; if not, create it
-		if _, err := os.Stat(pathToMoveTo); os.IsNotExist(err) {
-			err := os.MkdirAll(pathToMoveTo, os.ModePerm)
-			if err != nil {
-				return fmt.Errorf("failed to create target directory: %w", err)
-			}
-		}
-
-		// Loop through each file
-		for i, fileBytes := range fileBytesArray {
-			if i >= len(fileNames) { // Safety check to avoid index out of range
-				return fmt.Errorf("mismatch in numbers of files and file names")
-			}
-			fileName := fileNames[i] // Get the file name corresponding to the current byte array
-			runtime.LogError(a.ctx, "File "+fileName)
-			fullPath := filepath.Join(pathToMoveTo, fileName) // Combine path and file name
-			runtime.LogError(a.ctx, "File2 "+fileName+" Full path "+fullPath)
-
-			// Write the file
-			err := os.WriteFile(fullPath, fileBytes, 0644) // Permissions allow read/write for owner, read-only for others
-			if err != nil {
-				return fmt.Errorf("failed to write file: %w", err)
-			}
-		}
-
-		// Uncomment and use if needed for events post file operations
-		// runtime.EventsOnce(a.ctx, "rebuildFileTree", func(optionalData ...interface{}) {
-		//     fmt.Println("Event 'rebuildFileTree' received.")
-		//     for _, data := range optionalData {
-		//         fmt.Println("Data received with event:", data)
-		//     }
-		// })
-
-		return nil
-	}
-	return nil
-}
-
 func MoveFiles(srcPaths []string, destDir string) error {
 	for _, srcPath := range srcPaths {
 		filename := filepath.Base(srcPath)
@@ -267,7 +227,6 @@ func (a *App) DirectoryWatcher(dirIndex int) {
 					if !isInFileTask {
 						fmt.Println("Emitting rebuildFileTree event...")
 						runtime.EventsEmit(a.ctx, rebuildFileTree)
-						return
 					}
 				}
 

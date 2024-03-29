@@ -29,7 +29,9 @@ func main() {
 	encrypt := &Encrypt{
 		directories: app.directories,
 	}
-	fileUtils := &FileUtils{}
+	fileUtils := &FileUtils{
+		app: app,
+	}
 
 	// Create application with options
 	err := wails.Run(&options.App{

@@ -1,16 +1,22 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
-	"time"
 
-	"github.com/wailsapp/wails/v2/pkg/runtime"
+	// "sync"
+	// "sync/atomic"
+
+	"time"
 )
 
 type FileUtils struct {
+	app *App
+	ctx context.Context
+
 	directories []string // Your directories list
 }
 
@@ -119,42 +125,127 @@ func createDirectories(dirs ...string) error {
 	return nil
 }
 
-func (a *App) FilesDragNDrop(fileBytes []byte, fileName string, modifiedDate int64, pathToMoveTo string) error {
-	if a.ctx != nil {
+// func (a *App) FilesDragNDrop(fileBytes []byte, fileName string, modifiedDate int64, pathToMoveTo string) error {
+// 	if a.ctx != nil {
+// 		if _, err := os.Stat(pathToMoveTo); os.IsNotExist(err) {
+// 			err := os.MkdirAll(pathToMoveTo, os.ModePerm)
+// 			if err != nil {
+// 				return fmt.Errorf("failed to create target directory: %w", err)
+// 			}
+// 		}
+
+// 		fullPath := filepath.Join(pathToMoveTo, fileName)
+// 		file, err := os.OpenFile(fullPath, os.O_CREATE|os.O_WRONLY, 0644)
+// 		if err != nil {
+// 			return fmt.Errorf("failed to open file for writing: %w", err)
+// 		}
+// 		defer file.Close()
+
+// 		var writtenBytes int64
+// 		done := make(chan bool)
+
+// 		if len(fileBytes) > 5*1024*1024 {
+// 			// Start a goroutine to log file size during writing
+// 			go func() {
+// 				ticker := time.NewTicker(time.Millisecond)
+// 				defer ticker.Stop()
+
+// 				for {
+// 					select {
+// 					case <-ticker.C:
+// 						fmt.Printf("Current size of %s: %d bytes\n", fileName, atomic.LoadInt64(&writtenBytes))
+// 					case <-done:
+// 						// Final log to capture the completion state accurately
+// 						fmt.Printf("Final size of %s: %d bytes\n", fileName, atomic.LoadInt64(&writtenBytes))
+// 						return
+// 					}
+// 				}
+// 			}()
+// 		}
+
+// 		chunkSize := 1024 // Define a suitable chunk size
+// 		for i := 0; i < len(fileBytes); i += chunkSize {
+// 			end := i + chunkSize
+// 			if end > len(fileBytes) {
+// 				end = len(fileBytes)
+// 			}
+// 			n, err := file.Write(fileBytes[i:end])
+// 			if err != nil {
+// 				close(done) // Ensure to signal the goroutine to stop in case of an error
+// 				return fmt.Errorf("failed to write file: %w", err)
+// 			}
+// 			atomic.AddInt64(&writtenBytes, int64(n))
+// 		}
+
+// 		close(done) // Signal the completion of file writing to the goroutine
+
+// 		// Convert the modifiedDate from milliseconds to time.Time
+// 		modTime := time.UnixMilli(modifiedDate)
+
+// 		// Set the last modified time of the file
+// 		if err := os.Chtimes(fullPath, modTime, modTime); err != nil {
+// 			return fmt.Errorf("failed to set last modified date: %w", err)
+// 		}
+// 		return nil
+// 	}
+// 	return nil
+// }
+
+func (f *FileUtils) FilesDragNDrop(fileBytes []byte, fileName string, modifiedDate int64, pathToMoveTo string) error {
+	if f.app.ctx != nil {
 		if _, err := os.Stat(pathToMoveTo); os.IsNotExist(err) {
 			err := os.MkdirAll(pathToMoveTo, os.ModePerm)
 			if err != nil {
 				return fmt.Errorf("failed to create target directory: %w", err)
 			}
 		}
-
 		fullPath := filepath.Join(pathToMoveTo, fileName)
-		if len(fileBytes) > 10*1024*1024 {
-			// Start a goroutine to log file size during writing
-			go func() {
-				ticker := time.NewTicker(1 * time.Second) // Adjust the frame interval as needed
-				defer ticker.Stop()
-
-				for range ticker.C {
-					if info, err := os.Stat(fullPath); err == nil {
-						fmt.Printf("Current size of %s: %d bytes\n", fileName, info.Size())
-					}
-				}
-			}()
-		}
-		err := os.WriteFile(fullPath, fileBytes, 0644) // 0644 provides read/write permissions to the owner and read-only for others
+		file, err := os.OpenFile(fullPath, os.O_CREATE|os.O_WRONLY, 0644)
 		if err != nil {
-			return fmt.Errorf("failed to write file: %w", err)
+			return fmt.Errorf("failed to open file for writing: %w", err)
+		}
+		defer file.Close()
+
+		var writtenBytes int64
+		done := make(chan bool)
+
+		// if len(fileBytes) > 5*1024*1024 {
+		// 	go func() {
+		// 		ticker := time.NewTicker(time.Millisecond) // Slower ticker to reduce console spam
+		// 		defer ticker.Stop()
+		// 		for {
+		// 			select {
+		// 			case <-ticker.C:
+		// 				fmt.Printf("Current size of %s: %d bytes\n", fileName, writtenBytes) // Direct access under mutex protection
+		// 			case <-done:
+		// 				fmt.Printf("Final size of %s: %d bytes\n", fileName, writtenBytes)
+		// 				return
+		// 			}
+		// 		}
+		// 	}()
+		// }
+
+		chunkSize := 1024 // Define a suitable chunk size
+		for i := 0; i < len(fileBytes); i += chunkSize {
+			end := i + chunkSize
+			if end > len(fileBytes) {
+				end = len(fileBytes)
+			}
+			n, err := file.Write(fileBytes[i:end])
+			if err != nil {
+				close(done) // Ensure to signal the goroutine to stop in case of an error
+				return fmt.Errorf("failed to write file: %w", err)
+			}
+			writtenBytes += int64(n) // Safe to update within the mutex-protected block
 		}
 
-		// Convert the modifiedDate from milliseconds to time.Time
+		close(done) // Signal the completion of file writing to the goroutine
 		modTime := time.UnixMilli(modifiedDate)
 
 		// Set the last modified time of the file
 		if err := os.Chtimes(fullPath, modTime, modTime); err != nil {
 			return fmt.Errorf("failed to set last modified date: %w", err)
 		}
-		runtime.EventsEmit(a.ctx, rebuildFileTree)
 		return nil
 	}
 	return nil

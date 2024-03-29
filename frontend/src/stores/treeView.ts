@@ -3,7 +3,7 @@ import { get } from "svelte/store";
 import { AppPage, currentPage } from "../enums/AppPage";
 import { basePath, removeFileName } from "../tools/utils";
 import {
-    BuildDirectoryFileTree, FilesDragNDrop
+    BuildDirectoryFileTree, DirectoryWatcher
 } from "../../wailsjs/go/main/App";
 import {
     LogDebug,
@@ -18,12 +18,10 @@ import {
     GetDirectoryPath,
     GetFileProperties
 } from "../../wailsjs/go/main/Getters";
-import { SetIsInFileTask } from "../../wailsjs/go/main/FileUtils";
+import { SetIsInFileTask, FilesDragNDrop } from "../../wailsjs/go/main/FileUtils";
 
 export const vaultExpansionState = writable<{ [key: string]: boolean }>({});
-export const vaultRootExpanded = writable<boolean>(false);
 export const nBoxExpansionState = writable<{ [key: string]: boolean }>({});
-export const nboxRootExpanded = writable<boolean>(false);
 export const oBoxExpansionState = writable<{ [key: string]: boolean }>({});
 
 export const isInFileTask = writable<boolean>(false);
@@ -38,6 +36,7 @@ interface FileNode {
 export function loadFileTree(index: number) {
     BuildDirectoryFileTree(index)
         .then((result: FileNode) => {
+            LogPrint("Rebuilt File Tree " + index);
             const sortedTree = sortFileTree(result); // Sort the tree before setting it
             fileTree.set(sortedTree);
             updateExpansionStateStore()
@@ -123,15 +122,6 @@ export function getCurrentPageStore() {
 
 let draggedOver = false;
 
-export async function getFullFilePath(relPath: string): Promise<string> {
-    GetDirectoryPath(pageIndex()).then((dirPath) => {
-        LogWarning(dirPath + relPath);
-        return dirPath + relPath;
-    });
-    LogError("Error getting full filePath " + relPath);
-    return relPath;
-}
-
 export function handleDragOver(relPath: string, event: DragEvent) {
     event.preventDefault(); // Necessary to allow for a drop
     // if (!draggedOver) {
@@ -147,15 +137,19 @@ export function setIsInFileTask(b: boolean) {
     SetIsInFileTask(b).then((_isInFileTask) => {
         isInFileTask.set(_isInFileTask);
         LogPrint("SetIsInFileTask " + _isInFileTask);
+        if (!_isInFileTask) {
+            DirectoryWatcher(pageIndex())
+        }
     })
 };
+
+let droppedFilesCt: number
 
 export function handleDrop(relPath: string, event: DragEvent) {
     event.preventDefault();
     draggedOver = false;
     if (event.dataTransfer && event.dataTransfer.files) {
         const droppedFiles = event.dataTransfer.files;
-        // LogError("Dropped file relativePath " + relPath)
         var index = pageIndex();
         GetDirectoryPath(index).then((dirPath) => {
             var fullPath = dirPath + relPath;
@@ -171,48 +165,34 @@ export function handleDrop(relPath: string, event: DragEvent) {
                         pathToMoveTo = removeFileName(fullPath);
                     }
                     setIsInFileTask(true)
+                    droppedFilesCt = 1;
                     for (let i = 0; i < droppedFiles.length; i++) {
                         const file = droppedFiles[i];
                         const reader = new FileReader();
+                        reader.onprogress = function (event) {
+                            if (event.lengthComputable) {
+                                const loadedBytes = event.loaded;
+                                const totalBytes = event.total;
+                                const progressMsg = `${loadedBytes} of ${totalBytes} bytes (${Math.round((loadedBytes / totalBytes) * 100)}%)`;
+                                LogDebug(progressMsg);
+                            }
+                        };
                         reader.onload = function (e) {
                             const arrayBuffer = e.target?.result as ArrayBuffer;
                             if (arrayBuffer) { // Check if the result is not null or undefined
                                 const byteArray = new Uint8Array(arrayBuffer);
                                 FilesDragNDrop(Array.from(byteArray), file.name, file.lastModified, pathToMoveTo);
                                 LogDebug("frontend file on load" + file.name + " " + file.lastModified);
+                                droppedFilesCt++
+                                if (droppedFilesCt === droppedFiles.length + 1) {
+                                    setIsInFileTask(false)
+                                    LogDebug("droppedFilesCt " + droppedFilesCt++);
+                                    loadFileTree(index)
+                                }
                             }
                         };
                         reader.readAsArrayBuffer(file);
                     }
-                    // s
-                    // const byteArrays: number[][] = [];
-                    // const fileNames: string[] = [];
-                    // let filesProcessed = 0; // Counter to keep track of files processed
-
-                    // // Iterate over each dropped file
-                    // Array.from(droppedFiles).forEach((file) => {
-                    //     const reader = new FileReader();
-
-                    //     reader.onload = function (e) {
-                    //         const arrayBuffer = e.target?.result as ArrayBuffer;
-                    //         if (arrayBuffer) { // Check if the result is not null or undefined
-                    //             const byteArray = new Uint8Array(arrayBuffer);
-                    //             byteArrays.push(Array.from(byteArray)); // Add byte array to the list
-                    //             fileNames.push(file.name); // Add file name to the list
-
-                    //             filesProcessed++; // Increment the counter
-
-                    //             // Once all files have been processed, call FilesDragNDrop2
-                    //             if (filesProcessed === droppedFiles.length) {
-                    //                 FilesDragNDrop2(byteArrays, fileNames, pathToMoveTo);
-                    //                 LogDebug("frontend files on load: " + fileNames.join(", "));
-                    //             }
-                    //         }
-                    //     };
-
-                    // Trigger the read operation
-                    // reader.readAsArrayBuffer(file);
-                    // });
                 }
             });
         });

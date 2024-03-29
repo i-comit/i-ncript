@@ -74,7 +74,6 @@
         _label = basePath(tree.relPath);
         EventsOnce("rebuildFileTree", () => {
             loadFileTree(pageIndex());
-            LogPrint("Rebuilt File Tree");
         });
         return unsubscribe; // Unsubscribe when the component unmounts
     });
