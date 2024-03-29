@@ -21,7 +21,14 @@
     import { pageChangeBtn } from "../stores/pageChangeBtn.js";
     import { encryptProgress } from "../stores/encryptProgress";
 
-    import { loadFileTree, fileTree } from "../stores/treeView.ts";
+    import {
+        loadFileTree,
+        fileTree,
+        pageIndex,
+        handleDrop,
+        handleDragLeave,
+        handleDragOver,
+    } from "../stores/treeView.ts";
 
     import { addLogEntry } from "../tools/logger.ts";
 
@@ -48,7 +55,12 @@
     import TreeView from "./TreeView.svelte";
     import Logger from "./Logger.svelte";
 
-    import { EventsOn, LogPrint } from "../../wailsjs/runtime/runtime";
+    import {
+        EventsOn,
+        LogError,
+        LogPrint,
+    } from "../../wailsjs/runtime/runtime";
+    import { GetDirectoryPath } from "../../wailsjs/go/main/Getters";
 
     let _fileCt: number;
     _fileCt = 0;
@@ -63,6 +75,7 @@
             LogPrint(`New fileCount ${_fileCt}`);
         });
     });
+
     let _username: string;
     usernameStore.subscribe((value) => {
         _username = value;
@@ -99,6 +112,14 @@
                 ResizeWindow(width * 2, height + 15, false);
             }
         });
+    }
+
+    function handleDropOnModal(event: DragEvent) {
+        event.preventDefault();
+        LogError("MODAL " + _modal);
+        if (_modal === Modals.None) {
+            handleDrop("", event);
+        }
     }
 </script>
 
@@ -183,7 +204,16 @@
             </div>
         </div>
     </div>
-    <div id="right-panel" class="bg-gray-500 mt-6 px-0">
+    <div
+        id="right-panel"
+        role="application"
+        class="bg-gray-500 mt-6 px-0"
+        on:mouseleave={onmouseleave}
+        on:dragover={(event) => handleDragOver("", event)}
+        on:dragleave={handleDragLeave}
+        on:drop={(event) => handleDrop("", event)}
+        on:mouseenter={() => LogError("VAULT")}
+    >
         {#if _modal === Modals.None}
             <TreeView tree={$fileTree} />
             <!-- <Settings /> -->

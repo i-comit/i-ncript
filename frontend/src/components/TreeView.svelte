@@ -1,11 +1,11 @@
-<script context="module" lang="ts">
-    // retain module scoped expansion state for each tree node
-</script>
-
 <script lang="ts">
     // import { slide } from 'svelte/transition'
-    import { onMount } from "svelte";
-    import { LogError, LogPrint } from "../../wailsjs/runtime/runtime";
+    import { onMount, afterUpdate } from "svelte";
+    import {
+        EventsOn,
+        LogError,
+        LogPrint,
+    } from "../../wailsjs/runtime/runtime";
 
     import {
         FolderOpenSolid,
@@ -26,6 +26,7 @@
         handleDragOver,
         handleDrop,
         pageIndex,
+        loadFileTree,
     } from "../stores/treeView.ts";
 
     import {
@@ -60,6 +61,10 @@
     };
 
     onMount(() => {
+        EventsOn("rebuildFileTree", () => {
+            loadFileTree(pageIndex());
+            LogPrint("REBUILT FILE TREE");
+        });
         const currentPageStore = getCurrentPageStore();
         const unsubscribe = currentPageStore.subscribe((state) => {
             const basePathKey = basePath(tree.relPath);
@@ -70,8 +75,9 @@
         _label = basePath(tree.relPath);
         return unsubscribe; // Unsubscribe when the component unmounts
     });
+
+    afterUpdate(() => {});
     function updateExpansionForNode(node: FileNode, expand: boolean) {
-        // Recursive function to update the expansion state for a node and its children
         const currentPageStore = getCurrentPageStore();
         currentPageStore.update((currentState) => {
             const basePathKey = basePath(node.relPath);
@@ -102,7 +108,6 @@
         });
         return !tree.children;
     }
-    // let parentNode: HTMLLIElement;
     let buttonRef: HTMLButtonElement;
 
     function handleMouseEnter() {
@@ -114,8 +119,8 @@
             });
         });
     }
-    function handleMouseLeave() {}
 
+    function handleMouseLeave() {}
 </script>
 
 <div>
@@ -171,7 +176,9 @@
                 >
                     {_label}
                 </button>
-                <Tooltip class="p-0 m-0 text-xs bg-gray-400">{_filePropsTooltip}</Tooltip>
+                <Tooltip class="p-0 m-0 text-xs bg-gray-400"
+                    >{_filePropsTooltip}</Tooltip
+                >
             {:else}
                 <button
                     class="flex"

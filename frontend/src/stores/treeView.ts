@@ -3,7 +3,7 @@ import { get } from "svelte/store";
 import { AppPage, currentPage } from "../enums/AppPage";
 import { basePath, removeFileName } from "../tools/utils";
 import {
-    BuildDirectoryFileTree
+    BuildDirectoryFileTree, FilesDragNDrop
 } from "../../wailsjs/go/main/App";
 import {
     LogDebug,
@@ -24,15 +24,8 @@ export const nBoxExpansionState = writable<{ [key: string]: boolean }>({});
 export const nboxRootExpanded = writable<boolean>(false);
 export const oBoxExpansionState = writable<{ [key: string]: boolean }>({});
 
-interface FileNode {
-    relPath: string;
-    children?: FileNode[];
-}
 
 export const fileTree = writable<FileNode>({ relPath: "", children: [] });
-
-let expanded = false;
-let _appPage: AppPage;
 
 export const pageName: () => string = () => {
     const _appPage: AppPage = get(currentPage);
@@ -42,7 +35,7 @@ export const pageName: () => string = () => {
 export const pageIndex: () => number = () => {
     _appPage = get(currentPage)
     switch (
-    _appPage // Assuming _appPage holds the current page enum value
+    _appPage
     ) {
         case AppPage.Vault:
         default:
@@ -56,26 +49,16 @@ export const pageIndex: () => number = () => {
     };
 };
 
-export function getCurrentPageStore() {
-    _appPage = get(currentPage)
-    switch (
-    _appPage // Assuming _appPage holds the current page enum value
-    ) {
-        case AppPage.Vault:
-            return vaultExpansionState;
-        case AppPage.NBox:
-            return nBoxExpansionState;
-        case AppPage.OBox:
-            return oBoxExpansionState;
-        default:
-            throw new Error("Unrecognized page");
-    }
+interface FileNode {
+    relPath: string;
+    children?: FileNode[];
 }
 
 export function loadFileTree(index: number) {
     BuildDirectoryFileTree(index)
         .then((result: FileNode) => {
-            fileTree.set(result);
+            const sortedTree = sortFileTree(result); // Sort the tree before setting it
+            fileTree.set(sortedTree);
             loadExpansionState(index)
         })
         .catch((error) => {
@@ -98,6 +81,24 @@ function loadExpansionState(index: number) {
     });
 }
 
+function sortFileTree(node: FileNode): FileNode {
+    // Check if the node has children
+    if (node.children) {
+        // First, sort the children recursively
+        node.children = node.children.map(sortFileTree);
+        // Then, sort the current node's children putting directories (nodes with children) first
+        node.children.sort((a, b) => {
+            // If 'a' is a directory and 'b' is not, 'a' should come first
+            if (a.children && !b.children) { return -1; }
+            // If 'b' is a directory and 'a' is not, 'b' should come first
+            if (b.children && !a.children) { return 1; }
+            // If both are directories or both are files, they remain in their original order
+            return 0;
+        });
+    }
+    return node;
+}
+
 export const expandRoot: () => void = () => {
     const currentPageStore = getCurrentPageStore();
     _appPage = get(currentPage)
@@ -107,6 +108,26 @@ export const expandRoot: () => void = () => {
         return currentState; //returns the currentState to currentPageStore
     });
 };
+let expanded = false;
+let _appPage: AppPage;
+
+
+export function getCurrentPageStore() {
+    _appPage = get(currentPage)
+    switch (
+    _appPage
+    ) {
+        case AppPage.Vault:
+            return vaultExpansionState;
+        case AppPage.NBox:
+            return nBoxExpansionState;
+        case AppPage.OBox:
+            return oBoxExpansionState;
+        default:
+            throw new Error("Unrecognized page");
+    }
+}
+
 
 let draggedOver = false;
 
@@ -121,43 +142,64 @@ export async function getFullFilePath(relPath: string): Promise<string> {
 
 export function handleDragOver(relPath: string, event: DragEvent) {
     event.preventDefault(); // Necessary to allow for a drop
+    // if (!draggedOver) {
+    //     FileDialogueForDragNDrop().then(() => {
+    //         draggedOver = true;
+    //         LogError("Dragged over lele " + relPath);
+    //     })
+    // }
     draggedOver = true;
-    LogError("Dragged over lele " + relPath);
 }
 
 export function handleDrop(relPath: string, event: DragEvent) {
     event.preventDefault();
     draggedOver = false;
     if (event.dataTransfer && event.dataTransfer.files) {
-        const files = event.dataTransfer.files;
+        const droppedFiles = event.dataTransfer.files;
+        // LogError("Dropped file relativePath " + relPath)
         var index = pageIndex();
         GetDirectoryPath(index).then((dirPath) => {
             var fullPath = dirPath + relPath;
             getFileProperties(fullPath).then((fileProps) => {
-                LogError(files.length + " file(s) dropped. " + fullPath);
+                LogInfo(droppedFiles.length + " file(s) dropped. " + fullPath);
                 if (fileProps.fileType) {
                     let pathToMoveTo: string;
                     if (fileProps.fileType === "dir") {
-                        LogError("Node being used for drop is dir ");
+                        LogDebug("Node being used for drop is dir ");
                         pathToMoveTo = fullPath;
                     } else {
-                        LogError("Node being used for drop  is file ");
+                        LogDebug("Node being used for drop  is file ");
                         pathToMoveTo = removeFileName(fullPath);
                     }
-                    for (let i = 0; i < files.length; i++) {
-                        const file = files[i];
-                        const reader = new FileReader();
-                        reader.onload = (function (theFile) {
-                            return function (e) {
-                                const arrayBuffer = e.target?.result as ArrayBuffer;
-                                const byteArray = new Uint8Array(arrayBuffer);
-                                // e.target.result contains the file's data.
-                                // Send this data to the backend to be saved to the new location.
-                            };
-                        })(file);
-                        // reader.readAsDataURL(file);
-                        LogError("READER " + file.stream());
-                    }
+
+                    const file = droppedFiles[0];
+                    const reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        const arrayBuffer = e.target?.result as ArrayBuffer;
+                        if (arrayBuffer) { // Check if the result is not null or undefined
+                            const byteArray = new Uint8Array(arrayBuffer);
+                            FilesDragNDrop(Array.from(byteArray), file.name, pathToMoveTo);
+                            LogDebug("frontend file on load" + file.name);
+                        }
+                    };
+                    reader.readAsArrayBuffer(file);
+                    // LogError("front end file " +       reader.readAsArrayBuffer(file));
+
+                    // for (let i = 0; i < droppedFiles.length; i++) {
+                    //     const file = droppedFiles[i];
+                    //     const reader = new FileReader();
+                    //     reader.onload = (function (theFile) {
+                    //         return function (e) {
+                    //             const arrayBuffer = e.target?.result as ArrayBuffer;
+                    //             const byteArray = new Uint8Array(arrayBuffer);
+                    //             LogError("front end file " + theFile.name);
+                    //             // e.target.result contains the file's data.
+                    //             // Send this data to the backend to be saved to the new location.
+                    //         };
+                    //     })(file);
+                    //     LogError("READER " + file.stream());
+                    // }
                 }
             });
         });

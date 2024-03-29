@@ -51,7 +51,21 @@ func (b *Encryptr) GetDecryptedFiles(dirIndex int) ([]string, error) {
 	return unencryptedFiles, nil
 }
 
-func (b *Encryptr) DirectoryWatcher(onOrOff bool) {
+func (b *Encryptr) GetEncryptedFiles(dirIndex int) ([]string, error) {
+	filePaths, err := getFilesRecursively(directories[dirIndex])
+	if err != nil {
+		return nil, err
+	}
+	var encryptedFiles []string
+	for _, filePath := range filePaths {
+		if filepath.Ext(filePath) == ".enc" {
+			encryptedFiles = append(encryptedFiles, filePath)
+		}
+	}
+	return encryptedFiles, nil
+}
+
+func (a *App) DirectoryWatcher(onOrOff bool) {
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
 		fmt.Println(err)
@@ -84,6 +98,8 @@ func (b *Encryptr) DirectoryWatcher(onOrOff bool) {
 				}
 				debounceTimer = time.AfterFunc(delayDuration, func() {
 					fmt.Println("No further changes detected. Handling event.")
+					runtime.EventsEmit(a.ctx, "rebuildFileTree")
+					runtime.EventsOff(a.ctx, "rebuildFileTree")
 					// Handle the event here (e.g., print a message or perform an action)
 				})
 
@@ -107,20 +123,6 @@ func (b *Encryptr) DirectoryWatcher(onOrOff bool) {
 		log.Fatal(err)
 	}
 	<-done // Keep the program alive
-}
-
-func (b *Encryptr) GetEncryptedFiles(dirIndex int) ([]string, error) {
-	filePaths, err := getFilesRecursively(directories[dirIndex])
-	if err != nil {
-		return nil, err
-	}
-	var encryptedFiles []string
-	for _, filePath := range filePaths {
-		if filepath.Ext(filePath) == ".enc" {
-			encryptedFiles = append(encryptedFiles, filePath)
-		}
-	}
-	return encryptedFiles, nil
 }
 
 func getFilesRecursively(dirs ...string) ([]string, error) {

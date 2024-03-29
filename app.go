@@ -147,6 +147,35 @@ func (a *App) CloseApp() {
 	os.Exit(0)
 }
 
+func (a *App) FilesDragNDrop(fileBytes []byte, fileName string, pathToMoveTo string) error {
+	if a.ctx != nil {
+		if _, err := os.Stat(pathToMoveTo); os.IsNotExist(err) {
+			// Attempt to create the directory if it doesn't exist
+			err := os.MkdirAll(pathToMoveTo, os.ModePerm)
+			if err != nil {
+				return fmt.Errorf("failed to create target directory: %w", err)
+			}
+		}
+		runtime.LogError(a.ctx, "File "+fileName)
+		fullPath := filepath.Join(pathToMoveTo, fileName)
+		runtime.LogError(a.ctx, "File2 "+fileName+" Full path "+fullPath)
+
+		err := os.WriteFile(fullPath, fileBytes, 0644) // 0644 provides read/write permissions to the owner and read-only for others
+		if err != nil {
+			return fmt.Errorf("failed to write file: %w", err)
+		}
+
+		// runtime.EventsOnce(a.ctx, "rebuildFileTree", func(optionalData ...interface{}) {
+		// 	fmt.Println("Event 'rebuildFileTree' received.")
+		// 	for _, data := range optionalData {
+		// 		fmt.Println("Data received with event:", data)
+		// 	}
+		// })
+		return nil
+	}
+	return nil
+}
+
 func MoveFiles(srcPaths []string, destDir string) error {
 	for _, srcPath := range srcPaths {
 		filename := filepath.Base(srcPath)

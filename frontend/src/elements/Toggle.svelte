@@ -46,10 +46,6 @@
         border-radius: 100px;
     }
 
-    .button.b2 {
-        border-radius: 2px;
-    }
-
     .checkbox {
         position: relative;
         width: 100%;
@@ -67,7 +63,7 @@
 
     .layer {
         width: 100%;
-        background-color: #ebf7fc;
+        background-color: #e3e3e3;
         transition: 0.2s ease all;
         z-index: 1;
     }
@@ -93,11 +89,11 @@
     #button-1 .checkbox:checked + .knobs:before {
         content: "";
         left: 50px;
-        background-color: #f44336;
+        background-color: #bdf3fb;
     }
 
     #button-1 .checkbox:checked ~ .layer {
-        background-color: #fcebeb;
+        background-color: #dedede;
     }
 
     #button-1 .knobs,
