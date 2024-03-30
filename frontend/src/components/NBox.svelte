@@ -12,7 +12,7 @@
     import { usernameStore } from "../stores/usernameStore";
     import { pageChangeBtn } from "../stores/pageChangeBtn.js";
     import {
-        loadFileTree,
+        buildFileTree,
         fileTree,
     } from "../stores/treeView.ts";
 
@@ -34,7 +34,7 @@
         _modal = value;
     });
     onMount(() => {
-        loadFileTree(1);
+        buildFileTree();
     });
 </script>
 

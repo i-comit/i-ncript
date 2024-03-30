@@ -6,6 +6,7 @@
     import { onMount, afterUpdate, createEventDispatcher } from "svelte";
     import { get } from "svelte/store";
     import {
+    EventsOn,
         EventsOnce,
         LogError,
         LogInfo,
@@ -27,7 +28,7 @@
         expandRoot,
         getCurrentPageStore,
         handleDragOver,
-        loadFileTree,
+        buildFileTree,
         setHeldBtnsStyle,
     } from "../stores/treeView.ts";
 
@@ -135,11 +136,7 @@
             }
         });
         _label = basePath(tree.relPath);
-        EventsOnce("rebuildFileTree", () => {
-            loadFileTree(pageIndex());
-            clearHeldBtns();
-            // EventsOff("rebuildFileTree");
-        });
+        EventsOn("rebuildFileTree", buildFileTree);
         return unsubscribe; // Unsubscribe when the component unmounts
     });
 
@@ -176,22 +173,22 @@
 
     function handleMouseLeave() {
         currentRelPath.set("");
-        // LogPrint("RelativePath Leave " + currentRelPath);
     }
 
     function moveFilesFromFileNode() {
         if (tree.children && tree.children.length > 0) {
             if (Object.keys(_heldDownBtns).length > 0) {
                 moveFilesToRelPath(tree.relPath);
-                LogError("Moved Files to Dir");
+                LogInfo("Moved Files to Dir");
             }
         } else {
-            LogError("moveFilesFromFileNode " + tree.relPath);
+            LogInfo("moveFilesFromFileNode " + tree.relPath);
             if (tree.relPath !== get(currentRelPath)) {
                 var dirPath = removeFileName(tree.relPath);
                 moveFilesToRelPath(dirPath);
             }
         }
+        LogInfo("OH LAWD ");
     }
 </script>
 

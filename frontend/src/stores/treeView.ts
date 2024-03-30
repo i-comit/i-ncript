@@ -2,19 +2,18 @@ import { writable } from "svelte/store";
 import { get } from "svelte/store";
 import { AppPage, currentPage } from "../enums/AppPage";
 import { basePath, heldDownBtns, removeFileName } from "../tools/utils";
+import { BuildDirectoryFileTree, } from "../../wailsjs/go/main/App";
 import {
-    DirectoryWatcher,
-    BuildDirectoryFileTree,
-} from "../../wailsjs/go/main/App";
-import {
+    EventsOff,
+    EventsOn,
     LogError,
+    LogInfo,
     LogPrint,
 } from "../../wailsjs/runtime/runtime";
 
 import { getFileProperties, pageName, pageIndex } from "../tools/utils";
 import {
     GetDirectoryPath,
-    GetFileProperties
 } from "../../wailsjs/go/main/Getters";
 import {
     SetIsInFileTask, FilesDragNDrop,
@@ -52,23 +51,16 @@ export function addButtonRefToStore(path: string, buttonRef: HTMLButtonElement) 
 export function setHeldBtnsStyle() {
     const _heldDownBtns = get(heldDownBtns);
     Object.entries(_heldDownBtns).forEach(([path, btn]) => {
-        LogError("Held down node moveFiles: " + path); // Using console.error for demonstration
+        LogInfo("Held down node moveFiles: " + path); // Using console.error for demonstration
         btn.style.backgroundColor = "red";
     });
-
-    // // Check if the current relPath exists in the heldDownBtns and specifically style its button
-    // if (relPath in _heldDownBtns) {
-    //     LogError("Set File style " + relPath);
-    //     // If relPath exists, set its button's background color to blue
-    //     _heldDownBtns[relPath].style.backgroundColor = "blue";
-    // }
 }
 export function clearHeldBtns() {
     const _heldDownBtns = get(heldDownBtns);
     Object.entries(_heldDownBtns).forEach(([path, btn]) => {
         btn.style.backgroundColor = "transparent";
     });
-    LogError("LOL KEK");
+    LogInfo("Held buttons cleared");
     heldDownBtns.set({});
 }
 
@@ -101,16 +93,21 @@ export class FileTreeMap {
     }
 }
 
-function handleRebuildFileTree() {
+export function buildFileTree() {
     loadFileTree(pageIndex());
     clearHeldBtns();
-    // Additional logic to handle the event...
-  }
+    EventsOff("rebuildFileTree");
+}
 
-export function loadFileTree(index: number) {
+function subscribeToRebuildFileTree() {
+    EventsOn("rebuildFileTree", buildFileTree);
+    LogError("Subscribed to rebuildFileTree");
+}
+
+function loadFileTree(index: number) {
     BuildDirectoryFileTree(index)
         .then((result: FileNode) => {
-            LogPrint("Rebuilt File Tree " + index);
+            LogPrint("Rebuilt File Tree " + pageName());
             const sortedTree = sortFileTree(result); // Sort the tree before setting it
             fileTree.set(sortedTree);
             updateExpansionStateStore()
@@ -205,8 +202,8 @@ export async function setIsInFileTask(b: boolean): Promise<boolean> {
     isInFileTask.set(_isInFileTask);
     LogPrint("SetIsInFileTask " + _isInFileTask);
     // Optionally perform further actions
-    // if (!_isInFileTask) {
-    //     await DirectoryWatcher(pageIndex());
-    // }
+    if (_isInFileTask) {
+        subscribeToRebuildFileTree()
+    }
     return b; // Return the boolean value
 }

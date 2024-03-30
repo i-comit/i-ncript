@@ -8,7 +8,7 @@
 
     import { usernameStore } from "../stores/usernameStore";
     import { pageChangeBtn } from "../stores/pageChangeBtn.js";
-    import { loadFileTree, fileTree } from "../stores/treeView";
+    import { buildFileTree, fileTree } from "../stores/treeView";
 
     import { switchPages } from "../tools/utils.ts";
 
@@ -29,12 +29,7 @@
     });
 
     onMount(() => {
-        loadFileTree(2);
-        // loadDirectoryTree(2).then(() => {
-        //     setTimeout(() => {
-        //         loadExpansionState(2);
-        //     }, 10);
-        // });
+        buildFileTree();
     });
 </script>
 

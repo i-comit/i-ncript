@@ -211,7 +211,7 @@ func (a *App) DirectoryWatcher(dirIndex int) {
 				if !ok {
 					return
 				}
-				fmt.Printf("Event: %s\n", event)
+				fmt.Printf("DirectoryWatcherEvent: %s\n", event)
 				if !debounceTimer.Stop() {
 					select {
 					case <-debounceTimer.C: // Try to drain the channel

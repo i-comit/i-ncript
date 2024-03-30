@@ -23,12 +23,11 @@
     import { encryptProgress } from "../stores/encryptProgress";
 
     import {
-        loadFileTree,
+        buildFileTree,
         fileTree,
         handleDragOver,
         setIsInFileTask,
         clearHeldBtns,
-        getCurrentPageStore,
     } from "../stores/treeView.ts";
 
     import {
@@ -42,12 +41,10 @@
     // } from "../../wailsjs/go/main/Encrypt";
 
     import {
-        pageIndex,
         switchPages,
         switchModals,
         height,
         width,
-        basePath,
     } from "../tools/utils.ts";
 
     import Frame from "./Frame.svelte";
@@ -61,23 +58,16 @@
         GetDirectoryPath,
         GetFilesByType,
     } from "../../wailsjs/go/main/Getters";
-    import App from "../App.svelte";
 
     let _fileCt: number;
     _fileCt = 0;
     onMount(() => {
-        loadFileTree(0);
+        buildFileTree();
         EventsOn("fileProcessed", (currentCount) => {
             encryptProgress.set(currentCount);
             _encryptPercent = (_encryptProgress / _fileCt) * 100;
         });
-        // const currentPageStore = getCurrentPageStore();
-        // const unsubscribe = currentPageStore.subscribe((state) => {
-        //     const basePathKey = basePath(tree.relPath);
-        //     if (state[basePathKey] !== undefined) {
-        //         expanded = state[basePathKey];
-        //     }
-        // });
+   
     });
 
     let _username: string;
