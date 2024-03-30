@@ -6,12 +6,12 @@
   import WrongDir from "./components/WrongDir.svelte";
 
   import { AppPage, currentPage } from "./enums/AppPage.ts";
-  import { onMount } from "svelte";
+  import { onMount, createEventDispatcher } from "svelte";
   import { GetDirName } from "../wailsjs/go/main/Getters";
   import { LogDebug, LogWarning } from "../wailsjs/runtime/runtime";
   import { DirectoryWatcher } from "../wailsjs/go/main/App";
 
-  import { clearHeldDownFiles } from "./tools/utils.ts";
+    import { clearHeldBtns } from "./stores/treeView.ts";
 
   let loggedIn = false;
   let _page: AppPage;
@@ -30,9 +30,17 @@
     isRightDir = await GetDirName();
     LogDebug(isRightDir.toString());
   });
+
+  const dispatch = createEventDispatcher();
+
 </script>
 
-<main class="rounded-2xl" on:mouseleave={clearHeldDownFiles}>
+<main
+  class="rounded-2xl"
+  on:mouseleave={() => {
+    clearHeldBtns();
+  }}
+>
   {#if !isRightDir}
     <WrongDir />
   {:else if _page === AppPage.Login}

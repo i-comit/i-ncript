@@ -70,6 +70,7 @@
             encryptProgress.set(currentCount);
             _encryptPercent = (_encryptProgress / _fileCt) * 100;
         });
+        // triggerMethod2 = tri
     });
 
     let _username: string;
@@ -130,7 +131,7 @@
 
 <div class="flex h-screen rounded-lg">
     <Frame />
-    <div id="left-panel" role="application" class="w-45" on:mouseup={readCurrentHeldNodes}>
+    <div id="left-panel" class="w-45" role="none" on:mouseup={readCurrentHeldNodes}>
         <div id="page-info" class="static">
             <p>VAULT</p>
             <Button
@@ -220,7 +221,7 @@
         on:mouseenter={() => LogError("VAULT")}
     >
         {#if _modal === Modals.None}
-            <TreeView tree={$fileTree} />
+            <TreeView tree={$fileTree} on:customEvent />
             <!-- <Settings /> -->
         {:else if _modal === Modals.Settings}
             <Settings />

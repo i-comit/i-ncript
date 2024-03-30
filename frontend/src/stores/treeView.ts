@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 import { get } from "svelte/store";
 import { AppPage, currentPage } from "../enums/AppPage";
-import { basePath, removeFileName } from "../tools/utils";
+import { addFileToHeldFilesArr, basePath, heldDownBtns, removeFileName } from "../tools/utils";
 import {
     DirectoryWatcher,
     BuildDirectoryFileTree,
@@ -24,6 +24,10 @@ import {
 } from "../../wailsjs/go/main/FileUtils";
 
 export const vaultExpansionState = writable<{ [key: string]: boolean }>({});
+
+export const allFileBtns = writable<HTMLButtonElement[]>([])
+export const allTreeViewBtns = writable<{ [key: string]: HTMLButtonElement }>({});
+
 export const nBoxExpansionState = writable<{ [key: string]: boolean }>({});
 export const oBoxExpansionState = writable<{ [key: string]: boolean }>({});
 
@@ -34,6 +38,86 @@ export const fileTree = writable<FileNode>({ relPath: "", children: [] });
 interface FileNode {
     relPath: string;
     children?: FileNode[];
+}
+
+interface EnhancedFileNode extends FileNode {
+    parent?: EnhancedFileNode;
+}
+
+import { heldDownFiles } from "../tools/utils";
+
+export function setFileStyle(relPath: string, buttonElement: HTMLButtonElement) {
+    addFileToHeldFilesArr(relPath)
+    const filesState = get(heldDownFiles);
+    LogError("set File style " + relPath);
+    if (filesState.includes(relPath)) {
+        buttonElement.style.backgroundColor = "blue"; // Example of setting the style
+        // return "background-color: blue;"; // Selected state
+    } else {
+        buttonElement.style.backgroundColor = "red"; // Example of setting the style
+        // return "background-color: transparent;"; // Not selected state
+    }
+}
+
+export function addButtonRefToStore(path: string, buttonRef: HTMLButtonElement) {
+    allTreeViewBtns.update(currentBtns => {
+        return { ...currentBtns, [path]: buttonRef };
+    });
+}
+
+export function setHeldBtnsStyle() {
+    const _heldDownBtns = get(heldDownBtns);
+    Object.entries(_heldDownBtns).forEach(([path, btn]) => {
+        LogError("Held down node moveFiles: " + path); // Using console.error for demonstration
+        btn.style.backgroundColor = "red";
+    });
+
+    // // Check if the current relPath exists in the heldDownBtns and specifically style its button
+    // if (relPath in _heldDownBtns) {
+    //     LogError("Set File style " + relPath);
+    //     // If relPath exists, set its button's background color to blue
+    //     _heldDownBtns[relPath].style.backgroundColor = "blue";
+    // }
+}
+export function clearHeldBtns() {
+    const _heldDownBtns = get(heldDownBtns);
+    Object.entries(_heldDownBtns).forEach(([path, btn]) => {
+        console.error("Clearing Btns: " + path); // Assuming console.error for demonstration
+        btn.style.backgroundColor = "transparent";
+    });
+    heldDownBtns.set({});
+}
+
+export class FileTreeMap {
+    root: EnhancedFileNode;
+    private pathMap: Map<string, EnhancedFileNode> = new Map();
+
+    constructor(root: FileNode) {
+        this.root = this.enhanceTree(root, undefined);
+    }
+
+    // Enhances the tree with parent references and builds the path map
+    private enhanceTree(node: FileNode, parent?: EnhancedFileNode): EnhancedFileNode {
+        const enhancedNode: EnhancedFileNode = { ...node, parent };
+        this.pathMap.set(enhancedNode.relPath, enhancedNode);
+
+        if (node.children) {
+            enhancedNode.children = node.children.map(child => this.enhanceTree(child, enhancedNode));
+        }
+
+        return enhancedNode;
+    }
+
+    // Retrieves a node based on its relPath
+    public getNodeByPath(relPath: string): EnhancedFileNode | undefined {
+        return this.pathMap.get(relPath);
+    }
+
+    // Retrieves the parent of a node by its relPath
+    public getParentByPath(relPath: string): EnhancedFileNode | undefined {
+        const node = this.pathMap.get(relPath);
+        return node?.parent;
+    }
 }
 
 export function loadFileTree(index: number) {

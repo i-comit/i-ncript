@@ -1,8 +1,15 @@
+<script context="module" lang="ts">
+</script>
+
 <script lang="ts">
     // import { slide } from 'svelte/transition'
-    import { onMount, afterUpdate } from "svelte";
+    import { onMount, afterUpdate, createEventDispatcher } from "svelte";
     import { get } from "svelte/store";
-    import { EventsOnce, LogPrint } from "../../wailsjs/runtime/runtime";
+    import {
+        EventsOnce,
+        LogError,
+        LogPrint,
+    } from "../../wailsjs/runtime/runtime";
 
     import {
         FolderOpenSolid,
@@ -16,10 +23,14 @@
     import {
         expandRoot,
         getCurrentPageStore,
+        setFileStyle,
         handleDragLeave,
         handleDragOver,
         handleDrop,
         loadFileTree,
+        addButtonRefToStore,
+        allTreeViewBtns,
+        setHeldBtnsStyle,
     } from "../stores/treeView.ts";
 
     import {
@@ -30,6 +41,9 @@
         formatFileSize,
         addFileToHeldFilesArr,
         moveFilesToRelPath,
+        heldDownFiles,
+        clearHeldDownFiles,
+        addToHeldBtnsArr,
     } from "../tools/utils.ts";
 
     interface FileNode {
@@ -40,6 +54,8 @@
 
     import { AppPage, currentPage } from "../enums/AppPage.ts";
     import { GetDirectoryPath } from "../../wailsjs/go/main/Getters";
+
+    import App from "../App.svelte";
     let _appPage: AppPage;
     _appPage = AppPage.Vault;
     currentPage.subscribe((value) => {
@@ -57,6 +73,14 @@
             return currentState;
         });
     };
+    function logFilePath(relPath: string, _buttonRef: HTMLButtonElement) {
+        addToHeldBtnsArr(relPath, _buttonRef);
+        setHeldBtnsStyle()
+        var _heldDownFiles = get(heldDownFiles);
+        _heldDownFiles.forEach((node) => {
+            LogError("held down node moveFiles: " + node);
+        });
+    }
 
     onMount(() => {
         const currentPageStore = getCurrentPageStore();
@@ -70,8 +94,17 @@
         EventsOnce("rebuildFileTree", () => {
             loadFileTree(pageIndex());
         });
+        // addButtonRefToStore(tree.relPath, buttonRef);
+        // printAllButtonRefs()
         return unsubscribe; // Unsubscribe when the component unmounts
     });
+
+    // function printAllButtonRefs() {
+    //     const btns = get(allTreeViewBtns);
+    //     Object.entries(btns).forEach(([key, value]) => {
+    //         LogError(`Path: ${key}, Button: ${value}`);
+    //     });
+    // }
 
     function updateExpansionForNode(node: FileNode, expand: boolean) {
         const currentPageStore = getCurrentPageStore();
@@ -90,12 +123,6 @@
     }
     let _filePropsTooltip: string;
 
-    function logFilePath() {
-        GetDirectoryPath(pageIndex()).then((filePath) => {
-            LogPrint(filePath.toString() + tree.relPath);
-        });
-    }
-
     function isFile() {
         GetDirectoryPath(pageIndex()).then((filePath) => {
             getFileProperties(filePath + tree.relPath).then((fileProps) => {
@@ -105,13 +132,13 @@
         return !tree.children;
     }
     let buttonRef: HTMLButtonElement;
-
+    let currentRelPath: string;
     function handleMouseEnter() {
-        // changeChildrenBackground(parentNode, "green");
         GetDirectoryPath(pageIndex()).then((filePath) => {
             getFileProperties(filePath + tree.relPath).then((fileProps) => {
                 _filePropsTooltip = `${fileProps.modifiedDate} | ${formatFileSize(fileProps.fileSize)}`;
                 LogPrint("RelativePath " + tree.relPath);
+                currentRelPath = tree.relPath;
             });
         });
     }
@@ -127,11 +154,39 @@
         }
     }
 
-    function handleMouseLeave() {}
+    function handleMouseLeave() {
+        currentRelPath = "";
+        LogPrint("RelativePath Leave " + currentRelPath);
+    }
+
+    let backgroundBG: string;
+    function setBackgroundColor(relPath: string) {
+        var _heldDownFiles = get(heldDownFiles);
+        LogError(
+            "REL PATH " +
+                relPath +
+                "       \t" +
+                _heldDownFiles[0] +
+                " currentPath " +
+                currentRelPath,
+        );
+        if (_heldDownFiles.includes(relPath)) {
+            backgroundBG = "background-color: blue;";
+        } else {
+            backgroundBG = "background-color: none;";
+        }
+        // else if (relPath === currentRelPath) {
+        //     backgroundBG = "background-color: green;";
+        // } else if (relPath !== currentRelPath) {
+        //     backgroundBG = "background-color: red;";
+        // }
+    }
+    const dispatch = createEventDispatcher();
+    let fileTreeMap;
 </script>
 
 <svelte:window on:keydown={handleKeyDown} on:keyup={handleKeyUp} />
-<div>
+<div class="bg-gray-300">
     <button
         class="z-10 fixed top-0 left-1/2 transform -translate-x-1/2 mt-0.5"
         style="--wails-draggable:drag"
@@ -174,15 +229,16 @@
                 {/if}
             {:else if isFile()}
                 <button
-                    class="bg-gray-800"
                     bind:this={buttonRef}
-                    on:click={() => logFilePath()}
-                    on:mouseenter={() => handleMouseEnter()}
-                    on:mouseleave={handleMouseLeave}
+                    on:click={() => logFilePath(tree.relPath, buttonRef)}
+                    on:mouseenter={() => {
+                        handleMouseEnter();
+                    }}
+                    on:mouseleave={() => {
+                        handleMouseLeave();
+                    }}
                     on:dragover={(event) => handleDragOver(tree.relPath, event)}
                     on:dragleave={handleDragLeave}
-                    on:mouseup={() => moveFilesToRelPath(tree.relPath)}
-                    on:mousedown={() => addFileToHeldFilesArr(tree.relPath)}
                     on:drop={(event) => handleDrop(tree.relPath, event)}
                 >
                     {_label}

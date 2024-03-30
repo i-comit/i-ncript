@@ -13,6 +13,7 @@ import {
 } from "../../wailsjs/go/main/Getters";
 import { LogDebug, LogError, LogTrace, LogWarning } from "../../wailsjs/runtime/runtime";
 import { MoveFilesToPath } from '../../wailsjs/go/main/FileUtils';
+import { setIsInFileTask } from '../stores/treeView';
 
 export const width = 220
 export const height = 180
@@ -22,6 +23,7 @@ export const pageName: () => string = () => {
     return _appPage;
 };
 export const heldDownFiles = writable<string[]>([]);
+export const heldDownBtns = writable<{ [key: string]: HTMLButtonElement }>({});
 
 export const pageIndex: () => number = () => {
     const _appPage = get(currentPage)
@@ -129,16 +131,26 @@ export function formatFileSize(fileSize: number): string {
 
 //LOCAL DRAG AND DROP
 export function addFileToHeldFilesArr(relPath: string) {
-    GetDirectoryPath(pageIndex()).then((dirPath) => {
-        heldDownFiles.update((currentHeldDownFiles) => {
-            // Check if the newString is not already in the array
-            if (!currentHeldDownFiles.includes(dirPath + relPath)) {
-                return [...currentHeldDownFiles, dirPath + relPath];
-            }
-            // If it's already there, just return the current array without adding
+    // GetDirectoryPath(pageIndex()).then((dirPath) => {
+    heldDownFiles.update((currentHeldDownFiles) => {
+        // Check if the newString is not already in the array
+        if (!currentHeldDownFiles.includes(relPath)) {
             LogDebug("Added currentHeldDownFiles: " + currentHeldDownFiles);
-            return currentHeldDownFiles;
-        });
+            return [...currentHeldDownFiles, relPath];
+        }
+        // If it's already there, just return the current array without adding
+        return currentHeldDownFiles;
+    });
+    // });
+}
+
+export function addToHeldBtnsArr(relPath: string, button: HTMLButtonElement) {
+    heldDownBtns.update(currentHeldDownBtns => {
+        if (!(relPath in currentHeldDownBtns)) {
+            LogDebug("Added to heldDownBtns: " + relPath); // Using console.debug for demonstration
+            return { ...currentHeldDownBtns, [relPath]: button };
+        }
+        return currentHeldDownBtns;
     });
 }
 
@@ -157,7 +169,11 @@ export function moveFilesToRelPath(targetRelPath: string) {
                 }
                 var _heldDownFiles = get(heldDownFiles);
                 if (_heldDownFiles.length > 0) {
-                    MoveFilesToPath(_heldDownFiles, pathToMoveTo);
+                    setIsInFileTask(true)
+                    const modifiedFiles = _heldDownFiles.map(node => {
+                        return node ? dirPath + node : node;
+                    });
+                    MoveFilesToPath(modifiedFiles, pathToMoveTo);
                     _heldDownFiles.forEach((node) => {
                         LogError("held down node moveFiles: " + node);
                     });

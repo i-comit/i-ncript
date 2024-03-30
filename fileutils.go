@@ -31,10 +31,10 @@ func (f *FileUtils) SetIsInFileTask(b bool) bool {
 func (f *FileUtils) MoveFilesToPath(filePaths []string, targetPath string) {
 	if f.app.ctx != nil {
 		for _, files := range filePaths {
-			runtime.LogError(f.app.ctx, targetPath+" pathx2 "+filepath.Dir(files))
+			// runtime.LogError(f.app.ctx, targetPath+" pathx2 "+filepath.Dir(files))
 
 			if targetPath == filepath.Dir(files)+string(filepath.Separator) {
-				runtime.LogError(f.app.ctx, "This file already belongs in the targetPath")
+				// runtime.LogError(f.app.ctx, "This file already belongs in the targetPath")
 				continue
 			}
 
@@ -147,6 +147,8 @@ func (f *FileUtils) FilesDragNDrop(fileBytes []byte, fileName string, modifiedDa
 		if err := os.Chtimes(fullPath, modTime, modTime); err != nil {
 			return fmt.Errorf("failed to set last modified date: %w", err)
 		}
+		runtime.EventsEmit(f.app.ctx, rebuildFileTree)
+		isInFileTask = false
 		return nil
 	}
 	return nil
