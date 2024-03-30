@@ -42,9 +42,9 @@ export const pageIndex: () => number = () => {
 };
 
 export function switchPages(page: AppPage) {
+    currentPage.set(page);
     clearHeldBtns();
     DirectoryWatcher(pageIndex());
-    currentPage.set(page);
 }
 
 export function switchModals(modal: Modals) {
@@ -129,8 +129,13 @@ export function formatFileSize(fileSize: number): string {
     return `${formattedSize} ${units[unitIndex]}`;
 }
 
+export function checkIfRelPathIsInHeldDownBtns(relPath: string): boolean {
+    const currentHeldDownBtns = get(heldDownBtns);
+    return currentHeldDownBtns.hasOwnProperty(relPath);
+}
+
 //LOCAL DRAG AND DROP
-export function addToHeldBtnsArr(relPath: string, button: HTMLButtonElement) {
+export function addToHeldFileBtnsArr(relPath: string, button: HTMLButtonElement) {
     heldDownBtns.update(currentHeldDownBtns => {
         if (!(relPath in currentHeldDownBtns)) {
             LogDebug("Added to heldDownBtns: " + relPath); // Using console.debug for demonstration
@@ -164,14 +169,16 @@ export function moveFilesToRelPath(targetRelPath: string) {
                 }
                 var _heldDownBtns = get(heldDownBtns);
                 if (Object.keys(_heldDownBtns).length > 0) {
-                    setIsInFileTask(true);
-                    const modifiedFiles = Object.keys(_heldDownBtns).map(key => {
-                        return key ? dirPath + key : key;
-                    });
+                    setIsInFileTask(true).then(() => {
+                        const modifiedFiles = Object.keys(_heldDownBtns).map(key => {
+                            return key ? dirPath + key : key;
+                        });
 
-                    MoveFilesToPath(modifiedFiles, pathToMoveTo);
-                    Object.keys(_heldDownBtns).forEach(key => {
-                        LogTrace("Held down node moveFiles: " + key); // Using console.error for demonstration
+                        MoveFilesToPath(modifiedFiles, pathToMoveTo).then(() => {
+                            Object.keys(_heldDownBtns).forEach(key => {
+                                LogTrace("Held down node moveFiles: " + key); // Using console.error for demonstration
+                            });
+                        });
                     });
                 }
             }

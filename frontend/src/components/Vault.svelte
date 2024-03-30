@@ -215,7 +215,6 @@
         class="bg-gray-500 mt-0 px-0"
         on:mouseleave={onmouseleave}
         on:dragover={(event) => handleDragOver("", event)}
-        on:mouseenter={() => LogError("VAULT")}
     >
         {#if _modal === Modals.None}
             <TreeView tree={$fileTree} on:mousedown={clearHeldBtns} />

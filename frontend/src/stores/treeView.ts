@@ -7,11 +7,8 @@ import {
     BuildDirectoryFileTree,
 } from "../../wailsjs/go/main/App";
 import {
-    LogDebug,
     LogError,
-    LogInfo,
     LogPrint,
-    LogWarning,
 } from "../../wailsjs/runtime/runtime";
 
 import { getFileProperties, pageName, pageIndex } from "../tools/utils";
@@ -71,6 +68,7 @@ export function clearHeldBtns() {
     Object.entries(_heldDownBtns).forEach(([path, btn]) => {
         btn.style.backgroundColor = "transparent";
     });
+    LogError("LOL KEK");
     heldDownBtns.set({});
 }
 
@@ -103,6 +101,12 @@ export class FileTreeMap {
     }
 }
 
+function handleRebuildFileTree() {
+    loadFileTree(pageIndex());
+    clearHeldBtns();
+    // Additional logic to handle the event...
+  }
+
 export function loadFileTree(index: number) {
     BuildDirectoryFileTree(index)
         .then((result: FileNode) => {
@@ -130,14 +134,12 @@ function updateExpansionStateStore() {
 function loadExpansionState(index: number) {
     const currentPageStore = getCurrentPageStore();
     GetDirectoryPath(index).then((dirPath) => {
-        const unsubscribe = currentPageStore.subscribe((state) => {
-            const basePathKey = dirPath;
-            if (state[basePathKey] !== undefined) {
-                expanded = state[basePathKey];
-            }
-        });
+        const currentState = get(currentPageStore); // Synchronously get the current state
+        const basePathKey = dirPath;
+        if (currentState[basePathKey] !== undefined) {
+            expanded = currentState[basePathKey];
+        }
         expandRoot();
-        return unsubscribe; // Unsubscribe when the component unmounts
     });
 }
 
@@ -188,9 +190,6 @@ export function getCurrentPageStore() {
     }
 }
 
-
-let draggedOver = false;
-
 export function handleDragOver(relPath: string, event: DragEvent) {
     event.preventDefault(); // Necessary to allow for a drop
     // if (!draggedOver) {
@@ -199,15 +198,15 @@ export function handleDragOver(relPath: string, event: DragEvent) {
     //         LogError("Dragged over lele " + relPath);
     //     })
     // }
-    draggedOver = true;
 }
 
-export function setIsInFileTask(b: boolean) {
-    SetIsInFileTask(b).then((_isInFileTask) => {
-        isInFileTask.set(_isInFileTask);
-        LogPrint("SetIsInFileTask " + _isInFileTask);
-        if (!_isInFileTask) {
-            DirectoryWatcher(pageIndex())
-        }
-    })
-};
+export async function setIsInFileTask(b: boolean): Promise<boolean> {
+    const _isInFileTask = await SetIsInFileTask(b);
+    isInFileTask.set(_isInFileTask);
+    LogPrint("SetIsInFileTask " + _isInFileTask);
+    // Optionally perform further actions
+    // if (!_isInFileTask) {
+    //     await DirectoryWatcher(pageIndex());
+    // }
+    return b; // Return the boolean value
+}

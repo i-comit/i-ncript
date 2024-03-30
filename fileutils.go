@@ -26,7 +26,20 @@ var rebuildFileTree = "rebuildFileTree"
 
 func (f *FileUtils) SetIsInFileTask(b bool) bool {
 	isInFileTask = b
+	if isInFileTask {
+		f.app.closeDirectoryWatcher()
+	} else {
+		f.app.DirectoryWatcher(currentIndex)
+	}
 	return isInFileTask
+}
+
+func (f *FileUtils) CheckIfPathIsFile(filePath string) (bool, error) {
+	info, err := os.Stat(filePath)
+	if err != nil {
+		return false, err
+	}
+	return !info.IsDir(), nil
 }
 
 func (f *FileUtils) MoveFilesToPath(filePaths []string, targetPath string) {
@@ -47,8 +60,8 @@ func (f *FileUtils) MoveFilesToPath(filePaths []string, targetPath string) {
 			}
 			runtime.LogError(f.app.ctx, "Successfully moved file to: "+newFilePath+" "+strconv.Itoa(i))
 		}
-		isInFileTask = false
 		runtime.EventsEmit(f.app.ctx, rebuildFileTree)
+		f.SetIsInFileTask(false)
 	}
 }
 
@@ -147,8 +160,8 @@ func (f *FileUtils) FilesDragNDrop(fileBytes []byte, fileName string, modifiedDa
 		if err := os.Chtimes(fullPath, modTime, modTime); err != nil {
 			return fmt.Errorf("failed to set last modified date: %w", err)
 		}
-		isInFileTask = false
 		runtime.EventsEmit(f.app.ctx, rebuildFileTree)
+		f.SetIsInFileTask(false)
 		return nil
 	}
 	return nil

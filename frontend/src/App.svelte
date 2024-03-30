@@ -31,15 +31,10 @@
     LogDebug(isRightDir.toString());
   });
 
-  const dispatch = createEventDispatcher();
-
 </script>
 
 <main
   class="rounded-2xl"
-  on:mouseleave={() => {
-    clearHeldBtns();
-  }}
 >
   {#if !isRightDir}
     <WrongDir />

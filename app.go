@@ -212,7 +212,6 @@ func (a *App) DirectoryWatcher(dirIndex int) {
 					return
 				}
 				fmt.Printf("Event: %s\n", event)
-				// Handle the events...
 				if !debounceTimer.Stop() {
 					select {
 					case <-debounceTimer.C: // Try to drain the channel
@@ -220,7 +219,6 @@ func (a *App) DirectoryWatcher(dirIndex int) {
 					}
 				}
 				debounceTimer.Reset(delayDuration)
-
 			case <-debounceTimer.C:
 				fmt.Println("Handling event after debounce.")
 				if a.ctx != nil {
@@ -244,6 +242,5 @@ func (a *App) DirectoryWatcher(dirIndex int) {
 	}
 	fmt.Println("\033[32mNow watching directory", a.directories[dirIndex], "\033[0m")
 	currentIndex = dirIndex // Update the current index
-
-	<-a.done // Keep the watcher goroutine alive
+	<-a.done                // Keep the watcher goroutine alive
 }

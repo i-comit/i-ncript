@@ -166,6 +166,8 @@ func encryptFile(filePath string) (*os.File, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer encFile.Close() // Ensure the file is closed when the function returns
+
 	if _, err := encFile.Write(encrypted); err != nil {
 		encFile.Close()           // Attempt to close the file on error
 		os.Remove(encFile.Name()) // Cleanup the file if write fails
@@ -221,6 +223,8 @@ func decryptFile(filePath string) (*os.File, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer decFile.Close()
+
 	if _, err := decFile.Write(decrypted); err != nil {
 		decFile.Close()           // Attempt to close the file on error
 		os.Remove(decFile.Name()) // Cleanup the file if write fails

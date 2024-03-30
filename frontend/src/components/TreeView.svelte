@@ -38,9 +38,10 @@
         basePath,
         formatFileSize,
         moveFilesToRelPath,
-        addToHeldBtnsArr,
+        addToHeldFileBtnsArr,
         heldDownBtns,
         removeFileName,
+        checkIfRelPathIsInHeldDownBtns,
     } from "../tools/utils.ts";
 
     interface FileNode {
@@ -51,6 +52,7 @@
 
     import { AppPage, currentPage } from "../enums/AppPage.ts";
     import { GetDirectoryPath } from "../../wailsjs/go/main/Getters";
+    import { EventsOff } from "../../wailsjs/runtime/runtime.js";
 
     let _appPage: AppPage;
     _appPage = AppPage.Vault;
@@ -115,15 +117,12 @@
     }
 
     function handleFileClick(relPath: string, _buttonRef: HTMLButtonElement) {
-        if (!leftCtrlDown) {
+        if (!leftCtrlDown && !checkIfRelPathIsInHeldDownBtns(relPath)) {
             clearHeldBtns();
         }
-        addToHeldBtnsArr(relPath, _buttonRef);
+        addToHeldFileBtnsArr(relPath, _buttonRef);
         setHeldBtnsStyle();
         var _heldDownBtns = get(heldDownBtns);
-        Object.entries(_heldDownBtns).forEach(([path, btn]) => {
-            LogError("held down node moveFiles: " + path);
-        });
     }
 
     onMount(() => {
@@ -139,6 +138,7 @@
         EventsOnce("rebuildFileTree", () => {
             loadFileTree(pageIndex());
             clearHeldBtns();
+            // EventsOff("rebuildFileTree");
         });
         return unsubscribe; // Unsubscribe when the component unmounts
     });
@@ -161,12 +161,7 @@
     let _filePropsTooltip: string;
 
     function isFile(): boolean {
-        GetDirectoryPath(pageIndex()).then((filePath) => {
-            getFileProperties(filePath + tree.relPath).then((fileProps) => {
-                return fileProps.fileSize > 0;
-            });
-        });
-        return !tree.children;
+        return !tree.children; //This needs to be async
     }
     let buttonRef: HTMLButtonElement;
     function handleMouseEnter() {
@@ -184,8 +179,19 @@
         // LogPrint("RelativePath Leave " + currentRelPath);
     }
 
-    function checkIfHeldFilesCanBeMoved(): boolean {
-        return false;
+    function moveFilesFromFileNode() {
+        if (tree.children && tree.children.length > 0) {
+            if (Object.keys(_heldDownBtns).length > 0) {
+                moveFilesToRelPath(tree.relPath);
+                LogError("Moved Files to Dir");
+            }
+        } else {
+            LogError("moveFilesFromFileNode " + tree.relPath);
+            if (tree.relPath !== get(currentRelPath)) {
+                var dirPath = removeFileName(tree.relPath);
+                moveFilesToRelPath(dirPath);
+            }
+        }
     }
 </script>
 
@@ -215,12 +221,13 @@
             : "margin-top: -2px;color:white;--wails-draggable:no-drag"}
     >
         <li>
-            {#if tree.children && tree.children.length > 0}
+            {#if tree.children && tree.children.length > 0}<!-- Folder with children -->
                 <button
                     on:click={toggleExpansion}
                     class="flex"
                     on:mouseenter={() => handleMouseEnter()}
-                    on:mouseup={() => moveFilesToRelPath(tree.relPath)}
+                    on:mouseup={() => moveFilesFromFileNode()}
+                    on:drop={() => LogError("AMOGUS")}
                     on:dragover={(event) => handleDragOver(tree.relPath, event)}
                 >
                     {#if !expanded}
@@ -251,7 +258,7 @@
                         {/each}
                     </ul>
                 {/if}
-            {:else if isFile()}
+            {:else if isFile()}<!-- File -->
                 <button
                     bind:this={buttonRef}
                     on:mousedown={() =>
@@ -263,7 +270,7 @@
                         handleMouseLeave();
                     }}
                     on:mouseup={() => {
-                        moveFilesToRelPath(tree.relPath);
+                        moveFilesFromFileNode();
                     }}
                     on:dragover={(event) => handleDragOver(tree.relPath, event)}
                 >
@@ -281,12 +288,16 @@
                     >
                 {/if}
             {:else}
+                <!-- Folder with no children (empty) -->
                 <button
                     class="flex"
-                    on:dragover={(event) => handleDragOver(tree.relPath, event)}
+                    on:mouseenter={() => {
+                        handleMouseEnter();
+                    }}
+                    on:mouseup={() => moveFilesFromFileNode()}
                 >
                     <FolderSolid class="w-3 mr-1"></FolderSolid>
-                    {_label}
+                    {_label} AMOGUS
                 </button>
             {/if}
         </li>
