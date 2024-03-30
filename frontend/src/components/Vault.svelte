@@ -15,7 +15,7 @@
         BarsFromLeftOutline,
     } from "flowbite-svelte-icons";
 
-    import { AppPage } from "../enums/AppPage.ts";
+    import { AppPage, currentPage } from "../enums/AppPage.ts";
     import { Modals, currentModal } from "../enums/Modals.ts";
 
     import { usernameStore } from "../stores/usernameStore";
@@ -25,10 +25,10 @@
     import {
         loadFileTree,
         fileTree,
-        handleDrop,
-        handleDragLeave,
         handleDragOver,
         setIsInFileTask,
+        clearHeldBtns,
+        getCurrentPageStore,
     } from "../stores/treeView.ts";
 
     import {
@@ -47,7 +47,7 @@
         switchModals,
         height,
         width,
-        heldDownFiles,
+        basePath,
     } from "../tools/utils.ts";
 
     import Frame from "./Frame.svelte";
@@ -61,6 +61,7 @@
         GetDirectoryPath,
         GetFilesByType,
     } from "../../wailsjs/go/main/Getters";
+    import App from "../App.svelte";
 
     let _fileCt: number;
     _fileCt = 0;
@@ -70,7 +71,13 @@
             encryptProgress.set(currentCount);
             _encryptPercent = (_encryptProgress / _fileCt) * 100;
         });
-        // triggerMethod2 = tri
+        // const currentPageStore = getCurrentPageStore();
+        // const unsubscribe = currentPageStore.subscribe((state) => {
+        //     const basePathKey = basePath(tree.relPath);
+        //     if (state[basePathKey] !== undefined) {
+        //         expanded = state[basePathKey];
+        //     }
+        // });
     });
 
     let _username: string;
@@ -117,21 +124,13 @@
         event.preventDefault();
         LogError("MODAL " + _modal);
         if (_modal === Modals.None) {
-            handleDrop("", event);
         }
-    }
-
-    function readCurrentHeldNodes() {
-        var _heldDownFiles = get(heldDownFiles);
-        _heldDownFiles.forEach((node) => {
-            LogError("held down node: " + node);
-        });
     }
 </script>
 
 <div class="flex h-screen rounded-lg">
     <Frame />
-    <div id="left-panel" class="w-45" role="none" on:mouseup={readCurrentHeldNodes}>
+    <div id="left-panel" class="w-45" role="none" on:mousedown={clearHeldBtns}>
         <div id="page-info" class="static">
             <p>VAULT</p>
             <Button
@@ -150,8 +149,8 @@
         </div>
         <div class="buttons">
             <div class="row space-x-5">
-                <Button on:click={() => encrypt()}>ENCRYPT</Button>
-                <Button on:click={() => decrypt()}>DECRYPT</Button>
+                <Button on:click={() => encrypt()}>NCRYPT</Button>
+                <Button on:click={() => decrypt()}>DCRYPT</Button>
             </div>
             <div class="h-1"></div>
             <div class="flex justify-between items-center">
@@ -213,15 +212,13 @@
     <div
         id="right-panel"
         role="application"
-        class="bg-gray-500 mt-6 px-0"
+        class="bg-gray-500 mt-0 px-0"
         on:mouseleave={onmouseleave}
         on:dragover={(event) => handleDragOver("", event)}
-        on:dragleave={handleDragLeave}
-        on:drop={(event) => handleDrop("", event)}
         on:mouseenter={() => LogError("VAULT")}
     >
         {#if _modal === Modals.None}
-            <TreeView tree={$fileTree} on:customEvent />
+            <TreeView tree={$fileTree} on:mousedown={clearHeldBtns} />
             <!-- <Settings /> -->
         {:else if _modal === Modals.Settings}
             <Settings />

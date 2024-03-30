@@ -8,6 +8,7 @@
     import {
         EventsOnce,
         LogError,
+        LogInfo,
         LogPrint,
     } from "../../wailsjs/runtime/runtime";
 
@@ -21,15 +22,12 @@
     import { SpeedDial, SpeedDialButton, Tooltip } from "flowbite-svelte";
 
     import {
+        clearHeldBtns,
+        currentRelPath,
         expandRoot,
         getCurrentPageStore,
-        setFileStyle,
-        handleDragLeave,
         handleDragOver,
-        handleDrop,
         loadFileTree,
-        addButtonRefToStore,
-        allTreeViewBtns,
         setHeldBtnsStyle,
     } from "../stores/treeView.ts";
 
@@ -39,11 +37,10 @@
         getFileProperties,
         basePath,
         formatFileSize,
-        addFileToHeldFilesArr,
         moveFilesToRelPath,
-        heldDownFiles,
-        clearHeldDownFiles,
         addToHeldBtnsArr,
+        heldDownBtns,
+        removeFileName,
     } from "../tools/utils.ts";
 
     interface FileNode {
@@ -55,7 +52,6 @@
     import { AppPage, currentPage } from "../enums/AppPage.ts";
     import { GetDirectoryPath } from "../../wailsjs/go/main/Getters";
 
-    import App from "../App.svelte";
     let _appPage: AppPage;
     _appPage = AppPage.Vault;
     currentPage.subscribe((value) => {
@@ -63,6 +59,11 @@
     });
 
     let _label: string;
+    let _heldDownBtns: { [key: string]: HTMLButtonElement };
+
+    heldDownBtns.subscribe((value) => {
+        _heldDownBtns = value;
+    });
     let expanded = false;
 
     const toggleExpansion = () => {
@@ -73,12 +74,55 @@
             return currentState;
         });
     };
-    function logFilePath(relPath: string, _buttonRef: HTMLButtonElement) {
+
+    let leftCtrlDown = false;
+    let pointerDown = false; // Previously mouseDown
+
+    function ctrlLeftDown(event: KeyboardEvent) {
+        if (event.code === "ControlLeft") {
+            leftCtrlDown = true;
+        }
+    }
+
+    function ctrlLeftUp(event: KeyboardEvent) {
+        if (event.code === "ControlLeft") {
+            leftCtrlDown = false;
+        }
+    }
+    function onMouseDown(event: MouseEvent) {
+        if (event.button === 0) {
+            // Check if the left mouse button was pressed
+            pointerDown = true;
+            // LogInfo("Mouse down");
+        }
+    }
+    function onMouseUp(event: MouseEvent) {
+        if (event.button === 0) {
+            // Check if the left mouse button was released
+            pointerDown = false;
+            // LogInfo("Mouse up");
+        }
+    }
+
+    function onTouchStart(event: TouchEvent) {
+        pointerDown = true;
+        // LogInfo("Pointer down");
+    }
+
+    function onTouchEnd(event: TouchEvent) {
+        pointerDown = false;
+        // LogInfo("Pointer up");
+    }
+
+    function handleFileClick(relPath: string, _buttonRef: HTMLButtonElement) {
+        if (!leftCtrlDown) {
+            clearHeldBtns();
+        }
         addToHeldBtnsArr(relPath, _buttonRef);
-        setHeldBtnsStyle()
-        var _heldDownFiles = get(heldDownFiles);
-        _heldDownFiles.forEach((node) => {
-            LogError("held down node moveFiles: " + node);
+        setHeldBtnsStyle();
+        var _heldDownBtns = get(heldDownBtns);
+        Object.entries(_heldDownBtns).forEach(([path, btn]) => {
+            LogError("held down node moveFiles: " + path);
         });
     }
 
@@ -88,23 +132,16 @@
             const basePathKey = basePath(tree.relPath);
             if (state[basePathKey] !== undefined) {
                 expanded = state[basePathKey];
+                _label = basePath(tree.relPath); //This sets the rootdir Name
             }
         });
         _label = basePath(tree.relPath);
         EventsOnce("rebuildFileTree", () => {
             loadFileTree(pageIndex());
+            clearHeldBtns();
         });
-        // addButtonRefToStore(tree.relPath, buttonRef);
-        // printAllButtonRefs()
         return unsubscribe; // Unsubscribe when the component unmounts
     });
-
-    // function printAllButtonRefs() {
-    //     const btns = get(allTreeViewBtns);
-    //     Object.entries(btns).forEach(([key, value]) => {
-    //         LogError(`Path: ${key}, Button: ${value}`);
-    //     });
-    // }
 
     function updateExpansionForNode(node: FileNode, expand: boolean) {
         const currentPageStore = getCurrentPageStore();
@@ -123,7 +160,7 @@
     }
     let _filePropsTooltip: string;
 
-    function isFile() {
+    function isFile(): boolean {
         GetDirectoryPath(pageIndex()).then((filePath) => {
             getFileProperties(filePath + tree.relPath).then((fileProps) => {
                 return fileProps.fileSize > 0;
@@ -132,66 +169,40 @@
         return !tree.children;
     }
     let buttonRef: HTMLButtonElement;
-    let currentRelPath: string;
     function handleMouseEnter() {
         GetDirectoryPath(pageIndex()).then((filePath) => {
             getFileProperties(filePath + tree.relPath).then((fileProps) => {
                 _filePropsTooltip = `${fileProps.modifiedDate} | ${formatFileSize(fileProps.fileSize)}`;
-                LogPrint("RelativePath " + tree.relPath);
-                currentRelPath = tree.relPath;
+                // LogPrint("RelativePath " + tree.relPath);
+                if (isFile()) currentRelPath.set(tree.relPath);
             });
         });
     }
 
-    function handleKeyDown(event: KeyboardEvent) {
-        if (event.key === "Shift") {
-            addFileToHeldFilesArr(tree.relPath);
-        }
-    }
-
-    function handleKeyUp(event: KeyboardEvent) {
-        if (event.key === "Shift") {
-        }
-    }
-
     function handleMouseLeave() {
-        currentRelPath = "";
-        LogPrint("RelativePath Leave " + currentRelPath);
+        currentRelPath.set("");
+        // LogPrint("RelativePath Leave " + currentRelPath);
     }
 
-    let backgroundBG: string;
-    function setBackgroundColor(relPath: string) {
-        var _heldDownFiles = get(heldDownFiles);
-        LogError(
-            "REL PATH " +
-                relPath +
-                "       \t" +
-                _heldDownFiles[0] +
-                " currentPath " +
-                currentRelPath,
-        );
-        if (_heldDownFiles.includes(relPath)) {
-            backgroundBG = "background-color: blue;";
-        } else {
-            backgroundBG = "background-color: none;";
-        }
-        // else if (relPath === currentRelPath) {
-        //     backgroundBG = "background-color: green;";
-        // } else if (relPath !== currentRelPath) {
-        //     backgroundBG = "background-color: red;";
-        // }
+    function checkIfHeldFilesCanBeMoved(): boolean {
+        return false;
     }
-    const dispatch = createEventDispatcher();
-    let fileTreeMap;
 </script>
 
-<svelte:window on:keydown={handleKeyDown} on:keyup={handleKeyUp} />
-<div class="bg-gray-300">
+<svelte:window
+    on:keydown={ctrlLeftDown}
+    on:keyup={ctrlLeftUp}
+    on:mousedown={onMouseDown}
+    on:mouseup={onMouseUp}
+    on:touchstart={onTouchStart}
+    on:touchend={onTouchEnd}
+/>
+<div class="bg-gray-300" role="none">
     <button
         class="z-10 fixed top-0 left-1/2 transform -translate-x-1/2 mt-0.5"
         style="--wails-draggable:drag"
     >
-        <SearchOutline class="w-5 h-5" color="dark" />
+        <!-- <SearchOutline class="w-5 h-5" color="dark" /> -->
     </button>
     <!-- <div
         class="w-full absolute top-0 bg-gray-600 h-6"
@@ -200,8 +211,8 @@
     <ul
         class={basePath(tree.relPath) === pageName() ? "pl-0.5" : "pl-3"}
         style={basePath(tree.relPath) === pageName()
-            ? "margin-top: -22px;"
-            : "margin-top: 1px;"}
+            ? "padding-top: 1px;font-size: 15px;color:black;--wails-draggable:drag"
+            : "margin-top: -2px;color:white;--wails-draggable:no-drag"}
     >
         <li>
             {#if tree.children && tree.children.length > 0}
@@ -211,7 +222,6 @@
                     on:mouseenter={() => handleMouseEnter()}
                     on:mouseup={() => moveFilesToRelPath(tree.relPath)}
                     on:dragover={(event) => handleDragOver(tree.relPath, event)}
-                    on:drop={(event) => handleDrop(tree.relPath, event)}
                 >
                     {#if !expanded}
                         <FolderSolid class="w-3 mr-1"></FolderSolid>
@@ -220,6 +230,20 @@
                     {/if}
                     {_label}
                 </button>
+                {#if pointerDown}
+                    {#if Object.keys(_heldDownBtns).length > 0}
+                        <Tooltip class="p-1 m-1 text-xs bg-gray-400"
+                            >Move {Object.keys(_heldDownBtns).length} files to {basePath(
+                                tree.relPath,
+                            )}</Tooltip
+                        >
+                    {/if}
+                {:else}
+                    <Tooltip class="p-1 m-1 text-xs bg-gray-400"
+                        >{basePath(tree.relPath)}</Tooltip
+                    >
+                {/if}
+
                 {#if expanded}
                     <ul>
                         {#each tree.children as child}
@@ -230,27 +254,36 @@
             {:else if isFile()}
                 <button
                     bind:this={buttonRef}
-                    on:click={() => logFilePath(tree.relPath, buttonRef)}
+                    on:mousedown={() =>
+                        handleFileClick(tree.relPath, buttonRef)}
                     on:mouseenter={() => {
                         handleMouseEnter();
                     }}
                     on:mouseleave={() => {
                         handleMouseLeave();
                     }}
+                    on:mouseup={() => {
+                        moveFilesToRelPath(tree.relPath);
+                    }}
                     on:dragover={(event) => handleDragOver(tree.relPath, event)}
-                    on:dragleave={handleDragLeave}
-                    on:drop={(event) => handleDrop(tree.relPath, event)}
                 >
                     {_label}
                 </button>
-                <Tooltip class="p-0 m-0 text-xs bg-gray-400"
-                    >{_filePropsTooltip}</Tooltip
-                >
+                {#if pointerDown}
+                    <Tooltip class="p-1 m-1 text-xs bg-gray-400"
+                        >Move {Object.keys(_heldDownBtns).length} files to {basePath(
+                            removeFileName(tree.relPath),
+                        )}</Tooltip
+                    >
+                {:else}
+                    <Tooltip class="p-0 m-0 text-xs bg-gray-400"
+                        >{_filePropsTooltip}</Tooltip
+                    >
+                {/if}
             {:else}
                 <button
                     class="flex"
                     on:dragover={(event) => handleDragOver(tree.relPath, event)}
-                    on:drop={(event) => handleDrop(tree.relPath, event)}
                 >
                     <FolderSolid class="w-3 mr-1"></FolderSolid>
                     {_label}

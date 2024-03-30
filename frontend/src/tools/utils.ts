@@ -13,7 +13,7 @@ import {
 } from "../../wailsjs/go/main/Getters";
 import { LogDebug, LogError, LogTrace, LogWarning } from "../../wailsjs/runtime/runtime";
 import { MoveFilesToPath } from '../../wailsjs/go/main/FileUtils';
-import { setIsInFileTask } from '../stores/treeView';
+import { clearHeldBtns, setIsInFileTask } from '../stores/treeView';
 
 export const width = 220
 export const height = 180
@@ -22,7 +22,6 @@ export const pageName: () => string = () => {
     const _appPage: AppPage = get(currentPage);
     return _appPage;
 };
-export const heldDownFiles = writable<string[]>([]);
 export const heldDownBtns = writable<{ [key: string]: HTMLButtonElement }>({});
 
 export const pageIndex: () => number = () => {
@@ -43,8 +42,9 @@ export const pageIndex: () => number = () => {
 };
 
 export function switchPages(page: AppPage) {
-    currentPage.set(page); // Assuming currentPage is a writable store
+    clearHeldBtns();
     DirectoryWatcher(pageIndex());
+    currentPage.set(page);
 }
 
 export function switchModals(modal: Modals) {
@@ -130,20 +130,6 @@ export function formatFileSize(fileSize: number): string {
 }
 
 //LOCAL DRAG AND DROP
-export function addFileToHeldFilesArr(relPath: string) {
-    // GetDirectoryPath(pageIndex()).then((dirPath) => {
-    heldDownFiles.update((currentHeldDownFiles) => {
-        // Check if the newString is not already in the array
-        if (!currentHeldDownFiles.includes(relPath)) {
-            LogDebug("Added currentHeldDownFiles: " + currentHeldDownFiles);
-            return [...currentHeldDownFiles, relPath];
-        }
-        // If it's already there, just return the current array without adding
-        return currentHeldDownFiles;
-    });
-    // });
-}
-
 export function addToHeldBtnsArr(relPath: string, button: HTMLButtonElement) {
     heldDownBtns.update(currentHeldDownBtns => {
         if (!(relPath in currentHeldDownBtns)) {
@@ -154,9 +140,18 @@ export function addToHeldBtnsArr(relPath: string, button: HTMLButtonElement) {
     });
 }
 
+import { currentRelPath } from '../stores/treeView';
 export function moveFilesToRelPath(targetRelPath: string) {
     GetDirectoryPath(pageIndex()).then((dirPath) => {
         var fullPath = dirPath + targetRelPath;
+        LogDebug("DirPath on moveFiles " + dirPath)
+        LogDebug("targetRelPath on moveFiles " + targetRelPath)
+        var _currentRelPath = get(currentRelPath);
+        LogDebug("_currentRelPath on moveFiles " + _currentRelPath)
+        if (_currentRelPath === targetRelPath) return;
+
+        if (dirPath.slice(0, -1) === targetRelPath)
+            fullPath = dirPath
         getFileProperties(fullPath).then((fileProps) => {
             if (fileProps.fileType) {
                 let pathToMoveTo: string;
@@ -164,26 +159,22 @@ export function moveFilesToRelPath(targetRelPath: string) {
                     LogDebug("Node being used for drop is dir ");
                     pathToMoveTo = fullPath;
                 } else {
-                    LogDebug("Node being used for drop  is file ");
+                    LogDebug("Node being used for drop is file ");
                     pathToMoveTo = removeFileName(fullPath);
                 }
-                var _heldDownFiles = get(heldDownFiles);
-                if (_heldDownFiles.length > 0) {
-                    setIsInFileTask(true)
-                    const modifiedFiles = _heldDownFiles.map(node => {
-                        return node ? dirPath + node : node;
+                var _heldDownBtns = get(heldDownBtns);
+                if (Object.keys(_heldDownBtns).length > 0) {
+                    setIsInFileTask(true);
+                    const modifiedFiles = Object.keys(_heldDownBtns).map(key => {
+                        return key ? dirPath + key : key;
                     });
+
                     MoveFilesToPath(modifiedFiles, pathToMoveTo);
-                    _heldDownFiles.forEach((node) => {
-                        LogError("held down node moveFiles: " + node);
+                    Object.keys(_heldDownBtns).forEach(key => {
+                        LogTrace("Held down node moveFiles: " + key); // Using console.error for demonstration
                     });
                 }
             }
         });
     });
-}
-
-export function clearHeldDownFiles() {
-    heldDownFiles.set([]);
-    LogError("Held down Files Cleared");
 }

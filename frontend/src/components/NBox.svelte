@@ -1,19 +1,20 @@
 <!-- NBox.svelte -->
 <script lang="ts">
-    import { onMount } from "svelte";
+    import { onDestroy, onMount } from "svelte";
     import { Label, Input, GradientButton, Button } from "flowbite-svelte";
     import {
         AdjustmentsVerticalOutline,
-        ThumbsUpSolid,
-        CaretUpSolid,
     } from "flowbite-svelte-icons";
 
-    import { AppPage } from "../enums/AppPage.ts";
+    import { AppPage, currentPage } from "../enums/AppPage.ts";
     import { Modals, currentModal } from "../enums/Modals.ts";
 
     import { usernameStore } from "../stores/usernameStore";
     import { pageChangeBtn } from "../stores/pageChangeBtn.js";
-    import { loadFileTree, fileTree } from "../stores/treeView.ts";
+    import {
+        loadFileTree,
+        fileTree,
+    } from "../stores/treeView.ts";
 
     import { switchPages, switchModals } from "../tools/utils.ts";
 

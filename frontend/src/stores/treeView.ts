@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 import { get } from "svelte/store";
 import { AppPage, currentPage } from "../enums/AppPage";
-import { addFileToHeldFilesArr, basePath, heldDownBtns, removeFileName } from "../tools/utils";
+import { basePath, heldDownBtns, removeFileName } from "../tools/utils";
 import {
     DirectoryWatcher,
     BuildDirectoryFileTree,
@@ -34,6 +34,8 @@ export const oBoxExpansionState = writable<{ [key: string]: boolean }>({});
 export const isInFileTask = writable<boolean>(false);
 
 export const fileTree = writable<FileNode>({ relPath: "", children: [] });
+export const currentRelPath = writable<string>("");
+
 
 interface FileNode {
     relPath: string;
@@ -42,21 +44,6 @@ interface FileNode {
 
 interface EnhancedFileNode extends FileNode {
     parent?: EnhancedFileNode;
-}
-
-import { heldDownFiles } from "../tools/utils";
-
-export function setFileStyle(relPath: string, buttonElement: HTMLButtonElement) {
-    addFileToHeldFilesArr(relPath)
-    const filesState = get(heldDownFiles);
-    LogError("set File style " + relPath);
-    if (filesState.includes(relPath)) {
-        buttonElement.style.backgroundColor = "blue"; // Example of setting the style
-        // return "background-color: blue;"; // Selected state
-    } else {
-        buttonElement.style.backgroundColor = "red"; // Example of setting the style
-        // return "background-color: transparent;"; // Not selected state
-    }
 }
 
 export function addButtonRefToStore(path: string, buttonRef: HTMLButtonElement) {
@@ -82,7 +69,6 @@ export function setHeldBtnsStyle() {
 export function clearHeldBtns() {
     const _heldDownBtns = get(heldDownBtns);
     Object.entries(_heldDownBtns).forEach(([path, btn]) => {
-        console.error("Clearing Btns: " + path); // Assuming console.error for demonstration
         btn.style.backgroundColor = "transparent";
     });
     heldDownBtns.set({});
@@ -104,15 +90,12 @@ export class FileTreeMap {
         if (node.children) {
             enhancedNode.children = node.children.map(child => this.enhanceTree(child, enhancedNode));
         }
-
         return enhancedNode;
     }
 
-    // Retrieves a node based on its relPath
     public getNodeByPath(relPath: string): EnhancedFileNode | undefined {
         return this.pathMap.get(relPath);
     }
-
     // Retrieves the parent of a node by its relPath
     public getParentByPath(relPath: string): EnhancedFileNode | undefined {
         const node = this.pathMap.get(relPath);
@@ -147,7 +130,6 @@ function updateExpansionStateStore() {
 function loadExpansionState(index: number) {
     const currentPageStore = getCurrentPageStore();
     GetDirectoryPath(index).then((dirPath) => {
-        // LogInfo("Expanded " + dirPath + " file tree.");
         const unsubscribe = currentPageStore.subscribe((state) => {
             const basePathKey = dirPath;
             if (state[basePathKey] !== undefined) {
@@ -229,64 +211,3 @@ export function setIsInFileTask(b: boolean) {
         }
     })
 };
-
-let droppedFilesCt: number
-
-export function handleDrop(relPath: string, event: DragEvent) {
-    event.preventDefault();
-    draggedOver = false;
-    if (event.dataTransfer && event.dataTransfer.files) {
-        const droppedFiles = event.dataTransfer.files;
-        var index = pageIndex();
-        GetDirectoryPath(index).then((dirPath) => {
-            var fullPath = dirPath + relPath;
-            getFileProperties(fullPath).then((fileProps) => {
-                LogInfo(droppedFiles.length + " file(s) dropped. " + fullPath);
-                if (fileProps.fileType) {
-                    let pathToMoveTo: string;
-                    if (fileProps.fileType === "dir") {
-                        LogDebug("Node being used for drop is dir ");
-                        pathToMoveTo = fullPath;
-                    } else {
-                        LogDebug("Node being used for drop  is file ");
-                        pathToMoveTo = removeFileName(fullPath);
-                    }
-                    setIsInFileTask(true)
-                    droppedFilesCt = 1;
-                    for (let i = 0; i < droppedFiles.length; i++) {
-                        const file = droppedFiles[i];
-                        const reader = new FileReader();
-                        reader.onprogress = function (event) {
-                            if (event.lengthComputable) {
-                                const loadedBytes = event.loaded;
-                                const totalBytes = event.total;
-                                const progressMsg = `${loadedBytes} of ${totalBytes} bytes (${Math.round((loadedBytes / totalBytes) * 100)}%)`;
-                                LogDebug(progressMsg);
-                            }
-                        };
-                        reader.onload = function (e) {
-                            const arrayBuffer = e.target?.result as ArrayBuffer;
-                            if (arrayBuffer) { // Check if the result is not null or undefined
-                                const byteArray = new Uint8Array(arrayBuffer);
-                                FilesDragNDrop(Array.from(byteArray), file.name, file.lastModified, pathToMoveTo);
-                                LogDebug("frontend file on load" + file.name + " " + file.lastModified);
-                                droppedFilesCt++
-                                if (droppedFilesCt === droppedFiles.length + 1) {
-                                    setIsInFileTask(false)
-                                    LogDebug("droppedFilesCt " + droppedFilesCt++);
-                                    loadFileTree(index)
-                                }
-                            }
-                        };
-                        reader.readAsArrayBuffer(file);
-                    }
-                }
-            });
-        });
-    }
-}
-
-export function handleDragLeave(event: DragEvent) {
-    event.preventDefault();
-    draggedOver = false;
-}

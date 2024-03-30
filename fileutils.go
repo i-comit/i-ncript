@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	// "sync"
@@ -30,9 +31,7 @@ func (f *FileUtils) SetIsInFileTask(b bool) bool {
 
 func (f *FileUtils) MoveFilesToPath(filePaths []string, targetPath string) {
 	if f.app.ctx != nil {
-		for _, files := range filePaths {
-			// runtime.LogError(f.app.ctx, targetPath+" pathx2 "+filepath.Dir(files))
-
+		for i, files := range filePaths {
 			if targetPath == filepath.Dir(files)+string(filepath.Separator) {
 				// runtime.LogError(f.app.ctx, "This file already belongs in the targetPath")
 				continue
@@ -46,8 +45,10 @@ func (f *FileUtils) MoveFilesToPath(filePaths []string, targetPath string) {
 				runtime.LogError(f.app.ctx, "Error moving file: "+err.Error())
 				continue
 			}
-			runtime.LogError(f.app.ctx, "Successfully moved file to: "+newFilePath)
+			runtime.LogError(f.app.ctx, "Successfully moved file to: "+newFilePath+" "+strconv.Itoa(i))
 		}
+		isInFileTask = false
+		runtime.EventsEmit(f.app.ctx, rebuildFileTree)
 	}
 }
 
@@ -64,7 +65,6 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 	}
 	var rootDir = a.directories[dirIndex]
 	rootDir = filepath.Clean(rootDir)
-	// Initialize rootNode. It does not represent the rootDir itself but its contents.
 	rootNode := &FileNode{RelPath: rootDir, Children: []*FileNode{}}
 	err := filepath.Walk(rootDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -147,8 +147,8 @@ func (f *FileUtils) FilesDragNDrop(fileBytes []byte, fileName string, modifiedDa
 		if err := os.Chtimes(fullPath, modTime, modTime); err != nil {
 			return fmt.Errorf("failed to set last modified date: %w", err)
 		}
-		runtime.EventsEmit(f.app.ctx, rebuildFileTree)
 		isInFileTask = false
+		runtime.EventsEmit(f.app.ctx, rebuildFileTree)
 		return nil
 	}
 	return nil
