@@ -145,15 +145,15 @@ export function addToHeldFileBtnsArr(relPath: string, button: HTMLButtonElement)
     });
 }
 
-import { currentRelPath } from '../stores/treeView';
+import { currentFilePath } from '../stores/treeView';
 export function moveFilesToRelPath(targetRelPath: string) {
     GetDirectoryPath(pageIndex()).then((dirPath) => {
         var fullPath = dirPath + targetRelPath;
         LogDebug("DirPath on moveFiles " + dirPath)
         LogDebug("targetRelPath on moveFiles " + targetRelPath)
-        var _currentRelPath = get(currentRelPath);
+        var _currentRelPath = get(currentFilePath);
         LogDebug("_currentRelPath on moveFiles " + _currentRelPath)
-        if (_currentRelPath === targetRelPath) return;
+        if (_currentRelPath === targetRelPath) { return; }
 
         if (dirPath.slice(0, -1) === targetRelPath)
             fullPath = dirPath
@@ -167,13 +167,14 @@ export function moveFilesToRelPath(targetRelPath: string) {
                     LogDebug("Node being used for drop is file ");
                     pathToMoveTo = removeFileName(fullPath);
                 }
+
                 var _heldDownBtns = get(heldDownBtns);
                 if (Object.keys(_heldDownBtns).length > 0) {
+
                     setIsInFileTask(true).then(() => {
                         const modifiedFiles = Object.keys(_heldDownBtns).map(key => {
                             return key ? dirPath + key : key;
                         });
-
                         MoveFilesToPath(modifiedFiles, pathToMoveTo).then(() => {
                             Object.keys(_heldDownBtns).forEach(key => {
                                 LogTrace("Held down node moveFiles: " + key); // Using console.error for demonstration

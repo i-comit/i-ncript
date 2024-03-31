@@ -19,13 +19,12 @@
     import { Modals, currentModal } from "../enums/Modals.ts";
 
     import { usernameStore } from "../stores/usernameStore";
-    import { pageChangeBtn } from "../stores/pageChangeBtn.js";
+    import { pageChangeBtn } from "../stores/global_variables";
     import { encryptProgress } from "../stores/encryptProgress";
 
     import {
         buildFileTree,
         fileTree,
-        handleDragOver,
         setIsInFileTask,
         clearHeldBtns,
     } from "../stores/treeView.ts";
@@ -53,7 +52,11 @@
     import TreeView from "./TreeView.svelte";
     import Logger from "./Logger.svelte";
 
-    import { EventsOn, LogError } from "../../wailsjs/runtime/runtime";
+    import {
+        EventsOff,
+        EventsOn,
+        LogError,
+    } from "../../wailsjs/runtime/runtime";
     import {
         GetDirectoryPath,
         GetFilesByType,
@@ -67,7 +70,6 @@
             encryptProgress.set(currentCount);
             _encryptPercent = (_encryptProgress / _fileCt) * 100;
         });
-   
     });
 
     let _username: string;
@@ -93,6 +95,7 @@
             setIsInFileTask(true);
             if (filePaths.length > 0) {
                 _fileCt = filePaths.length;
+                EventsOff("rebuildFileTree");
                 EncryptFilesInDir(0);
                 ResizeWindow(width * 2, height + 15, false);
             }
@@ -104,6 +107,7 @@
             setIsInFileTask(true);
             if (filePaths.length > 0) {
                 _fileCt = filePaths.length;
+                EventsOff("rebuildFileTree");
                 DecryptFilesInDir(0);
                 ResizeWindow(width * 2, height + 15, false);
             }
@@ -201,13 +205,13 @@
     </div>
     <div
         id="right-panel"
-        role="application"
+        role="none"
         class="bg-gray-500 mt-0 px-0"
         on:mouseleave={onmouseleave}
-        on:dragover={(event) => handleDragOver("", event)}
+        on:click={clearHeldBtns}
     >
         {#if _modal === Modals.None}
-            <TreeView tree={$fileTree} on:mousedown={clearHeldBtns} />
+            <TreeView tree={$fileTree} />
             <!-- <Settings /> -->
         {:else if _modal === Modals.Settings}
             <Settings />

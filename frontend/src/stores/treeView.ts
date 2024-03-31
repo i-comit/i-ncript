@@ -2,7 +2,7 @@ import { writable } from "svelte/store";
 import { get } from "svelte/store";
 import { AppPage, currentPage } from "../enums/AppPage";
 import { basePath, heldDownBtns, removeFileName } from "../tools/utils";
-import { BuildDirectoryFileTree, } from "../../wailsjs/go/main/App";
+import { BuildDirectoryFileTree, SetIsInFileTask } from "../../wailsjs/go/main/App";
 import {
     EventsOff,
     EventsOn,
@@ -16,13 +16,10 @@ import {
     GetDirectoryPath,
 } from "../../wailsjs/go/main/Getters";
 import {
-    SetIsInFileTask, FilesDragNDrop,
+    FilesDragNDrop, OpenDirectory, OpenFile,
 } from "../../wailsjs/go/main/FileUtils";
 
 export const vaultExpansionState = writable<{ [key: string]: boolean }>({});
-
-export const allFileBtns = writable<HTMLButtonElement[]>([])
-export const allTreeViewBtns = writable<{ [key: string]: HTMLButtonElement }>({});
 
 export const nBoxExpansionState = writable<{ [key: string]: boolean }>({});
 export const oBoxExpansionState = writable<{ [key: string]: boolean }>({});
@@ -30,8 +27,8 @@ export const oBoxExpansionState = writable<{ [key: string]: boolean }>({});
 export const isInFileTask = writable<boolean>(false);
 
 export const fileTree = writable<FileNode>({ relPath: "", children: [] });
-export const currentRelPath = writable<string>("");
-
+export const currentFilePath = writable<string>("");
+export const currentDirPath = writable<string>("");
 
 interface FileNode {
     relPath: string;
@@ -42,27 +39,40 @@ interface EnhancedFileNode extends FileNode {
     parent?: EnhancedFileNode;
 }
 
-export function addButtonRefToStore(path: string, buttonRef: HTMLButtonElement) {
-    allTreeViewBtns.update(currentBtns => {
-        return { ...currentBtns, [path]: buttonRef };
-    });
-}
-
 export function setHeldBtnsStyle() {
     const _heldDownBtns = get(heldDownBtns);
-    Object.entries(_heldDownBtns).forEach(([path, btn]) => {
-        LogInfo("Held down node moveFiles: " + path); // Using console.error for demonstration
-        btn.style.backgroundColor = "red";
+    const entries = Object.entries(_heldDownBtns);
+    const lastIndex = entries.length - 1; // Get the index of the last element
+
+    entries.forEach(([path, btn], index) => {
+        console.log("Held down node moveFiles: " + path); // Assuming LogInfo is analogous to console.log for demonstration
+        // Apply blue to all but the last, red to the last
+        btn.style.backgroundColor = index === lastIndex ? "red" : "blue";
     });
 }
 export function clearHeldBtns() {
-    const _heldDownBtns = get(heldDownBtns);
-    Object.entries(_heldDownBtns).forEach(([path, btn]) => {
-        btn.style.backgroundColor = "transparent";
-    });
-    LogInfo("Held buttons cleared");
-    heldDownBtns.set({});
+    if (get(currentFilePath) === "" && get(currentDirPath) === "") {
+        const _heldDownBtns = get(heldDownBtns);
+        Object.entries(_heldDownBtns).forEach(([path, btn]) => {
+            btn.style.backgroundColor = "transparent";
+        });
+        LogInfo("Held buttons cleared");
+        heldDownBtns.set({});
+    }
 }
+
+export function openDirectory(relPath: string) {
+    GetDirectoryPath(pageIndex()).then((filePath) => {
+        OpenDirectory(filePath + relPath);
+    });
+}
+
+export function openFile(relPath: string) {
+    GetDirectoryPath(pageIndex()).then((filePath) => {
+        OpenFile(filePath + relPath);
+    });
+}
+
 
 export class FileTreeMap {
     root: EnhancedFileNode;
@@ -71,7 +81,6 @@ export class FileTreeMap {
     constructor(root: FileNode) {
         this.root = this.enhanceTree(root, undefined);
     }
-
     // Enhances the tree with parent references and builds the path map
     private enhanceTree(node: FileNode, parent?: EnhancedFileNode): EnhancedFileNode {
         const enhancedNode: EnhancedFileNode = { ...node, parent };
@@ -170,7 +179,6 @@ export const expandRoot: () => void = () => {
 let expanded = false;
 let _appPage: AppPage;
 
-
 export function getCurrentPageStore() {
     _appPage = get(currentPage)
     switch (
@@ -187,23 +195,9 @@ export function getCurrentPageStore() {
     }
 }
 
-export function handleDragOver(relPath: string, event: DragEvent) {
-    event.preventDefault(); // Necessary to allow for a drop
-    // if (!draggedOver) {
-    //     FileDialogueForDragNDrop().then(() => {
-    //         draggedOver = true;
-    //         LogError("Dragged over lele " + relPath);
-    //     })
-    // }
-}
-
 export async function setIsInFileTask(b: boolean): Promise<boolean> {
     const _isInFileTask = await SetIsInFileTask(b);
     isInFileTask.set(_isInFileTask);
     LogPrint("SetIsInFileTask " + _isInFileTask);
-    // Optionally perform further actions
-    if (_isInFileTask) {
-        subscribeToRebuildFileTree()
-    }
     return b; // Return the boolean value
 }

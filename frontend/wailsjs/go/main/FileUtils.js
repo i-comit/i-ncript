@@ -14,6 +14,10 @@ export function MoveFilesToPath(arg1, arg2) {
   return window['go']['main']['FileUtils']['MoveFilesToPath'](arg1, arg2);
 }
 
-export function SetIsInFileTask(arg1) {
-  return window['go']['main']['FileUtils']['SetIsInFileTask'](arg1);
+export function OpenDirectory(arg1) {
+  return window['go']['main']['FileUtils']['OpenDirectory'](arg1);
+}
+
+export function OpenFile(arg1) {
+  return window['go']['main']['FileUtils']['OpenFile'](arg1);
 }

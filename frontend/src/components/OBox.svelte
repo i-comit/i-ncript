@@ -7,7 +7,7 @@
     import { Modals, currentModal } from "../enums/Modals.ts";
 
     import { usernameStore } from "../stores/usernameStore";
-    import { pageChangeBtn } from "../stores/pageChangeBtn.js";
+    import { pageChangeBtn } from "../stores/global_variables";
     import { buildFileTree, fileTree } from "../stores/treeView";
 
     import { switchPages } from "../tools/utils.ts";

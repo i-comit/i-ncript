@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -13,7 +14,9 @@ import (
 
 	"time"
 
-	"github.com/wailsapp/wails/v2/pkg/runtime"
+	stdRuntime "runtime"
+
+	wailsRuntime "github.com/wailsapp/wails/v2/pkg/runtime" // This is an example path
 )
 
 type FileUtils struct {
@@ -23,16 +26,6 @@ type FileUtils struct {
 
 var isInFileTask = false
 var rebuildFileTree = "rebuildFileTree"
-
-func (f *FileUtils) SetIsInFileTask(b bool) bool {
-	isInFileTask = b
-	if isInFileTask {
-		f.app.closeDirectoryWatcher()
-	} else {
-		f.app.DirectoryWatcher(currentIndex)
-	}
-	return isInFileTask
-}
 
 func (f *FileUtils) CheckIfPathIsFile(filePath string) (bool, error) {
 	info, err := os.Stat(filePath)
@@ -55,18 +48,61 @@ func (f *FileUtils) MoveFilesToPath(filePaths []string, targetPath string) {
 			err := os.Rename(files, newFilePath)
 			if err != nil {
 				// Handle errors (e.g., file not found, permission issues, etc.)
-				runtime.LogError(f.app.ctx, "Error moving file: "+err.Error())
+				wailsRuntime.LogError(f.app.ctx, "Error moving file: "+err.Error())
 				continue
 			}
-			runtime.LogError(f.app.ctx, "Successfully moved file to: "+newFilePath+" "+strconv.Itoa(i))
+			wailsRuntime.LogError(f.app.ctx, "Successfully moved file to: "+newFilePath+" "+strconv.Itoa(i))
 		}
-		runtime.EventsEmit(f.app.ctx, rebuildFileTree)
-		f.SetIsInFileTask(false)
+		wailsRuntime.EventsEmit(f.app.ctx, rebuildFileTree)
+		f.app.SetIsInFileTask(false)
 	}
 }
 
+func (f *FileUtils) OpenFile(filePath string) error {
+	var cmd *exec.Cmd
+	switch stdRuntime.GOOS {
+	case "windows":
+		cmd = exec.Command("cmd", "/c", "start", "", filePath)
+	case "darwin":
+		cmd = exec.Command("open", filePath)
+	case "linux":
+		cmd = exec.Command("xdg-open", filePath)
+	default:
+		return fmt.Errorf("unsupported platform")
+	}
+
+	return cmd.Start()
+}
+
+func (f *FileUtils) OpenDirectory(_filePath string) error {
+	// Determine the directory path from the filePath
+	dirPath := _filePath
+	fileInfo, err := os.Stat(_filePath)
+	if err != nil {
+		return err
+	}
+	if !fileInfo.IsDir() {
+		dirPath = filepath.Dir(_filePath) + string(filepath.Separator)
+	}
+	fmt.Println("DirPath open directory " + dirPath)
+	// Open the directory based on the operating system
+	var cmd *exec.Cmd
+	switch stdRuntime.GOOS {
+	case "windows":
+		cmd = exec.Command("explorer", dirPath)
+	case "darwin":
+		cmd = exec.Command("open", dirPath)
+	case "linux":
+		cmd = exec.Command("xdg-open", dirPath)
+	default:
+		return fmt.Errorf("unsupported platform")
+	}
+	return cmd.Start()
+}
+
 type FileNode struct {
-	RelPath  string      `json:"relPath"`
+	RelPath string `json:"relPath"`
+	// IsDir  bool      `json:"isDir"`
 	Children []*FileNode `json:"children,omitempty"`
 }
 
@@ -137,7 +173,6 @@ func (f *FileUtils) FilesDragNDrop(fileBytes []byte, fileName string, modifiedDa
 		// 		}
 		// 	}()
 		// }
-
 		chunkSize := 1024 // Define a suitable chunk size
 		for i := 0; i < len(fileBytes); i += chunkSize {
 			end := i + chunkSize
@@ -152,7 +187,6 @@ func (f *FileUtils) FilesDragNDrop(fileBytes []byte, fileName string, modifiedDa
 			writtenBytes += int64(n) // Safe to update within the mutex-protected block
 			// atomic.AddInt64(&writtenBytes, int64(n)) // Atomic version
 		}
-
 		close(done) // Signal the completion of file writing to the goroutine
 		modTime := time.UnixMilli(modifiedDate)
 
@@ -160,8 +194,8 @@ func (f *FileUtils) FilesDragNDrop(fileBytes []byte, fileName string, modifiedDa
 		if err := os.Chtimes(fullPath, modTime, modTime); err != nil {
 			return fmt.Errorf("failed to set last modified date: %w", err)
 		}
-		runtime.EventsEmit(f.app.ctx, rebuildFileTree)
-		f.SetIsInFileTask(false)
+		wailsRuntime.EventsEmit(f.app.ctx, rebuildFileTree)
+		f.app.SetIsInFileTask(false)
 		return nil
 	}
 	return nil

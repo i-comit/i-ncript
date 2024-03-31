@@ -133,7 +133,7 @@ func (a *App) reverseProgress(encrypt bool, files int, dirIndex int) {
 		runtime.EventsEmit(a.ctx, fileProcessed, 0)
 		runtime.EventsEmit(a.ctx, fileCt, 0)
 		runtime.EventsOff(a.ctx, fileProcessed, fileCt, addLogFile, rebuildFileTree)
-		a.DirectoryWatcher(dirIndex)
+		a.SetIsInFileTask(false)
 	}
 }
 

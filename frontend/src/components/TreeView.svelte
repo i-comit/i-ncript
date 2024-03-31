@@ -3,10 +3,10 @@
 
 <script lang="ts">
     // import { slide } from 'svelte/transition'
-    import { onMount, afterUpdate, createEventDispatcher } from "svelte";
+    import { onMount } from "svelte";
     import { get } from "svelte/store";
     import {
-    EventsOn,
+        EventsOn,
         EventsOnce,
         LogError,
         LogInfo,
@@ -16,20 +16,27 @@
     import {
         FolderOpenSolid,
         FolderSolid,
-        SearchOutline,
+        FolderArrowRightOutline,
         ExpandOutline,
         CompressOutline,
     } from "flowbite-svelte-icons";
-    import { SpeedDial, SpeedDialButton, Tooltip } from "flowbite-svelte";
+    import {
+        SpeedDial,
+        SpeedDialButton,
+        Tooltip,
+        Popover,
+    } from "flowbite-svelte";
 
     import {
         clearHeldBtns,
-        currentRelPath,
+        currentFilePath,
         expandRoot,
         getCurrentPageStore,
-        handleDragOver,
         buildFileTree,
         setHeldBtnsStyle,
+        openDirectory,
+        openFile,
+        currentDirPath,
     } from "../stores/treeView.ts";
 
     import {
@@ -53,16 +60,19 @@
 
     import { AppPage, currentPage } from "../enums/AppPage.ts";
     import { GetDirectoryPath } from "../../wailsjs/go/main/Getters";
-    import { EventsOff } from "../../wailsjs/runtime/runtime.js";
 
     let _appPage: AppPage;
     _appPage = AppPage.Vault;
     currentPage.subscribe((value) => {
         _appPage = value;
     });
-
+    let tooltipTailwindClass = "p-0.5 m-0 text-xs bg-gray-400";
     let _label: string;
     let _heldDownBtns: { [key: string]: HTMLButtonElement };
+    let buttonRef: HTMLButtonElement;
+    let clickedOnButtonRef: HTMLButtonElement;
+
+    let clickedOnButton2: { [key: string]: HTMLButtonElement };
 
     heldDownBtns.subscribe((value) => {
         _heldDownBtns = value;
@@ -157,22 +167,35 @@
     }
     let _filePropsTooltip: string;
 
-    function isFile(): boolean {
-        return !tree.children; //This needs to be async
+    async function isFile(): Promise<boolean> {
+        const filePath = await GetDirectoryPath(pageIndex());
+        const fileProps = await getFileProperties(filePath + tree.relPath);
+        // Return true if fileSize > 0, indicating it's a file
+        return fileProps.fileSize > 0;
     }
-    let buttonRef: HTMLButtonElement;
+
     function handleMouseEnter() {
+        if (basePath(tree.relPath) === pageName()) return;
         GetDirectoryPath(pageIndex()).then((filePath) => {
             getFileProperties(filePath + tree.relPath).then((fileProps) => {
                 _filePropsTooltip = `${fileProps.modifiedDate} | ${formatFileSize(fileProps.fileSize)}`;
                 // LogPrint("RelativePath " + tree.relPath);
-                if (isFile()) currentRelPath.set(tree.relPath);
+                if (!tree.children) {
+                    isFile().then((_isFile) => {
+                        if (_isFile) currentFilePath.set(tree.relPath);
+                    });
+                } else {
+                    currentDirPath.set(tree.relPath);
+                    LogInfo("current Dir Path " + get(currentDirPath));
+                }
             });
         });
     }
 
     function handleMouseLeave() {
-        currentRelPath.set("");
+        currentFilePath.set("");
+        currentDirPath.set("");
+        LogError("currentRelpath null");
     }
 
     function moveFilesFromFileNode() {
@@ -182,14 +205,26 @@
                 LogInfo("Moved Files to Dir");
             }
         } else {
-            LogInfo("moveFilesFromFileNode " + tree.relPath);
-            if (tree.relPath !== get(currentRelPath)) {
+            LogInfo(
+                "moveFilesFromFileNode " +
+                    tree.relPath +
+                    " " +
+                    get(currentFilePath) +
+                    " " +
+                    get(currentDirPath),
+            );
+            if (tree.relPath !== get(currentFilePath)) {
                 var dirPath = removeFileName(tree.relPath);
                 moveFilesToRelPath(dirPath);
             }
         }
-        LogInfo("OH LAWD ");
     }
+
+    function handleDblClick(relPath: string) {
+        openFile(relPath);
+    }
+
+    let promise = isFile();
 </script>
 
 <svelte:window
@@ -200,32 +235,32 @@
     on:touchstart={onTouchStart}
     on:touchend={onTouchEnd}
 />
-<div class="bg-gray-300" role="none">
+<div class="bg-gray-300" role="none" on:click={clearHeldBtns}>
     <button
         class="z-10 fixed top-0 left-1/2 transform -translate-x-1/2 mt-0.5"
         style="--wails-draggable:drag"
     >
         <!-- <SearchOutline class="w-5 h-5" color="dark" /> -->
     </button>
-    <!-- <div
-        class="w-full absolute top-0 bg-gray-600 h-6"
-        style="--wails-draggable:drag"
-    ></div> -->
+    <!-- style={basePath(tree.relPath) === pageName()
+        ? "position: sticky; top: 0; z-index: 10; background-color: green !important"
+        : "position: relative;"}  -->
     <ul
         class={basePath(tree.relPath) === pageName() ? "pl-0.5" : "pl-3"}
         style={basePath(tree.relPath) === pageName()
-            ? "padding-top: 1px;font-size: 15px;color:black;--wails-draggable:drag"
-            : "margin-top: -2px;color:white;--wails-draggable:no-drag"}
+            ? "padding-top: 1px;font-size: 15px;color:black;--wails-draggable:drag;"
+            : "margin-top: -2px;color:white;--wails-draggable:no-drag; margin-bottom: 0px"}
     >
         <li>
             {#if tree.children && tree.children.length > 0}<!-- Folder with children -->
                 <button
-                    on:click={toggleExpansion}
+                    on:click={() => {
+                        toggleExpansion();
+                        clearHeldBtns();
+                    }}
                     class="flex"
                     on:mouseenter={() => handleMouseEnter()}
                     on:mouseup={() => moveFilesFromFileNode()}
-                    on:drop={() => LogError("AMOGUS")}
-                    on:dragover={(event) => handleDragOver(tree.relPath, event)}
                 >
                     {#if !expanded}
                         <FolderSolid class="w-3 mr-1"></FolderSolid>
@@ -236,18 +271,17 @@
                 </button>
                 {#if pointerDown}
                     {#if Object.keys(_heldDownBtns).length > 0}
-                        <Tooltip class="p-1 m-1 text-xs bg-gray-400"
+                        <Tooltip class={tooltipTailwindClass}
                             >Move {Object.keys(_heldDownBtns).length} files to {basePath(
                                 tree.relPath,
                             )}</Tooltip
                         >
                     {/if}
                 {:else}
-                    <Tooltip class="p-1 m-1 text-xs bg-gray-400"
+                    <Tooltip class={tooltipTailwindClass}
                         >{basePath(tree.relPath)}</Tooltip
                     >
                 {/if}
-
                 {#if expanded}
                     <ul>
                         {#each tree.children as child}
@@ -255,47 +289,74 @@
                         {/each}
                     </ul>
                 {/if}
-            {:else if isFile()}<!-- File -->
-                <button
-                    bind:this={buttonRef}
-                    on:mousedown={() =>
-                        handleFileClick(tree.relPath, buttonRef)}
-                    on:mouseenter={() => {
-                        handleMouseEnter();
-                    }}
-                    on:mouseleave={() => {
-                        handleMouseLeave();
-                    }}
-                    on:mouseup={() => {
-                        moveFilesFromFileNode();
-                    }}
-                    on:dragover={(event) => handleDragOver(tree.relPath, event)}
-                >
-                    {_label}
-                </button>
+            {:else if !tree.children}<!-- File -->
+                {#await promise then isFile}
+                    {#if isFile}
+                        <button
+                            class="rounded-md px-0.5"
+                            bind:this={buttonRef}
+                            on:mousedown={() =>
+                                handleFileClick(tree.relPath, buttonRef)}
+                            on:mouseenter={() => {
+                                handleMouseEnter();
+                            }}
+                            on:mouseleave={() => {
+                                handleMouseLeave();
+                            }}
+                            on:mouseup={() => {
+                                moveFilesFromFileNode();
+                            }}
+                            on:dblclick={() => handleDblClick(tree.relPath)}
+                        >
+                            {_label}
+                        </button>
+                    {:else}
+                        <button
+                            class="flex"
+                            on:mouseenter={() => {
+                                handleMouseEnter();
+                            }}
+                            on:mouseup={() => moveFilesFromFileNode()}
+                        >
+                            <FolderSolid class="w-3 mr-1"></FolderSolid>
+                            {_label} &#40;empty&#41;
+                        </button>
+                    {/if}
+                {:catch error}
+                    <p>There was an error: {error.message}</p>
+                {/await}
+
                 {#if pointerDown}
-                    <Tooltip class="p-1 m-1 text-xs bg-gray-400"
+                    <Tooltip
+                        class={tooltipTailwindClass}
+                        offset={-1}
+                        arrow={true}
                         >Move {Object.keys(_heldDownBtns).length} files to {basePath(
                             removeFileName(tree.relPath),
                         )}</Tooltip
                     >
+                {:else if clickedOnButtonRef === buttonRef}
+                    <Popover
+                        class="w-30 text-xs font-light m-0 p-0"
+                        arrow={true}
+                        offset={1}
+                        placement="bottom-end"
+                    >
+                        <FolderSolid class="w-3 m-0"></FolderSolid>
+                        <FolderSolid class="w-3 m-0"></FolderSolid>
+                    </Popover>
+                    <Tooltip
+                        class={tooltipTailwindClass}
+                        offset={-1}
+                        arrow={true}>{_filePropsTooltip}</Tooltip
+                    >
                 {:else}
-                    <Tooltip class="p-0 m-0 text-xs bg-gray-400"
-                        >{_filePropsTooltip}</Tooltip
+                    <Tooltip
+                        class={tooltipTailwindClass}
+                        offset={-1}
+                        arrow={true}>{_filePropsTooltip}</Tooltip
                     >
                 {/if}
-            {:else}
-                <!-- Folder with no children (empty) -->
-                <button
-                    class="flex"
-                    on:mouseenter={() => {
-                        handleMouseEnter();
-                    }}
-                    on:mouseup={() => moveFilesFromFileNode()}
-                >
-                    <FolderSolid class="w-3 mr-1"></FolderSolid>
-                    {_label} AMOGUS
-                </button>
             {/if}
         </li>
     </ul>
@@ -322,6 +383,17 @@
             >
                 <ExpandOutline class="w-6 h-6" />
             </SpeedDialButton>
+            <!-- {#if expanded}
+                <SpeedDialButton
+                    name="Expand "
+                    class="h-10 w-14 text-lg"
+                    on:click={() => {
+                        updateExpansionForNode(tree, true);
+                    }}
+                >
+                    <ExpandOutline class="w-6 h-6" />
+                </SpeedDialButton>
+            {/if} -->
         </SpeedDial>
     </div>
 </div>

@@ -149,6 +149,16 @@ func (a *App) CloseApp() {
 	os.Exit(0)
 }
 
+func (a *App) SetIsInFileTask(b bool) bool {
+	isInFileTask = b
+	if isInFileTask {
+		a.closeDirectoryWatcher()
+	} else {
+		a.DirectoryWatcher(currentIndex)
+	}
+	return isInFileTask
+}
+
 func MoveFiles(srcPaths []string, destDir string) error {
 	for _, srcPath := range srcPaths {
 		filename := filepath.Base(srcPath)
@@ -172,8 +182,8 @@ func (a *App) closeDirectoryWatcher() {
 				fmt.Println("\033[31m", "Failed to remove directory from watcher:", "\033[0m")
 			}
 		}
-		s := fmt.Sprintf("%s %d", a.directories[currentIndex], currentIndex)
-		fmt.Println("\033[32mStopped watching directory", s, "\033[0m")
+		s := fmt.Sprintf("stopped watching %s directory", filepath.Base(a.directories[currentIndex]))
+		fmt.Println("\033[33m", s, "\033[0m")
 		a.watcher.Close() // Close the current watcher to clean up resources
 	}
 }
@@ -240,7 +250,8 @@ func (a *App) DirectoryWatcher(dirIndex int) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("\033[32mNow watching directory", a.directories[dirIndex], "\033[0m")
+	s := fmt.Sprintf("now watching %s directory", filepath.Base(a.directories[currentIndex]))
+	fmt.Println("\033[32m", s, "\033[0m")
 	currentIndex = dirIndex // Update the current index
 	<-a.done                // Keep the watcher goroutine alive
 }
