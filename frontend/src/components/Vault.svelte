@@ -18,8 +18,9 @@
     import { AppPage, currentPage } from "../enums/AppPage.ts";
     import { Modals, currentModal } from "../enums/Modals.ts";
 
-    import { usernameStore } from "../stores/usernameStore";
-    import { pageChangeBtn } from "../stores/global_variables";
+    import {
+        pageChangeBtn,
+    } from "../stores/globalVariables.js";
     import { encryptProgress } from "../stores/encryptProgress";
 
     import {
@@ -27,7 +28,7 @@
         fileTree,
         setIsInFileTask,
         clearHeldBtns,
-    } from "../stores/treeView.ts";
+    } from "../tools/fileTree.ts";
 
     import {
         ResizeWindow,
@@ -49,7 +50,7 @@
     import Frame from "./Frame.svelte";
     import Info from "./Info.svelte";
     import Settings from "./Settings.svelte";
-    import TreeView from "./TreeView.svelte";
+    import TreeView from "./FileTree.svelte";
     import Logger from "./Logger.svelte";
 
     import {
@@ -70,11 +71,6 @@
             encryptProgress.set(currentCount);
             _encryptPercent = (_encryptProgress / _fileCt) * 100;
         });
-    });
-
-    let _username: string;
-    usernameStore.subscribe((value) => {
-        _username = value;
     });
 
     let _encryptProgress: number;

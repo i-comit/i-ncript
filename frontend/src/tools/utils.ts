@@ -13,7 +13,7 @@ import {
 } from "../../wailsjs/go/main/Getters";
 import { LogDebug, LogError, LogTrace, LogWarning } from "../../wailsjs/runtime/runtime";
 import { MoveFilesToPath } from '../../wailsjs/go/main/FileUtils';
-import { clearHeldBtns, setIsInFileTask } from '../stores/treeView';
+import { clearHeldBtns, setIsInFileTask } from './fileTree';
 
 export const width = 220
 export const height = 180
@@ -145,7 +145,7 @@ export function addToHeldFileBtnsArr(relPath: string, button: HTMLButtonElement)
     });
 }
 
-import { currentFilePath } from '../stores/treeView';
+import { currentFilePath } from './fileTree';
 export function moveFilesToRelPath(targetRelPath: string) {
     GetDirectoryPath(pageIndex()).then((dirPath) => {
         var fullPath = dirPath + targetRelPath;

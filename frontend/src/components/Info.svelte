@@ -12,7 +12,7 @@
     } from "flowbite-svelte";
     import { onMount } from "svelte";
     import { AppPage, currentPage } from "../enums/AppPage";
-    import { pageChangeBtn } from "../stores/pageChangeBtn";
+    import { pageChangeBtn } from "../stores/globalVariables";
 
     import { switchPages } from "../tools/utils";
     import { DownloadSolid, GithubSolid } from "flowbite-svelte-icons";
@@ -69,11 +69,3 @@
     </div>
     <div class="h-1" />
 </div>
-
-<style>
-    .row {
-        display: flex;
-        justify-content: space-between; /* Spread the buttons evenly */
-        margin-bottom: 10px; /* Spacing between rows of buttons */
-    }
-</style>

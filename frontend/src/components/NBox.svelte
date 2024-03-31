@@ -9,23 +9,23 @@
     import { AppPage, currentPage } from "../enums/AppPage.ts";
     import { Modals, currentModal } from "../enums/Modals.ts";
 
-    import { usernameStore } from "../stores/usernameStore";
-    import { pageChangeBtn } from "../stores/pageChangeBtn.js";
+    import { hashedCredentials } from "../stores/hashedCredentials.js";
+    import { pageChangeBtn } from "../stores/globalVariables.js";
     import {
         buildFileTree,
         fileTree,
-    } from "../stores/treeView.ts";
+    } from "../tools/fileTree.ts";
 
     import { switchPages, switchModals } from "../tools/utils.ts";
 
     import Frame from "./Frame.svelte";
     import Info from "./Info.svelte";
     import Settings from "./Settings.svelte";
-    import TreeView from "./TreeView.svelte";
+    import TreeView from "./FileTree.svelte";
     import Logger from "./Logger.svelte";
 
     let loggedInUser;
-    usernameStore.subscribe(($user) => {
+    hashedCredentials.subscribe(($user) => {
         loggedInUser = $user;
     });
 

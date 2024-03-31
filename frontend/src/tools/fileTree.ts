@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 import { get } from "svelte/store";
 import { AppPage, currentPage } from "../enums/AppPage";
-import { basePath, heldDownBtns, removeFileName } from "../tools/utils";
+import { basePath, heldDownBtns, removeFileName } from "./utils";
 import { BuildDirectoryFileTree, SetIsInFileTask } from "../../wailsjs/go/main/App";
 import {
     EventsOff,
@@ -11,7 +11,7 @@ import {
     LogPrint,
 } from "../../wailsjs/runtime/runtime";
 
-import { getFileProperties, pageName, pageIndex } from "../tools/utils";
+import { getFileProperties, pageName, pageIndex } from "./utils";
 import {
     GetDirectoryPath,
 } from "../../wailsjs/go/main/Getters";

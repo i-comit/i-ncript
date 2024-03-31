@@ -2,12 +2,9 @@
 <script>
     import { createEventDispatcher } from "svelte";
 
-    import { usernameStore } from "../stores/usernameStore";
-    import { passwordStore } from "../stores/passwordStore";
     import { Modals, currentModal } from "../enums/Modals";
 
     import { Login, ResizeWindow } from "../../wailsjs/go/main/App";
-    import { EncryptString } from "../../wailsjs/go/main/Encrypt";
     import { Button, Input, GradientButton, Tooltip } from "flowbite-svelte";
     import { switchModals } from "../tools/utils";
     import {
@@ -18,6 +15,7 @@
     import Frame from "./Frame.svelte";
     import Info from "./Info.svelte";
     import Settings from "./Settings.svelte";
+    import { hashedCredentials } from "../stores/hashedCredentials";
 
     const appName = __APP_NAME__;
     const appVersion = __APP_VERSION__;
@@ -28,13 +26,10 @@
     async function submit(event) {
         event.preventDefault();
         try {
-            await Login(username, password).then((loggedIn) => {
-                if (loggedIn) {
-                    const encryptedUsername = EncryptString(username);
-                    usernameStore.set({ encryptedUsername });
-                    const encryptedPassowrd = EncryptString(password);
-                    passwordStore.set({ encryptedPassowrd });
+            await Login(username, password).then((_hashedCredentials) => {
+                if (_hashedCredentials) {
                     dispatch("loginSuccess");
+                    hashedCredentials.set(_hashedCredentials);
                 }
             });
         } catch (error) {

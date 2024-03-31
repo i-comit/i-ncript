@@ -21,7 +21,8 @@ type App struct {
 	watcher     *fsnotify.Watcher // Hold the watcher instance
 }
 
-// var directories = []string{"VAULT", "N-BOX", "O-BOX"}
+var _width = 220
+var _height = 155
 var currentIndex = -1
 
 func NewApp() *App {
@@ -31,8 +32,7 @@ func NewApp() *App {
 }
 
 var rootFolder = "i-ncript"
-var encryptedUsername = ""
-var encryptedPassword = ""
+var hashedCredentials []byte
 
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
@@ -68,48 +68,61 @@ func (a *App) InitializeRootFolder() error {
 
 // func (b *App) shutdown(ctx context.Context) {
 // }
-func (a *App) Login(username string, password string) (bool, error) {
+func (a *App) Login(username string, password string) (string, error) {
 	if username == "" || password == "" {
-		log.Println("Username or password is empty")
-		return false, nil
+		fmt.Println("Username or password is empty")
+		return "", nil
 	}
 	cwd, err := os.Getwd()
 	if err != nil {
-		log.Fatalf("Failed to get current working directory: %s", err)
+		log.Fatalf("Failed to get CWD: %s", err)
 	}
-	keyFile := ".➫.🔑"
-	filePath := filepath.Join(cwd, keyFile)
+	filePath := filepath.Join(cwd, keyFileName)
 
-	file, err := os.Create(filePath)
-	if err != nil {
-		log.Fatalf("Failed to create file: %s", err)
-	}
-	defer file.Close()
+	var hasKey int
+	hasKey = checkCredentials(username + password)
 
-	_encryptedUsername, err := encryptString([]byte(username))
-	if err != nil {
-		log.Fatalf("Failed to encrypt username: %s", err)
+	switch hasKey {
+	case 0: //Key file does not exist
+		file, err := os.Create(filePath)
+		if err != nil {
+			log.Fatalf("Failed to create file: %s", err)
+		}
+		defer file.Close()
+		_hashedCredentials, err := hashCredentials(username + password)
+		if err != nil {
+			log.Fatalf("Failed to encrypt: %s", err)
+		}
+		_, err = file.WriteString(_hashedCredentials)
+		if err != nil {
+			log.Fatalf("Failed to write to file: %s", err)
+		}
+		fmt.Printf("File created: %s", filePath)
+		hashedCredentials = []byte(_hashedCredentials)
+	case 1:
+		file, err := os.Create(filePath)
+		if err != nil {
+			log.Fatalf("Failed to create file: %s", err)
+		}
+		defer file.Close()
+		_hashedCredentials, err := hashCredentials(username + password)
+		if err != nil {
+			log.Fatalf("Failed to encrypt: %s", err)
+		}
+		_, err = file.WriteString(_hashedCredentials)
+		if err != nil {
+			log.Fatalf("Failed to write to file: %s", err)
+		}
+		fmt.Printf("File created: %s", filePath)
+		hashedCredentials = []byte(_hashedCredentials)
 	}
-	_encryptedPassword, err := encryptString([]byte(password))
-	if err != nil {
-		log.Fatalf("Failed to encrypt password: %s", err)
-	}
-	encryptedUsername = _encryptedUsername
-	encryptedPassword = _encryptedPassword
 
-	_, err = file.WriteString(encryptedUsername + "\n" + encryptedPassword + "\n")
-	if err != nil {
-		log.Fatalf("Failed to write to file: %s", err)
-	}
-
-	log.Printf("File created: %s", filePath)
 	if a.ctx != nil {
 		a.ResizeWindow(_width*2, _height+25, false)
 	}
 	for i, dir := range a.directories {
 		a.directories[i] = cwd + string(os.PathSeparator) + dir
 	}
-
 	err = createDirectories(a.directories...)
 	if err != nil {
 		log.Fatal(err)
@@ -118,18 +131,10 @@ func (a *App) Login(username string, password string) (bool, error) {
 	tree, err := a.BuildDirectoryFileTree(0)
 	if err != nil {
 		fmt.Println("Error building file tree:", err)
-		return false, err
+		return "", err
 	}
-
-	data, err := json.MarshalIndent(tree, "", "  ")
-	if err != nil {
-		fmt.Println("Error marshaling tree to JSON:", err)
-		return false, err
-	}
-
-	jsonStr := string(data)
-	fmt.Println(jsonStr)
-	return true, nil
+	printFileTree(tree, false)
+	return "_hashedCredentials", nil
 }
 
 func (a *App) ResizeWindow(width int, height int, recenter bool) {
@@ -157,6 +162,20 @@ func (a *App) SetIsInFileTask(b bool) bool {
 		a.DirectoryWatcher(currentIndex)
 	}
 	return isInFileTask
+}
+
+func printFileTree(fileTree *FileNode, print bool) error {
+	if !print {
+		return nil
+	}
+	data, err := json.MarshalIndent(fileTree, "", "  ")
+	if err != nil {
+		fmt.Println("Error marshaling tree to JSON:", err)
+		return err
+	}
+	jsonStr := string(data)
+	fmt.Println(jsonStr)
+	return nil
 }
 
 func MoveFiles(srcPaths []string, destDir string) error {

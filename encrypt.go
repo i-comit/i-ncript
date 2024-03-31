@@ -1,13 +1,17 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
+	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
 	"io"
+	"log"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -25,11 +29,12 @@ type Encrypt struct {
 var fileProcessed = "fileProcessed"
 var fileCt = "fileCount"
 var addLogFile = "addLogFile"
+var keyFileName = ".i-ncript.🔑"
 
-func (b *Encrypt) EncryptString(stringToEncrypt string) string {
-	encryptedString, _ := encryptString([]byte(stringToEncrypt))
-	return encryptedString
-}
+// func (b *Encrypt) EncryptString(stringToEncrypt string) string {
+// 	encryptedString, _ := hashCredentials(stringToEncrypt)
+// 	return encryptedString
+// }
 
 func (a *App) EncryptFilesInDir(dirIndex int) (bool, error) {
 	filePaths, err := getFilesRecursively(a.directories[0])
@@ -57,7 +62,7 @@ func (a *App) EncryptFilesInDir(dirIndex int) (bool, error) {
 	}
 	if fileIter != 0 {
 		if a.ctx != nil {
-			a.reverseProgress(true, len(filePaths), dirIndex)
+			a.reverseProgress(true, len(filePaths))
 			return false, err
 		}
 	} else {
@@ -79,7 +84,6 @@ func (a *App) DecryptFilesInDir(dirIndex int) error {
 		if !strings.HasSuffix(filePath, ".enc") {
 			continue
 		}
-		// Encrypt the file content
 		decryptFile, err := decryptFile(filePath)
 		if err != nil {
 			return err
@@ -95,13 +99,13 @@ func (a *App) DecryptFilesInDir(dirIndex int) error {
 	}
 	if fileIter != 0 {
 		if a.ctx != nil {
-			a.reverseProgress(false, len(filePaths), dirIndex)
+			a.reverseProgress(false, len(filePaths))
 		}
 	}
 	return nil
 }
 
-func (a *App) reverseProgress(encrypt bool, files int, dirIndex int) {
+func (a *App) reverseProgress(encrypt bool, files int) {
 	runtime.EventsEmit(a.ctx, fileCt, 100)
 	runtime.EventsEmit(a.ctx, rebuildFileTree)
 	time.Sleep(1 * time.Second)
@@ -142,8 +146,8 @@ func encryptFile(filePath string) (*os.File, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	key := []byte("your-32-byte-long-aes-key-here..")
+	hashedKey := sha256.Sum256(hashedCredentials)
+	key := hashedKey[:]
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
@@ -188,13 +192,13 @@ func encryptFile(filePath string) (*os.File, error) {
 }
 
 func decryptFile(filePath string) (*os.File, error) {
-
 	data, err := os.ReadFile(filePath)
 	if err != nil {
 		return nil, err
 	}
 
-	key := []byte("your-32-byte-long-aes-key-here..")
+	hashedKey := sha256.Sum256(hashedCredentials)
+	key := hashedKey[:]
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
@@ -215,8 +219,6 @@ func decryptFile(filePath string) (*os.File, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	// Remove the .enc extension to get the original file path
 	newFilePath := filePath[:len(filePath)-len(".enc")]
 	// Create the new file for the decrypted data
 	decFile, err := os.Create(newFilePath)
@@ -235,7 +237,6 @@ func decryptFile(filePath string) (*os.File, error) {
 		os.Remove(decFile.Name()) // Cleanup the file if seek fails
 		return nil, err
 	}
-	//  delete the original encrypted file
 	if err := os.Remove(filePath); err != nil {
 		decFile.Close() // Best effort to close the decrypted file before returning error
 		return nil, err
@@ -243,8 +244,58 @@ func decryptFile(filePath string) (*os.File, error) {
 	return decFile, nil
 }
 
-func encryptString(data []byte) (string, error) {
-	key := []byte("your-32-byte-long-aes-key-here..")
+func checkCredentials(stringToCheck string) int {
+	cwd, err := os.Getwd()
+	if err != nil {
+		fmt.Printf("Failed to get current working directory: %s", err)
+		return -1
+	}
+	keyFilePath := filepath.Join(cwd, keyFileName)
+	fmt.Println("path to keyFile " + keyFilePath)
+
+	file, err := os.Open(keyFilePath)
+	if err != nil {
+		fmt.Println("Key file doesn't exist", err)
+		return 0
+	}
+	defer file.Close()
+
+	reader := bufio.NewReader(file)
+	line, isPrefix, err := reader.ReadLine()
+	if err != nil {
+		fmt.Println("Error reading line:", err)
+		return 1
+	}
+	if line == nil {
+		fmt.Println("Line is empty", err)
+		return 1
+	}
+	// Handling the case where the line is longer than the buffer
+	for isPrefix {
+		var more []byte
+		more, isPrefix, err = reader.ReadLine()
+		if err != nil {
+			fmt.Println("Error reading continuation of line:", err)
+			return 1
+		}
+		line = append(line, more...)
+	}
+
+	fmt.Println("First line of the file is:", string(line))
+	hashedStringToCheck, err := hashCredentials(stringToCheck)
+	if err != nil {
+		log.Fatalf("Failed to hash credentials to check %s", err)
+	}
+	fmt.Println("hashedStringToCheck is:", hashedStringToCheck)
+	return 2
+}
+
+func hashCredentials(stringToHash string) (string, error) {
+	byteData := []byte(_uniqueID + stringToHash)
+	hashedKey := sha256.Sum256(byteData)
+	key := hashedKey[:] // Convert to slice
+	fmt.Printf("Hashed string (32 bytes): %x\n", key)
+
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return "", err
@@ -260,6 +311,6 @@ func encryptString(data []byte) (string, error) {
 		return "", err
 	}
 
-	encrypted := aesGCM.Seal(nonce, nonce, data, nil)
+	encrypted := aesGCM.Seal(nonce, nonce, byteData, nil)
 	return hex.EncodeToString(encrypted), nil
 }

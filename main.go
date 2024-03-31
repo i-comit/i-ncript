@@ -14,8 +14,7 @@ import (
 
 //go:embed all:frontend/dist
 var assets embed.FS
-var _width = 220
-var _height = 155
+var _uniqueID = "f56bcbf2-db56-481b-a722-11c21a4b3ae2" //Change this in your build for extra security
 
 func (m *App) onSecondInstanceLaunch(data options.SecondInstanceData) {
 	// Your code to handle the second instance launch
@@ -80,7 +79,7 @@ func main() {
 			// WebviewGpuDisabled: false,
 		},
 		SingleInstanceLock: &options.SingleInstanceLock{
-			UniqueId:               "f56bcbf2-db56-481b-a722-11c21a4b3ae2",
+			UniqueId:               _uniqueID,
 			OnSecondInstanceLaunch: app.onSecondInstanceLaunch,
 		},
 		BackgroundColour: &options.RGBA{R: 80, G: 80, B: 80, A: 1},

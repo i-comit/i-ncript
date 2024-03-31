@@ -37,7 +37,7 @@
         openDirectory,
         openFile,
         currentDirPath,
-    } from "../stores/treeView.ts";
+    } from "../tools/fileTree.ts";
 
     import {
         pageName,
@@ -116,7 +116,6 @@
             // LogInfo("Mouse up");
         }
     }
-
     function onTouchStart(event: TouchEvent) {
         pointerDown = true;
         // LogInfo("Pointer down");
@@ -133,7 +132,6 @@
         }
         addToHeldFileBtnsArr(relPath, _buttonRef);
         setHeldBtnsStyle();
-        var _heldDownBtns = get(heldDownBtns);
     }
 
     onMount(() => {

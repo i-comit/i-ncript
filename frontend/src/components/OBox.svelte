@@ -6,14 +6,15 @@
     import { AppPage } from "../enums/AppPage.ts";
     import { Modals, currentModal } from "../enums/Modals.ts";
 
-    import { usernameStore } from "../stores/usernameStore";
-    import { pageChangeBtn } from "../stores/global_variables";
-    import { buildFileTree, fileTree } from "../stores/treeView";
+    import {
+        pageChangeBtn,
+    } from "../stores/globalVariables.js";
+    import { buildFileTree, fileTree } from "../tools/fileTree.ts";
 
     import { switchPages } from "../tools/utils.ts";
 
     import Frame from "./Frame.svelte";
-    import TreeView from "./TreeView.svelte";
+    import TreeView from "./FileTree.svelte";
     import Info from "./Info.svelte";
     import Settings from "./Settings.svelte";
     import Logger from "./Logger.svelte";
@@ -23,10 +24,10 @@
         _modal = value;
     });
 
-    let loggedInUser;
-    usernameStore.subscribe(($user) => {
-        loggedInUser = $user;
-    });
+    // let loggedInUser;
+    // hashedCredentials.subscribe(($user) => {
+    //     loggedInUser = $user;
+    // });
 
     onMount(() => {
         buildFileTree();

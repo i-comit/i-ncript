@@ -11,8 +11,6 @@
   import { LogDebug, LogWarning } from "../wailsjs/runtime/runtime";
   import { DirectoryWatcher } from "../wailsjs/go/main/App";
 
-    import { clearHeldBtns } from "./stores/treeView.ts";
-
   let loggedIn = false;
   let _page: AppPage;
   currentPage.subscribe((value) => {

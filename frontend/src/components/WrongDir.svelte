@@ -6,7 +6,7 @@
     import { InitializeRootFolder, CloseApp } from "../../wailsjs/go/main/App";
     import { GetRootFolder } from "../../wailsjs/go/main/Getters";
 
-    import { pageChangeBtn } from "../stores/pageChangeBtn";
+    import { pageChangeBtn } from "../stores/globalVariables";
     import Frame from "./Frame.svelte";
     let rootFolder = "";
     onMount(async () => {

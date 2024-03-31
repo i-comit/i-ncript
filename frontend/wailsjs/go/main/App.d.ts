@@ -14,7 +14,7 @@ export function EncryptFilesInDir(arg1:number):Promise<boolean>;
 
 export function InitializeRootFolder():Promise<void>;
 
-export function Login(arg1:string,arg2:string):Promise<boolean>;
+export function Login(arg1:string,arg2:string):Promise<string>;
 
 export function MinimizeApp():Promise<void>;
 
