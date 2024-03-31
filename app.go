@@ -68,10 +68,10 @@ func (a *App) InitializeRootFolder() error {
 
 // func (b *App) shutdown(ctx context.Context) {
 // }
-func (a *App) Login(username string, password string) (string, error) {
+func (a *App) Login(username string, password string) (int, error) {
 	if username == "" || password == "" {
 		fmt.Println("Username or password is empty")
-		return "", nil
+		return 0, nil
 	}
 	cwd, err := os.Getwd()
 	if err != nil {
@@ -79,10 +79,10 @@ func (a *App) Login(username string, password string) (string, error) {
 	}
 	filePath := filepath.Join(cwd, keyFileName)
 
-	var hasKey int
-	hasKey = checkCredentials(username + password)
+	var loginStat int
+	loginStat = checkCredentials(username + password)
 
-	switch hasKey {
+	switch loginStat {
 	case 0: //Key file does not exist
 		file, err := os.Create(filePath)
 		if err != nil {
@@ -100,9 +100,9 @@ func (a *App) Login(username string, password string) (string, error) {
 		fmt.Printf("File created: %s", filePath)
 		hashedCredentials = []byte(_hashedCredentials)
 	case 1:
-		file, err := os.Create(filePath)
+		file, err := os.Open(filePath)
 		if err != nil {
-			log.Fatalf("Failed to create file: %s", err)
+			log.Fatalf("Failed to open file: %s", err)
 		}
 		defer file.Close()
 		_hashedCredentials, err := hashCredentials(username + password)
@@ -115,26 +115,25 @@ func (a *App) Login(username string, password string) (string, error) {
 		}
 		fmt.Printf("File created: %s", filePath)
 		hashedCredentials = []byte(_hashedCredentials)
-	}
+	case 2:
+		if a.ctx != nil {
+			a.ResizeWindow(_width*2, _height+25, false)
+		}
+		for i, dir := range a.directories {
+			a.directories[i] = cwd + string(os.PathSeparator) + dir
+		}
+		err = createDirectories(a.directories...)
+		if err != nil {
+			log.Fatal(err)
+		}
 
-	if a.ctx != nil {
-		a.ResizeWindow(_width*2, _height+25, false)
+		tree, err := a.BuildDirectoryFileTree(0)
+		if err != nil {
+			log.Fatalf("Failed to write to file: %s", err)
+		}
+		printFileTree(tree, false)
 	}
-	for i, dir := range a.directories {
-		a.directories[i] = cwd + string(os.PathSeparator) + dir
-	}
-	err = createDirectories(a.directories...)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	tree, err := a.BuildDirectoryFileTree(0)
-	if err != nil {
-		fmt.Println("Error building file tree:", err)
-		return "", err
-	}
-	printFileTree(tree, false)
-	return "_hashedCredentials", nil
+	return loginStat, nil
 }
 
 func (a *App) ResizeWindow(width int, height int, recenter bool) {

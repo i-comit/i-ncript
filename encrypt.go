@@ -276,7 +276,6 @@ func checkCredentials(stringToCheck string) int {
 		more, isPrefix, err = reader.ReadLine()
 		if err != nil {
 			fmt.Println("Error reading continuation of line:", err)
-			return 1
 		}
 		line = append(line, more...)
 	}
@@ -284,17 +283,21 @@ func checkCredentials(stringToCheck string) int {
 	fmt.Println("First line of the file is:", string(line))
 	hashedStringToCheck, err := hashCredentials(stringToCheck)
 	if err != nil {
-		log.Fatalf("Failed to hash credentials to check %s", err)
+		log.Printf("Failed to hash credentials to check %s", err)
 	}
 	fmt.Println("hashedStringToCheck is:", hashedStringToCheck)
-	return 2
+	if string(line) == hashedStringToCheck {
+		log.Printf("String matched with key hash")
+		return 2
+	}
+	return 3 //String does not match with key hash
 }
 
 func hashCredentials(stringToHash string) (string, error) {
 	byteData := []byte(_uniqueID + stringToHash)
 	hashedKey := sha256.Sum256(byteData)
 	key := hashedKey[:] // Convert to slice
-	fmt.Printf("Hashed string (32 bytes): %x\n", key)
+	// fmt.Printf("Hashed string (32 bytes): %x\n", key)
 
 	block, err := aes.NewCipher(key)
 	if err != nil {
@@ -306,11 +309,14 @@ func hashCredentials(stringToHash string) (string, error) {
 		return "", err
 	}
 
-	nonce := make([]byte, aesGCM.NonceSize())
-	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
-		return "", err
-	}
+	// Nonce is usually critical for security in AES-GCM. Here, we omit it to meet the requirement,
+	// Be aware this makes the encryption deterministic and less secure.
+	// nonce := make([]byte, aesGCM.NonceSize())
+	// if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
+	// 	return "", err
+	// }
+	// encrypted := aesGCM.Seal(nonce, nonce, byteData, nil)
 
-	encrypted := aesGCM.Seal(nonce, nonce, byteData, nil)
+	encrypted := aesGCM.Seal(nil, make([]byte, aesGCM.NonceSize()), byteData, nil) // Using a zero nonce
 	return hex.EncodeToString(encrypted), nil
 }

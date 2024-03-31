@@ -9,7 +9,6 @@
     import { AppPage, currentPage } from "../enums/AppPage.ts";
     import { Modals, currentModal } from "../enums/Modals.ts";
 
-    import { hashedCredentials } from "../stores/hashedCredentials.js";
     import { pageChangeBtn } from "../stores/globalVariables.js";
     import {
         buildFileTree,
@@ -23,11 +22,6 @@
     import Settings from "./Settings.svelte";
     import TreeView from "./FileTree.svelte";
     import Logger from "./Logger.svelte";
-
-    let loggedInUser;
-    hashedCredentials.subscribe(($user) => {
-        loggedInUser = $user;
-    });
 
     let _modal: Modals;
     currentModal.subscribe((value) => {

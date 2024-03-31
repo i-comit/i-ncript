@@ -1,21 +1,37 @@
 <!-- Login.svelte -->
 <script>
-    import { createEventDispatcher } from "svelte";
+    import { createEventDispatcher, onMount, onDestroy } from "svelte";
 
     import { Modals, currentModal } from "../enums/Modals";
 
     import { Login, ResizeWindow } from "../../wailsjs/go/main/App";
-    import { Button, Input, GradientButton, Tooltip } from "flowbite-svelte";
+    import {
+        Button,
+        Input,
+        GradientButton,
+        Tooltip,
+        Popover,
+    } from "flowbite-svelte";
+    // import { Popover, Label, Input, Checkbox, Button } from 'flowbite-svelte';
+    import { CheckOutline, CloseOutline } from "flowbite-svelte-icons";
     import { switchModals } from "../tools/utils";
     import {
         InfoCircleOutline,
         AdjustmentsVerticalOutline,
     } from "flowbite-svelte-icons";
 
+    import {
+        startDisplay,
+        stopDisplay,
+        getDisplayString,
+        alertInterval,
+    } from "../tools/logger";
+    let displayString = "";
+
     import Frame from "./Frame.svelte";
     import Info from "./Info.svelte";
     import Settings from "./Settings.svelte";
-    import { hashedCredentials } from "../stores/hashedCredentials";
+    import { LogDebug } from "../../wailsjs/runtime/runtime";
 
     const appName = __APP_NAME__;
     const appVersion = __APP_VERSION__;
@@ -26,10 +42,22 @@
     async function submit(event) {
         event.preventDefault();
         try {
-            await Login(username, password).then((_hashedCredentials) => {
-                if (_hashedCredentials) {
-                    dispatch("loginSuccess");
-                    hashedCredentials.set(_hashedCredentials);
+            await Login(username, password).then((loginResult) => {
+                switch (loginResult) {
+                    case 0:
+                        break;
+                    case 1:
+                        startDisplay("AMogus");
+                        LogDebug("Case 1 login");
+                        break;
+                    case 2:
+                        dispatch("loginSuccess");
+                        break;
+                    case 3:
+                        LogDebug("Case 3 login");
+                        stopDisplay();
+                        startDisplay("wrong credentials");
+                        break;
                 }
             });
         } catch (error) {
@@ -40,6 +68,21 @@
     currentModal.subscribe((value) => {
         _modal = value;
     });
+
+    onMount(() => {
+        startDisplay("Hello Svelte");
+        // Subscribe to changes in displayString
+        const interval = setInterval(() => {
+            displayString = getDisplayString();
+        }, alertInterval);
+
+        return () => {
+            clearInterval(interval);
+        };
+    });
+    onDestroy(() => {
+        stopDisplay();
+    });
 </script>
 
 <form
@@ -47,7 +90,9 @@
     autocomplete="off"
     class="login-form flex-col rounded-lg"
 >
-    <!-- <p class="bg-gray-100">alert text</p> -->
+    <p class="absolute top-0 left-0 text-justify w-screen pl-2 pt-1 text-sm">
+        {displayString}
+    </p>
     <Frame />
     <!-- <div class=" pt-5"></div> -->
     <div class="loginField">
@@ -92,6 +137,37 @@
                     required
                 />
             </div>
+            <Popover class="text-sm h-2 w-20" placement="bottom">
+                <h3 class="font-semibold text-gray-900 dark:text-white">
+                    Must have at least 6 characters
+                </h3>
+                <div class="grid grid-cols-4 gap-2">
+                    <div class="h-1 bg-orange-300 dark:bg-orange-400" />
+                    <div class="h-1 bg-orange-300 dark:bg-orange-400" />
+                    <div class="h-1 bg-gray-200 dark:bg-gray-600" />
+                    <div class="h-1 bg-gray-200 dark:bg-gray-600" />
+                </div>
+                <p class="py-2">It’s better to have:</p>
+                <ul>
+                    <li class="flex items-center mb-1">
+                        <CheckOutline
+                            class="me-2 w-4 h-4 text-green-400 dark:text-green-500"
+                        />
+                        Upper &amp; lower case letters
+                    </li>
+                    <li class="flex items-center mb-1">
+                        <CheckOutline
+                            class="me-2 w-4 h-4 text-green-400 dark:text-green-500"
+                        />
+                        A symbol (#$&amp;)
+                    </li>
+                    <li class="flex items-center">
+                        <CloseOutline
+                            class="me-2 w-4 h-4 text-gray-300 dark:text-gray-400"
+                        />A longer password (min. 12 chars.)
+                    </li>
+                </ul>
+            </Popover>
         {:else if _modal === Modals.Settings}
             <Settings />
         {:else if _modal === Modals.Info}
