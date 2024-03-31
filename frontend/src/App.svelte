@@ -32,7 +32,7 @@
 </script>
 
 <main
-  class="rounded-2xl"
+  class="rounded-lg"
 >
   {#if !isRightDir}
     <WrongDir />

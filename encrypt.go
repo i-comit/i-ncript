@@ -80,7 +80,6 @@ func (a *App) DecryptFilesInDir(dirIndex int) error {
 	a.closeDirectoryWatcher()
 	var fileIter = 0
 	for i, filePath := range filePaths {
-
 		if !strings.HasSuffix(filePath, ".enc") {
 			continue
 		}
@@ -262,12 +261,8 @@ func checkCredentials(stringToCheck string) int {
 
 	reader := bufio.NewReader(file)
 	line, isPrefix, err := reader.ReadLine()
-	if err != nil {
+	if err != nil || line == nil {
 		fmt.Println("Error reading line:", err)
-		return 1
-	}
-	if line == nil {
-		fmt.Println("Line is empty", err)
 		return 1
 	}
 	// Handling the case where the line is longer than the buffer
@@ -276,6 +271,7 @@ func checkCredentials(stringToCheck string) int {
 		more, isPrefix, err = reader.ReadLine()
 		if err != nil {
 			fmt.Println("Error reading continuation of line:", err)
+			return 1
 		}
 		line = append(line, more...)
 	}
@@ -284,13 +280,16 @@ func checkCredentials(stringToCheck string) int {
 	hashedStringToCheck, err := hashCredentials(stringToCheck)
 	if err != nil {
 		log.Printf("Failed to hash credentials to check %s", err)
+		return -1
 	}
 	fmt.Println("hashedStringToCheck is:", hashedStringToCheck)
 	if string(line) == hashedStringToCheck {
 		log.Printf("String matched with key hash")
 		return 2
+	} else {
+		log.Printf("String not matched with key hash")
+		return 3
 	}
-	return 3 //String does not match with key hash
 }
 
 func hashCredentials(stringToHash string) (string, error) {

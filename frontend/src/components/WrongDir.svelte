@@ -18,7 +18,7 @@
     }
 </script>
 
-<div>
+<div class="rounded-lg">
     <Frame />
     <div class="h-6" />
     <p>app must run inside a folder named {rootFolder}</p>

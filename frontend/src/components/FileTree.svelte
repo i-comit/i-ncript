@@ -233,7 +233,7 @@
     on:touchstart={onTouchStart}
     on:touchend={onTouchEnd}
 />
-<div class="bg-gray-300" role="none" on:click={clearHeldBtns}>
+<div class="bg-gray-300 rounded-lg" role="none" on:click={clearHeldBtns}>
     <button
         class="z-10 fixed top-0 left-1/2 transform -translate-x-1/2 mt-0.5"
         style="--wails-draggable:drag"
@@ -321,7 +321,7 @@
                         </button>
                     {/if}
                 {:catch error}
-                    <p>There was an error: {error.message}</p>
+                    <p>nothing here yet..</p>
                 {/await}
 
                 {#if pointerDown}

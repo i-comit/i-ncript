@@ -118,7 +118,7 @@
     }
 </script>
 
-<div class="flex h-screen rounded-lg">
+<div class="flex h-screen !rounded-lg">
     <Frame />
     <div id="left-panel" class="w-45" role="none" on:mousedown={clearHeldBtns}>
         <div id="page-info" class="static">

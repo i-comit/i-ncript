@@ -9,7 +9,7 @@ export function clearLogEntries(entry: string) {
     logEntries.set([]);
 }
 
-export let alertInterval = 20;
+export let alertInterval = 25;
 let inputString = 'Hello';
 let displayString = '';
 let index = 0;
@@ -58,9 +58,10 @@ export function stopDisplay() {
     if (displayInterval !== null) {
         clearInterval(displayInterval);
         displayInterval = null;
-        index = 0;
-        displayString = ""
     }
+    index = 0;
+    adding = true
+    displayString = ""
 }
 
 export function getDisplayString() {

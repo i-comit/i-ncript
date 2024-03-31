@@ -78,9 +78,9 @@ func (a *App) Login(username string, password string) (int, error) {
 		log.Fatalf("Failed to get CWD: %s", err)
 	}
 	filePath := filepath.Join(cwd, keyFileName)
-
+	var credentials = username + password
 	var loginStat int
-	loginStat = checkCredentials(username + password)
+	loginStat = checkCredentials(credentials)
 
 	switch loginStat {
 	case 0: //Key file does not exist
@@ -89,33 +89,10 @@ func (a *App) Login(username string, password string) (int, error) {
 			log.Fatalf("Failed to create file: %s", err)
 		}
 		defer file.Close()
-		_hashedCredentials, err := hashCredentials(username + password)
-		if err != nil {
-			log.Fatalf("Failed to encrypt: %s", err)
-		}
-		_, err = file.WriteString(_hashedCredentials)
-		if err != nil {
-			log.Fatalf("Failed to write to file: %s", err)
-		}
-		fmt.Printf("File created: %s", filePath)
-		hashedCredentials = []byte(_hashedCredentials)
-	case 1:
-		file, err := os.Open(filePath)
-		if err != nil {
-			log.Fatalf("Failed to open file: %s", err)
-		}
-		defer file.Close()
-		_hashedCredentials, err := hashCredentials(username + password)
-		if err != nil {
-			log.Fatalf("Failed to encrypt: %s", err)
-		}
-		_, err = file.WriteString(_hashedCredentials)
-		if err != nil {
-			log.Fatalf("Failed to write to file: %s", err)
-		}
-		fmt.Printf("File created: %s", filePath)
-		hashedCredentials = []byte(_hashedCredentials)
-	case 2:
+		a.grantAccessToApp(file, credentials)
+	case 1: //File exists but is empty
+		break
+	case 2: //credentials match file hash
 		if a.ctx != nil {
 			a.ResizeWindow(_width*2, _height+25, false)
 		}
@@ -126,7 +103,6 @@ func (a *App) Login(username string, password string) (int, error) {
 		if err != nil {
 			log.Fatal(err)
 		}
-
 		tree, err := a.BuildDirectoryFileTree(0)
 		if err != nil {
 			log.Fatalf("Failed to write to file: %s", err)
@@ -134,6 +110,38 @@ func (a *App) Login(username string, password string) (int, error) {
 		printFileTree(tree, false)
 	}
 	return loginStat, nil
+}
+
+func (a *App) grantAccessToApp(file *os.File, credentials string) {
+	cwd, err := os.Getwd()
+	if err != nil {
+		log.Fatalf("Failed to get CWD: %s", err)
+	}
+	_hashedCredentials, err := hashCredentials(credentials)
+	if err != nil {
+		log.Fatalf("Failed to encrypt: %s", err)
+	}
+	_, err = file.WriteString(_hashedCredentials)
+	if err != nil {
+		log.Fatalf("Failed to write to file: %s", err)
+	}
+	fmt.Printf("File created: %s", cwd+file.Name())
+	hashedCredentials = []byte(_hashedCredentials)
+	if a.ctx != nil {
+		a.ResizeWindow(_width*2, _height+25, false)
+	}
+	for i, dir := range a.directories {
+		a.directories[i] = cwd + string(os.PathSeparator) + dir
+	}
+	err = createDirectories(a.directories...)
+	if err != nil {
+		log.Fatal(err)
+	}
+	tree, err := a.BuildDirectoryFileTree(0)
+	if err != nil {
+		log.Fatalf("Failed to write to file: %s", err)
+	}
+	printFileTree(tree, false)
 }
 
 func (a *App) ResizeWindow(width int, height int, recenter bool) {

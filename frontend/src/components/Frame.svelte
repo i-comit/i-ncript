@@ -16,16 +16,13 @@
 </script>
 
 <div
-    class=" window-controls h-6 w-screen flex justify-end py-0.5 px-0"
+    class=" window-controls h-6 w-screen flex justify-end py-0.5 px-0 rounded-lg"
     style="--wails-draggable:drag"
 >
-    <Button pill={true} class="!p-1 control-button !z-10" on:click={minimizeApp}
+    <Button pill={true} class="!p-1 !z-10" on:click={minimizeApp}
         ><MinusOutline class="w-5 h-5 m-0 p-0" color="white" /></Button
     >
-    <Button
-        pill={true}
-        class="!p-1 control-button !z-10"
-        on:click={CloseApp}
+    <Button pill={true} class="!p-1 !z-10" on:click={CloseApp}
         ><CloseOutline class="w-5 h-5 m-0 p-0" color="white" /></Button
     >
 </div>
@@ -35,11 +32,5 @@
         position: absolute;
         top: 0px;
         right: 0px;
-    }
-
-    .control-button {
-        cursor: pointer;
-        padding: 0;
-        margin: 0;
     }
 </style>

@@ -32,7 +32,7 @@
     });
 </script>
 
-<div class="flex h-screen rounded-lg">
+<div class="flex h-screen !rounded-lg">
     <Frame />
     <div id="left-panel" class="max-w-45">
         <div id="page-info" class="static">

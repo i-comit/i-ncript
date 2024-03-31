@@ -44,19 +44,15 @@
         try {
             await Login(username, password).then((loginResult) => {
                 switch (loginResult) {
-                    case 0:
-                        break;
-                    case 1:
-                        startDisplay("AMogus");
-                        LogDebug("Case 1 login");
-                        break;
-                    case 2:
+                    case 0: //File does not exist
+                    case 2: //hash matched with key
                         dispatch("loginSuccess");
                         break;
+                    case 1: //File is empty
+                        startDisplay("key file is empty...");
+                        break;
                     case 3:
-                        LogDebug("Case 3 login");
-                        stopDisplay();
-                        startDisplay("wrong credentials");
+                        startDisplay("wrong credentials...");
                         break;
                 }
             });
@@ -70,8 +66,6 @@
     });
 
     onMount(() => {
-        startDisplay("Hello Svelte");
-        // Subscribe to changes in displayString
         const interval = setInterval(() => {
             displayString = getDisplayString();
         }, alertInterval);
@@ -137,7 +131,7 @@
                     required
                 />
             </div>
-            <Popover class="text-sm h-2 w-20" placement="bottom">
+            <!-- <Popover class="text-sm h-2 w-20" placement="bottom">
                 <h3 class="font-semibold text-gray-900 dark:text-white">
                     Must have at least 6 characters
                 </h3>
@@ -167,7 +161,7 @@
                         />A longer password (min. 12 chars.)
                     </li>
                 </ul>
-            </Popover>
+            </Popover> -->
         {:else if _modal === Modals.Settings}
             <Settings />
         {:else if _modal === Modals.Info}
