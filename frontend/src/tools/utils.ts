@@ -11,11 +11,11 @@ import {
     GetDirectoryPath,
     GetFileProperties
 } from "../../wailsjs/go/main/Getters";
-import { LogDebug, LogError, LogTrace, LogWarning } from "../../wailsjs/runtime/runtime";
+import { LogDebug, LogError, LogInfo, LogTrace, LogWarning } from "../../wailsjs/runtime/runtime";
 import { MoveFilesToPath } from '../../wailsjs/go/main/FileUtils';
 import { clearHeldBtns, setIsInFileTask } from './fileTree';
 
-import { width, height } from "../stores/globalVariables.js"
+import { width, height } from "../stores/globalVariables.ts"
 
 export const pageName: () => string = () => {
     const _appPage: AppPage = get(currentPage);

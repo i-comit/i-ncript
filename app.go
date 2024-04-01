@@ -139,11 +139,11 @@ func (a *App) grantAccessToApp(file *os.File, credentials string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	tree, err := a.BuildDirectoryFileTree(0)
+	fileTree, err := a.BuildDirectoryFileTree(0)
 	if err != nil {
 		log.Fatalf("Failed to write to file: %s", err)
 	}
-	printFileTree(tree, false)
+	printFileTree(fileTree, false)
 }
 
 func (a *App) ResizeWindow(width int, height int) {

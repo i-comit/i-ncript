@@ -200,7 +200,7 @@
         on:click={clearHeldBtns}
     >
         {#if _modal === Modals.None}
-            <TreeView fileTree={$fileTree} />
+            <TreeView _fileTree={$fileTree} />
         {:else if _modal === Modals.Settings}
             <Settings />
         {:else if _modal === Modals.Info}

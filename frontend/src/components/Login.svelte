@@ -89,7 +89,6 @@
     let usernameCheck = false;
     function queryUsernameStrength() {
         const regex = /^.{5,}$/;
-        LogDebug("DERP " + usernameCheck);
         usernameCheck = regex.test(username);
     }
 
@@ -165,7 +164,7 @@
                     placement="bottom"
                     offset={0}
                     class={tooltipTailwindClass}
-                    arrow={false}>more than 5 characters</Tooltip
+                    arrow={false}>more than 4 characters</Tooltip
                 >
             </div>
             <div class="field">
@@ -187,7 +186,7 @@
                 <Tooltip
                     placement="left"
                     class={tooltipTailwindClass}
-                    arrow={false}>more than 5 characters</Tooltip
+                    arrow={false}>more than 4 characters</Tooltip
                 >
                 <div
                     class="flex-1 text-center"
