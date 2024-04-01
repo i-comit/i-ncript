@@ -63,7 +63,7 @@ export function switchModals(modal: Modals) {
                 if (_currentPage === AppPage.Login)
                     ResizeWindow(width, height)
                 else
-                    ResizeWindow(width * 2, height)
+                    ResizeWindow(width * 2, height + 15)
 
             } catch (error) {
                 console.error("Error calling ResizeWindow", error);
@@ -73,9 +73,9 @@ export function switchModals(modal: Modals) {
         default:
             try {
                 if (_currentPage === AppPage.Login)
-                    ResizeWindow(width, height)
+                    ResizeWindow(width, height + 15)
                 else
-                    ResizeWindow(width * 2, height)
+                    ResizeWindow(width * 2, height + 15)
             } catch (error) {
                 LogTrace("Error calling ResizeWindow: " + error);
             }

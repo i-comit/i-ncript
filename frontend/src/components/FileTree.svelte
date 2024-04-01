@@ -168,18 +168,20 @@
     function handleMouseEnter() {
         if (basePath(_fileTree.relPath) === pageName()) return;
         GetDirectoryPath(pageIndex()).then((filePath) => {
-            getFileProperties(filePath + _fileTree.relPath).then((fileProps) => {
-                _filePropsTooltip = `${fileProps.modifiedDate} | ${formatFileSize(fileProps.fileSize)}`;
-                // LogPrint("RelativePath " + tree.relPath);
-                if (!_fileTree.children) {
-                    isFile().then((_isFile) => {
-                        if (_isFile) currentFilePath.set(_fileTree.relPath);
-                    });
-                } else {
-                    currentDirPath.set(_fileTree.relPath);
-                    LogInfo("current Dir Path " + get(currentDirPath));
-                }
-            });
+            getFileProperties(filePath + _fileTree.relPath).then(
+                (fileProps) => {
+                    _filePropsTooltip = `${fileProps.modifiedDate} | ${formatFileSize(fileProps.fileSize)}`;
+                    // LogPrint("RelativePath " + tree.relPath);
+                    if (!_fileTree.children) {
+                        isFile().then((_isFile) => {
+                            if (_isFile) currentFilePath.set(_fileTree.relPath);
+                        });
+                    } else {
+                        currentDirPath.set(_fileTree.relPath);
+                        LogInfo("current Dir Path " + get(currentDirPath));
+                    }
+                },
+            );
         });
     }
 
@@ -237,7 +239,7 @@
         ? "position: sticky; top: 0; z-index: 10; background-color: green !important"
         : "position: relative;"}  -->
     <ul
-        class={basePath(_fileTree.relPath) === pageName() ? "pl-0.5" : "pl-3"}
+        class={basePath(_fileTree.relPath) === pageName() ? "pl-1" : "pl-3"}
         style={basePath(_fileTree.relPath) === pageName()
             ? "padding-top: 1px;font-size: 15px;color:black;--wails-draggable:drag;"
             : "margin-top: -2px;color:white;--wails-draggable:no-drag; margin-bottom: 0px"}
@@ -245,6 +247,9 @@
         <li>
             {#if _fileTree.children && _fileTree.children.length > 0}<!-- Folder with children -->
                 <button
+                    style={basePath(_fileTree.relPath) === pageName()
+                        ? "position: sticky; top: 1px; z-index: 5; background-color:blue"
+                        : "position: relative;"}
                     on:click={() => {
                         toggleExpansion();
                         clearHeldBtns();
@@ -262,14 +267,14 @@
                 </button>
                 {#if pointerDown}
                     {#if Object.keys(_heldDownBtns).length > 0}
-                        <Tooltip class={tooltipTailwindClass}
+                        <Tooltip class={tooltipTailwindClass} offset={1}
                             >Move {Object.keys(_heldDownBtns).length} files to {basePath(
                                 _fileTree.relPath,
                             )}</Tooltip
                         >
                     {/if}
-                {:else}
-                    <Tooltip class={tooltipTailwindClass}
+                {:else if basePath(_fileTree.relPath) !== pageName()}
+                    <Tooltip class={tooltipTailwindClass} offset={1}
                         >{basePath(_fileTree.relPath)}</Tooltip
                     >
                 {/if}
@@ -297,7 +302,8 @@
                             on:mouseup={() => {
                                 moveFilesFromFileNode();
                             }}
-                            on:dblclick={() => handleDblClick(_fileTree.relPath)}
+                            on:dblclick={() =>
+                                handleDblClick(_fileTree.relPath)}
                         >
                             {_label}
                         </button>
@@ -320,7 +326,7 @@
                 {#if pointerDown}
                     <Tooltip
                         class={tooltipTailwindClass}
-                        offset={-1}
+                        offset={1}
                         arrow={true}
                         >Move {Object.keys(_heldDownBtns).length} files to {basePath(
                             removeFileName(_fileTree.relPath),

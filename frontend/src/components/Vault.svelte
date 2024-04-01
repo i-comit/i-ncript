@@ -113,7 +113,7 @@
 
 <div class="flex h-screen !rounded-lg">
     <Frame />
-    <div id="left-panel" class="w-45" role="none" on:mousedown={clearHeldBtns}>
+    <div id="left-panel" class="mr-0.5 rounded-lg" role="none" on:mousedown={clearHeldBtns}>
         <div id="page-info" class="static">
             <p>VAULT</p>
             <Button
@@ -195,7 +195,7 @@
     <div
         id="right-panel"
         role="none"
-        class="bg-gray-500 mt-0 px-0"
+        class="bg-gray-500 ml-0.5 rounded-lg"
         on:mouseleave={onmouseleave}
         on:click={clearHeldBtns}
     >

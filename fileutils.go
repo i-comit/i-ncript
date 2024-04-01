@@ -42,7 +42,6 @@ func (f *FileUtils) MoveFilesToPath(filePaths []string, targetPath string) {
 				// runtime.LogError(f.app.ctx, "This file already belongs in the targetPath")
 				continue
 			}
-
 			newFilePath := filepath.Join(targetPath, filepath.Base(files))
 			// Move the file
 			err := os.Rename(files, newFilePath)

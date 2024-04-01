@@ -13,6 +13,7 @@ import (
 	"log"
 	"path/filepath"
 	"strings"
+	"sync/atomic"
 	"time"
 
 	"os"
@@ -72,12 +73,12 @@ func (a *App) EncryptFilesInDir(dirIndex int) (bool, error) {
 }
 
 func (a *App) DecryptFilesInDir(dirIndex int) error {
+	a.closeDirectoryWatcher()
 	filePaths, err := getFilesRecursively(a.directories[0])
 	fmt.Println("\033[32mdirectories[0] ", a.directories[0], "\033[0m")
 	if err != nil {
 		return err
 	}
-	a.closeDirectoryWatcher()
 	var fileIter = 0
 	for i, filePath := range filePaths {
 		if !strings.HasSuffix(filePath, ".enc") {
@@ -171,11 +172,35 @@ func encryptFile(filePath string) (*os.File, error) {
 	}
 	defer encFile.Close() // Ensure the file is closed when the function returns
 
-	if _, err := encFile.Write(encrypted); err != nil {
-		encFile.Close()           // Attempt to close the file on error
-		os.Remove(encFile.Name()) // Cleanup the file if write fails
-		return nil, err
+	done := make(chan struct{})
+	var writtenBytes int64 //May cause alignment problems on 32 bit systems
+	if len(data) > 10*1024*1024 {
+		go func() {
+			ticker := time.NewTicker(5 * time.Millisecond)
+			defer ticker.Stop()
+			for {
+				select {
+				case <-ticker.C:
+					fmt.Printf("Encryption: %d/%d bytes\n", atomic.LoadInt64(&writtenBytes), len(encrypted))
+				case <-done:
+					return
+				}
+			}
+		}()
 	}
+	chunkSize := 2 * 1024 // 2KB Chunk
+	for i := 0; i < len(encrypted); i += chunkSize {
+		end := i + chunkSize
+		if end > len(encrypted) {
+			end = len(encrypted)
+		}
+		n, err := encFile.Write(encrypted[i:end])
+		if err != nil {
+			return nil, fmt.Errorf("failed to write file: %w", err)
+		}
+		atomic.AddInt64(&writtenBytes, int64(n))
+	}
+	close(done)
 	if _, err := encFile.Seek(0, 0); err != nil {
 		encFile.Close()           // Attempt to close the file on error
 		os.Remove(encFile.Name()) // Cleanup the file if seek fails
@@ -219,25 +244,51 @@ func decryptFile(filePath string) (*os.File, error) {
 		return nil, err
 	}
 	newFilePath := filePath[:len(filePath)-len(".enc")]
-	// Create the new file for the decrypted data
 	decFile, err := os.Create(newFilePath)
 	if err != nil {
 		return nil, err
 	}
 	defer decFile.Close()
 
-	if _, err := decFile.Write(decrypted); err != nil {
-		decFile.Close()           // Attempt to close the file on error
-		os.Remove(decFile.Name()) // Cleanup the file if write fails
-		return nil, err
+	done := make(chan struct{})
+	var writtenBytes int64
+	//Use atomic.Int64 w/ writtenBytes.Load() for compatibility with 32bit systems
+	if len(data) > 10*1024*1024 {
+		go func() {
+			ticker := time.NewTicker(10 * time.Millisecond)
+			defer ticker.Stop()
+			for {
+				select {
+				case <-ticker.C:
+					fmt.Printf("Decryption: %d/%d bytes\n", atomic.LoadInt64(&writtenBytes), len(decrypted))
+				case <-done:
+					return
+				}
+			}
+		}()
 	}
+	chunkSize := 2 * 1024 // Define a suitable chunk size, e.g., 2KB
+	for i := 0; i < len(decrypted); i += chunkSize {
+		end := i + chunkSize
+		if end > len(decrypted) {
+			end = len(decrypted)
+		}
+		n, err := decFile.Write(decrypted[i:end])
+		if err != nil {
+			return nil, fmt.Errorf("failed to write file: %w", err)
+		}
+		// writtenBytes.Add(int64(n)) // if writtenBytes atomic.Int64
+		atomic.AddInt64(&writtenBytes, int64(n))
+	}
+	close(done)
+
 	if _, err := decFile.Seek(0, 0); err != nil {
-		decFile.Close()           // Attempt to close the file on error
-		os.Remove(decFile.Name()) // Cleanup the file if seek fails
+		decFile.Close()
+		os.Remove(decFile.Name())
 		return nil, err
 	}
 	if err := os.Remove(filePath); err != nil {
-		decFile.Close() // Best effort to close the decrypted file before returning error
+		decFile.Close()
 		return nil, err
 	}
 	return decFile, nil
@@ -276,13 +327,12 @@ func checkCredentials(stringToCheck string) int {
 		line = append(line, more...)
 	}
 
-	fmt.Println("First line of the file is:", string(line))
+	// fmt.Println("First line of the file is:", string(line))
 	hashedStringToCheck, err := hashCredentials(stringToCheck)
 	if err != nil {
 		log.Printf("Failed to hash credentials to check %s", err)
 		return -1
 	}
-	fmt.Println("hashedStringToCheck is:", hashedStringToCheck)
 	if string(line) == hashedStringToCheck {
 		log.Printf("String matched with key hash")
 		return 2
