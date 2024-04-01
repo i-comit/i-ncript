@@ -6,9 +6,7 @@
     import { AppPage } from "../enums/AppPage.ts";
     import { Modals, currentModal } from "../enums/Modals.ts";
 
-    import {
-        pageChangeBtn,
-    } from "../stores/globalVariables.ts";
+    import { pageChangeBtn } from "../stores/globalVariables.ts";
     import { buildFileTree, fileTree } from "../tools/fileTree.ts";
 
     import { switchPages } from "../tools/utils.ts";
@@ -83,13 +81,13 @@
     </div>
     <div id="right-panel" class="bg-gray-500 mt-6 px-0">
         {#if _modal === Modals.None}
-            <TreeView tree={$fileTree} />
+            <TreeView fileTree={$fileTree} />
         {:else if _modal === Modals.Settings}
             <Settings />
-        {:else if _modal === Modals.Logger}
-            <Logger />
         {:else if _modal === Modals.Info}
             <Info />
+        {:else if _modal === Modals.Logger}
+            <Logger />
         {/if}
     </div>
 </div>

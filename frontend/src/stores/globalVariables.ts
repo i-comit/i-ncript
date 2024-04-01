@@ -6,3 +6,6 @@ export const rootFolder = '------';
 
 export const width = 220
 export const height = 180
+
+export const accentColor = "#95c7db"
+export const darkColor = "#757575"

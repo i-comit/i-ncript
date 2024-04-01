@@ -32,12 +32,14 @@
     import Frame from "./Frame.svelte";
     import Info from "./Info.svelte";
     import Settings from "./Settings.svelte";
-    import { LogDebug } from "../../wailsjs/runtime/runtime";
     import {
         height,
         width,
         tooltipTailwindClass,
+        accentColor,
+        darkColor,
     } from "../stores/globalVariables.ts";
+    import { LogDebug, LogTrace } from "../../wailsjs/runtime/runtime.js";
 
     const appName = __APP_NAME__;
     const appVersion = __APP_VERSION__;
@@ -83,6 +85,32 @@
     onDestroy(() => {
         stopDisplay();
     });
+
+    let usernameCheck = false;
+    function queryUsernameStrength() {
+        const regex = /^.{5,}$/;
+        LogDebug("DERP " + usernameCheck);
+        usernameCheck = regex.test(username);
+    }
+
+    let passwordCheck1 = false; // Length check
+    let passwordCheck2 = false; // Uppercase and lowercase check
+    let passwordCheck3 = false; // Symbol check
+    let passwordCheck = false; // Overall password strength check
+
+    function queryPasswordStrength() {
+        // Check 1: Length is more than 5 characters
+        const regexLength = /^.{5,}$/;
+        passwordCheck1 = regexLength.test(password);
+        // Check 2: At least one uppercase and one lowercase letter
+        const regexLetters = /^(?=.*[A-Z])(?=.*[a-z])/;
+        passwordCheck2 = regexLetters.test(password);
+        // Check 3: At least one symbol from the set !@#$
+        const regexSymbol = /[~!@#$%^&*_=+<>:;]/;
+        passwordCheck3 = regexSymbol.test(password);
+
+        passwordCheck = passwordCheck1 && passwordCheck2 && passwordCheck3;
+    }
 </script>
 
 <form
@@ -124,16 +152,20 @@
                     placeholder="enter username.."
                     type="text"
                     bind:value={username}
+                    on:keyup={queryUsernameStrength}
                     required
                 />
             </div>
             <div class="flex w-full h-1.5 px-0.5 relative bottom-2">
-                <div class="flex-1 text-center bg-gray-200 rounded-lg"></div>
+                <div
+                    class="flex-1 text-center rounded-lg"
+                    style={`background-color: ${usernameCheck ? accentColor : darkColor};`}
+                ></div>
                 <Tooltip
                     placement="bottom"
                     offset={0}
                     class={tooltipTailwindClass}
-                    arrow={false}>&gt;= 5 characters</Tooltip
+                    arrow={false}>more than 5 characters</Tooltip
                 >
             </div>
             <div class="field">
@@ -143,24 +175,34 @@
                     placeholder="enter password.."
                     type="password"
                     bind:value={password}
+                    on:keyup={queryPasswordStrength}
                     required
                 />
             </div>
-            <div class="flex w-full h-1.5  px-0.5 relative bottom-2">
-                <div class="flex-1 text-center bg-gray-200 rounded-l-lg"></div>
+            <div class="flex w-full h-1.5 px-0.5 relative bottom-2">
+                <div
+                    class="flex-1 text-center rounded-l-lg"
+                    style={`background-color: ${passwordCheck1 ? accentColor : darkColor};`}
+                ></div>
                 <Tooltip
                     placement="left"
                     class={tooltipTailwindClass}
-                    arrow={false}>&gt;= 5 characters</Tooltip
+                    arrow={false}>more than 5 characters</Tooltip
                 >
-                <div class="flex-1 text-center bg-gray-200"></div>
+                <div
+                    class="flex-1 text-center"
+                    style={`background-color: ${passwordCheck2 ? accentColor : darkColor};`}
+                ></div>
                 <Tooltip
                     placement="bottom"
                     offset={0}
                     class={tooltipTailwindClass}
                     arrow={false}>a symbol ( #$&amp;! )</Tooltip
                 >
-                <div class="flex-1 text-center bg-gray-200 rounded-r-lg"></div>
+                <div
+                    class="flex-1 text-center rounded-r-lg"
+                    style={`background-color: ${passwordCheck3 ? accentColor : darkColor};`}
+                ></div>
                 <Tooltip
                     placement="right"
                     class={tooltipTailwindClass}
@@ -199,11 +241,20 @@
             >
         </div>
         <div>
-            <GradientButton
-                color="cyanToBlue"
-                class="!w-100 min-h-5 max-h-7 pt-3 "
-                type="submit">LOGIN</GradientButton
-            >
+            {#if usernameCheck && passwordCheck}
+                <GradientButton
+                    color="cyanToBlue"
+                    class="!w-100 min-h-5 max-h-7 pt-3 "
+                    type="submit">LOGIN</GradientButton
+                >
+            {:else}
+                <GradientButton
+                    color="cyanToBlue"
+                    disabled="true"
+                    class="!w-100 min-h-5 max-h-7 pt-3 opacity-25"
+                    type="submit">LOGIN</GradientButton
+                >
+            {/if}
         </div>
     </div>
 </form>

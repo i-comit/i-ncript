@@ -200,14 +200,13 @@
         on:click={clearHeldBtns}
     >
         {#if _modal === Modals.None}
-            <TreeView tree={$fileTree} />
-            <!-- <Settings /> -->
+            <TreeView fileTree={$fileTree} />
         {:else if _modal === Modals.Settings}
             <Settings />
-        {:else if _modal === Modals.Logger}
-            <Logger />
         {:else if _modal === Modals.Info}
             <Info />
+        {:else if _modal === Modals.Logger}
+            <Logger />
         {/if}
     </div>
     {#if _encryptProgress !== 0}

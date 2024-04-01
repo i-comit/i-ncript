@@ -56,7 +56,7 @@
         relPath: string;
         children?: FileNode[]; // Make children optional to match the Go structure
     }
-    export let tree: FileNode;
+    export let fileTree: FileNode;
 
     import { AppPage, currentPage } from "../enums/AppPage.ts";
     import { GetDirectoryPath } from "../../wailsjs/go/main/Getters";
@@ -83,7 +83,7 @@
         expanded = !expanded;
         const currentPageStore = getCurrentPageStore();
         currentPageStore.update((currentState) => {
-            currentState[basePath(tree.relPath)] = expanded;
+            currentState[basePath(fileTree.relPath)] = expanded;
             return currentState;
         });
     };
@@ -104,14 +104,12 @@
     }
     function onMouseDown(event: MouseEvent) {
         if (event.button === 0) {
-            // Check if the left mouse button was pressed
             pointerDown = true;
             // LogInfo("Mouse down");
         }
     }
     function onMouseUp(event: MouseEvent) {
         if (event.button === 0) {
-            // Check if the left mouse button was released
             pointerDown = false;
             // LogInfo("Mouse up");
         }
@@ -137,13 +135,13 @@
     onMount(() => {
         const currentPageStore = getCurrentPageStore();
         const unsubscribe = currentPageStore.subscribe((state) => {
-            const basePathKey = basePath(tree.relPath);
+            const basePathKey = basePath(fileTree.relPath);
             if (state[basePathKey] !== undefined) {
                 expanded = state[basePathKey];
-                _label = basePath(tree.relPath); //This sets the rootdir Name
+                _label = basePath(fileTree.relPath); //This sets the rootdir Name
             }
         });
-        _label = basePath(tree.relPath);
+        _label = basePath(fileTree.relPath);
         EventsOn("rebuildFileTree", buildFileTree);
         return unsubscribe; // Unsubscribe when the component unmounts
     });
@@ -167,23 +165,23 @@
 
     async function isFile(): Promise<boolean> {
         const filePath = await GetDirectoryPath(pageIndex());
-        const fileProps = await getFileProperties(filePath + tree.relPath);
+        const fileProps = await getFileProperties(filePath + fileTree.relPath);
         // Return true if fileSize > 0, indicating it's a file
         return fileProps.fileSize > 0;
     }
 
     function handleMouseEnter() {
-        if (basePath(tree.relPath) === pageName()) return;
+        if (basePath(fileTree.relPath) === pageName()) return;
         GetDirectoryPath(pageIndex()).then((filePath) => {
-            getFileProperties(filePath + tree.relPath).then((fileProps) => {
+            getFileProperties(filePath + fileTree.relPath).then((fileProps) => {
                 _filePropsTooltip = `${fileProps.modifiedDate} | ${formatFileSize(fileProps.fileSize)}`;
                 // LogPrint("RelativePath " + tree.relPath);
-                if (!tree.children) {
+                if (!fileTree.children) {
                     isFile().then((_isFile) => {
-                        if (_isFile) currentFilePath.set(tree.relPath);
+                        if (_isFile) currentFilePath.set(fileTree.relPath);
                     });
                 } else {
-                    currentDirPath.set(tree.relPath);
+                    currentDirPath.set(fileTree.relPath);
                     LogInfo("current Dir Path " + get(currentDirPath));
                 }
             });
@@ -197,22 +195,22 @@
     }
 
     function moveFilesFromFileNode() {
-        if (tree.children && tree.children.length > 0) {
+        if (fileTree.children && fileTree.children.length > 0) {
             if (Object.keys(_heldDownBtns).length > 0) {
-                moveFilesToRelPath(tree.relPath);
+                moveFilesToRelPath(fileTree.relPath);
                 LogInfo("Moved Files to Dir");
             }
         } else {
             LogInfo(
                 "moveFilesFromFileNode " +
-                    tree.relPath +
+                    fileTree.relPath +
                     " " +
                     get(currentFilePath) +
                     " " +
                     get(currentDirPath),
             );
-            if (tree.relPath !== get(currentFilePath)) {
-                var dirPath = removeFileName(tree.relPath);
+            if (fileTree.relPath !== get(currentFilePath)) {
+                var dirPath = removeFileName(fileTree.relPath);
                 moveFilesToRelPath(dirPath);
             }
         }
@@ -244,13 +242,13 @@
         ? "position: sticky; top: 0; z-index: 10; background-color: green !important"
         : "position: relative;"}  -->
     <ul
-        class={basePath(tree.relPath) === pageName() ? "pl-0.5" : "pl-3"}
-        style={basePath(tree.relPath) === pageName()
+        class={basePath(fileTree.relPath) === pageName() ? "pl-0.5" : "pl-3"}
+        style={basePath(fileTree.relPath) === pageName()
             ? "padding-top: 1px;font-size: 15px;color:black;--wails-draggable:drag;"
             : "margin-top: -2px;color:white;--wails-draggable:no-drag; margin-bottom: 0px"}
     >
         <li>
-            {#if tree.children && tree.children.length > 0}<!-- Folder with children -->
+            {#if fileTree.children && fileTree.children.length > 0}<!-- Folder with children -->
                 <button
                     on:click={() => {
                         toggleExpansion();
@@ -271,30 +269,30 @@
                     {#if Object.keys(_heldDownBtns).length > 0}
                         <Tooltip class={tooltipTailwindClass}
                             >Move {Object.keys(_heldDownBtns).length} files to {basePath(
-                                tree.relPath,
+                                fileTree.relPath,
                             )}</Tooltip
                         >
                     {/if}
                 {:else}
                     <Tooltip class={tooltipTailwindClass}
-                        >{basePath(tree.relPath)}</Tooltip
+                        >{basePath(fileTree.relPath)}</Tooltip
                     >
                 {/if}
                 {#if expanded}
                     <ul>
-                        {#each tree.children as child}
+                        {#each fileTree.children as child}
                             <svelte:self tree={child} />
                         {/each}
                     </ul>
                 {/if}
-            {:else if !tree.children}<!-- File -->
+            {:else if !fileTree.children}<!-- File -->
                 {#await promise then isFile}
                     {#if isFile}
                         <button
                             class="rounded-md px-0.5"
                             bind:this={buttonRef}
                             on:mousedown={() =>
-                                handleFileClick(tree.relPath, buttonRef)}
+                                handleFileClick(fileTree.relPath, buttonRef)}
                             on:mouseenter={() => {
                                 handleMouseEnter();
                             }}
@@ -304,7 +302,7 @@
                             on:mouseup={() => {
                                 moveFilesFromFileNode();
                             }}
-                            on:dblclick={() => handleDblClick(tree.relPath)}
+                            on:dblclick={() => handleDblClick(fileTree.relPath)}
                         >
                             {_label}
                         </button>
@@ -330,7 +328,7 @@
                         offset={-1}
                         arrow={true}
                         >Move {Object.keys(_heldDownBtns).length} files to {basePath(
-                            removeFileName(tree.relPath),
+                            removeFileName(fileTree.relPath),
                         )}</Tooltip
                     >
                 {:else if clickedOnButtonRef === buttonRef}
@@ -367,7 +365,7 @@
                 name="Collapse "
                 class="h-10 w-14 right-10"
                 on:click={() => {
-                    updateExpansionForNode(tree, false);
+                    updateExpansionForNode(fileTree, false);
                 }}
             >
                 <CompressOutline class="w-6 h-6" />
@@ -376,7 +374,7 @@
                 name="Expand "
                 class="h-10 w-14 text-lg"
                 on:click={() => {
-                    updateExpansionForNode(tree, true);
+                    updateExpansionForNode(fileTree, true);
                 }}
             >
                 <ExpandOutline class="w-6 h-6" />
