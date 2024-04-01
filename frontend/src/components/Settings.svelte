@@ -117,7 +117,4 @@
         justify-content: space-between; /* Spread the buttons evenly */
         margin-bottom: 10px; /* Spacing between rows of buttons */
     }
-    #modal-panel.expanded {
-        height: 200px; /* Height when expanded */
-    }
 </style>

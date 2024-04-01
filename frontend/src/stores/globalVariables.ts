@@ -1,0 +1,8 @@
+export const pageChangeBtn = "w-48 min-h-5 max-h-6 pt-3 px-1";
+
+export const tooltipTailwindClass = "p-0.5 m-0 text-xs bg-gray-400 px-1";
+
+export const rootFolder = '------';
+
+export const width = 220
+export const height = 180

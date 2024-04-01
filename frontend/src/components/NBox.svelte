@@ -9,7 +9,7 @@
     import { AppPage, currentPage } from "../enums/AppPage.ts";
     import { Modals, currentModal } from "../enums/Modals.ts";
 
-    import { pageChangeBtn } from "../stores/globalVariables.js";
+    import { pageChangeBtn } from "../stores/globalVariables.ts";
     import {
         buildFileTree,
         fileTree,

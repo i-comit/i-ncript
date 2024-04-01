@@ -1,5 +1,5 @@
 html {
-    background-color: rgba(27, 38, 54, 1);
+    background-color: rgba(27, 213, 54, .65);
     /* text-align: center; */
     color: white;
 }
@@ -32,8 +32,6 @@ body {
     /* Enables vertical scrolling */
     overflow-x: auto;
     /* Enables horizontal scrolling */
-
-    /* Other styles for layout and appearance */
     position: relative;
     box-sizing: border-box;
     scrollbar-width: none;

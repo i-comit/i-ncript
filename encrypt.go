@@ -132,7 +132,7 @@ func (a *App) reverseProgress(encrypt bool, files int) {
 	if a.ctx != nil {
 		time.Sleep(time.Second)
 		isInFileTask = false
-		a.ResizeWindow(_width*2, _height+25, false)
+		a.ResizeWindow(_width*2, _height+25)
 		runtime.EventsEmit(a.ctx, fileProcessed, 0)
 		runtime.EventsEmit(a.ctx, fileCt, 0)
 		runtime.EventsOff(a.ctx, fileProcessed, fileCt, addLogFile, rebuildFileTree)

@@ -18,9 +18,7 @@
     import { AppPage, currentPage } from "../enums/AppPage.ts";
     import { Modals, currentModal } from "../enums/Modals.ts";
 
-    import {
-        pageChangeBtn,
-    } from "../stores/globalVariables.js";
+    import { pageChangeBtn, height, width } from "../stores/globalVariables.ts";
     import { encryptProgress } from "../stores/encryptProgress";
 
     import {
@@ -40,12 +38,7 @@
     //     GetDecryptedFiles,
     // } from "../../wailsjs/go/main/Encrypt";
 
-    import {
-        switchPages,
-        switchModals,
-        height,
-        width,
-    } from "../tools/utils.ts";
+    import { switchPages, switchModals } from "../tools/utils.ts";
 
     import Frame from "./Frame.svelte";
     import Info from "./Info.svelte";
@@ -93,7 +86,7 @@
                 _fileCt = filePaths.length;
                 EventsOff("rebuildFileTree");
                 EncryptFilesInDir(0);
-                ResizeWindow(width * 2, height + 15, false);
+                ResizeWindow(width * 2, height + 15);
             }
         });
     }
@@ -105,7 +98,7 @@
                 _fileCt = filePaths.length;
                 EventsOff("rebuildFileTree");
                 DecryptFilesInDir(0);
-                ResizeWindow(width * 2, height + 15, false);
+                ResizeWindow(width * 2, height + 15);
             }
         });
     }

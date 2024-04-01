@@ -60,13 +60,13 @@
 
     import { AppPage, currentPage } from "../enums/AppPage.ts";
     import { GetDirectoryPath } from "../../wailsjs/go/main/Getters";
+    import { tooltipTailwindClass } from "../stores/globalVariables.ts";
 
     let _appPage: AppPage;
     _appPage = AppPage.Vault;
     currentPage.subscribe((value) => {
         _appPage = value;
     });
-    let tooltipTailwindClass = "p-0.5 m-0 text-xs bg-gray-400";
     let _label: string;
     let _heldDownBtns: { [key: string]: HTMLButtonElement };
     let buttonRef: HTMLButtonElement;

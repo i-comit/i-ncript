@@ -22,7 +22,7 @@ type App struct {
 }
 
 var _width = 220
-var _height = 155
+var _height = 180
 var currentIndex = -1
 
 func NewApp() *App {
@@ -94,7 +94,8 @@ func (a *App) Login(username string, password string) (int, error) {
 		break
 	case 2: //credentials match file hash
 		if a.ctx != nil {
-			a.ResizeWindow(_width*2, _height+25, false)
+			a.ResizeWindow(_width*2, _height)
+			runtime.WindowCenter(a.ctx)
 		}
 		for i, dir := range a.directories {
 			a.directories[i] = cwd + string(os.PathSeparator) + dir
@@ -128,7 +129,8 @@ func (a *App) grantAccessToApp(file *os.File, credentials string) {
 	fmt.Printf("File created: %s", cwd+file.Name())
 	hashedCredentials = []byte(_hashedCredentials)
 	if a.ctx != nil {
-		a.ResizeWindow(_width*2, _height+25, false)
+		a.ResizeWindow(_width*2, _height)
+		runtime.WindowCenter(a.ctx)
 	}
 	for i, dir := range a.directories {
 		a.directories[i] = cwd + string(os.PathSeparator) + dir
@@ -144,12 +146,9 @@ func (a *App) grantAccessToApp(file *os.File, credentials string) {
 	printFileTree(tree, false)
 }
 
-func (a *App) ResizeWindow(width int, height int, recenter bool) {
+func (a *App) ResizeWindow(width int, height int) {
 	if a.ctx != nil {
 		runtime.WindowSetSize(a.ctx, width, height)
-		if recenter {
-			runtime.WindowCenter(a.ctx)
-		}
 	}
 }
 

@@ -8,7 +8,7 @@
 
     import {
         pageChangeBtn,
-    } from "../stores/globalVariables.js";
+    } from "../stores/globalVariables.ts";
     import { buildFileTree, fileTree } from "../tools/fileTree.ts";
 
     import { switchPages } from "../tools/utils.ts";

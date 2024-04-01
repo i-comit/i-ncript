@@ -15,8 +15,7 @@ import { LogDebug, LogError, LogTrace, LogWarning } from "../../wailsjs/runtime/
 import { MoveFilesToPath } from '../../wailsjs/go/main/FileUtils';
 import { clearHeldBtns, setIsInFileTask } from './fileTree';
 
-export const width = 220
-export const height = 180
+import { width, height } from "../stores/globalVariables.js"
 
 export const pageName: () => string = () => {
     const _appPage: AppPage = get(currentPage);
@@ -62,9 +61,9 @@ export function switchModals(modal: Modals) {
         case Modals.Logger:
             try {
                 if (_currentPage === AppPage.Login)
-                    ResizeWindow(width, height, false)
+                    ResizeWindow(width, height)
                 else
-                    ResizeWindow(width * 2, height, false)
+                    ResizeWindow(width * 2, height)
 
             } catch (error) {
                 console.error("Error calling ResizeWindow", error);
@@ -74,9 +73,9 @@ export function switchModals(modal: Modals) {
         default:
             try {
                 if (_currentPage === AppPage.Login)
-                    ResizeWindow(width, 155, false)
+                    ResizeWindow(width, height)
                 else
-                    ResizeWindow(width * 2, height, false)
+                    ResizeWindow(width * 2, height)
             } catch (error) {
                 LogTrace("Error calling ResizeWindow: " + error);
             }

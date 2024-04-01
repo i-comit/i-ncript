@@ -18,6 +18,6 @@ export function Login(arg1:string,arg2:string):Promise<number>;
 
 export function MinimizeApp():Promise<void>;
 
-export function ResizeWindow(arg1:number,arg2:number,arg3:boolean):Promise<void>;
+export function ResizeWindow(arg1:number,arg2:number):Promise<void>;
 
 export function SetIsInFileTask(arg1:boolean):Promise<boolean>;

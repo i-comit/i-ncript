@@ -34,8 +34,8 @@ export function MinimizeApp() {
   return window['go']['main']['App']['MinimizeApp']();
 }
 
-export function ResizeWindow(arg1, arg2, arg3) {
-  return window['go']['main']['App']['ResizeWindow'](arg1, arg2, arg3);
+export function ResizeWindow(arg1, arg2) {
+  return window['go']['main']['App']['ResizeWindow'](arg1, arg2);
 }
 
 export function SetIsInFileTask(arg1) {

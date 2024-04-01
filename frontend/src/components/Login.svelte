@@ -10,6 +10,7 @@
         Input,
         GradientButton,
         Tooltip,
+        ButtonGroup,
         Popover,
     } from "flowbite-svelte";
     // import { Popover, Label, Input, Checkbox, Button } from 'flowbite-svelte';
@@ -32,6 +33,11 @@
     import Info from "./Info.svelte";
     import Settings from "./Settings.svelte";
     import { LogDebug } from "../../wailsjs/runtime/runtime";
+    import {
+        height,
+        width,
+        tooltipTailwindClass,
+    } from "../stores/globalVariables.ts";
 
     const appName = __APP_NAME__;
     const appVersion = __APP_VERSION__;
@@ -110,10 +116,10 @@
                     arrow={false}>99%</Tooltip
                 >
             </div>
-            <div class=" pt-1"></div>
+            <div class="h-1.5"></div>
             <div class="field">
                 <Input
-                    class="max-h-6 w-full"
+                    class="max-h-5 w-full bg py-0"
                     id="small-input"
                     placeholder="enter username.."
                     type="text"
@@ -121,9 +127,18 @@
                     required
                 />
             </div>
+            <div class="flex w-full h-1.5 px-0.5 relative bottom-2">
+                <div class="flex-1 text-center bg-gray-200 rounded-lg"></div>
+                <Tooltip
+                    placement="bottom"
+                    offset={0}
+                    class={tooltipTailwindClass}
+                    arrow={false}>&gt;= 5 characters</Tooltip
+                >
+            </div>
             <div class="field">
                 <Input
-                    class="max-h-6 w-full"
+                    class="max-h-5 w-full"
                     id="small-input"
                     placeholder="enter password.."
                     type="password"
@@ -131,43 +146,35 @@
                     required
                 />
             </div>
-            <!-- <Popover class="text-sm h-2 w-20" placement="bottom">
-                <h3 class="font-semibold text-gray-900 dark:text-white">
-                    Must have at least 6 characters
-                </h3>
-                <div class="grid grid-cols-4 gap-2">
-                    <div class="h-1 bg-orange-300 dark:bg-orange-400" />
-                    <div class="h-1 bg-orange-300 dark:bg-orange-400" />
-                    <div class="h-1 bg-gray-200 dark:bg-gray-600" />
-                    <div class="h-1 bg-gray-200 dark:bg-gray-600" />
-                </div>
-                <p class="py-2">It’s better to have:</p>
-                <ul>
-                    <li class="flex items-center mb-1">
-                        <CheckOutline
-                            class="me-2 w-4 h-4 text-green-400 dark:text-green-500"
-                        />
-                        Upper &amp; lower case letters
-                    </li>
-                    <li class="flex items-center mb-1">
-                        <CheckOutline
-                            class="me-2 w-4 h-4 text-green-400 dark:text-green-500"
-                        />
-                        A symbol (#$&amp;)
-                    </li>
-                    <li class="flex items-center">
-                        <CloseOutline
-                            class="me-2 w-4 h-4 text-gray-300 dark:text-gray-400"
-                        />A longer password (min. 12 chars.)
-                    </li>
-                </ul>
-            </Popover> -->
+            <div class="flex w-full h-1.5  px-0.5 relative bottom-2">
+                <div class="flex-1 text-center bg-gray-200 rounded-l-lg"></div>
+                <Tooltip
+                    placement="left"
+                    class={tooltipTailwindClass}
+                    arrow={false}>&gt;= 5 characters</Tooltip
+                >
+                <div class="flex-1 text-center bg-gray-200"></div>
+                <Tooltip
+                    placement="bottom"
+                    offset={0}
+                    class={tooltipTailwindClass}
+                    arrow={false}>a symbol ( #$&amp;! )</Tooltip
+                >
+                <div class="flex-1 text-center bg-gray-200 rounded-r-lg"></div>
+                <Tooltip
+                    placement="right"
+                    class={tooltipTailwindClass}
+                    arrow={false}>upper &amp; lower case</Tooltip
+                >
+            </div>
         {:else if _modal === Modals.Settings}
             <Settings />
         {:else if _modal === Modals.Info}
             <Info />
         {/if}
     </div>
+    <div class="h-4"></div>
+
     <div class="flex justify-between items-center">
         <div class="flex space-x-1">
             <!-- First two buttons -->
@@ -205,11 +212,11 @@
     .login-form {
         margin: auto;
         padding: 0.5rem;
+
         background-color: gray;
     }
     .login-form {
         padding-top: 1.5rem;
-        padding-bottom: 0.3rem;
     }
 
     .field {
