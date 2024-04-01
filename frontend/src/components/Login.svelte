@@ -110,6 +110,8 @@
 
         passwordCheck = passwordCheck1 && passwordCheck2 && passwordCheck3;
     }
+
+    import CircleProgressBar from "../elements/CircleProgressBar.svelte";
 </script>
 
 <form
@@ -121,6 +123,8 @@
         {displayString}
     </p>
     <Frame />
+    <!-- <CircleProgressBar /> -->
+
     <!-- <div class=" pt-5"></div> -->
     <div class="loginField">
         {#if _modal === Modals.None}

@@ -254,10 +254,11 @@
                 <button
                     class="flex {basePath(_fileTree.relPath) === pageName()
                         ? 'rounded-md px-1'
-                        : 'pl-3'}"
-                    style={basePath(_fileTree.relPath) === pageName()
-                        ? "position: sticky; top: 1px; z-index: 5; background-color:blue"
-                        : "position: relative;"}
+                        : 'pl-1.5'}"
+                    style="border-left: 1px solid #eee;
+                    {basePath(_fileTree.relPath) === pageName()
+                        ? 'position: sticky; top: 1px; z-index: 5; background-color:blue'
+                        : 'position: relative;'}"
                     on:click={() => {
                         toggleExpansion();
                         clearHeldBtns();
@@ -296,7 +297,8 @@
                 {#await promise then isFile}
                     {#if isFile}
                         <button
-                            class="flex rounded-md px-0.5"
+                            class="flex rounded-md px-0.5 ml-1"
+                            style="border-left: 1px solid #eee;"
                             bind:this={buttonRef}
                             on:mousedown={() => {
                                 handleFileClick(_fileTree.relPath, buttonRef);
@@ -315,15 +317,15 @@
                                 handleDblClick(_fileTree.relPath)}
                         >
                             {#if getFileType(_fileTree.relPath) === FileTypes.Encrypted}
-                                <LockSolid class="w-3 mr-1"></LockSolid>
+                                <LockSolid class="w-3 mr-0.5"></LockSolid>
                             {:else if getFileType(_fileTree.relPath) === FileTypes.Image}
-                                <FileImageSolid class="w-3 mr-1"
+                                <FileImageSolid class="w-3 mr-0.5"
                                 ></FileImageSolid>
                             {:else if getFileType(_fileTree.relPath) === FileTypes.Video}
-                                <FileVideoSolid class="w-3 mr-1"
+                                <FileVideoSolid class="w-3 mr-0.5"
                                 ></FileVideoSolid>
                             {:else if getFileType(_fileTree.relPath) === FileTypes.Audio}
-                                <FileMusicSolid class="w-3 mr-1"
+                                <FileMusicSolid class="w-3 mr-0.5"
                                 ></FileMusicSolid>
                             {:else}
                                 <FileOutline class="w-3 mr-1"></FileOutline>
@@ -432,7 +434,7 @@
         user-select: none;
         text-align: justify;
         font-size: small;
-        text-overflow: clip;
+        text-overflow:ellipsis;
     }
     button {
         text-align: justify;

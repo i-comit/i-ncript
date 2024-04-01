@@ -8,7 +8,7 @@
         Progressbar,
         Tooltip,
     } from "flowbite-svelte";
-    import Button from "../elements/Button.svelte";
+    import Button from "../elements/NeumorphicButton.svelte";
     import Toggle from "../elements/Toggle.svelte";
 
     import { sineOut } from "svelte/easing";
@@ -64,6 +64,7 @@
         GetFilesByType,
     } from "../../wailsjs/go/main/Getters";
     import DirSize from "../elements/DirSize.svelte";
+    import CircleProgressBar from "../elements/CircleProgressBar.svelte";
 
     let _fileCt: number;
     _fileCt = 0;
@@ -131,6 +132,7 @@
 <div class="flex h-screen !rounded-lg">
     <Frame />
     <DirSize />
+    <CircleProgressBar/>
     <div id="left-panel" role="none" on:mousedown={clearHeldBtns}>
         <div id="page-info" class="static">
             <p>VAULT</p>

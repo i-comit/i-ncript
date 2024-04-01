@@ -110,6 +110,11 @@ func (a *App) DecryptFilesInDir(dirIndex int) error {
 }
 func (a *App) InterruptEncryption() {
 	fmt.Println("\033[31minterrupted encryption: ", filepath.Base(lastFilePath), "\033[0m")
+	file, err := os.OpenFile(lastFilePath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0666)
+	if err != nil {
+		log.Fatalf("failed to open last file: %v", err)
+	}
+	defer file.Close()
 	if err := os.Remove(lastFilePath); err != nil {
 		fmt.Printf("last file remove failed %s", err)
 	}
@@ -118,6 +123,7 @@ func (a *App) InterruptEncryption() {
 }
 
 func (a *App) reverseProgress(encrypt bool, files int) {
+	lastFilePath = ""
 	runtime.EventsEmit(a.ctx, fileCt, 100)
 	runtime.EventsEmit(a.ctx, rebuildFileTree)
 	time.Sleep(time.Second)
@@ -193,7 +199,6 @@ func encryptFile(filePath string) (*os.File, error) {
 	if largeFileErr != nil {
 		return nil, fmt.Errorf("failed to encrypt large File: %w", largeFileErr)
 	}
-	// Delete the original file after successfully creating the encrypted version
 	if err := os.Remove(filePath); err != nil {
 		encFile.Close() // Best effort to close the encrypted file before returning error
 		return nil, err

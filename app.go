@@ -148,7 +148,9 @@ func (a *App) MinimizeApp() {
 }
 
 func (a *App) CloseApp() {
-	a.InterruptEncryption()
+	if lastFilePath != "" {
+		a.InterruptEncryption()
+	}
 	os.Exit(0)
 }
 
