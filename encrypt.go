@@ -30,16 +30,13 @@ type Encrypt struct {
 var fileProcessed = "fileProcessed"
 var fileCt = "fileCount"
 var addLogFile = "addLogFile"
+
+// DATA consts
 var keyFileName = ".i-ncript.🔑"
 
-// func (b *Encrypt) EncryptString(stringToEncrypt string) string {
-// 	encryptedString, _ := hashCredentials(stringToEncrypt)
-// 	return encryptedString
-// }
-
 func (a *App) EncryptFilesInDir(dirIndex int) (bool, error) {
-	filePaths, err := getFilesRecursively(a.directories[0])
-	fmt.Println("\033[32mdirectories[0] ", a.directories[0], "\033[0m")
+	filePaths, err := getFilesRecursively(a.directories[dirIndex])
+	fmt.Println("\033[32mdirectories[0] ", a.directories[dirIndex], "\033[0m")
 	if err != nil {
 		return false, err
 	}
@@ -52,6 +49,7 @@ func (a *App) EncryptFilesInDir(dirIndex int) (bool, error) {
 
 		encryptedFile, err := encryptFile(filePath)
 		if err != nil {
+			fmt.Println("\033[31mencryption error ", err, "\033[0m")
 			continue
 		}
 		defer encryptedFile.Close()
@@ -73,12 +71,11 @@ func (a *App) EncryptFilesInDir(dirIndex int) (bool, error) {
 }
 
 func (a *App) DecryptFilesInDir(dirIndex int) error {
-	a.closeDirectoryWatcher()
-	filePaths, err := getFilesRecursively(a.directories[0])
-	fmt.Println("\033[32mdirectories[0] ", a.directories[0], "\033[0m")
+	filePaths, err := getFilesRecursively(a.directories[dirIndex])
 	if err != nil {
 		return err
 	}
+	a.closeDirectoryWatcher()
 	var fileIter = 0
 	for i, filePath := range filePaths {
 		if !strings.HasSuffix(filePath, ".enc") {
@@ -86,7 +83,8 @@ func (a *App) DecryptFilesInDir(dirIndex int) error {
 		}
 		decryptFile, err := decryptFile(filePath)
 		if err != nil {
-			return err
+			fmt.Println("\033[31mdecryption error ", err, "\033[0m")
+			continue
 		}
 
 		defer decryptFile.Close()
@@ -108,7 +106,7 @@ func (a *App) DecryptFilesInDir(dirIndex int) error {
 func (a *App) reverseProgress(encrypt bool, files int) {
 	runtime.EventsEmit(a.ctx, fileCt, 100)
 	runtime.EventsEmit(a.ctx, rebuildFileTree)
-	time.Sleep(1 * time.Second)
+	time.Sleep(time.Second)
 	done := make(chan bool) // Cr
 	go func() {
 		counter := 100
@@ -132,7 +130,6 @@ func (a *App) reverseProgress(encrypt bool, files int) {
 
 	if a.ctx != nil {
 		time.Sleep(time.Second)
-		isInFileTask = false
 		a.ResizeWindow(_width*2, _height+25)
 		runtime.EventsEmit(a.ctx, fileProcessed, 0)
 		runtime.EventsEmit(a.ctx, fileCt, 0)
@@ -141,72 +138,43 @@ func (a *App) reverseProgress(encrypt bool, files int) {
 	}
 }
 
-func encryptFile(filePath string) (*os.File, error) {
+func initFileCipher(filePath string) (cipher.AEAD, []byte, error) {
 	data, err := os.ReadFile(filePath)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	hashedKey := sha256.Sum256(hashedCredentials)
 	key := hashedKey[:]
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-
 	aesGCM, err := cipher.NewGCM(block)
+	if err != nil {
+		fmt.Println("\033[31mGCM err ", err, "\033[0m")
+		return nil, nil, err
+	}
+	return aesGCM, data, nil
+}
+
+func encryptFile(filePath string) (*os.File, error) {
+	aesGCM, data, err := initFileCipher(filePath)
 	if err != nil {
 		return nil, err
 	}
-
 	nonce := make([]byte, aesGCM.NonceSize())
 	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
 		return nil, err
 	}
-
 	encrypted := aesGCM.Seal(nonce, nonce, data, nil)
-	newFilePath := filePath + ".enc"
 
+	newFilePath := filePath + ".enc"
 	encFile, err := os.Create(newFilePath)
 	if err != nil {
 		return nil, err
 	}
 	defer encFile.Close() // Ensure the file is closed when the function returns
-
-	done := make(chan struct{})
-	var writtenBytes int64 //May cause alignment problems on 32 bit systems
-	if len(data) > 10*1024*1024 {
-		go func() {
-			ticker := time.NewTicker(5 * time.Millisecond)
-			defer ticker.Stop()
-			for {
-				select {
-				case <-ticker.C:
-					fmt.Printf("Encryption: %d/%d bytes\n", atomic.LoadInt64(&writtenBytes), len(encrypted))
-				case <-done:
-					return
-				}
-			}
-		}()
-	}
-	chunkSize := 2 * 1024 // 2KB Chunk
-	for i := 0; i < len(encrypted); i += chunkSize {
-		end := i + chunkSize
-		if end > len(encrypted) {
-			end = len(encrypted)
-		}
-		n, err := encFile.Write(encrypted[i:end])
-		if err != nil {
-			return nil, fmt.Errorf("failed to write file: %w", err)
-		}
-		atomic.AddInt64(&writtenBytes, int64(n))
-	}
-	close(done)
-	if _, err := encFile.Seek(0, 0); err != nil {
-		encFile.Close()           // Attempt to close the file on error
-		os.Remove(encFile.Name()) // Cleanup the file if seek fails
-		return nil, err
-	}
-
+	checkLargeFileTicker(data, encrypted, encFile)
 	// Delete the original file after successfully creating the encrypted version
 	if err := os.Remove(filePath); err != nil {
 		encFile.Close() // Best effort to close the encrypted file before returning error
@@ -215,31 +183,62 @@ func encryptFile(filePath string) (*os.File, error) {
 	return encFile, nil
 }
 
+func checkLargeFileTicker(data []byte, cipherData []byte, cipherFile *os.File) (*os.File, error) {
+	done := make(chan struct{})
+	var maxAtomicSize = 20 // the maximum size *1024*1024 which triggers the encrypt/decrypt ticker
+	var writtenBytes int64 //Use atomic.Int64 w/ writtenBytes.Load() for compatibility with 32bit systems
+	if len(data) > maxAtomicSize*1024*1024 {
+		go func() {
+			ticker := time.NewTicker(10 * time.Millisecond)
+			defer ticker.Stop()
+			for {
+				select {
+				case <-ticker.C:
+					fmt.Printf("%s %d/%d bytes\n",
+						filepath.Base(cipherFile.Name()),
+						atomic.LoadInt64(&writtenBytes), len(cipherData))
+				case <-done:
+					return
+				}
+			}
+		}()
+	}
+	chunkSize := 2 * 1024 // 2KB Chunk
+	for i := 0; i < len(cipherData); i += chunkSize {
+		end := i + chunkSize
+		if end > len(cipherData) {
+			end = len(cipherData)
+		}
+		n, err := cipherFile.Write(cipherData[i:end])
+		if err != nil {
+			return nil, fmt.Errorf("failed to write file: %w", err)
+		}
+		atomic.AddInt64(&writtenBytes, int64(n))
+		// writtenBytes.Add(int64(n)) // if writtenBytes atomic.Int64
+	}
+	close(done)
+	if _, err := cipherFile.Seek(0, 0); err != nil {
+		cipherFile.Close()
+		os.Remove(cipherFile.Name())
+		return nil, err
+	}
+	return cipherFile, nil
+}
+
 func decryptFile(filePath string) (*os.File, error) {
-	data, err := os.ReadFile(filePath)
-	if err != nil {
-		return nil, err
-	}
-
-	hashedKey := sha256.Sum256(hashedCredentials)
-	key := hashedKey[:]
-	block, err := aes.NewCipher(key)
-	if err != nil {
-		return nil, err
-	}
-
-	aesGCM, err := cipher.NewGCM(block)
+	aesGCM, data, err := initFileCipher(filePath)
 	if err != nil {
 		return nil, err
 	}
 
 	nonceSize := aesGCM.NonceSize()
-	if len(data) < nonceSize {
-		return nil, err // Error handling: the data is shorter than the nonce size
-	}
 
+	if len(data) < nonceSize {
+		return nil, fmt.Errorf("data too short")
+	}
 	nonce, ciphertext := data[:nonceSize], data[nonceSize:]
 	decrypted, err := aesGCM.Open(nil, nonce, ciphertext, nil)
+
 	if err != nil {
 		return nil, err
 	}
@@ -250,43 +249,7 @@ func decryptFile(filePath string) (*os.File, error) {
 	}
 	defer decFile.Close()
 
-	done := make(chan struct{})
-	var writtenBytes int64
-	//Use atomic.Int64 w/ writtenBytes.Load() for compatibility with 32bit systems
-	if len(data) > 10*1024*1024 {
-		go func() {
-			ticker := time.NewTicker(10 * time.Millisecond)
-			defer ticker.Stop()
-			for {
-				select {
-				case <-ticker.C:
-					fmt.Printf("Decryption: %d/%d bytes\n", atomic.LoadInt64(&writtenBytes), len(decrypted))
-				case <-done:
-					return
-				}
-			}
-		}()
-	}
-	chunkSize := 2 * 1024 // Define a suitable chunk size, e.g., 2KB
-	for i := 0; i < len(decrypted); i += chunkSize {
-		end := i + chunkSize
-		if end > len(decrypted) {
-			end = len(decrypted)
-		}
-		n, err := decFile.Write(decrypted[i:end])
-		if err != nil {
-			return nil, fmt.Errorf("failed to write file: %w", err)
-		}
-		// writtenBytes.Add(int64(n)) // if writtenBytes atomic.Int64
-		atomic.AddInt64(&writtenBytes, int64(n))
-	}
-	close(done)
-
-	if _, err := decFile.Seek(0, 0); err != nil {
-		decFile.Close()
-		os.Remove(decFile.Name())
-		return nil, err
-	}
+	checkLargeFileTicker(data, decrypted, decFile)
 	if err := os.Remove(filePath); err != nil {
 		decFile.Close()
 		return nil, err
@@ -327,7 +290,6 @@ func checkCredentials(stringToCheck string) int {
 		line = append(line, more...)
 	}
 
-	// fmt.Println("First line of the file is:", string(line))
 	hashedStringToCheck, err := hashCredentials(stringToCheck)
 	if err != nil {
 		log.Printf("Failed to hash credentials to check %s", err)
@@ -365,7 +327,6 @@ func hashCredentials(stringToHash string) (string, error) {
 	// 	return "", err
 	// }
 	// encrypted := aesGCM.Seal(nonce, nonce, byteData, nil)
-
 	encrypted := aesGCM.Seal(nil, make([]byte, aesGCM.NonceSize()), byteData, nil) // Using a zero nonce
 	return hex.EncodeToString(encrypted), nil
 }

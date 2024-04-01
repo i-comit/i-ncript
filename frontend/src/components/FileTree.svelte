@@ -16,9 +16,13 @@
     import {
         FolderOpenSolid,
         FolderSolid,
-        FolderArrowRightOutline,
         ExpandOutline,
         CompressOutline,
+        LockSolid,
+        FileImageSolid,
+        FileVideoSolid,
+        FileMusicSolid,
+        FileOutline,
     } from "flowbite-svelte-icons";
     import {
         SpeedDial,
@@ -61,6 +65,7 @@
     import { AppPage, currentPage } from "../enums/AppPage.ts";
     import { GetDirectoryPath } from "../../wailsjs/go/main/Getters";
     import { tooltipTailwindClass } from "../stores/globalVariables.ts";
+    import { FileTypes, getFileType } from "../enums/FileTypes.ts";
 
     let _label: string;
     let _heldDownBtns: { [key: string]: HTMLButtonElement };
@@ -289,10 +294,12 @@
                 {#await promise then isFile}
                     {#if isFile}
                         <button
-                            class="rounded-md px-0.5"
+                            class="flex rounded-md px-0.5"
                             bind:this={buttonRef}
-                            on:mousedown={() =>
-                                handleFileClick(_fileTree.relPath, buttonRef)}
+                            on:mousedown={() => {
+                                handleFileClick(_fileTree.relPath, buttonRef);
+                                getFileType(_fileTree.relPath);
+                            }}
                             on:mouseenter={() => {
                                 handleMouseEnter();
                             }}
@@ -305,6 +312,20 @@
                             on:dblclick={() =>
                                 handleDblClick(_fileTree.relPath)}
                         >
+                            {#if getFileType(_fileTree.relPath) === FileTypes.Encrypted}
+                                <LockSolid class="w-3 mr-1"></LockSolid>
+                            {:else if getFileType(_fileTree.relPath) === FileTypes.Image}
+                                <FileImageSolid class="w-3 mr-1"
+                                ></FileImageSolid>
+                            {:else if getFileType(_fileTree.relPath) === FileTypes.Video}
+                                <FileVideoSolid class="w-3 mr-1"
+                                ></FileVideoSolid>
+                            {:else if getFileType(_fileTree.relPath) === FileTypes.Audio}
+                                <FileMusicSolid class="w-3 mr-1"
+                                ></FileMusicSolid>
+                            {:else}
+                                <FileOutline class="w-3 mr-1"></FileOutline>
+                            {/if}
                             {_label}
                         </button>
                     {:else}

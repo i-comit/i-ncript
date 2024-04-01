@@ -7,7 +7,7 @@
     import { GetRootFolder } from "../../wailsjs/go/main/Getters";
 
     import { pageChangeBtn } from "../stores/globalVariables";
-    import Frame from "./Frame.svelte";
+    import Frame from "../elements/Frame.svelte";
     let rootFolder = "";
     onMount(async () => {
         rootFolder = await GetRootFolder();

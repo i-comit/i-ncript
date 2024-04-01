@@ -12,7 +12,7 @@
 
     import { switchPages, switchModals } from "../tools/utils.ts";
 
-    import Frame from "./Frame.svelte";
+    import Frame from "../elements/Frame.svelte";
     import Info from "./Info.svelte";
     import Settings from "./Settings.svelte";
     import TreeView from "./FileTree.svelte";

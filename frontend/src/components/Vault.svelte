@@ -33,14 +33,10 @@
         EncryptFilesInDir,
         DecryptFilesInDir,
     } from "../../wailsjs/go/main/App";
-    // import {
-    //     GetEncryptedFiles,
-    //     GetDecryptedFiles,
-    // } from "../../wailsjs/go/main/Encrypt";
 
     import { switchPages, switchModals } from "../tools/utils.ts";
 
-    import Frame from "./Frame.svelte";
+    import Frame from "../elements/Frame.svelte";
     import Info from "./Info.svelte";
     import Settings from "./Settings.svelte";
     import TreeView from "./FileTree.svelte";
@@ -50,6 +46,7 @@
         EventsOff,
         EventsOn,
         LogError,
+        LogInfo,
     } from "../../wailsjs/runtime/runtime";
     import {
         GetDirectoryPath,
@@ -80,26 +77,29 @@
     let encrypting: boolean;
     encrypting = false;
     function encrypt() {
-        GetFilesByType(0, false).then((filePaths) => {
-            setIsInFileTask(true);
-            if (filePaths.length > 0) {
-                _fileCt = filePaths.length;
-                EventsOff("rebuildFileTree");
-                EncryptFilesInDir(0);
-                ResizeWindow(width * 2, height + 15);
-            }
+        setIsInFileTask(true).then(() => {
+            GetFilesByType(0, false).then((filePaths) => {
+                LogInfo("Began encrypting");
+                if (filePaths.length > 0) {
+                    _fileCt = filePaths.length;
+                    EncryptFilesInDir(0);
+                    ResizeWindow(width * 2, height + 15);
+                }
+            });
         });
     }
 
     function decrypt() {
-        GetFilesByType(0, true).then((filePaths) => {
-            setIsInFileTask(true);
-            if (filePaths.length > 0) {
-                _fileCt = filePaths.length;
-                EventsOff("rebuildFileTree");
-                DecryptFilesInDir(0);
-                ResizeWindow(width * 2, height + 15);
-            }
+        setIsInFileTask(true).then(() => {
+            LogInfo("Began decrypting1");
+            GetFilesByType(0, true).then((filePaths) => {
+                if (filePaths.length > 0) {
+                    _fileCt = filePaths.length;
+                    LogInfo("Began decrypting " + filePaths.length);
+                    DecryptFilesInDir(0);
+                    ResizeWindow(width * 2, height + 15);
+                }
+            });
         });
     }
 
@@ -113,7 +113,12 @@
 
 <div class="flex h-screen !rounded-lg">
     <Frame />
-    <div id="left-panel" class="mr-0.5 rounded-lg" role="none" on:mousedown={clearHeldBtns}>
+    <div
+        id="left-panel"
+        class="mr-0.5 rounded-lg"
+        role="none"
+        on:mousedown={clearHeldBtns}
+    >
         <div id="page-info" class="static">
             <p>VAULT</p>
             <Button

@@ -148,10 +148,7 @@ import { currentFilePath } from './fileTree';
 export function moveFilesToRelPath(targetRelPath: string) {
     GetDirectoryPath(pageIndex()).then((dirPath) => {
         var fullPath = dirPath + targetRelPath;
-        LogDebug("DirPath on moveFiles " + dirPath)
-        LogDebug("targetRelPath on moveFiles " + targetRelPath)
         var _currentRelPath = get(currentFilePath);
-        LogDebug("_currentRelPath on moveFiles " + _currentRelPath)
         if (_currentRelPath === targetRelPath) { return; }
 
         if (dirPath.slice(0, -1) === targetRelPath)

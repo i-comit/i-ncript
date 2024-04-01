@@ -35,10 +35,6 @@ interface FileNode {
     children?: FileNode[];
 }
 
-interface EnhancedFileNode extends FileNode {
-    parent?: EnhancedFileNode;
-}
-
 export function setHeldBtnsStyle() {
     const _heldDownBtns = get(heldDownBtns);
     const entries = Object.entries(_heldDownBtns);
@@ -71,35 +67,6 @@ export function openFile(relPath: string) {
     GetDirectoryPath(pageIndex()).then((filePath) => {
         OpenFile(filePath + relPath);
     });
-}
-
-
-export class FileTreeMap {
-    root: EnhancedFileNode;
-    private pathMap: Map<string, EnhancedFileNode> = new Map();
-
-    constructor(root: FileNode) {
-        this.root = this.enhanceTree(root, undefined);
-    }
-    // Enhances the tree with parent references and builds the path map
-    private enhanceTree(node: FileNode, parent?: EnhancedFileNode): EnhancedFileNode {
-        const enhancedNode: EnhancedFileNode = { ...node, parent };
-        this.pathMap.set(enhancedNode.relPath, enhancedNode);
-
-        if (node.children) {
-            enhancedNode.children = node.children.map(child => this.enhanceTree(child, enhancedNode));
-        }
-        return enhancedNode;
-    }
-
-    public getNodeByPath(relPath: string): EnhancedFileNode | undefined {
-        return this.pathMap.get(relPath);
-    }
-    // Retrieves the parent of a node by its relPath
-    public getParentByPath(relPath: string): EnhancedFileNode | undefined {
-        const node = this.pathMap.get(relPath);
-        return node?.parent;
-    }
 }
 
 export function buildFileTree() {
