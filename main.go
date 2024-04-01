@@ -14,7 +14,24 @@ import (
 
 //go:embed all:frontend/dist
 var assets embed.FS
-var _uniqueID = "f56bcbf2-db56-481b-a722-11c21a4b3ae2" //Change this in your build for extra security
+
+// EVENT consts
+const fileProcessed = "fileProcessed"
+const fileCt = "fileCount"
+const addLogFile = "addLogFile"
+
+// DATA consts
+const rootFolder = "i-ncript" //Change to whatever you want the root folder to be
+const keyFileName = ".i-ncript.🔑"
+const _width = 220
+const _height = 165
+const _uniqueID = "f56bcbf2-db56-481b-a722-11c21a4b3ae2" //Change this in your build for extra security
+
+// DYNAMIC data
+var lastFilePath string
+var interrupt = make(chan struct{})
+var lastDirIndex = -1
+var hashedCredentials []byte
 
 func (m *App) onSecondInstanceLaunch(data options.SecondInstanceData) {
 	// Your code to handle the second instance launch

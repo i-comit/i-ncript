@@ -2,7 +2,12 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
     import { get } from "svelte/store";
-    import { GradientButton, Popover, Progressbar, Tooltip } from "flowbite-svelte";
+    import {
+        GradientButton,
+        Popover,
+        Progressbar,
+        Tooltip,
+    } from "flowbite-svelte";
     import Button from "../elements/Button.svelte";
     import Toggle from "../elements/Toggle.svelte";
 
@@ -18,7 +23,12 @@
     import { AppPage, currentPage } from "../enums/AppPage.ts";
     import { Modals, currentModal } from "../enums/Modals.ts";
 
-    import { pageChangeBtn, height, width, tooltipTailwindClass } from "../stores/globalVariables.ts";
+    import {
+        pageChangeBtn,
+        height,
+        width,
+        tooltipTailwindClass,
+    } from "../stores/globalVariables.ts";
     import { encryptProgress } from "../stores/encryptProgress";
 
     import {
@@ -32,6 +42,7 @@
         ResizeWindow,
         EncryptFilesInDir,
         DecryptFilesInDir,
+        InterruptEncryption,
     } from "../../wailsjs/go/main/App";
 
     import { switchPages, switchModals } from "../tools/utils.ts";
@@ -110,16 +121,17 @@
         if (_modal === Modals.None) {
         }
     }
+
+    function stinky() {
+        LogInfo("Interrupt");
+        InterruptEncryption();
+    }
 </script>
 
 <div class="flex h-screen !rounded-lg">
     <Frame />
-    <DirSize/>
-    <div
-        id="left-panel"
-        role="none"
-        on:mousedown={clearHeldBtns}
-    >
+    <DirSize />
+    <div id="left-panel" role="none" on:mousedown={clearHeldBtns}>
         <div id="page-info" class="static">
             <p>VAULT</p>
             <Button
@@ -149,6 +161,7 @@
                         outline={true}
                         color="dark"
                         class="!p-1 !px-0 !mb-2"
+                        on:click={stinky}
                         ><CirclePauseSolid
                             class="w-5 h-5"
                             color="white"

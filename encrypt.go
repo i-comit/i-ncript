@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"context"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
@@ -13,6 +12,7 @@ import (
 	"log"
 	"path/filepath"
 	"strings"
+	"sync"
 	"sync/atomic"
 	"time"
 
@@ -22,17 +22,8 @@ import (
 )
 
 type Encrypt struct {
-	ctx         context.Context
 	directories []string // Your directories list
 }
-
-// EVENT consts
-var fileProcessed = "fileProcessed"
-var fileCt = "fileCount"
-var addLogFile = "addLogFile"
-
-// DATA consts
-var keyFileName = ".i-ncript.🔑"
 
 func (a *App) EncryptFilesInDir(dirIndex int) (bool, error) {
 	filePaths, err := getFilesRecursively(a.directories[dirIndex])
@@ -41,22 +32,30 @@ func (a *App) EncryptFilesInDir(dirIndex int) (bool, error) {
 		return false, err
 	}
 	a.closeDirectoryWatcher()
+	interrupt = make(chan struct{})
+
 	var fileIter = 0
 	for i, filePath := range filePaths {
-		if strings.HasSuffix(filePath, ".enc") {
-			continue
-		}
+		select {
+		case <-interrupt: // Check if there's an interrupt signal
 
-		encryptedFile, err := encryptFile(filePath)
-		if err != nil {
-			fmt.Println("\033[31mencryption error ", err, "\033[0m")
-			continue
-		}
-		defer encryptedFile.Close()
-		fileIter++
-		if a.ctx != nil {
-			runtime.EventsEmit(a.ctx, fileProcessed, i+1)
-			runtime.EventsEmit(a.ctx, addLogFile, filePath)
+			return false, fmt.Errorf("encryption interrupted")
+		default:
+			if strings.HasSuffix(filePath, ".enc") {
+				continue
+			}
+			encryptedFile, err := encryptFile(filePath)
+			if err != nil {
+				fmt.Println("\033[31mencryption error ", err, "\033[0m")
+				continue
+			}
+			encryptedFile.Close()   // Close right after done to avoid deferred pileup
+			lastFilePath = filePath // Update lastFile after successful encryption
+			fileIter++
+			if a.ctx != nil {
+				runtime.EventsEmit(a.ctx, fileProcessed, i+1)
+				runtime.EventsEmit(a.ctx, addLogFile, filePath)
+			}
 		}
 	}
 	if fileIter != 0 {
@@ -76,23 +75,30 @@ func (a *App) DecryptFilesInDir(dirIndex int) error {
 		return err
 	}
 	a.closeDirectoryWatcher()
+	interrupt = make(chan struct{})
+
 	var fileIter = 0
 	for i, filePath := range filePaths {
-		if !strings.HasSuffix(filePath, ".enc") {
-			continue
-		}
-		decryptFile, err := decryptFile(filePath)
-		if err != nil {
-			fmt.Println("\033[31mdecryption error ", err, "\033[0m")
-			continue
-		}
+		select {
+		case <-interrupt: // Check if there's an interrupt signal
+			return fmt.Errorf("decryption interrupted")
+		default:
+			if !strings.HasSuffix(filePath, ".enc") {
+				continue
+			}
+			decryptFile, err := decryptFile(filePath)
+			if err != nil {
+				fmt.Println("\033[31mdecryption error ", err, "\033[0m")
+				continue
+			}
 
-		defer decryptFile.Close()
-		fileIter++
-
-		if a.ctx != nil {
-			runtime.EventsEmit(a.ctx, fileProcessed, i+1)
-			runtime.EventsEmit(a.ctx, addLogFile, filePath)
+			decryptFile.Close()
+			lastFilePath = filePath
+			fileIter++
+			if a.ctx != nil {
+				runtime.EventsEmit(a.ctx, fileProcessed, i+1)
+				runtime.EventsEmit(a.ctx, addLogFile, filePath)
+			}
 		}
 	}
 	if fileIter != 0 {
@@ -102,12 +108,20 @@ func (a *App) DecryptFilesInDir(dirIndex int) error {
 	}
 	return nil
 }
+func (a *App) InterruptEncryption() {
+	fmt.Println("\033[31minterrupted encryption: ", filepath.Base(lastFilePath), "\033[0m")
+	if err := os.Remove(lastFilePath); err != nil {
+		fmt.Printf("last file remove failed %s", err)
+	}
+	close(interrupt) // Closing the channel sends a signal to all receivers
+	//Make sure to not run this method when interrupt is already closed; this will cause a panic
+}
 
 func (a *App) reverseProgress(encrypt bool, files int) {
 	runtime.EventsEmit(a.ctx, fileCt, 100)
 	runtime.EventsEmit(a.ctx, rebuildFileTree)
 	time.Sleep(time.Second)
-	done := make(chan bool) // Cr
+	done := make(chan bool)
 	go func() {
 		counter := 100
 		for counter > 1 {
@@ -174,7 +188,11 @@ func encryptFile(filePath string) (*os.File, error) {
 		return nil, err
 	}
 	defer encFile.Close() // Ensure the file is closed when the function returns
-	checkLargeFileTicker(data, encrypted, encFile)
+	largeFileErr := checkLargeFileTicker(data, encrypted, encFile)
+
+	if largeFileErr != nil {
+		return nil, fmt.Errorf("failed to encrypt large File: %w", largeFileErr)
+	}
 	// Delete the original file after successfully creating the encrypted version
 	if err := os.Remove(filePath); err != nil {
 		encFile.Close() // Best effort to close the encrypted file before returning error
@@ -183,54 +201,11 @@ func encryptFile(filePath string) (*os.File, error) {
 	return encFile, nil
 }
 
-func checkLargeFileTicker(data []byte, cipherData []byte, cipherFile *os.File) (*os.File, error) {
-	done := make(chan struct{})
-	var maxAtomicSize = 20 // the maximum size *1024*1024 which triggers the encrypt/decrypt ticker
-	var writtenBytes int64 //Use atomic.Int64 w/ writtenBytes.Load() for compatibility with 32bit systems
-	if len(data) > maxAtomicSize*1024*1024 {
-		go func() {
-			ticker := time.NewTicker(10 * time.Millisecond)
-			defer ticker.Stop()
-			for {
-				select {
-				case <-ticker.C:
-					fmt.Printf("%s %d/%d bytes\n",
-						filepath.Base(cipherFile.Name()),
-						atomic.LoadInt64(&writtenBytes), len(cipherData))
-				case <-done:
-					return
-				}
-			}
-		}()
-	}
-	chunkSize := 2 * 1024 // 2KB Chunk
-	for i := 0; i < len(cipherData); i += chunkSize {
-		end := i + chunkSize
-		if end > len(cipherData) {
-			end = len(cipherData)
-		}
-		n, err := cipherFile.Write(cipherData[i:end])
-		if err != nil {
-			return nil, fmt.Errorf("failed to write file: %w", err)
-		}
-		atomic.AddInt64(&writtenBytes, int64(n))
-		// writtenBytes.Add(int64(n)) // if writtenBytes atomic.Int64
-	}
-	close(done)
-	if _, err := cipherFile.Seek(0, 0); err != nil {
-		cipherFile.Close()
-		os.Remove(cipherFile.Name())
-		return nil, err
-	}
-	return cipherFile, nil
-}
-
 func decryptFile(filePath string) (*os.File, error) {
 	aesGCM, data, err := initFileCipher(filePath)
 	if err != nil {
 		return nil, err
 	}
-
 	nonceSize := aesGCM.NonceSize()
 
 	if len(data) < nonceSize {
@@ -249,12 +224,71 @@ func decryptFile(filePath string) (*os.File, error) {
 	}
 	defer decFile.Close()
 
-	checkLargeFileTicker(data, decrypted, decFile)
+	largeFileErr := checkLargeFileTicker(data, decrypted, decFile)
+	if largeFileErr != nil {
+		return nil, fmt.Errorf("failed to decrypt large File: %w", largeFileErr)
+	}
 	if err := os.Remove(filePath); err != nil {
 		decFile.Close()
 		return nil, err
 	}
 	return decFile, nil
+}
+
+func checkLargeFileTicker(data []byte, cipherData []byte, cipherFile *os.File) error {
+	done := make(chan struct{})
+	var once sync.Once     // Ensure the done channel is closed only once
+	var maxAtomicSize = 20 // the maximum size *1024*1024 which triggers the encrypt/decrypt ticker
+	interrupted := false   // Flag to track if an interrupt has occurred
+
+	var writtenBytes int64 //Use atomic.Int64 w/ writtenBytes.Load() for 32bit systems
+	if len(data) > maxAtomicSize*1024*1024 {
+		go func() {
+			ticker := time.NewTicker(10 * time.Millisecond)
+			defer ticker.Stop()
+			for {
+				select {
+				case <-interrupt: // Check if there's an interrupt signal
+					fmt.Println("\033[31m", "large file interrupted "+cipherFile.Name(), "\033[0m")
+					lastFilePath = cipherFile.Name()
+					once.Do(func() { close(done) }) // Close done channel safely
+					interrupted = true              // Set the interrupted flag
+					return
+				case <-ticker.C:
+					fmt.Printf("%s %d/%d bytes\n",
+						filepath.Base(cipherFile.Name()),
+						atomic.LoadInt64(&writtenBytes), len(cipherData))
+				case <-done:
+					return
+				}
+			}
+		}()
+	}
+	chunkSize := 2 * 1024 // 2KB Chunk
+	for i := 0; i < len(cipherData); i += chunkSize {
+		if interrupted { // Check if an interrupt has occurred
+			cipherFile.Close()
+			os.Remove(cipherFile.Name())
+			return fmt.Errorf("large file write interrupted: %s", cipherFile.Name())
+		}
+		end := i + chunkSize
+		if end > len(cipherData) {
+			end = len(cipherData)
+		}
+		n, err := cipherFile.Write(cipherData[i:end])
+		if err != nil {
+			return fmt.Errorf("failed to write file: %w", err)
+		}
+		atomic.AddInt64(&writtenBytes, int64(n))
+		// writtenBytes.Add(int64(n)) // if writtenBytes atomic.Int64
+	}
+	once.Do(func() { close(done) }) // Ensure the done channel is closed
+	if _, err := cipherFile.Seek(0, 0); err != nil {
+		cipherFile.Close()
+		os.Remove(cipherFile.Name())
+		return err
+	}
+	return nil
 }
 
 func checkCredentials(stringToCheck string) int {
@@ -319,7 +353,6 @@ func hashCredentials(stringToHash string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-
 	// Nonce is usually critical for security in AES-GCM. Here, we omit it to meet the requirement,
 	// Be aware this makes the encryption deterministic and less secure.
 	// nonce := make([]byte, aesGCM.NonceSize())

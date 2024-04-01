@@ -18,21 +18,14 @@ type App struct {
 	ctx         context.Context
 	directories []string
 	done        chan bool
-	watcher     *fsnotify.Watcher // Hold the watcher instance
+	watcher     *fsnotify.Watcher
 }
-
-var _width = 220
-var _height = 165
-var currentIndex = -1
 
 func NewApp() *App {
 	return &App{
 		directories: []string{"VAULT", "N-BOX", "O-BOX"},
 	}
 }
-
-var rootFolder = "i-ncript"
-var hashedCredentials []byte
 
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
@@ -155,6 +148,7 @@ func (a *App) MinimizeApp() {
 }
 
 func (a *App) CloseApp() {
+	a.InterruptEncryption()
 	os.Exit(0)
 }
 
@@ -163,7 +157,7 @@ func (a *App) SetIsInFileTask(b bool) bool {
 	if isInFileTask {
 		a.closeDirectoryWatcher()
 	} else {
-		a.DirectoryWatcher(currentIndex)
+		a.DirectoryWatcher(lastDirIndex)
 	}
 	return isInFileTask
 }
@@ -199,13 +193,13 @@ func MoveFiles(srcPaths []string, destDir string) error {
 func (a *App) closeDirectoryWatcher() {
 	if a.watcher != nil {
 		// Remove the current directory from being watched if applicable
-		if currentIndex >= 0 {
-			err := a.watcher.Remove(a.directories[currentIndex])
+		if lastDirIndex >= 0 {
+			err := a.watcher.Remove(a.directories[lastDirIndex])
 			if err != nil {
 				fmt.Println("\033[31m", "Failed to remove directory from watcher:", "\033[0m")
 			}
 		}
-		s := fmt.Sprintf("stopped watching %s directory", filepath.Base(a.directories[currentIndex]))
+		s := fmt.Sprintf("stopped watching %s directory", filepath.Base(a.directories[lastDirIndex]))
 		fmt.Println("\033[33m", s, "\033[0m")
 		a.watcher.Close() // Close the current watcher to clean up resources
 	}
@@ -220,7 +214,7 @@ func (a *App) resetDirectoryWatcher(dirIndex int) {
 	}
 
 	a.done = make(chan bool)
-	currentIndex = dirIndex // Initialize with an invalid index
+	lastDirIndex = dirIndex // Initialize with an invalid index
 }
 
 func (a *App) DirectoryWatcher(dirIndex int) {
@@ -274,8 +268,8 @@ func (a *App) DirectoryWatcher(dirIndex int) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	s := fmt.Sprintf("now watching %s directory", filepath.Base(a.directories[currentIndex]))
+	s := fmt.Sprintf("now watching %s directory", filepath.Base(a.directories[lastDirIndex]))
 	fmt.Println("\033[32m", s, "\033[0m")
-	currentIndex = dirIndex // Update the current index
+	lastDirIndex = dirIndex // Update the current index
 	<-a.done                // Keep the watcher goroutine alive
 }

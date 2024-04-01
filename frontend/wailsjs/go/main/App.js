@@ -26,6 +26,10 @@ export function InitializeRootFolder() {
   return window['go']['main']['App']['InitializeRootFolder']();
 }
 
+export function InterruptEncryption() {
+  return window['go']['main']['App']['InterruptEncryption']();
+}
+
 export function Login(arg1, arg2) {
   return window['go']['main']['App']['Login'](arg1, arg2);
 }
