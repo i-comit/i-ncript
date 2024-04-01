@@ -52,14 +52,17 @@ body {
 #left-panel {
     padding: 0.6rem;
     padding-top: 0rem;
+    margin-right: 0.1rem;
+    /*rounded-lg*/
+    border-radius: 0.5rem;
     width: 45%;
 }
 
 #right-panel {
-    /* max-height: 80vh; */
-    /* 80% of the viewport height */
+    margin-left: 0.1rem;
+    border-radius: 0.5rem;
+
     width: 55%;
-    /* Optional: For horizontal scrolling, you might set a max-width */
     /* Enable scrolling within the div */
     overflow-y: auto;
     /* Enables vertical scrolling */

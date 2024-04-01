@@ -2,7 +2,7 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
     import { get } from "svelte/store";
-    import { GradientButton, Popover, Progressbar } from "flowbite-svelte";
+    import { GradientButton, Popover, Progressbar, Tooltip } from "flowbite-svelte";
     import Button from "../elements/Button.svelte";
     import Toggle from "../elements/Toggle.svelte";
 
@@ -18,7 +18,7 @@
     import { AppPage, currentPage } from "../enums/AppPage.ts";
     import { Modals, currentModal } from "../enums/Modals.ts";
 
-    import { pageChangeBtn, height, width } from "../stores/globalVariables.ts";
+    import { pageChangeBtn, height, width, tooltipTailwindClass } from "../stores/globalVariables.ts";
     import { encryptProgress } from "../stores/encryptProgress";
 
     import {
@@ -52,6 +52,7 @@
         GetDirectoryPath,
         GetFilesByType,
     } from "../../wailsjs/go/main/Getters";
+    import DirSize from "../elements/DirSize.svelte";
 
     let _fileCt: number;
     _fileCt = 0;
@@ -113,9 +114,9 @@
 
 <div class="flex h-screen !rounded-lg">
     <Frame />
+    <DirSize/>
     <div
         id="left-panel"
-        class="mr-0.5 rounded-lg"
         role="none"
         on:mousedown={clearHeldBtns}
     >
@@ -133,7 +134,7 @@
             <p>32GB</p>
         </div>
         <div class=" !flex !justify-start row center bg-white mb-1">
-            <p>encrypted n files</p>
+            <p>encrypted 9999999 files</p>
         </div>
         <div class="buttons">
             <div class="row space-x-5">
@@ -200,7 +201,7 @@
     <div
         id="right-panel"
         role="none"
-        class="bg-gray-500 ml-0.5 rounded-lg"
+        class="bg-gray-500"
         on:mouseleave={onmouseleave}
         on:click={clearHeldBtns}
     >

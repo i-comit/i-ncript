@@ -244,7 +244,7 @@
         ? "position: sticky; top: 0; z-index: 10; background-color: green !important"
         : "position: relative;"}  -->
     <ul
-        class={basePath(_fileTree.relPath) === pageName() ? "pl-1" : "pl-3"}
+        class={basePath(_fileTree.relPath) === pageName() ? "pl-0" : "pl-3"}
         style={basePath(_fileTree.relPath) === pageName()
             ? "padding-top: 1px;font-size: 15px;color:black;--wails-draggable:drag;"
             : "margin-top: -2px;color:white;--wails-draggable:no-drag; margin-bottom: 0px"}
@@ -252,6 +252,9 @@
         <li>
             {#if _fileTree.children && _fileTree.children.length > 0}<!-- Folder with children -->
                 <button
+                    class="flex {basePath(_fileTree.relPath) === pageName()
+                        ? 'rounded-md px-1'
+                        : 'pl-3'}"
                     style={basePath(_fileTree.relPath) === pageName()
                         ? "position: sticky; top: 1px; z-index: 5; background-color:blue"
                         : "position: relative;"}
@@ -259,7 +262,6 @@
                         toggleExpansion();
                         clearHeldBtns();
                     }}
-                    class="flex"
                     on:mouseenter={() => handleMouseEnter()}
                     on:mouseup={() => moveFilesFromFileNode()}
                 >

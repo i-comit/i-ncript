@@ -87,7 +87,7 @@
             </div>
         </div>
     </div>
-    <div id="right-panel" class="bg-gray-500 mt-6 px-0">
+    <div id="right-panel" class="bg-gray-500 mt-0 px-0">
         {#if _modal === Modals.None}
             <TreeView _fileTree={$fileTree} />
         {:else if _modal === Modals.Settings}
