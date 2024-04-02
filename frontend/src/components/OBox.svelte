@@ -5,8 +5,9 @@
 
     import { AppPage } from "../enums/AppPage.ts";
     import { Modals, currentModal } from "../enums/Modals.ts";
+    import NeuButton from "../elements/NeuButton.svelte";
 
-    import { pageChangeBtn } from "../stores/globalVariables.ts";
+    import { lightBGColor, pageChangeBtn } from "../stores/globalVariables.ts";
     import { buildFileTree, fileTree } from "../tools/fileTree.ts";
 
     import { switchPages } from "../tools/utils.ts";
@@ -34,7 +35,11 @@
 
 <div class="flex h-screen !rounded-lg">
     <Frame />
-    <div id="left-panel" class="max-w-45">
+    <div
+        id="left-panel"
+        class="max-w-45"
+        style="background-color:{lightBGColor}"
+    >
         <div id="page-info" class="static">
             <p>O-BOX</p>
             <p>3.5GB</p>
@@ -64,22 +69,20 @@
             <div class="h-2"></div>
 
             <div class="row space-x-5">
-                <GradientButton
-                    color="cyanToBlue"
-                    class={pageChangeBtn}
-                    on:click={() => switchPages(AppPage.NBox)}
-                    >N-BOX</GradientButton
+                <NeuButton on:click={() => switchPages(AppPage.NBox)}
+                    >N-BOX</NeuButton
                 >
-                <GradientButton
-                    color="cyanToBlue"
-                    class={pageChangeBtn}
-                    on:click={() => switchPages(AppPage.Vault)}
-                    >VAULT</GradientButton
+                <NeuButton on:click={() => switchPages(AppPage.Vault)}
+                    >VAULT</NeuButton
                 >
             </div>
         </div>
     </div>
-    <div id="right-panel" class="bg-gray-500 mt-0 px-0">
+    <div
+        id="right-panel"
+        class="bg-gray-500 mt-0 px-0"
+        style="background-color:{lightBGColor}"
+    >
         {#if _modal === Modals.None}
             <TreeView _fileTree={$fileTree} />
         {:else if _modal === Modals.Settings}

@@ -2,13 +2,7 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
     import { get } from "svelte/store";
-    import {
-        GradientButton,
-        Popover,
-        Progressbar,
-        Tooltip,
-    } from "flowbite-svelte";
-    import Button from "../elements/NeumorphicButton.svelte";
+    import { Progressbar, Button } from "flowbite-svelte";
     import Toggle from "../elements/Toggle.svelte";
 
     import { sineOut } from "svelte/easing";
@@ -23,12 +17,7 @@
     import { AppPage, currentPage } from "../enums/AppPage.ts";
     import { Modals, currentModal } from "../enums/Modals.ts";
 
-    import {
-        pageChangeBtn,
-        height,
-        width,
-        tooltipTailwindClass,
-    } from "../stores/globalVariables.ts";
+    import { height, width, lightBGColor } from "../stores/globalVariables.ts";
     import { encryptProgress } from "../stores/encryptProgress";
 
     import {
@@ -47,6 +36,8 @@
 
     import { switchPages, switchModals } from "../tools/utils.ts";
 
+    import NeuButton from "../elements/NeuButton.svelte";
+
     import Frame from "../elements/Frame.svelte";
     import Info from "./Info.svelte";
     import Settings from "./Settings.svelte";
@@ -63,8 +54,8 @@
         GetDirectoryPath,
         GetFilesByType,
     } from "../../wailsjs/go/main/Getters";
-    import DirSize from "../elements/DirSize.svelte";
-    import CircleProgressBar from "../elements/CircleProgressBar.svelte";
+    import DirSize from "../elements/DirectorySizeBar.svelte";
+    import CircleProgressBar from "../elements/RadialProgress.svelte";
 
     let _fileCt: number;
     _fileCt = 0;
@@ -132,14 +123,19 @@
 <div class="flex h-screen !rounded-lg">
     <Frame />
     <DirSize />
-    <CircleProgressBar/>
-    <div id="left-panel" role="none" on:mousedown={clearHeldBtns}>
+    <!-- <CircleProgressBar className="left-5"/> -->
+    <div
+        id="left-panel"
+        style="background-color:{lightBGColor}"
+        role="none"
+        on:mousedown={clearHeldBtns}
+    >
         <div id="page-info" class="static">
             <p>VAULT</p>
             <Button
                 pill={true}
                 outline={true}
-                class="z-20"
+                class="z-20 h-0"
                 color="dark"
                 style="--wails-draggable:drag"
                 on:click={() => switchModals(Modals.Info)}
@@ -148,12 +144,12 @@
             <p>32GB</p>
         </div>
         <div class=" !flex !justify-start row center bg-white mb-1">
-            <p>encrypted 9999999 files</p>
+            <p>encrypted 999999 files</p>
         </div>
         <div class="buttons">
-            <div class="row space-x-5">
-                <Button on:click={() => encrypt()}>NCRYPT</Button>
-                <Button on:click={() => decrypt()}>DCRYPT</Button>
+            <div class="row space-x-2">
+                <NeuButton on:click={() => encrypt()}>ENCRYPT</NeuButton>
+                <NeuButton on:click={() => decrypt()}>DECRYPT</NeuButton>
             </div>
             <div class="h-1"></div>
             <div class="flex justify-between items-center">
@@ -162,7 +158,7 @@
                         pill={true}
                         outline={true}
                         color="dark"
-                        class="!p-1 !px-0 !mb-2"
+                        class="!p-1 !px-0 !mb-2 h-1"
                         on:click={stinky}
                         ><CirclePauseSolid
                             class="w-5 h-5"
@@ -185,18 +181,15 @@
                 </div>
             </div>
 
-            <div class="h-2.5"></div>
-            <div class="row">
-                <GradientButton
-                    color="cyanToBlue"
-                    class={pageChangeBtn}
-                    on:click={() => switchPages(AppPage.OBox)}
-                    >O-BOX</GradientButton
+            <div class="h-1"></div>
+            <div class="row space-x-2">
+                <NeuButton on:click={() => switchPages(AppPage.OBox)}
+                    >O-BOX</NeuButton
                 >
                 <Button
                     pill={true}
                     outline={true}
-                    class="!p-1"
+                    class="!p-1 h-7"
                     color="dark"
                     on:click={() => switchModals(Modals.Settings)}
                     ><AdjustmentsVerticalOutline
@@ -204,11 +197,8 @@
                         color="white"
                     /></Button
                 >
-                <GradientButton
-                    color="cyanToBlue"
-                    class={pageChangeBtn}
-                    on:click={() => switchPages(AppPage.NBox)}
-                    >N-BOX</GradientButton
+                <NeuButton on:click={() => switchPages(AppPage.NBox)}
+                    >N-BOX</NeuButton
                 >
             </div>
         </div>
@@ -217,9 +207,12 @@
         id="right-panel"
         role="none"
         class="bg-gray-500"
+        style="background-color:{lightBGColor}"
+
         on:mouseleave={onmouseleave}
         on:click={clearHeldBtns}
     >
+        <CircleProgressBar className="right-10" />
         {#if _modal === Modals.None}
             <TreeView _fileTree={$fileTree} />
         {:else if _modal === Modals.Settings}

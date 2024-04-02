@@ -111,7 +111,7 @@
         passwordCheck = passwordCheck1 && passwordCheck2 && passwordCheck3;
     }
 
-    import CircleProgressBar from "../elements/CircleProgressBar.svelte";
+    import NeuButton from "../elements/NeuButton.svelte";
 </script>
 
 <form
@@ -244,17 +244,14 @@
         </div>
         <div>
             {#if usernameCheck && passwordCheck}
-                <GradientButton
-                    color="cyanToBlue"
-                    class="!w-100 min-h-5 max-h-7 pt-3 "
-                    type="submit">LOGIN</GradientButton
+                <NeuButton className="!w-20 " type="submit"
+                    >LOGIN</NeuButton
                 >
             {:else}
-                <GradientButton
-                    color="cyanToBlue"
-                    disabled="true"
-                    class="!w-100 min-h-5 max-h-7 pt-3 opacity-25"
-                    type="submit">LOGIN</GradientButton
+                <NeuButton
+                    disabled={true}
+                    className="!w-20 opacity-20"
+                    type="submit">LOGIN</NeuButton
                 >
             {/if}
         </div>

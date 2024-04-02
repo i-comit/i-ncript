@@ -9,6 +9,7 @@ const config = {
     vitePreprocess({}),
     sveltePreprocess({
       scss: true,
+      less: true
     }),
   ],
 };

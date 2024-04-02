@@ -9,3 +9,5 @@ export const height = 165
 
 export const accentColor = "#95c7db"
 export const darkColor = "#757575"
+
+export const lightBGColor = "#eeeeee"

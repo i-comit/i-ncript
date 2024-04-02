@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
+    export let className = "";
 
     let dataProgress: number = 0; // Initial value
 
@@ -12,7 +13,10 @@
     });
 </script>
 
-<div class="ko-progress-circle absolute" data-progress={dataProgress}>
+<div
+    class="ko-progress-circle z-100 {` ${className}`}"
+    data-progress={dataProgress}
+>
     <div class="ko-circle">
         <div class="full ko-progress-circle__slice">
             <div class="ko-progress-circle__fill"></div>
@@ -26,18 +30,20 @@
 </div>
 
 <style lang="scss">
-    $circle-size: 120px;
+    $circle-size: 150px;
     $circle-background: #d9d9d9;
     $circle-color: #1291d4;
-    $inset-size: 105px;
+    $inset-size: 135px;
     $inset-color: #fbfbfb;
     $transition-length: 1s;
 
     .ko-progress-circle {
-        margin: 20px auto;
+        margin: 0px;
         width: $circle-size;
         height: $circle-size;
-
+        z-index: 25;
+        position: fixed;
+        bottom: 1rem;
         background-color: $circle-background;
         border-radius: 50%;
         .ko-progress-circle__slice,
