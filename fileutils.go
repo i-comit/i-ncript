@@ -245,7 +245,9 @@ func getFilesRecursively(dirs ...string) ([]string, error) {
 				return err
 			}
 			if !info.IsDir() { // Ensure we're only appending files, not directories
-				files = append(files, path)
+				if filepath.Base(path) != keyFileName {
+					files = append(files, path)
+				}
 			}
 			return nil
 		})

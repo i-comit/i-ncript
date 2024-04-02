@@ -384,8 +384,7 @@
     </ul>
     <div id="dial" class="fixed">
         <SpeedDial
-            defaultClass="fixed end-0"
-            class="bg-gray-800 rounded-full bg-white"
+            class="flex items-center justify-center bg-slate-50 !rounded-br-3xl !rounded-tl-3xl h-8 w-14"
         >
             <SpeedDialButton
                 name="Collapse "
@@ -422,8 +421,8 @@
 
 <style>
     #dial {
-        right: -12px !important;
-        bottom: 10vh !important;
+        right: -0.7rem !important;
+        bottom: -6vh !important;
         transform: scale(0.55) !important;
         z-index: 5;
     }
@@ -434,7 +433,7 @@
         user-select: none;
         text-align: justify;
         font-size: small;
-        text-overflow:ellipsis;
+        text-overflow: ellipsis;
     }
     button {
         text-align: justify;

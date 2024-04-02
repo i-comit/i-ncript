@@ -12,6 +12,7 @@
         AdjustmentsVerticalOutline,
         CirclePauseSolid,
         BarsFromLeftOutline,
+        PauseSolid,
     } from "flowbite-svelte-icons";
 
     import { AppPage, currentPage } from "../enums/AppPage.ts";
@@ -87,7 +88,7 @@
                 if (filePaths.length > 0) {
                     _fileCt = filePaths.length;
                     EncryptFilesInDir(0);
-                    ResizeWindow(width * 2, height + 15);
+                    // ResizeWindow(width * 2, height + 15);
                 }
             });
         });
@@ -99,9 +100,7 @@
             GetFilesByType(0, true).then((filePaths) => {
                 if (filePaths.length > 0) {
                     _fileCt = filePaths.length;
-                    LogInfo("Began decrypting " + filePaths.length);
                     DecryptFilesInDir(0);
-                    ResizeWindow(width * 2, height + 15);
                 }
             });
         });
@@ -123,7 +122,13 @@
 <div class="flex h-screen !rounded-lg">
     <Frame />
     <DirSize />
-    <!-- <CircleProgressBar className="left-5"/> -->
+    <CircleProgressBar className="left-5 ">
+        <div class="absolute inset-5 flex flex-col align-center top-7">
+            <p class="h-4 text-center leading-none text-sm select-none">ENCRYPTING</p>
+            <PauseSolid class="w-12 h-12 self-center " color="dark" />
+            <p class="bg-gray-400 h-4 text-center leading-none select-none">12/123</p>
+        </div></CircleProgressBar
+    >
     <div
         id="left-panel"
         style="background-color:{lightBGColor}"
@@ -208,7 +213,6 @@
         role="none"
         class="bg-gray-500"
         style="background-color:{lightBGColor}"
-
         on:mouseleave={onmouseleave}
         on:click={clearHeldBtns}
     >

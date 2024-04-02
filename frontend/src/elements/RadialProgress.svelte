@@ -1,5 +1,8 @@
+<!-- https://codepen.io/eZ0/pen/eZXNzd -->
 <script lang="ts">
     import { onMount } from "svelte";
+    import { lightBGColor } from "../stores/globalVariables.ts";
+
     export let className = "";
 
     let dataProgress: number = 0; // Initial value
@@ -26,10 +29,16 @@
             <div class="ko-progress-circle__fill ko-progress-circle__bar"></div>
         </div>
     </div>
-    <div class="ko-progress-circle__overlay"></div>
+    <div
+        class="ko-progress-circle__overlay"
+        style="background-color:{lightBGColor}"
+    >
+        <slot />
+    </div>
 </div>
 
 <style lang="scss">
+    @use "sass:math";
     $circle-size: 150px;
     $circle-background: #d9d9d9;
     $circle-color: #1291d4;
@@ -56,9 +65,9 @@
             border-radius: 50%;
         }
         .ko-progress-circle__slice {
-            clip: rect(0px, $circle-size, $circle-size, $circle-size/2);
+            clip: rect(0px, $circle-size, $circle-size, calc($circle-size / 2));
             .ko-progress-circle__fill {
-                clip: rect(0px, $circle-size/2, $circle-size, 0px);
+                clip: rect(0px, calc($circle-size / 2), $circle-size, 0px);
                 background-color: $circle-color;
             }
         }
@@ -66,15 +75,20 @@
             width: $inset-size;
             height: $inset-size;
             position: absolute;
-            margin-left: ($circle-size - $inset-size)/2;
-            margin-top: ($circle-size - $inset-size)/2;
+            margin-left: math.div($circle-size - $inset-size, 2);
+            margin-top: math.div($circle-size - $inset-size, 2);
 
             background-color: $inset-color;
             border-radius: 50%;
+            ::slotted(*) {
+                font-size: 1px !important; // Tailwind equivalent: text-xs
+                margin: 0; // Tailwind equivalent: m-0
+                padding: 0; // Tailwind equivalent: p-0
+            }
         }
 
         $i: 0;
-        $increment: 180deg / 100;
+        $increment: math.div(180deg, 100);
         @while $i <= 100 {
             &[data-progress="#{$i}"] {
                 .ko-progress-circle__slice.full,

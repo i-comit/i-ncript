@@ -351,12 +351,12 @@ func hashCredentials(stringToHash string) (string, error) {
 
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("hashCredentials fail: %w", err)
 	}
 
 	aesGCM, err := cipher.NewGCM(block)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("hashCredentials fail: %w", err)
 	}
 	// Nonce is usually critical for security in AES-GCM. Here, we omit it to meet the requirement,
 	// Be aware this makes the encryption deterministic and less secure.

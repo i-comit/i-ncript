@@ -20,21 +20,14 @@
 
 <style lang="scss">
     @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap");
+    @import '../consts.scss';
 
     $fontFamily: "Montserrat", sans-serif;
     $fontSize: 15px;
     $textColor: #5d5d5d;
 
     $height: 26px;
-
     // $bgColor: #e9e9e9;
-    $iconColor: #8992a5;
-
-    $accentBlue: #1657f0;
-    $brightBlue: #36d7e0;
-
-    $darkShadow: #484f60;
-    $lightShadow: #ffffff;
 
     $dropShadow:
         8px 8px 12px -2px rgba($darkShadow, 0.4),
