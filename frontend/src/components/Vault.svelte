@@ -29,7 +29,6 @@
     } from "../tools/fileTree.ts";
 
     import {
-        ResizeWindow,
         EncryptFilesInDir,
         DecryptFilesInDir,
         InterruptEncryption,
@@ -46,9 +45,7 @@
     import Logger from "./Logger.svelte";
 
     import {
-        EventsOff,
         EventsOn,
-        LogError,
         LogInfo,
     } from "../../wailsjs/runtime/runtime";
     import {
@@ -58,6 +55,7 @@
     import DirSize from "../elements/DirectorySizeBar.svelte";
     import RadialProgress from "../elements/RadialProgress.svelte";
     import { FileTasks, currentFileTask } from "../enums/FileTasks.ts";
+    import NeuSearch from "../elements/NeuSearch.svelte";
 
     let _totalFileCt: number;
     _totalFileCt = 0;
@@ -110,17 +108,10 @@
             });
         });
     }
-
-    function interruptFileTask() {
-        LogInfo("Interrupted file task");
-        InterruptEncryption();
-    }
 </script>
 
 <div class="flex h-screen !rounded-lg">
     <Frame />
-    <DirSize />
-
     <div
         id="left-panel"
         style="background-color:{lightBGColor}"
@@ -128,10 +119,7 @@
         on:mousedown={clearHeldBtns}
     >
         {#if _currentFileTask !== FileTasks.None}
-            <RadialProgress
-                className="left-5 "
-                dataProgress={_fileTaskPercent}
-            >
+            <RadialProgress className="left-5 " dataProgress={_fileTaskPercent}>
                 <div class="absolute inset-5 flex flex-col align-center top-7">
                     <p class="h-4 text-center leading-none text-sm select-none">
                         {_currentFileTask}
@@ -147,7 +135,7 @@
                 </div></RadialProgress
             >
         {/if}
-        <div id="page-info" class="static">
+        <!-- <div id="page-info" class="static">
             <p>VAULT</p>
             <Button
                 pill={true}
@@ -159,7 +147,10 @@
                 ><InfoCircleOutline class="w-5 h-5" color="white" /></Button
             >
             <p>32GB</p>
-        </div>
+        </div> -->
+        <div class="h-6"></div>
+
+        <DirSize />
         <div class=" !flex !justify-start row center bg-white mb-1">
             <p>encrypted 999999 files</p>
         </div>
@@ -171,16 +162,6 @@
             <div class="h-1"></div>
             <div class="flex justify-between items-center">
                 <div class="flex space-x-1">
-                    <Button
-                        pill={true}
-                        outline={true}
-                        color="dark"
-                        class="!p-1 !px-0 !mb-2 h-1"
-                        ><CirclePauseSolid
-                            class="w-5 h-5"
-                            color="white"
-                        /></Button
-                    >
                     <button
                         class="!p-1 !px-0 !mb-2"
                         color="dark"
@@ -228,6 +209,7 @@
         on:mouseleave={onmouseleave}
         on:click={clearHeldBtns}
     >
+        <NeuSearch  />
         <RadialProgress className="right-10" dataProgress={30} />
         {#if _modal === Modals.None}
             <TreeView _fileTree={$fileTree} />

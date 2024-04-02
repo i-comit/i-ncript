@@ -1,0 +1,62 @@
+$textColor: #5d5d5d;
+
+$iconColor: #8992a5;
+
+$accentBlue: #1657f0;
+$brightBlue: #36d7e0;
+
+$darkShadow: #484f60;
+$lightShadow: #ffffff;
+
+$dropShadow:
+    8px 8px 12px -2px rgba($darkShadow, 0.4),
+    -6px -6px 12px -1px rgba($lightShadow, 1);
+
+$innerShadow:
+    inset -4px -4px 6px -1px rgba($lightShadow, 1),
+    inset 2px 2px 8px -1px rgba($darkShadow, 0.5);
+
+$fontFamily: "Montserrat", sans-serif;
+$fontSize: 15px;
+
+$borderWidth: 3px;
+
+@mixin applyFontStyle() {
+    font-family: $fontFamily;
+    font-size: $fontSize;
+    line-height: $fontSize;
+    color: $textColor;
+}
+// Global
+%shared-styles {
+    @include applyFontStyle;
+    padding: 0 8px;
+    position: relative;
+    border: $borderWidth solid rgba($lightShadow, 0);
+    outline: none;
+    text-align: center;
+    transition: all 100ms ease-in-out;
+
+    &:hover {
+        box-shadow: none;
+        border-color: rgba($lightShadow, 0.5);
+    }
+}
+
+button {
+    @extend %shared-styles;
+    box-shadow: $dropShadow;
+    cursor: pointer;
+
+    &:active {
+        box-shadow: $innerShadow;
+        border-color: rgba($lightShadow, 0);
+    }
+
+    & > * {
+        vertical-align: middle;
+    }
+    & > span:last-child {
+        padding-left: 5px;
+    }
+}

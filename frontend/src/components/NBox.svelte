@@ -18,6 +18,7 @@
     import Settings from "./Settings.svelte";
     import TreeView from "./FileTree.svelte";
     import Logger from "./Logger.svelte";
+    import NeuSearch from "../elements/NeuSearch.svelte";
 
     let _modal: Modals;
     currentModal.subscribe((value) => {
@@ -91,6 +92,7 @@
         class="bg-gray-500 mt-0 px-0"
         style="background-color:{lightBGColor}"
     >
+        <NeuSearch />
         {#if _modal === Modals.None}
             <TreeView _fileTree={$fileTree} />
         {:else if _modal === Modals.Settings}

@@ -12,7 +12,7 @@
 </script>
 
 <button
-    class="oval-lg {` ${className}`}"
+    class="oval-lg select-none {` ${className}`}"
     style="background-color:{lightBGColor}"
     {disabled}
     on:click={handleClick}><slot /></button
@@ -20,37 +20,15 @@
 
 <style lang="scss">
     @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap");
-    @import '../consts.scss';
-
-    $fontFamily: "Montserrat", sans-serif;
-    $fontSize: 15px;
-    $textColor: #5d5d5d;
-
+    @import '../neumorphic.scss';
+    $fontSize: 1px;
     $height: 26px;
-    // $bgColor: #e9e9e9;
-
-    $dropShadow:
-        8px 8px 12px -2px rgba($darkShadow, 0.4),
-        -6px -6px 12px -1px rgba($lightShadow, 1);
-
-    $innerShadow:
-        inset -4px -4px 6px -1px rgba($lightShadow, 1),
-        inset 2px 2px 8px -1px rgba($darkShadow, 0.5);
 
     // Mixins
-
     @mixin size($width, $height: $width) {
         width: $width;
         height: $height;
     }
-
-    @mixin applyFontStyle() {
-        font-family: $fontFamily;
-        font-size: $fontSize;
-        line-height: $fontSize;
-        color: $textColor;
-    }
-
     @mixin gridPlacement($direction, $start, $end) {
         grid-#{$direction}-start: $start;
         grid-#{$direction}-end: $end;
@@ -68,42 +46,6 @@
     *:before,
     *:after {
         box-sizing: border-box;
-    }
-
-    // Global
-    %shared-styles {
-        @include applyFontStyle;
-        padding: 0 2px;
-        // padding-top: 15px;
-        padding-bottom: 4px;
-        position: relative;
-        border: 2px solid rgba($lightShadow, 0);
-        outline: none;
-        text-align: center;
-        transition: all 100ms ease-in-out;
-
-        &:hover {
-            box-shadow: none;
-            border-color: rgba($lightShadow, 0.5);
-        }
-    }
-
-    button {
-        @extend %shared-styles;
-        box-shadow: $dropShadow;
-        cursor: pointer;
-
-        &:active {
-            box-shadow: $innerShadow;
-            border-color: rgba($lightShadow, 0);
-        }
-
-        & > * {
-            vertical-align: middle;
-        }
-        & > span:last-child {
-            padding-left: 5px;
-        }
     }
 
     // Oval Buttons

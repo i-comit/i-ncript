@@ -7,6 +7,8 @@ export const rootFolder = '------';
 export const width = 220
 export const height = 165
 
+export const darkTextColor = "#111111"
+
 export const accentColor = "#95c7db"
 export const darkColor = "#757575"
 

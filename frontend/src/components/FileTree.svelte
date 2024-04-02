@@ -23,12 +23,15 @@
         FileVideoSolid,
         FileMusicSolid,
         FileOutline,
+        SearchOutline,
     } from "flowbite-svelte-icons";
     import {
         SpeedDial,
         SpeedDialButton,
         Tooltip,
         Popover,
+        Search,
+        Button,
     } from "flowbite-svelte";
 
     import {
@@ -64,8 +67,12 @@
 
     import { AppPage, currentPage } from "../enums/AppPage.ts";
     import { GetDirectoryPath } from "../../wailsjs/go/main/Getters";
-    import { tooltipTailwindClass } from "../stores/globalVariables.ts";
+    import {
+        darkTextColor,
+        tooltipTailwindClass,
+    } from "../stores/globalVariables.ts";
     import { FileTypes, getFileType } from "../enums/FileTypes.ts";
+    import NeuSearch from "../elements/NeuSearch.svelte";
 
     let _label: string;
     let _heldDownBtns: { [key: string]: HTMLButtonElement };
@@ -233,31 +240,35 @@
     on:touchstart={onTouchStart}
     on:touchend={onTouchEnd}
 />
-<div class="bg-gray-300 rounded-lg" role="none" on:click={clearHeldBtns}>
-    <button
+
+<div class="rounded-lg" role="none" on:click={clearHeldBtns}>
+    <!-- <button
         class="z-10 fixed top-0 left-1/2 transform -translate-x-1/2 mt-0.5"
         style="--wails-draggable:drag"
     >
-        <!-- <SearchOutline class="w-5 h-5" color="dark" /> -->
-    </button>
+        <SearchOutline class="w-5 h-5" color="dark" />
+    </button> -->
     <!-- style={basePath(_fileTree.relPath) === pageName()
         ? "position: sticky; top: 0; z-index: 10; background-color: green !important"
         : "position: relative;"}  -->
+
     <ul
         class={basePath(_fileTree.relPath) === pageName() ? "pl-0" : "pl-3"}
-        style={basePath(_fileTree.relPath) === pageName()
-            ? "padding-top: 1px;font-size: 15px;color:black;--wails-draggable:drag;"
-            : "margin-top: -2px;color:white;--wails-draggable:no-drag; margin-bottom: 0px"}
+        style={`color: ${darkTextColor}; ${
+            basePath(_fileTree.relPath) === pageName()
+                ? "padding-top: 1px; font-size: 15px; --wails-draggable: drag;"
+                : `margin-top: -2px; --wails-draggable: no-drag; margin-bottom: 0px`
+        }`}
     >
         <li>
             {#if _fileTree.children && _fileTree.children.length > 0}<!-- Folder with children -->
                 <button
                     class="flex {basePath(_fileTree.relPath) === pageName()
-                        ? 'rounded-md px-1'
+                        ? 'rounded-md px-1 underline'
                         : 'pl-1.5'}"
                     style="border-left: 1px solid #eee;
                     {basePath(_fileTree.relPath) === pageName()
-                        ? 'position: sticky; top: 1px; z-index: 5; background-color:blue'
+                        ? 'position: sticky; top: 1px; z-index: 5;'
                         : 'position: relative;'}"
                     on:click={() => {
                         toggleExpansion();
@@ -298,7 +309,6 @@
                     {#if isFile}
                         <button
                             class="flex rounded-md px-0.5 ml-1"
-                            style="border-left: 1px solid #eee;"
                             bind:this={buttonRef}
                             on:mousedown={() => {
                                 handleFileClick(_fileTree.relPath, buttonRef);
@@ -384,7 +394,7 @@
     </ul>
     <div id="dial" class="fixed">
         <SpeedDial
-            class="flex items-center justify-center bg-slate-50 !rounded-br-3xl !rounded-tl-3xl h-8 w-14"
+            class="flex items-center justify-center bg-gray-600 !rounded-br-xl !rounded-tl-3xl h-8 w-14"
         >
             <SpeedDialButton
                 name="Collapse "
