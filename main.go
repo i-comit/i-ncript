@@ -17,7 +17,7 @@ var assets embed.FS
 
 // EVENT consts
 const fileProcessed = "fileProcessed"
-const fileCt = "fileCount"
+const totalFileCt = "totalFileCount"
 const addLogFile = "addLogFile"
 
 // DATA consts

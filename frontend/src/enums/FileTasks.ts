@@ -1,7 +1,12 @@
 export enum FileTasks {
-    Encrypt = "encrypt",
-    Decrypt = "decrypt",
-    Move = "move",
-    Pack = "pack",
-    Copy = "copy",
+    Encrypt = "ENCRYPTING",
+    Decrypt = "DECRYPTING",
+    Move = "MOVING",
+    Pack = "PACKING",
+    Copy = "COPYING",
+    None = "none..",
 }
+
+import { writable } from 'svelte/store';
+
+export const currentFileTask = writable<FileTasks>(FileTasks.None);

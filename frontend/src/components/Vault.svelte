@@ -19,7 +19,7 @@
     import { Modals, currentModal } from "../enums/Modals.ts";
 
     import { height, width, lightBGColor } from "../stores/globalVariables.ts";
-    import { encryptProgress } from "../stores/encryptProgress";
+    import { encryptProgress as fileCt } from "../stores/encryptProgress";
 
     import {
         buildFileTree,
@@ -56,21 +56,29 @@
         GetFilesByType,
     } from "../../wailsjs/go/main/Getters";
     import DirSize from "../elements/DirectorySizeBar.svelte";
-    import CircleProgressBar from "../elements/RadialProgress.svelte";
+    import RadialProgress from "../elements/RadialProgress.svelte";
+    import { FileTasks, currentFileTask } from "../enums/FileTasks.ts";
 
-    let _fileCt: number;
-    _fileCt = 0;
+    let _totalFileCt: number;
+    _totalFileCt = 0;
+    let _fileCount: number;
+    fileCt.subscribe((value) => {
+        _fileCount = value;
+    });
+    let _fileTaskPercent: number;
+
     onMount(() => {
         buildFileTree();
-        EventsOn("fileProcessed", (currentCount) => {
-            encryptProgress.set(currentCount);
-            _encryptPercent = (_encryptProgress / _fileCt) * 100;
+        EventsOn("fileProcessed", (fileCtEvt) => {
+            fileCt.set(fileCtEvt);
+            _fileTaskPercent = Math.round((_fileCount / _totalFileCt) * 100);
+            if (fileCtEvt === 0) currentFileTask.set(FileTasks.None);
         });
     });
 
-    let _encryptProgress: number;
-    encryptProgress.subscribe(() => {
-        _encryptProgress = $encryptProgress;
+    let _currentFileTask: FileTasks;
+    currentFileTask.subscribe((value) => {
+        _currentFileTask = value;
     });
 
     let _modal: Modals;
@@ -78,17 +86,14 @@
         _modal = value;
     });
 
-    let _encryptPercent: number;
-    let encrypting: boolean;
-    encrypting = false;
     function encrypt() {
         setIsInFileTask(true).then(() => {
             GetFilesByType(0, false).then((filePaths) => {
                 LogInfo("Began encrypting");
                 if (filePaths.length > 0) {
-                    _fileCt = filePaths.length;
+                    currentFileTask.set(FileTasks.Encrypt);
+                    _totalFileCt = filePaths.length;
                     EncryptFilesInDir(0);
-                    // ResizeWindow(width * 2, height + 15);
                 }
             });
         });
@@ -96,25 +101,18 @@
 
     function decrypt() {
         setIsInFileTask(true).then(() => {
-            LogInfo("Began decrypting1");
             GetFilesByType(0, true).then((filePaths) => {
                 if (filePaths.length > 0) {
-                    _fileCt = filePaths.length;
+                    currentFileTask.set(FileTasks.Decrypt);
+                    _totalFileCt = filePaths.length;
                     DecryptFilesInDir(0);
                 }
             });
         });
     }
 
-    function handleDropOnModal(event: DragEvent) {
-        event.preventDefault();
-        LogError("MODAL " + _modal);
-        if (_modal === Modals.None) {
-        }
-    }
-
-    function stinky() {
-        LogInfo("Interrupt");
+    function interruptFileTask() {
+        LogInfo("Interrupted file task");
         InterruptEncryption();
     }
 </script>
@@ -122,19 +120,33 @@
 <div class="flex h-screen !rounded-lg">
     <Frame />
     <DirSize />
-    <CircleProgressBar className="left-5 ">
-        <div class="absolute inset-5 flex flex-col align-center top-7">
-            <p class="h-4 text-center leading-none text-sm select-none">ENCRYPTING</p>
-            <PauseSolid class="w-12 h-12 self-center " color="dark" />
-            <p class="bg-gray-400 h-4 text-center leading-none select-none">12/123</p>
-        </div></CircleProgressBar
-    >
+
     <div
         id="left-panel"
         style="background-color:{lightBGColor}"
         role="none"
         on:mousedown={clearHeldBtns}
     >
+        {#if _currentFileTask !== FileTasks.None}
+            <RadialProgress
+                className="left-5 "
+                dataProgress={_fileTaskPercent}
+            >
+                <div class="absolute inset-5 flex flex-col align-center top-7">
+                    <p class="h-4 text-center leading-none text-sm select-none">
+                        {_currentFileTask}
+                    </p>
+                    <button class="self-center" on:click={InterruptEncryption}>
+                        <PauseSolid class="w-12 h-12" color="dark" />
+                    </button>
+                    <p
+                        class="h-4 text-center leading-none select-none truncate"
+                    >
+                        {_fileCount} / {_totalFileCt}
+                    </p>
+                </div></RadialProgress
+            >
+        {/if}
         <div id="page-info" class="static">
             <p>VAULT</p>
             <Button
@@ -164,7 +176,6 @@
                         outline={true}
                         color="dark"
                         class="!p-1 !px-0 !mb-2 h-1"
-                        on:click={stinky}
                         ><CirclePauseSolid
                             class="w-5 h-5"
                             color="white"
@@ -208,6 +219,7 @@
             </div>
         </div>
     </div>
+
     <div
         id="right-panel"
         role="none"
@@ -216,7 +228,7 @@
         on:mouseleave={onmouseleave}
         on:click={clearHeldBtns}
     >
-        <CircleProgressBar className="right-10" />
+        <RadialProgress className="right-10" dataProgress={30} />
         {#if _modal === Modals.None}
             <TreeView _fileTree={$fileTree} />
         {:else if _modal === Modals.Settings}
@@ -227,19 +239,6 @@
             <Logger />
         {/if}
     </div>
-    {#if _encryptProgress !== 0}
-        <Progressbar
-            progress={_encryptPercent}
-            animate
-            precision={0}
-            labelInside
-            tweenDuration={1000}
-            easing={sineOut}
-            size="h-6"
-            labelInsideClass="bg-blue-600 text-blue-100 text-base font-medium text-center p-1 leading-none rounded-lg"
-            class="absolute bottom-0 w-screen"
-        />
-    {/if}
 </div>
 
 <style>

@@ -4,16 +4,17 @@
     import { lightBGColor } from "../stores/globalVariables.ts";
 
     export let className = "";
+    export let dataProgress: number
 
-    let dataProgress: number = 0; // Initial value
+    // let dataProgress: number = 0; // Initial value
 
-    function randomize(): void {
-        dataProgress = Math.floor(Math.random() * 100);
-    }
+    // function randomize(): void {
+    //     dataProgress = Math.floor(Math.random() * 100);
+    // }
 
-    onMount(() => {
-        setTimeout(randomize, 200); // Initial randomize after component mounts
-    });
+    // onMount(() => {
+    //     setTimeout(randomize, 200); // Initial randomize after component mounts
+    // });
 </script>
 
 <div
@@ -44,7 +45,7 @@
     $circle-color: #1291d4;
     $inset-size: 135px;
     $inset-color: #fbfbfb;
-    $transition-length: 1s;
+    $transition-length: .1s;
 
     .ko-progress-circle {
         margin: 0px;
