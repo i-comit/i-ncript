@@ -9,8 +9,8 @@ $darkShadow: #484f60;
 $lightShadow: #ffffff;
 
 $dropShadow:
-    8px 8px 12px -2px rgba($darkShadow, 0.4),
-    -6px -6px 12px -1px rgba($lightShadow, 1);
+    2px 6px 8px -2px rgba($darkShadow, 0.4),
+    -3px -6px 8px -1px rgba($lightShadow, 1);
 
 $innerShadow:
     inset -4px -4px 6px -1px rgba($lightShadow, 1),

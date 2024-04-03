@@ -18,6 +18,7 @@
     import Settings from "./Settings.svelte";
     import Logger from "./Logger.svelte";
     import NeuSearch from "../elements/NeuSearch.svelte";
+    import PanelDivider from "../elements/PanelDivider.svelte";
 
     let _modal: Modals;
     currentModal.subscribe((value) => {
@@ -67,9 +68,9 @@
                     >ENTER</GradientButton
                 >
             </div>
-            <div class="h-2"></div>
+            <div class="h-1"></div>
 
-            <div class="row space-x-5">
+            <div class="row space-x-5 space-evenly">
                 <NeuButton on:click={() => switchPages(AppPage.NBox)}
                     >N-BOX</NeuButton
                 >
@@ -79,6 +80,7 @@
             </div>
         </div>
     </div>
+    <PanelDivider />
     <div
         id="right-panel"
         class="bg-gray-500 mt-0 px-0"

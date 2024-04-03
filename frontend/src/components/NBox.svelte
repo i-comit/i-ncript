@@ -19,6 +19,7 @@
     import TreeView from "./FileTree.svelte";
     import Logger from "./Logger.svelte";
     import NeuSearch from "../elements/NeuSearch.svelte";
+    import PanelDivider from "../elements/PanelDivider.svelte";
 
     let _modal: Modals;
     currentModal.subscribe((value) => {
@@ -64,22 +65,10 @@
                     on:click={() => {}}>ENTER</GradientButton
                 >
             </div>
-            <div class="h-2"></div>
-
-            <div class="row space-x-2">
+            <div class="h-1"></div>
+            <div class="row space-x-5 space-evenly">
                 <NeuButton on:click={() => switchPages(AppPage.Vault)}
                     >VAULT</NeuButton
-                >
-                <Button
-                    pill={true}
-                    outline={true}
-                    class="!p-1"
-                    color="dark"
-                    on:click={() => switchModals(Modals.Settings)}
-                    ><AdjustmentsVerticalOutline
-                        class="w-5 h-5"
-                        color="white"
-                    /></Button
                 >
                 <NeuButton on:click={() => switchPages(AppPage.OBox)}
                     >O-BOX</NeuButton
@@ -87,9 +76,11 @@
             </div>
         </div>
     </div>
+    <PanelDivider />
+
     <div
         id="right-panel"
-        class="bg-gray-500 mt-0 px-0"
+        class="mt-0 px-0"
         style="background-color:{lightBGColor}"
     >
         <NeuSearch />

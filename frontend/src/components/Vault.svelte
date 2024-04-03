@@ -44,14 +44,8 @@
     import TreeView from "./FileTree.svelte";
     import Logger from "./Logger.svelte";
 
-    import {
-        EventsOn,
-        LogInfo,
-    } from "../../wailsjs/runtime/runtime";
-    import {
-        GetDirectoryPath,
-        GetFilesByType,
-    } from "../../wailsjs/go/main/Getters";
+    import { EventsOn, LogInfo } from "../../wailsjs/runtime/runtime";
+    import { GetFilesByType } from "../../wailsjs/go/main/Getters";
     import DirSize from "../elements/DirectorySizeBar.svelte";
     import RadialProgress from "../elements/RadialProgress.svelte";
     import { FileTasks, currentFileTask } from "../enums/FileTasks.ts";
@@ -136,19 +130,7 @@
                 </div></RadialProgress
             >
         {/if}
-        <!-- <div id="page-info" class="static">
-            <p>VAULT</p>
-            <Button
-                pill={true}
-                outline={true}
-                class="z-20 h-0"
-                color="dark"
-                style="--wails-draggable:drag"
-                on:click={() => switchModals(Modals.Info)}
-                ><InfoCircleOutline class="w-5 h-5" color="white" /></Button
-            >
-            <p>32GB</p>
-        </div> -->
+
         <div class="h-6"></div>
 
         <DirSize />
@@ -157,8 +139,12 @@
         </div>
         <div class="buttons">
             <div class="row space-x-2">
-                <NeuButton on:click={() => encrypt()}>ENCRYPT</NeuButton>
-                <NeuButton on:click={() => decrypt()}>DECRYPT</NeuButton>
+                <NeuButton on:click={() => encrypt()} _style="font-size: 13px;"
+                    >ENCRYPT</NeuButton
+                >
+                <NeuButton on:click={() => decrypt()} _style="font-size: 13px;"
+                    >DECRYPT</NeuButton
+                >
             </div>
             <div class="h-1"></div>
             <div class="flex justify-between items-center">
@@ -175,43 +161,33 @@
                 </div>
                 <div>
                     <Toggle />
-                    <p class="text-sm">HOT FILER</p>
+                    <p class="text-xs ml-3">HOT FILER</p>
                 </div>
             </div>
 
             <div class="h-1"></div>
-            <div class="row space-x-2">
-                <NeuButton on:click={() => switchPages(AppPage.OBox)}
+            <div class="row space-x-5 space-evenly">
+                <NeuButton on:click={() => switchPages(AppPage.OBox)} 
                     >O-BOX</NeuButton
                 >
-                <Button
-                    pill={true}
-                    outline={true}
-                    class="!p-1 h-7"
-                    color="dark"
-                    on:click={() => switchModals(Modals.Settings)}
-                    ><AdjustmentsVerticalOutline
-                        class="w-5 h-5"
-                        color="white"
-                    /></Button
-                >
+
                 <NeuButton on:click={() => switchPages(AppPage.NBox)}
                     >N-BOX</NeuButton
                 >
             </div>
         </div>
     </div>
-    <PanelDivider/>
+
+    <PanelDivider />
 
     <div
         id="right-panel"
         role="none"
-        class="bg-gray-500"
         style="background-color:{lightBGColor}"
         on:mouseleave={onmouseleave}
         on:click={clearHeldBtns}
     >
-        <NeuSearch  />
+        <NeuSearch />
         <RadialProgress className="right-10" dataProgress={30} />
         {#if _modal === Modals.None}
             <TreeView _fileTree={$fileTree} />

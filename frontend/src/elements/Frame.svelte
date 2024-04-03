@@ -31,10 +31,10 @@
     >
     </div>
     <div class="flex justify-end">
-        <Button pill={true} class="!p-1 !z-10" on:click={minimizeApp}>
+        <Button pill={true} class="!p-1 !pr-0 !z-10" on:click={minimizeApp}>
             <MinusOutline class="w-5 h-5 m-0 p-0" color="white" />
         </Button>
-        <Button pill={true} class="!p-1 !z-10" on:click={CloseApp}>
+        <Button pill={true} class="!p-1 !pl-0 !z-10" on:click={CloseApp}>
             <CloseOutline class="w-5 h-5 m-0 p-0" color="white" />
         </Button>
     </div>

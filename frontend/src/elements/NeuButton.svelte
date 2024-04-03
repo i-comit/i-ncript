@@ -7,21 +7,23 @@
     }
     import { lightBGColor } from "../stores/globalVariables";
 
-    export let className = "";
+    export let _class = "";
     export let disabled = false;
+
+    export let _style = "";
 </script>
 
 <button
-    class="oval-lg select-none {` ${className}`}"
-    style="background-color:{lightBGColor}"
+    class="oval-lg select-none {` ${_class}`}"
+    style="background-color:{lightBGColor}; {` ${_style}`}"
     {disabled}
     on:click={handleClick}><slot /></button
 >
 
 <style lang="scss">
     @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap");
-    @import '../neumorphic.scss';
-    $fontSize: 1px;
+    @import "../neumorphic.scss";
+    $fontSize: 15px;
     $height: 26px;
 
     // Mixins
@@ -58,6 +60,7 @@
     .oval-lg {
         @extend %oval-btn;
         width: 210px;
+        font-size: $fontSize;
         &--with-icon {
             @extend .oval-lg;
             text-align: left;

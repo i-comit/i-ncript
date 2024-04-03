@@ -244,13 +244,13 @@
         </div>
         <div>
             {#if usernameCheck && passwordCheck}
-                <NeuButton className="!w-20 " type="submit"
+                <NeuButton _class="!w-20 " type="submit"
                     >LOGIN</NeuButton
                 >
             {:else}
                 <NeuButton
                     disabled={true}
-                    className="!w-20 opacity-20"
+                    _class="!w-20 opacity-20"
                     type="submit">LOGIN</NeuButton
                 >
             {/if}

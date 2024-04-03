@@ -1,5 +1,5 @@
 html {
-    background-color: rgba(56, 194, 232, 0.65);
+    background-color: transparent;
     border-radius: 0.5rem;
     /* text-align: center; */
     color: white;
@@ -51,18 +51,18 @@ body {
 }
 
 #left-panel {
-    padding: 0.6rem;
+    padding: 0.5rem;
     padding-top: 0rem;
-    margin-right: 0.1rem;
+    /* margin-right: 0.1rem; */
     /*rounded-lg*/
     border-radius: 0.5rem;
-    width: 45%;
+    width: 42%;
 }
 
 #right-panel {
-    margin-left: 0.1rem;
+    /* margin-left: 0.1rem; */
     border-radius: 0.5rem;
-
+    width: 52%;
     /* Enable scrolling within the div */
     overflow-y: auto;
     /* Enables vertical scrolling */
