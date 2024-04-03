@@ -47,7 +47,7 @@ export function setHeldBtnsStyle() {
     });
 }
 export function clearHeldBtns() {
-    if (get(currentFilePath) === "" && get(currentDirPath) === "") {
+    if (get(currentFilePath) === "" || get(currentDirPath) === "") {
         const _heldDownBtns = get(heldDownBtns);
         Object.entries(_heldDownBtns).forEach(([path, btn]) => {
             btn.style.backgroundColor = "transparent";

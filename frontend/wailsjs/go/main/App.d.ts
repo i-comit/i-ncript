@@ -6,7 +6,7 @@ export function BuildDirectoryFileTree(arg1:number):Promise<main.FileNode>;
 
 export function CloseApp():Promise<void>;
 
-export function DecryptFilesInDir(arg1:number):Promise<void>;
+export function DecryptFilesInDir(arg1:number):Promise<boolean>;
 
 export function DirectoryWatcher(arg1:number):Promise<void>;
 

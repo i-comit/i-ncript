@@ -2,14 +2,8 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
     import { get } from "svelte/store";
-    import {
-        GradientButton,
-        Popover,
-        Progressbar,
-        Tooltip,
-    } from "flowbite-svelte";
-    import Button from "../elements/Button.svelte";
-    import Toggle from "../elements/Toggle.svelte";
+    import { Progressbar, Button } from "flowbite-svelte";
+    import Toggle from "../elements/FlatToggle.svelte";
 
     import { sineOut } from "svelte/easing";
 
@@ -18,18 +12,14 @@
         AdjustmentsVerticalOutline,
         CirclePauseSolid,
         BarsFromLeftOutline,
+        PauseSolid,
     } from "flowbite-svelte-icons";
 
     import { AppPage, currentPage } from "../enums/AppPage.ts";
     import { Modals, currentModal } from "../enums/Modals.ts";
 
-    import {
-        pageChangeBtn,
-        height,
-        width,
-        tooltipTailwindClass,
-    } from "../stores/globalVariables.ts";
-    import { encryptProgress } from "../stores/encryptProgress";
+    import { height, width, lightBGColor } from "../stores/globalVariables.ts";
+    import { encryptProgress as fileCt } from "../stores/encryptProgress";
 
     import {
         buildFileTree,
@@ -39,7 +29,6 @@
     } from "../tools/fileTree.ts";
 
     import {
-        ResizeWindow,
         EncryptFilesInDir,
         DecryptFilesInDir,
         InterruptEncryption,
@@ -47,37 +36,42 @@
 
     import { switchPages, switchModals } from "../tools/utils.ts";
 
+    import NeuButton from "../elements/NeuButton.svelte";
+
     import Frame from "../elements/Frame.svelte";
     import Info from "./Info.svelte";
     import Settings from "./Settings.svelte";
     import TreeView from "./FileTree.svelte";
     import Logger from "./Logger.svelte";
 
-    import {
-        EventsOff,
-        EventsOn,
-        LogError,
-        LogInfo,
-    } from "../../wailsjs/runtime/runtime";
-    import {
-        GetDirectoryPath,
-        GetFilesByType,
-    } from "../../wailsjs/go/main/Getters";
-    import DirSize from "../elements/DirSize.svelte";
+    import { EventsOn, LogInfo } from "../../wailsjs/runtime/runtime";
+    import { GetFilesByType } from "../../wailsjs/go/main/Getters";
+    import DirSize from "../elements/DirectorySizeBar.svelte";
+    import RadialProgress from "../elements/RadialProgress.svelte";
+    import { FileTasks, currentFileTask } from "../enums/FileTasks.ts";
+    import NeuSearch from "../elements/NeuSearch.svelte";
+    import PanelDivider from "../elements/PanelDivider.svelte";
 
-    let _fileCt: number;
-    _fileCt = 0;
+    let _totalFileCt: number;
+    _totalFileCt = 0;
+    let _fileCount: number;
+    fileCt.subscribe((value) => {
+        _fileCount = value;
+    });
+    let _fileTaskPercent: number;
+
     onMount(() => {
         buildFileTree();
-        EventsOn("fileProcessed", (currentCount) => {
-            encryptProgress.set(currentCount);
-            _encryptPercent = (_encryptProgress / _fileCt) * 100;
+        EventsOn("fileProcessed", (fileCtEvt) => {
+            fileCt.set(fileCtEvt);
+            _fileTaskPercent = Math.round((_fileCount / _totalFileCt) * 100);
+            if (fileCtEvt === 0) currentFileTask.set(FileTasks.None);
         });
     });
 
-    let _encryptProgress: number;
-    encryptProgress.subscribe(() => {
-        _encryptProgress = $encryptProgress;
+    let _currentFileTask: FileTasks;
+    currentFileTask.subscribe((value) => {
+        _currentFileTask = value;
     });
 
     let _modal: Modals;
@@ -85,17 +79,14 @@
         _modal = value;
     });
 
-    let _encryptPercent: number;
-    let encrypting: boolean;
-    encrypting = false;
     function encrypt() {
         setIsInFileTask(true).then(() => {
             GetFilesByType(0, false).then((filePaths) => {
                 LogInfo("Began encrypting");
                 if (filePaths.length > 0) {
-                    _fileCt = filePaths.length;
+                    currentFileTask.set(FileTasks.Encrypt);
+                    _totalFileCt = filePaths.length;
                     EncryptFilesInDir(0);
-                    ResizeWindow(width * 2, height + 15);
                 }
             });
         });
@@ -103,70 +94,61 @@
 
     function decrypt() {
         setIsInFileTask(true).then(() => {
-            LogInfo("Began decrypting1");
             GetFilesByType(0, true).then((filePaths) => {
                 if (filePaths.length > 0) {
-                    _fileCt = filePaths.length;
-                    LogInfo("Began decrypting " + filePaths.length);
+                    currentFileTask.set(FileTasks.Decrypt);
+                    _totalFileCt = filePaths.length;
                     DecryptFilesInDir(0);
-                    ResizeWindow(width * 2, height + 15);
                 }
             });
         });
-    }
-
-    function handleDropOnModal(event: DragEvent) {
-        event.preventDefault();
-        LogError("MODAL " + _modal);
-        if (_modal === Modals.None) {
-        }
-    }
-
-    function stinky() {
-        LogInfo("Interrupt");
-        InterruptEncryption();
     }
 </script>
 
 <div class="flex h-screen !rounded-lg">
     <Frame />
-    <DirSize />
-    <div id="left-panel" role="none" on:mousedown={clearHeldBtns}>
-        <div id="page-info" class="static">
-            <p>VAULT</p>
-            <Button
-                pill={true}
-                outline={true}
-                class="z-20"
-                color="dark"
-                style="--wails-draggable:drag"
-                on:click={() => switchModals(Modals.Info)}
-                ><InfoCircleOutline class="w-5 h-5" color="white" /></Button
+    <div
+        id="left-panel"
+        style="background-color:{lightBGColor}"
+        role="none"
+        on:mousedown={clearHeldBtns}
+    >
+        {#if _currentFileTask !== FileTasks.None}
+            <RadialProgress className="left-5 " dataProgress={_fileTaskPercent}>
+                <div class="absolute inset-5 flex flex-col align-center top-7">
+                    <p class="h-4 text-center leading-none text-sm select-none">
+                        {_currentFileTask}
+                    </p>
+                    <button class="self-center" on:click={InterruptEncryption}>
+                        <PauseSolid class="w-12 h-12" color="dark" />
+                    </button>
+                    <p
+                        class="h-4 text-center leading-none select-none truncate"
+                    >
+                        {_fileCount} / {_totalFileCt}
+                    </p>
+                </div></RadialProgress
             >
-            <p>32GB</p>
-        </div>
+        {/if}
+
+        <div class="h-6"></div>
+
+        <DirSize />
         <div class=" !flex !justify-start row center bg-white mb-1">
-            <p>encrypted 9999999 files</p>
+            <p>encrypted 999999 files</p>
         </div>
         <div class="buttons">
-            <div class="row space-x-5">
-                <Button on:click={() => encrypt()}>NCRYPT</Button>
-                <Button on:click={() => decrypt()}>DCRYPT</Button>
+            <div class="row space-x-2">
+                <NeuButton on:click={() => encrypt()} _style="font-size: 13px;"
+                    >ENCRYPT</NeuButton
+                >
+                <NeuButton on:click={() => decrypt()} _style="font-size: 13px;"
+                    >DECRYPT</NeuButton
+                >
             </div>
             <div class="h-1"></div>
             <div class="flex justify-between items-center">
                 <div class="flex space-x-1">
-                    <Button
-                        pill={true}
-                        outline={true}
-                        color="dark"
-                        class="!p-1 !px-0 !mb-2"
-                        on:click={stinky}
-                        ><CirclePauseSolid
-                            class="w-5 h-5"
-                            color="white"
-                        /></Button
-                    >
                     <button
                         class="!p-1 !px-0 !mb-2"
                         color="dark"
@@ -179,45 +161,34 @@
                 </div>
                 <div>
                     <Toggle />
-                    <p class="text-sm">HOT FILER</p>
+                    <p class="text-xs ml-3">HOT FILER</p>
                 </div>
             </div>
 
-            <div class="h-2.5"></div>
-            <div class="row">
-                <GradientButton
-                    color="cyanToBlue"
-                    class={pageChangeBtn}
-                    on:click={() => switchPages(AppPage.OBox)}
-                    >O-BOX</GradientButton
+            <div class="h-1"></div>
+            <div class="row space-x-5 space-evenly">
+                <NeuButton on:click={() => switchPages(AppPage.OBox)} 
+                    >O-BOX</NeuButton
                 >
-                <Button
-                    pill={true}
-                    outline={true}
-                    class="!p-1"
-                    color="dark"
-                    on:click={() => switchModals(Modals.Settings)}
-                    ><AdjustmentsVerticalOutline
-                        class="w-5 h-5"
-                        color="white"
-                    /></Button
-                >
-                <GradientButton
-                    color="cyanToBlue"
-                    class={pageChangeBtn}
-                    on:click={() => switchPages(AppPage.NBox)}
-                    >N-BOX</GradientButton
+
+                <NeuButton on:click={() => switchPages(AppPage.NBox)}
+                    >N-BOX</NeuButton
                 >
             </div>
         </div>
     </div>
+
+    <PanelDivider />
+
     <div
         id="right-panel"
         role="none"
-        class="bg-gray-500"
+        style="background-color:{lightBGColor}"
         on:mouseleave={onmouseleave}
         on:click={clearHeldBtns}
     >
+        <NeuSearch />
+        <RadialProgress className="right-10" dataProgress={30} />
         {#if _modal === Modals.None}
             <TreeView _fileTree={$fileTree} />
         {:else if _modal === Modals.Settings}
@@ -228,19 +199,6 @@
             <Logger />
         {/if}
     </div>
-    {#if _encryptProgress !== 0}
-        <Progressbar
-            progress={_encryptPercent}
-            animate
-            precision={0}
-            labelInside
-            tweenDuration={1000}
-            easing={sineOut}
-            size="h-6"
-            labelInsideClass="bg-blue-600 text-blue-100 text-base font-medium text-center p-1 leading-none rounded-lg"
-            class="absolute bottom-0 w-screen"
-        />
-    {/if}
 </div>
 
 <style>

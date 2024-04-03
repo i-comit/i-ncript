@@ -11,7 +11,7 @@
 
 <div>
     <Progressbar
-        class="absolute top-0 right-16 z-10 w-1/5 ml-3 mt-1.5"
+        class="absolute top-0 left-1 z-10 w-1/5 ml-3 mt-1.5"
         progress="50"
         size="h-3"
         color="red"

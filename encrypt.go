@@ -38,7 +38,6 @@ func (a *App) EncryptFilesInDir(dirIndex int) (bool, error) {
 	for i, filePath := range filePaths {
 		select {
 		case <-interrupt: // Check if there's an interrupt signal
-
 			return false, fmt.Errorf("encryption interrupted")
 		default:
 			if strings.HasSuffix(filePath, ".enc") {
@@ -61,18 +60,18 @@ func (a *App) EncryptFilesInDir(dirIndex int) (bool, error) {
 	if fileIter != 0 {
 		if a.ctx != nil {
 			a.reverseProgress(true, len(filePaths))
-			return false, err
+			return true, err
 		}
 	} else {
-		return true, err
+		return false, err
 	}
-	return false, err
+	return true, nil
 }
 
-func (a *App) DecryptFilesInDir(dirIndex int) error {
+func (a *App) DecryptFilesInDir(dirIndex int) (bool, error) {
 	filePaths, err := getFilesRecursively(a.directories[dirIndex])
 	if err != nil {
-		return err
+		return false, err
 	}
 	a.closeDirectoryWatcher()
 	interrupt = make(chan struct{})
@@ -81,7 +80,7 @@ func (a *App) DecryptFilesInDir(dirIndex int) error {
 	for i, filePath := range filePaths {
 		select {
 		case <-interrupt: // Check if there's an interrupt signal
-			return fmt.Errorf("decryption interrupted")
+			return false, fmt.Errorf("decryption interrupted")
 		default:
 			if !strings.HasSuffix(filePath, ".enc") {
 				continue
@@ -104,11 +103,19 @@ func (a *App) DecryptFilesInDir(dirIndex int) error {
 	if fileIter != 0 {
 		if a.ctx != nil {
 			a.reverseProgress(false, len(filePaths))
+			return true, err
 		}
+	} else {
+		return false, nil
 	}
-	return nil
+	return true, nil
 }
 func (a *App) InterruptEncryption() {
+	file, err := os.OpenFile(lastFilePath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0666)
+	if err != nil {
+		log.Printf("failed to open last file: %v", err)
+	}
+	defer file.Close()
 	fmt.Println("\033[31minterrupted encryption: ", filepath.Base(lastFilePath), "\033[0m")
 	if err := os.Remove(lastFilePath); err != nil {
 		fmt.Printf("last file remove failed %s", err)
@@ -118,18 +125,18 @@ func (a *App) InterruptEncryption() {
 }
 
 func (a *App) reverseProgress(encrypt bool, files int) {
-	runtime.EventsEmit(a.ctx, fileCt, 100)
-	runtime.EventsEmit(a.ctx, rebuildFileTree)
-	time.Sleep(time.Second)
+	lastFilePath = ""
+	runtime.EventsEmit(a.ctx, totalFileCt, 100)
+	time.Sleep(time.Millisecond * 400)
 	done := make(chan bool)
 	go func() {
 		counter := 100
-		for counter > 1 {
+		for counter > 0 {
 			counter-- // Decrement the counter
 			if a.ctx != nil {
 				runtime.EventsEmit(a.ctx, fileProcessed, counter)
 			}
-			time.Sleep(4 * time.Millisecond) // Wait for 0.2 seconds
+			time.Sleep(2 * time.Millisecond) // Wait for 0.2 seconds
 		}
 		done <- true // Signal that the loop is done
 	}()
@@ -143,11 +150,11 @@ func (a *App) reverseProgress(encrypt bool, files int) {
 	}
 
 	if a.ctx != nil {
-		time.Sleep(time.Second)
+		runtime.EventsEmit(a.ctx, rebuildFileTree)
 		a.ResizeWindow(_width*2, _height+25)
 		runtime.EventsEmit(a.ctx, fileProcessed, 0)
-		runtime.EventsEmit(a.ctx, fileCt, 0)
-		runtime.EventsOff(a.ctx, fileProcessed, fileCt, addLogFile, rebuildFileTree)
+		runtime.EventsEmit(a.ctx, totalFileCt, 0)
+		runtime.EventsOff(a.ctx, fileProcessed, totalFileCt, addLogFile)
 		a.SetIsInFileTask(false)
 	}
 }
@@ -193,7 +200,6 @@ func encryptFile(filePath string) (*os.File, error) {
 	if largeFileErr != nil {
 		return nil, fmt.Errorf("failed to encrypt large File: %w", largeFileErr)
 	}
-	// Delete the original file after successfully creating the encrypted version
 	if err := os.Remove(filePath); err != nil {
 		encFile.Close() // Best effort to close the encrypted file before returning error
 		return nil, err
@@ -346,12 +352,12 @@ func hashCredentials(stringToHash string) (string, error) {
 
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("hashCredentials fail: %w", err)
 	}
 
 	aesGCM, err := cipher.NewGCM(block)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("hashCredentials fail: %w", err)
 	}
 	// Nonce is usually critical for security in AES-GCM. Here, we omit it to meet the requirement,
 	// Be aware this makes the encryption deterministic and less secure.
