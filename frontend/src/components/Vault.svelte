@@ -3,7 +3,7 @@
     import { onMount, onDestroy } from "svelte";
     import { get } from "svelte/store";
     import { Progressbar, Button } from "flowbite-svelte";
-    import Toggle from "../elements/Toggle.svelte";
+    import Toggle from "../elements/FlatToggle.svelte";
 
     import { sineOut } from "svelte/easing";
 
@@ -56,6 +56,7 @@
     import RadialProgress from "../elements/RadialProgress.svelte";
     import { FileTasks, currentFileTask } from "../enums/FileTasks.ts";
     import NeuSearch from "../elements/NeuSearch.svelte";
+    import PanelDivider from "../elements/PanelDivider.svelte";
 
     let _totalFileCt: number;
     _totalFileCt = 0;
@@ -200,6 +201,7 @@
             </div>
         </div>
     </div>
+    <PanelDivider/>
 
     <div
         id="right-panel"
