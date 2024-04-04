@@ -24,7 +24,7 @@ const addLogFile = "addLogFile"
 const rootFolder = "i-ncript" //Change to whatever you want the root folder to be
 const keyFileName = ".i-ncript.🔑"
 const _width = 220
-const _height = 165
+const _height = 145
 const _uniqueID = "f56bcbf2-db56-481b-a722-11c21a4b3ae2" //Change this in your build for extra security
 
 // DYNAMIC data
@@ -51,7 +51,7 @@ func main() {
 	err := wails.Run(&options.App{
 		Title:         "i-ncript",
 		Width:         _width,
-		Height:        _height,
+		Height:        _height + 20,
 		DisableResize: true,
 		Fullscreen:    false,
 		Frameless:     true,

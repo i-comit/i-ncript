@@ -40,7 +40,7 @@
     <Login on:loginSuccess={handleLoginSuccess} />
   {:else if _page === AppPage.Vault}
     <Vault />
-  {:else if _page === AppPage.NBox}
+  {:else if _page === AppPage.Mbox}
     <N_Box />
   {:else if _page === AppPage.OBox}
     <O_Box />

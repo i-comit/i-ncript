@@ -71,7 +71,7 @@
             <div class="h-1"></div>
 
             <div class="row space-x-5 space-evenly">
-                <NeuButton on:click={() => switchPages(AppPage.NBox)}
+                <NeuButton on:click={() => switchPages(AppPage.Mbox)}
                     >N-BOX</NeuButton
                 >
                 <NeuButton on:click={() => switchPages(AppPage.Vault)}

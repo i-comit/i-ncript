@@ -31,7 +31,7 @@ export const pageIndex: () => number = () => {
         case AppPage.Vault:
         default:
             return 0;
-        case AppPage.NBox:
+        case AppPage.Mbox:
             return 1;
         case AppPage.OBox:
             return 2;
@@ -62,9 +62,9 @@ export function switchModals(modal: Modals) {
         case Modals.Logger:
             try {
                 if (_currentPage === AppPage.Login)
-                    ResizeWindow(width, height)
+                    ResizeWindow(width, height + 15)
                 else
-                    ResizeWindow(width * 2, height + 8)
+                    ResizeWindow(width * 2, height)
 
             } catch (error) {
                 console.error("Error calling ResizeWindow", error);
@@ -74,9 +74,9 @@ export function switchModals(modal: Modals) {
         default:
             try {
                 if (_currentPage === AppPage.Login)
-                    ResizeWindow(width, height + 8)
+                    ResizeWindow(width, height + 15)
                 else
-                    ResizeWindow(width * 2, height + 8)
+                    ResizeWindow(width * 2, height)
             } catch (error) {
                 LogTrace("Error calling ResizeWindow: " + error);
             }

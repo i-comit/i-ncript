@@ -10,6 +10,11 @@
 </script>
 
 <div class="h-6">
+    <!-- <div
+        class="mb-1 h-6 leading-none absolute top-0 left-4 z-10 w-1/3 ml-3 mt-0"
+    >
+        <p class="relative top-1.5 text-left leading-none">...</p>
+    </div> -->
     <Progressbar
         class="absolute top-0 left-4 z-10 w-1/3 ml-3 mt-1.5"
         progress="50"

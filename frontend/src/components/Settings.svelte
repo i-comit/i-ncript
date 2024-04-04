@@ -31,8 +31,8 @@
 
 <div
     id="modal-panel"
-    class="bg-gray-200 rounded-lg mt-1 mb-2 ml-1 mr-1.5"
-    style="max-height: {_currentPage === AppPage.Login ? '66vh' : '81vh'};"
+    class="bg-gray-200 rounded-lg mt-1 mb-2 ml-1 mr-1.5 z-20"
+    style="max-height: {_currentPage === AppPage.Login ? '66vh' : '94vh'};"
 >
     <div class="row bg-gray-500 rounded-lg">
         <Button

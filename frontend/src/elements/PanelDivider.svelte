@@ -13,17 +13,21 @@
 
 <div class="absolute -z-10 bg-slate-500 w-20 h-full select-none left-1/3"></div>
 <div class="panel" style="background-color:{lightBGColor}">
-    <div class="absolute inverted-border-radius left"></div>
+    <div
+        class="absolute w-full h-1/5 rounded-full bg-slate-500 select-none"
+        style="top:90%"
+    ></div>
+
     <div class="icon space-y-1">
         <div class="icon__home">
             <InfoCircleOutline
-                class="pt-px"
+                class="p-px"
                 on:click={() => switchModals(Modals.Info)}
             />
         </div>
         <div class="icon__account">
             <BarsFromLeftOutline
-                class="p-px"
+                class="p-px" role="button"
                 on:click={() => switchModals(Modals.Logger)}
             />
         </div>
@@ -34,19 +38,16 @@
             <CogSolid class="p-px" />
         </button>
     </div>
+    <div
+        class="absolute w-full h-1/5 rounded-full bg-slate-500 select-none"
+        style="bottom:90%"
+    ></div>
 
-    <div class="inverted-border-radius right"></div>
 </div>
 
 <style lang="scss">
     $panel-width: 1.65rem;
     @import "../neumorphic.scss";
-
-    $bg: #eeeeee;
-    $element-height: 44px;
-    $element-width: 1.6rem;
-    $element-box-shadow: 0 25px 0 $bg;
-    $element-box-shadow-inverse: 0 -25px 0 $bg;
 
     .panel {
         width: $panel-width;
@@ -54,66 +55,9 @@
         display: flex;
         justify-content: center; /* Centers horizontally */
         align-items: center; /* Centers vertically */
-        height: 48%;
-        top: 25%;
+        height: 65%;
+        top: 20%;
         position: relative; // Ensure .inverted-border-radius positions relative to .panel
-    }
-
-    .inverted-border-radius {
-        position: absolute;
-        height: 100%;
-        z-index: -10;
-        user-select: none;
-        width: $panel-width;
-        border-radius: 25px 0 0 25px;
-
-        &.left,
-        &.right {
-            // Combine common pseudo-element styles
-            &::before,
-            &::after {
-                content: "";
-                position: absolute;
-                background-color: transparent;
-                height: $element-height;
-                width: $element-width;
-            }
-
-            &::before {
-                top: 100%;
-                box-shadow: $element-box-shadow-inverse;
-            }
-
-            &::after {
-                bottom: 100%;
-                box-shadow: $element-box-shadow;
-            }
-        }
-
-        // Apply side-specific styles using nesting
-        &.right {
-            &::before {
-                right: 0px;
-                border-top-right-radius: 50%;
-            }
-
-            &::after {
-                right: 0px;
-                border-bottom-right-radius: 50%;
-            }
-        }
-
-        &.left {
-            &::before {
-                left: 0px;
-                border-top-left-radius: 50%;
-            }
-
-            &::after {
-                left: 0px;
-                border-bottom-left-radius: 50%;
-            }
-        }
     }
 
     $icon-size: 1.2rem;

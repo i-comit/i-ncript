@@ -421,7 +421,7 @@
 <style>
     #dial {
         right: -0.7rem !important;
-        bottom: -6.5vh !important;
+        bottom: -8vh !important;
         transform: scale(0.55) !important;
         z-index: 5;
     }

@@ -5,7 +5,7 @@ export const tooltipTailwindClass = "p-0.5 m-0 text-xs bg-gray-400 px-1 z-10";
 export const rootFolder = '------';
 
 export const width = 220
-export const height = 165
+export const height = 145
 
 export const darkTextColor = "#111111"
 

@@ -153,7 +153,7 @@ export function getCurrentPageStore() {
     ) {
         case AppPage.Vault:
             return vaultExpansionState;
-        case AppPage.NBox:
+        case AppPage.Mbox:
             return nBoxExpansionState;
         case AppPage.OBox:
             return oBoxExpansionState;

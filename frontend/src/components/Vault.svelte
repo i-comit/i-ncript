@@ -53,6 +53,7 @@
     import PanelDivider from "../elements/PanelDivider.svelte";
     import WaveProgress from "../elements/WaveProgress.svelte";
     import NeuButtonFake from "../elements/NeuButtonFake.svelte";
+    import TaskDisplay from "../elements/TaskDisplay.svelte";
 
     let _totalFileCt: number;
     _totalFileCt = 0;
@@ -115,30 +116,7 @@
         role="none"
         on:mousedown={clearHeldBtns}
     >
-        <!-- {#if _currentFileTask !== FileTasks.None}
-            <RadialProgress className="left-5 " dataProgress={_fileTaskPercent}>
-                <div class="absolute inset-5 flex flex-col align-center top-7">
-                    <p class="h-4 text-center leading-none text-sm select-none">
-                        {_currentFileTask}
-                    </p>
-                    <button class="self-center" on:click={InterruptEncryption}>
-                        <PauseSolid class="w-12 h-12" color="dark" />
-                    </button>
-                    <p
-                        class="h-4 text-center leading-none select-none truncate"
-                    >
-                        {_fileCount} / {_totalFileCt}
-                    </p>
-                </div></RadialProgress
-            >
-        {/if} -->
-
         <DirSize />
-        <div class="mb-1 h-6 leading-none">
-            <p class="relative top-1.5 text-left leading-none">
-                encrypted 99999 files
-            </p>
-        </div>
         <div class="buttons">
             {#if _currentFileTask === FileTasks.None}
                 <div class="row space-x-2">
@@ -152,15 +130,7 @@
                     >
                 </div>
             {:else}
-                <div class="row space-x-0 h-6">
-                    <div
-                        class="flex flex-grow justify-center items-center !w-1/4"
-                    >
-                        <NeuButtonFake _style="font-size: 15px;"
-                            >{_currentFileTask}...</NeuButtonFake
-                        >
-                    </div>
-                </div>
+                <TaskDisplay />
             {/if}
 
             <div class="relative h-14">
@@ -169,16 +139,16 @@
                         HOT FILER
                     </p>
                 {:else}
-                    <WaveProgress
-                        dataProgress={_fileTaskPercent}
+                    <div class="h-0.5" />
+                    <WaveProgress dataProgress={_fileTaskPercent}
                     ></WaveProgress>
                 {/if}
             </div>
 
-            <div class="h-1"></div>
+            <div class="h-1" />
             <div class="row space-x-0">
                 <NeuButton
-                    on:click={() => switchPages(AppPage.NBox)}
+                    on:click={() => switchPages(AppPage.Mbox)}
                     _class="!w-20">M-BOX</NeuButton
                 >
                 <Toggle />
@@ -196,7 +166,7 @@
         on:click={clearHeldBtns}
     >
         <NeuSearch />
-        <RadialProgress className="right-11" dataProgress={30} />
+        <RadialProgress _style="right: 3.6rem" dataProgress={30} />
         {#if _modal === Modals.None}
             <TreeView _fileTree={$fileTree} />
         {:else if _modal === Modals.Settings}

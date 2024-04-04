@@ -23,7 +23,7 @@ type App struct {
 
 func NewApp() *App {
 	return &App{
-		directories: []string{"VAULT", "N-BOX", "O-BOX"},
+		directories: []string{"VAULT", "M-BOX"},
 	}
 }
 
@@ -87,7 +87,7 @@ func (a *App) Login(username string, password string) (int, error) {
 		break
 	case 2: //credentials match file hash
 		if a.ctx != nil {
-			a.ResizeWindow(_width*2, _height+15)
+			a.ResizeWindow(_width*2, _height)
 		}
 		for i, dir := range a.directories {
 			a.directories[i] = cwd + string(os.PathSeparator) + dir
@@ -121,7 +121,7 @@ func (a *App) grantAccessToApp(file *os.File, credentials string) {
 	fmt.Printf("File created: %s", cwd+file.Name())
 	hashedCredentials = []byte(_hashedCredentials)
 	if a.ctx != nil {
-		a.ResizeWindow(_width*2, _height+15)
+		a.ResizeWindow(_width*2, _height)
 	}
 	for i, dir := range a.directories {
 		a.directories[i] = cwd + string(os.PathSeparator) + dir

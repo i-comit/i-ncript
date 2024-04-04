@@ -4,7 +4,8 @@
     import { lightBGColor } from "../stores/globalVariables.ts";
 
     export let className = "";
-    export let dataProgress: number
+    export let dataProgress: number;
+    export let _style = "";
 
     // let dataProgress: number = 0; // Initial value
 
@@ -18,8 +19,9 @@
 </script>
 
 <div
-    class="ko-progress-circle z-100 {` ${className}`}"
+    class="ko-progress-circle z-5 {` ${className}`}"
     data-progress={dataProgress}
+    style={_style}
 >
     <div class="ko-circle">
         <div class="full ko-progress-circle__slice">
@@ -40,18 +42,18 @@
 
 <style lang="scss">
     @use "sass:math";
-    $circle-size: 155px;
+    $circle-size: 125px;
     $circle-background: #d9d9d9;
     $circle-color: #1291d4;
-    $inset-size: 135px;
+    $inset-size: 115px;
     $inset-color: #fbfbfb;
-    $transition-length: .1s;
+    $transition-length: 0.1s;
 
     .ko-progress-circle {
         margin: 0px;
         width: $circle-size;
         height: $circle-size;
-        z-index: 25;
+        z-index: 15;
         position: fixed;
         bottom: 0.6rem;
         background-color: $circle-background;
