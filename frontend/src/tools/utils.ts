@@ -44,6 +44,7 @@ export function switchPages(page: AppPage) {
     currentPage.set(page);
     clearHeldBtns();
     DirectoryWatcher(pageIndex());
+    switchModals(get(currentModal));
 }
 
 export function switchModals(modal: Modals) {
@@ -63,7 +64,7 @@ export function switchModals(modal: Modals) {
                 if (_currentPage === AppPage.Login)
                     ResizeWindow(width, height)
                 else
-                    ResizeWindow(width * 2, height + 15)
+                    ResizeWindow(width * 2, height + 8)
 
             } catch (error) {
                 console.error("Error calling ResizeWindow", error);
@@ -73,9 +74,9 @@ export function switchModals(modal: Modals) {
         default:
             try {
                 if (_currentPage === AppPage.Login)
-                    ResizeWindow(width, height + 15)
+                    ResizeWindow(width, height + 8)
                 else
-                    ResizeWindow(width * 2, height + 15)
+                    ResizeWindow(width * 2, height + 8)
             } catch (error) {
                 LogTrace("Error calling ResizeWindow: " + error);
             }

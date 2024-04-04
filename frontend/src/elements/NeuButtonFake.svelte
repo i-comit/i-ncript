@@ -15,9 +15,9 @@
 </script>
 
 <button
-    class="oval-lg select-none {` ${_class}`}"
+    class="oval-lg select-none pointer-events-none {` ${_class}`}"
     style="background-color:{lightBGColor}; {` ${_style}`}"
-    on:click={handleClick}><slot /></button
+    disabled><slot /></button
 >
 
 <style lang="scss">
@@ -44,6 +44,17 @@
     *:before,
     *:after {
         box-sizing: border-box;
+    }
+    %shared-styles {
+        @include applyFontStyle;
+        padding: 0 8px;
+        position: relative;
+        border: $borderWidth solid rgba($lightShadow, 0);
+        outline: none;
+        text-align: center;
+
+        box-shadow: $innerShadow;
+        border-color: rgba($lightShadow, 0);
     }
 
     // Oval Buttons

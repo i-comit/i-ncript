@@ -4,14 +4,11 @@
 
     import { Modals, currentModal } from "../enums/Modals";
 
-    import { Login, ResizeWindow } from "../../wailsjs/go/main/App";
+    import { Login } from "../../wailsjs/go/main/App";
     import {
         Button,
         Input,
-        GradientButton,
         Tooltip,
-        ButtonGroup,
-        Popover,
     } from "flowbite-svelte";
     // import { Popover, Label, Input, Checkbox, Button } from 'flowbite-svelte';
     import { CheckOutline, CloseOutline } from "flowbite-svelte-icons";

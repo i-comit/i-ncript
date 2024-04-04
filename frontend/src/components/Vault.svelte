@@ -51,6 +51,8 @@
     import { FileTasks, currentFileTask } from "../enums/FileTasks.ts";
     import NeuSearch from "../elements/NeuSearch.svelte";
     import PanelDivider from "../elements/PanelDivider.svelte";
+    import WaveProgress from "../elements/WaveProgress.svelte";
+    import NeuButtonFake from "../elements/NeuButtonFake.svelte";
 
     let _totalFileCt: number;
     _totalFileCt = 0;
@@ -113,7 +115,7 @@
         role="none"
         on:mousedown={clearHeldBtns}
     >
-        {#if _currentFileTask !== FileTasks.None}
+        <!-- {#if _currentFileTask !== FileTasks.None}
             <RadialProgress className="left-5 " dataProgress={_fileTaskPercent}>
                 <div class="absolute inset-5 flex flex-col align-center top-7">
                     <p class="h-4 text-center leading-none text-sm select-none">
@@ -129,51 +131,57 @@
                     </p>
                 </div></RadialProgress
             >
-        {/if}
-
-        <div class="h-6"></div>
+        {/if} -->
 
         <DirSize />
-        <div class=" !flex !justify-start row center bg-white mb-1">
-            <p>encrypted 999999 files</p>
+        <div class="mb-1 h-6 leading-none">
+            <p class="relative top-1.5 text-left leading-none">
+                encrypted 99999 files
+            </p>
         </div>
         <div class="buttons">
-            <div class="row space-x-2">
-                <NeuButton on:click={() => encrypt()} _style="font-size: 13px;"
-                    >ENCRYPT</NeuButton
-                >
-                <NeuButton on:click={() => decrypt()} _style="font-size: 13px;"
-                    >DECRYPT</NeuButton
-                >
-            </div>
-            <div class="h-1"></div>
-            <div class="flex justify-between items-center">
-                <div class="flex space-x-1">
-                    <button
-                        class="!p-1 !px-0 !mb-2"
-                        color="dark"
-                        on:click={() => switchModals(Modals.Logger)}
-                        ><BarsFromLeftOutline
-                            class="w-5 h-5"
-                            color="dark"
-                        /></button
+            {#if _currentFileTask === FileTasks.None}
+                <div class="row space-x-2">
+                    <NeuButton
+                        on:click={() => encrypt()}
+                        _style="font-size: 14px;">ENCRYPT</NeuButton
+                    >
+                    <NeuButton
+                        on:click={() => decrypt()}
+                        _style="font-size: 14px;">DECRYPT</NeuButton
                     >
                 </div>
-                <div>
-                    <Toggle />
-                    <p class="text-xs ml-3">HOT FILER</p>
+            {:else}
+                <div class="row space-x-0 h-6">
+                    <div
+                        class="flex flex-grow justify-center items-center !w-1/4"
+                    >
+                        <NeuButtonFake _style="font-size: 15px;"
+                            >{_currentFileTask}...</NeuButtonFake
+                        >
+                    </div>
                 </div>
+            {/if}
+
+            <div class="relative h-14">
+                {#if _currentFileTask === FileTasks.None}
+                    <p class="absolute bottom-0 right-0 leading-none text-sm">
+                        HOT FILER
+                    </p>
+                {:else}
+                    <WaveProgress
+                        dataProgress={_fileTaskPercent}
+                    ></WaveProgress>
+                {/if}
             </div>
 
             <div class="h-1"></div>
-            <div class="row space-x-5 space-evenly">
-                <NeuButton on:click={() => switchPages(AppPage.OBox)} 
-                    >O-BOX</NeuButton
+            <div class="row space-x-0">
+                <NeuButton
+                    on:click={() => switchPages(AppPage.NBox)}
+                    _class="!w-20">M-BOX</NeuButton
                 >
-
-                <NeuButton on:click={() => switchPages(AppPage.NBox)}
-                    >N-BOX</NeuButton
-                >
+                <Toggle />
             </div>
         </div>
     </div>
@@ -188,7 +196,7 @@
         on:click={clearHeldBtns}
     >
         <NeuSearch />
-        <RadialProgress className="right-10" dataProgress={30} />
+        <RadialProgress className="right-11" dataProgress={30} />
         {#if _modal === Modals.None}
             <TreeView _fileTree={$fileTree} />
         {:else if _modal === Modals.Settings}
@@ -213,6 +221,6 @@
     .buttons .row {
         display: flex;
         justify-content: space-between;
-        margin-bottom: 10px;
+        margin-bottom: 4px;
     }
 </style>

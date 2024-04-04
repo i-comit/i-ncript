@@ -151,7 +151,7 @@ func (a *App) reverseProgress(encrypt bool, files int) {
 
 	if a.ctx != nil {
 		runtime.EventsEmit(a.ctx, rebuildFileTree)
-		a.ResizeWindow(_width*2, _height+25)
+		a.ResizeWindow(_width*2, _height+18)
 		runtime.EventsEmit(a.ctx, fileProcessed, 0)
 		runtime.EventsEmit(a.ctx, totalFileCt, 0)
 		runtime.EventsOff(a.ctx, fileProcessed, totalFileCt, addLogFile)

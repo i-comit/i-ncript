@@ -6,6 +6,9 @@
         InfoCircleSolid,
         InfoCircleOutline,
     } from "flowbite-svelte-icons";
+    import { switchModals } from "../tools/utils";
+    import { Modals } from "../enums/Modals";
+    import { LogInfo } from "../../wailsjs/runtime/runtime";
 </script>
 
 <div class="absolute -z-10 bg-slate-500 w-20 h-full select-none left-1/3"></div>
@@ -13,33 +16,31 @@
     <div class="absolute inverted-border-radius left"></div>
     <div class="icon space-y-1">
         <div class="icon__home">
-            <InfoCircleOutline class="pt-px" />
+            <InfoCircleOutline
+                class="pt-px"
+                on:click={() => switchModals(Modals.Info)}
+            />
         </div>
         <div class="icon__account">
-            <BarsFromLeftOutline class="p-px" />
+            <BarsFromLeftOutline
+                class="p-px"
+                on:click={() => switchModals(Modals.Logger)}
+            />
         </div>
-        <div class="icon__settings">
+        <button
+            class="icon__settings"
+            on:click={() => switchModals(Modals.Settings)}
+        >
             <CogSolid class="p-px" />
-            <!-- <ion-icon name="settings"></ion-icon> -->
-        </div>
+        </button>
     </div>
 
     <div class="inverted-border-radius right"></div>
 </div>
 
 <style lang="scss">
-    $panel-width: 1.6rem;
-    $icon-size: 1.2rem;
-
+    $panel-width: 1.65rem;
     @import "../neumorphic.scss";
-
-    $dropShadow:
-        2px 2px 4px -2px rgba($darkShadow, 0.4),
-        -2px -4px 4px -1px rgba($lightShadow, 1);
-
-    $innerShadow:
-        inset -2px -2px 2px -1px rgba($lightShadow, 1),
-        inset 1px 1px 2px -1px rgba($darkShadow, 0.5);
 
     $bg: #eeeeee;
     $element-height: 44px;
@@ -47,18 +48,13 @@
     $element-box-shadow: 0 25px 0 $bg;
     $element-box-shadow-inverse: 0 -25px 0 $bg;
 
-    .picIcon {
-        position: absolute;
-        padding: 1rem;
-    }
-
     .panel {
         width: $panel-width;
         background-color: green;
         display: flex;
         justify-content: center; /* Centers horizontally */
         align-items: center; /* Centers vertically */
-        height: 50%;
+        height: 48%;
         top: 25%;
         position: relative; // Ensure .inverted-border-radius positions relative to .panel
     }
@@ -120,6 +116,7 @@
         }
     }
 
+    $icon-size: 1.2rem;
     :root {
         --primary-light: #8abdff;
         --primary: #8daacb;
@@ -132,12 +129,13 @@
         --greyDark: #8e8e8e;
     }
 
-    // $shadow:
-    //     0.2rem 0.3rem 0.6rem var(--greyLight-2),
-    //     -0.2rem -0.2rem 0.5rem var(--white);
-    // $inner-shadow:
-    //     inset 0.2rem 0.2rem 0.5rem var(--greyLight-2),
-    //     inset -0.2rem -0.2rem 0.5rem var(--white);
+    $dropShadow:
+        2px 2px 2px -2px rgba($darkShadow, 0.4),
+        -2px -3px 3px -1px rgba($lightShadow, 1);
+
+    $innerShadow:
+        inset -2px -2px 2px -1px rgba($lightShadow, 1),
+        inset 1px 1px 2px -1px rgba($darkShadow, 0.5);
 
     /*  ICONS  */
     .icon {

@@ -40,7 +40,7 @@
 
 <style lang="scss">
     @use "sass:math";
-    $circle-size: 150px;
+    $circle-size: 155px;
     $circle-background: #d9d9d9;
     $circle-color: #1291d4;
     $inset-size: 135px;
@@ -53,7 +53,7 @@
         height: $circle-size;
         z-index: 25;
         position: fixed;
-        bottom: 1rem;
+        bottom: 0.6rem;
         background-color: $circle-background;
         border-radius: 50%;
         .ko-progress-circle__slice,

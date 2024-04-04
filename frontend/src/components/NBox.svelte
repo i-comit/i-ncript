@@ -1,13 +1,22 @@
 <!-- NBox.svelte -->
 <script lang="ts">
     import { onDestroy, onMount } from "svelte";
-    import { Label, Input, GradientButton, Button } from "flowbite-svelte";
-    import { AdjustmentsVerticalOutline } from "flowbite-svelte-icons";
+    import { Input, Tooltip } from "flowbite-svelte";
+    import {
+        AdjustmentsVerticalOutline,
+        CloseOutline,
+    } from "flowbite-svelte-icons";
 
     import { AppPage, currentPage } from "../enums/AppPage.ts";
     import { Modals, currentModal } from "../enums/Modals.ts";
 
-    import { lightBGColor, pageChangeBtn } from "../stores/globalVariables.ts";
+    import {
+        accentColor,
+        darkColor,
+        lightBGColor,
+        pageChangeBtn,
+        tooltipTailwindClass,
+    } from "../stores/globalVariables.ts";
     import { buildFileTree, fileTree } from "../tools/fileTree.ts";
 
     import { switchPages, switchModals } from "../tools/utils.ts";
@@ -20,6 +29,9 @@
     import Logger from "./Logger.svelte";
     import NeuSearch from "../elements/NeuSearch.svelte";
     import PanelDivider from "../elements/PanelDivider.svelte";
+    import DirectorySizeBar from "../elements/DirectorySizeBar.svelte";
+    import { LogInfo } from "../../wailsjs/runtime/runtime";
+    import NeuButtonFake from "../elements/NeuButtonFake.svelte";
 
     let _modal: Modals;
     currentModal.subscribe((value) => {
@@ -27,7 +39,42 @@
     });
     onMount(() => {
         buildFileTree();
+        password = "";
     });
+
+    let password: string;
+
+    function enterPassword(event: KeyboardEvent) {
+        if (event.code === "Enter") {
+            const inputElement = event.target as HTMLInputElement;
+            password = inputElement.value;
+            // Now you can use the password variable as needed
+            LogInfo("amogus " + password);
+        }
+    }
+
+    function clearPassword() {
+        password = "";
+    }
+
+    let passwordCheck1 = false; // Length check
+    let passwordCheck2 = false; // Uppercase and lowercase check
+    let passwordCheck3 = false; // Symbol check
+    let passwordCheck = false; // Overall password strength check
+
+    function queryPasswordStrength() {
+        // Check 1: Length is more than 5 characters
+        const regexLength = /^.{5,}$/;
+        passwordCheck1 = regexLength.test(password);
+        // Check 2: At least one uppercase and one lowercase letter
+        const regexLetters = /^(?=.*[A-Z])(?=.*[a-z])/;
+        passwordCheck2 = regexLetters.test(password);
+        // Check 3: At least one symbol from the set !@#$
+        const regexSymbol = /[~!@#$%^&*_=+<>:;]/;
+        passwordCheck3 = regexSymbol.test(password);
+
+        passwordCheck = passwordCheck1 && passwordCheck2 && passwordCheck3;
+    }
 </script>
 
 <div class="flex h-screen !rounded-lg">
@@ -37,42 +84,117 @@
         class="max-w-45"
         style="background-color:{lightBGColor}"
     >
-        <div id="page-info" class="static">
-            <p>N-BOX</p>
-            <p>3.6GB</p>
+        <DirectorySizeBar />
+
+        <div class=" !flex !justify-start row center bg-white mb-1 h-6">
+            <!-- <p>encrypted 99999 files</p> -->
         </div>
         <div class="buttons">
             <div class="row">
-                <Label for="small-input" class="block mb-2">Default</Label>
                 <Input
-                    class="max-h-1 max-w-32"
+                    class="max-h-1"
                     id="small-input"
-                    placeholder="Default input"
+                    placeholder="enter username.."
                 />
             </div>
-            <div class="row">
-                <Label for="small-input" class="block mb-2">Default</Label>
-                <Input
-                    class="max-h-1 max-w-32"
-                    id="small-input"
-                    placeholder="Default input"
-                />
+            <div class="flex w-full h-1.5 px-0.5 relative bottom-2">
+                <div
+                    class="flex-1 text-center rounded-lg"
+                    style={`background-color: ${passwordCheck1 ? accentColor : darkColor};`}
+                ></div>
+                <Tooltip
+                    placement="left"
+                    class={tooltipTailwindClass}
+                    arrow={false}>more than 4 characters</Tooltip
+                >
             </div>
-            <div class="row center">
+            {#if password === ""}
+                <div class="row">
+                    <Input
+                        class="max-h-1 m-0"
+                        id="small-input"
+                        placeholder="enter password.."
+                        type="password"
+                        on:keyup={(event) => enterPassword(event)}
+                    />
+                </div>
+                <div class="flex w-full h-1.5 px-0.5 relative bottom-2">
+                    <div
+                        class="flex-1 text-center rounded-l-lg"
+                        style={`background-color: ${passwordCheck1 ? accentColor : darkColor};`}
+                    ></div>
+                    <Tooltip
+                        placement="left"
+                        class={tooltipTailwindClass}
+                        arrow={false}>more than 4 characters</Tooltip
+                    >
+                    <div
+                        class="flex-1 text-center"
+                        style={`background-color: ${passwordCheck2 ? accentColor : darkColor};`}
+                    ></div>
+                    <Tooltip
+                        placement="bottom"
+                        offset={0}
+                        class={tooltipTailwindClass}
+                        arrow={false}>a symbol ( #$&amp;! )</Tooltip
+                    >
+                    <div
+                        class="flex-1 text-center rounded-r-lg"
+                        style={`background-color: ${passwordCheck3 ? accentColor : darkColor};`}
+                    ></div>
+                    <Tooltip
+                        placement="right"
+                        class={tooltipTailwindClass}
+                        arrow={false}>upper &amp; lower case</Tooltip
+                    >
+                </div>
+            {:else}
+                <div class="row">
+                    <Input
+                        class="max-h-1 m-0"
+                        id="small-input"
+                        placeholder="confirm password.."
+                        type="password"
+                        on:keyup={(event) => enterPassword(event)}
+                    />
+                    <button on:click={() => clearPassword()}>
+                        <CloseOutline class=" text-blue-700 " />
+                    </button>
+                </div>
+                <div class="flex w-full h-1.5 px-0.5 relative bottom-2">
+                    <div
+                        class="flex-1 text-center rounded-lg"
+                        style={`background-color: ${passwordCheck1 ? accentColor : darkColor};`}
+                    ></div>
+                    <Tooltip
+                        placement="left"
+                        class={tooltipTailwindClass}
+                        arrow={false}>must match password</Tooltip
+                    >
+                </div>
+            {/if}
+
+            <div class="h-3.5">
+                <!-- <Input
+                    class="max-h-1 m-0"
+                    id="small-input"
+                    placeholder="confirm password.."
+                    on:keyup={enterPassword}
+                /> -->
+                <!-- <div class="row center">
                 <GradientButton
                     color="cyanToBlue"
                     class="max-h-1"
                     on:click={() => {}}>ENTER</GradientButton
                 >
+            </div> -->
             </div>
-            <div class="h-1"></div>
+
             <div class="row space-x-5 space-evenly">
                 <NeuButton on:click={() => switchPages(AppPage.Vault)}
                     >VAULT</NeuButton
                 >
-                <NeuButton on:click={() => switchPages(AppPage.OBox)}
-                    >O-BOX</NeuButton
-                >
+                <NeuButtonFake></NeuButtonFake>
             </div>
         </div>
     </div>
@@ -108,9 +230,5 @@
         display: flex;
         justify-content: space-between; /* Spread the buttons evenly */
         margin-bottom: 10px; /* Spacing between rows of buttons */
-    }
-
-    .buttons .row.center {
-        justify-content: center; /* Center the button in this row */
     }
 </style>

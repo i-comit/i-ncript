@@ -8,12 +8,12 @@
 
     // Function to log the checkbox's state
     function logCheckboxState() {
-        LogPrint("Checkbox is pressed. Current state:" + isChecked);
+        LogPrint("Checkbox is pressed. Current state:" + !isChecked);
         // DirectoryWatcher(isChecked);
     }
 </script>
 
-<div class="button r bg-gray-100" id="button-1">
+<div class="button r " id="button-1">
     <input
         type="checkbox"
         class="checkbox"
@@ -35,15 +35,16 @@
     }
     .button {
         position: relative;
-        width: 70px;
-        height: 20px;
+        width: 50%;
+        height: 22px;
+        top: 0px;
         margin: 1px auto 0 10px;
         overflow: hidden;
     }
 
     .button.r,
     .button.r .layer {
-        border-radius: 100px;
+        border-radius: .5rem;
     }
 
     .checkbox {
@@ -63,7 +64,7 @@
 
     .layer {
         width: 100%;
-        background-color: #e3e3e3;
+        background-color: #b6b6b6;
         transition: 0.2s ease all;
         z-index: 1;
     }
@@ -73,27 +74,27 @@
         position: absolute;
         top: 2px;
         left: 2px;
-        width: 18px;
-        height: 10px;
+        width: 20px;
+        height: 18px;
         color: #fff;
         font-size: 10px;
         font-weight: bold;
         text-align: center;
         line-height: 1;
         padding: 8px 3px;
-        background-color: #03a9f4;
-        border-radius: 50%;
+        background-color: #969696;
+        border-radius: 32%;
         transition: 0.2s cubic-bezier(0.18, 0.89, 0.35, 1.15) all;
     }
 
     #button-1 .checkbox:checked + .knobs:before {
         content: "";
-        left: 50px;
-        background-color: #bdf3fb;
+        left: 72%;
+        background-color: #a9d3ff;
     }
 
     #button-1 .checkbox:checked ~ .layer {
-        background-color: #dedede;
+        background-color: #d1eef7;
     }
 
     #button-1 .knobs,

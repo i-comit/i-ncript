@@ -414,17 +414,6 @@
             >
                 <ExpandOutline class="w-6 h-6" />
             </SpeedDialButton>
-            <!-- {#if expanded}
-                <SpeedDialButton
-                    name="Expand "
-                    class="h-10 w-14 text-lg"
-                    on:click={() => {
-                        updateExpansionForNode(tree, true);
-                    }}
-                >
-                    <ExpandOutline class="w-6 h-6" />
-                </SpeedDialButton>
-            {/if} -->
         </SpeedDial>
     </div>
 </div>
@@ -432,7 +421,7 @@
 <style>
     #dial {
         right: -0.7rem !important;
-        bottom: -6vh !important;
+        bottom: -6.5vh !important;
         transform: scale(0.55) !important;
         z-index: 5;
     }

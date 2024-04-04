@@ -4,7 +4,7 @@ export enum FileTasks {
     Move = "MOVING",
     Pack = "PACKING",
     Copy = "COPYING",
-    None = "none..",
+    None = "none",
 }
 
 import { writable } from 'svelte/store';
