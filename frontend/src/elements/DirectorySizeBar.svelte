@@ -8,7 +8,7 @@
     });
 </script>
 
-<div class="h-6">
+<div class="h-6 select-none pointer-events-none">
 mazon    <!-- <div
         class="mb-1 h-6 leading-none absolute top-0 left-4 z-10 w-1/3 ml-3 mt-0"
     >

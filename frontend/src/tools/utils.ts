@@ -141,7 +141,7 @@ export function checkIfRelPathIsInHeldDownBtns(relPath: string): boolean {
 export function addToHeldFileBtnsArr(relPath: string, button: HTMLButtonElement) {
     heldDownBtns.update(currentHeldDownBtns => {
         if (!(relPath in currentHeldDownBtns)) {
-            LogDebug("Added to heldDownBtns: " + relPath); // Using console.debug for demonstration
+            LogDebug("Added to heldDownBtns: " + relPath);
             return { ...currentHeldDownBtns, [relPath]: button };
         }
         return currentHeldDownBtns;
@@ -176,9 +176,6 @@ export function moveFilesToRelPath(targetRelPath: string) {
                             return key ? dirPath + key : key;
                         });
                         MoveFilesToPath(modifiedFiles, pathToMoveTo).then(() => {
-                            Object.keys(_heldDownBtns).forEach(key => {
-                                LogTrace("Held down node moveFiles: " + key); // Using console.error for demonstration
-                            });
                         });
                     });
                 }

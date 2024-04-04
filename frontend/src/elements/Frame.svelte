@@ -5,6 +5,8 @@
     import { LogDebug, LogError } from "../../wailsjs/runtime/runtime";
     import appLogo from "../assets/images/i-comiti.png";
 
+    import { lightBGColor, darkColor } from "../stores/globalVariables";
+
     import { tooltipTailwindClass } from "../stores/globalVariables";
 
     function minimizeApp() {
@@ -24,17 +26,23 @@
 >
     <div class="flex justify-start h-full ml-1 select-none">
         <img src={appLogo} alt="Description" />
-        <Tooltip
-        class={tooltipTailwindClass}
-        offset={-1}
-        arrow={true}>portable data encryption app</Tooltip
-    >
+        <Tooltip class={tooltipTailwindClass} offset={-1} arrow={true}
+            >portable data encryption app</Tooltip
+        >
     </div>
     <div class="flex justify-end">
-        <Button pill={true} class="!p-1 !pr-0 !z-10" on:click={minimizeApp}>
+        <Button
+            class="p-0 my-1"
+            style={`background-color: ${darkColor}`}
+            on:click={minimizeApp}
+        >
             <MinusOutline class="w-5 h-5 m-0 p-0" color="white" />
         </Button>
-        <Button pill={true} class="!p-1 !pl-0 !z-10" on:click={CloseApp}>
+        <Button
+            class="p-0 my-1 !mr-1"
+            style={`background-color: ${darkColor}`}
+            on:click={CloseApp}
+        >
             <CloseOutline class="w-5 h-5 m-0 p-0" color="white" />
         </Button>
     </div>

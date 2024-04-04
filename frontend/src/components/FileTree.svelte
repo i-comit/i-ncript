@@ -24,6 +24,8 @@
         FileMusicSolid,
         FileOutline,
         SearchOutline,
+        MailBoxSolid,
+        ShieldSolid,
     } from "flowbite-svelte-icons";
     import {
         SpeedDial,
@@ -44,6 +46,7 @@
         openDirectory,
         openFile,
         currentDirPath,
+        clearHeldBtnsFromContainer,
     } from "../tools/fileTree.ts";
 
     import {
@@ -71,9 +74,11 @@
     import { GetDirectoryPath } from "../../wailsjs/go/main/Getters";
     import {
         darkTextColor,
+        lightBGColor,
         tooltipTailwindClass,
     } from "../stores/globalVariables.ts";
     import { FileTypes, getFileType } from "../enums/FileTypes.ts";
+    import SpringyPointer from "../elements/SpringyPointer.svelte";
 
     let _label: string;
     let _heldDownBtns: { [key: string]: HTMLButtonElement };
@@ -108,13 +113,13 @@
     function onMouseDown(event: MouseEvent) {
         if (event.button === 0) {
             pointerDown.set(true);
-            LogInfo("Mouse down");
+            // LogInfo("Mouse down");
         }
     }
     function onMouseUp(event: MouseEvent) {
         if (event.button === 0) {
             pointerDown.set(false);
-            LogInfo("Mouse up");
+            // LogInfo("Mouse up");
         }
     }
     function onTouchStart(event: TouchEvent) {
@@ -128,10 +133,20 @@
     }
 
     function handleFileClick(relPath: string, _buttonRef: HTMLButtonElement) {
-        if (!leftCtrlDown && !checkIfRelPathIsInHeldDownBtns(relPath)) {
+        LogInfo(
+            "derp " +
+                get(leftCtrlDown) +
+                " " +
+                checkIfRelPathIsInHeldDownBtns(relPath),
+        );
+        if (!get(leftCtrlDown) && checkIfRelPathIsInHeldDownBtns(relPath)) {
+            LogInfo("herp");
             clearHeldBtns();
         }
         addToHeldFileBtnsArr(relPath, _buttonRef);
+        Object.keys(get(heldDownBtns)).forEach((key) => {
+            LogInfo("Held down node moveFiles: " + key);
+        });
         setHeldBtnsStyle();
     }
 
@@ -184,10 +199,11 @@
                         isFile().then((_isFile) => {
                             if (_isFile) currentFilePath.set(_fileTree.relPath);
                         });
-                    } else {
-                        currentDirPath.set(_fileTree.relPath);
-                        LogInfo("current Dir Path " + get(currentDirPath));
                     }
+                    // else {
+                    //     currentDirPath.set(_fileTree.relPath);
+                    //     LogInfo("current Dir Path " + get(currentDirPath));
+                    // }
                 },
             );
         });
@@ -196,6 +212,7 @@
     function handleMouseLeave() {
         currentFilePath.set("");
         currentDirPath.set("");
+        leftCtrlDown.set(false);
         LogError("currentRelpath null");
     }
 
@@ -237,7 +254,7 @@
     on:touchend={onTouchEnd}
 />
 
-<div class="rounded-lg" role="none" on:click={clearHeldBtns}>
+<div class="rounded-lg" role="none" on:click={clearHeldBtnsFromContainer}>
     <ul
         class={basePath(_fileTree.relPath) === pageName() ? "pl-0" : "pl-3"}
         style={`color: ${darkTextColor}; ${
@@ -254,7 +271,7 @@
                         : 'pl-1.5'}"
                     style="border-left: 1px solid #eeeeee;
                     {basePath(_fileTree.relPath) === pageName()
-                        ? 'position: sticky; top: 1px; z-index: 50;'
+                        ? `position: sticky; top: 1px; background-color: ${lightBGColor}; z-index: 9999`
                         : 'position: relative;'}"
                     on:click={() => {
                         toggleExpansion();
@@ -271,7 +288,7 @@
                     {_label}
                 </button>
                 {#if pointerDown}
-                    {#if Object.keys(_heldDownBtns).length > 0}
+                    {#if Object.keys(_heldDownBtns).length > 0 && basePath(_fileTree.relPath) !== pageName()}
                         <Tooltip class={tooltipTailwindClass} offset={1}
                             >Move {Object.keys(_heldDownBtns).length} files to {basePath(
                                 _fileTree.relPath,
@@ -294,7 +311,7 @@
                 {#await promise then isFile}
                     {#if isFile}
                         <button
-                            class="flex rounded-md px-0.5 ml-1"
+                            class="flex rounded-md px-0.5 ml-1 my-0.5"
                             bind:this={buttonRef}
                             on:mousedown={() => {
                                 handleFileClick(_fileTree.relPath, buttonRef);
@@ -309,8 +326,6 @@
                             on:mouseup={() => {
                                 moveFilesFromFileNode();
                             }}
-                            on:dblclick={() =>
-                                handleDblClick(_fileTree.relPath)}
                         >
                             {#if getFileType(_fileTree.relPath) === FileTypes.Encrypted}
                                 <LockSolid class="w-3 mr-0.5"></LockSolid>
@@ -345,14 +360,15 @@
                 {/await}
 
                 {#if pointerDown}
-                    <Tooltip
-                        class={tooltipTailwindClass}
-                        offset={1}
-                        arrow={true}
-                        >Move {Object.keys(_heldDownBtns).length} files to {basePath(
-                            removeFileName(_fileTree.relPath),
-                        )}</Tooltip
-                    >
+                    {#if Object.keys(_heldDownBtns).length > 0 && basePath(_fileTree.relPath) !== pageName()}
+                        <Tooltip
+                            class={tooltipTailwindClass}
+                            offset={1}
+                            arrow={true}
+                            >Move {Object.keys(_heldDownBtns).length} files to {basePath(
+                                removeFileName(_fileTree.relPath),
+                            )}</Tooltip
+                        >{/if}
                 {:else if clickedOnButtonRef === buttonRef}
                     <Popover
                         class="w-30 text-xs font-light m-0 p-0"
@@ -414,6 +430,7 @@
 
     ul {
         margin: 0px;
+        z-index: 25;
         list-style: none;
         user-select: none;
         text-align: justify;

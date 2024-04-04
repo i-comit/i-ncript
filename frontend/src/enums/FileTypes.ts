@@ -58,6 +58,6 @@ export function getFileType(relPath: string): FileTypes {
     // Extract the file extension
     const extension = relPath.split('.').pop()?.toLowerCase() || '';
     // Determine the file type based on the extension
-    LogDebug("file type is " + extension)
+    // LogDebug("file type is " + extension)
     return extensionToFileType[extension] || FileTypes.Unknown;
 }

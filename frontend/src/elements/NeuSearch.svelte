@@ -22,7 +22,7 @@
 </script>
 
 <div
-    class="absolute search z-10 {` ${_class}`}"
+    class="!sticky top-0 search z-10 {` ${_class}`}"
     style="--wails-draggable:drag;"
 >
     <!-- <svg
@@ -67,10 +67,6 @@
         height: $height;
     }
 
-    #closeButton {
-        position: absolute;
-        left: 12rem !important;
-    }
 
     @mixin applyFontStyle() {
         font-family: $fontFamily;
@@ -129,7 +125,6 @@
     }
 
     // Oval Buttons
-
     %oval-btn {
         height: $height;
         padding: 0 2px;
@@ -137,7 +132,7 @@
 
     .oval-sm {
         @extend %oval-btn;
-        width: 110px;
+        width: 108px;
         border-radius: 0.4rem;
         margin-top: 1.5px;
     }

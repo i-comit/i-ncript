@@ -13,3 +13,9 @@ export const accentColor = "#95c7db"
 export const darkColor = "#757575"
 
 export const lightBGColor = "#eeeeee"
+
+export const prevHighlight_light = "#c4c4c4";
+export const lastHighlight_light = "#e4e4e4";
+
+// export const prevHighlight_dark = ;
+// export const lastHighlight_dark

@@ -2,10 +2,7 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
     import { get } from "svelte/store";
-    import { Progressbar, Button } from "flowbite-svelte";
     import Toggle from "../elements/FlatToggle.svelte";
-
-    import { sineOut } from "svelte/easing";
 
     import { AppPage, currentPage } from "../enums/AppPage.ts";
     import { Modals, currentModal } from "../enums/Modals.ts";
@@ -17,7 +14,7 @@
         buildFileTree,
         fileTree,
         setIsInFileTask,
-        clearHeldBtns,
+        clearHeldBtnsFromContainer,
     } from "../tools/fileTree.ts";
 
     import {
@@ -104,33 +101,33 @@
         });
     }
 
+    import FileTools from "../elements/FileTools.svelte";
     import SpringyPointer from "../elements/SpringyPointer.svelte";
 
     let isFilesDraggedOver: boolean;
 
-    function checkMouseEnter() {
-        if (get(pointerDown)) {
+    function checkMouseEnter(): boolean {
+        if ($pointerDown) {
             isFilesDraggedOver = true;
             const _heldDownBtns = get(heldDownBtns);
             const entries = Object.entries(_heldDownBtns);
             const lastIndex = entries.length;
             LogInfo("ERM " + lastIndex);
+            return true;
         }
+        return false;
     }
 
     function checkMouseLeave() {}
 </script>
 
 <div class="flex h-screen !rounded-lg">
-    {#if $pointerDown}
-        <SpringyPointer />
-    {/if}
     <Frame />
     <div
         id="left-panel"
         style="background-color:{lightBGColor}"
         role="none"
-        on:mousedown={clearHeldBtns}
+        on:click={clearHeldBtnsFromContainer}
         on:mouseenter={checkMouseEnter}
         on:mouseleave={checkMouseLeave}
     >
@@ -148,12 +145,17 @@
                     >
                 </div>
             {:else}
-                <TaskDisplay />
+                <div class="h-7">
+                    <TaskDisplay />
+                </div>
             {/if}
 
-            <div class="relative h-14 bg-white">
+            <div class="relative h-14">
                 {#if _currentFileTask === FileTasks.None}
-                    <p class="absolute bottom-0 right-0 leading-none text-sm">
+                    <div style="padding-top: 0.325rem">
+                        <FileTools />
+                    </div>
+                    <p class="absolute bottom-0 right-0 leading-none text-sm select-none">
                         HOT FILER
                     </p>
                 {:else}
@@ -175,15 +177,15 @@
     </div>
 
     <PanelDivider />
-
     <div
         id="right-panel"
         role="none"
         style="background-color:{lightBGColor}"
         on:mouseleave={onmouseleave}
-        on:click={clearHeldBtns}
+        on:click={clearHeldBtnsFromContainer}
     >
         <NeuSearch />
+
         <!-- <RadialProgress _style="right: 3.6rem" dataProgress={30} /> -->
         {#if _modal === Modals.None}
             <TreeView _fileTree={$fileTree} />

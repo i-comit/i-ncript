@@ -4,7 +4,11 @@
     import { Input, Tooltip } from "flowbite-svelte";
     import {
         AdjustmentsVerticalOutline,
+        ArrowUpDownOutline,
         CloseOutline,
+        EnvelopeOpenSolid,
+        EnvelopeSolid,
+        MailBoxSolid,
     } from "flowbite-svelte-icons";
 
     import { AppPage, currentPage } from "../enums/AppPage.ts";
@@ -35,6 +39,7 @@
     import { FileTasks, currentFileTask } from "../enums/FileTasks.ts";
     import WaveProgress from "../elements/WaveProgress.svelte";
     import TaskDisplay from "../elements/TaskDisplay.svelte";
+    import FileTools from "../elements/FileTools.svelte";
 
     let _modal: Modals;
     currentModal.subscribe((value) => {
@@ -94,17 +99,82 @@
     >
         <DirectorySizeBar />
 
-        <!-- <div class="mb-1 h-6 leading-none">
-            <p class="relative top-1.5 text-left leading-none">...</p>
-        </div> -->
-        <div class="buttons">
-            {#if _currentFileTask === FileTasks.None}
+      
+        {#if _currentFileTask === FileTasks.None}
+            <div class="row">
+                <Input
+                    class="max-h-1"
+                    id="small-input"
+                    placeholder="enter username.."
+                />
+            </div>
+            <div class="flex w-full h-1 px-0.5 relative bottom-1">
+                <div
+                    class="flex-1 text-center rounded-lg"
+                    style={`background-color: ${passwordCheck1 ? accentColor : darkColor};`}
+                ></div>
+                <Tooltip
+                    placement="left"
+                    class={tooltipTailwindClass}
+                    arrow={false}>more than 4 characters</Tooltip
+                >
+            </div>
+            {#if password === ""}
+                <div style="height: 1.1rem">
+                    <FileTools />
+                </div>
+
                 <div class="row">
                     <Input
-                        class="max-h-1"
+                        class="max-h-1 m-0"
                         id="small-input"
-                        placeholder="enter username.."
+                        placeholder="enter password.."
+                        type="password"
+                        on:keyup={(event) => enterPassword(event)}
                     />
+                </div>
+                <div class="flex w-full h-1 px-0.5 relative bottom-1">
+                    <div
+                        class="flex-1 text-center rounded-l-lg"
+                        style={`background-color: ${passwordCheck1 ? accentColor : darkColor};`}
+                    ></div>
+                    <Tooltip
+                        placement="left"
+                        class={tooltipTailwindClass}
+                        arrow={false}>more than 4 characters</Tooltip
+                    >
+                    <div
+                        class="flex-1 text-center"
+                        style={`background-color: ${passwordCheck2 ? accentColor : darkColor};`}
+                    ></div>
+                    <Tooltip
+                        placement="bottom"
+                        offset={0}
+                        class={tooltipTailwindClass}
+                        arrow={false}>a symbol ( #$&amp;! )</Tooltip
+                    >
+                    <div
+                        class="flex-1 text-center rounded-r-lg"
+                        style={`background-color: ${passwordCheck3 ? accentColor : darkColor};`}
+                    ></div>
+                    <Tooltip
+                        placement="right"
+                        class={tooltipTailwindClass}
+                        arrow={false}>upper &amp; lower case</Tooltip
+                    >
+                </div>
+            {:else}
+                <div class="row">
+                    <Input
+                        class="max-h-1 m-0"
+                        id="small-input"
+                        placeholder="confirm password.."
+                        type="password"
+                        on:keyup={(event) => enterPassword(event)}
+                    />
+                    <button on:click={() => clearPassword()}>
+                        <CloseOutline class=" text-blue-700 " />
+                    </button>
                 </div>
                 <div class="flex w-full h-1.5 px-0.5 relative bottom-2">
                     <div
@@ -114,87 +184,20 @@
                     <Tooltip
                         placement="left"
                         class={tooltipTailwindClass}
-                        arrow={false}>more than 4 characters</Tooltip
+                        arrow={false}>must match password</Tooltip
                     >
                 </div>
-                {#if password === ""}
-                    <div class="row">
-                        <Input
-                            class="max-h-1 m-0"
-                            id="small-input"
-                            placeholder="enter password.."
-                            type="password"
-                            on:keyup={(event) => enterPassword(event)}
-                        />
-                    </div>
-                    <div class="flex w-full h-1.5 px-0.5 relative bottom-2">
-                        <div
-                            class="flex-1 text-center rounded-l-lg"
-                            style={`background-color: ${passwordCheck1 ? accentColor : darkColor};`}
-                        ></div>
-                        <Tooltip
-                            placement="left"
-                            class={tooltipTailwindClass}
-                            arrow={false}>more than 4 characters</Tooltip
-                        >
-                        <div
-                            class="flex-1 text-center"
-                            style={`background-color: ${passwordCheck2 ? accentColor : darkColor};`}
-                        ></div>
-                        <Tooltip
-                            placement="bottom"
-                            offset={0}
-                            class={tooltipTailwindClass}
-                            arrow={false}>a symbol ( #$&amp;! )</Tooltip
-                        >
-                        <div
-                            class="flex-1 text-center rounded-r-lg"
-                            style={`background-color: ${passwordCheck3 ? accentColor : darkColor};`}
-                        ></div>
-                        <Tooltip
-                            placement="right"
-                            class={tooltipTailwindClass}
-                            arrow={false}>upper &amp; lower case</Tooltip
-                        >
-                    </div>
-                {:else}
-                    <div class="row">
-                        <Input
-                            class="max-h-1 m-0"
-                            id="small-input"
-                            placeholder="confirm password.."
-                            type="password"
-                            on:keyup={(event) => enterPassword(event)}
-                        />
-                        <button on:click={() => clearPassword()}>
-                            <CloseOutline class=" text-blue-700 " />
-                        </button>
-                    </div>
-                    <div class="flex w-full h-1.5 px-0.5 relative bottom-2">
-                        <div
-                            class="flex-1 text-center rounded-lg"
-                            style={`background-color: ${passwordCheck1 ? accentColor : darkColor};`}
-                        ></div>
-                        <Tooltip
-                            placement="left"
-                            class={tooltipTailwindClass}
-                            arrow={false}>must match password</Tooltip
-                        >
-                    </div>
-                {/if}
-                <div class="h-2.5" />
-            {:else}
-                <TaskDisplay />
-                <div class="h-0.5"/>
-                <WaveProgress dataProgress={_fileTaskPercent}></WaveProgress>
             {/if}
-            <div class="h-1"/>
-            <div class="row space-x-5 space-evenly">
-                <NeuButton on:click={() => switchPages(AppPage.Vault)}
-                    >VAULT</NeuButton
-                >
-                <NeuButtonFake></NeuButtonFake>
-            </div>
+        {:else}
+            <TaskDisplay />
+            <div class="h-0.5" />
+            <WaveProgress dataProgress={_fileTaskPercent}></WaveProgress>
+        {/if}
+        <div class="row space-x-5 space-evenly">
+            <NeuButton on:click={() => switchPages(AppPage.Vault)}
+                >VAULT</NeuButton
+            >
+            <NeuButtonFake></NeuButtonFake>
         </div>
     </div>
     <PanelDivider />
@@ -225,9 +228,10 @@
         background-color: #fcfcfc;
     }
 
-    .buttons .row {
+    .row {
         display: flex;
         justify-content: space-between; /* Spread the buttons evenly */
-        margin-bottom: 10px; /* Spacing between rows of buttons */
+        margin-bottom: 4px; /* Spacing between rows of buttons */
+        margin-top: 4px;
     }
 </style>

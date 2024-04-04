@@ -18,6 +18,7 @@ import {
 import {
     FilesDragNDrop, OpenDirectory, OpenFile,
 } from "../../wailsjs/go/main/FileUtils";
+import { lastHighlight_light, prevHighlight_light } from "../stores/globalVariables";
 
 export const vaultExpansionState = writable<{ [key: string]: boolean }>({});
 
@@ -42,21 +43,27 @@ export function setHeldBtnsStyle() {
 
     entries.forEach(([path, btn], index) => {
         console.log("Held down node moveFiles: " + path); // Assuming LogInfo is analogous to console.log for demonstration
-        // Apply blue to all but the last, red to the last
-        btn.style.backgroundColor = index === lastIndex ? "red" : "blue";
+        btn.style.backgroundColor = index === lastIndex ? lastHighlight_light : prevHighlight_light;
+        btn.style.textDecoration = index === lastIndex ? "underline" : "none";
+        btn.style.opacity = "50%"
     });
 }
 export function clearHeldBtns() {
-    if (get(currentFilePath) === "" || get(currentDirPath) === "") {
+    if (get(currentDirPath) === "") {
         const _heldDownBtns = get(heldDownBtns);
         Object.entries(_heldDownBtns).forEach(([path, btn]) => {
             btn.style.backgroundColor = "transparent";
+            btn.style.textDecoration = "none";
         });
         LogInfo("Held buttons cleared");
         heldDownBtns.set({});
     }
 }
-
+export function clearHeldBtnsFromContainer() {
+    if (get(currentFilePath) === "" && get(currentDirPath) === "") {
+        clearHeldBtns();
+    }
+}
 export function openDirectory(relPath: string) {
     GetDirectoryPath(pageIndex()).then((filePath) => {
         OpenDirectory(filePath + relPath);
