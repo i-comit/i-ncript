@@ -23,6 +23,9 @@ export const pageName: () => string = () => {
 };
 export const heldDownBtns = writable<{ [key: string]: HTMLButtonElement }>({});
 
+export const leftCtrlDown = writable<boolean>(false);
+export const pointerDown = writable<boolean>(false);
+
 export const pageIndex: () => number = () => {
     const _appPage = get(currentPage)
     switch (

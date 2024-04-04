@@ -13,7 +13,8 @@
     }
 </script>
 
-<div class="button r " id="button-1">
+<div class="button r" id="button-1">
+    
     <input
         type="checkbox"
         class="checkbox"
@@ -44,7 +45,7 @@
 
     .button.r,
     .button.r .layer {
-        border-radius: .5rem;
+        border-radius: 0.5rem;
     }
 
     .checkbox {

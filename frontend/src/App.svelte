@@ -11,6 +11,7 @@
   import { LogDebug, LogWarning } from "../wailsjs/runtime/runtime";
   import { DirectoryWatcher } from "../wailsjs/go/main/App";
 
+
   let loggedIn = false;
   let _page: AppPage;
   currentPage.subscribe((value) => {
@@ -28,12 +29,9 @@
     isRightDir = await GetDirName();
     LogDebug(isRightDir.toString());
   });
-
 </script>
 
-<main
-  class="rounded-lg"
->
+<main class="rounded-lg">
   {#if !isRightDir}
     <WrongDir />
   {:else if _page === AppPage.Login}

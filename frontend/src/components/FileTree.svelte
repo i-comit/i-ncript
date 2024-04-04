@@ -57,6 +57,8 @@
         heldDownBtns,
         removeFileName,
         checkIfRelPathIsInHeldDownBtns,
+        leftCtrlDown,
+        pointerDown,
     } from "../tools/utils.ts";
 
     interface FileNode {
@@ -72,14 +74,11 @@
         tooltipTailwindClass,
     } from "../stores/globalVariables.ts";
     import { FileTypes, getFileType } from "../enums/FileTypes.ts";
-    import NeuSearch from "../elements/NeuSearch.svelte";
 
     let _label: string;
     let _heldDownBtns: { [key: string]: HTMLButtonElement };
     let buttonRef: HTMLButtonElement;
     let clickedOnButtonRef: HTMLButtonElement;
-
-    let clickedOnButton2: { [key: string]: HTMLButtonElement };
 
     heldDownBtns.subscribe((value) => {
         _heldDownBtns = value;
@@ -95,39 +94,36 @@
         });
     };
 
-    let leftCtrlDown = false;
-    let pointerDown = false; // Previously mouseDown
-
     function ctrlLeftDown(event: KeyboardEvent) {
         if (event.code === "ControlLeft") {
-            leftCtrlDown = true;
+            leftCtrlDown.set(true);
         }
     }
 
     function ctrlLeftUp(event: KeyboardEvent) {
         if (event.code === "ControlLeft") {
-            leftCtrlDown = false;
+            leftCtrlDown.set(false);
         }
     }
     function onMouseDown(event: MouseEvent) {
         if (event.button === 0) {
-            pointerDown = true;
-            // LogInfo("Mouse down");
+            pointerDown.set(true);
+            LogInfo("Mouse down");
         }
     }
     function onMouseUp(event: MouseEvent) {
         if (event.button === 0) {
-            pointerDown = false;
-            // LogInfo("Mouse up");
+            pointerDown.set(false);
+            LogInfo("Mouse up");
         }
     }
     function onTouchStart(event: TouchEvent) {
-        pointerDown = true;
+        pointerDown.set(true);
         // LogInfo("Pointer down");
     }
 
     function onTouchEnd(event: TouchEvent) {
-        pointerDown = false;
+        pointerDown.set(false);
         // LogInfo("Pointer up");
     }
 
@@ -242,16 +238,6 @@
 />
 
 <div class="rounded-lg" role="none" on:click={clearHeldBtns}>
-    <!-- <button
-        class="z-10 fixed top-0 left-1/2 transform -translate-x-1/2 mt-0.5"
-        style="--wails-draggable:drag"
-    >
-        <SearchOutline class="w-5 h-5" color="dark" />
-    </button> -->
-    <!-- style={basePath(_fileTree.relPath) === pageName()
-        ? "position: sticky; top: 0; z-index: 10; background-color: green !important"
-        : "position: relative;"}  -->
-
     <ul
         class={basePath(_fileTree.relPath) === pageName() ? "pl-0" : "pl-3"}
         style={`color: ${darkTextColor}; ${
@@ -264,11 +250,11 @@
             {#if _fileTree.children && _fileTree.children.length > 0}<!-- Folder with children -->
                 <button
                     class="flex {basePath(_fileTree.relPath) === pageName()
-                        ? 'rounded-md px-1 underline'
+                        ? 'rounded-md px-1 underline mb-0.5'
                         : 'pl-1.5'}"
-                    style="border-left: 1px solid #eee;
+                    style="border-left: 1px solid #eeeeee;
                     {basePath(_fileTree.relPath) === pageName()
-                        ? 'position: sticky; top: 1px; z-index: 5;'
+                        ? 'position: sticky; top: 1px; z-index: 50;'
                         : 'position: relative;'}"
                     on:click={() => {
                         toggleExpansion();

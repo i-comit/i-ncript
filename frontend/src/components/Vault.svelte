@@ -7,14 +7,6 @@
 
     import { sineOut } from "svelte/easing";
 
-    import {
-        InfoCircleOutline,
-        AdjustmentsVerticalOutline,
-        CirclePauseSolid,
-        BarsFromLeftOutline,
-        PauseSolid,
-    } from "flowbite-svelte-icons";
-
     import { AppPage, currentPage } from "../enums/AppPage.ts";
     import { Modals, currentModal } from "../enums/Modals.ts";
 
@@ -34,7 +26,12 @@
         InterruptEncryption,
     } from "../../wailsjs/go/main/App";
 
-    import { switchPages, switchModals } from "../tools/utils.ts";
+    import {
+        switchPages,
+        switchModals,
+        pointerDown,
+        heldDownBtns,
+    } from "../tools/utils.ts";
 
     import NeuButton from "../elements/NeuButton.svelte";
 
@@ -106,15 +103,36 @@
             });
         });
     }
+
+    import SpringyPointer from "../elements/SpringyPointer.svelte";
+
+    let isFilesDraggedOver: boolean;
+
+    function checkMouseEnter() {
+        if (get(pointerDown)) {
+            isFilesDraggedOver = true;
+            const _heldDownBtns = get(heldDownBtns);
+            const entries = Object.entries(_heldDownBtns);
+            const lastIndex = entries.length;
+            LogInfo("ERM " + lastIndex);
+        }
+    }
+
+    function checkMouseLeave() {}
 </script>
 
 <div class="flex h-screen !rounded-lg">
+    {#if $pointerDown}
+        <SpringyPointer />
+    {/if}
     <Frame />
     <div
         id="left-panel"
         style="background-color:{lightBGColor}"
         role="none"
         on:mousedown={clearHeldBtns}
+        on:mouseenter={checkMouseEnter}
+        on:mouseleave={checkMouseLeave}
     >
         <DirSize />
         <div class="buttons">
@@ -133,7 +151,7 @@
                 <TaskDisplay />
             {/if}
 
-            <div class="relative h-14">
+            <div class="relative h-14 bg-white">
                 {#if _currentFileTask === FileTasks.None}
                     <p class="absolute bottom-0 right-0 leading-none text-sm">
                         HOT FILER
@@ -166,7 +184,7 @@
         on:click={clearHeldBtns}
     >
         <NeuSearch />
-        <RadialProgress _style="right: 3.6rem" dataProgress={30} />
+        <!-- <RadialProgress _style="right: 3.6rem" dataProgress={30} /> -->
         {#if _modal === Modals.None}
             <TreeView _fileTree={$fileTree} />
         {:else if _modal === Modals.Settings}
