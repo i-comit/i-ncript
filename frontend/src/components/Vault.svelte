@@ -33,6 +33,7 @@
         heldDownBtns,
         prependAbsPathToRelPaths,
         totalFileCt,
+        checkFileTypesinHeldDownBtns,
     } from "../tools/utils.ts";
 
     import NeuButton from "../elements/NeuButton.svelte";
@@ -97,11 +98,13 @@
     });
 
     function encrypt() {
-        var _heldDownBtns = get(heldDownBtns);
-        if (Object.keys(_heldDownBtns).length > 0)
+        if (
+            checkFileTypesinHeldDownBtns(true) > 0 &&
+            Object.keys(get(heldDownBtns)).length > 0
+        )
             setIsInFileTask(true).then(() => {
                 currentFileTask.set(FileTasks.Encrypt);
-                totalFileCt.set(Object.keys(_heldDownBtns).length);
+                totalFileCt.set(checkFileTypesinHeldDownBtns(true));
                 prependAbsPathToRelPaths(0).then((prependedRelPaths) => {
                     EncryptFilesInArr(prependedRelPaths);
                 });
@@ -119,11 +122,13 @@
     }
 
     function decrypt() {
-        var _heldDownBtns = get(heldDownBtns);
-        if (Object.keys(_heldDownBtns).length > 0)
+        if (
+            checkFileTypesinHeldDownBtns(false) > 0 &&
+            Object.keys(get(heldDownBtns)).length > 0
+        )
             setIsInFileTask(true).then(() => {
                 currentFileTask.set(FileTasks.Decrypt);
-                totalFileCt.set(Object.keys(_heldDownBtns).length);
+                totalFileCt.set(checkFileTypesinHeldDownBtns(false));
                 prependAbsPathToRelPaths(0).then((prependedRelPaths) => {
                     DecryptFilesInArr(prependedRelPaths);
                 });

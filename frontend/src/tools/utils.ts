@@ -21,7 +21,7 @@ export const pageName: () => string = () => {
     const _appPage: AppPage = get(currentPage);
     return _appPage;
 };
-export const heldDownBtns = writable<{ [key: string]: HTMLButtonElement }>({});
+export const heldDownBtns = writable<{ [relPath: string]: HTMLButtonElement }>({});
 
 export const leftCtrlDown = writable<boolean>(false);
 export const pointerDown = writable<boolean>(false);
@@ -139,7 +139,6 @@ export function checkIfRelPathIsInHeldDownBtns(relPath: string): boolean {
     return currentHeldDownBtns.hasOwnProperty(relPath);
 }
 
-//LOCAL DRAG AND DROP
 export function addToHeldFileBtnsArr(relPath: string, button: HTMLButtonElement) {
     heldDownBtns.update(currentHeldDownBtns => {
         if (!(relPath in currentHeldDownBtns)) {
@@ -150,7 +149,28 @@ export function addToHeldFileBtnsArr(relPath: string, button: HTMLButtonElement)
     });
 }
 
+export function checkFileTypesinHeldDownBtns(encryptOrDecrypt: boolean): number {
+    var filteredFileCt: number = 0;
+    Object.keys(get(heldDownBtns)).forEach((relPath) => {
+        var fileTypes = getFileType(relPath)
+        if (fileTypes === FileTypes.Unknown) { filteredFileCt++; return }
+
+        if (encryptOrDecrypt) {
+            if (fileTypes !== FileTypes.Encrypted) {
+                filteredFileCt++
+            }
+        } else {
+            if (fileTypes === FileTypes.Encrypted) {
+                filteredFileCt++
+            }
+        }
+    });
+    LogInfo("Final fileCount: " + filteredFileCt);
+    return filteredFileCt
+}
+
 import { currentFilePath } from './fileTree';
+import { FileTypes, getFileType } from '../enums/FileTypes.ts';
 export function moveFilesToRelPath(targetRelPath: string) {
     GetDirectoryPath(pageIndex()).then((dirPath) => {
         var fullPath = dirPath + targetRelPath;

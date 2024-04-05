@@ -23,7 +23,6 @@ import (
 
 func (a *App) EncryptFilesInDir(dirIndex int) (bool, error) {
 	filePaths, err := getFilesRecursively(a.directories[dirIndex])
-	fmt.Println("\033[32mdirectories[0] ", a.directories[dirIndex], "\033[0m")
 	if err != nil {
 		return false, err
 	}

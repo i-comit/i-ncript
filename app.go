@@ -279,7 +279,7 @@ func (a *App) DirectoryWatcher(dirIndex int) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	s := fmt.Sprintf("now watching %s directory", filepath.Base(a.directories[lastDirIndex]))
+	s := fmt.Sprintf("began watching %s directory", filepath.Base(a.directories[lastDirIndex]))
 	fmt.Println("\033[32m", s, "\033[0m")
 	lastDirIndex = dirIndex // Update the current index
 	<-a.done                // Keep the watcher goroutine alive
