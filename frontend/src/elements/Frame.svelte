@@ -39,7 +39,7 @@
             <MinusOutline class="w-5 h-5 m-0 p-0" color="white" />
         </Button>
         <Button
-            class="p-0 my-1 !mr-1"
+            class="p-0 my-1 !mr-1 !ml-px"
             style={`background-color: ${darkColor}`}
             on:click={CloseApp}
         >

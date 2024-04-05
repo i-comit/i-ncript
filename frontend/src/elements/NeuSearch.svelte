@@ -22,7 +22,7 @@
 </script>
 
 <div
-    class="!sticky top-0 search z-10 {` ${_class}`}"
+    class="!sticky top-0 left-0 search z-10 {` ${_class}`}"
     style="--wails-draggable:drag;"
 >
     <!-- <svg
@@ -57,6 +57,14 @@
     @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap");
     @import "../neumorphic.scss";
 
+    $dropShadow:
+        2px 2px 6px -2px rgba($darkShadow, 0.4),
+        -3px -6px 6px -1px rgba($lightShadow, 1);
+
+    $innerShadow:
+        inset -4px -2px 4px -1px rgba($lightShadow, 1),
+        inset 2px 2px 4px -1px rgba($darkShadow, 0.5);
+
     //  Variables
     $fontFamily: "Montserrat", sans-serif;
     $fontSize: 13px;
@@ -66,7 +74,6 @@
         width: $width;
         height: $height;
     }
-
 
     @mixin applyFontStyle() {
         font-family: $fontFamily;
@@ -153,7 +160,7 @@
         &__input {
             padding: 0 1.2rem;
             text-align: left;
-            left: 74px;
+            left: 72px;
         }
     }
 </style>

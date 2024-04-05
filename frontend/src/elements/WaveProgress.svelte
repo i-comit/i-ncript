@@ -12,14 +12,16 @@
     <!-- <div class="flex flex-grow justify-center items-center"> -->
     <!-- <div class="flex space-x-1 text-black text-center text-sm m-0 p-0 leading-none">ENCRYPTING</div> -->
 </div>
-<div class="progress progress-striped active mb-1 rounded-md h-4 p-0 m-0">
-    <div
-        style="width: {` ${dataProgress}`}%;"
-        class="progress-bar rounded-md h-4"
-    >
-        <p class="text-center text-sm"><slot /></p>
+{#if dataProgress > 0}
+    <div class="progress progress-striped active mb-1 rounded-md h-4 p-0 m-0">
+        <div
+            style="width: {` ${dataProgress}`}%;"
+            class="progress-bar rounded-md h-4"
+        >
+            <p class="text-center text-sm"><slot /></p>
+        </div>
     </div>
-</div>
+{/if}
 
 <style lang="scss">
     @import "../neumorphic.scss";

@@ -6,6 +6,7 @@
 
     import { AppPage, currentPage } from "../enums/AppPage.ts";
     import { Modals, currentModal } from "../enums/Modals.ts";
+    import { FileTasks, currentFileTask } from "../enums/FileTasks.ts";
 
     import { height, width, lightBGColor } from "../stores/globalVariables.ts";
     import { encryptProgress as fileCt } from "../stores/encryptProgress";
@@ -21,6 +22,8 @@
         EncryptFilesInDir,
         DecryptFilesInDir,
         InterruptEncryption,
+        EncryptFilesInArr,
+        DecryptFilesInArr,
     } from "../../wailsjs/go/main/App";
 
     import {
@@ -28,6 +31,7 @@
         switchModals,
         pointerDown,
         heldDownBtns,
+        prependAbsPathToRelPaths,
     } from "../tools/utils.ts";
 
     import NeuButton from "../elements/NeuButton.svelte";
@@ -38,16 +42,23 @@
     import TreeView from "./FileTree.svelte";
     import Logger from "./Logger.svelte";
 
-    import { EventsOn, LogInfo } from "../../wailsjs/runtime/runtime";
-    import { GetFilesByType } from "../../wailsjs/go/main/Getters";
+    import {
+        EventsOff,
+        EventsOn,
+        LogInfo,
+    } from "../../wailsjs/runtime/runtime";
+    import {
+        GetDirectoryPath,
+        GetFilesByType,
+    } from "../../wailsjs/go/main/Getters";
     import DirSize from "../elements/DirectorySizeBar.svelte";
     import RadialProgress from "../elements/RadialProgress.svelte";
-    import { FileTasks, currentFileTask } from "../enums/FileTasks.ts";
     import NeuSearch from "../elements/NeuSearch.svelte";
     import PanelDivider from "../elements/PanelDivider.svelte";
     import WaveProgress from "../elements/WaveProgress.svelte";
     import NeuButtonFake from "../elements/NeuButtonFake.svelte";
     import TaskDisplay from "../elements/TaskDisplay.svelte";
+    import FileTools from "../elements/FileTools.svelte";
 
     let _totalFileCt: number;
     _totalFileCt = 0;
@@ -56,13 +67,19 @@
         _fileCount = value;
     });
     let _fileTaskPercent: number;
+    let _largeFilePercent: number;
 
     onMount(() => {
         buildFileTree();
-        EventsOn("fileProcessed", (fileCtEvt) => {
+        EventsOn("fileProcessed", (fileCtEvt: number) => {
             fileCt.set(fileCtEvt);
             _fileTaskPercent = Math.round((_fileCount / _totalFileCt) * 100);
             if (fileCtEvt === 0) currentFileTask.set(FileTasks.None);
+        });
+        EventsOn("largeFilePercent", (largeFilePercent: number) => {
+            _largeFilePercent = largeFilePercent;
+            LogInfo("large file percent " + _largeFilePercent);
+            if (_largeFilePercent === 0) EventsOff("largeFilePercent");
         });
     });
 
@@ -77,42 +94,55 @@
     });
 
     function encrypt() {
+        LogInfo("begin encryption");
         setIsInFileTask(true).then(() => {
             GetFilesByType(0, false).then((filePaths) => {
-                LogInfo("Began encrypting");
-                if (filePaths.length > 0) {
-                    currentFileTask.set(FileTasks.Encrypt);
-                    _totalFileCt = filePaths.length;
-                    EncryptFilesInDir(0);
+                currentFileTask.set(FileTasks.Encrypt);
+                var _heldDownBtns = get(heldDownBtns);
+                if (Object.keys(_heldDownBtns).length > 0) {
+                    _totalFileCt = Object.keys(_heldDownBtns).length;
+                    prependAbsPathToRelPaths(0).then((prependedRelPaths) => {
+                        EncryptFilesInArr(prependedRelPaths);
+                    });
+                } else {
+                    if (filePaths.length > 0) {
+                        _totalFileCt = filePaths.length;
+                        EncryptFilesInDir(0);
+                    }
                 }
             });
         });
     }
 
     function decrypt() {
+        LogInfo("begin decryption");
         setIsInFileTask(true).then(() => {
             GetFilesByType(0, true).then((filePaths) => {
                 if (filePaths.length > 0) {
                     currentFileTask.set(FileTasks.Decrypt);
-                    _totalFileCt = filePaths.length;
-                    DecryptFilesInDir(0);
+                    var _heldDownBtns = get(heldDownBtns);
+
+                    if (Object.keys(_heldDownBtns).length > 0) {
+                        _totalFileCt = Object.keys(_heldDownBtns).length;
+                        prependAbsPathToRelPaths(0).then(
+                            (prependedRelPaths) => {
+                                DecryptFilesInArr(prependedRelPaths);
+                            },
+                        );
+                    } else {
+                        _totalFileCt = filePaths.length;
+                        DecryptFilesInDir(0);
+                    }
                 }
             });
         });
     }
-
-    import FileTools from "../elements/FileTools.svelte";
-    import SpringyPointer from "../elements/SpringyPointer.svelte";
 
     let isFilesDraggedOver: boolean;
 
     function checkMouseEnter(): boolean {
         if ($pointerDown) {
             isFilesDraggedOver = true;
-            const _heldDownBtns = get(heldDownBtns);
-            const entries = Object.entries(_heldDownBtns);
-            const lastIndex = entries.length;
-            LogInfo("ERM " + lastIndex);
             return true;
         }
         return false;
@@ -155,7 +185,9 @@
                     <div style="padding-top: 0.325rem">
                         <FileTools />
                     </div>
-                    <p class="absolute bottom-0 right-0 leading-none text-sm select-none">
+                    <p
+                        class="absolute bottom-0 right-0 leading-none text-sm select-none"
+                    >
                         HOT FILER
                     </p>
                 {:else}
@@ -185,8 +217,12 @@
         on:click={clearHeldBtnsFromContainer}
     >
         <NeuSearch />
-
-        <!-- <RadialProgress _style="right: 3.6rem" dataProgress={30} /> -->
+        {#if _largeFilePercent > 0}
+            <RadialProgress
+                _style="right: 3.6rem"
+                dataProgress={_largeFilePercent}
+            />
+        {/if}
         {#if _modal === Modals.None}
             <TreeView _fileTree={$fileTree} />
         {:else if _modal === Modals.Settings}

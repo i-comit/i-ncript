@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 import { get } from "svelte/store";
 import { AppPage, currentPage } from "../enums/AppPage";
-import { basePath, heldDownBtns, removeFileName } from "./utils";
+import { basePath, checkIfRelPathIsInHeldDownBtns, heldDownBtns, removeFileName } from "./utils";
 import { BuildDirectoryFileTree, SetIsInFileTask } from "../../wailsjs/go/main/App";
 import {
     EventsOff,
@@ -14,6 +14,7 @@ import {
 import { getFileProperties, pageName, pageIndex } from "./utils";
 import {
     GetDirectoryPath,
+    GetFileTreePath,
 } from "../../wailsjs/go/main/Getters";
 import {
     FilesDragNDrop, OpenDirectory, OpenFile,
@@ -80,11 +81,29 @@ export function buildFileTree() {
     loadFileTree(pageIndex());
     clearHeldBtns();
     EventsOff("rebuildFileTree");
+    subscribeToRebuildFileTree();
 }
 
 function subscribeToRebuildFileTree() {
     EventsOn("rebuildFileTree", buildFileTree);
-    LogError("Subscribed to rebuildFileTree");
+    LogError("subscribed to rebuildFileTree");
+}
+
+export async function checkFileDragDirectory(relPath: string): Promise<boolean> {
+    const currentDirectory = await GetDirectoryPath(pageIndex());
+    return GetFileTreePath(pageIndex(), relPath).then((filePath) => {
+        var _currentDirPath = get(currentDirPath);
+        if (_currentDirPath !== "") {
+            if (_currentDirPath === removeFileName(relPath)) return false;
+        }
+        if (removeFileName(filePath) === currentDirectory ||
+            removeFileName(filePath) === removeFileName(currentDirectory + relPath) ||
+            checkIfRelPathIsInHeldDownBtns(relPath)) return false;
+        return true;
+    }).catch((error) => {
+        LogError(error);
+        return false;
+    });
 }
 
 function loadFileTree(index: number) {

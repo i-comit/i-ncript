@@ -42,9 +42,6 @@ func main() {
 	getters := &Getters{
 		directories: app.directories,
 	}
-	encrypt := &Encrypt{
-		directories: app.directories,
-	}
 	fileUtils := &FileUtils{app: app}
 
 	// Create application with options
@@ -62,7 +59,7 @@ func main() {
 		OnStartup: app.startup,
 		// OnShutdown: app.shutdown,
 		Bind: []interface{}{
-			app, getters, encrypt, fileUtils,
+			app, getters, fileUtils,
 		},
 		Windows: &windows.Options{
 			WebviewIsTransparent:              false,

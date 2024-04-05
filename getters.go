@@ -31,6 +31,10 @@ func (b *Getters) GetDirName() (bool, error) {
 	return match, nil
 }
 
+func (g *Getters) GetFileTreePath(dirIndex int, relPath string) (string, error) {
+	return g.directories[dirIndex] + string(filepath.Separator) + relPath, nil
+}
+
 func (g *Getters) GetFilesByType(dirIndex int, getFileType bool) ([]string, error) {
 	filePaths, err := getFilesRecursively(g.directories[dirIndex])
 	if err != nil {

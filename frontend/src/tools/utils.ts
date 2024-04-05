@@ -101,12 +101,12 @@ export async function getFileProperties(filePath: string): Promise<FilePropertie
         throw error; // Rethrow or handle as needed
     }
 }
-
 const directoryPathRegex = /^(.*[\\/])/;
 
 export function basePath(path: string): string {
     return path.split(directoryPathRegex).pop() || path;
 }
+
 export async function getFullFilePath(relPath: string): Promise<string> {
     GetDirectoryPath(pageIndex()).then((dirPath) => {
         LogWarning(dirPath + relPath);
@@ -170,16 +170,24 @@ export function moveFilesToRelPath(targetRelPath: string) {
 
                 var _heldDownBtns = get(heldDownBtns);
                 if (Object.keys(_heldDownBtns).length > 0) {
-
                     setIsInFileTask(true).then(() => {
-                        const modifiedFiles = Object.keys(_heldDownBtns).map(key => {
-                            return key ? dirPath + key : key;
-                        });
-                        MoveFilesToPath(modifiedFiles, pathToMoveTo).then(() => {
-                        });
+                        prependAbsPathToRelPaths(pageIndex()).then((preprendedRelPaths) => {
+                            MoveFilesToPath(preprendedRelPaths, pathToMoveTo);
+                        })
                     });
                 }
             }
         });
     });
+}
+
+export async function prependAbsPathToRelPaths(dirIndex: number): Promise<string[]> {
+    try {
+        var _heldDownBtns = get(heldDownBtns);
+        const dirPath = await GetDirectoryPath(dirIndex);
+        const preprendedRelPaths = Object.keys(_heldDownBtns).map((key) =>
+            key ? dirPath + key : key,
+        );
+        return preprendedRelPaths;
+    } catch (error) { return []; }
 }

@@ -21,10 +21,6 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
-type Encrypt struct {
-	directories []string // Your directories list
-}
-
 func (a *App) EncryptFilesInDir(dirIndex int) (bool, error) {
 	filePaths, err := getFilesRecursively(a.directories[dirIndex])
 	fmt.Println("\033[32mdirectories[0] ", a.directories[dirIndex], "\033[0m")
@@ -34,22 +30,56 @@ func (a *App) EncryptFilesInDir(dirIndex int) (bool, error) {
 	a.closeDirectoryWatcher()
 	interrupt = make(chan struct{})
 
+	cipherResult, err := a.encryptOrDecrypt(true, filePaths)
+	if err != nil {
+		return false, err
+	}
+	return cipherResult, nil
+}
+
+func (a *App) EncryptFilesInArr(filePaths []string) (bool, error) {
+	a.closeDirectoryWatcher()
+	interrupt = make(chan struct{})
+
+	cipherResult, err := a.encryptOrDecrypt(true, filePaths)
+	if err != nil {
+		return false, err
+	}
+	return cipherResult, nil
+}
+
+func (a *App) encryptOrDecrypt(encryptOrDecrypt bool, filePaths []string) (bool, error) {
 	var fileIter = 0
 	for i, filePath := range filePaths {
 		select {
 		case <-interrupt: // Check if there's an interrupt signal
-			return false, fmt.Errorf("encryption interrupted")
+			fmt.Printf("encryption interrupted")
+			lastFilePath = filePath
+			return false, nil
 		default:
-			if strings.HasSuffix(filePath, ".enc") {
-				continue
+			if encryptOrDecrypt {
+				if strings.HasSuffix(filePath, ".enc") {
+					continue
+				}
+				cipherFile, err := a.encryptFile(filePath)
+				if err != nil {
+					fmt.Println("\033[31mcipher issue ", err, "\033[0m")
+					continue
+				}
+				cipherFile.Close() // Close right after done to avoid deferred pileup
+			} else {
+				if !strings.HasSuffix(filePath, ".enc") {
+					continue
+				}
+				cipherFile, err := a.decryptFile(filePath)
+				if err != nil {
+					fmt.Println("\033[31mcipher issue ", err, "\033[0m")
+					continue
+				}
+				cipherFile.Close()
 			}
-			encryptedFile, err := encryptFile(filePath)
-			if err != nil {
-				fmt.Println("\033[31mencryption error ", err, "\033[0m")
-				continue
-			}
-			encryptedFile.Close()   // Close right after done to avoid deferred pileup
-			lastFilePath = filePath // Update lastFile after successful encryption
+
+			lastFilePath = filePath // Update lastFile after successful
 			fileIter++
 			if a.ctx != nil {
 				runtime.EventsEmit(a.ctx, fileProcessed, i+1)
@@ -60,10 +90,10 @@ func (a *App) EncryptFilesInDir(dirIndex int) (bool, error) {
 	if fileIter != 0 {
 		if a.ctx != nil {
 			a.reverseProgress(true, len(filePaths))
-			return true, err
+			return true, nil
 		}
 	} else {
-		return false, err
+		return false, fmt.Errorf("ciphered files == 0")
 	}
 	return true, nil
 }
@@ -76,40 +106,24 @@ func (a *App) DecryptFilesInDir(dirIndex int) (bool, error) {
 	a.closeDirectoryWatcher()
 	interrupt = make(chan struct{})
 
-	var fileIter = 0
-	for i, filePath := range filePaths {
-		select {
-		case <-interrupt: // Check if there's an interrupt signal
-			return false, fmt.Errorf("decryption interrupted")
-		default:
-			if !strings.HasSuffix(filePath, ".enc") {
-				continue
-			}
-			decryptFile, err := decryptFile(filePath)
-			if err != nil {
-				fmt.Println("\033[31mdecryption error ", err, "\033[0m")
-				continue
-			}
-
-			decryptFile.Close()
-			lastFilePath = filePath
-			fileIter++
-			if a.ctx != nil {
-				runtime.EventsEmit(a.ctx, fileProcessed, i+1)
-				runtime.EventsEmit(a.ctx, addLogFile, filePath)
-			}
-		}
+	cipherResult, err := a.encryptOrDecrypt(false, filePaths)
+	if err != nil {
+		return false, err
 	}
-	if fileIter != 0 {
-		if a.ctx != nil {
-			a.reverseProgress(false, len(filePaths))
-			return true, err
-		}
-	} else {
-		return false, nil
-	}
-	return true, nil
+	return cipherResult, nil
 }
+
+func (a *App) DecryptFilesInArr(filePaths []string) (bool, error) {
+	a.closeDirectoryWatcher()
+	interrupt = make(chan struct{})
+
+	cipherResult, err := a.encryptOrDecrypt(false, filePaths)
+	if err != nil {
+		return false, err
+	}
+	return cipherResult, nil
+}
+
 func (a *App) InterruptEncryption() {
 	file, err := os.OpenFile(lastFilePath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0666)
 	if err != nil {
@@ -126,21 +140,21 @@ func (a *App) InterruptEncryption() {
 
 func (a *App) reverseProgress(encrypt bool, files int) {
 	lastFilePath = ""
-	runtime.EventsEmit(a.ctx, totalFileCt, 100)
+	// runtime.EventsEmit(a.ctx, totalFileCt, 100)
 	time.Sleep(time.Millisecond * 400)
-	done := make(chan bool)
-	go func() {
-		counter := 100
-		for counter > 0 {
-			counter-- // Decrement the counter
-			if a.ctx != nil {
-				runtime.EventsEmit(a.ctx, fileProcessed, counter)
-			}
-			time.Sleep(2 * time.Millisecond) // Wait for 0.2 seconds
-		}
-		done <- true // Signal that the loop is done
-	}()
-	<-done // Wait for the goroutine to signal it's done
+	// done := make(chan bool)
+	// go func() {
+	// 	counter := 100
+	// 	for counter > 0 {
+	// 		counter-- // Decrement the counter
+	// 		if a.ctx != nil {
+	// 			runtime.EventsEmit(a.ctx, fileProcessed, counter)
+	// 		}
+	// 		time.Sleep(2 * time.Millisecond) // Wait for 0.2 seconds
+	// 	}
+	// 	done <- true // Signal that the loop is done
+	// }()
+	// <-done
 	if encrypt {
 		response := fmt.Sprintf("encrypted %d files.", files)
 		runtime.EventsEmit(a.ctx, addLogFile, response)
@@ -159,26 +173,7 @@ func (a *App) reverseProgress(encrypt bool, files int) {
 	}
 }
 
-func initFileCipher(filePath string) (cipher.AEAD, []byte, error) {
-	data, err := os.ReadFile(filePath)
-	if err != nil {
-		return nil, nil, err
-	}
-	hashedKey := sha256.Sum256(hashedCredentials)
-	key := hashedKey[:]
-	block, err := aes.NewCipher(key)
-	if err != nil {
-		return nil, nil, err
-	}
-	aesGCM, err := cipher.NewGCM(block)
-	if err != nil {
-		fmt.Println("\033[31mGCM err ", err, "\033[0m")
-		return nil, nil, err
-	}
-	return aesGCM, data, nil
-}
-
-func encryptFile(filePath string) (*os.File, error) {
+func (a *App) encryptFile(filePath string) (*os.File, error) {
 	aesGCM, data, err := initFileCipher(filePath)
 	if err != nil {
 		return nil, err
@@ -195,7 +190,7 @@ func encryptFile(filePath string) (*os.File, error) {
 		return nil, err
 	}
 	defer encFile.Close() // Ensure the file is closed when the function returns
-	largeFileErr := checkLargeFileTicker(data, encrypted, encFile)
+	largeFileErr := a.checkLargeFileTicker(data, encrypted, encFile)
 
 	if largeFileErr != nil {
 		return nil, fmt.Errorf("failed to encrypt large File: %w", largeFileErr)
@@ -207,7 +202,7 @@ func encryptFile(filePath string) (*os.File, error) {
 	return encFile, nil
 }
 
-func decryptFile(filePath string) (*os.File, error) {
+func (a *App) decryptFile(filePath string) (*os.File, error) {
 	aesGCM, data, err := initFileCipher(filePath)
 	if err != nil {
 		return nil, err
@@ -230,7 +225,7 @@ func decryptFile(filePath string) (*os.File, error) {
 	}
 	defer decFile.Close()
 
-	largeFileErr := checkLargeFileTicker(data, decrypted, decFile)
+	largeFileErr := a.checkLargeFileTicker(data, decrypted, decFile)
 	if largeFileErr != nil {
 		return nil, fmt.Errorf("failed to decrypt large File: %w", largeFileErr)
 	}
@@ -241,14 +236,14 @@ func decryptFile(filePath string) (*os.File, error) {
 	return decFile, nil
 }
 
-func checkLargeFileTicker(data []byte, cipherData []byte, cipherFile *os.File) error {
+func (a *App) checkLargeFileTicker(data []byte, cipherData []byte, cipherFile *os.File) error {
 	done := make(chan struct{})
-	var once sync.Once     // Ensure the done channel is closed only once
-	var maxAtomicSize = 20 // the maximum size *1024*1024 which triggers the encrypt/decrypt ticker
-	interrupted := false   // Flag to track if an interrupt has occurred
+	var once sync.Once         // Ensure the done channel is closed only once
+	var thresholdFileSize = 40 //  file size in MBs to trigger ticker
+	interrupted := false       // Flag to track if an interrupt has occurred
 
 	var writtenBytes int64 //Use atomic.Int64 w/ writtenBytes.Load() for 32bit systems
-	if len(data) > maxAtomicSize*1024*1024 {
+	if len(data) > thresholdFileSize*1024*1024 {
 		go func() {
 			ticker := time.NewTicker(10 * time.Millisecond)
 			defer ticker.Stop()
@@ -261,9 +256,10 @@ func checkLargeFileTicker(data []byte, cipherData []byte, cipherFile *os.File) e
 					interrupted = true              // Set the interrupted flag
 					return
 				case <-ticker.C:
-					fmt.Printf("%s %d/%d bytes\n",
-						filepath.Base(cipherFile.Name()),
-						atomic.LoadInt64(&writtenBytes), len(cipherData))
+					percent := (float64(atomic.LoadInt64(&writtenBytes)) / float64(len(cipherData))) * 100
+					percentInt := int(percent + 0.5) // Adds 0.5 before casting to round to nearest whole number
+					// fmt.Printf("Percentage: %d%%\n", percentInt)
+					runtime.EventsEmit(a.ctx, "largeFilePercent", percentInt)
 				case <-done:
 					return
 				}
@@ -294,7 +290,27 @@ func checkLargeFileTicker(data []byte, cipherData []byte, cipherFile *os.File) e
 		os.Remove(cipherFile.Name())
 		return err
 	}
+	runtime.EventsEmit(a.ctx, "largeFilePercent", 0)
 	return nil
+}
+
+func initFileCipher(filePath string) (cipher.AEAD, []byte, error) {
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		return nil, nil, err
+	}
+	hashedKey := sha256.Sum256(hashedCredentials)
+	key := hashedKey[:]
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, nil, err
+	}
+	aesGCM, err := cipher.NewGCM(block)
+	if err != nil {
+		fmt.Println("\033[31mGCM err ", err, "\033[0m")
+		return nil, nil, err
+	}
+	return aesGCM, data, nil
 }
 
 func checkCredentials(stringToCheck string) int {
@@ -348,7 +364,6 @@ func hashCredentials(stringToHash string) (string, error) {
 	byteData := []byte(_uniqueID + stringToHash)
 	hashedKey := sha256.Sum256(byteData)
 	key := hashedKey[:] // Convert to slice
-	// fmt.Printf("Hashed string (32 bytes): %x\n", key)
 
 	block, err := aes.NewCipher(key)
 	if err != nil {
@@ -359,13 +374,6 @@ func hashCredentials(stringToHash string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("hashCredentials fail: %w", err)
 	}
-	// Nonce is usually critical for security in AES-GCM. Here, we omit it to meet the requirement,
-	// Be aware this makes the encryption deterministic and less secure.
-	// nonce := make([]byte, aesGCM.NonceSize())
-	// if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
-	// 	return "", err
-	// }
-	// encrypted := aesGCM.Seal(nonce, nonce, byteData, nil)
 	encrypted := aesGCM.Seal(nil, make([]byte, aesGCM.NonceSize()), byteData, nil) // Using a zero nonce
 	return hex.EncodeToString(encrypted), nil
 }

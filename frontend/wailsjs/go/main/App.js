@@ -10,12 +10,20 @@ export function CloseApp() {
   return window['go']['main']['App']['CloseApp']();
 }
 
+export function DecryptFilesInArr(arg1) {
+  return window['go']['main']['App']['DecryptFilesInArr'](arg1);
+}
+
 export function DecryptFilesInDir(arg1) {
   return window['go']['main']['App']['DecryptFilesInDir'](arg1);
 }
 
 export function DirectoryWatcher(arg1) {
   return window['go']['main']['App']['DirectoryWatcher'](arg1);
+}
+
+export function EncryptFilesInArr(arg1) {
+  return window['go']['main']['App']['EncryptFilesInArr'](arg1);
 }
 
 export function EncryptFilesInDir(arg1) {

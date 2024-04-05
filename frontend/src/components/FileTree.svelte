@@ -47,6 +47,7 @@
         openFile,
         currentDirPath,
         clearHeldBtnsFromContainer,
+        checkFileDragDirectory,
     } from "../tools/fileTree.ts";
 
     import {
@@ -133,14 +134,7 @@
     }
 
     function handleFileClick(relPath: string, _buttonRef: HTMLButtonElement) {
-        LogInfo(
-            "derp " +
-                get(leftCtrlDown) +
-                " " +
-                checkIfRelPathIsInHeldDownBtns(relPath),
-        );
         if (!get(leftCtrlDown) && checkIfRelPathIsInHeldDownBtns(relPath)) {
-            LogInfo("herp");
             clearHeldBtns();
         }
         addToHeldFileBtnsArr(relPath, _buttonRef);
@@ -199,11 +193,10 @@
                         isFile().then((_isFile) => {
                             if (_isFile) currentFilePath.set(_fileTree.relPath);
                         });
+                    } else {
+                        currentDirPath.set(_fileTree.relPath);
+                        LogInfo("current Dir Path " + get(currentDirPath));
                     }
-                    // else {
-                    //     currentDirPath.set(_fileTree.relPath);
-                    //     LogInfo("current Dir Path " + get(currentDirPath));
-                    // }
                 },
             );
         });
@@ -220,7 +213,7 @@
         if (_fileTree.children && _fileTree.children.length > 0) {
             if (Object.keys(_heldDownBtns).length > 0) {
                 moveFilesToRelPath(_fileTree.relPath);
-                LogInfo("Moved Files to Dir");
+                LogInfo("Moved Files to Dir " + _fileTree.relPath);
             }
         } else {
             LogInfo(
@@ -242,7 +235,15 @@
         openFile(relPath);
     }
 
-    let promise = isFile();
+    function checkHeldDownBtnsTooltip(): boolean {
+        return (
+            Object.keys(_heldDownBtns).length > 0 &&
+            basePath(_fileTree.relPath) !== pageName()
+        );
+    }
+
+    let _isFile = isFile();
+    let _canMoveToDir = checkFileDragDirectory(_fileTree.relPath);
 </script>
 
 <svelte:window
@@ -253,7 +254,6 @@
     on:touchstart={onTouchStart}
     on:touchend={onTouchEnd}
 />
-
 <div class="rounded-lg" role="none" on:click={clearHeldBtnsFromContainer}>
     <ul
         class={basePath(_fileTree.relPath) === pageName() ? "pl-0" : "pl-3"}
@@ -271,7 +271,7 @@
                         : 'pl-1.5'}"
                     style="border-left: 1px solid #eeeeee;
                     {basePath(_fileTree.relPath) === pageName()
-                        ? `position: sticky; top: 1px; background-color: ${lightBGColor}; z-index: 9999`
+                        ? `position: sticky; top: 1px; left:0px; background-color: ${lightBGColor}; z-index: 45`
                         : 'position: relative;'}"
                     on:click={() => {
                         toggleExpansion();
@@ -287,10 +287,10 @@
                     {/if}
                     {_label}
                 </button>
-                {#if pointerDown}
-                    {#if Object.keys(_heldDownBtns).length > 0 && basePath(_fileTree.relPath) !== pageName()}
+                {#if $pointerDown}
+                    {#if checkHeldDownBtnsTooltip()}
                         <Tooltip class={tooltipTailwindClass} offset={1}
-                            >Move {Object.keys(_heldDownBtns).length} files to {basePath(
+                            >move {Object.keys(_heldDownBtns).length} files to {basePath(
                                 _fileTree.relPath,
                             )}</Tooltip
                         >
@@ -308,7 +308,7 @@
                     </ul>
                 {/if}
             {:else if !_fileTree.children}<!-- File -->
-                {#await promise then isFile}
+                {#await _isFile then isFile}
                     {#if isFile}
                         <button
                             class="flex rounded-md px-0.5 ml-1 my-0.5"
@@ -356,19 +356,24 @@
                         </button>
                     {/if}
                 {:catch error}
-                    <p>nothing here yet..</p>
+                    <p>nothing here yet.</p>
                 {/await}
 
-                {#if pointerDown}
-                    {#if Object.keys(_heldDownBtns).length > 0 && basePath(_fileTree.relPath) !== pageName()}
-                        <Tooltip
-                            class={tooltipTailwindClass}
-                            offset={1}
-                            arrow={true}
-                            >Move {Object.keys(_heldDownBtns).length} files to {basePath(
-                                removeFileName(_fileTree.relPath),
-                            )}</Tooltip
-                        >{/if}
+                {#if $pointerDown}
+                    {#if checkHeldDownBtnsTooltip()}
+                        {#await _canMoveToDir then canMove}
+                            {#if canMove}
+                                <Tooltip
+                                    class={tooltipTailwindClass}
+                                    offset={1}
+                                    arrow={true}
+                                    >move {Object.keys(_heldDownBtns).length} files
+                                    to
+                                    {basePath(_fileTree.relPath)}</Tooltip
+                                >
+                            {/if}
+                        {/await}
+                    {/if}
                 {:else if clickedOnButtonRef === buttonRef}
                     <Popover
                         class="w-30 text-xs font-light m-0 p-0"

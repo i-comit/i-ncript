@@ -22,6 +22,10 @@ export function GetFileProperties(arg1) {
   return window['go']['main']['Getters']['GetFileProperties'](arg1);
 }
 
+export function GetFileTreePath(arg1, arg2) {
+  return window['go']['main']['Getters']['GetFileTreePath'](arg1, arg2);
+}
+
 export function GetFilesByType(arg1, arg2) {
   return window['go']['main']['Getters']['GetFilesByType'](arg1, arg2);
 }

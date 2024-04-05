@@ -6,9 +6,13 @@ export function BuildDirectoryFileTree(arg1:number):Promise<main.FileNode>;
 
 export function CloseApp():Promise<void>;
 
+export function DecryptFilesInArr(arg1:Array<string>):Promise<boolean>;
+
 export function DecryptFilesInDir(arg1:number):Promise<boolean>;
 
 export function DirectoryWatcher(arg1:number):Promise<void>;
+
+export function EncryptFilesInArr(arg1:Array<string>):Promise<boolean>;
 
 export function EncryptFilesInDir(arg1:number):Promise<boolean>;
 
