@@ -46,7 +46,7 @@ export function setHeldBtnsStyle() {
         console.log("Held down node moveFiles: " + path); // Assuming LogInfo is analogous to console.log for demonstration
         btn.style.backgroundColor = index === lastIndex ? lastHighlight_light : prevHighlight_light;
         btn.style.textDecoration = index === lastIndex ? "underline" : "none";
-        btn.style.opacity = "50%"
+        btn.style.opacity = "65%"
     });
 }
 export function clearHeldBtns() {

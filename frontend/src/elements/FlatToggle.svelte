@@ -1,25 +1,41 @@
 <!-- https://codepen.io/singhimalaya/pen/EdVzNL -->
 <script lang="ts">
     import { LogPrint } from "../../wailsjs/runtime/runtime";
-    // import { DirectoryWatcher } from "../../wailsjs/go/main/Encryptr";
+    import {
+        EncryptFilesInDir,
+        SetIsHotFilerEnabled,
+    } from "../../wailsjs/go/main/App";
+    import { GetFilesByType } from "../../wailsjs/go/main/Getters";
+    import { setIsInFileTask } from "../tools/fileTree";
+    import { FileTasks, currentFileTask } from "../enums/FileTasks";
+    import { totalFileCt } from "../tools/utils";
 
     let isChecked: boolean;
     isChecked = false;
 
     // Function to log the checkbox's state
-    function logCheckboxState() {
-        LogPrint("Checkbox is pressed. Current state:" + !isChecked);
-        // DirectoryWatcher(isChecked);
+    function toggleHotFiler() {
+        LogPrint("toggle state: " + !isChecked);
+        SetIsHotFilerEnabled(!isChecked);
+        if (!isChecked)
+            GetFilesByType(0, false).then((filePaths) => {
+                setIsInFileTask(true).then(() => {
+                    currentFileTask.set(FileTasks.Encrypt);
+                    if (filePaths.length > 0) {
+                        totalFileCt.set(filePaths.length);
+                        EncryptFilesInDir(0);
+                    } else setIsInFileTask(false);
+                });
+            });
     }
 </script>
 
 <div class="button r" id="button-1">
-    
     <input
         type="checkbox"
         class="checkbox"
         bind:checked={isChecked}
-        on:click={logCheckboxState}
+        on:click={toggleHotFiler}
     />
     <div class="knobs"></div>
     <div class="layer"></div>

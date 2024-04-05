@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -10,7 +9,7 @@ import (
 
 // GETTER STRUCT
 type Getters struct {
-	ctx         context.Context
+	app         *App
 	directories []string
 }
 

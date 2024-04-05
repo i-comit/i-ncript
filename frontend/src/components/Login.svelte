@@ -94,6 +94,8 @@
     let passwordCheck3 = false; // Symbol check
     let passwordCheck = false; // Overall password strength check
 
+    let passwordMatch = false//password match check when creating account
+
     function queryPasswordStrength() {
         // Check 1: Length is more than 5 characters
         const regexLength = /^.{5,}$/;
@@ -116,7 +118,7 @@
     autocomplete="off"
     class="login-form flex-col rounded-lg"
 >
-    <p class="absolute top-0 left-0 text-justify w-screen pl-2 pt-1 text-sm">
+    <p class="absolute top-0 left-0 text-justify w-screen pl-6 pt-1 text-sm">
         {displayString}
     </p>
     <Frame />

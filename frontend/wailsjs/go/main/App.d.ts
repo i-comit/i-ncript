@@ -26,4 +26,6 @@ export function MinimizeApp():Promise<void>;
 
 export function ResizeWindow(arg1:number,arg2:number):Promise<void>;
 
+export function SetIsHotFilerEnabled(arg1:boolean):Promise<void>;
+
 export function SetIsInFileTask(arg1:boolean):Promise<boolean>;

@@ -93,6 +93,7 @@ func (a *App) encryptOrDecrypt(encryptOrDecrypt bool, filePaths []string) (bool,
 			return true, nil
 		}
 	} else {
+		a.SetIsInFileTask(false)
 		return false, fmt.Errorf("ciphered files == 0")
 	}
 	return true, nil
@@ -239,7 +240,7 @@ func (a *App) decryptFile(filePath string) (*os.File, error) {
 func (a *App) checkLargeFileTicker(data []byte, cipherData []byte, cipherFile *os.File) error {
 	done := make(chan struct{})
 	var once sync.Once         // Ensure the done channel is closed only once
-	var thresholdFileSize = 40 //  file size in MBs to trigger ticker
+	var thresholdFileSize = 50 //  file size in MBs to trigger ticker
 	interrupted := false       // Flag to track if an interrupt has occurred
 
 	var writtenBytes int64 //Use atomic.Int64 w/ writtenBytes.Load() for 32bit systems

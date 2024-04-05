@@ -40,6 +40,7 @@ func (m *App) onSecondInstanceLaunch(data options.SecondInstanceData) {
 func main() {
 	app := NewApp()
 	getters := &Getters{
+		app:         app,
 		directories: app.directories,
 	}
 	fileUtils := &FileUtils{app: app}

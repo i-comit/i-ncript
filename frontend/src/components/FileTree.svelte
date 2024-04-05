@@ -206,7 +206,7 @@
         currentFilePath.set("");
         currentDirPath.set("");
         leftCtrlDown.set(false);
-        LogError("currentRelpath null");
+        // LogError("currentRelpath null");
     }
 
     function moveFilesFromFileNode() {

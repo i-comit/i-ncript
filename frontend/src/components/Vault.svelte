@@ -32,6 +32,7 @@
         pointerDown,
         heldDownBtns,
         prependAbsPathToRelPaths,
+        totalFileCt,
     } from "../tools/utils.ts";
 
     import NeuButton from "../elements/NeuButton.svelte";
@@ -60,8 +61,8 @@
     import TaskDisplay from "../elements/TaskDisplay.svelte";
     import FileTools from "../elements/FileTools.svelte";
 
-    let _totalFileCt: number;
-    _totalFileCt = 0;
+    //  let _totalFileCt: number;
+    // _totalFileCt = 0;
     let _fileCount: number;
     fileCt.subscribe((value) => {
         _fileCount = value;
@@ -73,7 +74,9 @@
         buildFileTree();
         EventsOn("fileProcessed", (fileCtEvt: number) => {
             fileCt.set(fileCtEvt);
-            _fileTaskPercent = Math.round((_fileCount / _totalFileCt) * 100);
+            _fileTaskPercent = Math.round(
+                (_fileCount / get(totalFileCt)) * 100,
+            );
             if (fileCtEvt === 0) currentFileTask.set(FileTasks.None);
         });
         EventsOn("largeFilePercent", (largeFilePercent: number) => {
@@ -94,48 +97,47 @@
     });
 
     function encrypt() {
-        LogInfo("begin encryption");
-        setIsInFileTask(true).then(() => {
-            GetFilesByType(0, false).then((filePaths) => {
+        var _heldDownBtns = get(heldDownBtns);
+        if (Object.keys(_heldDownBtns).length > 0)
+            setIsInFileTask(true).then(() => {
                 currentFileTask.set(FileTasks.Encrypt);
-                var _heldDownBtns = get(heldDownBtns);
-                if (Object.keys(_heldDownBtns).length > 0) {
-                    _totalFileCt = Object.keys(_heldDownBtns).length;
-                    prependAbsPathToRelPaths(0).then((prependedRelPaths) => {
-                        EncryptFilesInArr(prependedRelPaths);
-                    });
-                } else {
-                    if (filePaths.length > 0) {
-                        _totalFileCt = filePaths.length;
-                        EncryptFilesInDir(0);
-                    }
-                }
+                totalFileCt.set(Object.keys(_heldDownBtns).length);
+                prependAbsPathToRelPaths(0).then((prependedRelPaths) => {
+                    EncryptFilesInArr(prependedRelPaths);
+                });
             });
-        });
+        else
+            GetFilesByType(0, false).then((filePaths) => {
+                if (filePaths.length > 0) {
+                    setIsInFileTask(true).then(() => {
+                        currentFileTask.set(FileTasks.Encrypt);
+                        totalFileCt.set(filePaths.length);
+                        EncryptFilesInDir(0);
+                    });
+                } else setIsInFileTask(false);
+            });
     }
 
     function decrypt() {
-        LogInfo("begin decryption");
-        setIsInFileTask(true).then(() => {
+        var _heldDownBtns = get(heldDownBtns);
+        if (Object.keys(_heldDownBtns).length > 0)
+            setIsInFileTask(true).then(() => {
+                currentFileTask.set(FileTasks.Decrypt);
+                totalFileCt.set(Object.keys(_heldDownBtns).length);
+                prependAbsPathToRelPaths(0).then((prependedRelPaths) => {
+                    DecryptFilesInArr(prependedRelPaths);
+                });
+            });
+        else
             GetFilesByType(0, true).then((filePaths) => {
                 if (filePaths.length > 0) {
-                    currentFileTask.set(FileTasks.Decrypt);
-                    var _heldDownBtns = get(heldDownBtns);
-
-                    if (Object.keys(_heldDownBtns).length > 0) {
-                        _totalFileCt = Object.keys(_heldDownBtns).length;
-                        prependAbsPathToRelPaths(0).then(
-                            (prependedRelPaths) => {
-                                DecryptFilesInArr(prependedRelPaths);
-                            },
-                        );
-                    } else {
-                        _totalFileCt = filePaths.length;
+                    setIsInFileTask(true).then(() => {
+                        currentFileTask.set(FileTasks.Decrypt);
+                        totalFileCt.set(filePaths.length);
                         DecryptFilesInDir(0);
-                    }
-                }
+                    });
+                } else setIsInFileTask(false);
             });
-        });
     }
 
     let isFilesDraggedOver: boolean;
@@ -166,11 +168,11 @@
             {#if _currentFileTask === FileTasks.None}
                 <div class="row space-x-2">
                     <NeuButton
-                        on:click={() => encrypt()}
+                        on:mousedown={() => encrypt()}
                         _style="font-size: 14px;">ENCRYPT</NeuButton
                     >
                     <NeuButton
-                        on:click={() => decrypt()}
+                        on:mousedown={() => decrypt()}
                         _style="font-size: 14px;">DECRYPT</NeuButton
                     >
                 </div>

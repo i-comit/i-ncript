@@ -5,6 +5,10 @@
     function handleClick() {
         dispatch("click");
     }
+
+    function handMouseDown() {
+        dispatch("mousedown");
+    }
     import { lightBGColor } from "../stores/globalVariables";
 
     export let _class = "";
@@ -17,7 +21,7 @@
 <button
     class="oval-lg select-none {` ${_class}`}"
     style="background-color:{lightBGColor}; {` ${_style}`}"
-    on:click={handleClick}><slot /></button
+    on:click={handleClick} on:mousedown={handMouseDown}><slot /></button
 >
 
 <style lang="scss">
