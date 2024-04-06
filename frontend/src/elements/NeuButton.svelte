@@ -9,19 +9,18 @@
     function handMouseDown() {
         dispatch("mousedown");
     }
-    import { lightBGColor } from "../stores/globalVariables";
+    import { lightBGColor } from "../stores/constantVariables";
 
     export let _class = "";
 
     export let _style = "";
-
-    export let isPressed = false;
 </script>
 
 <button
     class="oval-lg select-none {` ${_class}`}"
     style="background-color:{lightBGColor}; {` ${_style}`}"
-    on:click={handleClick} on:mousedown={handMouseDown}><slot /></button
+    on:click={handleClick}
+    on:mousedown={handMouseDown}><slot /></button
 >
 
 <style lang="scss">

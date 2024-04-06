@@ -7,7 +7,7 @@
     import { Modals, currentModal } from "../enums/Modals.ts";
     import NeuButton from "../elements/NeuButton.svelte";
 
-    import { lightBGColor} from "../stores/globalVariables.ts";
+    import { lightBGColor} from "../stores/constantVariables.ts";
     import { buildFileTree, fileTree } from "../tools/fileTree.ts";
 
     import { switchPages } from "../tools/utils.ts";

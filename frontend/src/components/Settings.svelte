@@ -20,8 +20,11 @@
     } from "flowbite-svelte-icons";
 
     import { AppPage, currentPage } from "../enums/AppPage";
+    import { darklightMode } from "../stores/dynamicVariables";
 
-    function toggleLightDarkMode() {}
+    function toggleLightDarkMode() {
+        darklightMode.update((currentValue) => !currentValue);
+    }
     let _currentPage;
     currentPage.subscribe((value) => {
         _currentPage = value;
@@ -35,13 +38,13 @@
     style="max-height: {_currentPage === AppPage.Login ? '66vh' : '94vh'};"
 >
     <div class="row bg-gray-500 rounded-lg">
-        <Button
-            pill={true}
-            outline={false}
-            class="!p-1"
-            on:click={() => toggleLightDarkMode()}
-            ><SunSolid class="w-5 h-5 m-0 p-0 " color="white" /></Button
-        >
+        <button class="!p-1" on:click={() => toggleLightDarkMode()}>
+            {#if $darklightMode}
+                <MoonSolid class="w-5 h-5 m-0 p-0 " color="white" />
+            {:else}
+                <SunSolid class="w-5 h-5 m-0 p-0 " color="white" />
+            {/if}
+        </button>
         <div id="languages h-1 bg-gray-400">
             <Button
                 >Languages<ChevronDownOutline

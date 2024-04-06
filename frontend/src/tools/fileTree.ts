@@ -23,7 +23,7 @@ import {
 import {
     FilesDragNDrop, OpenDirectory, OpenFile,
 } from "../../wailsjs/go/main/FileUtils";
-import { lastHighlight_light, prevHighlight_light } from "../stores/globalVariables";
+import { lastHighlight_light, prevHighlight_light } from "../stores/constantVariables";
 
 export const vaultExpansionState = writable<{ [key: string]: boolean }>({});
 export const mBoxExpansionState = writable<{ [key: string]: boolean }>({});

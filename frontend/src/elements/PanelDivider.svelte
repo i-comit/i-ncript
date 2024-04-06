@@ -1,21 +1,45 @@
 <script lang="ts">
-    import { lightBGColor } from "../stores/globalVariables";
+    import { onMount } from "svelte";
+    import { get } from "svelte/store";
+
+    import {
+        accentColor,
+        activeAccentColor,
+        darkBGColor,
+        lightBGColor,
+    } from "../stores/constantVariables";
+
     import {
         CogSolid,
         BarsFromLeftOutline,
         InfoCircleSolid,
         InfoCircleOutline,
     } from "flowbite-svelte-icons";
-    import { switchModals } from "../tools/utils";
+    import { switchModals, toggleDarkLightMode } from "../tools/utils";
     import { Modals } from "../enums/Modals";
     import { LogInfo } from "../../wailsjs/runtime/runtime";
+    import { darklightMode } from "../stores/dynamicVariables";
+
+    darklightMode.subscribe((value) => {
+        toggleDarkLightMode(value);
+    });
+
+    onMount(() => {
+        document.documentElement.style.setProperty("--icon-color", _color);
+        toggleDarkLightMode(get(darklightMode));
+    });
+
+    let _color: string = darkBGColor;
 </script>
 
-<div class="absolute -z-10 bg-slate-500 w-20 h-full select-none left-1/3"></div>
-<div class="panel" style="background-color:{lightBGColor}">
+<div
+    class="absolute -z-10 w-20 h-full select-none left-1/3"
+    style="background-color:{accentColor}"
+></div>
+<div class="panel">
     <div
-        class="absolute w-full h-1/5 rounded-full bg-slate-500 select-none"
-        style="top:90%"
+        class="absolute w-full h-1/5 rounded-full select-none"
+        style={`top:90%; background-color: ${accentColor}`}
     ></div>
 
     <div class="icon space-y-1">
@@ -25,12 +49,12 @@
                 on:click={() => switchModals(Modals.Info)}
             />
         </div>
-        <div class="icon__account">
-            <BarsFromLeftOutline
-                class="p-px" role="button"
-                on:click={() => switchModals(Modals.Logger)}
-            />
-        </div>
+        <button
+            class="icon__account"
+            on:click={() => switchModals(Modals.Logger)}
+        >
+            <BarsFromLeftOutline class="p-px" role="button" />
+        </button>
         <button
             class="icon__settings"
             on:click={() => switchModals(Modals.Settings)}
@@ -39,19 +63,24 @@
         </button>
     </div>
     <div
-        class="absolute w-full h-1/5 rounded-full bg-slate-500 select-none"
-        style="bottom:90%"
+        class="absolute w-full h-1/5 rounded-full select-none"
+        style={`bottom:90%; background-color: ${accentColor}`}
     ></div>
-
 </div>
 
 <style lang="scss">
     $panel-width: 1.65rem;
     @import "../neumorphic.scss";
+    :root {
+        --bg-color: #757575;
+        --icon: #757575;
+        --icon-hover: #8abdff;
+        --icon-active: #a0b0ff;
+    }
 
     .panel {
+        background-color: var(--bg-color);
         width: $panel-width;
-        background-color: green;
         display: flex;
         justify-content: center; /* Centers horizontally */
         align-items: center; /* Centers vertically */
@@ -61,17 +90,6 @@
     }
 
     $icon-size: 1.2rem;
-    :root {
-        --primary-light: #8abdff;
-        --primary: #8daacb;
-        --primary-dark: #5b0eeb;
-
-        --white: #ffffff;
-        --greyLight-1: #e4ebf5;
-        --greyLight-2: #c8d0e7;
-        --greyLight-3: #bec8e4;
-        --greyDark: #8e8e8e;
-    }
 
     $dropShadow:
         2px 2px 2px -2px rgba($darkShadow, 0.4),
@@ -98,14 +116,14 @@
             align-items: center;
             font-size: 2rem;
             cursor: pointer;
-            color: var(--greyDark);
+            color: var(--icon);
             transition: all 0.2s ease;
             &:active {
                 box-shadow: $innerShadow;
-                color: var(--primary);
+                color: var(--icon-active);
             }
             &:hover {
-                color: var(--primary);
+                color: var(--icon-hover);
             }
         }
     }

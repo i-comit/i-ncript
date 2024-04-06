@@ -16,10 +16,10 @@
 
     import {
         accentColor,
-        darkColor,
+        darkBGColor,
         lightBGColor,
         tooltipTailwindClass,
-    } from "../stores/globalVariables.ts";
+    } from "../stores/constantVariables.ts";
     import {
         buildFileTree,
         currentFilePath,
@@ -60,19 +60,23 @@
     heldDownBtns.subscribe((value) => {
         _heldDownBtns = value;
         handleOnFileClick();
-        // checklastSelectedFileExtension();
+        checklastSelectedFileExtension();
     });
 
     // $: _currentFilePath = $currentFilePath;
 
     function checklastSelectedFileExtension() {
+        if (Object.keys(_heldDownBtns).length === 0) {
+            LogInfo("heldDownBtns is empty");
+            return;
+        }
         const entries = Object.entries(_heldDownBtns);
         var lastEntry = entries[entries.length - 1];
         const [key, value] = lastEntry;
 
         if (lastEntry !== null) {
             LogInfo("Last entry rel path " + key);
-        } else LogInfo("Last entry is null");
+        } 
     }
 
     onMount(() => {
@@ -138,7 +142,7 @@
             <div class="flex w-full h-1 px-0.5 relative bottom-1">
                 <div
                     class="flex-1 text-center rounded-lg"
-                    style={`background-color: ${passwordCheck1 ? accentColor : darkColor};`}
+                    style={`background-color: ${passwordCheck1 ? accentColor : darkBGColor};`}
                 ></div>
                 <Tooltip
                     placement="left"
@@ -163,7 +167,7 @@
                 <div class="flex w-full h-1 px-0.5 relative bottom-1">
                     <div
                         class="flex-1 text-center rounded-l-lg"
-                        style={`background-color: ${passwordCheck1 ? accentColor : darkColor};`}
+                        style={`background-color: ${passwordCheck1 ? accentColor : darkBGColor};`}
                     ></div>
                     <Tooltip
                         placement="left"
@@ -172,7 +176,7 @@
                     >
                     <div
                         class="flex-1 text-center"
-                        style={`background-color: ${passwordCheck2 ? accentColor : darkColor};`}
+                        style={`background-color: ${passwordCheck2 ? accentColor : darkBGColor};`}
                     ></div>
                     <Tooltip
                         placement="bottom"
@@ -182,7 +186,7 @@
                     >
                     <div
                         class="flex-1 text-center rounded-r-lg"
-                        style={`background-color: ${passwordCheck3 ? accentColor : darkColor};`}
+                        style={`background-color: ${passwordCheck3 ? accentColor : darkBGColor};`}
                     ></div>
                     <Tooltip
                         placement="right"
@@ -206,7 +210,7 @@
                 <div class="flex w-full h-1.5 px-0.5 relative bottom-2">
                     <div
                         class="flex-1 text-center rounded-lg"
-                        style={`background-color: ${passwordCheck1 ? accentColor : darkColor};`}
+                        style={`background-color: ${passwordCheck1 ? accentColor : darkBGColor};`}
                     ></div>
                     <Tooltip
                         placement="left"

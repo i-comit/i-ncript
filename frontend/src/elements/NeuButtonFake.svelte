@@ -5,13 +5,10 @@
     function handleClick() {
         dispatch("click");
     }
-    import { lightBGColor } from "../stores/globalVariables";
+    import { lightBGColor } from "../stores/constantVariables";
 
     export let _class = "";
-
     export let _style = "";
-
-    export let isPressed = false;
 </script>
 
 <button

@@ -8,8 +8,12 @@
     import { Modals, currentModal } from "../enums/Modals.ts";
     import { FileTasks, currentFileTask } from "../enums/FileTasks.ts";
 
-    import { height, width, lightBGColor } from "../stores/globalVariables.ts";
-    import { encryptProgress as fileCt } from "../stores/encryptProgress";
+    import {
+        height,
+        width,
+        lightBGColor,
+        darkBGColor,
+    } from "../stores/constantVariables.ts";
 
     import {
         buildFileTree,
@@ -34,6 +38,7 @@
         prependAbsPathToRelPaths,
         totalFileCt,
         checkFileTypesinHeldDownBtns,
+        toggleDarkLightMode,
     } from "../tools/utils.ts";
 
     import NeuButton from "../elements/NeuButton.svelte";
@@ -61,31 +66,14 @@
     import NeuButtonFake from "../elements/NeuButtonFake.svelte";
     import TaskDisplay from "../elements/TaskDisplay.svelte";
     import FileTools from "../elements/FileTools.svelte";
+    import { darklightMode } from "../stores/dynamicVariables.ts";
 
     //  let _totalFileCt: number;
     // _totalFileCt = 0;
     let _fileCount: number;
-    fileCt.subscribe((value) => {
-        _fileCount = value;
-    });
+
     let _fileTaskPercent: number;
     let _largeFilePercent: number;
-
-    onMount(() => {
-        buildFileTree();
-        EventsOn("fileProcessed", (fileCtEvt: number) => {
-            fileCt.set(fileCtEvt);
-            _fileTaskPercent = Math.round(
-                (_fileCount / get(totalFileCt)) * 100,
-            );
-            if (fileCtEvt === 0) currentFileTask.set(FileTasks.None);
-        });
-        EventsOn("largeFilePercent", (largeFilePercent: number) => {
-            _largeFilePercent = largeFilePercent;
-            LogInfo("large file percent " + _largeFilePercent);
-            if (largeFilePercent === 0) EventsOff("largeFilePercent");
-        });
-    });
 
     let _currentFileTask: FileTasks;
     currentFileTask.subscribe((value) => {
@@ -95,6 +83,27 @@
     let _modal: Modals;
     currentModal.subscribe((value) => {
         _modal = value;
+    });
+
+    darklightMode.subscribe((value) => {
+        toggleDarkLightMode(value);
+    });
+
+    onMount(() => {
+        buildFileTree();
+        EventsOn("fileProcessed", (fileCtEvt: number) => {
+            _fileCount = fileCtEvt;
+            _fileTaskPercent = Math.round(
+                (_fileCount / get(totalFileCt)) * 100,
+            );
+            if (fileCtEvt === 0) currentFileTask.set(FileTasks.None);
+        });
+        toggleDarkLightMode(get(darklightMode));
+        EventsOn("largeFilePercent", (largeFilePercent: number) => {
+            _largeFilePercent = largeFilePercent;
+            LogInfo("large file percent " + _largeFilePercent);
+            if (largeFilePercent === 0) EventsOff("largeFilePercent");
+        });
     });
 
     function encrypt() {
@@ -162,7 +171,6 @@
     <Frame />
     <div
         id="left-panel"
-        style="background-color:{lightBGColor}"
         role="none"
         on:click={clearHeldBtnsFromContainer}
         on:mouseenter={checkMouseEnter}
@@ -219,7 +227,6 @@
     <div
         id="right-panel"
         role="none"
-        style="background-color:{lightBGColor}"
         on:mouseleave={onmouseleave}
         on:click={clearHeldBtnsFromContainer}
     >
@@ -243,12 +250,16 @@
 </div>
 
 <style>
+    :root {
+        --bg-color: #757575;
+    }
     p {
         color: black;
     }
 
-    #left-panel {
-        background-color: #e8e8e8;
+    #left-panel,
+    #right-panel {
+        background-color: var(--bg-color);
     }
 
     .buttons .row {

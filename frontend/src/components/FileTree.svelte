@@ -57,7 +57,7 @@
         darkTextColor,
         lightBGColor,
         tooltipTailwindClass,
-    } from "../stores/globalVariables.ts";
+    } from "../stores/constantVariables.ts";
     import {
         ctrlLeftDown,
         ctrlLeftUp,

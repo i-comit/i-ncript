@@ -5,9 +5,11 @@
     import { LogDebug, LogError } from "../../wailsjs/runtime/runtime";
     import appLogo from "../assets/images/i-comiti.png";
 
-    import { lightBGColor, darkColor } from "../stores/globalVariables";
-
-    import { tooltipTailwindClass } from "../stores/globalVariables";
+    import {
+        lightBGColor,
+        darkBGColor,
+        tooltipTailwindClass,
+    } from "../stores/constantVariables";
 
     function minimizeApp() {
         MinimizeApp()
@@ -33,14 +35,14 @@
     <div class="flex justify-end">
         <Button
             class="p-0 my-1"
-            style={`background-color: ${darkColor}`}
+            style={`background-color: ${darkBGColor}`}
             on:click={minimizeApp}
         >
             <MinusOutline class="w-5 h-5 m-0 p-0" color="white" />
         </Button>
         <Button
             class="p-0 my-1 !mr-1 !ml-px"
-            style={`background-color: ${darkColor}`}
+            style={`background-color: ${darkBGColor}`}
             on:click={CloseApp}
         >
             <CloseOutline class="w-5 h-5 m-0 p-0" color="white" />

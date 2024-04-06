@@ -1,6 +1,6 @@
 <!-- https://codepen.io/caesura/pen/QWNjvOX -->
 <script>
-    import { lightBGColor } from "../stores/globalVariables";
+    import { lightBGColor } from "../stores/constantVariables";
     import { onMount, onDestroy } from "svelte";
 
     import { CloseButton } from "flowbite-svelte";
