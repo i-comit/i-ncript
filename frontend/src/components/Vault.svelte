@@ -83,7 +83,7 @@
         EventsOn("largeFilePercent", (largeFilePercent: number) => {
             _largeFilePercent = largeFilePercent;
             LogInfo("large file percent " + _largeFilePercent);
-            if (_largeFilePercent === 0) EventsOff("largeFilePercent");
+            if (largeFilePercent === 0) EventsOff("largeFilePercent");
         });
     });
 
@@ -99,7 +99,7 @@
 
     function encrypt() {
         if (
-            checkFileTypesinHeldDownBtns(true) > 0 &&
+            checkFileTypesinHeldDownBtns(true) > 0 ||
             Object.keys(get(heldDownBtns)).length > 0
         )
             setIsInFileTask(true).then(() => {
@@ -123,7 +123,7 @@
 
     function decrypt() {
         if (
-            checkFileTypesinHeldDownBtns(false) > 0 &&
+            checkFileTypesinHeldDownBtns(false) > 0 ||
             Object.keys(get(heldDownBtns)).length > 0
         )
             setIsInFileTask(true).then(() => {

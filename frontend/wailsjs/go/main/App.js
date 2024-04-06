@@ -46,6 +46,10 @@ export function MinimizeApp() {
   return window['go']['main']['App']['MinimizeApp']();
 }
 
+export function OpenENCPFile(arg1) {
+  return window['go']['main']['App']['OpenENCPFile'](arg1);
+}
+
 export function ResizeWindow(arg1, arg2) {
   return window['go']['main']['App']['ResizeWindow'](arg1, arg2);
 }

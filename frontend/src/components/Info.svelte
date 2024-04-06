@@ -12,9 +12,7 @@
     } from "flowbite-svelte";
     import { onMount } from "svelte";
     import { AppPage, currentPage } from "../enums/AppPage";
-    import { pageChangeBtn } from "../stores/globalVariables";
 
-    import { switchPages } from "../tools/utils";
     import { DownloadSolid, GithubSolid } from "flowbite-svelte-icons";
 
     let cwd = "";
@@ -37,11 +35,11 @@
         {cwd}
     </div>
     <div id="viewLog" class="px-4">
-        <GradientButton
+        <!-- <GradientButton
             color="cyanToBlue"
             class={pageChangeBtn}
             on:click={() => {}}>VIEW LOG</GradientButton
-        >
+        > -->
     </div>
     <div id="driveFormat" class=" px-0 m-0 bg-gray-100">format: NTFS</div>
     <div class="h-1" />

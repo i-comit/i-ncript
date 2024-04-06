@@ -2,15 +2,13 @@
   import Login from "./components/Login.svelte";
   import Vault from "./components/Vault.svelte";
   import N_Box from "./components/NBox.svelte";
-  import O_Box from "./components/OBox.svelte";
   import WrongDir from "./components/WrongDir.svelte";
 
   import { AppPage, currentPage } from "./enums/AppPage.ts";
-  import { onMount, createEventDispatcher } from "svelte";
+  import { onMount } from "svelte";
   import { GetDirName } from "../wailsjs/go/main/Getters";
   import { LogDebug, LogWarning } from "../wailsjs/runtime/runtime";
   import { DirectoryWatcher } from "../wailsjs/go/main/App";
-
 
   let loggedIn = false;
   let _page: AppPage;
@@ -40,7 +38,5 @@
     <Vault />
   {:else if _page === AppPage.Mbox}
     <N_Box />
-  {:else if _page === AppPage.OBox}
-    <O_Box />
   {/if}
 </main>

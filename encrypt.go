@@ -141,7 +141,7 @@ func (a *App) InterruptEncryption() {
 func (a *App) reverseProgress(encrypt bool, files int) {
 	lastFilePath = ""
 	// runtime.EventsEmit(a.ctx, totalFileCt, 100)
-	time.Sleep(time.Millisecond * 400)
+	time.Sleep(time.Second)
 	// done := make(chan bool)
 	// go func() {
 	// 	counter := 100
@@ -236,7 +236,7 @@ func (a *App) decryptFile(filePath string) (*os.File, error) {
 	return decFile, nil
 }
 
-func (a *App) checkLargeFileTicker(data []byte, cipherData []byte, cipherFile *os.File) error {
+func (a *App) checkLargeFileTicker(data, cipherData []byte, cipherFile *os.File) error {
 	done := make(chan struct{})
 	var once sync.Once         // Ensure the done channel is closed only once
 	var thresholdFileSize = 50 //  file size in MBs to trigger ticker
@@ -313,16 +313,8 @@ func initFileCipher(filePath string) (cipher.AEAD, []byte, error) {
 	return aesGCM, data, nil
 }
 
-func checkCredentials(stringToCheck string) int {
-	cwd, err := os.Getwd()
-	if err != nil {
-		fmt.Printf("Failed to get current working directory: %s", err)
-		return -1
-	}
-	keyFilePath := filepath.Join(cwd, keyFileName)
-	fmt.Println("path to keyFile " + keyFilePath)
-
-	file, err := os.Open(keyFilePath)
+func checkCredentials(_hashedCredentials string) int {
+	file, err := os.Open(getKeyFilePath())
 	if err != nil {
 		fmt.Println("Key file doesn't exist", err)
 		return 0
@@ -345,8 +337,7 @@ func checkCredentials(stringToCheck string) int {
 		}
 		line = append(line, more...)
 	}
-
-	hashedStringToCheck, err := hashCredentials(stringToCheck)
+	hashedStringToCheck, err := hashString(_hashedCredentials)
 	if err != nil {
 		log.Printf("Failed to hash credentials to check %s", err)
 		return -1
@@ -360,20 +351,66 @@ func checkCredentials(stringToCheck string) int {
 	}
 }
 
-func hashCredentials(stringToHash string) (string, error) {
+func (a *App) OpenENCPFile(password string) error {
+	_hashedPassword, err := hashString(password)
+	if err != nil {
+		log.Printf("Failed to hash password %s", err)
+		return err
+	}
+	var shuffledCredentials = shuffleStrings(hashedUsername, _hashedPassword)
+
+	hashedStringToCheck, err := hashString(shuffledCredentials)
+	if err != nil {
+		log.Printf("Failed to hash credentials to check %s", err)
+		return err
+	}
+	log.Printf("lel " + hashedStringToCheck)
+	return nil
+}
+
+// func (a *App) RecoverENCPFile(password string) error {
+// 	_hashedPassword, err := hashString(password)
+// 	if err != nil {
+// 		log.Printf("Failed to hash password %s", err)
+// 		return err
+// 	}
+// 	var shuffledCredentials = shuffleStrings(hashedUsername, _hashedPassword)
+
+// 	hashedStringToCheck, err := hashString(shuffledCredentials)
+// 	if err != nil {
+// 		log.Printf("Failed to hash credentials to check %s", err)
+// 		return err
+// 	}
+// 	log.Printf("lel " + hashedStringToCheck)
+// 	return nil
+// }
+
+func packENCPFile(recipientUsername, recipientPassword string, filePaths []string) error {
+	recipientHashedCredentials, err := hashString(recipientUsername + recipientPassword)
+	if err != nil {
+		log.Printf("Failed to hash credentials to check %s", err)
+		return err
+	}
+	log.Printf("lel " + recipientHashedCredentials)
+	return nil
+}
+
+func hashString(stringToHash string) (string, error) {
 	byteData := []byte(_uniqueID + stringToHash)
 	hashedKey := sha256.Sum256(byteData)
 	key := hashedKey[:] // Convert to slice
 
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		return "", fmt.Errorf("hashCredentials fail: %w", err)
+		return "", fmt.Errorf("hashString fail: %w", err)
 	}
 
 	aesGCM, err := cipher.NewGCM(block)
 	if err != nil {
-		return "", fmt.Errorf("hashCredentials fail: %w", err)
+		return "", fmt.Errorf("hashString fail: %w", err)
 	}
-	encrypted := aesGCM.Seal(nil, make([]byte, aesGCM.NonceSize()), byteData, nil) // Using a zero nonce
+	//The nonce is omitted as we need to ensure that the hash is the same for repeated logins
+	encrypted := aesGCM.Seal(nil, make([]byte, aesGCM.NonceSize()), byteData, nil) // Using a zero
+	log.Printf("hashed string %s", hex.EncodeToString(encrypted))
 	return hex.EncodeToString(encrypted), nil
 }

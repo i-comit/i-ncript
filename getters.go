@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -112,4 +113,59 @@ func (b *Getters) GetFileProperties(filePath string) (FileProperties, error) {
 
 func (g *Getters) GetRootFolder() string {
 	return rootFolder
+}
+
+func getKeyFilePath() string {
+	cwd, err := os.Getwd()
+	if err != nil {
+		fmt.Printf("Failed to get current working directory: %s", err)
+		return ""
+	}
+	keyFilePath := filepath.Join(cwd, keyFileName)
+	fmt.Println("path to keyFile " + keyFilePath)
+
+	file, err := os.Open(keyFilePath)
+	if err != nil {
+		fmt.Println("Key file doesn't exist", err)
+		return ""
+	}
+	defer file.Close()
+	return keyFilePath
+}
+
+func printFileTree(fileTree *FileNode, print bool) error {
+	if !print {
+		return nil
+	}
+	data, err := json.MarshalIndent(fileTree, "", "  ")
+	if err != nil {
+		fmt.Println("Error marshaling tree to JSON:", err)
+		return err
+	}
+	jsonStr := string(data)
+	fmt.Println(jsonStr)
+	return nil
+}
+
+func shuffleStrings(str1, str2 string) string {
+	// Convert strings to rune slices to properly handle multi-byte characters.
+	runes1 := []rune(str1)
+	runes2 := []rune(str2)
+	var result []rune
+	// Iterate over both rune slices and append alternately to the result slice.
+	maxLen := len(runes1)
+	if len(runes2) > maxLen {
+		maxLen = len(runes2)
+	}
+
+	for i := 0; i < maxLen; i++ {
+		if i < len(runes1) {
+			result = append(result, runes1[i])
+		}
+		if i < len(runes2) {
+			result = append(result, runes2[i])
+		}
+	}
+	fmt.Println("shuffled " + string(result))
+	return string(result)
 }

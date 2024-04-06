@@ -36,10 +36,8 @@ export const pageIndex: () => number = () => {
             return 0;
         case AppPage.Mbox:
             return 1;
-        case AppPage.OBox:
-            return 2;
         case AppPage.Login:
-            return 3;
+            return 2;
     };
 };
 

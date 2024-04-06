@@ -8,8 +8,6 @@ import (
 	"path/filepath"
 	"time"
 
-	"encoding/json"
-
 	"github.com/fsnotify/fsnotify"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
@@ -31,6 +29,11 @@ func NewApp() *App {
 
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
+	log.Print("app has started")
+	keyFilePath := getKeyFilePath()
+	if keyFilePath != "" {
+
+	}
 }
 
 func (a *App) InitializeRootFolder() error {
@@ -63,19 +66,32 @@ func (a *App) InitializeRootFolder() error {
 
 // func (b *App) shutdown(ctx context.Context) {
 // }
-func (a *App) Login(username string, password string) (int, error) {
+
+func (a *App) Login(username, password string) (int, error) {
 	if username == "" || password == "" {
 		fmt.Println("Username or password is empty")
-		return 0, nil
+		return -1, nil
 	}
 	cwd, err := os.Getwd()
 	if err != nil {
 		log.Fatalf("Failed to get CWD: %s", err)
 	}
 	filePath := filepath.Join(cwd, keyFileName)
-	var credentials = username + password
 	var loginStat int
-	loginStat = checkCredentials(credentials)
+
+	_hashedUsername, err := hashString(username)
+	if err != nil {
+		log.Printf("Failed to hash username %s", err)
+		return -1, err
+	}
+	// _hashedPassword, err := hashString(password)
+	// if err != nil {
+	// 	log.Printf("Failed to hash password %s", err)
+	// 	return -1, err
+	// }
+	hashedUsername = _hashedUsername
+	var shuffledCredentials = shuffleStrings(_hashedUsername, password)
+	loginStat = checkCredentials(shuffledCredentials)
 
 	switch loginStat {
 	case 0: //Key file does not exist
@@ -84,7 +100,7 @@ func (a *App) Login(username string, password string) (int, error) {
 			log.Fatalf("Failed to create file: %s", err)
 		}
 		defer file.Close()
-		a.grantAccessToApp(file, credentials)
+		a.grantAccessToApp(file, shuffledCredentials)
 	case 1: //File exists but is empty
 		break
 	case 2: //credentials match file hash
@@ -112,7 +128,7 @@ func (a *App) grantAccessToApp(file *os.File, credentials string) {
 	if err != nil {
 		log.Fatalf("Failed to get CWD: %s", err)
 	}
-	_hashedCredentials, err := hashCredentials(credentials)
+	_hashedCredentials, err := hashString(credentials)
 	if err != nil {
 		log.Fatalf("Failed to encrypt: %s", err)
 	}
@@ -120,7 +136,6 @@ func (a *App) grantAccessToApp(file *os.File, credentials string) {
 	if err != nil {
 		log.Fatalf("Failed to write to file: %s", err)
 	}
-	fmt.Printf("File created: %s", cwd+file.Name())
 	hashedCredentials = []byte(_hashedCredentials)
 	if a.ctx != nil {
 		a.ResizeWindow(_width*2, _height)
@@ -134,7 +149,7 @@ func (a *App) grantAccessToApp(file *os.File, credentials string) {
 	}
 	fileTree, err := a.BuildDirectoryFileTree(0)
 	if err != nil {
-		log.Fatalf("Failed to write to file: %s", err)
+		log.Fatalf("Failed to build fileTree: %s", err)
 	}
 	printFileTree(fileTree, false)
 }
@@ -169,20 +184,6 @@ func (a *App) SetIsInFileTask(b bool) bool {
 		a.DirectoryWatcher(lastDirIndex)
 	}
 	return isInFileTask
-}
-
-func printFileTree(fileTree *FileNode, print bool) error {
-	if !print {
-		return nil
-	}
-	data, err := json.MarshalIndent(fileTree, "", "  ")
-	if err != nil {
-		fmt.Println("Error marshaling tree to JSON:", err)
-		return err
-	}
-	jsonStr := string(data)
-	fmt.Println(jsonStr)
-	return nil
 }
 
 func MoveFiles(srcPaths []string, destDir string) error {

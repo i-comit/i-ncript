@@ -1,7 +1,6 @@
 export enum AppPage {
     Vault = 'VAULT',
     Mbox = 'M-BOX',
-    OBox = 'O-BOX',
     Login = 'Login',
     WrongDir = 'WrongDir',
 }

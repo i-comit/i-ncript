@@ -18,12 +18,15 @@
         accentColor,
         darkColor,
         lightBGColor,
-        pageChangeBtn,
         tooltipTailwindClass,
     } from "../stores/globalVariables.ts";
-    import { buildFileTree, fileTree } from "../tools/fileTree.ts";
+    import {
+        buildFileTree,
+        currentFilePath,
+        fileTree,
+    } from "../tools/fileTree.ts";
 
-    import { switchPages, switchModals } from "../tools/utils.ts";
+    import { switchPages, switchModals, heldDownBtns } from "../tools/utils.ts";
     import NeuButton from "../elements/NeuButton.svelte";
 
     import Frame from "../elements/Frame.svelte";
@@ -45,10 +48,6 @@
     currentModal.subscribe((value) => {
         _modal = value;
     });
-    onMount(() => {
-        buildFileTree();
-        password = "";
-    });
 
     let _currentFileTask: FileTasks;
     currentFileTask.subscribe((value) => {
@@ -57,17 +56,46 @@
     let _fileTaskPercent: number;
     let password: string;
 
+    let _heldDownBtns: { [key: string]: HTMLButtonElement };
+    heldDownBtns.subscribe((value) => {
+        _heldDownBtns = value;
+        handleOnFileClick();
+        // checklastSelectedFileExtension();
+    });
+
+    // $: _currentFilePath = $currentFilePath;
+
+    function checklastSelectedFileExtension() {
+        const entries = Object.entries(_heldDownBtns);
+        var lastEntry = entries[entries.length - 1];
+        const [key, value] = lastEntry;
+
+        if (lastEntry !== null) {
+            LogInfo("Last entry rel path " + key);
+        } else LogInfo("Last entry is null");
+    }
+
+    onMount(() => {
+        buildFileTree();
+        password = "";
+    });
+
     function enterPassword(event: KeyboardEvent) {
         if (event.code === "Enter") {
             const inputElement = event.target as HTMLInputElement;
             password = inputElement.value;
-            // Now you can use the password variable as needed
-            LogInfo("amogus " + password);
         }
     }
 
     function clearPassword() {
         password = "";
+    }
+
+    function handleOnFileClick() {
+        LogInfo("on heldDownBtns changed ");
+        Object.keys(_heldDownBtns).forEach((key) => {
+            LogInfo("Held down node moveFiles on MBOX: " + key);
+        });
     }
 
     let passwordCheck1 = false; // Length check
@@ -99,7 +127,6 @@
     >
         <DirectorySizeBar />
 
-      
         {#if _currentFileTask === FileTasks.None}
             <div class="row">
                 <Input
@@ -221,13 +248,6 @@
 </div>
 
 <style>
-    p {
-        color: black;
-    }
-    #left-panel {
-        background-color: #fcfcfc;
-    }
-
     .row {
         display: flex;
         justify-content: space-between; /* Spread the buttons evenly */
