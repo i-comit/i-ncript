@@ -2,17 +2,11 @@
 <script>
     import { createEventDispatcher, onMount, onDestroy } from "svelte";
 
-    import { Modals, currentModal } from "../enums/Modals";
+    import { Modals, currentModal } from "../../enums/Modals";
 
-    import { Login } from "../../wailsjs/go/main/App";
-    import {
-        Button,
-        Input,
-        Tooltip,
-    } from "flowbite-svelte";
-    // import { Popover, Label, Input, Checkbox, Button } from 'flowbite-svelte';
-    import { CheckOutline, CloseOutline } from "flowbite-svelte-icons";
-    import { switchModals } from "../tools/utils";
+    import { Login } from "../../../wailsjs/go/main/App";
+    import { Button, Input, Tooltip } from "flowbite-svelte";
+    import { switchModals } from "../../tools/utils";
     import {
         InfoCircleOutline,
         AdjustmentsVerticalOutline,
@@ -23,26 +17,32 @@
         stopDisplay,
         getDisplayString,
         alertInterval,
-    } from "../tools/logger";
-    let displayString = "";
+    } from "../../tools/logger";
 
-    import Frame from "../elements/Frame.svelte";
-    import Info from "./Info.svelte";
-    import Settings from "./Settings.svelte";
+    import Frame from "../widgets/Frame.svelte";
+    import Info from "../modals/Info.svelte";
+    import Settings from "../modals/Settings.svelte";
+
+    import NeuButton from "../elements/NeuButton.svelte";
     import {
-        height,
-        width,
         tooltipTailwindClass,
         accentColor,
         darkBGColor,
-    } from "../stores/constantVariables.ts";
-    import { LogDebug, LogTrace } from "../../wailsjs/runtime/runtime.js";
+    } from "../../stores/constantVariables.ts";
 
+    import { darklightMode } from "../../stores/dynamicVariables.ts";
+    import { toggleDarkLightMode } from "../../tools/utils";
+
+    let displayString = "";
     const appName = __APP_NAME__;
     const appVersion = __APP_VERSION__;
-    const dispatch = createEventDispatcher();
     let username = "";
     let password = "";
+    const dispatch = createEventDispatcher();
+
+    darklightMode.subscribe((value) => {
+        toggleDarkLightMode(value);
+    });
 
     async function submit(event) {
         event.preventDefault();
@@ -74,7 +74,7 @@
         const interval = setInterval(() => {
             displayString = getDisplayString();
         }, alertInterval);
-
+        toggleDarkLightMode(false);
         return () => {
             clearInterval(interval);
         };
@@ -94,7 +94,7 @@
     let passwordCheck3 = false; // Symbol check
     let passwordCheck = false; // Overall password strength check
 
-    let passwordMatch = false//password match check when creating account
+    let passwordMatch = false; //password match check when creating account
 
     function queryPasswordStrength() {
         // Check 1: Length is more than 5 characters
@@ -109,8 +109,6 @@
 
         passwordCheck = passwordCheck1 && passwordCheck2 && passwordCheck3;
     }
-
-    import NeuButton from "../elements/NeuButton.svelte";
 </script>
 
 <form
@@ -243,9 +241,7 @@
         </div>
         <div>
             {#if usernameCheck && passwordCheck}
-                <NeuButton _class="!w-20 " type="submit"
-                    >LOGIN</NeuButton
-                >
+                <NeuButton _class="!w-20 " type="submit">LOGIN</NeuButton>
             {:else}
                 <NeuButton
                     disabled={true}
@@ -258,11 +254,15 @@
 </form>
 
 <style>
+    :root {
+        --bg-color: #757575;
+    }
+
     .login-form {
         margin: auto;
         padding: 0.5rem;
 
-        background-color: gray;
+        background-color: var(--bg-color);
     }
     .login-form {
         padding-top: 1.5rem;

@@ -11,12 +11,12 @@
         Range,
     } from "flowbite-svelte";
     import { onMount } from "svelte";
-    import { AppPage, currentPage } from "../enums/AppPage";
+    import { AppPage, currentPage } from "../../enums/AppPage";
 
     import { DownloadSolid, GithubSolid } from "flowbite-svelte-icons";
 
     let cwd = "";
-    import { GetAppPath } from "../../wailsjs/go/main/Getters";
+    import { GetAppPath } from "../../../wailsjs/go/main/Getters";
     onMount(async () => {
         cwd = "CWD: " + (await GetAppPath());
     });

@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { FileTasks, currentFileTask } from "../enums/FileTasks";
-    import NeuButtonFake from "./NeuButtonFake.svelte";
+    import { FileTasks, currentFileTask } from "../../enums/FileTasks";
+    import NeuButtonFake from "../elements/NeuButtonFake.svelte";
 
     let _currentFileTask: FileTasks;
     currentFileTask.subscribe((value) => {

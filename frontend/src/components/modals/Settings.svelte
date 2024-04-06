@@ -10,17 +10,16 @@
         DropdownItem,
         Range,
     } from "flowbite-svelte";
-    import { switchPages } from "../tools/utils";
+    import { switchPages } from "../../tools/utils";
     import {
         InfoCircleOutline,
-        AdjustmentsVerticalOutline,
         ChevronDownOutline,
         SunSolid,
         MoonSolid,
     } from "flowbite-svelte-icons";
 
-    import { AppPage, currentPage } from "../enums/AppPage";
-    import { darklightMode } from "../stores/dynamicVariables";
+    import { AppPage, currentPage } from "../../enums/AppPage";
+    import { darklightMode } from "../../stores/dynamicVariables";
 
     function toggleLightDarkMode() {
         darklightMode.update((currentValue) => !currentValue);
@@ -83,7 +82,6 @@
             <Button pill color="blue"></Button>
             <Button pill color="green"></Button>
             <Button pill color="red"></Button>
-            <!-- <Button pill color="primary"></Button> -->
             <Button pill color="yellow"></Button>
         </ButtonGroup>
     </div>
@@ -93,7 +91,6 @@
             <Button pill color="blue"></Button>
             <Button pill color="green"></Button>
             <Button pill color="red"></Button>
-            <!-- <Button pill color="primary"></Button> -->
             <Button pill color="yellow"></Button>
         </ButtonGroup>
     </div>
@@ -103,7 +100,6 @@
             <Button pill color="blue"></Button>
             <Button pill color="green"></Button>
             <Button pill color="red"></Button>
-            <!-- <Button pill color="primary"></Button> -->
             <Button pill color="yellow"></Button>
         </ButtonGroup>
     </div>

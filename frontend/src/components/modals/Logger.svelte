@@ -8,10 +8,10 @@
         FileCopySolid,
     } from "flowbite-svelte-icons";
 
-    import { basePath } from "../tools/utils.ts";
+    import { basePath } from "../../tools/utils.ts";
 
-    import { addLogEntry, logEntries } from "../tools/logger";
-    import { EventsOn } from "../../wailsjs/runtime/runtime";
+    import { addLogEntry, logEntries } from "../../tools/logger";
+    import { EventsOn } from "../../../wailsjs/runtime/runtime";
 
     onMount(() => {
         EventsOn("addLogFile", (fileName) => {

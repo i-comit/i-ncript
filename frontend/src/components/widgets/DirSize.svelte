@@ -2,8 +2,7 @@
     import { onMount, onDestroy } from "svelte";
 
     import { Progressbar, Tooltip } from "flowbite-svelte";
-    import { tooltipTailwindClass } from "../stores/constantVariables";
-    import { LogInfo } from "../../wailsjs/runtime/runtime";
+    import { tooltipTailwindClass } from "../../stores/constantVariables";
     onMount(() => {});
 </script>
 

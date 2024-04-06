@@ -5,7 +5,7 @@
 
 <style lang="scss">
   @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap");
-  @import "../neumorphic.scss";
+  @import "../../neumorphic.scss";
 
   //  Variables
   $fontSize: 1px;

@@ -2,7 +2,7 @@
     import { onMount, onDestroy } from "svelte";
     import { spring } from "svelte/motion";
     import { FileOutline } from "flowbite-svelte-icons";
-    import { width } from "../stores/constantVariables";
+    import { width } from "../../stores/constantVariables";
 
     onMount(() => {});
 

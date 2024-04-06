@@ -10,7 +10,7 @@
         LogError,
         LogInfo,
         LogPrint,
-    } from "../../wailsjs/runtime/runtime";
+    } from "../../../wailsjs/runtime/runtime";
 
     import {
         FolderOpenSolid,
@@ -37,7 +37,7 @@
         handleFileClick,
         FileNode,
         updateExpansionStateStore,
-    } from "../tools/fileTree.ts";
+    } from "../../tools/fileTree.ts";
 
     import {
         pageName,
@@ -50,14 +50,14 @@
         removeFileName,
         leftCtrlDown,
         pointerDown,
-    } from "../tools/utils.ts";
+    } from "../../tools/utils.ts";
 
-    import { GetDirectoryPath } from "../../wailsjs/go/main/Getters";
+    import { GetDirectoryPath } from "../../../wailsjs/go/main/Getters";
     import {
         darkTextColor,
         lightBGColor,
         tooltipTailwindClass,
-    } from "../stores/constantVariables.ts";
+    } from "../../stores/constantVariables.ts";
     import {
         ctrlLeftDown,
         ctrlLeftUp,
@@ -65,8 +65,8 @@
         onMouseUp,
         onTouchStart,
         onTouchEnd,
-    } from "../tools/inputs.ts";
-    import FileIcon from "../elements/FileIcon.svelte";
+    } from "../../tools/inputs.ts";
+    import FileIcon from "../widgets/FileIcon.svelte";
 
     export let _fileTree: FileNode;
 

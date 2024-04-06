@@ -1,7 +1,7 @@
 <!-- https://codepen.io/eZ0/pen/eZXNzd -->
 <script lang="ts">
     import { onMount } from "svelte";
-    import { lightBGColor } from "../stores/constantVariables.ts";
+    import { lightBGColor } from "../../stores/constantVariables.ts";
 
     export let className = "";
     export let dataProgress: number;

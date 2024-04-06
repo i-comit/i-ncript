@@ -1,31 +1,32 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { get } from "svelte/store";
-
-    import {
-        accentColor,
-        activeAccentColor,
-        darkBGColor,
-        lightBGColor,
-    } from "../stores/constantVariables";
-
     import {
         CogSolid,
         BarsFromLeftOutline,
         InfoCircleSolid,
         InfoCircleOutline,
     } from "flowbite-svelte-icons";
-    import { switchModals, toggleDarkLightMode } from "../tools/utils";
-    import { Modals } from "../enums/Modals";
-    import { LogInfo } from "../../wailsjs/runtime/runtime";
-    import { darklightMode } from "../stores/dynamicVariables";
+
+    import { LogInfo } from "../../../wailsjs/runtime/runtime";
+
+    import { Modals } from "../../enums/Modals";
+
+    import {
+        accentColor,
+        activeAccentColor,
+        darkBGColor,
+        lightBGColor,
+    } from "../../stores/constantVariables";
+    import { darklightMode } from "../../stores/dynamicVariables";
+
+    import { switchModals, toggleDarkLightMode } from "../../tools/utils";
 
     darklightMode.subscribe((value) => {
         toggleDarkLightMode(value);
     });
 
     onMount(() => {
-        document.documentElement.style.setProperty("--icon-color", _color);
         toggleDarkLightMode(get(darklightMode));
     });
 
@@ -70,12 +71,12 @@
 
 <style lang="scss">
     $panel-width: 1.65rem;
-    @import "../neumorphic.scss";
+    @import "../../neumorphic.scss";
     :root {
         --bg-color: #757575;
         --icon: #757575;
         --icon-hover: #8abdff;
-        --icon-active: #a0b0ff;
+        --icon-active: #a0d6ff;
     }
 
     .panel {

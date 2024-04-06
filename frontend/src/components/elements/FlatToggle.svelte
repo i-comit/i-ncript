@@ -1,14 +1,14 @@
 <!-- https://codepen.io/singhimalaya/pen/EdVzNL -->
 <script lang="ts">
-    import { LogPrint } from "../../wailsjs/runtime/runtime";
+    import { LogPrint } from "../../../wailsjs/runtime/runtime";
     import {
         EncryptFilesInDir,
         SetIsHotFilerEnabled,
-    } from "../../wailsjs/go/main/App";
-    import { GetFilesByType } from "../../wailsjs/go/main/Getters";
-    import { setIsInFileTask } from "../tools/fileTree";
-    import { FileTasks, currentFileTask } from "../enums/FileTasks";
-    import { totalFileCt } from "../tools/utils";
+    } from "../../../wailsjs/go/main/App";
+    import { GetFilesByType } from "../../../wailsjs/go/main/Getters";
+    import { setIsInFileTask } from "../../tools/fileTree";
+    import { FileTasks, currentFileTask } from "../../enums/FileTasks";
+    import { totalFileCt } from "../../tools/utils";
 
     let isChecked: boolean;
     isChecked = false;

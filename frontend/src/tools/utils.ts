@@ -15,7 +15,7 @@ import { LogDebug, LogError, LogInfo, LogTrace, LogWarning } from "../../wailsjs
 import { MoveFilesToPath } from '../../wailsjs/go/main/FileUtils';
 import { clearHeldBtns, setIsInFileTask } from './fileTree';
 
-import { width, height, darkBGColor, lightBGColor } from "../stores/constantVariables.ts"
+import { width, height, darkBGColor, lightBGColor, lightTextColor, darkTextColor } from "../stores/constantVariables.ts"
 
 export const pageName: () => string = () => {
     const _appPage: AppPage = get(currentPage);
@@ -213,14 +213,24 @@ export async function prependAbsPathToRelPaths(dirIndex: number): Promise<string
 }
 
 export function toggleDarkLightMode(darkLightMode: boolean) {
-    if (darkLightMode)
+    if (darkLightMode) {
         document.documentElement.style.setProperty(
             "--bg-color",
             darkBGColor,
         );
-    else
+        document.documentElement.style.setProperty(
+            "--text-color",
+            lightTextColor,
+        );
+    }
+    else {
         document.documentElement.style.setProperty(
             "--bg-color",
             lightBGColor,
         );
+        document.documentElement.style.setProperty(
+            "--text-color",
+            darkTextColor,
+        );
+    }
 }

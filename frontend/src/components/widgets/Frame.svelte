@@ -1,15 +1,21 @@
 <script>
-    import { MinimizeApp, CloseApp } from "../../wailsjs/go/main/App";
+    import { MinimizeApp, CloseApp } from "../../../wailsjs/go/main/App";
     import { MinusOutline, CloseOutline } from "flowbite-svelte-icons";
     import { Button, Input, GradientButton, Tooltip } from "flowbite-svelte";
-    import { LogDebug, LogError } from "../../wailsjs/runtime/runtime";
-    import appLogo from "../assets/images/i-comiti.png";
+    import { LogDebug, LogError } from "../../../wailsjs/runtime/runtime";
+    import appLogo from "../../assets/images/i-comiti.png";
 
+    import { darklightMode } from "../../stores/dynamicVariables";
+    import { toggleDarkLightMode } from "../../tools/utils";
+
+    darklightMode.subscribe((value) => {
+        toggleDarkLightMode(value);
+    });
     import {
         lightBGColor,
         darkBGColor,
         tooltipTailwindClass,
-    } from "../stores/constantVariables";
+    } from "../../stores/constantVariables";
 
     function minimizeApp() {
         MinimizeApp()
@@ -33,24 +39,25 @@
         >
     </div>
     <div class="flex justify-end">
-        <Button
-            class="p-0 my-1"
-            style={`background-color: ${darkBGColor}`}
-            on:click={minimizeApp}
-        >
-            <MinusOutline class="w-5 h-5 m-0 p-0" color="white" />
-        </Button>
-        <Button
-            class="p-0 my-1 !mr-1 !ml-px"
-            style={`background-color: ${darkBGColor}`}
-            on:click={CloseApp}
-        >
-            <CloseOutline class="w-5 h-5 m-0 p-0" color="white" />
-        </Button>
+        <button class="p-0 my-1 rounded-lg" on:click={minimizeApp}>
+            <MinusOutline class="w-5 h-5 m-0 p-0" color="var(--text-color)" />
+        </button>
+        <button class="p-0 my-1 mr-1 ml-px rounded-lg" on:click={CloseApp}>
+            <CloseOutline class="w-5 h-5 m-0 p-0" color="var(--text-color)" />
+        </button>
     </div>
 </div>
 
 <style>
+    :root {
+        --bg-color: #757575;
+        --text-color: #dddddd;
+    }
+
+    button {
+        background-color: var(--bg-color);
+    }
+
     .window-controls {
         position: absolute;
         top: 0px;

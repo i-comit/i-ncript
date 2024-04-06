@@ -4,23 +4,11 @@
     import { get } from "svelte/store";
     import Toggle from "../elements/FlatToggle.svelte";
 
-    import { AppPage, currentPage } from "../enums/AppPage.ts";
-    import { Modals, currentModal } from "../enums/Modals.ts";
-    import { FileTasks, currentFileTask } from "../enums/FileTasks.ts";
-
     import {
-        height,
-        width,
-        lightBGColor,
-        darkBGColor,
-    } from "../stores/constantVariables.ts";
-
-    import {
-        buildFileTree,
-        fileTree,
-        setIsInFileTask,
-        clearHeldBtnsFromContainer,
-    } from "../tools/fileTree.ts";
+        EventsOff,
+        EventsOn,
+        LogInfo,
+    } from "../../../wailsjs/runtime/runtime";
 
     import {
         EncryptFilesInDir,
@@ -28,7 +16,24 @@
         InterruptEncryption,
         EncryptFilesInArr,
         DecryptFilesInArr,
-    } from "../../wailsjs/go/main/App";
+    } from "../../../wailsjs/go/main/App";
+    import {
+        GetDirectoryPath,
+        GetFilesByType,
+    } from "../../../wailsjs/go/main/Getters";
+
+    import { AppPage, currentPage } from "../../enums/AppPage.ts";
+    import { Modals, currentModal } from "../../enums/Modals.ts";
+    import { FileTasks, currentFileTask } from "../../enums/FileTasks.ts";
+
+    import { darklightMode } from "../../stores/dynamicVariables.ts";
+
+    import {
+        buildFileTree,
+        fileTree,
+        setIsInFileTask,
+        clearHeldBtnsFromContainer,
+    } from "../../tools/fileTree.ts";
 
     import {
         switchPages,
@@ -39,34 +44,23 @@
         totalFileCt,
         checkFileTypesinHeldDownBtns,
         toggleDarkLightMode,
-    } from "../tools/utils.ts";
+    } from "../../tools/utils.ts";
 
-    import NeuButton from "../elements/NeuButton.svelte";
-
-    import Frame from "../elements/Frame.svelte";
-    import Info from "./Info.svelte";
-    import Settings from "./Settings.svelte";
-    import TreeView from "./FileTree.svelte";
-    import Logger from "./Logger.svelte";
-
-    import {
-        EventsOff,
-        EventsOn,
-        LogInfo,
-    } from "../../wailsjs/runtime/runtime";
-    import {
-        GetDirectoryPath,
-        GetFilesByType,
-    } from "../../wailsjs/go/main/Getters";
-    import DirSize from "../elements/DirectorySizeBar.svelte";
-    import RadialProgress from "../elements/RadialProgress.svelte";
-    import NeuSearch from "../elements/NeuSearch.svelte";
-    import PanelDivider from "../elements/PanelDivider.svelte";
-    import WaveProgress from "../elements/WaveProgress.svelte";
-    import NeuButtonFake from "../elements/NeuButtonFake.svelte";
     import TaskDisplay from "../elements/TaskDisplay.svelte";
-    import FileTools from "../elements/FileTools.svelte";
-    import { darklightMode } from "../stores/dynamicVariables.ts";
+    import NeuButton from "../elements/NeuButton.svelte";
+    import NeuSearch from "../elements/NeuSearch.svelte";
+    import WaveProgress from "../elements/WaveProgress.svelte";
+    import RadialProgress from "../elements/RadialProgress.svelte";
+
+    import Info from "../modals/Info.svelte";
+    import Settings from "../modals/Settings.svelte";
+    import TreeView from "../modals/FileTree.svelte";
+    import Logger from "../modals/Logger.svelte";
+
+    import Frame from "../widgets/Frame.svelte";
+    import DirSize from "../widgets/DirSize.svelte";
+    import PanelDivider from "../widgets/PanelDivider.svelte";
+    import FileTools from "../widgets/FileTools.svelte";
 
     //  let _totalFileCt: number;
     // _totalFileCt = 0;

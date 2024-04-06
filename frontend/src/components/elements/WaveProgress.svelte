@@ -24,7 +24,7 @@
 {/if}
 
 <style lang="scss">
-    @import "../neumorphic.scss";
+    @import "../../neumorphic.scss";
 
     $brand-default: #b0bec5;
     $brand-primary: #2196f3;

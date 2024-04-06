@@ -11,38 +11,40 @@
         MailBoxSolid,
     } from "flowbite-svelte-icons";
 
-    import { AppPage, currentPage } from "../enums/AppPage.ts";
-    import { Modals, currentModal } from "../enums/Modals.ts";
+    import { AppPage, currentPage } from "../../enums/AppPage.ts";
+    import { Modals, currentModal } from "../../enums/Modals.ts";
+    import { FileTasks, currentFileTask } from "../../enums/FileTasks.ts";
 
     import {
         accentColor,
         darkBGColor,
         lightBGColor,
         tooltipTailwindClass,
-    } from "../stores/constantVariables.ts";
+    } from "../../stores/constantVariables.ts";
+    import { buildFileTree, fileTree } from "../../tools/fileTree.ts";
+
     import {
-        buildFileTree,
-        currentFilePath,
-        fileTree,
-    } from "../tools/fileTree.ts";
+        switchPages,
+        switchModals,
+        heldDownBtns,
+    } from "../../tools/utils.ts";
+    import { LogInfo } from "../../../wailsjs/runtime/runtime";
 
-    import { switchPages, switchModals, heldDownBtns } from "../tools/utils.ts";
+    import Frame from "../widgets/Frame.svelte";
+    import PanelDivider from "../widgets/PanelDivider.svelte";
+    import FileTools from "../widgets/FileTools.svelte";
+    import DirSize from "../widgets/DirSize.svelte";
+
     import NeuButton from "../elements/NeuButton.svelte";
-
-    import Frame from "../elements/Frame.svelte";
-    import Info from "./Info.svelte";
-    import Settings from "./Settings.svelte";
-    import TreeView from "./FileTree.svelte";
-    import Logger from "./Logger.svelte";
     import NeuSearch from "../elements/NeuSearch.svelte";
-    import PanelDivider from "../elements/PanelDivider.svelte";
-    import DirectorySizeBar from "../elements/DirectorySizeBar.svelte";
-    import { LogInfo } from "../../wailsjs/runtime/runtime";
     import NeuButtonFake from "../elements/NeuButtonFake.svelte";
-    import { FileTasks, currentFileTask } from "../enums/FileTasks.ts";
     import WaveProgress from "../elements/WaveProgress.svelte";
     import TaskDisplay from "../elements/TaskDisplay.svelte";
-    import FileTools from "../elements/FileTools.svelte";
+
+    import Info from "../modals/Info.svelte";
+    import Settings from "../modals/Settings.svelte";
+    import TreeView from "../modals/FileTree.svelte";
+    import Logger from "../modals/Logger.svelte";
 
     let _modal: Modals;
     currentModal.subscribe((value) => {
@@ -76,7 +78,7 @@
 
         if (lastEntry !== null) {
             LogInfo("Last entry rel path " + key);
-        } 
+        }
     }
 
     onMount(() => {
@@ -129,7 +131,7 @@
         class="max-w-45"
         style="background-color:{lightBGColor}"
     >
-        <DirectorySizeBar />
+        <DirSize />
 
         {#if _currentFileTask === FileTasks.None}
             <div class="row">

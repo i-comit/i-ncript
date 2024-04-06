@@ -1,10 +1,10 @@
 <!-- https://codepen.io/caesura/pen/QWNjvOX -->
 <script>
-    import { lightBGColor } from "../stores/constantVariables";
+    import { lightBGColor } from "../../stores/constantVariables";
     import { onMount, onDestroy } from "svelte";
 
     import { CloseButton } from "flowbite-svelte";
-    import { LogInfo } from "../../wailsjs/runtime/runtime";
+    import { LogInfo } from "../../../wailsjs/runtime/runtime";
     export let _class = "";
 
     export let searchInput = "";
@@ -55,7 +55,7 @@
 
 <style lang="scss">
     @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap");
-    @import "../neumorphic.scss";
+    @import "../../neumorphic.scss";
 
     $dropShadow:
         2px 2px 6px -2px rgba($darkShadow, 0.4),

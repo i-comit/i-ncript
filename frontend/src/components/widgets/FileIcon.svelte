@@ -6,8 +6,8 @@
         FileMusicSolid,
         FileOutline,
     } from "flowbite-svelte-icons";
-    import { getFileType, FileTypes } from "../enums/FileTypes";
-    import { FileNode } from "../tools/fileTree";
+    import { getFileType, FileTypes } from "../../enums/FileTypes";
+    import { FileNode } from "../../tools/fileTree";
 
     export let _fileTree: FileNode;
 </script>

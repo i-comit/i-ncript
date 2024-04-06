@@ -1,8 +1,8 @@
 <script lang="ts">
-  import Login from "./components/Login.svelte";
-  import Vault from "./components/Vault.svelte";
-  import N_Box from "./components/NBox.svelte";
-  import WrongDir from "./components/WrongDir.svelte";
+  import Login from "./components/pages/Login.svelte";
+  import Vault from "./components/pages/Vault.svelte";
+  import M_Box from "./components/pages/MBox.svelte";
+  import WrongDir from "./components/pages/WrongDir.svelte";
 
   import { AppPage, currentPage } from "./enums/AppPage.ts";
   import { onMount } from "svelte";
@@ -37,6 +37,6 @@
   {:else if _page === AppPage.Vault}
     <Vault />
   {:else if _page === AppPage.Mbox}
-    <N_Box />
+    <M_Box />
   {/if}
 </main>

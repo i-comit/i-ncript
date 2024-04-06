@@ -9,7 +9,7 @@
     function handMouseDown() {
         dispatch("mousedown");
     }
-    import { lightBGColor } from "../stores/constantVariables";
+    import { lightBGColor } from "../../stores/constantVariables";
 
     export let _class = "";
 
@@ -25,7 +25,7 @@
 
 <style lang="scss">
     @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap");
-    @import "../neumorphic.scss";
+    @import "../../neumorphic.scss";
     $fontSize: 15px;
     $height: 1.5rem;
 
