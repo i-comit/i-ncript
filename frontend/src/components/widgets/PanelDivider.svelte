@@ -14,50 +14,52 @@
 
     import {
         accentColor,
-        activeAccentColor,
-        darkBGColor,
-        lightBGColor,
     } from "../../stores/constantVariables";
     import { darklightMode } from "../../stores/dynamicVariables";
 
-    import { switchModals, toggleDarkLightMode } from "../../tools/utils";
+    import {
+        switchModals,
+        darkLightBGOnId,
+        darkLightTextOnClasses,
+    } from "../../tools/utils";
 
     darklightMode.subscribe((value) => {
-        toggleDarkLightMode(value);
+        darkLightBGOnId(value, "panel");
+        darkLightTextOnClasses(!value, "icon");
     });
 
     onMount(() => {
-        toggleDarkLightMode(get(darklightMode));
+        var _darkLightMode = get(darklightMode);
+        darkLightBGOnId(_darkLightMode, "panel");
+        darkLightTextOnClasses(!_darkLightMode, "icon");
     });
-
-    let _color: string = darkBGColor;
 </script>
 
 <div
     class="absolute -z-10 w-20 h-full select-none left-1/3"
     style="background-color:{accentColor}"
 ></div>
-<div class="panel">
+<div id="panel">
     <div
         class="absolute w-full h-1/5 rounded-full select-none"
         style={`top:90%; background-color: ${accentColor}`}
     ></div>
 
     <div class="icon space-y-1">
-        <div class="icon__home">
+        <button class="icon__info iconBG">
             <InfoCircleOutline
                 class="p-px"
                 on:click={() => switchModals(Modals.Info)}
             />
-        </div>
+        </button>
         <button
-            class="icon__account"
+            class="icon__logger iconBG"
             on:click={() => switchModals(Modals.Logger)}
         >
             <BarsFromLeftOutline class="p-px" role="button" />
         </button>
         <button
-            class="icon__settings"
+            class="icon__settings iconBG"
             on:click={() => switchModals(Modals.Settings)}
         >
             <CogSolid class="p-px" />
@@ -72,14 +74,14 @@
 <style lang="scss">
     $panel-width: 1.65rem;
     @import "../../neumorphic.scss";
-    :root {
+    body {
         --bg-color: #757575;
-        --icon: #757575;
+        --text-color: #757575;
         --icon-hover: #8abdff;
         --icon-active: #a0d6ff;
     }
 
-    .panel {
+    #panel {
         background-color: var(--bg-color);
         width: $panel-width;
         display: flex;
@@ -105,8 +107,8 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        &__account,
-        &__home,
+        &__info,
+        &__logger,
         &__settings {
             width: $icon-size;
             height: $icon-size;
@@ -117,7 +119,7 @@
             align-items: center;
             font-size: 2rem;
             cursor: pointer;
-            color: var(--icon);
+            color: var(--text-color);
             transition: all 0.2s ease;
             &:active {
                 box-shadow: $innerShadow;

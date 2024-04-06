@@ -1,29 +1,61 @@
-<script>
+<script lang="ts">
+    import { onDestroy, onMount } from "svelte";
+    import { get } from "svelte/store";
     import { MinimizeApp, CloseApp } from "../../../wailsjs/go/main/App";
     import { MinusOutline, CloseOutline } from "flowbite-svelte-icons";
     import { Button, Input, GradientButton, Tooltip } from "flowbite-svelte";
-    import { LogDebug, LogError } from "../../../wailsjs/runtime/runtime";
-    import appLogo from "../../assets/images/i-comiti.png";
 
-    import { darklightMode } from "../../stores/dynamicVariables";
-    import { toggleDarkLightMode } from "../../tools/utils";
-
-    darklightMode.subscribe((value) => {
-        toggleDarkLightMode(value);
-    });
     import {
         lightBGColor,
         darkBGColor,
         tooltipTailwindClass,
     } from "../../stores/constantVariables";
 
-    function minimizeApp() {
+    import {
+        LogDebug,
+        LogError,
+        LogInfo,
+    } from "../../../wailsjs/runtime/runtime";
+    import appLogo from "../../assets/images/i-comiti.png";
+
+    import { darklightMode } from "../../stores/dynamicVariables";
+    import {
+        darkLightTextOnClasses,
+        darkLightBGOnElement,
+        darkLightTextOnId,
+    } from "../../tools/utils";
+
+    let minimizeBtn: HTMLButtonElement;
+    let closeBtn: HTMLButtonElement;
+
+    const unsubscribe = darklightMode.subscribe((value) => {
+        darkLightBGOnElement(!value, minimizeBtn);
+        darkLightBGOnElement(!value, closeBtn);
+        darkLightTextOnId(value, "minimize-icon");
+        darkLightTextOnId(value, "close-icon");
+    });
+    onMount(() => {
+        var _value = get(darklightMode);
+        darkLightBGOnElement(!_value, minimizeBtn);
+        darkLightBGOnElement(!_value, closeBtn);
+        darkLightTextOnId(_value, "minimize-icon");
+        darkLightTextOnId(_value, "close-icon");
+    });
+    onDestroy(() => {
+        unsubscribe();
+    });
+
+    function minimizeApp(event: MouseEvent) {
+        if (event.detail === 0) {
+            // 0 for non-mouse clicks, 1 for mouse clicks
+            return; // Ignore non-mouse clicks
+        }
         MinimizeApp()
             .then(() => {
                 LogDebug("Application minimized");
             })
             .catch((error) => {
-                LogError("Failed to minimize application:", error);
+                LogError("Failed to minimize application: " + error);
             });
     }
 </script>
@@ -39,22 +71,36 @@
         >
     </div>
     <div class="flex justify-end">
-        <button class="p-0 my-1 rounded-lg" on:click={minimizeApp}>
-            <MinusOutline class="w-5 h-5 m-0 p-0" color="var(--text-color)" />
+        <button
+            bind:this={minimizeBtn}
+            class="p-0 my-1 rounded-md"
+            on:click|preventDefault={(event) => minimizeApp(event)}
+        >
+            <div id="minimize-icon">
+                <MinusOutline id="icon" class="w-5 h-5 m-0 p-0" />
+            </div>
         </button>
-        <button class="p-0 my-1 mr-1 ml-px rounded-lg" on:click={CloseApp}>
-            <CloseOutline class="w-5 h-5 m-0 p-0" color="var(--text-color)" />
+        <button
+            bind:this={closeBtn}
+            class="p-0 my-1 mr-1 ml-px rounded-md"
+            on:click={CloseApp}
+        >
+            <div id="close-icon">
+                <CloseOutline class="w-5 h-5 m-0 p-0" />
+            </div>
         </button>
     </div>
 </div>
 
 <style>
-    :root {
-        --bg-color: #757575;
+    #minimize-icon,
+    #close-icon {
         --text-color: #dddddd;
+        color: var(--text-color);
     }
 
     button {
+        --bg-color: #757575;
         background-color: var(--bg-color);
     }
 

@@ -122,16 +122,10 @@
 
     $icon-size: 2rem;
 
-    :root {
+    body {
         --primary-light: #8abdff;
         --primary: #8daacb;
         --primary-dark: #5b0eeb;
-
-        --white: #ffffff;
-        --greyLight-1: #e4ebf5;
-        --greyLight-2: #c8d0e7;
-        --greyLight-3: #bec8e4;
-        --greyDark: #8e8e8e;
     }
 
     $dropShadow:

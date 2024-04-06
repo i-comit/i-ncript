@@ -20,9 +20,11 @@
 
     import { AppPage, currentPage } from "../../enums/AppPage";
     import { darklightMode } from "../../stores/dynamicVariables";
+    import { LogInfo } from "../../../wailsjs/runtime/runtime";
 
     function toggleLightDarkMode() {
-        darklightMode.update((currentValue) => !currentValue);
+        darklightMode.update((v) => !v);
+        LogInfo("calling darklight ");
     }
     let _currentPage;
     currentPage.subscribe((value) => {
@@ -34,7 +36,7 @@
 <div
     id="modal-panel"
     class="bg-gray-200 rounded-lg mt-1 mb-2 ml-1 mr-1.5 z-20"
-    style="max-height: {_currentPage === AppPage.Login ? '66vh' : '94vh'};"
+    style="max-height: {_currentPage === AppPage.Login ? '50vh' : '94vh'};"
 >
     <div class="row bg-gray-500 rounded-lg">
         <button class="!p-1" on:click={() => toggleLightDarkMode()}>

@@ -36,7 +36,6 @@
         checkFileDragDirectory,
         handleFileClick,
         FileNode,
-        updateExpansionStateStore,
     } from "../../tools/fileTree.ts";
 
     import {
@@ -107,12 +106,17 @@
         return unsubscribe; // Unsubscribe when the component unmounts
     });
 
-    function updateExpansionForNode(node: FileNode, expand: boolean) {
-        updateExpansionStateStore();
+    function expandCollapseAllNodes(node: FileNode, expand: boolean) {
+        const currentPageStore = getCurrentPageStore();
+        currentPageStore.update((currentState) => {
+            const basePathKey = basePath(node.relPath);
+            currentState[basePathKey] = expand;
+            return currentState;
+        });
         // Recurse through children if any
         if (node.children) {
             for (const child of node.children) {
-                updateExpansionForNode(child, expand);
+                expandCollapseAllNodes(child, expand);
             }
         }
         expandRoot();
@@ -319,7 +323,7 @@
                 name="Collapse "
                 class="h-10 w-14 right-10"
                 on:click={() => {
-                    updateExpansionForNode(_fileTree, false);
+                    expandCollapseAllNodes(_fileTree, false);
                 }}
             >
                 <CompressOutline class="w-6 h-6" />
@@ -328,7 +332,7 @@
                 name="Expand "
                 class="h-10 w-14 text-lg"
                 on:click={() => {
-                    updateExpansionForNode(_fileTree, true);
+                    expandCollapseAllNodes(_fileTree, true);
                 }}
             >
                 <ExpandOutline class="w-6 h-6" />

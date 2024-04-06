@@ -290,7 +290,9 @@ func (a *App) checkLargeFileTicker(data, cipherData []byte, cipherFile *os.File)
 		os.Remove(cipherFile.Name())
 		return err
 	}
-	runtime.EventsEmit(a.ctx, "largeFilePercent", 0)
+	if len(data) > thresholdFileSize*1024*1024 {
+		runtime.EventsEmit(a.ctx, "largeFilePercent", 0)
+	}
 	return nil
 }
 

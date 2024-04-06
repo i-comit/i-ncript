@@ -43,7 +43,7 @@
         prependAbsPathToRelPaths,
         totalFileCt,
         checkFileTypesinHeldDownBtns,
-        toggleDarkLightMode,
+        darkLightBGOnId,
     } from "../../tools/utils.ts";
 
     import TaskDisplay from "../elements/TaskDisplay.svelte";
@@ -79,8 +79,9 @@
         _modal = value;
     });
 
-    darklightMode.subscribe((value) => {
-        toggleDarkLightMode(value);
+    const unsubscribe = darklightMode.subscribe((value) => {
+        darkLightBGOnId(value, "right-panel");
+        darkLightBGOnId(value, "left-panel");
     });
 
     onMount(() => {
@@ -92,12 +93,19 @@
             );
             if (fileCtEvt === 0) currentFileTask.set(FileTasks.None);
         });
-        toggleDarkLightMode(get(darklightMode));
+        // toggleDarkLightBackground(get(darklightMode));
         EventsOn("largeFilePercent", (largeFilePercent: number) => {
             _largeFilePercent = largeFilePercent;
             LogInfo("large file percent " + _largeFilePercent);
             if (largeFilePercent === 0) EventsOff("largeFilePercent");
         });
+
+        darkLightBGOnId(get(darklightMode), "right-panel");
+        darkLightBGOnId(get(darklightMode), "left-panel");
+    });
+
+    onDestroy(() => {
+        unsubscribe();
     });
 
     function encrypt() {
@@ -244,15 +252,14 @@
 </div>
 
 <style>
-    :root {
-        --bg-color: #757575;
-    }
     p {
-        color: black;
+        --text-color: #111111;
+        color: var(--text-color);
     }
 
     #left-panel,
     #right-panel {
+        --bg-color: #757575;
         background-color: var(--bg-color);
     }
 

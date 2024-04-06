@@ -77,7 +77,7 @@ export function switchModals(modal: Modals) {
         default:
             try {
                 if (_currentPage === AppPage.Login)
-                    ResizeWindow(width, height + 15)
+                    ResizeWindow(width, height)
                 else
                     ResizeWindow(width * 2, height)
             } catch (error) {
@@ -212,25 +212,95 @@ export async function prependAbsPathToRelPaths(dirIndex: number): Promise<string
     } catch (error) { return []; }
 }
 
-export function toggleDarkLightMode(darkLightMode: boolean) {
-    if (darkLightMode) {
-        document.documentElement.style.setProperty(
-            "--bg-color",
-            darkBGColor,
-        );
-        document.documentElement.style.setProperty(
-            "--text-color",
-            lightTextColor,
-        );
-    }
-    else {
-        document.documentElement.style.setProperty(
-            "--bg-color",
-            lightBGColor,
-        );
-        document.documentElement.style.setProperty(
-            "--text-color",
-            darkTextColor,
-        );
+//DARK MODE functions
+
+//BG(background-color) element properties
+export function darkLightBGOnElement(darkLightMode: boolean, element: HTMLElement) {
+    if (!element) return
+    if (darkLightMode)
+        element.style.setProperty("--bg-color", darkBGColor,);
+    else
+        element.style.setProperty("--bg-color", lightBGColor,);
+}
+
+export function darkLightBGOnId(darkLightMode: boolean, idName: string) {
+    const element = document.getElementById(idName);
+    if (!element) return
+    if (darkLightMode)
+        element?.style.setProperty("--bg-color", darkBGColor,);
+    else
+        element?.style.setProperty("--bg-color", lightBGColor,);
+}
+//END OF BG(background-color) element propetyies
+
+export function darkLightTextOnElement(darkLightMode: boolean, element: HTMLElement) {
+    if (!element) return
+    if (darkLightMode)
+        element.style.setProperty("--text-color", darkTextColor,);
+    else
+        element.style.setProperty("--text-color", lightTextColor,);
+}
+
+export function darkLightTextOnId(darkLightMode: boolean, idName: string) {
+    const element = document.getElementById(idName);
+    if (!element) return
+    if (darkLightMode)
+        element?.style.setProperty("--text-color", darkTextColor,);
+    else
+        element?.style.setProperty("--text-color", lightTextColor,);
+}
+
+export function darkLightTextInContainer(darkLightMode: boolean, containerId: string, element: string) {
+    const container = document.getElementById(containerId);
+    if (!container) return; // Early return if container is not found
+    const elements = container.querySelectorAll(element);
+    elements.forEach((_element) => {
+        const htmlElement = _element as HTMLElement;
+        if (darkLightMode)
+            htmlElement.style.setProperty("--text-color", darkTextColor,);
+        else
+            htmlElement.style.setProperty("--text-color", lightTextColor,);
+
+    });
+}
+
+export function darkLightTextOnClasses(darkLightMode: boolean, className: string) {
+    const elements = document.getElementsByClassName(className);
+    if (!elements) return; // Early return if container is not found
+    for (const _element of elements) {
+        // Type assertion
+        const htmlElement = _element as HTMLElement;
+        if (darkLightMode)
+            htmlElement.style.setProperty("--text-color", darkTextColor);
+        else
+            htmlElement.style.setProperty("--text-color", lightTextColor);
+
     }
 }
+
+// export function toggleDarkLightBackground(darkLightMode: boolean) {
+//     if (darkLightMode)
+//         document.documentElement.style.setProperty(
+//             "--bg-color",
+//             darkBGColor,
+//         );
+//     else
+//         document.documentElement.style.setProperty(
+//             "--bg-color",
+//             lightBGColor,
+//         );
+// }
+
+// export function toggleDarkLightText(darkLightMode: boolean) {
+//     if (darkLightMode)
+//         document.documentElement.style.setProperty(
+//             "--text-color",
+//             lightTextColor,
+//         );
+
+//     else
+//         document.documentElement.style.setProperty(
+//             "--text-color",
+//             "black",
+//         );
+// }

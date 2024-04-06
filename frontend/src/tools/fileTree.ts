@@ -117,6 +117,16 @@ function subscribeToRebuildFileTree() {
     LogError("subscribed to rebuildFileTree");
 }
 
+function updateExpansionStateStore() {
+    var _fileTree = get(fileTree);
+    const currentPageStore = getCurrentPageStore();
+    currentPageStore.update((currentState) => {
+        const basePathKey = basePath(_fileTree.relPath);
+        currentState[basePathKey] = expanded;
+        return currentState;
+    });
+}
+
 export async function checkFileDragDirectory(relPath: string): Promise<boolean> {
     const currentDirectory = await GetDirectoryPath(pageIndex());
     return GetFileTreePath(pageIndex(), relPath).then((filePath) => {
@@ -131,16 +141,6 @@ export async function checkFileDragDirectory(relPath: string): Promise<boolean> 
     }).catch((error) => {
         LogError(error);
         return false;
-    });
-}
-
-export function updateExpansionStateStore() {
-    var _fileTree = get(fileTree);
-    const currentPageStore = getCurrentPageStore();
-    currentPageStore.update((currentState) => {
-        const basePathKey = basePath(_fileTree.relPath);
-        currentState[basePathKey] = expanded;
-        return currentState;
     });
 }
 

@@ -19,7 +19,7 @@ $innerShadow:
 $fontFamily: "Montserrat", sans-serif;
 $fontSize: 15px;
 
-$borderWidth: 3px;
+$borderWidth: 1.5px;
 
 @mixin applyFontStyle() {
     font-family: $fontFamily;
@@ -27,6 +27,7 @@ $borderWidth: 3px;
     line-height: $fontSize;
     color: $textColor;
 }
+
 // Global
 %shared-styles {
     @include applyFontStyle;
@@ -40,23 +41,5 @@ $borderWidth: 3px;
     &:hover {
         box-shadow: none;
         border-color: rgba($lightShadow, 0.5);
-    }
-}
-
-button {
-    @extend %shared-styles;
-    box-shadow: $dropShadow;
-    cursor: pointer;
-
-    &:active {
-        box-shadow: $innerShadow;
-        border-color: rgba($lightShadow, 0);
-    }
-
-    & > * {
-        vertical-align: middle;
-    }
-    & > span:last-child {
-        padding-left: 5px;
     }
 }

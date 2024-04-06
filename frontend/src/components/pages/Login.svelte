@@ -31,7 +31,7 @@
     } from "../../stores/constantVariables.ts";
 
     import { darklightMode } from "../../stores/dynamicVariables.ts";
-    import { toggleDarkLightMode } from "../../tools/utils";
+    import { darkLightBGOnElement } from "../../tools/utils";
 
     let displayString = "";
     const appName = __APP_NAME__;
@@ -40,8 +40,24 @@
     let password = "";
     const dispatch = createEventDispatcher();
 
-    darklightMode.subscribe((value) => {
-        toggleDarkLightMode(value);
+    let loginForm;
+    const unsubscribe = darklightMode.subscribe((value) => {
+        darkLightBGOnElement(value, loginForm);
+    });
+
+    onMount(() => {
+        const interval = setInterval(() => {
+            displayString = getDisplayString();
+        }, alertInterval);
+        darkLightBGOnElement(false, loginForm);
+        return () => {
+            clearInterval(interval);
+        };
+    });
+    
+    onDestroy(() => {
+        stopDisplay();
+        unsubscribe();
     });
 
     async function submit(event) {
@@ -68,19 +84,6 @@
     let _modal;
     currentModal.subscribe((value) => {
         _modal = value;
-    });
-
-    onMount(() => {
-        const interval = setInterval(() => {
-            displayString = getDisplayString();
-        }, alertInterval);
-        toggleDarkLightMode(false);
-        return () => {
-            clearInterval(interval);
-        };
-    });
-    onDestroy(() => {
-        stopDisplay();
     });
 
     let usernameCheck = false;
@@ -112,7 +115,8 @@
 </script>
 
 <form
-    on:submit={submit}
+    on:submit|preventDefault={submit}
+    bind:this={loginForm}
     autocomplete="off"
     class="login-form flex-col rounded-lg"
 >
@@ -120,8 +124,6 @@
         {displayString}
     </p>
     <Frame />
-    <!-- <CircleProgressBar /> -->
-
     <!-- <div class=" pt-5"></div> -->
     <div class="loginField">
         {#if _modal === Modals.None}
