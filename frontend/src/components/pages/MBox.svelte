@@ -37,13 +37,13 @@
     import Frame from "../widgets/Frame.svelte";
     import PanelDivider from "../widgets/PanelDivider.svelte";
     import FileTools from "../widgets/FileTools.svelte";
-    import DirSize from "../widgets/DirSize.svelte";
+    import DirSize from "../widgets/DirectorySize.svelte";
 
-    import NeuButton from "../elements/NeuButton.svelte";
-    import NeuSearch from "../elements/NeuSearch.svelte";
-    import NeuButtonFake from "../elements/NeuButtonFake.svelte";
-    import WaveProgress from "../elements/WaveProgress.svelte";
-    import TaskDisplay from "../elements/TaskDisplay.svelte";
+    import NeuButton from "../widgets/NeuButton.svelte";
+    import NeuSearch from "../widgets/NeuSearch.svelte";
+    import NeuButtonFake from "../widgets/NeuButtonFake.svelte";
+    import WaveProgress from "../widgets/WaveProgress.svelte";
+    import TaskDisplay from "../widgets/TaskDisplay.svelte";
 
     import Info from "../modals/Info.svelte";
     import Settings from "../modals/Settings.svelte";
@@ -113,7 +113,7 @@
         const entries = Object.entries($heldDownBtns);
         var lastEntry = entries[entries.length - 1];
         const [key, value] = lastEntry;
-        if (lastEntry !== null) {
+        if (lastEntry) {
             LogInfo("Last entry rel path " + key);
             var lastFileType = getFileType(key);
             if (lastFileType === FileTypes.Encrypted) {

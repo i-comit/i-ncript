@@ -2,7 +2,7 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
     import { get } from "svelte/store";
-    import Toggle from "../elements/FlatToggle.svelte";
+    import Toggle from "../widgets/FlatToggle.svelte";
 
     import {
         EventsOff,
@@ -45,11 +45,11 @@
         darkLightBGOnId,
     } from "../../tools/utils.ts";
 
-    import TaskDisplay from "../elements/TaskDisplay.svelte";
-    import NeuButton from "../elements/NeuButton.svelte";
-    import NeuSearch from "../elements/NeuSearch.svelte";
-    import WaveProgress from "../elements/WaveProgress.svelte";
-    import RadialProgress from "../elements/RadialProgress.svelte";
+    import TaskDisplay from "../widgets/TaskDisplay.svelte";
+    import NeuButton from "../widgets/NeuButton.svelte";
+    import NeuSearch from "../widgets/NeuSearch.svelte";
+    import WaveProgress from "../widgets/WaveProgress.svelte";
+    import RadialProgress from "../widgets/RadialProgress.svelte";
 
     import Info from "../modals/Info.svelte";
     import Settings from "../modals/Settings.svelte";
@@ -57,7 +57,7 @@
     import Logger from "../modals/Logger.svelte";
 
     import Frame from "../widgets/Frame.svelte";
-    import DirSize from "../widgets/DirSize.svelte";
+    import DirSize from "../widgets/DirectorySize.svelte";
     import PanelDivider from "../widgets/PanelDivider.svelte";
     import FileTools from "../widgets/FileTools.svelte";
 

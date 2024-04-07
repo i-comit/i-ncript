@@ -23,7 +23,7 @@
     import Info from "../modals/Info.svelte";
     import Settings from "../modals/Settings.svelte";
 
-    import NeuButton from "../elements/NeuButton.svelte";
+    import NeuButton from "../widgets/NeuButton.svelte";
     import {
         tooltipTailwindClass,
         accentColor,
