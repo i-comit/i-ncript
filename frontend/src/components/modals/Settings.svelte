@@ -19,11 +19,11 @@
     } from "flowbite-svelte-icons";
 
     import { AppPage, currentPage } from "../../enums/AppPage";
-    import { darklightMode } from "../../stores/dynamicVariables";
+    import { darkLightMode } from "../../stores/dynamicVariables";
     import { LogInfo } from "../../../wailsjs/runtime/runtime";
 
     function toggleLightDarkMode() {
-        darklightMode.update((v) => !v);
+        darkLightMode.update((v) => !v);
         LogInfo("calling darklight ");
     }
     let _currentPage;
@@ -40,7 +40,7 @@
 >
     <div class="row bg-gray-500 rounded-lg">
         <button class="!p-1" on:click={() => toggleLightDarkMode()}>
-            {#if $darklightMode}
+            {#if $darkLightMode}
                 <MoonSolid class="w-5 h-5 m-0 p-0 " color="white" />
             {:else}
                 <SunSolid class="w-5 h-5 m-0 p-0 " color="white" />

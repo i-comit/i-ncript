@@ -1,14 +1,12 @@
 <!-- NBox.svelte -->
 <script lang="ts">
-    import { onDestroy, onMount } from "svelte";
+    import { onMount, onDestroy } from "svelte";
+    import { get } from "svelte/store";
     import { Input, Tooltip } from "flowbite-svelte";
     import {
-        AdjustmentsVerticalOutline,
-        ArrowUpDownOutline,
         CloseOutline,
         EnvelopeOpenSolid,
         EnvelopeSolid,
-        MailBoxSolid,
     } from "flowbite-svelte-icons";
 
     import { AppPage, currentPage } from "../../enums/AppPage.ts";
@@ -21,12 +19,18 @@
         lightBGColor,
         tooltipTailwindClass,
     } from "../../stores/constantVariables.ts";
-    import { buildFileTree, fileTree } from "../../tools/fileTree.ts";
+    import { darkLightMode } from "../../stores/dynamicVariables.ts";
+
+    import {
+        buildFileTree,
+        clearHeldBtnsFromContainer,
+        fileTree,
+    } from "../../tools/fileTree.ts";
 
     import {
         switchPages,
-        switchModals,
         heldDownBtns,
+        darkLightBGOnId,
     } from "../../tools/utils.ts";
     import { LogInfo } from "../../../wailsjs/runtime/runtime";
 
@@ -59,13 +63,30 @@
     let password: string;
 
     let _heldDownBtns: { [key: string]: HTMLButtonElement };
-    heldDownBtns.subscribe((value) => {
+    const unsub_heldDownBtns = heldDownBtns.subscribe((value) => {
         _heldDownBtns = value;
         handleOnFileClick();
         checklastSelectedFileExtension();
     });
 
+    const unsub_darkLightMode = darkLightMode.subscribe((value) => {
+        darkLightBGOnId(value, "right-panel");
+        darkLightBGOnId(value, "left-panel");
+    });
+
     // $: _currentFilePath = $currentFilePath;
+
+    onMount(() => {
+        buildFileTree();
+        darkLightBGOnId(get(darkLightMode), "right-panel");
+        darkLightBGOnId(get(darkLightMode), "left-panel");
+        password = "";
+    });
+
+    onDestroy(() => {
+        unsub_heldDownBtns();
+        unsub_darkLightMode();
+    });
 
     function checklastSelectedFileExtension() {
         if (Object.keys(_heldDownBtns).length === 0) {
@@ -80,11 +101,6 @@
             LogInfo("Last entry rel path " + key);
         }
     }
-
-    onMount(() => {
-        buildFileTree();
-        password = "";
-    });
 
     function enterPassword(event: KeyboardEvent) {
         if (event.code === "Enter") {
@@ -126,11 +142,7 @@
 
 <div class="flex h-screen !rounded-lg">
     <Frame />
-    <div
-        id="left-panel"
-        class="max-w-45"
-        style="background-color:{lightBGColor}"
-    >
+    <div id="left-panel" role="none" on:click={clearHeldBtnsFromContainer}>
         <DirSize />
 
         {#if _currentFileTask === FileTasks.None}
@@ -237,8 +249,9 @@
 
     <div
         id="right-panel"
-        class="mt-0 px-0"
-        style="background-color:{lightBGColor}"
+        role="none"
+        on:mouseleave={onmouseleave}
+        on:click={clearHeldBtnsFromContainer}
     >
         <NeuSearch />
         {#if _modal === Modals.None}

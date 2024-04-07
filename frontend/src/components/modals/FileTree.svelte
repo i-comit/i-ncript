@@ -1,9 +1,6 @@
-<script context="module" lang="ts">
-</script>
-
 <script lang="ts">
     // import { slide } from 'svelte/transition'
-    import { createEventDispatcher, onMount } from "svelte";
+    import { onMount, onDestroy } from "svelte";
     import { get } from "svelte/store";
     import {
         EventsOn,
@@ -49,10 +46,12 @@
         removeFileName,
         leftCtrlDown,
         pointerDown,
+        darkLightTextOnElement,
     } from "../../tools/utils.ts";
 
     import { GetDirectoryPath } from "../../../wailsjs/go/main/Getters";
     import {
+        darkBGColor,
         darkTextColor,
         lightBGColor,
         tooltipTailwindClass,
@@ -66,6 +65,7 @@
         onTouchEnd,
     } from "../../tools/inputs.ts";
     import FileIcon from "../widgets/FileIcon.svelte";
+    import { darkLightMode } from "../../stores/dynamicVariables.ts";
 
     export let _fileTree: FileNode;
 
@@ -79,9 +79,20 @@
     });
     let expanded = false;
     let _filePropsTooltip: string;
+    let ulElement: HTMLUListElement;
 
     let _isFile = isFile();
     let _canMoveToDir = checkFileDragDirectory(_fileTree.relPath);
+
+    $: folderStyle = `${
+        basePath(_fileTree.relPath) === pageName()
+            ? `position: sticky; top: 1px; left: 0px; background-color: ${
+                  get(darkLightMode) ? darkBGColor : lightBGColor
+              }; z-index: 45`
+            : ` border-left: 1px solid ${
+                  get(darkLightMode) ? lightBGColor : darkBGColor
+              }; position: relative;`
+    }`;
 
     const toggleExpansion = () => {
         expanded = !expanded;
@@ -92,7 +103,13 @@
         });
     };
 
+    const unsub_darkLightMode = darkLightMode.subscribe((value) => {
+        darkLightTextOnElement(!value, ulElement);
+    });
+
     onMount(() => {
+        darkLightTextOnElement(!get(darkLightMode), ulElement);
+
         const currentPageStore = getCurrentPageStore();
         const unsubscribe = currentPageStore.subscribe((state) => {
             const basePathKey = basePath(_fileTree.relPath);
@@ -104,6 +121,10 @@
         _label = basePath(_fileTree.relPath);
         EventsOn("rebuildFileTree", buildFileTree);
         return unsubscribe; // Unsubscribe when the component unmounts
+    });
+
+    onDestroy(() => {
+        unsub_darkLightMode();
     });
 
     function expandCollapseAllNodes(node: FileNode, expand: boolean) {
@@ -184,10 +205,16 @@
     on:touchstart={onTouchStart}
     on:touchend={onTouchEnd}
 />
-<div class="rounded-lg" role="none" on:click={clearHeldBtnsFromContainer}>
+<div
+    id="filetree"
+    class="rounded-lg"
+    role="none"
+    on:click={clearHeldBtnsFromContainer}
+>
     <ul
+        bind:this={ulElement}
         class={basePath(_fileTree.relPath) === pageName() ? "pl-0" : "pl-3"}
-        style={`color: ${darkTextColor}; ${
+        style={`${
             basePath(_fileTree.relPath) === pageName()
                 ? "padding-top: 1px; font-size: 15px; --wails-draggable: drag;"
                 : `margin-top: -2px; --wails-draggable: no-drag; margin-bottom: 0px`
@@ -199,10 +226,7 @@
                     class="flex {basePath(_fileTree.relPath) === pageName()
                         ? 'rounded-md px-1 underline mb-0.5'
                         : 'pl-1.5'}"
-                    style="border-left: 1px solid #eeeeee;
-                    {basePath(_fileTree.relPath) === pageName()
-                        ? `position: sticky; top: 1px; left:0px; background-color: ${lightBGColor}; z-index: 45`
-                        : 'position: relative;'}"
+                    style={folderStyle}
                     on:click={() => {
                         toggleExpansion();
                         clearHeldBtns();
@@ -350,6 +374,8 @@
     }
 
     ul {
+        --text-color: #757575;
+        color: var(--text-color);
         margin: 0px;
         z-index: 25;
         list-style: none;

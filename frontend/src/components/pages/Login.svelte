@@ -30,7 +30,7 @@
         darkBGColor,
     } from "../../stores/constantVariables.ts";
 
-    import { darklightMode } from "../../stores/dynamicVariables.ts";
+    import { darkLightMode } from "../../stores/dynamicVariables.ts";
     import { darkLightBGOnElement } from "../../tools/utils";
 
     let displayString = "";
@@ -41,7 +41,7 @@
     const dispatch = createEventDispatcher();
 
     let loginForm;
-    const unsubscribe = darklightMode.subscribe((value) => {
+    const unsubscribe = darkLightMode.subscribe((value) => {
         darkLightBGOnElement(value, loginForm);
     });
 
@@ -54,7 +54,7 @@
             clearInterval(interval);
         };
     });
-    
+
     onDestroy(() => {
         stopDisplay();
         unsubscribe();

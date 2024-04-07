@@ -15,7 +15,7 @@
     import {
         accentColor,
     } from "../../stores/constantVariables";
-    import { darklightMode } from "../../stores/dynamicVariables";
+    import { darkLightMode } from "../../stores/dynamicVariables";
 
     import {
         switchModals,
@@ -23,13 +23,13 @@
         darkLightTextOnClasses,
     } from "../../tools/utils";
 
-    darklightMode.subscribe((value) => {
+    darkLightMode.subscribe((value) => {
         darkLightBGOnId(value, "panel");
         darkLightTextOnClasses(!value, "icon");
     });
 
     onMount(() => {
-        var _darkLightMode = get(darklightMode);
+        var _darkLightMode = get(darkLightMode);
         darkLightBGOnId(_darkLightMode, "panel");
         darkLightTextOnClasses(!_darkLightMode, "icon");
     });

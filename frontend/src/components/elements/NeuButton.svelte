@@ -7,30 +7,30 @@
         darkLightBGOnElement,
         darkLightTextOnElement,
     } from "../../tools/utils";
-    import { darklightMode } from "../../stores/dynamicVariables";
+    import { darkLightMode } from "../../stores/dynamicVariables";
 
     export let _class = "";
     export let _style = "";
     const dispatch = createEventDispatcher();
 
     let neuButton: HTMLButtonElement;
-    const unsubscribe = darklightMode.subscribe((value) => {
+    const unsub_darkLightMode = darkLightMode.subscribe((value) => {
         darkLightBGOnElement(value, neuButton);
         darkLightTextOnElement(!value, neuButton);
-        darkLightShadowOnElement(value);
+        darkLightShadowOnNeuButton(value);
     });
 
     onMount(() => {
-        var _value = get(darklightMode);
+        var _value = get(darkLightMode);
         darkLightBGOnElement(_value, neuButton);
         darkLightTextOnElement(!_value, neuButton);
-        darkLightShadowOnElement(_value);
+        darkLightShadowOnNeuButton(_value);
     });
     onDestroy(() => {
-        unsubscribe();
+        unsub_darkLightMode();
     });
 
-    function darkLightShadowOnElement(darkLightMode: boolean) {
+    function darkLightShadowOnNeuButton(darkLightMode: boolean) {
         if (!neuButton) return;
         if (darkLightMode) {
             neuButton.style.setProperty("--light-shadow", "#808080");

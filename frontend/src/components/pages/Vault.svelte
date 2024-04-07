@@ -26,7 +26,7 @@
     import { Modals, currentModal } from "../../enums/Modals.ts";
     import { FileTasks, currentFileTask } from "../../enums/FileTasks.ts";
 
-    import { darklightMode } from "../../stores/dynamicVariables.ts";
+    import { darkLightMode } from "../../stores/dynamicVariables.ts";
 
     import {
         buildFileTree,
@@ -37,7 +37,6 @@
 
     import {
         switchPages,
-        switchModals,
         pointerDown,
         heldDownBtns,
         prependAbsPathToRelPaths,
@@ -79,7 +78,7 @@
         _modal = value;
     });
 
-    const unsubscribe = darklightMode.subscribe((value) => {
+    const unsub_darkLightMode = darkLightMode.subscribe((value) => {
         darkLightBGOnId(value, "right-panel");
         darkLightBGOnId(value, "left-panel");
     });
@@ -100,12 +99,12 @@
             if (largeFilePercent === 0) EventsOff("largeFilePercent");
         });
 
-        darkLightBGOnId(get(darklightMode), "right-panel");
-        darkLightBGOnId(get(darklightMode), "left-panel");
+        darkLightBGOnId(get(darkLightMode), "right-panel");
+        darkLightBGOnId(get(darkLightMode), "left-panel");
     });
 
     onDestroy(() => {
-        unsubscribe();
+        unsub_darkLightMode();
     });
 
     function encrypt() {
@@ -179,49 +178,45 @@
         on:mouseleave={checkMouseLeave}
     >
         <DirSize />
-        <div class="buttons">
-            {#if _currentFileTask === FileTasks.None}
-                <div class="row space-x-2">
-                    <NeuButton
-                        on:mousedown={() => encrypt()}
-                        _style="font-size: 14px;">ENCRYPT</NeuButton
-                    >
-                    <NeuButton
-                        on:mousedown={() => decrypt()}
-                        _style="font-size: 14px;">DECRYPT</NeuButton
-                    >
-                </div>
-            {:else}
-                <div class="h-7">
-                    <TaskDisplay />
-                </div>
-            {/if}
-
-            <div class="relative h-14">
-                {#if _currentFileTask === FileTasks.None}
-                    <div style="padding-top: 0.325rem">
-                        <FileTools />
-                    </div>
-                    <p
-                        class="absolute bottom-0 right-0 leading-none text-sm select-none"
-                    >
-                        HOT FILER
-                    </p>
-                {:else}
-                    <div class="h-0.5" />
-                    <WaveProgress dataProgress={_fileTaskPercent}
-                    ></WaveProgress>
-                {/if}
-            </div>
-
-            <div class="h-1" />
-            <div class="row space-x-0">
+        {#if _currentFileTask === FileTasks.None}
+            <div class="row space-x-2">
                 <NeuButton
-                    on:click={() => switchPages(AppPage.Mbox)}
-                    _class="!w-20">M-BOX</NeuButton
+                    on:mousedown={() => encrypt()}
+                    _style="font-size: 14px;">ENCRYPT</NeuButton
                 >
-                <Toggle />
+                <NeuButton
+                    on:mousedown={() => decrypt()}
+                    _style="font-size: 14px;">DECRYPT</NeuButton
+                >
             </div>
+        {:else}
+            <div class="h-7">
+                <TaskDisplay />
+            </div>
+        {/if}
+
+        <div class="relative h-14">
+            {#if _currentFileTask === FileTasks.None}
+                <div style="padding-top: 0.325rem">
+                    <FileTools />
+                </div>
+                <p
+                    class="absolute bottom-0 right-0 leading-none text-sm select-none"
+                >
+                    HOT FILER
+                </p>
+            {:else}
+                <div class="h-0.5" />
+                <WaveProgress dataProgress={_fileTaskPercent}></WaveProgress>
+            {/if}
+        </div>
+
+        <div class="h-1" />
+        <div class="row space-x-0">
+            <NeuButton on:click={() => switchPages(AppPage.Mbox)} _class="!w-20"
+                >M-BOX</NeuButton
+            >
+            <Toggle />
         </div>
     </div>
 
@@ -252,18 +247,12 @@
 </div>
 
 <style>
-    p {
+    /* p {
         --text-color: #111111;
         color: var(--text-color);
-    }
+    } */
 
-    #left-panel,
-    #right-panel {
-        --bg-color: #757575;
-        background-color: var(--bg-color);
-    }
-
-    .buttons .row {
+    .row {
         display: flex;
         justify-content: space-between;
         margin-bottom: 4px;

@@ -18,7 +18,7 @@
     } from "../../../wailsjs/runtime/runtime";
     import appLogo from "../../assets/images/i-comiti.png";
 
-    import { darklightMode } from "../../stores/dynamicVariables";
+    import { darkLightMode } from "../../stores/dynamicVariables";
     import {
         darkLightTextOnClasses,
         darkLightBGOnElement,
@@ -28,21 +28,21 @@
     let minimizeBtn: HTMLButtonElement;
     let closeBtn: HTMLButtonElement;
 
-    const unsubscribe = darklightMode.subscribe((value) => {
+    const unsub_darkLightMode = darkLightMode.subscribe((value) => {
         darkLightBGOnElement(!value, minimizeBtn);
         darkLightBGOnElement(!value, closeBtn);
         darkLightTextOnId(value, "minimize-icon");
         darkLightTextOnId(value, "close-icon");
     });
     onMount(() => {
-        var _value = get(darklightMode);
+        var _value = get(darkLightMode);
         darkLightBGOnElement(!_value, minimizeBtn);
         darkLightBGOnElement(!_value, closeBtn);
         darkLightTextOnId(_value, "minimize-icon");
         darkLightTextOnId(_value, "close-icon");
     });
     onDestroy(() => {
-        unsubscribe();
+        unsub_darkLightMode();
     });
 
     function minimizeApp(event: MouseEvent) {
