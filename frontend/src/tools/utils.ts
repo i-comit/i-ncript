@@ -13,16 +13,29 @@ import {
 } from "../../wailsjs/go/main/Getters";
 import { LogDebug, LogError, LogInfo, LogTrace, LogWarning } from "../../wailsjs/runtime/runtime";
 import { MoveFilesToPath } from '../../wailsjs/go/main/FileUtils';
-import { clearHeldBtns, setIsInFileTask } from './fileTree';
 
-import { width, height, darkBGColor, lightBGColor, lightTextColor, darkTextColor } from "../stores/constantVariables.ts"
+import { FileTypes, getFileType } from '../enums/FileTypes.ts';
+import { mBoxDir, vaultDir } from '../stores/dynamicVariables.ts';
+import {
+    clearHeldBtns,
+    setIsInFileTask,
+    currentFilePath
+} from './fileTree';
+
+import {
+    width, height,
+    darkBGColor,
+    lightBGColor,
+    lightTextColor,
+    darkTextColor
+} from "../stores/constantVariables.ts"
 
 export const pageName: () => string = () => {
     const _appPage: AppPage = get(currentPage);
     return _appPage;
 };
-export const heldDownBtns = writable<{ [relPath: string]: HTMLButtonElement }>({});
 
+export const heldDownBtns = writable<{ [relPath: string]: HTMLButtonElement }>({});
 export const leftCtrlDown = writable<boolean>(false);
 export const pointerDown = writable<boolean>(false);
 
@@ -104,16 +117,18 @@ export async function getFileProperties(filePath: string): Promise<FilePropertie
 const directoryPathRegex = /^(.*[\\/])/;
 
 export function basePath(path: string): string {
-    return path.split(directoryPathRegex).pop() || path;
+    // Remove a trailing separator, if it exists
+    const normalizedPath = path.replace(/[\\/]+$/, '');
+    // Split the path by directory separators and return the last part
+    return normalizedPath.split(directoryPathRegex).pop() || normalizedPath;
 }
 
-export async function getFullFilePath(relPath: string): Promise<string> {
-    GetDirectoryPath(pageIndex()).then((dirPath) => {
-        LogWarning(dirPath + relPath);
-        return dirPath + relPath;
-    });
-    LogError("Error getting full filePath " + relPath);
-    return relPath;
+export function getRootDir(): string {
+    switch (pageIndex()) {
+        case 0: return get(vaultDir);
+        case 1: return get(mBoxDir);
+    }
+    return ""
 }
 
 export function removeFileName(filePath: string): string {
@@ -167,44 +182,40 @@ export function checkFileTypesinHeldDownBtns(encryptOrDecrypt: boolean): number 
     return filteredFileCt
 }
 
-import { currentFilePath } from './fileTree';
-import { FileTypes, getFileType } from '../enums/FileTypes.ts';
 export function moveFilesToRelPath(targetRelPath: string) {
-    GetDirectoryPath(pageIndex()).then((dirPath) => {
-        var fullPath = dirPath + targetRelPath;
-        var _currentRelPath = get(currentFilePath);
-        if (_currentRelPath === targetRelPath) { return; }
+    let dirPath = getRootDir();
+    let fullPath = dirPath + targetRelPath;
+    var _currentRelPath = get(currentFilePath);
+    if (_currentRelPath === targetRelPath) { return; }
 
-        if (dirPath.slice(0, -1) === targetRelPath)
-            fullPath = dirPath
-        getFileProperties(fullPath).then((fileProps) => {
-            if (fileProps.fileType) {
-                let pathToMoveTo: string;
-                if (fileProps.fileType === "dir") {
-                    LogDebug("Node being used for drop is dir ");
-                    pathToMoveTo = fullPath;
-                } else {
-                    LogDebug("Node being used for drop is file ");
-                    pathToMoveTo = removeFileName(fullPath);
-                }
-
-                var _heldDownBtns = get(heldDownBtns);
-                if (Object.keys(_heldDownBtns).length > 0) {
-                    setIsInFileTask(true).then(() => {
-                        prependAbsPathToRelPaths(pageIndex()).then((preprendedRelPaths) => {
-                            MoveFilesToPath(preprendedRelPaths, pathToMoveTo);
-                        })
-                    });
-                }
+    if (dirPath === targetRelPath) fullPath = dirPath
+    getFileProperties(fullPath).then((fileProps) => {
+        if (fileProps.fileType) {
+            let pathToMoveTo: string;
+            if (fileProps.fileType === "dir") {
+                LogDebug("Node being used for drop is dir ");
+                pathToMoveTo = fullPath;
+            } else {
+                LogDebug("Node being used for drop is file ");
+                pathToMoveTo = removeFileName(fullPath);
             }
-        });
+
+            let _heldDownBtns = get(heldDownBtns);
+            if (Object.keys(_heldDownBtns).length > 0) {
+                setIsInFileTask(true).then(() => {
+                    prependAbsPathToRelPaths(pageIndex()).then((preprendedRelPaths) => {
+                        MoveFilesToPath(preprendedRelPaths, pathToMoveTo);
+                    })
+                });
+            }
+        }
     });
 }
 
 export async function prependAbsPathToRelPaths(dirIndex: number): Promise<string[]> {
     try {
         var _heldDownBtns = get(heldDownBtns);
-        const dirPath = await GetDirectoryPath(dirIndex);
+        const dirPath = getRootDir();
         const preprendedRelPaths = Object.keys(_heldDownBtns).map((key) =>
             key ? dirPath + key : key,
         );

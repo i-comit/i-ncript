@@ -8,7 +8,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"sync/atomic"
 
@@ -35,20 +34,18 @@ func (f *FileUtils) CheckIfPathIsFile(filePath string) (bool, error) {
 
 func (f *FileUtils) MoveFilesToPath(filePaths []string, targetPath string) {
 	if f.app.ctx != nil {
-		for i, files := range filePaths {
-			if targetPath == filepath.Dir(files)+string(filepath.Separator) {
-				// runtime.LogError(f.app.ctx, "This file already belongs in the targetPath")
+		for _, files := range filePaths {
+			if targetPath == filepath.Dir(files) {
 				continue
 			}
 			newFilePath := filepath.Join(targetPath, filepath.Base(files))
 			// Move the file
 			err := os.Rename(files, newFilePath)
 			if err != nil {
-				// Handle errors (e.g., file not found, permission issues, etc.)
 				wailsRuntime.LogError(f.app.ctx, "Error moving file: "+err.Error())
 				continue
 			}
-			wailsRuntime.LogError(f.app.ctx, "Successfully moved file to: "+newFilePath+" "+strconv.Itoa(i))
+			wailsRuntime.LogError(f.app.ctx, "Successfully moved file to: "+newFilePath)
 		}
 		wailsRuntime.EventsEmit(f.app.ctx, rebuildFileTree)
 		f.app.SetIsInFileTask(false)
@@ -109,8 +106,9 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 		dirIndex = len(a.directories) - 1
 	}
 	var rootDir = a.directories[dirIndex]
+	var separator = string(filepath.Separator)
 	rootDir = filepath.Clean(rootDir)
-	rootNode := &FileNode{RelPath: rootDir, Children: []*FileNode{}}
+	rootNode := &FileNode{RelPath: rootDir + separator, Children: []*FileNode{}}
 	err := filepath.Walk(rootDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -125,7 +123,7 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 		if err != nil {
 			return err
 		}
-		parts := strings.Split(relativePath, string(filepath.Separator))
+		parts := strings.Split(relativePath, separator)
 		addPath(rootNode, parts, "")
 		return nil
 	})

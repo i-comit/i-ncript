@@ -4,6 +4,7 @@ import { AppPage, currentPage } from "../enums/AppPage";
 import {
     addToHeldFileBtnsArr, basePath,
     checkIfRelPathIsInHeldDownBtns,
+    getRootDir,
     heldDownBtns, leftCtrlDown, removeFileName
 } from "./utils";
 import { BuildDirectoryFileTree, SetIsInFileTask } from "../../wailsjs/go/main/App";
@@ -21,7 +22,7 @@ import {
     GetFileTreePath,
 } from "../../wailsjs/go/main/Getters";
 import {
-    FilesDragNDrop, OpenDirectory, OpenFile,
+    OpenDirectory, OpenFile,
 } from "../../wailsjs/go/main/FileUtils";
 import { lastHighlight_light, prevHighlight_light } from "../stores/constantVariables";
 
@@ -80,15 +81,11 @@ export function clearHeldBtnsFromContainer() {
     }
 }
 export function openDirectory(relPath: string) {
-    GetDirectoryPath(pageIndex()).then((filePath) => {
-        OpenDirectory(filePath + relPath);
-    });
+    OpenDirectory(getRootDir() + relPath);
 }
 
 export function openFile(relPath: string) {
-    GetDirectoryPath(pageIndex()).then((filePath) => {
-        OpenFile(filePath + relPath);
-    });
+    OpenFile(getRootDir() + relPath);
 }
 
 export function buildFileTree() {
@@ -97,14 +94,14 @@ export function buildFileTree() {
     EventsOff("rebuildFileTree");
     subscribeToRebuildFileTree();
 }
-function loadFileTree(index: number) {
-    BuildDirectoryFileTree(index)
+function loadFileTree(dirIndex: number) {
+    BuildDirectoryFileTree(dirIndex)
         .then((result: FileNode) => {
-            LogPrint("Rebuilt File Tree " + pageName());
             const sortedTree = sortFileTree(result); // Sort the tree before setting it
             fileTree.set(sortedTree);
+            loadExpansionState(dirIndex)
             updateExpansionStateStore()
-            loadExpansionState(index)
+            LogPrint("Rebuilt File Tree " + pageName());
         })
         .catch((error) => {
             LogError("Failed to get directory structure: " + error);
@@ -118,16 +115,15 @@ function subscribeToRebuildFileTree() {
 
 function updateExpansionStateStore() {
     var _fileTree = get(fileTree);
-    const currentPageStore = getCurrentPageStore();
-    currentPageStore.update((currentState) => {
-        const basePathKey = basePath(_fileTree.relPath);
+    getCurrentPageStore().update((currentState) => {
+        const basePathKey = _fileTree.relPath;
         currentState[basePathKey] = expanded;
         return currentState;
     });
 }
 
 export async function checkFileDragDirectory(relPath: string): Promise<boolean> {
-    const currentDirectory = await GetDirectoryPath(pageIndex());
+    const currentDirectory = getRootDir();
     return GetFileTreePath(pageIndex(), relPath).then((filePath) => {
         var _currentDirPath = get(currentDirPath);
         if (_currentDirPath !== "") {
@@ -144,24 +140,25 @@ export async function checkFileDragDirectory(relPath: string): Promise<boolean> 
 }
 
 export const expandRoot: () => void = () => {
-    const currentPageStore = getCurrentPageStore();
     _appPage = get(currentPage)
-    currentPageStore.update((currentState) => {
+    getCurrentPageStore().update((currentState) => {
         currentState[pageName()] = true;
-        return currentState; //returns the currentState to currentPageStore
+        if (get(fileTree).relPath === getRootDir()) {
+            expanded = true;
+            LogInfo("expanding rootDir");
+        }
+        return currentState; //returns the currentState to 
     });
 };
 
 function loadExpansionState(index: number) {
     const currentPageStore = getCurrentPageStore();
-    GetDirectoryPath(index).then((dirPath) => {
-        const currentState = get(currentPageStore); // Synchronously get the current state
-        const basePathKey = dirPath;
-        if (currentState[basePathKey] !== undefined) {
-            expanded = currentState[basePathKey];
-        }
-        expandRoot();
-    });
+    const currentState = get(currentPageStore);
+    const basePathKey = getRootDir();
+    if (currentState[basePathKey] !== undefined) {
+        expanded = currentState[basePathKey];
+    }
+    expandRoot();
 }
 
 export function getCurrentPageStore() {

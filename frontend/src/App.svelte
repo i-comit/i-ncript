@@ -6,20 +6,46 @@
 
   import { AppPage, currentPage } from "./enums/AppPage.ts";
   import { onMount } from "svelte";
-  import { GetDirName } from "../wailsjs/go/main/Getters";
-  import { LogDebug, LogWarning } from "../wailsjs/runtime/runtime";
+  import { GetDirName, GetDirectoryPath } from "../wailsjs/go/main/Getters";
+  import { LogDebug, LogInfo, LogWarning } from "../wailsjs/runtime/runtime";
   import { DirectoryWatcher } from "../wailsjs/go/main/App";
+  import { vaultDir, mBoxDir } from "./stores/dynamicVariables.ts";
+  import { buildFileTree, fileTree } from "./tools/fileTree.ts";
 
-  let loggedIn = false;
   let _page: AppPage;
   currentPage.subscribe((value) => {
     _page = value;
   });
 
-  function handleLoginSuccess() {
-    loggedIn = true;
+  async function loggedIn() {
+    await GetDirectoryPath(0).then((vaultPath) => {
+      vaultDir.set(vaultPath);
+      LogWarning("vaultPath " + vaultPath);
+    });
+    await GetDirectoryPath(1).then((mBoxPath) => {
+      mBoxDir.set(mBoxPath);
+      LogWarning("mboxPath " + mBoxPath);
+    });
+    // currentPage.set(AppPage.Vault);
+    // buildFileTree();
+    // DirectoryWatcher(0);
     currentPage.set(AppPage.Vault);
-    DirectoryWatcher(0);
+    subscribeToFileTreeAndRunOnce();
+  }
+
+  function subscribeToFileTreeAndRunOnce() {
+    let unsubscribe = () => {}; // Define a no-op function to avoid undefined errors
+
+    unsubscribe = fileTree.subscribe((value) => {
+      // Assuming value has a meaningful check to determine if it's initialized
+      if (value && value.relPath !== "") {
+        // Check if fileTree has been initialized
+        buildFileTree();
+        DirectoryWatcher(0);
+        LogInfo("fileTree loaded on login");
+        unsubscribe(); // Now safe to unsubscribe
+      }
+    });
   }
   let isRightDir = false;
 
@@ -33,7 +59,7 @@
   {#if !isRightDir}
     <WrongDir />
   {:else if _page === AppPage.Login}
-    <Login on:loginSuccess={handleLoginSuccess} />
+    <Login on:loginSuccess={loggedIn} />
   {:else if _page === AppPage.Vault}
     <Vault />
   {:else if _page === AppPage.Mbox}

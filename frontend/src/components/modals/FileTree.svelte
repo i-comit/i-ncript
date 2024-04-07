@@ -1,6 +1,6 @@
 <script lang="ts">
     // import { slide } from 'svelte/transition'
-    import { onMount, onDestroy } from "svelte";
+    import { onMount, onDestroy, afterUpdate } from "svelte";
     import { get } from "svelte/store";
     import {
         EventsOn,
@@ -33,6 +33,7 @@
         checkFileDragDirectory,
         handleFileClick,
         FileNode,
+        fileTree,
     } from "../../tools/fileTree.ts";
 
     import {
@@ -47,6 +48,7 @@
         leftCtrlDown,
         pointerDown,
         darkLightTextOnElement,
+        getRootDir,
     } from "../../tools/utils.ts";
 
     import { GetDirectoryPath } from "../../../wailsjs/go/main/Getters";
@@ -71,7 +73,11 @@
 
     export let _fileTree: FileNode;
 
-    let _label: string;
+    $: if (_fileTree) {
+        console.log("_fileTree updated", _fileTree);
+    }
+
+    $: _label = basePath(_fileTree.relPath);
     let buttonRef: HTMLButtonElement;
     let clickedOnButtonRef: HTMLButtonElement;
 
@@ -87,7 +93,7 @@
     let _canMoveToDir = checkFileDragDirectory(_fileTree.relPath);
 
     $: folderStyle = `${
-        basePath(_fileTree.relPath) === pageName()
+        _fileTree.relPath === getRootDir()
             ? `position: sticky; top: 1px; left: 0px; 
                background-color: ${get(darkLightMode) ? darkBGColor : lightBGColor}; 
                color: ${accentColor}; 
@@ -101,7 +107,7 @@
         expanded = !expanded;
         const currentPageStore = getCurrentPageStore();
         currentPageStore.update((currentState) => {
-            currentState[basePath(_fileTree.relPath)] = expanded;
+            currentState[_fileTree.relPath] = expanded;
             return currentState;
         });
     };
@@ -113,10 +119,10 @@
     onMount(() => {
         const currentPageStore = getCurrentPageStore();
         const unsubscribe = currentPageStore.subscribe((state) => {
-            const basePathKey = basePath(_fileTree.relPath);
+            const basePathKey = _fileTree.relPath;
             if (state[basePathKey] !== undefined) {
                 expanded = state[basePathKey];
-                _label = basePath(_fileTree.relPath); //This sets the rootdir Name
+                _label = basePath(_fileTree.relPath); //sets the rootdir Name
             }
         });
         darkLightTextOnElement(!get(darkLightMode), ulElement);
@@ -132,7 +138,7 @@
     function expandCollapseAllNodes(node: FileNode, expand: boolean) {
         const currentPageStore = getCurrentPageStore();
         currentPageStore.update((currentState) => {
-            const basePathKey = basePath(node.relPath);
+            const basePathKey = node.relPath;
             currentState[basePathKey] = expand;
             return currentState;
         });
@@ -152,23 +158,21 @@
     }
 
     function handleMouseEnter() {
-        if (basePath(_fileTree.relPath) === pageName()) return;
-        GetDirectoryPath(pageIndex()).then((filePath) => {
-            getFileProperties(filePath + _fileTree.relPath).then(
-                (fileProps) => {
-                    _filePropsTooltip = `${fileProps.modifiedDate} | ${formatFileSize(fileProps.fileSize)}`;
-                    // LogPrint("RelativePath " + tree.relPath);
-                    if (!_fileTree.children) {
-                        isFile().then((_isFile) => {
-                            if (_isFile) currentFilePath.set(_fileTree.relPath);
-                        });
-                    } else {
-                        currentDirPath.set(_fileTree.relPath);
-                        LogInfo("current Dir Path " + get(currentDirPath));
-                    }
-                },
-            );
-        });
+        if (_fileTree.relPath === getRootDir()) return;
+        getFileProperties(getRootDir() + _fileTree.relPath).then(
+            (fileProps) => {
+                _filePropsTooltip = `${fileProps.modifiedDate} | ${formatFileSize(fileProps.fileSize)}`;
+                // LogPrint("RelativePath " + tree.relPath);
+                if (!_fileTree.children) {
+                    isFile().then((_isFile) => {
+                        if (_isFile) currentFilePath.set(_fileTree.relPath);
+                    });
+                } else {
+                    currentDirPath.set(_fileTree.relPath);
+                    LogInfo("current Dir Path " + get(currentDirPath));
+                }
+            },
+        );
     }
 
     function handleMouseLeave() {
@@ -215,9 +219,9 @@
 >
     <ul
         bind:this={ulElement}
-        class={basePath(_fileTree.relPath) === pageName() ? "pl-0" : "pl-3"}
+        class={_fileTree.relPath === getRootDir() ? "pl-0" : "pl-3"}
         style={`${
-            basePath(_fileTree.relPath) === pageName()
+            _fileTree.relPath === getRootDir()
                 ? "padding-top: 1px; font-size: 15px; --wails-draggable: drag;"
                 : `margin-top: -2px; --wails-draggable: no-drag; margin-bottom: 0px`
         }`}
@@ -225,7 +229,7 @@
         <li>
             {#if _fileTree.children && _fileTree.children.length > 0}<!-- Folder with children -->
                 <button
-                    class="flex {basePath(_fileTree.relPath) === pageName()
+                    class="flex {_fileTree.relPath === getRootDir()
                         ? 'rounded-md px-1 underline mb-0.5'
                         : 'pl-1.5'}"
                     style={folderStyle}
@@ -251,7 +255,7 @@
                             )}</Tooltip
                         >
                     {/if}
-                {:else if basePath(_fileTree.relPath) !== pageName()}
+                {:else if _fileTree.relPath !== getRootDir()}
                     <Tooltip class={tooltipTailwindClass} offset={1}
                         >{basePath(_fileTree.relPath)}</Tooltip
                     >

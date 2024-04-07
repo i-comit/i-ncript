@@ -84,11 +84,7 @@ func (a *App) Login(username, password string) (int, error) {
 		log.Printf("Failed to hash username %s", err)
 		return -1, err
 	}
-	// _hashedPassword, err := hashString(password)
-	// if err != nil {
-	// 	log.Printf("Failed to hash password %s", err)
-	// 	return -1, err
-	// }
+
 	hashedUsername = _hashedUsername
 	var shuffledCredentials = shuffleStrings(_hashedUsername, password)
 	loginStat = checkCredentials(shuffledCredentials)
@@ -151,7 +147,7 @@ func (a *App) grantAccessToApp(file *os.File, credentials string) {
 	if err != nil {
 		log.Fatalf("Failed to build fileTree: %s", err)
 	}
-	printFileTree(fileTree, false)
+	printFileTree(fileTree, true)
 }
 
 func (a *App) ResizeWindow(width int, height int) {
