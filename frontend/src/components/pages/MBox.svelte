@@ -27,6 +27,7 @@
         switchPages,
         heldDownBtns,
         darkLightBGOnId,
+        prependAbsPathToRelPaths,
     } from "../../tools/utils.ts";
     import { LogDebug, LogInfo } from "../../../wailsjs/runtime/runtime";
 
@@ -47,6 +48,7 @@
     import Logger from "../modals/Logger.svelte";
     import { FileTypes, getFileType } from "../../enums/FileTypes.ts";
     import PasswordScan from "../widgets/PasswordScan.svelte";
+    import { PackFilesForENCP } from "../../../wailsjs/go/main/FileUtils";
 
     enum MboxState {
         Pack = "PACK",
@@ -173,6 +175,12 @@
             passwordCheck,
         };
     }
+
+    function packSelectedFiles() {
+        prependAbsPathToRelPaths(1).then((absFilePaths) => {
+            PackFilesForENCP(absFilePaths);
+        });
+    }
 </script>
 
 <div class="flex h-screen !rounded-lg">
@@ -294,9 +302,7 @@
             >
             {#if currentMBoxState === MboxState.Pack}
                 {#if passwordMatch}
-                    <NeuButton on:click={() => switchPages(AppPage.Vault)}
-                        >PACK</NeuButton
-                    >
+                    <NeuButton on:click={packSelectedFiles}>PACK</NeuButton>
                 {:else}
                     <NeuButtonFake>PACK</NeuButtonFake>
                 {/if}

@@ -228,10 +228,6 @@ func (a *App) resetDirectoryWatcher(dirIndex int) {
 }
 
 func (a *App) DirectoryWatcher(dirIndex int) {
-	// if currentIndex == dirIndex {
-	// 	fmt.Println("Directory already being watched.")
-	// 	return // Directory is already being watched, do nothing
-	// }
 	a.closeDirectoryWatcher()
 	a.resetDirectoryWatcher(dirIndex)
 

@@ -1,18 +1,16 @@
 package main
 
 import (
+	"archive/zip"
 	"context"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
-
-	// "sync"
-	// "sync/atomic"
-
-	"time"
+	"sync/atomic"
 
 	stdRuntime "runtime"
 
@@ -100,8 +98,7 @@ func (f *FileUtils) OpenDirectory(_filePath string) error {
 }
 
 type FileNode struct {
-	RelPath string `json:"relPath"`
-	// IsDir  bool      `json:"isDir"`
+	RelPath  string      `json:"relPath"`
 	Children []*FileNode `json:"children,omitempty"`
 }
 
@@ -139,63 +136,97 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 	return rootNode, nil
 }
 
-func (f *FileUtils) FilesDragNDrop(fileBytes []byte, fileName string, modifiedDate int64, pathToMoveTo string) error {
-	if f.ctx != nil {
-		if _, err := os.Stat(pathToMoveTo); os.IsNotExist(err) {
-			err := os.MkdirAll(pathToMoveTo, os.ModePerm)
-			if err != nil {
-				return fmt.Errorf("failed to create target directory: %w", err)
-			}
+func (f *FileUtils) PackFilesForENCP(filePaths []string) error {
+	f.app.closeDirectoryWatcher()
+	interrupt = make(chan struct{})
+
+	lastFilePath := filePaths[len(filePaths)-1]
+	zipFilePath := lastFilePath + ".zip"
+	// Create the zip file
+	zipFile, err := os.Create(zipFilePath)
+	if err != nil {
+		return err
+	}
+	defer zipFile.Close()
+	// Create a new zip writer
+	zipWriter := zip.NewWriter(zipFile)
+	defer zipWriter.Close()
+	for _, filePath := range filePaths {
+		if err := f.addFileToZip(zipWriter, filePath); err != nil {
+			return err
 		}
-		fullPath := filepath.Join(pathToMoveTo, fileName)
-		file, err := os.OpenFile(fullPath, os.O_CREATE|os.O_WRONLY, 0644)
+	}
+	return nil
+}
+
+func (f *FileUtils) addFileToZip(zipWriter *zip.Writer, filePath string) error {
+	fileToZip, err := os.Open(filePath)
+	if err != nil {
+		return err
+	}
+	defer fileToZip.Close()
+	// Get the info about the file
+	info, err := fileToZip.Stat()
+	if err != nil {
+		return err
+	}
+	// Create a header based on the file info
+	header, err := zip.FileInfoHeader(info)
+	if err != nil {
+		return err
+	}
+	// Use the basename of the filePath for the file name in the zip
+	header.Name = filepath.Base(filePath)
+	// Create the writer for the file
+	writer, err := zipWriter.CreateHeader(header)
+	if err != nil {
+		return err
+	}
+
+	const thresholdFileSize = 50 //if file is more than 50MB
+	if info.Size() > int64(thresholdFileSize*1024*1024) {
+		err = f.checkLargeZipFileTicker(writer, fileToZip)
+	} else {
+		_, err = io.Copy(writer, fileToZip)
+	}
+	fmt.Printf("Copied %s to zip file \n", filePath)
+	return err
+}
+
+func (f *FileUtils) checkLargeZipFileTicker(writer io.Writer, fileToZip *os.File) error {
+	fileSize, err := fileToZip.Seek(0, io.SeekEnd) // Get the file size
+	if err != nil {
+		return err
+	}
+	_, err = fileToZip.Seek(0, io.SeekStart) // Reset file pointer
+	if err != nil {
+		return err
+	}
+
+	var writtenBytes int64 = 0
+	// Initialize your progress tracking here, if needed
+	buf := make([]byte, 4096) // 4KB buffer
+	for {
+		n, err := fileToZip.Read(buf)
+		if err != nil && err != io.EOF {
+			return err
+		}
+		if n == 0 {
+			break
+		}
+		wn, err := writer.Write(buf[:n])
 		if err != nil {
-			return fmt.Errorf("failed to open file for writing: %w", err)
+			return err
 		}
-		defer file.Close()
+		atomic.AddInt64(&writtenBytes, int64(wn))
 
-		var writtenBytes int64
-		done := make(chan bool)
+		// Update progress here using writtenBytes and fileSize
+		percent := float64(writtenBytes) / float64(fileSize) * 100
+		fmt.Printf("Progress: %.2f%%\n", percent) // Replace with your event emission
 
-		// if len(fileBytes) > 5*1024*1024 {
-		// 	go func() {
-		// 		ticker := time.NewTicker(time.Millisecond) // Slower ticker to reduce console spam
-		// 		defer ticker.Stop()
-		// 		for {
-		// 			select {
-		// 			case <-ticker.C:
-		// 				fmt.Printf("Current size of %s: %d bytes\n", fileName, writtenBytes) // Direct access under mutex protection
-		// 			case <-done:
-		// 				fmt.Printf("Final size of %s: %d bytes\n", fileName, writtenBytes)
-		// 				return
-		// 			}
-		// 		}
-		// 	}()
-		// }
-		chunkSize := 1024 // Define a suitable chunk size
-		for i := 0; i < len(fileBytes); i += chunkSize {
-			end := i + chunkSize
-			if end > len(fileBytes) {
-				end = len(fileBytes)
-			}
-			n, err := file.Write(fileBytes[i:end])
-			if err != nil {
-				close(done) // Ensure to signal the goroutine to stop in case of an error
-				return fmt.Errorf("failed to write file: %w", err)
-			}
-			writtenBytes += int64(n) // Safe to update within the mutex-protected block
-			// atomic.AddInt64(&writtenBytes, int64(n)) // Atomic version
+		if err == io.EOF {
+			break
 		}
-		close(done) // Signal the completion of file writing to the goroutine
-		modTime := time.UnixMilli(modifiedDate)
-
-		// Set the last modified time of the file
-		if err := os.Chtimes(fullPath, modTime, modTime); err != nil {
-			return fmt.Errorf("failed to set last modified date: %w", err)
-		}
-		wailsRuntime.EventsEmit(f.app.ctx, rebuildFileTree)
-		f.app.SetIsInFileTask(false)
-		return nil
 	}
 	return nil
 }

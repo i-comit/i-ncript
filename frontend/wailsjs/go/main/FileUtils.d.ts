@@ -3,10 +3,10 @@
 
 export function CheckIfPathIsFile(arg1:string):Promise<boolean>;
 
-export function FilesDragNDrop(arg1:Array<number>,arg2:string,arg3:number,arg4:string):Promise<void>;
-
 export function MoveFilesToPath(arg1:Array<string>,arg2:string):Promise<void>;
 
 export function OpenDirectory(arg1:string):Promise<void>;
 
 export function OpenFile(arg1:string):Promise<void>;
+
+export function PackFilesForENCP(arg1:Array<string>):Promise<void>;

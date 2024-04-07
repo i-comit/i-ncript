@@ -27,8 +27,6 @@ func (a *App) EncryptFilesInDir(dirIndex int) (bool, error) {
 		return false, err
 	}
 	a.closeDirectoryWatcher()
-	interrupt = make(chan struct{})
-
 	cipherResult, err := a.encryptOrDecrypt(true, filePaths)
 	if err != nil {
 		return false, err
@@ -38,8 +36,6 @@ func (a *App) EncryptFilesInDir(dirIndex int) (bool, error) {
 
 func (a *App) EncryptFilesInArr(filePaths []string) (bool, error) {
 	a.closeDirectoryWatcher()
-	interrupt = make(chan struct{})
-
 	cipherResult, err := a.encryptOrDecrypt(true, filePaths)
 	if err != nil {
 		return false, err
@@ -48,6 +44,7 @@ func (a *App) EncryptFilesInArr(filePaths []string) (bool, error) {
 }
 
 func (a *App) encryptOrDecrypt(encryptOrDecrypt bool, filePaths []string) (bool, error) {
+	interrupt = make(chan struct{})
 	var fileIter = 0
 	for i, filePath := range filePaths {
 		select {
@@ -104,8 +101,6 @@ func (a *App) DecryptFilesInDir(dirIndex int) (bool, error) {
 		return false, err
 	}
 	a.closeDirectoryWatcher()
-	interrupt = make(chan struct{})
-
 	cipherResult, err := a.encryptOrDecrypt(false, filePaths)
 	if err != nil {
 		return false, err
@@ -115,7 +110,6 @@ func (a *App) DecryptFilesInDir(dirIndex int) (bool, error) {
 
 func (a *App) DecryptFilesInArr(filePaths []string) (bool, error) {
 	a.closeDirectoryWatcher()
-	interrupt = make(chan struct{})
 
 	cipherResult, err := a.encryptOrDecrypt(false, filePaths)
 	if err != nil {
@@ -190,10 +184,11 @@ func (a *App) encryptFile(filePath string) (*os.File, error) {
 		return nil, err
 	}
 	defer encFile.Close() // Ensure the file is closed when the function returns
-	largeFileErr := a.checkLargeFileTicker(data, encrypted, encFile)
+
+	largeFileErr := a.writeCipherFile(data, encrypted, encFile)
 
 	if largeFileErr != nil {
-		return nil, fmt.Errorf("failed to encrypt large File: %w", largeFileErr)
+		return nil, fmt.Errorf("encrypt file fail: %w", largeFileErr)
 	}
 	if err := os.Remove(filePath); err != nil {
 		encFile.Close() // Best effort to close the encrypted file before returning error
@@ -225,9 +220,9 @@ func (a *App) decryptFile(filePath string) (*os.File, error) {
 	}
 	defer decFile.Close()
 
-	largeFileErr := a.checkLargeFileTicker(data, decrypted, decFile)
+	largeFileErr := a.writeCipherFile(data, decrypted, decFile)
 	if largeFileErr != nil {
-		return nil, fmt.Errorf("failed to decrypt large File: %w", largeFileErr)
+		return nil, fmt.Errorf("decrypt file fail: %w", largeFileErr)
 	}
 	if err := os.Remove(filePath); err != nil {
 		decFile.Close()
@@ -236,10 +231,10 @@ func (a *App) decryptFile(filePath string) (*os.File, error) {
 	return decFile, nil
 }
 
-func (a *App) checkLargeFileTicker(data, cipherData []byte, cipherFile *os.File) error {
+func (a *App) writeCipherFile(data, cipherData []byte, cipherFile *os.File) error {
 	done := make(chan struct{})
 	var once sync.Once         // Ensure the done channel is closed only once
-	var thresholdFileSize = 50 //  file size in MBs to trigger ticker
+	var thresholdFileSize = 50 // File size in MBs to trigger ticker
 	interrupted := false       // Flag to track if an interrupt has occurred
 
 	var writtenBytes int64 //Use atomic.Int64 w/ writtenBytes.Load() for 32bit systems
@@ -271,7 +266,7 @@ func (a *App) checkLargeFileTicker(data, cipherData []byte, cipherFile *os.File)
 		if interrupted { // Check if an interrupt has occurred
 			cipherFile.Close()
 			os.Remove(cipherFile.Name())
-			return fmt.Errorf("large file write interrupted: %s", cipherFile.Name())
+			return fmt.Errorf("file write interrupted: %s", cipherFile.Name())
 		}
 		end := i + chunkSize
 		if end > len(cipherData) {
