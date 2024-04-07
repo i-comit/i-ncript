@@ -277,30 +277,3 @@ export function darkLightTextOnClasses(darkLightMode: boolean, className: string
 
     }
 }
-
-// export function toggleDarkLightBackground(darkLightMode: boolean) {
-//     if (darkLightMode)
-//         document.documentElement.style.setProperty(
-//             "--bg-color",
-//             darkBGColor,
-//         );
-//     else
-//         document.documentElement.style.setProperty(
-//             "--bg-color",
-//             lightBGColor,
-//         );
-// }
-
-// export function toggleDarkLightText(darkLightMode: boolean) {
-//     if (darkLightMode)
-//         document.documentElement.style.setProperty(
-//             "--text-color",
-//             lightTextColor,
-//         );
-
-//     else
-//         document.documentElement.style.setProperty(
-//             "--text-color",
-//             "black",
-//         );
-// }

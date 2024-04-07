@@ -51,9 +51,11 @@
 
     import { GetDirectoryPath } from "../../../wailsjs/go/main/Getters";
     import {
+        accentColor,
         darkBGColor,
         darkTextColor,
         lightBGColor,
+        lightTextColor,
         tooltipTailwindClass,
     } from "../../stores/constantVariables.ts";
     import {
@@ -86,12 +88,13 @@
 
     $: folderStyle = `${
         basePath(_fileTree.relPath) === pageName()
-            ? `position: sticky; top: 1px; left: 0px; background-color: ${
-                  get(darkLightMode) ? darkBGColor : lightBGColor
-              }; z-index: 45`
-            : ` border-left: 1px solid ${
-                  get(darkLightMode) ? lightBGColor : darkBGColor
-              }; position: relative;`
+            ? `position: sticky; top: 1px; left: 0px; 
+               background-color: ${get(darkLightMode) ? darkBGColor : lightBGColor}; 
+               color: ${accentColor}; 
+               font-weight: 600; z-index: 45`
+            : `border-left: 1.5px solid ${get(darkLightMode) ? lightBGColor : darkBGColor};
+               position: relative;
+               color: ${get(darkLightMode) ? lightTextColor : darkTextColor}; `
     }`;
 
     const toggleExpansion = () => {
@@ -108,8 +111,6 @@
     });
 
     onMount(() => {
-        darkLightTextOnElement(!get(darkLightMode), ulElement);
-
         const currentPageStore = getCurrentPageStore();
         const unsubscribe = currentPageStore.subscribe((state) => {
             const basePathKey = basePath(_fileTree.relPath);
@@ -118,6 +119,7 @@
                 _label = basePath(_fileTree.relPath); //This sets the rootdir Name
             }
         });
+        darkLightTextOnElement(!get(darkLightMode), ulElement);
         _label = basePath(_fileTree.relPath);
         EventsOn("rebuildFileTree", buildFileTree);
         return unsubscribe; // Unsubscribe when the component unmounts
@@ -341,7 +343,7 @@
     </ul>
     <div id="dial" class="fixed">
         <SpeedDial
-            class="flex items-center justify-center bg-gray-600 !rounded-br-xl !rounded-tl-3xl h-8 w-14 !bg-opacity-20"
+            class="flex items-center justify-center bg-gray-600 !rounded-br-xl !rounded-tl-3xl h-8 w-14"
         >
             <SpeedDialButton
                 name="Collapse "

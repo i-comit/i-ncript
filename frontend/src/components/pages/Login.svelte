@@ -32,6 +32,9 @@
 
     import { darkLightMode } from "../../stores/dynamicVariables.ts";
     import { darkLightBGOnElement } from "../../tools/utils";
+    import { LogInfo } from "../../../wailsjs/runtime/runtime";
+
+    import PasswordScan from "../widgets/PasswordScan.svelte";
 
     let displayString = "";
     const appName = __APP_NAME__;
@@ -92,25 +95,32 @@
         usernameCheck = regex.test(username);
     }
 
-    let passwordCheck1 = false; // Length check
-    let passwordCheck2 = false; // Uppercase and lowercase check
-    let passwordCheck3 = false; // Symbol check
-    let passwordCheck = false; // Overall password strength check
+    let checks = {
+        passwordCheck1: false,
+        passwordCheck2: false,
+        passwordCheck3: false,
+        passwordCheck: false,
+    };
 
-    let passwordMatch = false; //password match check when creating account
+    let passwordMatch;
+    // let usernameCheck: string;
 
-    function queryPasswordStrength() {
-        // Check 1: Length is more than 5 characters
-        const regexLength = /^.{5,}$/;
-        passwordCheck1 = regexLength.test(password);
-        // Check 2: At least one uppercase and one lowercase letter
-        const regexLetters = /^(?=.*[A-Z])(?=.*[a-z])/;
-        passwordCheck2 = regexLetters.test(password);
-        // Check 3: At least one symbol from the set !@#$
-        const regexSymbol = /[~!@#$%^&*_=+<>:;]/;
-        passwordCheck3 = regexSymbol.test(password);
-
-        passwordCheck = passwordCheck1 && passwordCheck2 && passwordCheck3;
+    // Function to handle the custom event
+    function handlePasswordStrengthUpdated(event) {
+        const {
+            passwordCheck1,
+            passwordCheck2,
+            passwordCheck3,
+            passwordCheck,
+        } = event.detail;
+        checks = {
+            passwordCheck1,
+            passwordCheck2,
+            passwordCheck3,
+            passwordCheck,
+        };
+        LogInfo("passwordCheck 1 " + passwordCheck1);
+        // Now 'checks' object contains the updated check values
     }
 </script>
 
@@ -128,7 +138,6 @@
     <div class="loginField">
         {#if _modal === Modals.None}
             <div class="flex items-center mx-auto">
-                <!-- This will align the two <p> tags horizontally -->
                 <p class="shrink-0 text-left mr-auto">{appName}</p>
                 <Tooltip
                     placement="right"
@@ -177,40 +186,14 @@
                     placeholder="enter password.."
                     type="password"
                     bind:value={password}
-                    on:keyup={queryPasswordStrength}
                     required
                 />
             </div>
-            <div class="flex w-full h-1.5 px-0.5 relative bottom-2">
-                <div
-                    class="flex-1 text-center rounded-l-lg"
-                    style={`background-color: ${passwordCheck1 ? accentColor : darkBGColor};`}
-                ></div>
-                <Tooltip
-                    placement="left"
-                    class={tooltipTailwindClass}
-                    arrow={false}>more than 4 characters</Tooltip
-                >
-                <div
-                    class="flex-1 text-center"
-                    style={`background-color: ${passwordCheck2 ? accentColor : darkBGColor};`}
-                ></div>
-                <Tooltip
-                    placement="bottom"
-                    offset={0}
-                    class={tooltipTailwindClass}
-                    arrow={false}>a symbol ( #$&amp;! )</Tooltip
-                >
-                <div
-                    class="flex-1 text-center rounded-r-lg"
-                    style={`background-color: ${passwordCheck3 ? accentColor : darkBGColor};`}
-                ></div>
-                <Tooltip
-                    placement="right"
-                    class={tooltipTailwindClass}
-                    arrow={false}>upper &amp; lower case</Tooltip
-                >
-            </div>
+            <PasswordScan
+                {password}
+                _class="flex w-full h-1.5 px-0.5 relative bottom-2"
+                on:passwordStrengthUpdated={handlePasswordStrengthUpdated}
+            />
         {:else if _modal === Modals.Settings}
             <Settings />
         {:else if _modal === Modals.Info}
@@ -242,7 +225,7 @@
             >
         </div>
         <div>
-            {#if usernameCheck && passwordCheck}
+            {#if usernameCheck && checks.passwordCheck}
                 <NeuButton _class="!w-20 " type="submit">LOGIN</NeuButton>
             {:else}
                 <NeuButton

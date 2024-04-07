@@ -1,7 +1,6 @@
 export const tooltipTailwindClass = "p-0.5 m-0 text-xs bg-gray-400 px-1 z-50";
 
-export const width = 220
-export const height = 145
+export const width = 220; export const height = 145;
 
 export const accentColor = "#95c7db"
 export const activeAccentColor = "#7bb9d1"
@@ -21,4 +20,8 @@ export const neuInnerShadowLight = "#ffffff";
 export const prevHighlight_light = "#b0b0b0";
 export const lastHighlight_light = "#c4c4c4";
 
+export const lightShadow_Dark = "#808080";
+export const lightShadow_Light = "#fafafa";
 
+export const darkShadow_Dark = "30, 30, 30";
+export const darkShadow_Light = "95, 95, 95";

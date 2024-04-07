@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onMount } from "svelte";
+    import { onMount, onDestroy } from "svelte";
     import { get } from "svelte/store";
     import {
         CogSolid,
@@ -14,6 +14,10 @@
 
     import {
         accentColor,
+        darkShadow_Dark,
+        darkShadow_Light,
+        lightShadow_Dark,
+        lightShadow_Light,
     } from "../../stores/constantVariables";
     import { darkLightMode } from "../../stores/dynamicVariables";
 
@@ -23,16 +27,38 @@
         darkLightTextOnClasses,
     } from "../../tools/utils";
 
-    darkLightMode.subscribe((value) => {
+    const unsub_darkLightMode = darkLightMode.subscribe((value) => {
         darkLightBGOnId(value, "panel");
         darkLightTextOnClasses(!value, "icon");
+        darkLightShadowOnIcons(value);
     });
 
     onMount(() => {
-        var _darkLightMode = get(darkLightMode);
-        darkLightBGOnId(_darkLightMode, "panel");
-        darkLightTextOnClasses(!_darkLightMode, "icon");
+        var _value = get(darkLightMode);
+        darkLightBGOnId(_value, "panel");
+        darkLightTextOnClasses(!_value, "icon");
+        darkLightShadowOnIcons(_value);
     });
+
+    onDestroy(() => {
+        unsub_darkLightMode();
+    });
+
+    function darkLightShadowOnIcons(darkLightMode: boolean) {
+        const elements = document.getElementsByClassName("icon");
+        if (!elements) return; // Early return if container is not found
+        for (const _element of elements) {
+            const _icon = _element as HTMLElement;
+
+            if (darkLightMode) {
+                _icon.style.setProperty("--light-shadow", lightShadow_Dark);
+                _icon.style.setProperty("--dark-shadow-rgb", darkShadow_Dark);
+            } else {
+                _icon.style.setProperty("--light-shadow", lightShadow_Light);
+                _icon.style.setProperty("--dark-shadow-rgb", darkShadow_Light);
+            }
+        }
+    }
 </script>
 
 <div
@@ -94,26 +120,28 @@
 
     $icon-size: 1.2rem;
 
-    $dropShadow:
-        2px 2px 2px -2px rgba($darkShadow, 0.4),
-        -2px -3px 3px -1px rgba($lightShadow, 1);
-
-    $innerShadow:
-        inset -2px -2px 2px -1px rgba($lightShadow, 1),
-        inset 1px 1px 2px -1px rgba($darkShadow, 0.5);
-
     /*  ICONS  */
     .icon {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+
+        --light-shadow: #fafafa;
+        --dark-shadow-rgb: 95, 95, 95; /* #5f5f5f */
+
+        --drop-shadow: 2px 3px 4px -2px rgba(var(--dark-shadow-rgb), 0.8),
+            -2px -3px 3px -1px var(--light-shadow);
+
+        --inner-shadow: inset -3px -3px 3px -1px var(--light-shadow),
+            inset 2px 2px 2px -1px rgba(var(--dark-shadow-rgb), 0.6);
+
         &__info,
         &__logger,
         &__settings {
             width: $icon-size;
             height: $icon-size;
             border-radius: 50%;
-            box-shadow: $dropShadow;
+            box-shadow: var(--drop-shadow);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -122,7 +150,7 @@
             color: var(--text-color);
             transition: all 0.2s ease;
             &:active {
-                box-shadow: $innerShadow;
+                box-shadow: var(--inner-shadow);
                 color: var(--icon-active);
             }
             &:hover {

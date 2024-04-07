@@ -6,7 +6,7 @@ export enum FileTypes {
     Audio = "audio",
     CGModel = "cgModel",
     Encrypted = "encrypted",
-
+    EncryptedP = "encryptedP"
 }
 
 import { LogDebug } from "../../wailsjs/runtime/runtime"
@@ -52,6 +52,8 @@ const extensionToFileType: Record<string, FileTypes> = {
     'fbx': FileTypes.CGModel,
     //Encrypted file
     'enc': FileTypes.Encrypted,
+    //EncrypedPack file
+    'encp': FileTypes.EncryptedP,
 };
 
 export function getFileType(relPath: string): FileTypes {

@@ -47,9 +47,9 @@ export function handleFileClick(relPath: string, _buttonRef: HTMLButtonElement) 
         clearHeldBtns();
     }
     addToHeldFileBtnsArr(relPath, _buttonRef);
-    Object.keys(get(heldDownBtns)).forEach((key) => {
-        LogInfo("Held down node moveFiles: " + key);
-    });
+    // Object.keys(get(heldDownBtns)).forEach((key) => {
+    //     LogInfo("Held down node moveFiles: " + key);
+    // });
     setHeldBtnsStyle();
 }
 
@@ -59,7 +59,6 @@ export function setHeldBtnsStyle() {
     const lastIndex = entries.length - 1; // Get the index of the last element
 
     entries.forEach(([path, btn], index) => {
-        console.log("Held down node moveFiles: " + path); // Assuming LogInfo is analogous to console.log for demonstration
         btn.style.backgroundColor = index === lastIndex ? prevHighlight_light : lastHighlight_light;
         btn.style.textDecoration = index === lastIndex ? "underline" : "none";
     });

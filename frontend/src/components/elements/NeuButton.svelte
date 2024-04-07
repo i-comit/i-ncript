@@ -8,6 +8,12 @@
         darkLightTextOnElement,
     } from "../../tools/utils";
     import { darkLightMode } from "../../stores/dynamicVariables";
+    import {
+        lightShadow_Dark,
+        darkShadow_Dark,
+        lightShadow_Light,
+        darkShadow_Light,
+    } from "../../stores/constantVariables";
 
     export let _class = "";
     export let _style = "";
@@ -26,6 +32,7 @@
         darkLightTextOnElement(!_value, neuButton);
         darkLightShadowOnNeuButton(_value);
     });
+
     onDestroy(() => {
         unsub_darkLightMode();
     });
@@ -33,11 +40,11 @@
     function darkLightShadowOnNeuButton(darkLightMode: boolean) {
         if (!neuButton) return;
         if (darkLightMode) {
-            neuButton.style.setProperty("--light-shadow", "#808080");
-            neuButton.style.setProperty("--dark-shadow-rgb", "30, 30, 30");
+            neuButton.style.setProperty("--light-shadow", lightShadow_Dark);
+            neuButton.style.setProperty("--dark-shadow-rgb", darkShadow_Dark);
         } else {
-            neuButton.style.setProperty("--light-shadow", "#fafafa");
-            neuButton.style.setProperty("--dark-shadow-rgb", "95, 95, 95");
+            neuButton.style.setProperty("--light-shadow", lightShadow_Light);
+            neuButton.style.setProperty("--dark-shadow-rgb", darkShadow_Light);
         }
     }
 

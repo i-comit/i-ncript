@@ -227,7 +227,7 @@
         on:mouseleave={onmouseleave}
         on:click={clearHeldBtnsFromContainer}
     >
-        <NeuSearch />
+        <!-- <NeuSearch /> -->
         {#if _largeFilePercent > 0}
             <RadialProgress
                 _style="right: 3.6rem"
@@ -247,10 +247,6 @@
 </div>
 
 <style>
-    /* p {
-        --text-color: #111111;
-        color: var(--text-color);
-    } */
 
     .row {
         display: flex;
