@@ -22,25 +22,30 @@
         unsub_darkLightMode();
     });
 
-    let lastEntry: [string, HTMLButtonElement] | undefined;
+    // let lastEntry: [string, HTMLButtonElement] | undefined;
+    var lastFile: FileTypes;
 
     // Reactive statement to update lastEntry whenever heldDownBtns changes
     $: {
         const entries = Object.entries($heldDownBtns);
-        lastEntry = entries[entries.length - 1];
-        printoutLastEntry();
+        let lastEntry = entries[entries.length - 1];
+        lastFile = printoutLastEntry(lastEntry);
     }
 
-    function printoutLastEntry() {
+    function printoutLastEntry(
+        lastEntry: [string, HTMLButtonElement],
+    ): FileTypes {
         if (lastEntry) {
-            var lastEntryFileType = getFileType(lastEntry[0]);
+            let lastEntryFileType = getFileType(lastEntry[0]);
             LogInfo("key " + lastEntry[0] + " file " + lastEntryFileType);
+            return lastEntryFileType;
         }
+        return FileTypes.Unknown;
     }
 
     import { heldDownBtns } from "../../tools/utils";
     import { LogInfo } from "../../../wailsjs/runtime/runtime";
-    import { getFileType } from "../../enums/FileTypes";
+    import { FileTypes, getFileType } from "../../enums/FileTypes";
 </script>
 
 {#if Object.keys($heldDownBtns).length > 0}
@@ -48,9 +53,11 @@
         <button>
             <FolderArrowRightOutline />
         </button>
-        <button>
-            <PlaySolid />
-        </button>
+        {#if lastFile !== FileTypes.Encrypted && lastFile !== FileTypes.Unknown}
+            <button>
+                <PlaySolid />
+            </button>
+        {/if}
         <button>
             <FolderOpenSolid />
         </button>

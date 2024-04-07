@@ -17,6 +17,7 @@
 
     export let _class = "";
     export let _style = "";
+
     const dispatch = createEventDispatcher();
 
     let neuButton: HTMLButtonElement;
@@ -61,16 +62,16 @@
     bind:this={neuButton}
     class="oval-lg select-none {` ${_class}`}"
     style={` ${_style}`}
-    on:click={handleClick}
-    on:mousedown={handleMouseDown}><slot /></button
+    on:click|stopPropagation={handleClick}><slot /></button
 >
 
 <style lang="scss">
     @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap");
     @import "../../neumorphic.scss";
+
     $fontSize: 15px;
     $height: 1.5rem;
-
+    
     button {
         --bg-color: #757575;
         --text-color: #dddddd;
@@ -95,19 +96,6 @@
             box-shadow: var(--inner-shadow);
             border-color: rgba(var(--light-shadow), 0);
         }
-    }
-
-    // Mixins
-    @mixin size($width, $height: $width) {
-        width: $width;
-        height: $height;
-    }
-
-    @mixin center {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
     }
 
     // Layout

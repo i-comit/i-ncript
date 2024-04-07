@@ -72,20 +72,20 @@
     ></div>
 
     <div class="icon space-y-1">
-        <button class="icon__info iconBG">
+        <button class="icon__info">
             <InfoCircleOutline
                 class="p-px"
                 on:click={() => switchModals(Modals.Info)}
             />
         </button>
         <button
-            class="icon__logger iconBG"
+            class="icon__logger"
             on:click={() => switchModals(Modals.Logger)}
         >
             <BarsFromLeftOutline class="p-px" role="button" />
         </button>
         <button
-            class="icon__settings iconBG"
+            class="icon__settings"
             on:click={() => switchModals(Modals.Settings)}
         >
             <CogSolid class="p-px" />

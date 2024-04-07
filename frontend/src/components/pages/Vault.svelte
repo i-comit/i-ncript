@@ -247,7 +247,6 @@
 </div>
 
 <style>
-
     .row {
         display: flex;
         justify-content: space-between;

@@ -1,19 +1,58 @@
 <!-- https://codepen.io/caesura/pen/QWNjvOX -->
-<script>
-    import { createEventDispatcher } from "svelte";
+<script lang="ts">
+    import { createEventDispatcher, onDestroy, onMount } from "svelte";
     const dispatch = createEventDispatcher();
-    function handleClick() {
-        dispatch("click");
-    }
-    import { lightBGColor } from "../../stores/constantVariables";
 
+    import {
+        lightBGColor,
+        lightShadow_Dark,
+        darkShadow_Dark,
+        lightShadow_Light,
+        darkShadow_Light,
+    } from "../../stores/constantVariables";
+    import { darkLightMode } from "../../stores/dynamicVariables";
+    import {
+        darkLightBGOnElement,
+        darkLightTextOnElement,
+    } from "../../tools/utils";
+    import { get } from "svelte/store";
     export let _class = "";
     export let _style = "";
+
+    let neuButton: HTMLButtonElement;
+    const unsub_darkLightMode = darkLightMode.subscribe((value) => {
+        darkLightBGOnElement(value, neuButton);
+        darkLightTextOnElement(!value, neuButton);
+        darkLightShadowOnNeuButton(value);
+    });
+
+    onMount(() => {
+        var _value = get(darkLightMode);
+        darkLightBGOnElement(_value, neuButton);
+        darkLightTextOnElement(!_value, neuButton);
+        darkLightShadowOnNeuButton(_value);
+    });
+
+    onDestroy(() => {
+        unsub_darkLightMode();
+    });
+
+    function darkLightShadowOnNeuButton(darkLightMode: boolean) {
+        if (!neuButton) return;
+        if (darkLightMode) {
+            neuButton.style.setProperty("--light-shadow", lightShadow_Dark);
+            neuButton.style.setProperty("--dark-shadow-rgb", darkShadow_Dark);
+        } else {
+            neuButton.style.setProperty("--light-shadow", lightShadow_Light);
+            neuButton.style.setProperty("--dark-shadow-rgb", darkShadow_Light);
+        }
+    }
 </script>
 
 <button
+    bind:this={neuButton}
     class="oval-lg select-none pointer-events-none {` ${_class}`}"
-    style="background-color:{lightBGColor}; {` ${_style}`}"
+    style={` ${_style}`}
     disabled><slot /></button
 >
 
@@ -23,20 +62,32 @@
     $fontSize: 15px;
     $height: 1.5rem;
 
-    // Mixins
-    @mixin size($width, $height: $width) {
-        width: $width;
-        height: $height;
-    }
-
-    @mixin center {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-
     // Layout
+    button {
+        --bg-color: #757575;
+        --text-color: #dddddd;
+
+        --light-shadow: #fafafa;
+        --dark-shadow-rgb: 95, 95, 95; /* #5f5f5f */
+
+        --drop-shadow: 2px 6px 6px -2px rgba(var(--dark-shadow-rgb), 0.6),
+            -3px -6px 8px -2px var(--light-shadow);
+
+        --inner-shadow: inset -4px -4px 4px -1px var(--light-shadow),
+            inset 2px 2px 6px -1px rgba(var(--dark-shadow-rgb), 0.5);
+
+        background-color: var(--bg-color);
+        color: var(--text-color);
+
+        @extend %shared-styles;
+        box-shadow: var(--drop-shadow);
+        cursor: pointer;
+
+        &:active {
+            box-shadow: var(--inner-shadow);
+            border-color: rgba(var(--light-shadow), 0);
+        }
+    }
     *,
     *:before,
     *:after {

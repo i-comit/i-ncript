@@ -3,11 +3,7 @@
     import { onMount, onDestroy } from "svelte";
     import { get } from "svelte/store";
     import { Input, Tooltip } from "flowbite-svelte";
-    import {
-        CloseOutline,
-        EnvelopeOpenSolid,
-        EnvelopeSolid,
-    } from "flowbite-svelte-icons";
+    import { CloseOutline } from "flowbite-svelte-icons";
 
     import { AppPage, currentPage } from "../../enums/AppPage.ts";
     import { Modals, currentModal } from "../../enums/Modals.ts";
@@ -71,21 +67,31 @@
     });
     let _fileTaskPercent: number;
     let password: string;
+    let enteredPassword: string = "";
+
+    let username: string;
+    let usernameCheck: boolean = false;
+
+    let checks = {
+        passwordCheck1: false,
+        passwordCheck2: false,
+        passwordCheck3: false,
+        passwordCheck: false,
+    };
+
+    let passwordMatch: boolean;
 
     let _heldDownBtns: { [key: string]: HTMLButtonElement };
+
     const unsub_heldDownBtns = heldDownBtns.subscribe((value) => {
         _heldDownBtns = value;
-        LogInfo("Stuff");
         handleOnFileClick();
-        // checklastSelectedFileExtension();
     });
 
     const unsub_darkLightMode = darkLightMode.subscribe((value) => {
         darkLightBGOnId(value, "right-panel");
         darkLightBGOnId(value, "left-panel");
     });
-
-    // $: _currentFilePath = $currentFilePath;
 
     onMount(() => {
         buildFileTree();
@@ -127,25 +133,31 @@
 
     function enterPassword(event: KeyboardEvent) {
         if (event.code === "Enter") {
+            password = "";
             const inputElement = event.target as HTMLInputElement;
-            password = inputElement.value;
+            enteredPassword = inputElement.value;
         }
     }
-
+    function clearUsername() {
+        username = "";
+        usernameCheck = false;
+    }
     function clearPassword() {
         password = "";
+        Object.keys(checks).forEach((key) => {
+            checks[key as keyof typeof checks] = false;
+        });
+        enteredPassword = "";
     }
 
-    let checks = {
-        passwordCheck1: false,
-        passwordCheck2: false,
-        passwordCheck3: false,
-        passwordCheck: false,
-    };
+    function checkMatchedPassword() {
+        passwordMatch = password === enteredPassword;
+    }
 
-    let passwordMatch: boolean;
-    let usernameCheck: string;
-
+    function queryUsernameStrength() {
+        const regex = /^.{5,}$/;
+        usernameCheck = regex.test(username);
+    }
     // Function to handle the custom event
     function handlePasswordStrengthUpdated(event: CustomEvent) {
         const {
@@ -160,14 +172,20 @@
             passwordCheck3,
             passwordCheck,
         };
-        LogInfo("passwordCheck 1 " + passwordCheck1);
-        // Now 'checks' object contains the updated check values
     }
 </script>
 
 <div class="flex h-screen !rounded-lg">
     <Frame />
-    <div id="left-panel" role="none" on:click={clearHeldBtnsFromContainer}>
+    <div
+        id="left-panel"
+        role="none"
+        on:click={() => {
+            clearHeldBtnsFromContainer();
+            clearUsername();
+            clearPassword();
+        }}
+    >
         <DirSize />
 
         {#if currentMBoxState === MboxState.None}
@@ -184,6 +202,7 @@
                     id="small-input"
                     placeholder="enter password.."
                     type="password"
+                    bind:value={password}
                     on:keyup={(event) => enterPassword(event)}
                 />
             </div>
@@ -191,44 +210,16 @@
                 {password}
                 on:passwordStrengthUpdated={handlePasswordStrengthUpdated}
             />
-
-            <!-- <div class="flex w-full h-1 px-0.5 relative bottom-1">
-                <div
-                    class="flex-1 text-center rounded-l-lg"
-                    style={`background-color: ${passwordCheck1 ? accentColor : darkBGColor};`}
-                ></div>
-                <Tooltip
-                    placement="left"
-                    class={tooltipTailwindClass}
-                    arrow={false}>more than 4 characters</Tooltip
-                >
-                <div
-                    class="flex-1 text-center"
-                    style={`background-color: ${passwordCheck2 ? accentColor : darkBGColor};`}
-                ></div>
-                <Tooltip
-                    placement="bottom"
-                    offset={0}
-                    class={tooltipTailwindClass}
-                    arrow={false}>a symbol ( #$&amp;! )</Tooltip
-                >
-                <div
-                    class="flex-1 text-center rounded-r-lg"
-                    style={`background-color: ${passwordCheck3 ? accentColor : darkBGColor};`}
-                ></div>
-                <Tooltip
-                    placement="right"
-                    class={tooltipTailwindClass}
-                    arrow={false}>upper &amp; lower case</Tooltip
-                >
-            </div> -->
         {:else if currentMBoxState === MboxState.Pack}
             {#if _currentFileTask === FileTasks.None}
-                <div class="row">
+                <div class="row" role="none" on:click|stopPropagation>
                     <Input
                         class="max-h-1"
                         id="small-input"
                         placeholder="enter username.."
+                        type="text"
+                        bind:value={username}
+                        on:keyup={queryUsernameStrength}
                     />
                 </div>
                 <div class="flex w-full h-1 px-0.5 relative bottom-1">
@@ -242,17 +233,18 @@
                         arrow={false}>more than 4 characters</Tooltip
                     >
                 </div>
-                {#if password === ""}
+                {#if !enteredPassword}
                     <div style="height: 1.1rem">
                         <FileTools />
                     </div>
 
-                    <div class="row">
+                    <div class="row" role="none" on:click|stopPropagation>
                         <Input
                             class="max-h-1 m-0"
                             id="small-input"
                             placeholder="enter password.."
                             type="password"
+                            bind:value={password}
                             on:keyup={(event) => enterPassword(event)}
                         />
                     </div>
@@ -260,50 +252,24 @@
                         {password}
                         on:passwordStrengthUpdated={handlePasswordStrengthUpdated}
                     />
-                    <!-- <div class="flex w-full h-1 px-0.5 relative bottom-1">
-                        <div
-                            class="flex-1 text-center rounded-l-lg"
-                            style={`background-color: ${passwordCheck1 ? accentColor : darkBGColor};`}
-                        ></div>
-                        <Tooltip
-                            placement="left"
-                            class={tooltipTailwindClass}
-                            arrow={false}>more than 4 characters</Tooltip
-                        >
-                        <div
-                            class="flex-1 text-center"
-                            style={`background-color: ${passwordCheck2 ? accentColor : darkBGColor};`}
-                        ></div>
-                        <Tooltip
-                            placement="bottom"
-                            offset={0}
-                            class={tooltipTailwindClass}
-                            arrow={false}>a symbol ( #$&amp;! )</Tooltip
-                        >
-                        <div
-                            class="flex-1 text-center rounded-r-lg"
-                            style={`background-color: ${passwordCheck3 ? accentColor : darkBGColor};`}
-                        ></div>
-                        <Tooltip
-                            placement="right"
-                            class={tooltipTailwindClass}
-                            arrow={false}>upper &amp; lower case</Tooltip
-                        >
-                    </div> -->
                 {:else}
-                    <div class="row">
+                    <div style="height: 1.1rem">
+                        <FileTools />
+                    </div>
+                    <div class="row" role="none" on:click|stopPropagation>
                         <Input
                             class="max-h-1 m-0"
                             id="small-input"
                             placeholder="confirm password.."
                             type="password"
-                            on:keyup={(event) => enterPassword(event)}
+                            bind:value={password}
+                            on:keyup={checkMatchedPassword}
                         />
-                        <button on:click={() => clearPassword()}>
+                        <button on:click={clearPassword}>
                             <CloseOutline class=" text-blue-700 " />
                         </button>
                     </div>
-                    <div class="flex w-full h-1.5 px-0.5 relative bottom-2">
+                    <div class="flex w-full h-1 px-0.5 relative bottom-1">
                         <div
                             class="flex-1 text-center rounded-lg"
                             style={`background-color: ${passwordMatch ? accentColor : darkBGColor};`}
@@ -326,7 +292,25 @@
             <NeuButton on:click={() => switchPages(AppPage.Vault)}
                 >VAULT</NeuButton
             >
-            <NeuButtonFake></NeuButtonFake>
+            {#if currentMBoxState === MboxState.Pack}
+                {#if passwordMatch}
+                    <NeuButton on:click={() => switchPages(AppPage.Vault)}
+                        >PACK</NeuButton
+                    >
+                {:else}
+                    <NeuButtonFake>PACK</NeuButtonFake>
+                {/if}
+            {:else if currentMBoxState === MboxState.Open}
+                {#if Object.keys(_heldDownBtns).length > 0}
+                    <NeuButton on:click={() => switchPages(AppPage.Vault)}
+                        >OPEN</NeuButton
+                    >
+                {:else}
+                    <NeuButtonFake>OPEN</NeuButtonFake>
+                {/if}
+            {:else}
+                <NeuButtonFake></NeuButtonFake>
+            {/if}
         </div>
     </div>
     <PanelDivider />

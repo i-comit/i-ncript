@@ -229,7 +229,7 @@
                         ? 'rounded-md px-1 underline mb-0.5'
                         : 'pl-1.5'}"
                     style={folderStyle}
-                    on:click={() => {
+                    on:click|stopPropagation={() => {
                         toggleExpansion();
                         clearHeldBtns();
                     }}
