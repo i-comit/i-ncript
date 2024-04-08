@@ -228,18 +228,17 @@ func appendHashToZipFile(file *os.File, str string) error {
 	return nil
 }
 
-func insertBytesProcedurally(s1, s2 []byte) string {
-	// Convert byte arrays to rune slices to handle multi-byte characters
+func insertBytesProcedurally(s1, s2 []byte) []rune {
+	if len(s1) < len(s2) {
+		s1, s2 = s2, s1
+	}
 	r1, r2 := bytesToRunes(s1), bytesToRunes(s2)
-
 	// Determine total length and ratio
 	totalLength := len(r1) + len(r2)
 	ratio := float64(len(r1)) / float64(len(r2))
-
 	// Prepare result slice
 	var result []rune
 	i, j := 0, 0.0 // i tracks position in r1, j tracks float position in r2
-
 	for len(result) < totalLength {
 		// Decide whether to append from r1 or r2 based on ratio and progress
 		if float64(i) <= j*ratio && i < len(r1) {
@@ -250,7 +249,31 @@ func insertBytesProcedurally(s1, s2 []byte) string {
 			j++
 		}
 	}
-	return string(result)
+	return result
+}
+
+func matchBytesProcedurally(combinedByte []rune, byteToMatch []byte) bool {
+	rByteToMatch := bytesToRunes(byteToMatch)
+	originalS1Length := len(combinedByte) - len(rByteToMatch)
+	var ratio float64
+
+	if originalS1Length != 0 {
+		ratio = float64(len(combinedByte)) / float64(originalS1Length)
+	} else {
+		fmt.Println("Matched string: (none, combinedByte is the same as byteToMatch)")
+		return false
+	}
+	var matchedRunes []rune
+	j := 0.0 // j tracks the float position in rByteToMatch based on the ratio.
+	for i := 0; i < len(combinedByte) && int(j) < len(rByteToMatch); i++ {
+		if float64(i) >= j*ratio && combinedByte[i] == rByteToMatch[int(j)] {
+			matchedRunes = append(matchedRunes, combinedByte[i])
+			j++
+		}
+	}
+	fmt.Println("Matched string:", string(matchedRunes))
+	// Success is determined by whether we've matched all runes from byteToMatch.
+	return len(matchedRunes) == len(rByteToMatch)
 }
 
 func bytesToRunes(b []byte) []rune {
@@ -261,30 +284,6 @@ func bytesToRunes(b []byte) []rune {
 		b = b[size:]
 	}
 	return r
-}
-
-func extractStringProcedurally(combinedString, stringToMatch string) bool {
-	if len(combinedString) < len(stringToMatch) {
-		return false
-	}
-
-	originalLength := len(combinedString) - len(stringToMatch)
-	var interval int
-
-	if len(stringToMatch) <= originalLength {
-		interval = originalLength / len(stringToMatch)
-	} else {
-		interval = len(stringToMatch) / originalLength
-	}
-
-	matchIndex := 0
-	for i := interval; i < len(combinedString) && matchIndex < len(stringToMatch); i += interval + 1 {
-		if combinedString[i] != stringToMatch[matchIndex] {
-			return false
-		}
-		matchIndex++
-	}
-	return matchIndex == len(stringToMatch)
 }
 
 func (f *FileUtils) addFileToZip(zipWriter *zip.Writer, filePath string) error {

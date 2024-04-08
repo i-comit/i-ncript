@@ -34,29 +34,17 @@ func (a *App) startup(ctx context.Context) {
 	if keyFilePath != "" {
 
 	}
-	// fmt.Println(combineStringProcedurally("1234567892201233.", "abcd"))   // "12a34b56c78d9"
-	// fmt.Println(combineStringProcedurally("abcd", "1234567890123123089")) // "a12b34c56d789"
-	fmt.Println(insertBytesProcedurally([]byte("12345678"), []byte("abcd")))  // Expected: "1a23b45c67d8"
-	fmt.Println(insertBytesProcedurally([]byte("abcd"), []byte("12345678")))  // Expected: "a12b34c56d78"
-	fmt.Println(insertBytesProcedurally([]byte("123456789"), []byte("abcd"))) // Expected: "1a23b45c67d89"
-	fmt.Println(insertBytesProcedurally([]byte("abcd"), []byte("123456789"))) // Expected: "a123b45c67d89"
-	// fmt.Println(insertProcedurally("1234567892201233.", "abcd")) // "12a34b56c78d9"
-	// fmt.Println(insertProcedurally("abcd", "12345678")) // "a12b34c56d78"
+	combinedBytes1 := insertBytesProcedurally([]byte("1234123312213d5678"), []byte("abcd"))
+	fmt.Println("Combined string 1:", string(combinedBytes1))                                            //1a23b45c67d8
+	fmt.Println("Match result 1:", matchBytesProcedurally(combinedBytes1, []byte("abcd")))               // Expected: true
+	fmt.Println("Match result 2:", matchBytesProcedurally(combinedBytes1, []byte("abce")))               // Expected: false
+	fmt.Println("Match result 3:", matchBytesProcedurally(combinedBytes1, []byte("1234123312213d5678"))) // Expected: false
 
-	// combinedString := combineStringProcedurally("123456789", "abcd")
-	// // fmt.Println(combinedString) // "12a34b56c78d9"
-
-	// stringToMatch := "abcd"
-	// fmt.Println(extractStringProcedurally(combinedString, stringToMatch)) // true
-
-	// stringToMatch = "abce"
-	// fmt.Println(extractStringProcedurally(combinedString, stringToMatch)) // false
-
-	// // Using results from insertProcedurally to test
-	// insertedString := string(insertBytesProcedurally([]byte("abcd"), []byte("12345678")))
-	// fmt.Println(insertedString)
-	// fmt.Println(extractStringProcedurally(insertedString, "12345678")) // Expected: true
-	// fmt.Println(extractStringProcedurally(insertedString, "12345679")) // Expected: false
+	combinedBytes2 := insertBytesProcedurally([]byte("2138nyhon21;o23xasdadsds"), []byte("fjnhdsa5d"))
+	fmt.Println("Combined string 2:", string(combinedBytes2))                                                  //a12b34c56d78
+	fmt.Println("Match result 4:", matchBytesProcedurally(combinedBytes2, []byte("2138nyhon21;o23xasdadsds"))) // Expected: true
+	fmt.Println("Match result 5:", matchBytesProcedurally(combinedBytes2, []byte("fjnhdsa5d")))                // Expected: false
+	fmt.Println("Match result 6:", matchBytesProcedurally(combinedBytes2, []byte("abcd")))                     // Expected: false
 
 }
 
