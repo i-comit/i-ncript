@@ -16,7 +16,7 @@ import {
     LogPrint,
 } from "../../wailsjs/runtime/runtime";
 
-import { getFileProperties, pageName, pageIndex } from "./utils";
+import { pageName, pageIndex } from "./utils";
 import {
     GetDirectoryPath,
     GetFileTreePath,
@@ -48,9 +48,7 @@ export function handleFileClick(relPath: string, _buttonRef: HTMLButtonElement) 
         clearHeldBtns();
     }
     addToHeldFileBtnsArr(relPath, _buttonRef);
-    // Object.keys(get(heldDownBtns)).forEach((key) => {
-    //     LogInfo("Held down node moveFiles: " + key);
-    // });
+
     setHeldBtnsStyle();
 }
 
@@ -89,23 +87,24 @@ export function openFile(relPath: string) {
 }
 
 export function buildFileTree() {
-    loadFileTree(pageIndex());
-    clearHeldBtns();
-    EventsOff("rebuildFileTree");
-    subscribeToRebuildFileTree();
-}
-function loadFileTree(dirIndex: number) {
-    BuildDirectoryFileTree(dirIndex)
-        .then((result: FileNode) => {
-            const sortedTree = sortFileTree(result); // Sort the tree before setting it
+    BuildDirectoryFileTree(pageIndex())
+        .then(sortFileTree)
+        .then((sortedTree) => {
             fileTree.set(sortedTree);
-            loadExpansionState(dirIndex)
-            updateExpansionStateStore()
-            LogPrint("Rebuilt File Tree " + pageName());
+            return sortedTree; // Pass the sorted tree for further processing
+        })
+        .then(loadExpansionState)
+        .then(updateExpansionStateStore)
+        .then(() => {
+            LogPrint("Fully initialized and loaded " + pageName());
         })
         .catch((error) => {
             LogError("Failed to get directory structure: " + error);
         });
+
+    clearHeldBtns();
+    EventsOff("rebuildFileTree");
+    subscribeToRebuildFileTree();
 }
 
 function subscribeToRebuildFileTree() {
@@ -113,8 +112,18 @@ function subscribeToRebuildFileTree() {
     LogError("subscribed to rebuildFileTree");
 }
 
+function loadExpansionState() {
+    const currentPageStore = getCurrentPageStore();
+    const currentState = get(currentPageStore);
+    const basePathKey = getRootDir();
+    if (currentState[basePathKey] !== undefined) {
+        expanded = currentState[basePathKey];
+    }
+    expandRoot();
+}
+
 function updateExpansionStateStore() {
-    var _fileTree = get(fileTree);
+    let _fileTree = get(fileTree);
     getCurrentPageStore().update((currentState) => {
         const basePathKey = _fileTree.relPath;
         currentState[basePathKey] = expanded;
@@ -142,7 +151,6 @@ export async function checkFileDragDirectory(relPath: string): Promise<boolean> 
 export const expandRoot: () => void = () => {
     _appPage = get(currentPage)
     getCurrentPageStore().update((currentState) => {
-        currentState[pageName()] = true;
         if (get(fileTree).relPath === getRootDir()) {
             expanded = true;
             LogInfo("expanding rootDir");
@@ -151,15 +159,6 @@ export const expandRoot: () => void = () => {
     });
 };
 
-function loadExpansionState(index: number) {
-    const currentPageStore = getCurrentPageStore();
-    const currentState = get(currentPageStore);
-    const basePathKey = getRootDir();
-    if (currentState[basePathKey] !== undefined) {
-        expanded = currentState[basePathKey];
-    }
-    expandRoot();
-}
 
 export function getCurrentPageStore() {
     _appPage = get(currentPage)

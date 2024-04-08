@@ -26,9 +26,7 @@
       mBoxDir.set(mBoxPath);
       LogWarning("mboxPath " + mBoxPath);
     });
-    // currentPage.set(AppPage.Vault);
-    // buildFileTree();
-    // DirectoryWatcher(0);
+
     currentPage.set(AppPage.Vault);
     subscribeToFileTreeAndRunOnce();
   }

@@ -73,10 +73,6 @@
 
     export let _fileTree: FileNode;
 
-    $: if (_fileTree) {
-        console.log("_fileTree updated", _fileTree);
-    }
-
     $: _label = basePath(_fileTree.relPath);
     let buttonRef: HTMLButtonElement;
     let clickedOnButtonRef: HTMLButtonElement;
@@ -152,8 +148,9 @@
     }
 
     async function isFile(): Promise<boolean> {
-        const filePath = await GetDirectoryPath(pageIndex());
-        const fileProps = await getFileProperties(filePath + _fileTree.relPath);
+        const fileProps = await getFileProperties(
+            getRootDir() + _fileTree.relPath,
+        );
         return fileProps.fileSize > 0; // Return true if fileSize > 0, indicating a file
     }
 
