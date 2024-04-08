@@ -167,17 +167,22 @@
                     required
                 />
             </div>
-            <div class="flex w-full h-1.5 px-0.5 relative bottom-2">
+            <div
+                class="flex w-full h-1.5 px-0.5 relative bottom-2"
+                tabindex="-1"
+            >
                 <div
                     class="flex-1 text-center rounded-lg"
                     style={`background-color: ${usernameCheck ? accentColor : darkBGColor};`}
                 ></div>
-                <Tooltip
-                    placement="bottom"
-                    offset={0}
-                    class={tooltipTailwindClass}
-                    arrow={false}>more than 4 characters</Tooltip
-                >
+                <div tabindex="-1">
+                    <Tooltip
+                        placement="bottom"
+                        offset={0}
+                        class={tooltipTailwindClass}
+                        arrow={false}>more than 4 characters</Tooltip
+                    >
+                </div>
             </div>
             <div class="field">
                 <Input

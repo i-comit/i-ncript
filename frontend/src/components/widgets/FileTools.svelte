@@ -8,7 +8,7 @@
         PlaySolid,
     } from "flowbite-svelte-icons";
     import { darkLightMode } from "../../stores/dynamicVariables";
-    import { darkLightTextInContainer } from "../../tools/utils";
+    import { darkLightTextInContainer, getRootDir } from "../../tools/utils";
 
     const unsub_darkLightMode = darkLightMode.subscribe((value) => {
         darkLightTextInContainer(!value, "file-tools", "button");
@@ -22,30 +22,34 @@
         unsub_darkLightMode();
     });
 
-    // let lastEntry: [string, HTMLButtonElement] | undefined;
     var lastFile: FileTypes;
-
+    var lastFilePath: string;
     // Reactive statement to update lastEntry whenever heldDownBtns changes
-    $: {
+    // $: {
+    //     const entries = Object.entries($heldDownBtns);
+    //     lastFilePath = entries[entries.length - 1][0];
+    //     printoutLastEntry2(lastFilePath);
+    // }
+
+    function getLastEntryPath() {
         const entries = Object.entries($heldDownBtns);
-        let lastEntry = entries[entries.length - 1];
-        lastFile = printoutLastEntry(lastEntry);
+        lastFilePath = entries[entries.length - 1][0];
+        printoutLastEntry(lastFilePath);
     }
 
-    function printoutLastEntry(
-        lastEntry: [string, HTMLButtonElement],
-    ): FileTypes {
-        if (lastEntry) {
-            let lastEntryFileType = getFileType(lastEntry[0]);
-            LogInfo("key " + lastEntry[0] + " file " + lastEntryFileType);
-            return lastEntryFileType;
+    function printoutLastEntry(lastEntryString: string) {
+        if (lastEntryString) {
+            lastFilePath = getRootDir() + lastEntryString;
+            GetAppendedFileBytes(lastFilePath).then(() => {
+                LogInfo("Last file path Play FileTools" + lastFilePath);
+            });
         }
-        return FileTypes.Unknown;
     }
 
     import { heldDownBtns } from "../../tools/utils";
     import { LogInfo } from "../../../wailsjs/runtime/runtime";
     import { FileTypes, getFileType } from "../../enums/FileTypes";
+    import { GetAppendedFileBytes } from "../../../wailsjs/go/main/FileUtils";
 </script>
 
 {#if Object.keys($heldDownBtns).length > 0}
@@ -54,7 +58,7 @@
             <FolderArrowRightOutline />
         </button>
         {#if lastFile !== FileTypes.Encrypted && lastFile !== FileTypes.Unknown}
-            <button>
+            <button on:click|stopPropagation={getLastEntryPath}>
                 <PlaySolid />
             </button>
         {/if}

@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 	"sync/atomic"
+	"unicode/utf8"
 
 	stdRuntime "runtime"
 
@@ -139,7 +140,12 @@ func (f *FileUtils) PackFilesForENCP(filePaths []string) error {
 	interrupt = make(chan struct{})
 
 	lastFilePath := filePaths[len(filePaths)-1]
-	zipFilePath := lastFilePath + ".zip"
+	// if len(filePaths) > 1 {
+	extension := filepath.Ext(lastFilePath)
+
+	filenameWithoutExtension := strings.TrimSuffix(lastFilePath, extension)
+	fmt.Println("without exntension " + filenameWithoutExtension)
+	zipFilePath := filenameWithoutExtension
 	// Create the zip file
 	zipFile, err := os.Create(zipFilePath)
 	if err != nil {
@@ -154,7 +160,131 @@ func (f *FileUtils) PackFilesForENCP(filePaths []string) error {
 			return err
 		}
 	}
+	if err := zipWriter.Close(); err != nil {
+		return fmt.Errorf("error closing zip writer: %s", err)
+	}
+
+	encryptedZipFile, err := f.app.encryptENCPFile(zipFile.Name())
+	if err != nil {
+		return fmt.Errorf("encryption error: %s", err)
+	}
+	if err := encryptedZipFile.Close(); err != nil {
+		return fmt.Errorf("error closing encryptedZipFile: %s", err)
+	}
+
+	encryptedZipFileOpened, err := os.OpenFile(encryptedZipFile.Name(), os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		return fmt.Errorf("error reopening encryptedZipFile for appending: %s", err)
+	}
+	defer encryptedZipFileOpened.Close()
+
+	if err := appendHashToZipFile(encryptedZipFileOpened, "TestHE"); err != nil {
+		return fmt.Errorf("appendHash error: %s", err)
+	}
+
 	return nil
+}
+
+func (f *FileUtils) GetAppendedFileBytes(filePath string) error {
+	file, err := os.Open(filePath)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	info, err := file.Stat()
+	if err != nil {
+		return err
+	}
+	// Check if the file size is more than 10 bytes
+	if info.Size() > 10 {
+		startPos := info.Size() - 5
+		// Seek to the start position
+		_, err := file.Seek(startPos, 0)
+		if err != nil {
+			return err
+		}
+		// Read the last 5 bytes
+		buf := make([]byte, 5)
+		_, err = file.Read(buf)
+		if err != nil {
+			return err
+		}
+		fmt.Println("Last 5 bytes:", buf)
+	}
+	return nil
+}
+
+func appendHashToZipFile(file *os.File, str string) error {
+	// Seek to the end of the file
+	fmt.Println("append file name " + file.Name())
+	_, err := file.Seek(0, io.SeekEnd)
+	if err != nil {
+		return err
+	}
+	_, err = file.Write([]byte(str))
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func insertBytesProcedurally(s1, s2 []byte) string {
+	// Convert byte arrays to rune slices to handle multi-byte characters
+	r1, r2 := bytesToRunes(s1), bytesToRunes(s2)
+
+	// Determine total length and ratio
+	totalLength := len(r1) + len(r2)
+	ratio := float64(len(r1)) / float64(len(r2))
+
+	// Prepare result slice
+	var result []rune
+	i, j := 0, 0.0 // i tracks position in r1, j tracks float position in r2
+
+	for len(result) < totalLength {
+		// Decide whether to append from r1 or r2 based on ratio and progress
+		if float64(i) <= j*ratio && i < len(r1) {
+			result = append(result, r1[i])
+			i++
+		} else if int(j) < len(r2) {
+			result = append(result, r2[int(j)])
+			j++
+		}
+	}
+	return string(result)
+}
+
+func bytesToRunes(b []byte) []rune {
+	var r []rune
+	for len(b) > 0 {
+		runeValue, size := utf8.DecodeRune(b)
+		r = append(r, runeValue)
+		b = b[size:]
+	}
+	return r
+}
+
+func extractStringProcedurally(combinedString, stringToMatch string) bool {
+	if len(combinedString) < len(stringToMatch) {
+		return false
+	}
+
+	originalLength := len(combinedString) - len(stringToMatch)
+	var interval int
+
+	if len(stringToMatch) <= originalLength {
+		interval = originalLength / len(stringToMatch)
+	} else {
+		interval = len(stringToMatch) / originalLength
+	}
+
+	matchIndex := 0
+	for i := interval; i < len(combinedString) && matchIndex < len(stringToMatch); i += interval + 1 {
+		if combinedString[i] != stringToMatch[matchIndex] {
+			return false
+		}
+		matchIndex++
+	}
+	return matchIndex == len(stringToMatch)
 }
 
 func (f *FileUtils) addFileToZip(zipWriter *zip.Writer, filePath string) error {
@@ -217,7 +347,6 @@ func (f *FileUtils) checkLargeZipFileTicker(writer io.Writer, fileToZip *os.File
 			return err
 		}
 		atomic.AddInt64(&writtenBytes, int64(wn))
-
 		// Update progress here using writtenBytes and fileSize
 		percent := float64(writtenBytes) / float64(fileSize) * 100
 		fmt.Printf("Progress: %.2f%%\n", percent) // Replace with your event emission

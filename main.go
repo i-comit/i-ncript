@@ -104,5 +104,4 @@ func main() {
 	if err != nil {
 		println("Error:", err.Error())
 	}
-	// encryptr.initializeWatcher(-1)
 }

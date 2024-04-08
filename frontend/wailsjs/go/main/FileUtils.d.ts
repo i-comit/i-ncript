@@ -3,6 +3,8 @@
 
 export function CheckIfPathIsFile(arg1:string):Promise<boolean>;
 
+export function GetAppendedFileBytes(arg1:string):Promise<void>;
+
 export function MoveFilesToPath(arg1:Array<string>,arg2:string):Promise<void>;
 
 export function OpenDirectory(arg1:string):Promise<void>;

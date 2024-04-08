@@ -34,6 +34,30 @@ func (a *App) startup(ctx context.Context) {
 	if keyFilePath != "" {
 
 	}
+	// fmt.Println(combineStringProcedurally("1234567892201233.", "abcd"))   // "12a34b56c78d9"
+	// fmt.Println(combineStringProcedurally("abcd", "1234567890123123089")) // "a12b34c56d789"
+	fmt.Println(insertBytesProcedurally([]byte("12345678"), []byte("abcd")))  // Expected: "1a23b45c67d8"
+	fmt.Println(insertBytesProcedurally([]byte("abcd"), []byte("12345678")))  // Expected: "a12b34c56d78"
+	fmt.Println(insertBytesProcedurally([]byte("123456789"), []byte("abcd"))) // Expected: "1a23b45c67d89"
+	fmt.Println(insertBytesProcedurally([]byte("abcd"), []byte("123456789"))) // Expected: "a123b45c67d89"
+	// fmt.Println(insertProcedurally("1234567892201233.", "abcd")) // "12a34b56c78d9"
+	// fmt.Println(insertProcedurally("abcd", "12345678")) // "a12b34c56d78"
+
+	// combinedString := combineStringProcedurally("123456789", "abcd")
+	// // fmt.Println(combinedString) // "12a34b56c78d9"
+
+	// stringToMatch := "abcd"
+	// fmt.Println(extractStringProcedurally(combinedString, stringToMatch)) // true
+
+	// stringToMatch = "abce"
+	// fmt.Println(extractStringProcedurally(combinedString, stringToMatch)) // false
+
+	// // Using results from insertProcedurally to test
+	// insertedString := string(insertBytesProcedurally([]byte("abcd"), []byte("12345678")))
+	// fmt.Println(insertedString)
+	// fmt.Println(extractStringProcedurally(insertedString, "12345678")) // Expected: true
+	// fmt.Println(extractStringProcedurally(insertedString, "12345679")) // Expected: false
+
 }
 
 func (a *App) InitializeRootFolder() error {

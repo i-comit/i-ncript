@@ -304,7 +304,7 @@
                 {#if passwordMatch}
                     <NeuButton on:click={packSelectedFiles}>PACK</NeuButton>
                 {:else}
-                    <NeuButtonFake>PACK</NeuButtonFake>
+                    <NeuButtonFake>ENTER</NeuButtonFake>
                 {/if}
             {:else if currentMBoxState === MboxState.Open}
                 {#if Object.keys(_heldDownBtns).length > 0}

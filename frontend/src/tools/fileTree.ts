@@ -52,39 +52,6 @@ export function handleFileClick(relPath: string, _buttonRef: HTMLButtonElement) 
     setHeldBtnsStyle();
 }
 
-export function setHeldBtnsStyle() {
-    const _heldDownBtns = get(heldDownBtns);
-    const entries = Object.entries(_heldDownBtns);
-    const lastIndex = entries.length - 1; // Get the index of the last element
-
-    entries.forEach(([path, btn], index) => {
-        btn.style.backgroundColor = index === lastIndex ? prevHighlight_light : lastHighlight_light;
-        btn.style.textDecoration = index === lastIndex ? "underline" : "none";
-    });
-}
-export function clearHeldBtns() {
-    if (get(currentDirPath) === "") {
-        const _heldDownBtns = get(heldDownBtns);
-        Object.entries(_heldDownBtns).forEach(([path, btn]) => {
-            btn.style.backgroundColor = "transparent";
-            btn.style.textDecoration = "none";
-        });
-        LogInfo("Held buttons cleared");
-        heldDownBtns.set({});
-    }
-}
-export function clearHeldBtnsFromContainer() {
-    if (get(currentFilePath) === "" && get(currentDirPath) === "") {
-        clearHeldBtns();
-    }
-}
-export function openDirectory(relPath: string) {
-    OpenDirectory(getRootDir() + relPath);
-}
-
-export function openFile(relPath: string) {
-    OpenFile(getRootDir() + relPath);
-}
 
 export function buildFileTree() {
     BuildDirectoryFileTree(pageIndex())
@@ -129,6 +96,41 @@ function updateExpansionStateStore() {
         currentState[basePathKey] = expanded;
         return currentState;
     });
+}
+
+export function setHeldBtnsStyle() {
+    const _heldDownBtns = get(heldDownBtns);
+    const entries = Object.entries(_heldDownBtns);
+    const lastIndex = entries.length - 1; // Get the index of the last element
+
+    entries.forEach(([path, btn], index) => {
+        btn.style.backgroundColor = index === lastIndex ? prevHighlight_light : lastHighlight_light;
+        btn.style.textDecoration = index === lastIndex ? "underline" : "none";
+    });
+}
+export function clearHeldBtns() {
+    if (get(currentDirPath) === "") {
+        const _heldDownBtns = get(heldDownBtns);
+        Object.entries(_heldDownBtns).forEach(([path, btn]) => {
+            btn.style.backgroundColor = "transparent";
+            btn.style.textDecoration = "none";
+        });
+        LogInfo("Held buttons cleared");
+        heldDownBtns.set({});
+    }
+}
+export function clearHeldBtnsFromContainer() {
+    if (get(currentFilePath) === "" &&
+        get(currentDirPath) === "") {
+        clearHeldBtns();
+    }
+}
+export function openDirectory(relPath: string) {
+    OpenDirectory(getRootDir() + relPath);
+}
+
+export function openFile(relPath: string) {
+    OpenFile(getRootDir() + relPath);
 }
 
 export async function checkFileDragDirectory(relPath: string): Promise<boolean> {

@@ -6,6 +6,10 @@ export function CheckIfPathIsFile(arg1) {
   return window['go']['main']['FileUtils']['CheckIfPathIsFile'](arg1);
 }
 
+export function GetAppendedFileBytes(arg1) {
+  return window['go']['main']['FileUtils']['GetAppendedFileBytes'](arg1);
+}
+
 export function MoveFilesToPath(arg1, arg2) {
   return window['go']['main']['FileUtils']['MoveFilesToPath'](arg1, arg2);
 }

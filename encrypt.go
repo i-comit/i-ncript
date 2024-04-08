@@ -197,6 +197,36 @@ func (a *App) encryptFile(filePath string) (*os.File, error) {
 	return encFile, nil
 }
 
+func (a *App) encryptENCPFile(filePath string) (*os.File, error) {
+	aesGCM, data, err := initFileCipher(filePath)
+	if err != nil {
+		return nil, err
+	}
+	nonce := make([]byte, aesGCM.NonceSize())
+	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
+		return nil, err
+	}
+	encrypted := aesGCM.Seal(nonce, nonce, data, nil)
+
+	newFilePath := filePath + ".encp"
+	encFile, err := os.Create(newFilePath)
+	if err != nil {
+		return nil, err
+	}
+	defer encFile.Close() // Ensure the file is closed when the function returns
+
+	largeFileErr := a.writeCipherFile(data, encrypted, encFile)
+
+	if largeFileErr != nil {
+		return nil, fmt.Errorf("encrypt file fail: %w", largeFileErr)
+	}
+	if err := os.Remove(filePath); err != nil {
+		encFile.Close() // Best effort to close the encrypted file before returning error
+		return nil, err
+	}
+	return encFile, nil
+}
+
 func (a *App) decryptFile(filePath string) (*os.File, error) {
 	aesGCM, data, err := initFileCipher(filePath)
 	if err != nil {

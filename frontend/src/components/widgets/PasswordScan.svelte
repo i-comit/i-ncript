@@ -44,7 +44,7 @@
     }
 </script>
 
-<div class={_class}>
+<div class={_class} tabindex="-1">
     <div
         class="flex-1 text-center rounded-l-lg"
         style={`background-color: ${passwordCheck1 ? accentColor : darkBGColor};`}
