@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -138,14 +139,7 @@ func (f *FileUtils) PackFilesForENCP(receiverUsername, receiverPassword string, 
 	interrupt = make(chan struct{})
 
 	lastFilePath := filePaths[len(filePaths)-1]
-	// if len(filePaths) > 1 {
-	// fmt.Println("without exntension " + filenameWithoutExtension)
-	// extension := filepath.Ext(lastFilePath)
-
 	filenameWithoutExtension := removeFileExtension(lastFilePath)
-	// fmt.Println("without exntension " + filenameWithoutExtension)
-	// zipFilePath := filenameWithoutExtension
-
 	zipFilePath := filenameWithoutExtension + ".zip"
 	// Create the zip file
 	zipFile, err := os.Create(zipFilePath)
@@ -171,51 +165,95 @@ func (f *FileUtils) PackFilesForENCP(receiverUsername, receiverPassword string, 
 	if err := zipWriter.Close(); err != nil {
 		return fmt.Errorf("error closing zip writer: %s", err)
 	}
+	zipFile.Close()
+
 	hashedReceiverUsername, err := hashString(receiverUsername)
 	if err != nil {
 		return fmt.Errorf("recipient hash fail: %w", err)
 	}
 	var shuffledCredentials = shuffleStrings(hashedReceiverUsername, receiverPassword)
-	hashedReceiverCredentials, err := hashBytes([]byte(shuffledCredentials))
+	_hashedCredentials, err := hashString(shuffledCredentials)
 	if err != nil {
 		return fmt.Errorf("error hashing recipient credentials: %s", err)
 	}
-	encryptedZipFile, err := f.app.encryptENCPFile(hashedReceiverCredentials, zipFilePath)
-	if err != nil {
-		return fmt.Errorf("error with encryptedZipFile: %s", err)
-	}
-	encryptedZipFile.Close()
-	zipFile.Close()
 
-	originalBytes, err := os.ReadFile(encryptedZipFile.Name())
+	keyFile, err := os.Create(filepath.Base(lastFilePath) + "_stuff.key")
 	if err != nil {
-		return fmt.Errorf("error reading file: %s", err)
-	}
-	fmt.Printf("Original bytes length %d ", len(originalBytes))
-	// originalZipFile, err := os.Create(zipFile.Name() + "_original.zip")
-	// if err != nil {
-	// 	fmt.Printf("create zip file fail %s", err)
-	// 	return err
-	// }
-	// originalZipFile.Close()
-	// err = os.WriteFile(originalZipFile.Name(), originalBytes, 0644)
-	// if err != nil {
-	// 	return fmt.Errorf("error writing runes to original file: %s", err)
-	// }
-	encodedReceiverCredentials := base64.StdEncoding.EncodeToString(hashedReceiverCredentials)
-	mixedRunes := insertBytesProcedurally(originalBytes, []byte(encodedReceiverCredentials))
-	// // Convert back to bytes
-	mixedBytes := runesToBytes(mixedRunes)
-	mixedZipFile, err := os.Create(zipFile.Name())
-	if err != nil {
-		fmt.Printf("create zip file fail %s", err)
+		fmt.Printf("key error %s", err)
 		return err
 	}
-	err = os.WriteFile(mixedZipFile.Name(), mixedBytes, 0666)
+	defer keyFile.Close()
+
+	_, err = keyFile.WriteString(_hashedCredentials)
 	if err != nil {
-		return fmt.Errorf("error writing runes to file: %s", err)
+		log.Fatalf("Failed to write to file: %s", err)
 	}
-	fmt.Printf("New bytes length %d ", len(mixedBytes))
+
+	encryptedZipFile, err := f.app.encryptZipFile([]byte(_hashedCredentials), zipFile.Name())
+	if err != nil {
+		fmt.Printf("failed encryption ENCP %s", err)
+		return err
+	}
+	encryptedZipFile.Close()
+	// Assuming previous code exists above this and you've just closed the encryptedZipFile
+	// Create a new parent zip file that will contain the encrypted zip file and the key file
+	parentZipFile, err := os.Create(filepath.Join(filepath.Dir(zipFile.Name()), "final_bundle.zip"))
+	if err != nil {
+		return fmt.Errorf("failed to create parent zip file: %s", err)
+	}
+	defer parentZipFile.Close()
+
+	parentZipWriter := zip.NewWriter(parentZipFile)
+	defer parentZipWriter.Close()
+
+	// Function to add a file to the parent zip
+	addFileToZip := func(zipWriter *zip.Writer, filePath string) error {
+		fileToZip, err := os.Open(filePath)
+		if err != nil {
+			return err
+		}
+		defer fileToZip.Close()
+
+		// Get the info about the file
+		info, err := fileToZip.Stat()
+		if err != nil {
+			return err
+		}
+
+		header, err := zip.FileInfoHeader(info)
+		if err != nil {
+			return err
+		}
+
+		header.Name = filepath.Base(filePath)
+		header.Method = zip.Deflate
+
+		writer, err := zipWriter.CreateHeader(header)
+		if err != nil {
+			return err
+		}
+
+		_, err = io.Copy(writer, fileToZip)
+		return err
+	}
+
+	// Add the encrypted zip file to the parent zip
+	if err := addFileToZip(parentZipWriter, encryptedZipFile.Name()); err != nil {
+		return fmt.Errorf("failed to add encrypted zip to parent zip: %s", err)
+	}
+
+	// Add the key file to the parent zip
+	if err := addFileToZip(parentZipWriter, keyFile.Name()); err != nil {
+		return fmt.Errorf("failed to add key file to parent zip: %s", err)
+	}
+
+	// Make sure to close the parentZipWriter to finalize the zip file
+	if err := parentZipWriter.Close(); err != nil {
+		return fmt.Errorf("error closing parent zip writer: %s", err)
+	}
+
+	fmt.Println("Successfully created parent zip with encrypted zip and key file.")
+
 	return nil
 }
 
@@ -227,19 +265,28 @@ func (f *FileUtils) AuthenticateENCPFile(password string, encFilePath string) er
 		return fmt.Errorf("error hashing user credentials: %s", err)
 	}
 	encodedCredentials := base64.StdEncoding.EncodeToString(_hashedCredentials)
-	// if err != nil {
-	// 	fmt.Printf("decode error %s", err)
-	// 	return fmt.Errorf("error decoding user encp credentials: %s", err)
-	// }
+
 	fmt.Println("hashed your creds " + encodedCredentials)
 	encFileBytes, err := os.ReadFile(encFilePath)
 	if err != nil {
 		return fmt.Errorf("error reading file: %s", err)
 	}
+
+	// encFile, err := os.Open(encFilePath)
+	// if err != nil {
+	// 	return fmt.Errorf("error reading file: %s", err)
+	// }
+	// decryptedZipFile, err := f.app.decryptENCPFile([]byte(encodedCredentials), encFile)
+	// if err != nil {
+	// 	fmt.Printf("error decrypted zip file: %s", err)
+	// 	return fmt.Errorf("error writing decrypted encp to file: %s", err)
+	// }
+	// fmt.Println("decrypted zip file " + decryptedZipFile.Name())
+
 	matched, originalBytes := matchBytesProcedurally(bytesToRunes(encFileBytes), []byte(encodedCredentials))
 	if matched {
 		zipFileName := removeFileExtension(encFilePath)
-		openedZipFile, err := os.Create(zipFileName)
+		openedZipFile, err := os.Create(zipFileName + "_original.zip")
 		if err != nil {
 			fmt.Printf("create zip file fail %s", err)
 			return err
@@ -250,12 +297,45 @@ func (f *FileUtils) AuthenticateENCPFile(password string, encFilePath string) er
 			return fmt.Errorf("error writing decrypted encp to file: %s", err)
 		}
 
-		decryptedZipFile, err := f.app.decryptENCPFile(_hashedCredentials, openedZipFile)
+		decryptedZipFile, err := f.app.decryptENCPFile([]byte(encodedCredentials), openedZipFile)
 		if err != nil {
 			fmt.Printf("error decrypted zip file: %s", err)
 			return fmt.Errorf("error writing decrypted encp to file: %s", err)
 		}
 		fmt.Println("decrypted zip file " + decryptedZipFile.Name())
+	}
+	return nil
+}
+
+func (f *FileUtils) OpenENCPmatch(password, encFilePath string) error {
+	fmt.Println("Open file path " + encFilePath)
+
+	var shuffledCredentials = shuffleStrings(hashedUsername, password)
+	_hashedCredentials, err := hashBytes([]byte(shuffledCredentials))
+	if err != nil {
+		return fmt.Errorf("error hashing user credentials: %s", err)
+	}
+	encodedCredentials := base64.StdEncoding.EncodeToString(_hashedCredentials)
+
+	fmt.Println("hashed your creds " + encodedCredentials)
+	encFileBytes, err := os.ReadFile(encFilePath)
+	if err != nil {
+		return fmt.Errorf("error reading file: %s", err)
+	}
+
+	matched, originalBytes := matchBytesProcedurally(bytesToRunes(encFileBytes), []byte(encodedCredentials))
+	if matched {
+		zipFileName := removeFileExtension(encFilePath)
+		openedZipFile, err := os.Create(zipFileName + "_originalunmixed.zip")
+		if err != nil {
+			fmt.Printf("create zip file fail %s", err)
+			return err
+		}
+		err = os.WriteFile(openedZipFile.Name(), originalBytes, 0644)
+		if err != nil {
+			fmt.Printf("error writing encp bytes to file: %s", err)
+			return fmt.Errorf("error writing decrypted encp to file: %s", err)
+		}
 	}
 	return nil
 }

@@ -51,6 +51,7 @@
     import PasswordScan from "../widgets/PasswordScan.svelte";
     import {
         AuthenticateENCPFile,
+        OpenENCPmatch,
         PackFilesForENCP,
     } from "../../../wailsjs/go/main/FileUtils";
 
@@ -129,7 +130,9 @@
         if (lastEntry) {
             LogInfo("Last entry rel path " + key);
             var lastFileType = getFileType(key);
-            if (lastFileType === FileTypes.EncryptedP) {
+            if (lastFileType === FileTypes.EncryptedP ||
+                lastFileType === FileTypes.Encrypted
+            ) {
                 currentMBoxState = MboxState.Open;
             } else {
                 currentMBoxState = MboxState.Pack;
@@ -196,7 +199,14 @@
     function authenticateENCPFile() {
         const entries = Object.entries(_heldDownBtns);
         var lastEntry = entries[entries.length - 1];
-        AuthenticateENCPFile(password, getRootDir() + lastEntry[0]);
+
+        var lastFileType = getFileType(lastEntry[0]);
+        if (lastFileType === FileTypes.EncryptedP) {
+            AuthenticateENCPFile(password, getRootDir() + lastEntry[0]);
+        } else {
+            LogInfo("Matching ENCP");
+            OpenENCPmatch(password, getRootDir() + lastEntry[0]);
+        }
     }
 </script>
 
