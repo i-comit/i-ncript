@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 	"unicode/utf8"
 )
@@ -169,6 +170,13 @@ func shuffleStrings(str1, str2 string) string {
 	}
 	fmt.Println("shuffled " + string(result))
 	return string(result)
+}
+
+func removeFileExtension(_filePath string) string {
+	extension := filepath.Ext(_filePath)
+	filePathWithoutExtension := strings.TrimSuffix(_filePath, extension)
+	fmt.Println("file w/o extension " + filePathWithoutExtension)
+	return filePathWithoutExtension
 }
 
 func bytesToRunes(b []byte) []rune {

@@ -35,16 +35,16 @@ func (a *App) startup(ctx context.Context) {
 
 	}
 	combinedBytes1 := insertBytesProcedurally([]byte("1234123312213d5678"), []byte("abcd"))
-	fmt.Println("Combined string 1:", string(combinedBytes1))                                            //1a23b45c67d8
-	fmt.Println("Match result 1:", matchBytesProcedurally(combinedBytes1, []byte("abcd")))               // Expected: true
-	fmt.Println("Match result 2:", matchBytesProcedurally(combinedBytes1, []byte("abce")))               // Expected: false
-	fmt.Println("Match result 3:", matchBytesProcedurally(combinedBytes1, []byte("1234123312213d5678"))) // Expected: false
+	fmt.Println("Combined string 1:", string(combinedBytes1)) //1a23b45c67d8
+	// fmt.Println("Match result 1:", matchBytesProcedurally(combinedBytes1, []byte("abcd")))               // Expected: true
+	// fmt.Println("Match result 2:", matchBytesProcedurally(combinedBytes1, []byte("abce")))               // Expected: false
+	// fmt.Println("Match result 3:", matchBytesProcedurally(combinedBytes1, []byte("1234123312213d5678"))) // Expected: false
 
 	combinedBytes2 := insertBytesProcedurally([]byte("2138nyhon21;o23xasdadsds"), []byte("fjnhdsa5d"))
-	fmt.Println("Combined string 2:", string(combinedBytes2))                                                  //a12b34c56d78
-	fmt.Println("Match result 4:", matchBytesProcedurally(combinedBytes2, []byte("2138nyhon21;o23xasdadsds"))) // Expected: true
-	fmt.Println("Match result 5:", matchBytesProcedurally(combinedBytes2, []byte("fjnhdsa5d")))                // Expected: false
-	fmt.Println("Match result 6:", matchBytesProcedurally(combinedBytes2, []byte("abcd")))                     // Expected: false
+	fmt.Println("Combined string 2:", string(combinedBytes2)) //a12b34c56d78
+	// fmt.Println("Match result 4:", matchBytesProcedurally(combinedBytes2, []byte("2138nyhon21;o23xasdadsds"))) // Expected: true
+	// fmt.Println("Match result 5:", matchBytesProcedurally(combinedBytes2, []byte("fjnhdsa5d")))                // Expected: false
+	// fmt.Println("Match result 6:", matchBytesProcedurally(combinedBytes2, []byte("abcd")))                     // Expected: false
 
 }
 

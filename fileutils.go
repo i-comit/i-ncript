@@ -142,11 +142,11 @@ func (f *FileUtils) PackFilesForENCP(receiverUsername, receiverPassword string, 
 	// fmt.Println("without exntension " + filenameWithoutExtension)
 	// extension := filepath.Ext(lastFilePath)
 
-	// filenameWithoutExtension := strings.TrimSuffix(lastFilePath, extension)
+	filenameWithoutExtension := removeFileExtension(lastFilePath)
 	// fmt.Println("without exntension " + filenameWithoutExtension)
 	// zipFilePath := filenameWithoutExtension
 
-	zipFilePath := lastFilePath + ".encp"
+	zipFilePath := filenameWithoutExtension + ".zip"
 	// Create the zip file
 	zipFile, err := os.Create(zipFilePath)
 	if err != nil {
@@ -171,39 +171,47 @@ func (f *FileUtils) PackFilesForENCP(receiverUsername, receiverPassword string, 
 	if err := zipWriter.Close(); err != nil {
 		return fmt.Errorf("error closing zip writer: %s", err)
 	}
-
 	hashedReceiverUsername, err := hashString(receiverUsername)
 	if err != nil {
 		return fmt.Errorf("recipient hash fail: %w", err)
 	}
-
 	var shuffledCredentials = shuffleStrings(hashedReceiverUsername, receiverPassword)
 	hashedReceiverCredentials, err := hashBytes([]byte(shuffledCredentials))
 	if err != nil {
 		return fmt.Errorf("error hashing recipient credentials: %s", err)
 	}
-	encodedReceiverCredentials := base64.StdEncoding.EncodeToString(hashedReceiverCredentials)
-
-	fmt.Println("hashedReceiverUsername " + hashedReceiverUsername)
-	fmt.Println("encoded receiver creds " + encodedReceiverCredentials)
 	encryptedZipFile, err := f.app.encryptENCPFile(hashedReceiverCredentials, zipFilePath)
 	if err != nil {
 		return fmt.Errorf("error with encryptedZipFile: %s", err)
 	}
 	encryptedZipFile.Close()
+	zipFile.Close()
 
 	originalBytes, err := os.ReadFile(encryptedZipFile.Name())
 	if err != nil {
 		return fmt.Errorf("error reading file: %s", err)
 	}
-	// testBytes := []byte("test")
 	fmt.Printf("Original bytes length %d ", len(originalBytes))
-	// testBytes := hashedReceiverCredentials
+	// originalZipFile, err := os.Create(zipFile.Name() + "_original.zip")
+	// if err != nil {
+	// 	fmt.Printf("create zip file fail %s", err)
+	// 	return err
+	// }
+	// originalZipFile.Close()
+	// err = os.WriteFile(originalZipFile.Name(), originalBytes, 0644)
+	// if err != nil {
+	// 	return fmt.Errorf("error writing runes to original file: %s", err)
+	// }
+	encodedReceiverCredentials := base64.StdEncoding.EncodeToString(hashedReceiverCredentials)
 	mixedRunes := insertBytesProcedurally(originalBytes, []byte(encodedReceiverCredentials))
-	// Convert back to bytes
+	// // Convert back to bytes
 	mixedBytes := runesToBytes(mixedRunes)
-
-	err = os.WriteFile(encryptedZipFile.Name(), mixedBytes, 0644)
+	mixedZipFile, err := os.Create(zipFile.Name())
+	if err != nil {
+		fmt.Printf("create zip file fail %s", err)
+		return err
+	}
+	err = os.WriteFile(mixedZipFile.Name(), mixedBytes, 0666)
 	if err != nil {
 		return fmt.Errorf("error writing runes to file: %s", err)
 	}
@@ -228,7 +236,27 @@ func (f *FileUtils) AuthenticateENCPFile(password string, encFilePath string) er
 	if err != nil {
 		return fmt.Errorf("error reading file: %s", err)
 	}
-	matchBytesProcedurally(bytesToRunes(encFileBytes), []byte(encodedCredentials))
+	matched, originalBytes := matchBytesProcedurally(bytesToRunes(encFileBytes), []byte(encodedCredentials))
+	if matched {
+		zipFileName := removeFileExtension(encFilePath)
+		openedZipFile, err := os.Create(zipFileName)
+		if err != nil {
+			fmt.Printf("create zip file fail %s", err)
+			return err
+		}
+		err = os.WriteFile(openedZipFile.Name(), originalBytes, 0644)
+		if err != nil {
+			fmt.Printf("error writing encp bytes to file: %s", err)
+			return fmt.Errorf("error writing decrypted encp to file: %s", err)
+		}
+
+		decryptedZipFile, err := f.app.decryptENCPFile(_hashedCredentials, openedZipFile)
+		if err != nil {
+			fmt.Printf("error decrypted zip file: %s", err)
+			return fmt.Errorf("error writing decrypted encp to file: %s", err)
+		}
+		fmt.Println("decrypted zip file " + decryptedZipFile.Name())
+	}
 	return nil
 }
 
@@ -285,7 +313,7 @@ func insertBytesProcedurally(b1, b2 []byte) []rune {
 	return result
 }
 
-func matchBytesProcedurally(combinedByte []rune, byteToMatch []byte) bool {
+func matchBytesProcedurally(combinedByte []rune, byteToMatch []byte) (bool, []byte) {
 	rByteToMatch := bytesToRunes(byteToMatch)
 	originalS1Length := len(combinedByte) - len(rByteToMatch)
 	var ratio float64
@@ -294,24 +322,30 @@ func matchBytesProcedurally(combinedByte []rune, byteToMatch []byte) bool {
 		ratio = float64(len(combinedByte)) / float64(originalS1Length)
 	} else {
 		fmt.Println("Matched string: (none, combinedByte is the same as byteToMatch)")
-		return false
+		return false, runesToBytes(combinedByte)
 	}
+
 	var matchedRunes []rune
+	var remainingRunes []rune
 	j := 0.0 // j tracks the float position in rByteToMatch based on the ratio.
-	for i := 0; i < len(combinedByte) && int(j) < len(rByteToMatch); i++ {
-		if float64(i) >= j*ratio && combinedByte[i] == rByteToMatch[int(j)] {
+	for i := 0; i < len(combinedByte); i++ {
+		if int(j) < len(rByteToMatch) && float64(i) >= j*ratio && combinedByte[i] == rByteToMatch[int(j)] {
 			matchedRunes = append(matchedRunes, combinedByte[i])
 			j++
+		} else {
+			remainingRunes = append(remainingRunes, combinedByte[i])
 		}
 	}
+
 	fmt.Println("Matched string:", string(matchedRunes))
 	fmt.Println("Matched?:", len(matchedRunes) == len(rByteToMatch))
 	// Success is determined by whether we've matched all runes from byteToMatch.
-	return len(matchedRunes) == len(rByteToMatch)
+	// Returns the remaining bytes as a byte array if the full sequence was found.
+	return len(matchedRunes) == len(rByteToMatch), runesToBytes(remainingRunes)
 }
 
-func (f *FileUtils) addFileToZip(zipWriter *zip.Writer, filePath string) error {
-	fileToZip, err := os.Open(filePath)
+func (f *FileUtils) addFileToZip(zipWriter *zip.Writer, zipFilePath string) error {
+	fileToZip, err := os.Open(zipFilePath)
 	if err != nil {
 		return err
 	}
@@ -327,7 +361,7 @@ func (f *FileUtils) addFileToZip(zipWriter *zip.Writer, filePath string) error {
 		return err
 	}
 	// Use the basename of the filePath for the file name in the zip
-	header.Name = filepath.Base(filePath)
+	header.Name = filepath.Base(zipFilePath)
 	// Create the writer for the file
 	writer, err := zipWriter.CreateHeader(header)
 	if err != nil {
@@ -340,7 +374,7 @@ func (f *FileUtils) addFileToZip(zipWriter *zip.Writer, filePath string) error {
 	} else {
 		_, err = io.Copy(writer, fileToZip)
 	}
-	fmt.Printf("Copied %s to zip file \n", filePath)
+	fmt.Printf("Copied %s to zip file \n", zipFilePath)
 	return err
 }
 
