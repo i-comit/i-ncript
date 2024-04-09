@@ -28,6 +28,7 @@
         heldDownBtns,
         darkLightBGOnId,
         prependAbsPathToRelPaths,
+        getRootDir,
     } from "../../tools/utils.ts";
     import { LogDebug, LogInfo } from "../../../wailsjs/runtime/runtime";
 
@@ -48,7 +49,10 @@
     import Logger from "../modals/Logger.svelte";
     import { FileTypes, getFileType } from "../../enums/FileTypes.ts";
     import PasswordScan from "../widgets/PasswordScan.svelte";
-    import { PackFilesForENCP } from "../../../wailsjs/go/main/FileUtils";
+    import {
+        AuthenticateENCPFile,
+        PackFilesForENCP,
+    } from "../../../wailsjs/go/main/FileUtils";
 
     enum MboxState {
         Pack = "PACK",
@@ -118,8 +122,9 @@
         Object.keys(_heldDownBtns).forEach((key) => {
             LogInfo("Held down node moveFiles on MBOX: " + key);
         });
-        const entries = Object.entries($heldDownBtns);
+        const entries = Object.entries(_heldDownBtns);
         var lastEntry = entries[entries.length - 1];
+
         const [key, value] = lastEntry;
         if (lastEntry) {
             LogInfo("Last entry rel path " + key);
@@ -145,7 +150,7 @@
         enteredPassword = password;
         password = "";
     }
-    
+
     function clearUsername() {
         username = "";
         usernameCheck = false;
@@ -182,10 +187,16 @@
         };
     }
 
-    function packSelectedFiles() {
+    function packFilesForENCP() {
         prependAbsPathToRelPaths(1).then((absFilePaths) => {
             PackFilesForENCP(username, password, absFilePaths);
         });
+    }
+
+    function authenticateENCPFile() {
+        const entries = Object.entries(_heldDownBtns);
+        var lastEntry = entries[entries.length - 1];
+        AuthenticateENCPFile(password, getRootDir() + lastEntry[0]);
     }
 </script>
 
@@ -211,7 +222,7 @@
             </div>
         {:else if currentMBoxState === MboxState.Open}
             <div style="height: 3.175rem" />
-            <div class="row">
+            <div class="row" role="none" on:click|stopPropagation>
                 <Input
                     class="max-h-1 m-0"
                     id="small-input"
@@ -237,7 +248,10 @@
                         on:keyup={queryUsernameStrength}
                     />
                 </div>
-                <div class="flex w-full h-1 px-0.5 relative bottom-1">
+                <div
+                    class="flex w-full h-1 px-0.5 relative bottom-1"
+                    tabindex="-1"
+                >
                     <div
                         class="flex-1 text-center rounded-lg"
                         style={`background-color: ${usernameCheck ? accentColor : darkBGColor};`}
@@ -284,7 +298,10 @@
                             <CloseOutline class=" text-blue-700 " />
                         </button>
                     </div>
-                    <div class="flex w-full h-1 px-0.5 relative bottom-1">
+                    <div
+                        class="flex w-full h-1 px-0.5 relative bottom-1"
+                        tabindex="-1"
+                    >
                         <div
                             class="flex-1 text-center rounded-lg"
                             style={`background-color: ${passwordMatch ? accentColor : darkBGColor};`}
@@ -317,13 +334,13 @@
                         <NeuButtonFake>ENTER</NeuButtonFake>
                     {/if}
                 {:else if passwordMatch}
-                    <NeuButton on:click={packSelectedFiles}>PACK</NeuButton>
+                    <NeuButton on:click={packFilesForENCP}>PACK</NeuButton>
                 {:else}
                     <NeuButtonFake>PACK</NeuButtonFake>
                 {/if}
             {:else if currentMBoxState === MboxState.Open}
                 {#if Object.keys(_heldDownBtns).length > 0}
-                    <NeuButton on:click={() => enterPasswordBtn()}
+                    <NeuButton on:click={() => authenticateENCPFile()}
                         >OPEN</NeuButton
                     >
                 {:else}

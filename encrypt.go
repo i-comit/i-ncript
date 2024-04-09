@@ -6,6 +6,7 @@ import (
 	"crypto/cipher"
 	"crypto/rand"
 	"crypto/sha256"
+	"encoding/base64"
 	"encoding/hex"
 	"fmt"
 	"io"
@@ -202,20 +203,19 @@ func (a *App) encryptENCPFile(hashedReceiverCredentials []byte, filePath string)
 	if err != nil {
 		return nil, err
 	}
-
-	nonce := make([]byte, aesGCM.NonceSize())
-	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
-		return nil, err
-	}
-	encrypted := aesGCM.Seal(nonce, nonce, data, nil)
-
-	newFilePath := filePath + ".encp"
-	encpFile, err := os.Create(newFilePath)
+	// nonce := make([]byte, aesGCM.NonceSize())
+	// if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
+	// 	return nil, err
+	// }
+	encrypted := aesGCM.Seal(nil, make([]byte, aesGCM.NonceSize()), data, nil) // Using a zero
+	encoded := base64.StdEncoding.EncodeToString(encrypted)
+	// newFilePath := filePath + ".encp"
+	encpFile, err := os.Create(filePath)
 	if err != nil {
 		return nil, err
 	}
 	defer encpFile.Close() // Ensure the file is closed when the function returns
-	largeFileErr := a.writeCipherFile(data, encrypted, encpFile)
+	largeFileErr := a.writeCipherFile(data, []byte(encoded), encpFile)
 
 	if largeFileErr != nil {
 		return nil, fmt.Errorf("encrypt file fail: %w", largeFileErr)

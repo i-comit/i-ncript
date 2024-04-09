@@ -2,6 +2,7 @@ package main
 
 import (
 	"archive/zip"
+	"encoding/base64"
 	"fmt"
 	"io"
 	"os"
@@ -138,11 +139,14 @@ func (f *FileUtils) PackFilesForENCP(receiverUsername, receiverPassword string, 
 
 	lastFilePath := filePaths[len(filePaths)-1]
 	// if len(filePaths) > 1 {
-	extension := filepath.Ext(lastFilePath)
+	// fmt.Println("without exntension " + filenameWithoutExtension)
+	// extension := filepath.Ext(lastFilePath)
 
-	filenameWithoutExtension := strings.TrimSuffix(lastFilePath, extension)
-	fmt.Println("without exntension " + filenameWithoutExtension)
-	zipFilePath := filenameWithoutExtension
+	// filenameWithoutExtension := strings.TrimSuffix(lastFilePath, extension)
+	// fmt.Println("without exntension " + filenameWithoutExtension)
+	// zipFilePath := filenameWithoutExtension
+
+	zipFilePath := lastFilePath + ".encp"
 	// Create the zip file
 	zipFile, err := os.Create(zipFilePath)
 	if err != nil {
@@ -178,14 +182,15 @@ func (f *FileUtils) PackFilesForENCP(receiverUsername, receiverPassword string, 
 	if err != nil {
 		return fmt.Errorf("error hashing recipient credentials: %s", err)
 	}
-	fmt.Println("receiver password " + receiverPassword)
+	encodedReceiverCredentials := base64.StdEncoding.EncodeToString(hashedReceiverCredentials)
 
+	fmt.Println("hashedReceiverUsername " + hashedReceiverUsername)
+	fmt.Println("encoded receiver creds " + encodedReceiverCredentials)
 	encryptedZipFile, err := f.app.encryptENCPFile(hashedReceiverCredentials, zipFilePath)
 	if err != nil {
 		return fmt.Errorf("error with encryptedZipFile: %s", err)
 	}
 	encryptedZipFile.Close()
-	fmt.Println("encryptedZipFile.Close()")
 
 	originalBytes, err := os.ReadFile(encryptedZipFile.Name())
 	if err != nil {
@@ -193,8 +198,8 @@ func (f *FileUtils) PackFilesForENCP(receiverUsername, receiverPassword string, 
 	}
 	// testBytes := []byte("test")
 	fmt.Printf("Original bytes length %d ", len(originalBytes))
-	testBytes := hashedReceiverCredentials
-	mixedRunes := insertBytesProcedurally(originalBytes, testBytes)
+	// testBytes := hashedReceiverCredentials
+	mixedRunes := insertBytesProcedurally(originalBytes, []byte(encodedReceiverCredentials))
 	// Convert back to bytes
 	mixedBytes := runesToBytes(mixedRunes)
 
@@ -203,6 +208,27 @@ func (f *FileUtils) PackFilesForENCP(receiverUsername, receiverPassword string, 
 		return fmt.Errorf("error writing runes to file: %s", err)
 	}
 	fmt.Printf("New bytes length %d ", len(mixedBytes))
+	return nil
+}
+
+func (f *FileUtils) AuthenticateENCPFile(password string, encFilePath string) error {
+	fmt.Println("ENCP file path " + encFilePath)
+	var shuffledCredentials = shuffleStrings(hashedUsername, password)
+	_hashedCredentials, err := hashBytes([]byte(shuffledCredentials))
+	if err != nil {
+		return fmt.Errorf("error hashing user credentials: %s", err)
+	}
+	encodedCredentials := base64.StdEncoding.EncodeToString(_hashedCredentials)
+	// if err != nil {
+	// 	fmt.Printf("decode error %s", err)
+	// 	return fmt.Errorf("error decoding user encp credentials: %s", err)
+	// }
+	fmt.Println("hashed your creds " + encodedCredentials)
+	encFileBytes, err := os.ReadFile(encFilePath)
+	if err != nil {
+		return fmt.Errorf("error reading file: %s", err)
+	}
+	matchBytesProcedurally(bytesToRunes(encFileBytes), []byte(encodedCredentials))
 	return nil
 }
 
@@ -279,6 +305,7 @@ func matchBytesProcedurally(combinedByte []rune, byteToMatch []byte) bool {
 		}
 	}
 	fmt.Println("Matched string:", string(matchedRunes))
+	fmt.Println("Matched?:", len(matchedRunes) == len(rByteToMatch))
 	// Success is determined by whether we've matched all runes from byteToMatch.
 	return len(matchedRunes) == len(rByteToMatch)
 }
