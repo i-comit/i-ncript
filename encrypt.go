@@ -244,72 +244,38 @@ func (a *App) writeENCPFile(filePath string, encodedData []byte) error {
 	return nil
 }
 
-func (a *App) decryptENCPFile(hashedReceiverCredentials []byte, zipFile *os.File) (*os.File, error) {
-	// Assuming `initFileCipher` prepares an aesGCM instance using `hashedReceiverCredentials`
-	aesGCM, _, err := initFileCipher(hashedReceiverCredentials, zipFile.Name())
-	if err != nil {
-		fmt.Printf("failure init GCM %s", err)
-		return nil, err
-	}
-	// Use `readENCPFile` to read and decode the Base64-encoded encrypted content
-	decodedData, err := readENCPFile(zipFile.Name())
-	if err != nil {
-		return nil, fmt.Errorf("decrypt file fail: %w", err)
-	}
-
-	decryptedFilePath2 := zipFile.Name() // You might want to adjust this, e.g., removing ".encp"
-	decryptedFile2, err := os.Create(decryptedFilePath2 + ".7z")
+func (a *App) decryptENCPFile(hashedReceiverCredentials []byte, filePath string) (*os.File, error) {
+	aesGCM, data, err := initFileCipher(hashedReceiverCredentials, filePath)
 	if err != nil {
 		return nil, err
 	}
-	defer decryptedFile2.Close()
-
-	// Write the decrypted data to the file
-	_, err = decryptedFile2.Write(decodedData)
-	if err != nil {
-		return nil, fmt.Errorf("error writing decrypted data to file: %w", err)
-	}
-
 	nonceSize := aesGCM.NonceSize()
-	if len(decodedData) < nonceSize {
+
+	if len(data) < nonceSize {
 		return nil, fmt.Errorf("data too short")
 	}
-	nonce, ciphertext := decodedData[:nonceSize], decodedData[nonceSize:]
-	// Decrypt the data
+	nonce, ciphertext := data[:nonceSize], data[nonceSize:]
 	decrypted, err := aesGCM.Open(nil, nonce, ciphertext, nil)
 	if err != nil {
-		return nil, fmt.Errorf("decrypt file fail: %w", err)
+		return nil, err
 	}
-
-	decryptedFilePath := zipFile.Name()
-	decryptedFile, err := os.Create(decryptedFilePath + ".27z")
+	newFilePath := filePath[:len(filePath)-len(".encp")]
+	decFile, err := os.Create(newFilePath)
 	if err != nil {
 		return nil, err
 	}
-	defer decryptedFile.Close()
+	defer decFile.Close()
 
-	// Write the decrypted data to the file
-	_, err = decryptedFile.Write(decrypted)
-	if err != nil {
-		return nil, fmt.Errorf("error writing decrypted data to file: %w", err)
+	largeFileErr := a.writeCipherFile(data, decrypted, decFile)
+	if largeFileErr != nil {
+		fmt.Printf("decrypt file fail: %s", largeFileErr)
+		return nil, fmt.Errorf("decrypt file fail: %w", largeFileErr)
 	}
-
-	return decryptedFile2, nil
-}
-
-func readENCPFile(filePath string) ([]byte, error) {
-	// Read the content from the file
-	encodedData, err := os.ReadFile(filePath)
-	if err != nil {
-		return nil, err
-	}
-	// Decode the Base64-encoded data
-	// decodedData, err := base64.StdEncoding.DecodeString(string(encodedData))
-	// if err != nil {
+	// if err := os.Remove(filePath); err != nil {
+	// 	decFile.Close()
 	// 	return nil, err
 	// }
-	// fmt.Printf("Decoded data len %d", len(decodedData))
-	return encodedData, nil
+	return decFile, nil
 }
 
 func (a *App) decryptFile(filePath string) (*os.File, error) {

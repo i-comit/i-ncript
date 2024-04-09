@@ -96,10 +96,14 @@ func (a *App) Login(username, password string) (int, error) {
 		log.Printf("Failed to hash username %s", err)
 		return -1, err
 	}
-
 	hashedUsername = _hashedUsername
 	var shuffledCredentials = shuffleStrings(_hashedUsername, password)
 	loginStat = checkCredentials(shuffledCredentials)
+	_hashedCredentials, err := hashString(shuffledCredentials)
+	if err != nil {
+		log.Fatalf("Failed to hash credentials: %s", err)
+	}
+	hashedCredentials = []byte(_hashedCredentials)
 
 	switch loginStat {
 	case 0: //Key file does not exist
@@ -108,7 +112,7 @@ func (a *App) Login(username, password string) (int, error) {
 			log.Fatalf("Failed to create file: %s", err)
 		}
 		defer file.Close()
-		a.grantAccessToApp(file, shuffledCredentials)
+		a.grantAccessToApp(file, _hashedCredentials)
 	case 1: //File exists but is empty
 		break
 	case 2: //credentials match file hash
@@ -131,20 +135,15 @@ func (a *App) Login(username, password string) (int, error) {
 	return loginStat, nil
 }
 
-func (a *App) grantAccessToApp(file *os.File, credentials string) {
+func (a *App) grantAccessToApp(file *os.File, _hashedCredentials string) {
 	cwd, err := os.Getwd()
 	if err != nil {
 		log.Fatalf("Failed to get CWD: %s", err)
-	}
-	_hashedCredentials, err := hashString(credentials)
-	if err != nil {
-		log.Fatalf("Failed to encrypt: %s", err)
 	}
 	_, err = file.WriteString(_hashedCredentials)
 	if err != nil {
 		log.Fatalf("Failed to write to file: %s", err)
 	}
-	hashedCredentials = []byte(_hashedCredentials)
 	if a.ctx != nil {
 		a.ResizeWindow(_width*2, _height)
 	}
