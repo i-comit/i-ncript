@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"time"
+	"unicode/utf8"
 )
 
 // GETTER STRUCT
@@ -168,4 +169,21 @@ func shuffleStrings(str1, str2 string) string {
 	}
 	fmt.Println("shuffled " + string(result))
 	return string(result)
+}
+
+func bytesToRunes(b []byte) []rune {
+	var r []rune
+	for len(b) > 0 {
+		runeValue, size := utf8.DecodeRune(b)
+		r = append(r, runeValue)
+		b = b[size:]
+	}
+	return r
+}
+func runesToBytes(r []rune) []byte {
+	var b []byte
+	for _, runeVal := range r {
+		b = append(b, byte(runeVal))
+	}
+	return b
 }

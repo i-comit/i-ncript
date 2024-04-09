@@ -181,11 +181,11 @@
         {#if _currentFileTask === FileTasks.None}
             <div class="row space-x-2">
                 <NeuButton
-                    on:mousedown={() => encrypt()}
+                    on:click={() => encrypt()}
                     _style="font-size: 14px;">ENCRYPT</NeuButton
                 >
                 <NeuButton
-                    on:mousedown={() => decrypt()}
+                    on:click={() => decrypt()}
                     _style="font-size: 14px;">DECRYPT</NeuButton
                 >
             </div>

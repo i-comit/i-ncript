@@ -2,7 +2,6 @@ package main
 
 import (
 	"archive/zip"
-	"context"
 	"fmt"
 	"io"
 	"os"
@@ -10,7 +9,6 @@ import (
 	"path/filepath"
 	"strings"
 	"sync/atomic"
-	"unicode/utf8"
 
 	stdRuntime "runtime"
 
@@ -19,7 +17,6 @@ import (
 
 type FileUtils struct {
 	app *App
-	ctx context.Context
 }
 
 var isInFileTask = false
@@ -135,7 +132,7 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 	return rootNode, nil
 }
 
-func (f *FileUtils) PackFilesForENCP(filePaths []string) error {
+func (f *FileUtils) PackFilesForENCP(receiverUsername, receiverPassword string, filePaths []string) error {
 	f.app.closeDirectoryWatcher()
 	interrupt = make(chan struct{})
 
@@ -156,32 +153,56 @@ func (f *FileUtils) PackFilesForENCP(filePaths []string) error {
 	zipWriter := zip.NewWriter(zipFile)
 	defer zipWriter.Close()
 	for _, filePath := range filePaths {
-		if err := f.addFileToZip(zipWriter, filePath); err != nil {
-			return err
+		select {
+		case <-interrupt: // Check if there's an interrupt signal
+			fmt.Printf("packing interrupted")
+			lastFilePath = filePath
+			return nil
+		default:
+			if err := f.addFileToZip(zipWriter, filePath); err != nil {
+				return err
+			}
 		}
 	}
 	if err := zipWriter.Close(); err != nil {
 		return fmt.Errorf("error closing zip writer: %s", err)
 	}
 
-	encryptedZipFile, err := f.app.encryptENCPFile(zipFile.Name())
+	hashedReceiverUsername, err := hashString(receiverUsername)
 	if err != nil {
-		return fmt.Errorf("encryption error: %s", err)
-	}
-	if err := encryptedZipFile.Close(); err != nil {
-		return fmt.Errorf("error closing encryptedZipFile: %s", err)
+		return fmt.Errorf("recipient hash fail: %w", err)
 	}
 
-	encryptedZipFileOpened, err := os.OpenFile(encryptedZipFile.Name(), os.O_APPEND|os.O_WRONLY, 0644)
+	var shuffledCredentials = shuffleStrings(hashedReceiverUsername, receiverPassword)
+	hashedReceiverCredentials, err := hashBytes([]byte(shuffledCredentials))
 	if err != nil {
-		return fmt.Errorf("error reopening encryptedZipFile for appending: %s", err)
+		return fmt.Errorf("error hashing recipient credentials: %s", err)
 	}
-	defer encryptedZipFileOpened.Close()
+	fmt.Println("receiver password " + receiverPassword)
 
-	if err := appendHashToZipFile(encryptedZipFileOpened, "TestHE"); err != nil {
-		return fmt.Errorf("appendHash error: %s", err)
+	encryptedZipFile, err := f.app.encryptENCPFile(hashedReceiverCredentials, zipFilePath)
+	if err != nil {
+		return fmt.Errorf("error with encryptedZipFile: %s", err)
 	}
+	encryptedZipFile.Close()
+	fmt.Println("encryptedZipFile.Close()")
 
+	originalBytes, err := os.ReadFile(encryptedZipFile.Name())
+	if err != nil {
+		return fmt.Errorf("error reading file: %s", err)
+	}
+	// testBytes := []byte("test")
+	fmt.Printf("Original bytes length %d ", len(originalBytes))
+	testBytes := hashedReceiverCredentials
+	mixedRunes := insertBytesProcedurally(originalBytes, testBytes)
+	// Convert back to bytes
+	mixedBytes := runesToBytes(mixedRunes)
+
+	err = os.WriteFile(encryptedZipFile.Name(), mixedBytes, 0644)
+	if err != nil {
+		return fmt.Errorf("error writing runes to file: %s", err)
+	}
+	fmt.Printf("New bytes length %d ", len(mixedBytes))
 	return nil
 }
 
@@ -214,25 +235,11 @@ func (f *FileUtils) GetAppendedFileBytes(filePath string) error {
 	return nil
 }
 
-func appendHashToZipFile(file *os.File, str string) error {
-	// Seek to the end of the file
-	fmt.Println("append file name " + file.Name())
-	_, err := file.Seek(0, io.SeekEnd)
-	if err != nil {
-		return err
+func insertBytesProcedurally(b1, b2 []byte) []rune {
+	if len(b1) < len(b2) {
+		b1, b2 = b2, b1
 	}
-	_, err = file.Write([]byte(str))
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func insertBytesProcedurally(s1, s2 []byte) []rune {
-	if len(s1) < len(s2) {
-		s1, s2 = s2, s1
-	}
-	r1, r2 := bytesToRunes(s1), bytesToRunes(s2)
+	r1, r2 := bytesToRunes(b1), bytesToRunes(b2)
 	// Determine total length and ratio
 	totalLength := len(r1) + len(r2)
 	ratio := float64(len(r1)) / float64(len(r2))
@@ -274,16 +281,6 @@ func matchBytesProcedurally(combinedByte []rune, byteToMatch []byte) bool {
 	fmt.Println("Matched string:", string(matchedRunes))
 	// Success is determined by whether we've matched all runes from byteToMatch.
 	return len(matchedRunes) == len(rByteToMatch)
-}
-
-func bytesToRunes(b []byte) []rune {
-	var r []rune
-	for len(b) > 0 {
-		runeValue, size := utf8.DecodeRune(b)
-		r = append(r, runeValue)
-		b = b[size:]
-	}
-	return r
 }
 
 func (f *FileUtils) addFileToZip(zipWriter *zip.Writer, filePath string) error {

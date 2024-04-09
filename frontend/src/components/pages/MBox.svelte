@@ -124,7 +124,7 @@
         if (lastEntry) {
             LogInfo("Last entry rel path " + key);
             var lastFileType = getFileType(key);
-            if (lastFileType === FileTypes.Encrypted) {
+            if (lastFileType === FileTypes.EncryptedP) {
                 currentMBoxState = MboxState.Open;
             } else {
                 currentMBoxState = MboxState.Pack;
@@ -140,6 +140,12 @@
             enteredPassword = inputElement.value;
         }
     }
+
+    function enterPasswordBtn() {
+        enteredPassword = password;
+        password = "";
+    }
+    
     function clearUsername() {
         username = "";
         usernameCheck = false;
@@ -178,7 +184,7 @@
 
     function packSelectedFiles() {
         prependAbsPathToRelPaths(1).then((absFilePaths) => {
-            PackFilesForENCP(absFilePaths);
+            PackFilesForENCP(username, password, absFilePaths);
         });
     }
 </script>
@@ -204,6 +210,7 @@
                 <p class="text-start">text</p>
             </div>
         {:else if currentMBoxState === MboxState.Open}
+            <div style="height: 3.175rem" />
             <div class="row">
                 <Input
                     class="max-h-1 m-0"
@@ -273,7 +280,7 @@
                             bind:value={password}
                             on:keyup={checkMatchedPassword}
                         />
-                        <button on:click={clearPassword}>
+                        <button on:click|stopPropagation={clearPassword}>
                             <CloseOutline class=" text-blue-700 " />
                         </button>
                     </div>
@@ -301,14 +308,22 @@
                 >VAULT</NeuButton
             >
             {#if currentMBoxState === MboxState.Pack}
-                {#if passwordMatch}
+                {#if !enteredPassword}
+                    {#if checks.passwordCheck}
+                        <NeuButton on:click={() => enterPasswordBtn()}
+                            >ENTER</NeuButton
+                        >
+                    {:else}
+                        <NeuButtonFake>ENTER</NeuButtonFake>
+                    {/if}
+                {:else if passwordMatch}
                     <NeuButton on:click={packSelectedFiles}>PACK</NeuButton>
                 {:else}
-                    <NeuButtonFake>ENTER</NeuButtonFake>
+                    <NeuButtonFake>PACK</NeuButtonFake>
                 {/if}
             {:else if currentMBoxState === MboxState.Open}
                 {#if Object.keys(_heldDownBtns).length > 0}
-                    <NeuButton on:click={() => switchPages(AppPage.Vault)}
+                    <NeuButton on:click={() => enterPasswordBtn()}
                         >OPEN</NeuButton
                     >
                 {:else}

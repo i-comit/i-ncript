@@ -11,4 +11,4 @@ export function OpenDirectory(arg1:string):Promise<void>;
 
 export function OpenFile(arg1:string):Promise<void>;
 
-export function PackFilesForENCP(arg1:Array<string>):Promise<void>;
+export function PackFilesForENCP(arg1:string,arg2:string,arg3:Array<string>):Promise<void>;

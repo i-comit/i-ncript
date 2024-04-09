@@ -168,7 +168,7 @@ func (a *App) reverseProgress(encrypt bool, files int) {
 }
 
 func (a *App) encryptFile(filePath string) (*os.File, error) {
-	aesGCM, data, err := initFileCipher(filePath)
+	aesGCM, data, err := initFileCipher(hashedCredentials, filePath)
 	if err != nil {
 		return nil, err
 	}
@@ -197,11 +197,12 @@ func (a *App) encryptFile(filePath string) (*os.File, error) {
 	return encFile, nil
 }
 
-func (a *App) encryptENCPFile(filePath string) (*os.File, error) {
-	aesGCM, data, err := initFileCipher(filePath)
+func (a *App) encryptENCPFile(hashedReceiverCredentials []byte, filePath string) (*os.File, error) {
+	aesGCM, data, err := initFileCipher(hashedReceiverCredentials, filePath)
 	if err != nil {
 		return nil, err
 	}
+
 	nonce := make([]byte, aesGCM.NonceSize())
 	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
 		return nil, err
@@ -209,26 +210,30 @@ func (a *App) encryptENCPFile(filePath string) (*os.File, error) {
 	encrypted := aesGCM.Seal(nonce, nonce, data, nil)
 
 	newFilePath := filePath + ".encp"
-	encFile, err := os.Create(newFilePath)
+	encpFile, err := os.Create(newFilePath)
 	if err != nil {
 		return nil, err
 	}
-	defer encFile.Close() // Ensure the file is closed when the function returns
-
-	largeFileErr := a.writeCipherFile(data, encrypted, encFile)
+	defer encpFile.Close() // Ensure the file is closed when the function returns
+	largeFileErr := a.writeCipherFile(data, encrypted, encpFile)
 
 	if largeFileErr != nil {
 		return nil, fmt.Errorf("encrypt file fail: %w", largeFileErr)
 	}
-	if err := os.Remove(filePath); err != nil {
-		encFile.Close() // Best effort to close the encrypted file before returning error
-		return nil, err
-	}
-	return encFile, nil
+	//This needs the full file extension, do not use the string path without the ext
+	// if err := os.Remove(filePath); err != nil {
+	// 	encpFile.Close()
+	// 	return nil, err
+	// }
+	return encpFile, nil
+}
+
+func (a *App) OpenENCPFile(inputPassword, encpFilePath string) {
+
 }
 
 func (a *App) decryptFile(filePath string) (*os.File, error) {
-	aesGCM, data, err := initFileCipher(filePath)
+	aesGCM, data, err := initFileCipher(hashedCredentials, filePath)
 	if err != nil {
 		return nil, err
 	}
@@ -321,12 +326,12 @@ func (a *App) writeCipherFile(data, cipherData []byte, cipherFile *os.File) erro
 	return nil
 }
 
-func initFileCipher(filePath string) (cipher.AEAD, []byte, error) {
+func initFileCipher(_hashedCredentials []byte, filePath string) (cipher.AEAD, []byte, error) {
 	data, err := os.ReadFile(filePath)
 	if err != nil {
 		return nil, nil, err
 	}
-	hashedKey := sha256.Sum256(hashedCredentials)
+	hashedKey := sha256.Sum256(_hashedCredentials)
 	key := hashedKey[:]
 	block, err := aes.NewCipher(key)
 	if err != nil {
@@ -378,23 +383,6 @@ func checkCredentials(_hashedCredentials string) int {
 	}
 }
 
-func (a *App) OpenENCPFile(password string) error {
-	_hashedPassword, err := hashString(password)
-	if err != nil {
-		log.Printf("Failed to hash password %s", err)
-		return err
-	}
-	var shuffledCredentials = shuffleStrings(hashedUsername, _hashedPassword)
-
-	hashedStringToCheck, err := hashString(shuffledCredentials)
-	if err != nil {
-		log.Printf("Failed to hash credentials to check %s", err)
-		return err
-	}
-	log.Printf("lel " + hashedStringToCheck)
-	return nil
-}
-
 // func (a *App) RecoverENCPFile(password string) error {
 // 	_hashedPassword, err := hashString(password)
 // 	if err != nil {
@@ -412,32 +400,30 @@ func (a *App) OpenENCPFile(password string) error {
 // 	return nil
 // }
 
-func packENCPFile(recipientUsername, recipientPassword string, filePaths []string) error {
-	recipientHashedCredentials, err := hashString(recipientUsername + recipientPassword)
-	if err != nil {
-		log.Printf("Failed to hash credentials to check %s", err)
-		return err
-	}
-	log.Printf("lel " + recipientHashedCredentials)
-	return nil
-}
-
 func hashString(stringToHash string) (string, error) {
 	byteData := []byte(_uniqueID + stringToHash)
+	hashedString, err := hashBytes(byteData)
+	if err != nil {
+		return "", fmt.Errorf("hashString fail: %w", err)
+	}
+	return hex.EncodeToString(hashedString), nil
+}
+
+func hashBytes(byteData []byte) ([]byte, error) {
 	hashedKey := sha256.Sum256(byteData)
 	key := hashedKey[:] // Convert to slice
 
 	block, err := aes.NewCipher(key)
 	if err != nil {
-		return "", fmt.Errorf("hashString fail: %w", err)
+		return nil, err
 	}
 
 	aesGCM, err := cipher.NewGCM(block)
 	if err != nil {
-		return "", fmt.Errorf("hashString fail: %w", err)
+		return nil, err
 	}
 	//The nonce is omitted as we need to ensure that the hash is the same for repeated logins
 	encrypted := aesGCM.Seal(nil, make([]byte, aesGCM.NonceSize()), byteData, nil) // Using a zero
 	log.Printf("hashed string %s", hex.EncodeToString(encrypted))
-	return hex.EncodeToString(encrypted), nil
+	return encrypted, nil
 }
