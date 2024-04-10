@@ -19,6 +19,8 @@ var assets embed.FS
 const fileProcessed = "fileProcessed"
 const totalFileCt = "totalFileCount"
 const addLogFile = "addLogFile"
+const changeFileTask = "changeFileTask"
+const largeFilePercent = "largeFilePercent"
 
 // DATA consts
 const rootFolder = "i-ncript" //Change to whatever you want the root folder to be

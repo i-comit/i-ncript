@@ -51,6 +51,7 @@ func (a *App) encryptOrDecrypt(encryptOrDecrypt bool, filePaths []string) (bool,
 		case <-interrupt: // Check if there's an interrupt signal
 			fmt.Printf("encryption interrupted")
 			lastFilePath = filePath
+			a.reverseProgress(encryptOrDecrypt, i)
 			return false, nil
 		default:
 			if encryptOrDecrypt {
@@ -134,21 +135,7 @@ func (a *App) InterruptEncryption() {
 
 func (a *App) reverseProgress(encrypt bool, files int) {
 	lastFilePath = ""
-	// runtime.EventsEmit(a.ctx, totalFileCt, 100)
-	time.Sleep(time.Second)
-	// done := make(chan bool)
-	// go func() {
-	// 	counter := 100
-	// 	for counter > 0 {
-	// 		counter-- // Decrement the counter
-	// 		if a.ctx != nil {
-	// 			runtime.EventsEmit(a.ctx, fileProcessed, counter)
-	// 		}
-	// 		time.Sleep(2 * time.Millisecond) // Wait for 0.2 seconds
-	// 	}
-	// 	done <- true // Signal that the loop is done
-	// }()
-	// <-done
+	// time.Sleep(time.Second)
 	if encrypt {
 		response := fmt.Sprintf("encrypted %d files.", files)
 		runtime.EventsEmit(a.ctx, addLogFile, response)
@@ -227,55 +214,38 @@ func (a *App) encryptZipFile(hashedReceiverCredentials []byte, filePath string) 
 	return encFile, nil
 }
 
-func (a *App) writeENCPFile(filePath string, encodedData []byte) error {
-	// Open the file for writing
-	file, err := os.Create(filePath)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	// Write the Base64-encoded encrypted data to the file
-	_, err = file.Write(encodedData)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (a *App) decryptENCPFile(hashedReceiverCredentials []byte, filePath string) (*os.File, error) {
+func (a *App) decryptENCPFile(hashedReceiverCredentials []byte, filePath string) (bool, error) {
 	aesGCM, data, err := initFileCipher(hashedReceiverCredentials, filePath)
 	if err != nil {
-		return nil, err
+		return false, err
 	}
 	nonceSize := aesGCM.NonceSize()
 
 	if len(data) < nonceSize {
-		return nil, fmt.Errorf("data too short")
+		return false, fmt.Errorf("data too short")
 	}
 	nonce, ciphertext := data[:nonceSize], data[nonceSize:]
 	decrypted, err := aesGCM.Open(nil, nonce, ciphertext, nil)
 	if err != nil {
-		return nil, err
+		return false, err
 	}
 	newFilePath := filePath[:len(filePath)-len(".encp")]
 	decFile, err := os.Create(newFilePath)
 	if err != nil {
-		return nil, err
+		return false, err
 	}
 	defer decFile.Close()
 
 	largeFileErr := a.writeCipherFile(data, decrypted, decFile)
 	if largeFileErr != nil {
 		fmt.Printf("decrypt file fail: %s", largeFileErr)
-		return nil, fmt.Errorf("decrypt file fail: %w", largeFileErr)
+		return false, fmt.Errorf("decrypt file fail: %w", largeFileErr)
 	}
-	// if err := os.Remove(filePath); err != nil {
-	// 	decFile.Close()
-	// 	return nil, err
-	// }
-	return decFile, nil
+	if err := os.Remove(filePath); err != nil {
+		decFile.Close()
+		return false, err
+	}
+	return true, nil
 }
 
 func (a *App) decryptFile(filePath string) (*os.File, error) {
@@ -335,7 +305,7 @@ func (a *App) writeCipherFile(data, cipherData []byte, cipherFile *os.File) erro
 					percent := (float64(atomic.LoadInt64(&writtenBytes)) / float64(len(cipherData))) * 100
 					percentInt := int(percent + 0.5) // Adds 0.5 before casting to round to nearest whole number
 					// fmt.Printf("Percentage: %d%%\n", percentInt)
-					runtime.EventsEmit(a.ctx, "largeFilePercent", percentInt)
+					runtime.EventsEmit(a.ctx, largeFilePercent, percentInt)
 				case <-done:
 					return
 				}

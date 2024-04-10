@@ -9,8 +9,6 @@
             <PauseSolid class="pl-px !w-8 !h-8" />
         </div>
     </div>
-    <!-- <div class="flex flex-grow justify-center items-center"> -->
-    <!-- <div class="flex space-x-1 text-black text-center text-sm m-0 p-0 leading-none">ENCRYPTING</div> -->
 </div>
 {#if dataProgress > 0}
     <div class="progress progress-striped active mb-1 rounded-md h-4 p-0 m-0">

@@ -54,8 +54,6 @@ export const pageIndex: () => number = () => {
     };
 };
 
-export const totalFileCt = writable<number>(0);
-
 export function switchPages(page: AppPage) {
     currentPage.set(page);
     clearHeldBtns();

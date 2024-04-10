@@ -15,7 +15,13 @@
         lightBGColor,
         tooltipTailwindClass,
     } from "../../stores/constantVariables.ts";
-    import { darkLightMode } from "../../stores/dynamicVariables.ts";
+    import {
+        darkLightMode,
+        fileCount,
+        fileTaskPercent,
+        largeFilePercent,
+        totalFileCt,
+    } from "../../stores/dynamicVariables.ts";
 
     import {
         buildFileTree,
@@ -30,7 +36,12 @@
         prependAbsPathToRelPaths,
         getRootDir,
     } from "../../tools/utils.ts";
-    import { LogDebug, LogInfo } from "../../../wailsjs/runtime/runtime";
+    import {
+        EventsOff,
+        EventsOn,
+        LogDebug,
+        LogInfo,
+    } from "../../../wailsjs/runtime/runtime";
 
     import Frame from "../widgets/Frame.svelte";
     import PanelDivider from "../widgets/PanelDivider.svelte";
@@ -72,7 +83,7 @@
     currentFileTask.subscribe((value) => {
         _currentFileTask = value;
     });
-    let _fileTaskPercent: number;
+
     let password: string;
     let enteredPassword: string = "";
 
@@ -102,9 +113,24 @@
 
     onMount(() => {
         buildFileTree();
+        EventsOn("fileProcessed", (fileCtEvt: number) => {
+            fileCount.set(fileCtEvt);
+            fileTaskPercent.set(
+                Math.round(($fileCount / get(totalFileCt)) * 100),
+            );
+            if (fileCtEvt === 0) currentFileTask.set(FileTasks.None);
+        });
+        EventsOn("largeFilePercent", (_largeFilePercent: number) => {
+            largeFilePercent.set(_largeFilePercent);
+            if (_largeFilePercent === 0) EventsOff("largeFilePercent");
+        });
+        EventsOn("changeFileTask", (fileTask: number) => {
+        });
+
         darkLightBGOnId(get(darkLightMode), "right-panel");
         darkLightBGOnId(get(darkLightMode), "left-panel");
-        password = "";
+        clearUsername();
+        clearPassword();
     });
 
     onDestroy(() => {
@@ -130,7 +156,8 @@
         if (lastEntry) {
             LogInfo("Last entry rel path " + key);
             var lastFileType = getFileType(key);
-            if (lastFileType === FileTypes.EncryptedP ||
+            if (
+                lastFileType === FileTypes.EncryptedP ||
                 lastFileType === FileTypes.Encrypted
             ) {
                 currentMBoxState = MboxState.Open;
@@ -192,6 +219,7 @@
 
     function packFilesForENCP() {
         prependAbsPathToRelPaths(1).then((absFilePaths) => {
+            currentFileTask.set(FileTasks.Pack);
             PackFilesForENCP(username, password, absFilePaths);
         });
     }
@@ -326,7 +354,7 @@
             {:else}
                 <TaskDisplay />
                 <div class="h-0.5" />
-                <WaveProgress dataProgress={_fileTaskPercent}></WaveProgress>
+                <WaveProgress dataProgress={$fileTaskPercent}></WaveProgress>
             {/if}
         {/if}
 

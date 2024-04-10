@@ -26,7 +26,13 @@
     import { Modals, currentModal } from "../../enums/Modals.ts";
     import { FileTasks, currentFileTask } from "../../enums/FileTasks.ts";
 
-    import { darkLightMode } from "../../stores/dynamicVariables.ts";
+    import {
+        darkLightMode,
+        fileCount,
+        fileTaskPercent,
+        largeFilePercent,
+        totalFileCt,
+    } from "../../stores/dynamicVariables.ts";
 
     import {
         buildFileTree,
@@ -40,7 +46,6 @@
         pointerDown,
         heldDownBtns,
         prependAbsPathToRelPaths,
-        totalFileCt,
         checkFileTypesinHeldDownBtns,
         darkLightBGOnId,
     } from "../../tools/utils.ts";
@@ -61,13 +66,6 @@
     import PanelDivider from "../widgets/PanelDivider.svelte";
     import FileTools from "../widgets/FileTools.svelte";
 
-    //  let _totalFileCt: number;
-    // _totalFileCt = 0;
-    let _fileCount: number;
-
-    let _fileTaskPercent: number;
-    let _largeFilePercent: number;
-
     let _currentFileTask: FileTasks;
     currentFileTask.subscribe((value) => {
         _currentFileTask = value;
@@ -86,17 +84,15 @@
     onMount(() => {
         buildFileTree();
         EventsOn("fileProcessed", (fileCtEvt: number) => {
-            _fileCount = fileCtEvt;
-            _fileTaskPercent = Math.round(
-                (_fileCount / get(totalFileCt)) * 100,
+            fileCount.set(fileCtEvt);
+            fileTaskPercent.set(
+                Math.round(($fileCount / get(totalFileCt)) * 100),
             );
             if (fileCtEvt === 0) currentFileTask.set(FileTasks.None);
         });
-        // toggleDarkLightBackground(get(darklightMode));
-        EventsOn("largeFilePercent", (largeFilePercent: number) => {
-            _largeFilePercent = largeFilePercent;
-            LogInfo("large file percent " + _largeFilePercent);
-            if (largeFilePercent === 0) EventsOff("largeFilePercent");
+        EventsOn("largeFilePercent", (_largeFilePercent: number) => {
+            largeFilePercent.set(_largeFilePercent);
+            if (_largeFilePercent === 0) EventsOff("largeFilePercent");
         });
 
         darkLightBGOnId(get(darkLightMode), "right-panel");
@@ -180,13 +176,11 @@
         <DirSize />
         {#if _currentFileTask === FileTasks.None}
             <div class="row space-x-2">
-                <NeuButton
-                    on:click={() => encrypt()}
-                    _style="font-size: 14px;">ENCRYPT</NeuButton
+                <NeuButton on:click={() => encrypt()} _style="font-size: 14px;"
+                    >ENCRYPT</NeuButton
                 >
-                <NeuButton
-                    on:click={() => decrypt()}
-                    _style="font-size: 14px;">DECRYPT</NeuButton
+                <NeuButton on:click={() => decrypt()} _style="font-size: 14px;"
+                    >DECRYPT</NeuButton
                 >
             </div>
         {:else}
@@ -207,7 +201,7 @@
                 </p>
             {:else}
                 <div class="h-0.5" />
-                <WaveProgress dataProgress={_fileTaskPercent}></WaveProgress>
+                <WaveProgress dataProgress={$fileTaskPercent}></WaveProgress>
             {/if}
         </div>
 
@@ -228,10 +222,10 @@
         on:click={clearHeldBtnsFromContainer}
     >
         <!-- <NeuSearch /> -->
-        {#if _largeFilePercent > 0}
+        {#if $largeFilePercent > 0}
             <RadialProgress
                 _style="right: 3.6rem"
-                dataProgress={_largeFilePercent}
+                dataProgress={$largeFilePercent}
             />
         {/if}
         {#if _modal === Modals.None}

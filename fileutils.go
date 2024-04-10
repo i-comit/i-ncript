@@ -178,150 +178,31 @@ func (f *FileUtils) PackFilesForENCP(receiverUsername, receiverPassword string, 
 
 	fmt.Printf("_hashedCredentials! %s", _hashedCredentials)
 
-	// encodedCredentials := base64.StdEncoding.EncodeToString([]byte(_hashedCredentials))
 	encryptedZipFile, err := f.app.encryptZipFile([]byte(_hashedCredentials), zipFile.Name())
 	if err != nil {
 		fmt.Printf("failed encryption ENCP %s", err)
 		return err
 	}
 	encryptedZipFile.Close()
-
-	// keyFile, err := os.Create(filepath.Base(lastFilePath) + "_stuff.key")
-	// if err != nil {
-	// 	fmt.Printf("key error %s", err)
-	// 	return err
-	// }
-	// defer keyFile.Close()
-
-	// _, err = keyFile.WriteString(_hashedCredentials)
-	// if err != nil {
-	// 	log.Fatalf("Failed to write to file: %s", err)
-	// }
-
-	// // Assuming previous code exists above this and you've just closed the encryptedZipFile
-	// // Create a new parent zip file that will contain the encrypted zip file and the key file
-	// parentZipFile, err := os.Create(filepath.Join(filepath.Dir(zipFile.Name()), "final_bundle.zip"))
-	// if err != nil {
-	// 	return fmt.Errorf("failed to create parent zip file: %s", err)
-	// }
-	// defer parentZipFile.Close()
-
-	// parentZipWriter := zip.NewWriter(parentZipFile)
-	// defer parentZipWriter.Close()
-
-	// // Function to add a file to the parent zip
-	// addFileToZip := func(zipWriter *zip.Writer, filePath string) error {
-	// 	fileToZip, err := os.Open(filePath)
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	// 	defer fileToZip.Close()
-
-	// 	// Get the info about the file
-	// 	info, err := fileToZip.Stat()
-	// 	if err != nil {
-	// 		return err
-	// 	}
-
-	// 	header, err := zip.FileInfoHeader(info)
-	// 	if err != nil {
-	// 		return err
-	// 	}
-
-	// 	header.Name = filepath.Base(filePath)
-	// 	header.Method = zip.Deflate
-
-	// 	writer, err := zipWriter.CreateHeader(header)
-	// 	if err != nil {
-	// 		return err
-	// 	}
-
-	// 	_, err = io.Copy(writer, fileToZip)
-	// 	return err
-	// }
-
-	// // Add the encrypted zip file to the parent zip
-	// if err := addFileToZip(parentZipWriter, encryptedZipFile.Name()); err != nil {
-	// 	return fmt.Errorf("failed to add encrypted zip to parent zip: %s", err)
-	// }
-
-	// // Add the key file to the parent zip
-	// if err := addFileToZip(parentZipWriter, keyFile.Name()); err != nil {
-	// 	return fmt.Errorf("failed to add key file to parent zip: %s", err)
-	// }
-
-	// // Make sure to close the parentZipWriter to finalize the zip file
-	// if err := parentZipWriter.Close(); err != nil {
-	// 	return fmt.Errorf("error closing parent zip writer: %s", err)
-	// }
-
-	// fmt.Println("Successfully created parent zip with encrypted zip and key file.")
-
 	return nil
 }
 
-func (f *FileUtils) AuthenticateENCPFile(password string, encFilePath string) error {
+func (f *FileUtils) AuthenticateENCPFile(password string, encFilePath string) (bool, error) {
 	fmt.Println("ENCP file path " + encFilePath)
 	var shuffledCredentials = shuffleStrings(hashedUsername, password)
-	// _bytesCredentials, err := hashBytes([]byte(shuffledCredentials))
-	// if err != nil {
-	// 	return fmt.Errorf("error hashing user credentials: %s", err)
-	// }
 	_hashedCredentials, err := hashString(shuffledCredentials)
 	if err != nil {
-		return fmt.Errorf("error hashing user credentials: %s", err)
+		return false, fmt.Errorf("error hashing user credentials: %s", err)
 	}
 	fmt.Printf("hashed Credentials %s \n", hashedCredentials)
 	fmt.Printf("_hashedCredentials %s \n", _hashedCredentials)
 	decryptedZipFile, err := f.app.decryptENCPFile([]byte(_hashedCredentials), encFilePath)
 	if err != nil {
 		fmt.Printf("error decrypting zip file: %s", err)
-		return fmt.Errorf("error writing decrypted encp to file: %s", err)
+		return false, fmt.Errorf("error writing decrypted encp to file: %s", err)
 	}
-	fmt.Println("decrypted zip file " + decryptedZipFile.Name())
-	return nil
-
-	// encodedCredentials := base64.StdEncoding.EncodeToString(_hashedCredentials)
-
-	// fmt.Println("hashed your creds " + encodedCredentials)
-	// encFileBytes, err := os.ReadFile(encFilePath)
-	// if err != nil {
-	// 	return fmt.Errorf("error reading file: %s", err)
-	// }
-
-	// // encFile, err := os.Open(encFilePath)
-	// // if err != nil {
-	// // 	return fmt.Errorf("error reading file: %s", err)
-	// // }
-	// // decryptedZipFile, err := f.app.decryptENCPFile([]byte(encodedCredentials), encFile)
-	// // if err != nil {
-	// // 	fmt.Printf("error decrypted zip file: %s", err)
-	// // 	return fmt.Errorf("error writing decrypted encp to file: %s", err)
-	// // }
-	// // fmt.Println("decrypted zip file " + decryptedZipFile.Name())
-
-	// matched, originalBytes := matchBytesProcedurally(bytesToRunes(encFileBytes), []byte(encodedCredentials))
-	// if matched {
-	// 	zipFileName := removeFileExtension(encFilePath)
-	// 	openedZipFile, err := os.Create(zipFileName + "_original.zip")
-	// 	if err != nil {
-	// 		fmt.Printf("create zip file fail %s", err)
-	// 		return err
-	// 	}
-	// 	err = os.WriteFile(openedZipFile.Name(), originalBytes, 0644)
-	// 	if err != nil {
-	// 		fmt.Printf("error writing encp bytes to file: %s", err)
-	// 		return fmt.Errorf("error writing decrypted encp to file: %s", err)
-	// 	}
-
-	// 	decryptedZipFile, err := f.app.decryptENCPFile([]byte(encodedCredentials), openedZipFile)
-	// 	if err != nil {
-	// 		fmt.Printf("error decrypted zip file: %s", err)
-	// 		return fmt.Errorf("error writing decrypted encp to file: %s", err)
-	// 	}
-	// 	fmt.Println("decrypted zip file " + decryptedZipFile.Name())
-	// }
-	// return nil
+	// fmt.Println("decrypted zip file " + decryptedZipFile.Name())
+	return decryptedZipFile, nil
 }
 
 func (f *FileUtils) OpenENCPmatch(password, encFilePath string) error {
@@ -447,17 +328,14 @@ func (f *FileUtils) addFileToZip(zipWriter *zip.Writer, zipFilePath string) erro
 		return err
 	}
 	defer fileToZip.Close()
-	// Get the info about the file
 	info, err := fileToZip.Stat()
 	if err != nil {
 		return err
 	}
-	// Create a header based on the file info
 	header, err := zip.FileInfoHeader(info)
 	if err != nil {
 		return err
 	}
-	// Use the basename of the filePath for the file name in the zip
 	header.Name = filepath.Base(zipFilePath)
 	// Create the writer for the file
 	writer, err := zipWriter.CreateHeader(header)
@@ -465,7 +343,7 @@ func (f *FileUtils) addFileToZip(zipWriter *zip.Writer, zipFilePath string) erro
 		return err
 	}
 
-	const thresholdFileSize = 50 //if file is more than 50MB
+	const thresholdFileSize = 40 //if file is more than 50MB
 	if info.Size() > int64(thresholdFileSize*1024*1024) {
 		err = f.checkLargeZipFileTicker(writer, fileToZip)
 	} else {
@@ -486,7 +364,6 @@ func (f *FileUtils) checkLargeZipFileTicker(writer io.Writer, fileToZip *os.File
 	}
 
 	var writtenBytes int64 = 0
-	// Initialize your progress tracking here, if needed
 	buf := make([]byte, 4096) // 4KB buffer
 	for {
 		n, err := fileToZip.Read(buf)
@@ -503,12 +380,14 @@ func (f *FileUtils) checkLargeZipFileTicker(writer io.Writer, fileToZip *os.File
 		atomic.AddInt64(&writtenBytes, int64(wn))
 		// Update progress here using writtenBytes and fileSize
 		percent := float64(writtenBytes) / float64(fileSize) * 100
-		fmt.Printf("Progress: %.2f%%\n", percent) // Replace with your event emission
-
+		percentInt := int(percent + 0.5)
+		wailsRuntime.EventsEmit(f.app.ctx, largeFilePercent, percentInt)
+		fmt.Printf("Zip Progress: %.2f%%\n", percent) // Replace with your event emission
 		if err == io.EOF {
 			break
 		}
 	}
+	wailsRuntime.EventsEmit(f.app.ctx, largeFilePercent, 0)
 	return nil
 }
 
