@@ -12,6 +12,8 @@ export function DecryptFilesInDir(arg1:number):Promise<boolean>;
 
 export function DirectoryWatcher(arg1:number):Promise<void>;
 
+export function EncryptENCPFile(arg1:string,arg2:string,arg3:string):Promise<boolean>;
+
 export function EncryptFilesInArr(arg1:Array<string>):Promise<boolean>;
 
 export function EncryptFilesInDir(arg1:number):Promise<boolean>;

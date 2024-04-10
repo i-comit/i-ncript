@@ -184,34 +184,45 @@ func (a *App) encryptFile(filePath string) (*os.File, error) {
 	return encFile, nil
 }
 
-func (a *App) encryptZipFile(hashedReceiverCredentials []byte, filePath string) (*os.File, error) {
-	aesGCM, data, err := initFileCipher(hashedReceiverCredentials, filePath)
+func (a *App) EncryptENCPFile(_username, _password, filePath string) (bool, error) {
+	hashedReceiverUsername, err := hashString(_username)
 	if err != nil {
-		return nil, err
+		return false, err
+	}
+	var shuffledCredentials = shuffleStrings(hashedReceiverUsername, _password)
+	_hashedCredentials, err := hashString(shuffledCredentials)
+	if err != nil {
+		return false, err
+	}
+
+	fmt.Printf("_hashedCredentials! %s", _hashedCredentials)
+	aesGCM, data, err := initFileCipher([]byte(_hashedCredentials), filePath)
+	if err != nil {
+		return false, err
 	}
 	nonce := make([]byte, aesGCM.NonceSize())
 	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
-		return nil, err
+		return false, err
 	}
 	encrypted := aesGCM.Seal(nonce, nonce, data, nil)
 
 	newFilePath := filePath + ".encp"
 	encFile, err := os.Create(newFilePath)
 	if err != nil {
-		return nil, err
+		return false, err
 	}
 	defer encFile.Close() // Ensure the file is closed when the function returns
+	fileCipher := a.writeCipherFile(data, encrypted, encFile)
 
-	largeFileErr := a.writeCipherFile(data, encrypted, encFile)
-
-	if largeFileErr != nil {
-		return nil, fmt.Errorf("encrypt file fail: %w", largeFileErr)
+	if fileCipher != nil {
+		return false, err
 	}
 	if err := os.Remove(filePath); err != nil {
 		encFile.Close() // Best effort to close the encrypted file before returning error
-		return nil, err
+		fmt.Printf("error closing file %s", err)
+		return false, err
 	}
-	return encFile, nil
+	return true, nil
 }
 
 func (a *App) decryptENCPFile(hashedReceiverCredentials []byte, filePath string) (bool, error) {

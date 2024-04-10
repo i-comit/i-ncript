@@ -8,7 +8,7 @@
     import { GetFilesByType } from "../../../wailsjs/go/main/Getters";
     import { setIsInFileTask } from "../../tools/fileTree";
     import { FileTasks, currentFileTask } from "../../enums/FileTasks";
-    import { totalFileCt } from "../../tools/utils";
+    import { totalFileCt } from "../../stores/dynamicVariables";
 
     let isChecked: boolean;
     isChecked = false;

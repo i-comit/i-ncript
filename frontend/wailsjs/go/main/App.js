@@ -22,6 +22,10 @@ export function DirectoryWatcher(arg1) {
   return window['go']['main']['App']['DirectoryWatcher'](arg1);
 }
 
+export function EncryptENCPFile(arg1, arg2, arg3) {
+  return window['go']['main']['App']['EncryptENCPFile'](arg1, arg2, arg3);
+}
+
 export function EncryptFilesInArr(arg1) {
   return window['go']['main']['App']['EncryptFilesInArr'](arg1);
 }

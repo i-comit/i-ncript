@@ -88,10 +88,12 @@
             fileTaskPercent.set(
                 Math.round(($fileCount / get(totalFileCt)) * 100),
             );
+            LogInfo("file count " + fileCtEvt);
             if (fileCtEvt === 0) currentFileTask.set(FileTasks.None);
         });
         EventsOn("largeFilePercent", (_largeFilePercent: number) => {
             largeFilePercent.set(_largeFilePercent);
+            LogInfo("largeFile " + $largeFilePercent);
             if (_largeFilePercent === 0) EventsOff("largeFilePercent");
         });
 
@@ -101,6 +103,8 @@
 
     onDestroy(() => {
         unsub_darkLightMode();
+        EventsOff("fileProcessed")
+        EventsOff("largeFilePercent")
     });
 
     function encrypt() {

@@ -133,7 +133,7 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 	return rootNode, nil
 }
 
-func (f *FileUtils) PackFilesForENCP(receiverUsername, receiverPassword string, filePaths []string) error {
+func (f *FileUtils) PackFilesForENCP(receiverUsername, receiverPassword string, filePaths []string) (string, error) {
 	f.app.closeDirectoryWatcher()
 	interrupt = make(chan struct{})
 
@@ -143,7 +143,7 @@ func (f *FileUtils) PackFilesForENCP(receiverUsername, receiverPassword string, 
 	// Create the zip file
 	zipFile, err := os.Create(zipFilePath)
 	if err != nil {
-		return err
+		return "", err
 	}
 	defer zipFile.Close()
 	// Create a new zip writer
@@ -154,37 +154,18 @@ func (f *FileUtils) PackFilesForENCP(receiverUsername, receiverPassword string, 
 		case <-interrupt: // Check if there's an interrupt signal
 			fmt.Printf("packing interrupted")
 			lastFilePath = filePath
-			return nil
+			return "", nil
 		default:
 			if err := f.addFileToZip(zipWriter, filePath); err != nil {
-				return err
+				return "", nil
 			}
 		}
 	}
 	if err := zipWriter.Close(); err != nil {
-		return fmt.Errorf("error closing zip writer: %s", err)
+		return "", fmt.Errorf("error closing zip writer: %s", err)
 	}
 	zipFile.Close()
-
-	hashedReceiverUsername, err := hashString(receiverUsername)
-	if err != nil {
-		return fmt.Errorf("recipient hash fail: %w", err)
-	}
-	var shuffledCredentials = shuffleStrings(hashedReceiverUsername, receiverPassword)
-	_hashedCredentials, err := hashString(shuffledCredentials)
-	if err != nil {
-		return fmt.Errorf("error hashing recipient credentials: %s", err)
-	}
-
-	fmt.Printf("_hashedCredentials! %s", _hashedCredentials)
-
-	encryptedZipFile, err := f.app.encryptZipFile([]byte(_hashedCredentials), zipFile.Name())
-	if err != nil {
-		fmt.Printf("failed encryption ENCP %s", err)
-		return err
-	}
-	encryptedZipFile.Close()
-	return nil
+	return zipFile.Name(), nil
 }
 
 func (f *FileUtils) AuthenticateENCPFile(password string, encFilePath string) (bool, error) {
@@ -381,8 +362,13 @@ func (f *FileUtils) checkLargeZipFileTicker(writer io.Writer, fileToZip *os.File
 		// Update progress here using writtenBytes and fileSize
 		percent := float64(writtenBytes) / float64(fileSize) * 100
 		percentInt := int(percent + 0.5)
-		wailsRuntime.EventsEmit(f.app.ctx, largeFilePercent, percentInt)
-		fmt.Printf("Zip Progress: %.2f%%\n", percent) // Replace with your event emission
+		if f.app.ctx != nil {
+			wailsRuntime.EventsEmit(f.app.ctx, largeFilePercent, percentInt)
+			fmt.Printf("Zip Progress w Emit: %d\n", percentInt) // Replace with your event emission
+
+		} else {
+			fmt.Printf("Zip Progress: %.2f%%\n", percent) // Replace with your event emission
+		}
 		if err == io.EOF {
 			break
 		}

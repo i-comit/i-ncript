@@ -65,6 +65,8 @@
         OpenENCPmatch,
         PackFilesForENCP,
     } from "../../../wailsjs/go/main/FileUtils";
+    import { EncryptENCPFile } from "../../../wailsjs/go/main/App";
+    import RadialProgress from "../widgets/RadialProgress.svelte";
 
     enum MboxState {
         Pack = "PACK",
@@ -122,9 +124,8 @@
         });
         EventsOn("largeFilePercent", (_largeFilePercent: number) => {
             largeFilePercent.set(_largeFilePercent);
+            LogInfo("largeFile " + $largeFilePercent);
             if (_largeFilePercent === 0) EventsOff("largeFilePercent");
-        });
-        EventsOn("changeFileTask", (fileTask: number) => {
         });
 
         darkLightBGOnId(get(darkLightMode), "right-panel");
@@ -136,6 +137,8 @@
     onDestroy(() => {
         unsub_heldDownBtns();
         unsub_darkLightMode();
+        EventsOff("fileProcessed");
+        EventsOff("largeFilePercent");
     });
 
     function handleOnFileClick() {
@@ -220,7 +223,23 @@
     function packFilesForENCP() {
         prependAbsPathToRelPaths(1).then((absFilePaths) => {
             currentFileTask.set(FileTasks.Pack);
-            PackFilesForENCP(username, password, absFilePaths);
+            PackFilesForENCP(username, password, absFilePaths).then(
+                (zipFilePath) => {
+                    if (zipFilePath) {
+                        currentFileTask.set(FileTasks.Encrypt);
+                        EncryptENCPFile(username, password, zipFilePath)
+                            .then((encpFinished) => {
+                                if (encpFinished) {
+                                    currentFileTask.set(FileTasks.None);
+                                    LogInfo("ENCP Finished");
+                                }
+                            })
+                            .finally(() => {
+                                currentFileTask.set(FileTasks.None);
+                            });
+                    }
+                },
+            );
         });
     }
 
@@ -400,6 +419,12 @@
         }}
     >
         <!-- <NeuSearch /> -->
+        {#if $largeFilePercent > 0}
+            <RadialProgress
+                _style="right: 3.6rem"
+                dataProgress={$largeFilePercent}
+            />
+        {/if}
         {#if _modal === Modals.None}
             <TreeView _fileTree={$fileTree} />
         {:else if _modal === Modals.Settings}
