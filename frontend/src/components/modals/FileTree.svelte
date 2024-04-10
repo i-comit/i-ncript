@@ -38,7 +38,6 @@
 
     import {
         pageName,
-        pageIndex,
         getFileProperties,
         basePath,
         formatFileSize,
@@ -47,11 +46,11 @@
         removeFileName,
         leftCtrlDown,
         pointerDown,
-        darkLightTextOnElement,
         getRootDir,
     } from "../../tools/utils.ts";
 
-    import { GetDirectoryPath } from "../../../wailsjs/go/main/Getters";
+    import { darkLightTextOnElement } from "../../tools/themes.ts";
+
     import {
         accentColor,
         darkBGColor,

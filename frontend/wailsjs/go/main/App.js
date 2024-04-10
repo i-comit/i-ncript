@@ -38,8 +38,8 @@ export function InitializeRootFolder() {
   return window['go']['main']['App']['InitializeRootFolder']();
 }
 
-export function InterruptEncryption() {
-  return window['go']['main']['App']['InterruptEncryption']();
+export function InterruptFileTask() {
+  return window['go']['main']['App']['InterruptFileTask']();
 }
 
 export function Login(arg1, arg2) {

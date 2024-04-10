@@ -20,7 +20,7 @@ export function EncryptFilesInDir(arg1:number):Promise<boolean>;
 
 export function InitializeRootFolder():Promise<void>;
 
-export function InterruptEncryption():Promise<void>;
+export function InterruptFileTask():Promise<void>;
 
 export function Login(arg1:string,arg2:string):Promise<number>;
 

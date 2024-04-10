@@ -14,18 +14,16 @@
 
     import {
         accentColor,
-        darkShadow_Dark,
-        darkShadow_Light,
-        lightShadow_Dark,
-        lightShadow_Light,
     } from "../../stores/constantVariables";
     import { darkLightMode } from "../../stores/dynamicVariables";
 
+    import { switchModals } from "../../tools/utils";
+
     import {
-        switchModals,
         darkLightBGOnId,
         darkLightTextOnClasses,
-    } from "../../tools/utils";
+        darkLightShadowOnIcons,
+    } from "../../tools/themes";
 
     const unsub_darkLightMode = darkLightMode.subscribe((value) => {
         darkLightBGOnId(value, "panel");
@@ -43,22 +41,6 @@
     onDestroy(() => {
         unsub_darkLightMode();
     });
-
-    function darkLightShadowOnIcons(darkLightMode: boolean) {
-        const elements = document.getElementsByClassName("icon");
-        if (!elements) return; // Early return if container is not found
-        for (const _element of elements) {
-            const _icon = _element as HTMLElement;
-
-            if (darkLightMode) {
-                _icon.style.setProperty("--light-shadow", lightShadow_Dark);
-                _icon.style.setProperty("--dark-shadow-rgb", darkShadow_Dark);
-            } else {
-                _icon.style.setProperty("--light-shadow", lightShadow_Light);
-                _icon.style.setProperty("--dark-shadow-rgb", darkShadow_Light);
-            }
-        }
-    }
 </script>
 
 <div
@@ -74,7 +56,7 @@
     <div class="icon space-y-1">
         <button class="icon__info">
             <InfoCircleOutline
-                class="p-px"
+                class="p-px pt-0.5"
                 on:click={() => switchModals(Modals.Info)}
             />
         </button>
@@ -82,13 +64,13 @@
             class="icon__logger"
             on:click={() => switchModals(Modals.Logger)}
         >
-            <BarsFromLeftOutline class="p-px" role="button" />
+            <BarsFromLeftOutline class="p-px pt-0.5" role="button" />
         </button>
         <button
             class="icon__settings"
             on:click={() => switchModals(Modals.Settings)}
         >
-            <CogSolid class="p-px" />
+            <CogSolid class="p-px pt-0.5" />
         </button>
     </div>
     <div
@@ -121,41 +103,5 @@
     $icon-size: 1.2rem;
 
     /*  ICONS  */
-    .icon {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-
-        --light-shadow: #fafafa;
-        --dark-shadow-rgb: 95, 95, 95; /* #5f5f5f */
-
-        --drop-shadow: 2px 3px 4px -2px rgba(var(--dark-shadow-rgb), 0.8),
-            -2px -3px 3px -1px var(--light-shadow);
-
-        --inner-shadow: inset -3px -3px 3px -1px var(--light-shadow),
-            inset 2px 2px 2px -1px rgba(var(--dark-shadow-rgb), 0.6);
-
-        &__info,
-        &__logger,
-        &__settings {
-            width: $icon-size;
-            height: $icon-size;
-            border-radius: 50%;
-            box-shadow: var(--drop-shadow);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2rem;
-            cursor: pointer;
-            color: var(--text-color);
-            transition: all 0.2s ease;
-            &:active {
-                box-shadow: var(--inner-shadow);
-                color: var(--icon-active);
-            }
-            &:hover {
-                color: var(--icon-hover);
-            }
-        }
-    }
+    @import "../../neu_icons.scss";
 </style>

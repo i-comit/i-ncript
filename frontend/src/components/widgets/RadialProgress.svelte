@@ -1,44 +1,60 @@
 <!-- https://codepen.io/eZ0/pen/eZXNzd -->
 <script lang="ts">
-    import { onMount } from "svelte";
+    import { onDestroy, onMount } from "svelte";
     import { lightBGColor } from "../../stores/constantVariables.ts";
+
+    import { darkLightBGOnElement } from "../../tools/themes";
+    import {
+        darkLightMode,
+        largeFilePercent,
+    } from "../../stores/dynamicVariables.ts";
+    import { get } from "svelte/store";
 
     export let className = "";
     export let dataProgress: number;
     export let _style = "";
+
+    let overlay: HTMLDivElement;
 
     // let dataProgress: number = 0; // Initial value
 
     // function randomize(): void {
     //     dataProgress = Math.floor(Math.random() * 100);
     // }
+    const unsub_darkLightMode = darkLightMode.subscribe((value) => {
+        darkLightBGOnElement(!value, overlay);
+    });
 
-    // onMount(() => {
-    //     setTimeout(randomize, 200); // Initial randomize after component mounts
-    // });
+    // $: darkLightBGOnElement(!darkLightMode, overlay);
+
+    onDestroy(() => {
+        unsub_darkLightMode();
+        darkLightBGOnElement(!get(darkLightMode), overlay);
+    });
 </script>
 
-<div
-    class="ko-progress-circle z-5 {` ${className}`}"
-    data-progress={dataProgress}
-    style={_style}
->
-    <div class="ko-circle">
-        <div class="full ko-progress-circle__slice">
-            <div class="ko-progress-circle__fill"></div>
-        </div>
-        <div class="ko-progress-circle__slice">
-            <div class="ko-progress-circle__fill"></div>
-            <div class="ko-progress-circle__fill ko-progress-circle__bar"></div>
-        </div>
-    </div>
+{#if $largeFilePercent > 0}
     <div
-        class="ko-progress-circle__overlay"
-        style="background-color:{lightBGColor}"
+        class="ko-progress-circle z-5 {` ${className}`}"
+        data-progress={dataProgress}
+        style={_style}
     >
-        <slot />
+        <div class="ko-circle">
+            <div class="full ko-progress-circle__slice">
+                <div class="ko-progress-circle__fill"></div>
+            </div>
+            <div class="ko-progress-circle__slice">
+                <div class="ko-progress-circle__fill"></div>
+                <div
+                    class="ko-progress-circle__fill ko-progress-circle__bar"
+                ></div>
+            </div>
+        </div>
+        <div class="ko-progress-circle__overlay" bind:this={overlay}>
+            <slot />
+        </div>
     </div>
-</div>
+{/if}
 
 <style lang="scss">
     @use "sass:math";
@@ -46,7 +62,6 @@
     $circle-background: #d9d9d9;
     $circle-color: #1291d4;
     $inset-size: 115px;
-    $inset-color: #fbfbfb;
     $transition-length: 0.1s;
 
     .ko-progress-circle {
@@ -80,8 +95,8 @@
             position: absolute;
             margin-left: math.div($circle-size - $inset-size, 2);
             margin-top: math.div($circle-size - $inset-size, 2);
-
-            background-color: $inset-color;
+            --bg-color: #757575;
+            background-color: var(--bg-color);
             border-radius: 50%;
             ::slotted(*) {
                 font-size: 1px !important; // Tailwind equivalent: text-xs

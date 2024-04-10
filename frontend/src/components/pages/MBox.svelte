@@ -33,10 +33,12 @@
     import {
         switchPages,
         heldDownBtns,
-        darkLightBGOnId,
         prependAbsPathToRelPaths,
         getRootDir,
     } from "../../tools/utils.ts";
+
+    import { darkLightBGOnId } from "../../tools/themes";
+
     import {
         EventsOff,
         EventsOn,
@@ -50,7 +52,6 @@
     import DirSize from "../widgets/DirectorySize.svelte";
 
     import NeuButton from "../widgets/NeuButton.svelte";
-    import NeuSearch from "../widgets/NeuSearch.svelte";
     import NeuButtonFake from "../widgets/NeuButtonFake.svelte";
     import WaveProgress from "../widgets/WaveProgress.svelte";
     import TaskDisplay from "../widgets/TaskDisplay.svelte";
@@ -431,12 +432,10 @@
         }}
     >
         <!-- <NeuSearch /> -->
-        {#if $largeFilePercent > 0}
-            <RadialProgress
-                _style="right: 3.6rem"
-                dataProgress={$largeFilePercent}
-            />
-        {/if}
+        <RadialProgress
+            _style="right: 3.6rem"
+            dataProgress={$largeFilePercent}
+        />
         {#if _modal === Modals.None}
             <TreeView _fileTree={$fileTree} />
         {:else if _modal === Modals.Settings}

@@ -34,7 +34,7 @@
     import {
         darkLightBGOnElement,
         darkLightTextOnElement,
-    } from "../../tools/utils";
+    } from "../../tools/themes";
     import { LogInfo } from "../../../wailsjs/runtime/runtime";
 
     import PasswordScan from "../widgets/PasswordScan.svelte";

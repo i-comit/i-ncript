@@ -35,18 +35,6 @@ func (a *App) startup(ctx context.Context) {
 	if keyFilePath != "" {
 
 	}
-	combinedBytes1 := insertBytesProcedurally([]byte("1234123312213d5678"), []byte("abcd"))
-	fmt.Println("Combined string 1:", string(combinedBytes1)) //1a23b45c67d8
-	// fmt.Println("Match result 1:", matchBytesProcedurally(combinedBytes1, []byte("abcd")))               // Expected: true
-	// fmt.Println("Match result 2:", matchBytesProcedurally(combinedBytes1, []byte("abce")))               // Expected: false
-	// fmt.Println("Match result 3:", matchBytesProcedurally(combinedBytes1, []byte("1234123312213d5678"))) // Expected: false
-
-	combinedBytes2 := insertBytesProcedurally([]byte("2138nyhon21;o23xasdadsds"), []byte("fjnhdsa5d"))
-	fmt.Println("Combined string 2:", string(combinedBytes2)) //a12b34c56d78
-	// fmt.Println("Match result 4:", matchBytesProcedurally(combinedBytes2, []byte("2138nyhon21;o23xasdadsds"))) // Expected: true
-	// fmt.Println("Match result 5:", matchBytesProcedurally(combinedBytes2, []byte("fjnhdsa5d")))                // Expected: false
-	// fmt.Println("Match result 6:", matchBytesProcedurally(combinedBytes2, []byte("abcd")))                     // Expected: false
-
 }
 
 func (a *App) InitializeRootFolder() error {
@@ -77,8 +65,22 @@ func (a *App) InitializeRootFolder() error {
 	return nil
 }
 
-// func (b *App) shutdown(ctx context.Context) {
-// }
+func (a *App) InterruptFileTask() error {
+	file, err := os.OpenFile(a.lastFilePath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0666)
+	if err != nil {
+		log.Printf("failed to open last file: %v", err)
+		return err
+	}
+	file.Close()
+	fmt.Println("\033[31minterrupted file task: ", filepath.Base(a.lastFilePath), "\033[0m")
+	if err := os.Remove(a.lastFilePath); err != nil {
+		fmt.Printf("last file remove failed %s", err)
+		return err
+	}
+	close(interrupt) // Closing the channel sends a signal to all receivers
+	return nil
+	//Make sure to not run this method when interrupt is already closed; this will cause a panic
+}
 
 func (a *App) Login(username, password string) (int, error) {
 	if username == "" || password == "" {
@@ -174,7 +176,7 @@ func (a *App) MinimizeApp() {
 
 func (a *App) CloseApp() {
 	if a.lastFilePath != "" {
-		a.InterruptEncryption()
+		a.InterruptFileTask()
 	}
 	os.Exit(0)
 }

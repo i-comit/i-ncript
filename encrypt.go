@@ -10,7 +10,6 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"path/filepath"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -117,20 +116,6 @@ func (a *App) DecryptFilesInArr(filePaths []string) (bool, error) {
 		return false, err
 	}
 	return cipherResult, nil
-}
-
-func (a *App) InterruptEncryption() {
-	file, err := os.OpenFile(a.lastFilePath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0666)
-	if err != nil {
-		log.Printf("failed to open last file: %v", err)
-	}
-	defer file.Close()
-	fmt.Println("\033[31minterrupted encryption: ", filepath.Base(a.lastFilePath), "\033[0m")
-	if err := os.Remove(a.lastFilePath); err != nil {
-		fmt.Printf("last file remove failed %s", err)
-	}
-	close(interrupt) // Closing the channel sends a signal to all receivers
-	//Make sure to not run this method when interrupt is already closed; this will cause a panic
 }
 
 func (a *App) resetProgress(encrypt bool, files int) {

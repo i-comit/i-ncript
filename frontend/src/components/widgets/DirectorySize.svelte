@@ -5,7 +5,7 @@
     import { tooltipTailwindClass } from "../../stores/constantVariables";
     import { alertInterval, getDisplayString } from "../../tools/logger";
     import { darkLightMode } from "../../stores/dynamicVariables";
-    import { darkLightTextOnElement } from "../../tools/utils";
+    import { darkLightTextOnElement } from "../../tools/themes";
     import { get } from "svelte/store";
 
     let typewriter: HTMLParagraphElement;

@@ -5,8 +5,10 @@
 
     import {
         darkLightBGOnElement,
+        darkLightShadowOnNeuButton,
         darkLightTextOnElement,
-    } from "../../tools/utils";
+    } from "../../tools/themes";
+
     import { darkLightMode } from "../../stores/dynamicVariables";
     import {
         lightShadow_Dark,
@@ -24,37 +26,22 @@
     const unsub_darkLightMode = darkLightMode.subscribe((value) => {
         darkLightBGOnElement(value, neuButton);
         darkLightTextOnElement(!value, neuButton);
-        darkLightShadowOnNeuButton(value);
+        darkLightShadowOnNeuButton(value, neuButton);
     });
 
     onMount(() => {
         var _value = get(darkLightMode);
         darkLightBGOnElement(_value, neuButton);
         darkLightTextOnElement(!_value, neuButton);
-        darkLightShadowOnNeuButton(_value);
+        darkLightShadowOnNeuButton(_value, neuButton);
     });
 
     onDestroy(() => {
         unsub_darkLightMode();
     });
 
-    function darkLightShadowOnNeuButton(darkLightMode: boolean) {
-        if (!neuButton) return;
-        if (darkLightMode) {
-            neuButton.style.setProperty("--light-shadow", lightShadow_Dark);
-            neuButton.style.setProperty("--dark-shadow-rgb", darkShadow_Dark);
-        } else {
-            neuButton.style.setProperty("--light-shadow", lightShadow_Light);
-            neuButton.style.setProperty("--dark-shadow-rgb", darkShadow_Light);
-        }
-    }
-
     function handleClick() {
         dispatch("click");
-    }
-
-    function handleMouseDown() {
-        dispatch("mousedown");
     }
 </script>
 
@@ -71,7 +58,7 @@
 
     $fontSize: 15px;
     $height: 1.5rem;
-    
+
     button {
         --bg-color: #757575;
         --text-color: #dddddd;
@@ -80,7 +67,7 @@
         --dark-shadow-rgb: 95, 95, 95; /* #5f5f5f */
 
         --drop-shadow: 2px 6px 6px -2px rgba(var(--dark-shadow-rgb), 0.6),
-            -3px -6px 8px -2px var(--light-shadow);
+            -3px -6px 4px -2px var(--light-shadow);
 
         --inner-shadow: inset -4px -4px 4px -1px var(--light-shadow),
             inset 2px 2px 6px -1px rgba(var(--dark-shadow-rgb), 0.5);

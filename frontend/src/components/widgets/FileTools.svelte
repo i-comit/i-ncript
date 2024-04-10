@@ -8,15 +8,24 @@
         PlaySolid,
     } from "flowbite-svelte-icons";
     import { darkLightMode } from "../../stores/dynamicVariables";
-    import { darkLightTextInContainer, getRootDir } from "../../tools/utils";
+    import { getRootDir } from "../../tools/utils";
+
+    import {
+        darkLightTextOnClasses,
+    } from "../../tools/themes";
+
+    import { heldDownBtns } from "../../tools/utils";
+    import { LogInfo } from "../../../wailsjs/runtime/runtime";
+    import { FileTypes, getFileType } from "../../enums/FileTypes";
+    import { GetAppendedFileBytes } from "../../../wailsjs/go/main/FileUtils";
 
     const unsub_darkLightMode = darkLightMode.subscribe((value) => {
-        darkLightTextInContainer(!value, "file-tools", "button");
+        darkLightTextOnClasses(!value, "tool");
     });
 
     onMount(() => {
         var _value = get(darkLightMode);
-        darkLightTextInContainer(!_value, "file-tools", "button");
+        darkLightTextOnClasses(!_value, "tool");
     });
     onDestroy(() => {
         unsub_darkLightMode();
@@ -24,12 +33,6 @@
 
     var lastFile: FileTypes;
     var lastFilePath: string;
-    // Reactive statement to update lastEntry whenever heldDownBtns changes
-    // $: {
-    //     const entries = Object.entries($heldDownBtns);
-    //     lastFilePath = entries[entries.length - 1][0];
-    //     printoutLastEntry2(lastFilePath);
-    // }
 
     function getLastEntryPath() {
         const entries = Object.entries($heldDownBtns);
@@ -45,31 +48,26 @@
             });
         }
     }
-
-    import { heldDownBtns } from "../../tools/utils";
-    import { LogInfo } from "../../../wailsjs/runtime/runtime";
-    import { FileTypes, getFileType } from "../../enums/FileTypes";
-    import { GetAppendedFileBytes } from "../../../wailsjs/go/main/FileUtils";
 </script>
 
 {#if Object.keys($heldDownBtns).length > 0}
     <div id="file-tools" class="flex justify-end space-x-1">
-        <button>
+        <button class="tool">
             <FolderArrowRightOutline />
         </button>
         {#if lastFile !== FileTypes.Encrypted && lastFile !== FileTypes.Unknown}
-            <button on:click|stopPropagation={getLastEntryPath}>
+            <button class="tool" on:click|stopPropagation={getLastEntryPath}>
                 <PlaySolid />
             </button>
         {/if}
-        <button>
+        <button class="tool">
             <FolderOpenSolid />
         </button>
     </div>
 {/if}
 
 <style>
-    button {
+    .tool {
         --text-color: #757575;
         color: var(--text-color);
     }

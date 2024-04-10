@@ -19,11 +19,11 @@
     import appLogo from "../../assets/images/i-comiti.png";
 
     import { darkLightMode } from "../../stores/dynamicVariables";
+ 
     import {
-        darkLightTextOnClasses,
         darkLightBGOnElement,
         darkLightTextOnId,
-    } from "../../tools/utils";
+    } from "../../tools/themes";
 
     let minimizeBtn: HTMLButtonElement;
     let closeBtn: HTMLButtonElement;

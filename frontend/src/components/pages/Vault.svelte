@@ -13,7 +13,6 @@
     import {
         EncryptFilesInDir,
         DecryptFilesInDir,
-        InterruptEncryption,
         EncryptFilesInArr,
         DecryptFilesInArr,
     } from "../../../wailsjs/go/main/App";
@@ -47,8 +46,9 @@
         heldDownBtns,
         prependAbsPathToRelPaths,
         checkFileTypesinHeldDownBtns,
-        darkLightBGOnId,
     } from "../../tools/utils.ts";
+
+    import { darkLightBGOnId } from "../../tools/themes";
 
     import TaskDisplay from "../widgets/TaskDisplay.svelte";
     import NeuButton from "../widgets/NeuButton.svelte";
@@ -190,7 +190,7 @@
     >
         <DirSize />
         {#if _currentFileTask === FileTasks.None}
-            <div class="row space-x-2 bg-green-300">
+            <div class="row space-x-2">
                 <NeuButton on:click={() => encrypt()} _style="font-size: 14px;"
                     >ENCRYPT</NeuButton
                 >
@@ -207,18 +207,17 @@
                 <div style="padding-top: 0.325rem">
                     <FileTools />
                 </div>
-                <p
+                <!-- <p
                     class="absolute bottom-0 right-0 leading-none text-sm select-none"
                 >
                     HOT FILER
-                </p>
+                </p> -->
             {:else}
-                <div class="h-0.5" />
                 <WaveProgress dataProgress={$fileTaskPercent}></WaveProgress>
             {/if}
         </div>
 
-        <div class={_currentFileTask === FileTasks.None ? "h-1" : "h-2"} />
+        <div class={_currentFileTask === FileTasks.None ? "h-1" : "h-0.5"} />
 
         <div class="row space-x-0">
             <NeuButton on:click={() => switchPages(AppPage.Mbox)} _class="!w-20"
@@ -236,12 +235,10 @@
         on:click={clearHeldBtnsFromContainer}
     >
         <!-- <NeuSearch /> -->
-        {#if $largeFilePercent > 0}
-            <RadialProgress
-                _style="right: 3.6rem"
-                dataProgress={$largeFilePercent}
-            />
-        {/if}
+        <RadialProgress
+            _style="right: 3.6rem"
+            dataProgress={$largeFilePercent}
+        />
         {#if _modal === Modals.None}
             <TreeView _fileTree={$fileTree} />
         {:else if _modal === Modals.Settings}
