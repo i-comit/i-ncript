@@ -18,6 +18,7 @@ type App struct {
 	hotFilerEnabled bool
 	done            chan bool
 	watcher         *fsnotify.Watcher
+	lastFilePath    string
 }
 
 func NewApp() *App {
@@ -172,7 +173,7 @@ func (a *App) MinimizeApp() {
 }
 
 func (a *App) CloseApp() {
-	if lastFilePath != "" {
+	if a.lastFilePath != "" {
 		a.InterruptEncryption()
 	}
 	os.Exit(0)

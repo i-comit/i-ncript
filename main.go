@@ -29,7 +29,6 @@ const _height = 145
 const _uniqueID = "f56bcbf2-db56-481b-a722-11c21a4b3ae2" //Change this in your build for extra security
 
 // DYNAMIC data
-var lastFilePath string
 var interrupt = make(chan struct{})
 var lastDirIndex = -1
 var hashedUsername string

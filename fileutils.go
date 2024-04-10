@@ -2,7 +2,6 @@ package main
 
 import (
 	"archive/zip"
-	"encoding/base64"
 	"fmt"
 	"io"
 	"os"
@@ -139,7 +138,7 @@ func (f *FileUtils) PackFilesForENCP(receiverUsername, receiverPassword string, 
 
 	lastFilePath := filePaths[len(filePaths)-1]
 	filenameWithoutExtension := removeFileExtension(lastFilePath)
-	zipFilePath := filenameWithoutExtension + ".zip"
+	zipFilePath := filenameWithoutExtension
 	// Create the zip file
 	zipFile, err := os.Create(zipFilePath)
 	if err != nil {
@@ -153,7 +152,7 @@ func (f *FileUtils) PackFilesForENCP(receiverUsername, receiverPassword string, 
 		select {
 		case <-interrupt: // Check if there's an interrupt signal
 			fmt.Printf("packing interrupted")
-			lastFilePath = filePath
+			f.app.lastFilePath = filePath
 			return "", nil
 		default:
 			if err := f.addFileToZip(zipWriter, filePath); err != nil {
@@ -169,54 +168,17 @@ func (f *FileUtils) PackFilesForENCP(receiverUsername, receiverPassword string, 
 }
 
 func (f *FileUtils) AuthenticateENCPFile(password string, encFilePath string) (bool, error) {
-	fmt.Println("ENCP file path " + encFilePath)
 	var shuffledCredentials = shuffleStrings(hashedUsername, password)
 	_hashedCredentials, err := hashString(shuffledCredentials)
 	if err != nil {
 		return false, fmt.Errorf("error hashing user credentials: %s", err)
 	}
-	fmt.Printf("hashed Credentials %s \n", hashedCredentials)
-	fmt.Printf("_hashedCredentials %s \n", _hashedCredentials)
 	decryptedZipFile, err := f.app.decryptENCPFile([]byte(_hashedCredentials), encFilePath)
 	if err != nil {
 		fmt.Printf("error decrypting zip file: %s", err)
 		return false, fmt.Errorf("error writing decrypted encp to file: %s", err)
 	}
-	// fmt.Println("decrypted zip file " + decryptedZipFile.Name())
 	return decryptedZipFile, nil
-}
-
-func (f *FileUtils) OpenENCPmatch(password, encFilePath string) error {
-	fmt.Println("Open file path " + encFilePath)
-
-	var shuffledCredentials = shuffleStrings(hashedUsername, password)
-	_hashedCredentials, err := hashBytes([]byte(shuffledCredentials))
-	if err != nil {
-		return fmt.Errorf("error hashing user credentials: %s", err)
-	}
-	encodedCredentials := base64.StdEncoding.EncodeToString(_hashedCredentials)
-
-	fmt.Println("hashed your creds " + encodedCredentials)
-	encFileBytes, err := os.ReadFile(encFilePath)
-	if err != nil {
-		return fmt.Errorf("error reading file: %s", err)
-	}
-
-	matched, originalBytes := matchBytesProcedurally(bytesToRunes(encFileBytes), []byte(encodedCredentials))
-	if matched {
-		zipFileName := removeFileExtension(encFilePath)
-		openedZipFile, err := os.Create(zipFileName + "_originalunmixed.zip")
-		if err != nil {
-			fmt.Printf("create zip file fail %s", err)
-			return err
-		}
-		err = os.WriteFile(openedZipFile.Name(), originalBytes, 0644)
-		if err != nil {
-			fmt.Printf("error writing encp bytes to file: %s", err)
-			return fmt.Errorf("error writing decrypted encp to file: %s", err)
-		}
-	}
-	return nil
 }
 
 func (f *FileUtils) GetAppendedFileBytes(filePath string) error {
@@ -324,9 +286,9 @@ func (f *FileUtils) addFileToZip(zipWriter *zip.Writer, zipFilePath string) erro
 		return err
 	}
 
-	const thresholdFileSize = 40 //if file is more than 50MB
+	const thresholdFileSize = 50 //if file is more than 50MB
 	if info.Size() > int64(thresholdFileSize*1024*1024) {
-		err = f.checkLargeZipFileTicker(writer, fileToZip)
+		err = f.app.checkLargeZipFileTicker(writer, fileToZip)
 	} else {
 		_, err = io.Copy(writer, fileToZip)
 	}
@@ -334,7 +296,7 @@ func (f *FileUtils) addFileToZip(zipWriter *zip.Writer, zipFilePath string) erro
 	return err
 }
 
-func (f *FileUtils) checkLargeZipFileTicker(writer io.Writer, fileToZip *os.File) error {
+func (a *App) checkLargeZipFileTicker(writer io.Writer, fileToZip *os.File) error {
 	fileSize, err := fileToZip.Seek(0, io.SeekEnd) // Get the file size
 	if err != nil {
 		return err
@@ -345,7 +307,8 @@ func (f *FileUtils) checkLargeZipFileTicker(writer io.Writer, fileToZip *os.File
 	}
 
 	var writtenBytes int64 = 0
-	buf := make([]byte, 4096) // 4KB buffer
+	var lastpercentInt = 0
+	buf := make([]byte, 2096) // 4KB buffer
 	for {
 		n, err := fileToZip.Read(buf)
 		if err != nil && err != io.EOF {
@@ -359,21 +322,18 @@ func (f *FileUtils) checkLargeZipFileTicker(writer io.Writer, fileToZip *os.File
 			return err
 		}
 		atomic.AddInt64(&writtenBytes, int64(wn))
-		// Update progress here using writtenBytes and fileSize
 		percent := float64(writtenBytes) / float64(fileSize) * 100
 		percentInt := int(percent + 0.5)
-		if f.app.ctx != nil {
-			wailsRuntime.EventsEmit(f.app.ctx, largeFilePercent, percentInt)
-			fmt.Printf("Zip Progress w Emit: %d\n", percentInt) // Replace with your event emission
-
-		} else {
-			fmt.Printf("Zip Progress: %.2f%%\n", percent) // Replace with your event emission
+		if lastpercentInt != percentInt {
+			wailsRuntime.EventsEmit(a.ctx, largeFilePercent, percentInt)
+			fmt.Printf("Zip Progress: %.2f%%\n", percent)
 		}
+		lastpercentInt = percentInt
 		if err == io.EOF {
 			break
 		}
 	}
-	wailsRuntime.EventsEmit(f.app.ctx, largeFilePercent, 0)
+	wailsRuntime.EventsEmit(a.ctx, largeFilePercent, 0)
 	return nil
 }
 

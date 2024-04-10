@@ -25,6 +25,7 @@
 
     import {
         buildFileTree,
+        clearHeldBtns,
         clearHeldBtnsFromContainer,
         fileTree,
     } from "../../tools/fileTree.ts";
@@ -62,11 +63,11 @@
     import PasswordScan from "../widgets/PasswordScan.svelte";
     import {
         AuthenticateENCPFile,
-        OpenENCPmatch,
         PackFilesForENCP,
     } from "../../../wailsjs/go/main/FileUtils";
     import { EncryptENCPFile } from "../../../wailsjs/go/main/App";
     import RadialProgress from "../widgets/RadialProgress.svelte";
+    import { startDisplay } from "../../tools/logger.ts";
 
     enum MboxState {
         Pack = "PACK",
@@ -231,11 +232,18 @@
                             .then((encpFinished) => {
                                 if (encpFinished) {
                                     currentFileTask.set(FileTasks.None);
-                                    LogInfo("ENCP Finished");
+                                    clearUsername();
+                                    clearPassword();
+                                    startDisplay(
+                                        `packed ${absFilePaths.length} files`,
+                                    );
+                                    clearHeldBtns();
                                 }
                             })
                             .finally(() => {
                                 currentFileTask.set(FileTasks.None);
+                                clearUsername();
+                                clearPassword();
                             });
                     }
                 },
@@ -249,10 +257,14 @@
 
         var lastFileType = getFileType(lastEntry[0]);
         if (lastFileType === FileTypes.EncryptedP) {
-            AuthenticateENCPFile(password, getRootDir() + lastEntry[0]);
-        } else {
-            LogInfo("Matching ENCP");
-            OpenENCPmatch(password, getRootDir() + lastEntry[0]);
+            AuthenticateENCPFile(password, getRootDir() + lastEntry[0])
+                .then((authenticated) => {
+                    if (authenticated) startDisplay("successful authenticated");
+                    else startDisplay("File failed authentication");
+                })
+                .catch(() => {
+                    startDisplay("File failed authentication");
+                });
         }
     }
 </script>

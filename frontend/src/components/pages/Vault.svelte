@@ -65,6 +65,7 @@
     import DirSize from "../widgets/DirectorySize.svelte";
     import PanelDivider from "../widgets/PanelDivider.svelte";
     import FileTools from "../widgets/FileTools.svelte";
+    import { startDisplay } from "../../tools/logger.ts";
 
     let _currentFileTask: FileTasks;
     currentFileTask.subscribe((value) => {
@@ -103,8 +104,8 @@
 
     onDestroy(() => {
         unsub_darkLightMode();
-        EventsOff("fileProcessed")
-        EventsOff("largeFilePercent")
+        EventsOff("fileProcessed");
+        EventsOff("largeFilePercent");
     });
 
     function encrypt() {
@@ -127,7 +128,10 @@
                         totalFileCt.set(filePaths.length);
                         EncryptFilesInDir(0);
                     });
-                } else setIsInFileTask(false);
+                } else {
+                    startDisplay("no files to encrypt");
+                    setIsInFileTask(false);
+                }
             });
     }
 
@@ -145,13 +149,20 @@
             });
         else
             GetFilesByType(0, true).then((filePaths) => {
+                if (filePaths === null) {
+                    LogInfo("STINKY");
+                    startDisplay("no files to decrypt");
+                }
                 if (filePaths.length > 0) {
                     setIsInFileTask(true).then(() => {
                         currentFileTask.set(FileTasks.Decrypt);
                         totalFileCt.set(filePaths.length);
                         DecryptFilesInDir(0);
                     });
-                } else setIsInFileTask(false);
+                } else {
+                    startDisplay("no files to decrypt");
+                    setIsInFileTask(false);
+                }
             });
     }
 
@@ -179,7 +190,7 @@
     >
         <DirSize />
         {#if _currentFileTask === FileTasks.None}
-            <div class="row space-x-2">
+            <div class="row space-x-2 bg-green-300">
                 <NeuButton on:click={() => encrypt()} _style="font-size: 14px;"
                     >ENCRYPT</NeuButton
                 >
@@ -188,9 +199,7 @@
                 >
             </div>
         {:else}
-            <div class="h-7">
-                <TaskDisplay />
-            </div>
+            <TaskDisplay />
         {/if}
 
         <div class="relative h-14">
@@ -209,7 +218,8 @@
             {/if}
         </div>
 
-        <div class="h-1" />
+        <div class={_currentFileTask === FileTasks.None ? "h-1" : "h-2"} />
+
         <div class="row space-x-0">
             <NeuButton on:click={() => switchPages(AppPage.Mbox)} _class="!w-20"
                 >M-BOX</NeuButton

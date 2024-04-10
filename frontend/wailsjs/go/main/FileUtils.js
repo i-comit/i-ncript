@@ -22,10 +22,6 @@ export function OpenDirectory(arg1) {
   return window['go']['main']['FileUtils']['OpenDirectory'](arg1);
 }
 
-export function OpenENCPmatch(arg1, arg2) {
-  return window['go']['main']['FileUtils']['OpenENCPmatch'](arg1, arg2);
-}
-
 export function OpenFile(arg1) {
   return window['go']['main']['FileUtils']['OpenFile'](arg1);
 }

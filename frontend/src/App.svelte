@@ -28,14 +28,8 @@
     });
 
     currentPage.set(AppPage.Vault);
-    subscribeToFileTreeAndRunOnce();
-  }
-
-  function subscribeToFileTreeAndRunOnce() {
     let unsubscribe = () => {}; // Define a no-op function to avoid undefined errors
-
     unsubscribe = fileTree.subscribe((value) => {
-      // Assuming value has a meaningful check to determine if it's initialized
       if (value && value.relPath !== "") {
         // Check if fileTree has been initialized
         buildFileTree();
@@ -45,6 +39,7 @@
       }
     });
   }
+
   let isRightDir = false;
 
   onMount(async () => {

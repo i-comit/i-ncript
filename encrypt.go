@@ -50,8 +50,8 @@ func (a *App) encryptOrDecrypt(encryptOrDecrypt bool, filePaths []string) (bool,
 		select {
 		case <-interrupt: // Check if there's an interrupt signal
 			fmt.Printf("encryption interrupted")
-			lastFilePath = filePath
-			a.reverseProgress(encryptOrDecrypt, i)
+			a.lastFilePath = filePath
+			a.resetProgress(encryptOrDecrypt, i)
 			return false, nil
 		default:
 			if encryptOrDecrypt {
@@ -76,7 +76,7 @@ func (a *App) encryptOrDecrypt(encryptOrDecrypt bool, filePaths []string) (bool,
 				cipherFile.Close()
 			}
 
-			lastFilePath = filePath // Update lastFile after successful
+			a.lastFilePath = filePath // Update lastFile after successful
 			fileIter++
 			if a.ctx != nil {
 				runtime.EventsEmit(a.ctx, fileProcessed, i+1)
@@ -86,7 +86,7 @@ func (a *App) encryptOrDecrypt(encryptOrDecrypt bool, filePaths []string) (bool,
 	}
 	if fileIter != 0 {
 		if a.ctx != nil {
-			a.reverseProgress(true, len(filePaths))
+			a.resetProgress(true, len(filePaths))
 			return true, nil
 		}
 	} else {
@@ -120,28 +120,30 @@ func (a *App) DecryptFilesInArr(filePaths []string) (bool, error) {
 }
 
 func (a *App) InterruptEncryption() {
-	file, err := os.OpenFile(lastFilePath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0666)
+	file, err := os.OpenFile(a.lastFilePath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0666)
 	if err != nil {
 		log.Printf("failed to open last file: %v", err)
 	}
 	defer file.Close()
-	fmt.Println("\033[31minterrupted encryption: ", filepath.Base(lastFilePath), "\033[0m")
-	if err := os.Remove(lastFilePath); err != nil {
+	fmt.Println("\033[31minterrupted encryption: ", filepath.Base(a.lastFilePath), "\033[0m")
+	if err := os.Remove(a.lastFilePath); err != nil {
 		fmt.Printf("last file remove failed %s", err)
 	}
 	close(interrupt) // Closing the channel sends a signal to all receivers
 	//Make sure to not run this method when interrupt is already closed; this will cause a panic
 }
 
-func (a *App) reverseProgress(encrypt bool, files int) {
-	lastFilePath = ""
+func (a *App) resetProgress(encrypt bool, files int) {
+	a.lastFilePath = ""
 	// time.Sleep(time.Second)
-	if encrypt {
-		response := fmt.Sprintf("encrypted %d files.", files)
-		runtime.EventsEmit(a.ctx, addLogFile, response)
-	} else {
-		response := fmt.Sprintf("decrypted %d files.", files)
-		runtime.EventsEmit(a.ctx, addLogFile, response)
+	if files > 0 {
+		if encrypt {
+			response := fmt.Sprintf("encrypted %d files.", files)
+			runtime.EventsEmit(a.ctx, addLogFile, response)
+		} else {
+			response := fmt.Sprintf("decrypted %d files.", files)
+			runtime.EventsEmit(a.ctx, addLogFile, response)
+		}
 	}
 
 	if a.ctx != nil {
@@ -240,8 +242,8 @@ func (a *App) decryptENCPFile(hashedReceiverCredentials []byte, filePath string)
 	if err != nil {
 		return false, err
 	}
-	newFilePath := filePath[:len(filePath)-len(".encp")]
-	decFile, err := os.Create(newFilePath)
+	newFilePath := removeFileExtension(filePath)
+	decFile, err := os.Create(newFilePath + ".zip")
 	if err != nil {
 		return false, err
 	}
@@ -301,6 +303,7 @@ func (a *App) writeCipherFile(data, cipherData []byte, cipherFile *os.File) erro
 
 	var writtenBytes int64 //Use atomic.Int64 w/ writtenBytes.Load() for 32bit systems
 	if len(data) > thresholdFileSize*1024*1024 {
+		var lastpercentInt = 0
 		go func() {
 			ticker := time.NewTicker(10 * time.Millisecond)
 			defer ticker.Stop()
@@ -308,15 +311,18 @@ func (a *App) writeCipherFile(data, cipherData []byte, cipherFile *os.File) erro
 				select {
 				case <-interrupt: // Check if there's an interrupt signal
 					fmt.Println("\033[31m", "large file interrupted "+cipherFile.Name(), "\033[0m")
-					lastFilePath = cipherFile.Name()
+					a.lastFilePath = cipherFile.Name()
 					once.Do(func() { close(done) }) // Close done channel safely
 					interrupted = true              // Set the interrupted flag
 					return
 				case <-ticker.C:
 					percent := (float64(atomic.LoadInt64(&writtenBytes)) / float64(len(cipherData))) * 100
 					percentInt := int(percent + 0.5) // Adds 0.5 before casting to round to nearest whole number
-					// fmt.Printf("Percentage: %d%%\n", percentInt)
-					runtime.EventsEmit(a.ctx, largeFilePercent, percentInt)
+					if lastpercentInt != percentInt {
+						runtime.EventsEmit(a.ctx, largeFilePercent, percentInt)
+						fmt.Printf("Cipher Progress: %.2f%%\n", percent)
+					}
+					lastpercentInt = percentInt
 				case <-done:
 					return
 				}
@@ -409,23 +415,6 @@ func checkCredentials(_hashedCredentials string) int {
 		return 3
 	}
 }
-
-// func (a *App) RecoverENCPFile(password string) error {
-// 	_hashedPassword, err := hashString(password)
-// 	if err != nil {
-// 		log.Printf("Failed to hash password %s", err)
-// 		return err
-// 	}
-// 	var shuffledCredentials = shuffleStrings(hashedUsername, _hashedPassword)
-
-// 	hashedStringToCheck, err := hashString(shuffledCredentials)
-// 	if err != nil {
-// 		log.Printf("Failed to hash credentials to check %s", err)
-// 		return err
-// 	}
-// 	log.Printf("lel " + hashedStringToCheck)
-// 	return nil
-// }
 
 func hashString(stringToHash string) (string, error) {
 	byteData := []byte(_uniqueID + stringToHash)

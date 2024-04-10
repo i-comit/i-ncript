@@ -31,12 +31,17 @@
     } from "../../stores/constantVariables.ts";
 
     import { darkLightMode } from "../../stores/dynamicVariables.ts";
-    import { darkLightBGOnElement } from "../../tools/utils";
+    import {
+        darkLightBGOnElement,
+        darkLightTextOnElement,
+    } from "../../tools/utils";
     import { LogInfo } from "../../../wailsjs/runtime/runtime";
 
     import PasswordScan from "../widgets/PasswordScan.svelte";
 
     let displayString = "";
+    var typewriter;
+
     const appName = __APP_NAME__;
     const appVersion = __APP_VERSION__;
     let username = "";
@@ -44,8 +49,9 @@
     const dispatch = createEventDispatcher();
 
     let loginForm;
-    const unsubscribe = darkLightMode.subscribe((value) => {
+    const unsub_darkLightMode = darkLightMode.subscribe((value) => {
         darkLightBGOnElement(value, loginForm);
+        darkLightTextOnElement(!value, typewriter);
     });
 
     onMount(() => {
@@ -53,6 +59,7 @@
             displayString = getDisplayString();
         }, alertInterval);
         darkLightBGOnElement(false, loginForm);
+        darkLightTextOnElement(true, loginForm);
         return () => {
             clearInterval(interval);
         };
@@ -60,7 +67,7 @@
 
     onDestroy(() => {
         stopDisplay();
-        unsubscribe();
+        unsub_darkLightMode();
     });
 
     async function submit(event) {
@@ -103,7 +110,6 @@
     };
 
     let passwordMatch;
-    // let usernameCheck: string;
 
     // Function to handle the custom event
     function handlePasswordStrengthUpdated(event) {
@@ -130,7 +136,10 @@
     autocomplete="off"
     class="login-form flex-col rounded-lg"
 >
-    <p class="absolute top-0 left-0 text-justify w-screen pl-6 pt-1 text-sm">
+    <p
+        class="absolute top-0 left-0 text-justify w-screen pl-6 pt-1 text-sm"
+        bind:this={typewriter}
+    >
         {displayString}
     </p>
     <Frame />
@@ -248,14 +257,16 @@
         --bg-color: #757575;
     }
 
+    p {
+        --text-color: #757575;
+        color: var(--text-color);
+    }
+
     .login-form {
         margin: auto;
         padding: 0.5rem;
-
-        background-color: var(--bg-color);
-    }
-    .login-form {
         padding-top: 1.5rem;
+        background-color: var(--bg-color);
     }
 
     .field {
