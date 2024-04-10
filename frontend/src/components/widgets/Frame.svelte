@@ -16,10 +16,11 @@
         LogError,
         LogInfo,
     } from "../../../wailsjs/runtime/runtime";
-    import appLogo from "../../assets/images/i-comiti.png";
+    import appLogoLight from "../../assets/images/appLogo_light.png";
+    import appLogoDark from "../../assets/images/appLogo_dark.png";
 
     import { darkLightMode } from "../../stores/dynamicVariables";
- 
+
     import {
         darkLightBGOnElement,
         darkLightTextOnId,
@@ -65,7 +66,11 @@
     style="--wails-draggable:drag"
 >
     <div class="flex justify-start h-full ml-1 select-none">
-        <img src={appLogo} alt="Description" />
+        {#if $darkLightMode}
+            <img src={appLogoLight} alt="Description" class="p-0.5" />
+        {:else}
+            <img src={appLogoDark} alt="Description" class="p-0.5" />
+        {/if}
         <Tooltip class={tooltipTailwindClass} offset={-1} arrow={true}
             >portable data encryption app</Tooltip
         >

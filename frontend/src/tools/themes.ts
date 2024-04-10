@@ -1,3 +1,4 @@
+import { LogInfo } from "../../wailsjs/runtime/runtime";
 import { darkBGColor, lightBGColor, darkTextColor, lightTextColor, lightShadow_Dark, darkShadow_Dark, lightShadow_Light, darkShadow_Light } from "../stores/constantVariables";
 
 //BG(background-color) element properties
@@ -20,7 +21,7 @@ export function darkLightBGOnId(darkLightMode: boolean, idName: string) {
 //END OF BG(background-color) element propetyies
 
 export function darkLightTextOnElement(darkLightMode: boolean, element: HTMLElement) {
-    if (!element) return
+    if (!element) { LogInfo("no element found"); return }
     if (darkLightMode)
         element.style.setProperty("--text-color", darkTextColor,);
     else

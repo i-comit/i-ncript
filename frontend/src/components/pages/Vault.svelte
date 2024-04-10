@@ -52,7 +52,6 @@
 
     import TaskDisplay from "../widgets/TaskDisplay.svelte";
     import NeuButton from "../widgets/NeuButton.svelte";
-    import NeuSearch from "../widgets/NeuSearch.svelte";
     import WaveProgress from "../widgets/WaveProgress.svelte";
     import RadialProgress from "../widgets/RadialProgress.svelte";
 
@@ -110,7 +109,7 @@
 
     function encrypt() {
         if (
-            checkFileTypesinHeldDownBtns(true) > 0 ||
+            checkFileTypesinHeldDownBtns(true) > 0 &&
             Object.keys(get(heldDownBtns)).length > 0
         )
             setIsInFileTask(true).then(() => {
@@ -122,6 +121,10 @@
             });
         else
             GetFilesByType(0, false).then((filePaths) => {
+                if (!filePaths) {
+                    startDisplay("no files to encrypt..");
+                    return;
+                }
                 if (filePaths.length > 0) {
                     setIsInFileTask(true).then(() => {
                         currentFileTask.set(FileTasks.Encrypt);
@@ -129,7 +132,7 @@
                         EncryptFilesInDir(0);
                     });
                 } else {
-                    startDisplay("no files to encrypt");
+                    startDisplay("no files to encrypt..");
                     setIsInFileTask(false);
                 }
             });
@@ -137,7 +140,7 @@
 
     function decrypt() {
         if (
-            checkFileTypesinHeldDownBtns(false) > 0 ||
+            checkFileTypesinHeldDownBtns(false) > 0 &&
             Object.keys(get(heldDownBtns)).length > 0
         )
             setIsInFileTask(true).then(() => {
@@ -149,9 +152,9 @@
             });
         else
             GetFilesByType(0, true).then((filePaths) => {
-                if (filePaths === null) {
-                    LogInfo("STINKY");
-                    startDisplay("no files to decrypt");
+                if (!filePaths) {
+                    startDisplay("no files to decrypt..");
+                    return;
                 }
                 if (filePaths.length > 0) {
                     setIsInFileTask(true).then(() => {
@@ -160,7 +163,7 @@
                         DecryptFilesInDir(0);
                     });
                 } else {
-                    startDisplay("no files to decrypt");
+                    startDisplay("no files to decrypt..");
                     setIsInFileTask(false);
                 }
             });

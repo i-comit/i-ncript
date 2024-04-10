@@ -2,28 +2,25 @@
     import { onMount, onDestroy } from "svelte";
 
     import { Progressbar, Tooltip } from "flowbite-svelte";
-    import { tooltipTailwindClass } from "../../stores/constantVariables";
+    import {
+        darkTextColor,
+        lightTextColor,
+        tooltipTailwindClass,
+    } from "../../stores/constantVariables";
     import { alertInterval, getDisplayString } from "../../tools/logger";
     import { darkLightMode } from "../../stores/dynamicVariables";
     import { darkLightTextOnElement } from "../../tools/themes";
     import { get } from "svelte/store";
+    import { LogInfo } from "../../../wailsjs/runtime/runtime";
 
-    let typewriter: HTMLParagraphElement;
+    let typewriter: HTMLElement;
     let displayString = "";
-
-    const unsub_darkLightMode = darkLightMode.subscribe((value) => {
-        darkLightTextOnElement(!value, typewriter);
-    });
 
     onMount(() => {
         const interval = setInterval(() => {
             displayString = getDisplayString();
         }, alertInterval);
-        darkLightTextOnElement(!get(darkLightMode), typewriter);
-    });
-
-    onDestroy(() => {
-        unsub_darkLightMode();
+        darkLightTextOnElement(!$darkLightMode, typewriter);
     });
 </script>
 
@@ -32,12 +29,21 @@
         <div
             class="mb-1 h-6 leading-none absolute top-0 left-4 z-10 w-1/3 ml-3 mt-0"
         >
-            <p
-                class="relative top-1.5 text-left leading-none"
-                bind:this={typewriter}
-            >
-                {displayString}
-            </p>
+            {#if $darkLightMode}
+                <p
+                    class="relative top-1.5 text-left leading-none"
+                    style={`color:${lightTextColor}`}
+                >
+                    {displayString}
+                </p>
+            {:else}
+                <p
+                    class="relative top-1.5 text-left leading-none"
+                    style={`color:${darkTextColor}`}
+                >
+                    {displayString}
+                </p>
+            {/if}
         </div>
     {:else}
         <Progressbar
@@ -55,6 +61,7 @@
 <style>
     p {
         --text-color: #757575;
+
         color: var(--text-color);
     }
 </style>
