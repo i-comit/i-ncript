@@ -46,6 +46,7 @@ let _appPage: AppPage;
 export function handleFileClick(relPath: string, _buttonRef: HTMLButtonElement) {
     if (!get(leftCtrlDown) && checkIfRelPathIsInHeldDownBtns(relPath)) {
         clearHeldBtns();
+        LogInfo("Cleared held buttons from file click")
     }
     addToHeldFileBtnsArr(relPath, _buttonRef);
 
@@ -123,16 +124,9 @@ export function clearHeldBtnsFromContainer() {
     if (get(currentFilePath) === "" &&
         get(currentDirPath) === "") {
         clearHeldBtns();
+        LogInfo("Hmm idk")
     }
 }
-export function openDirectory(relPath: string) {
-    OpenDirectory(getRootDir() + relPath);
-}
-
-export function openFile(relPath: string) {
-    OpenFile(getRootDir() + relPath);
-}
-
 export async function checkFileDragDirectory(relPath: string): Promise<boolean> {
     const currentDirectory = getRootDir();
     return GetFileTreePath(pageIndex(), relPath).then((filePath) => {

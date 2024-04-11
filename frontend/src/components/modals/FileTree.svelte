@@ -33,7 +33,6 @@
         checkFileDragDirectory,
         handleFileClick,
         FileNode,
-        fileTree,
     } from "../../tools/fileTree.ts";
 
     import {
@@ -70,6 +69,7 @@
     import FileIcon from "../widgets/FileIcon.svelte";
     import { darkLightMode } from "../../stores/dynamicVariables.ts";
     import { FileTasks, currentFileTask } from "../../enums/FileTasks.ts";
+    import { OpenDirectory } from "../../../wailsjs/go/main/FileUtils";
 
     export let _fileTree: FileNode;
 
@@ -212,7 +212,7 @@
     id="filetree"
     class="rounded-lg"
     role="none"
-    on:click={clearHeldBtnsFromContainer}
+    on:mouseup|stopPropagation={clearHeldBtnsFromContainer}
 >
     <ul
         bind:this={ulElement}
@@ -294,7 +294,10 @@
                             on:mouseenter={() => {
                                 handleMouseEnter();
                             }}
-                            on:mouseup={() => moveFilesFromFileNode()}
+                            on:mouseup|stopPropagation={() =>
+                                moveFilesFromFileNode()}
+                            on:dblclick={() =>
+                                OpenDirectory(getRootDir() + _fileTree.relPath)}
                         >
                             <FolderSolid class="w-3 mr-1"></FolderSolid>
                             {_label} &#40;empty&#41;
@@ -320,21 +323,6 @@
                         {/await}
                     {/if}
                 {:else if clickedOnButtonRef === buttonRef}
-                    <Popover
-                        class="w-30 text-xs font-light m-0 p-0"
-                        arrow={true}
-                        offset={1}
-                        placement="bottom-end"
-                    >
-                        <FolderSolid class="w-3 m-0"></FolderSolid>
-                        <FolderSolid class="w-3 m-0"></FolderSolid>
-                    </Popover>
-                    <Tooltip
-                        class={tooltipTailwindClass}
-                        offset={-1}
-                        arrow={true}>{_filePropsTooltip}</Tooltip
-                    >
-                {:else}
                     <Tooltip
                         class={tooltipTailwindClass}
                         offset={-1}

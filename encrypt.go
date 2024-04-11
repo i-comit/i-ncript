@@ -206,10 +206,12 @@ func (a *App) EncryptENCPFile(_username, _password, filePath string) (bool, erro
 		return false, err
 	}
 	if err := os.Remove(filePath); err != nil {
-		encFile.Close() // Best effort to close the encrypted file before returning error
+		encFile.Close()
 		fmt.Printf("error closing file %s", err)
 		return false, err
 	}
+	s := "encrypted ENCP file: " + filepath.Base(filePath)
+	runtime.EventsEmit(a.ctx, addLogFile, s)
 	return true, nil
 }
 
@@ -244,6 +246,8 @@ func (a *App) decryptENCPFile(hashedReceiverCredentials []byte, filePath string)
 		decFile.Close()
 		return false, err
 	}
+	s := "opened ENCP file: " + filepath.Base(filePath)
+	runtime.EventsEmit(a.ctx, addLogFile, s)
 	return true, nil
 }
 

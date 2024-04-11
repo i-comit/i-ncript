@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"sync/atomic"
 	"time"
@@ -51,15 +52,15 @@ func (f *FileUtils) MoveFilesToPath(filePaths []string, targetPath string) {
 	}
 }
 
-func (f *FileUtils) OpenFile(filePath string) error {
+func (f *FileUtils) OpenFile(_filePath string) error {
 	var cmd *exec.Cmd
 	switch stdRuntime.GOOS {
 	case "windows":
-		cmd = exec.Command("cmd", "/c", "start", "", filePath)
+		cmd = exec.Command("cmd", "/c", "start", "", _filePath)
 	case "darwin":
-		cmd = exec.Command("open", filePath)
+		cmd = exec.Command("open", _filePath)
 	case "linux":
-		cmd = exec.Command("xdg-open", filePath)
+		cmd = exec.Command("xdg-open", _filePath)
 	default:
 		return fmt.Errorf("unsupported platform")
 	}
@@ -78,11 +79,10 @@ func (f *FileUtils) OpenDirectory(_filePath string) error {
 		dirPath = filepath.Dir(_filePath) + string(filepath.Separator)
 	}
 	fmt.Println("DirPath open directory " + dirPath)
-	// Open the directory based on the operating system
 	var cmd *exec.Cmd
 	switch stdRuntime.GOOS {
 	case "windows":
-		cmd = exec.Command("explorer", dirPath)
+		cmd = exec.Command("cmd", "/c", "start", "", dirPath)
 	case "darwin":
 		cmd = exec.Command("open", dirPath)
 	case "linux":
@@ -114,7 +114,6 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 		}
 		path = filepath.Clean(path)
 		if path == rootDir {
-			// fmt.Println("ROOT PATH " + path)
 			return nil
 		}
 
@@ -165,6 +164,8 @@ func (f *FileUtils) PackFilesForENCP(receiverUsername, receiverPassword string, 
 		return "", fmt.Errorf("error closing zip writer: %s", err)
 	}
 	zipFile.Close()
+	s := "packed " + strconv.Itoa(len(filePaths)) + " files into " + filenameWithoutExtension
+	wailsRuntime.EventsEmit(f.app.ctx, addLogFile, s)
 	return zipFile.Name(), nil
 }
 

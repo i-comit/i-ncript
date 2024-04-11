@@ -24,10 +24,6 @@ import {
 
 import {
     width, height,
-    darkBGColor,
-    lightBGColor,
-    lightTextColor,
-    darkTextColor
 } from "../stores/constantVariables.ts"
 
 export const pageName: () => string = () => {
@@ -191,7 +187,7 @@ export function moveFilesToRelPath(targetRelPath: string) {
         if (fileProps.fileType) {
             let pathToMoveTo: string;
             if (fileProps.fileType === "dir") {
-                LogDebug("Node being used for drop is dir ");
+                LogDebug("Node being used for drop is dir derp ");
                 pathToMoveTo = fullPath;
             } else {
                 LogDebug("Node being used for drop is file ");

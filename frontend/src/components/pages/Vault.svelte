@@ -172,7 +172,6 @@
         return false;
     }
 
-    function checkMouseLeave() {}
 </script>
 
 <div class="flex h-screen !rounded-lg">
@@ -182,7 +181,6 @@
         role="none"
         on:click={clearHeldBtnsFromContainer}
         on:mouseenter={checkMouseEnter}
-        on:mouseleave={checkMouseLeave}
     >
         <DirSize />
         {#if _currentFileTask === FileTasks.None}
@@ -228,7 +226,7 @@
         id="right-panel"
         role="none"
         on:mouseleave={onmouseleave}
-        on:click={clearHeldBtnsFromContainer}
+        on:mouseup={clearHeldBtnsFromContainer}
     >
         <!-- <NeuSearch /> -->
         <RadialProgress
