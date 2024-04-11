@@ -57,6 +57,23 @@ func (g *Getters) GetFilesByType(dirIndex int, getFileType bool) ([]string, erro
 	return files, nil
 }
 
+func (g *Getters) GetTotalDirSize(dirPath string) (int64, error) {
+	var totalSize int64 // This will hold the total size of all files
+	err := filepath.Walk(dirPath, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err // Propagate the error
+		}
+		if !info.IsDir() {
+			totalSize += info.Size() // Add file size, ignoring directories
+		}
+		return nil
+	})
+	if err != nil {
+		return 0, err // Return the error if something went wrong during the walk
+	}
+	return totalSize, nil // Return the total size of the files
+}
+
 func (g *Getters) GetDirectoryPath(dirIndex int) (string, error) {
 	if dirIndex < 0 {
 		dirIndex = 0

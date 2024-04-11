@@ -70,6 +70,7 @@
     import { darkLightMode } from "../../stores/dynamicVariables.ts";
     import { FileTasks, currentFileTask } from "../../enums/FileTasks.ts";
     import { OpenDirectory } from "../../../wailsjs/go/main/FileUtils";
+    import { GetTotalDirSize } from "../../../wailsjs/go/main/Getters";
 
     export let _fileTree: FileNode;
 
@@ -86,6 +87,7 @@
     let ulElement: HTMLUListElement;
 
     let _isFile = isFile();
+    let _dirSize = getDirSize();
     let _canMoveToDir = checkFileDragDirectory(_fileTree.relPath);
 
     $: folderStyle = `${
@@ -154,6 +156,11 @@
         return fileProps.fileSize > 0; // Return true if fileSize > 0, indicating a file
     }
 
+    async function getDirSize(): Promise<string> {
+        const dirSize = await GetTotalDirSize(getRootDir() + _fileTree.relPath);
+        return `${formatFileSize(dirSize)}`;
+    }
+
     function handleMouseEnter() {
         if (_fileTree.relPath === getRootDir()) return;
         getFileProperties(getRootDir() + _fileTree.relPath).then(
@@ -194,7 +201,7 @@
 
     function checkHeldDownBtnsTooltip(): boolean {
         return (
-            Object.keys(_heldDownBtns).length > 0 &&
+            Object.keys($heldDownBtns).length > 0 &&
             basePath(_fileTree.relPath) !== pageName()
         );
     }
@@ -227,8 +234,9 @@
             {#if _fileTree.children && _fileTree.children.length > 0}<!-- Folder with children -->
                 <button
                     disabled={$currentFileTask !== FileTasks.None}
-                    class="flex {_fileTree.relPath === getRootDir()
-                        ? 'rounded-md px-1 underline mb-0.5'
+                    class="flex hover:underline {_fileTree.relPath ===
+                    getRootDir()
+                        ? 'rounded-md px-1 mb-0.5'
                         : 'pl-1.5'}"
                     style={folderStyle}
                     on:click|stopPropagation={() => {
@@ -254,9 +262,17 @@
                         >
                     {/if}
                 {:else if _fileTree.relPath !== getRootDir()}
-                    <Tooltip class={tooltipTailwindClass} offset={1}
-                        >{basePath(_fileTree.relPath)}</Tooltip
-                    >
+                    {#await _dirSize then dirSize}
+                        {#if dirSize}
+                            <Tooltip class={tooltipTailwindClass} offset={-1}
+                                >{dirSize}</Tooltip
+                            >
+                        {/if}
+                    {:catch}
+                        <Tooltip class={tooltipTailwindClass} offset={-1}
+                            >{basePath(_fileTree.relPath)}</Tooltip
+                        >
+                    {/await}
                 {/if}
                 {#if expanded}
                     <ul>
@@ -304,7 +320,11 @@
                         </button>
                     {/if}
                 {:catch error}
-                    <p>nothing here yet.</p>
+                    <button
+                        on:dblclick={() =>
+                            OpenDirectory(getRootDir() + _fileTree.relPath)}
+                        >nothing here yet.</button
+                    >
                 {/await}
 
                 {#if $pointerDown}
@@ -322,7 +342,7 @@
                             {/if}
                         {/await}
                     {/if}
-                {:else if clickedOnButtonRef === buttonRef}
+                {:else}
                     <Tooltip
                         class={tooltipTailwindClass}
                         offset={-1}

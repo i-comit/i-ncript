@@ -58,8 +58,8 @@
   onMount(async () => {
     isRightDir = await GetDirName();
     LogDebug(isRightDir.toString());
-    EventsOn("addLogFile", (fileName) => {
-      addLogEntry(basePath(fileName));
+    EventsOn("addLogFile", (logEntry) => {
+      addLogEntry(logEntry);
     });
     EventsOn("largeFilePercent", (_largeFilePercent: number) => {
       largeFilePercent.set(_largeFilePercent);

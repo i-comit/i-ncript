@@ -1,4 +1,5 @@
 import { writable } from 'svelte/store';
+import { LogInfo } from '../../wailsjs/runtime/runtime';
 
 export const logEntries = writable<{ entry: string; timestamp: string }[]>([]);
 
@@ -21,6 +22,35 @@ export function addLogEntry(entry: string) {
     });
 }
 
+export function getEntryKeyword(entry: string): string {
+    // Split the string into words
+    const words = entry.split(" ");
+    // Get the first word
+    const firstWord = words[0];
+    // Print the first word
+    LogInfo("First entry word " + firstWord);
+    let replacedChar = '';
+    switch (firstWord) {
+        case "encrypted":
+            replacedChar = '🔒'
+            break;
+        case "decrypted":
+            replacedChar = '🔓'
+            break;
+        case "opened":
+            replacedChar = '📂'
+            break;
+        case "packed":
+            replacedChar = '✉️'
+            break;
+        case "moved":
+            replacedChar = '💼'
+            break;
+    }
+    const modifiedEntry = entry.replace(firstWord, replacedChar);
+    return modifiedEntry;
+}
+
 export function formatTime(isoString: string): string {
     const date = new Date(isoString);
     const hours = date.getHours();
@@ -31,9 +61,9 @@ export function formatTime(isoString: string): string {
     const month = date.getMonth() + 1; // getMonth() is zero-based
     const day = date.getDate();
     const year = date.getFullYear().toString().slice(-2); // Get last two digits of year
-  
+
     return `${month}/${day}/${year} | ${formattedHours}:${formattedMinutes} ${ampm}`;
-  }
+}
 
 
 export let alertInterval = 25;

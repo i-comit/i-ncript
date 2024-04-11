@@ -39,13 +39,14 @@ func (f *FileUtils) MoveFilesToPath(filePaths []string, targetPath string) {
 				continue
 			}
 			newFilePath := filepath.Join(targetPath, filepath.Base(files))
-			// Move the file
 			err := os.Rename(files, newFilePath)
 			if err != nil {
 				wailsRuntime.LogError(f.app.ctx, "Error moving file: "+err.Error())
 				continue
 			}
 			wailsRuntime.LogError(f.app.ctx, "Successfully moved file to: "+newFilePath)
+			s := "moved " + strconv.Itoa(len(filePaths)) + " to " + targetPath
+			wailsRuntime.EventsEmit(f.app.ctx, addLogFile, s)
 		}
 		wailsRuntime.EventsEmit(f.app.ctx, rebuildFileTree)
 		f.app.SetIsInFileTask(false)
@@ -116,7 +117,6 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 		if path == rootDir {
 			return nil
 		}
-
 		relativePath, err := filepath.Rel(rootDir, path)
 		if err != nil {
 			return err
@@ -212,8 +212,38 @@ func (f *FileUtils) GetAppendedFileBytes(filePath string) error {
 	return nil
 }
 
-func (f *FileUtils) SaveLogEntries(files, timestamps []string) {
+func (f *FileUtils) SaveLogEntries(entries, timestamps []string) error {
+	// Get current working directory
+	cwd, err := os.Getwd()
+	if err != nil {
+		fmt.Printf("Failed to get CWD: %s\n", err)
+		return err
+	}
+	logFilePath := filepath.Join(cwd, "log.md")
+	file, err := os.Create(logFilePath)
+	if err != nil {
+		fmt.Printf("Failed to create log file: %s\n", err)
+		return err
+	}
+	defer file.Close()
+	// Check if the lengths of entries and timestamps are equal
+	if len(entries) != len(timestamps) {
+		return fmt.Errorf("entries and timestamps slice length mismatch")
+	}
+	for i, entry := range entries {
+		formattedTime := formatTime(timestamps[i])
+		if formattedTime == "" {
+			continue // Skip entries with invalid timestamps
+		}
+		// Write to the log file
+		_, err := file.WriteString(fmt.Sprintf("%s | %s\n", formattedTime, entry))
+		if err != nil {
+			fmt.Printf("Failed to write to log file: %s\n", err)
+			return err
+		}
+	}
 
+	return nil
 }
 
 func formatTime(isoString string) string {
@@ -224,7 +254,7 @@ func formatTime(isoString string) string {
 		return ""
 	}
 
-	return t.Format("01-02-06 03:04 PM")
+	return t.Format("01/02/06 03:04PM")
 }
 
 func (f *FileUtils) addFileToZip(zipWriter *zip.Writer, zipFilePath string) error {

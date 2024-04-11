@@ -80,7 +80,11 @@ func (a *App) encryptOrDecrypt(encryptOrDecrypt bool, filePaths []string) (bool,
 			fileIter++
 			if a.ctx != nil {
 				runtime.EventsEmit(a.ctx, fileProcessed, i+1)
-				runtime.EventsEmit(a.ctx, addLogFile, filePath)
+				if encryptOrDecrypt {
+					runtime.EventsEmit(a.ctx, addLogFile, "encrypted "+filepath.Base(filePath))
+				} else {
+					runtime.EventsEmit(a.ctx, addLogFile, "decrypted "+filepath.Base(filePath))
+				}
 			}
 		}
 	}
@@ -121,7 +125,6 @@ func (a *App) DecryptFilesInArr(filePaths []string) (bool, error) {
 
 func (a *App) resetProgress(encrypt bool, files int) {
 	a.lastFilePath = ""
-	// time.Sleep(time.Second)
 	if files > 0 {
 		if encrypt {
 			response := fmt.Sprintf("encrypted %d files.", files)
@@ -183,7 +186,6 @@ func (a *App) EncryptENCPFile(_username, _password, filePath string) (bool, erro
 		return false, err
 	}
 
-	fmt.Printf("_hashedCredentials! %s", _hashedCredentials)
 	aesGCM, data, err := initFileCipher([]byte(_hashedCredentials), filePath)
 	if err != nil {
 		return false, err
@@ -210,7 +212,7 @@ func (a *App) EncryptENCPFile(_username, _password, filePath string) (bool, erro
 		fmt.Printf("error closing file %s", err)
 		return false, err
 	}
-	s := "encrypted ENCP file: " + filepath.Base(filePath)
+	s := "encrypted " + filepath.Base(newFilePath)
 	runtime.EventsEmit(a.ctx, addLogFile, s)
 	return true, nil
 }
@@ -246,7 +248,7 @@ func (a *App) decryptENCPFile(hashedReceiverCredentials []byte, filePath string)
 		decFile.Close()
 		return false, err
 	}
-	s := "opened ENCP file: " + filepath.Base(filePath)
+	s := "opened " + filepath.Base(filePath)
 	runtime.EventsEmit(a.ctx, addLogFile, s)
 	return true, nil
 }

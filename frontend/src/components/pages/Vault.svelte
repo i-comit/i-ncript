@@ -107,6 +107,7 @@
         )
             setIsInFileTask(true).then(() => {
                 currentFileTask.set(FileTasks.Encrypt);
+                currentModal.set(Modals.Logger);
                 totalFileCt.set(checkFileTypesinHeldDownBtns(true));
                 prependAbsPathToRelPaths(0).then((prependedRelPaths) => {
                     EncryptFilesInArr(prependedRelPaths);
@@ -121,6 +122,7 @@
                 if (filePaths.length > 0) {
                     setIsInFileTask(true).then(() => {
                         currentFileTask.set(FileTasks.Encrypt);
+                        currentModal.set(Modals.Logger);
                         totalFileCt.set(filePaths.length);
                         EncryptFilesInDir(0);
                     });
@@ -138,6 +140,7 @@
         )
             setIsInFileTask(true).then(() => {
                 currentFileTask.set(FileTasks.Decrypt);
+                currentModal.set(Modals.Logger);
                 totalFileCt.set(checkFileTypesinHeldDownBtns(false));
                 prependAbsPathToRelPaths(0).then((prependedRelPaths) => {
                     DecryptFilesInArr(prependedRelPaths);
@@ -152,6 +155,7 @@
                 if (filePaths.length > 0) {
                     setIsInFileTask(true).then(() => {
                         currentFileTask.set(FileTasks.Decrypt);
+                        currentModal.set(Modals.Logger);
                         totalFileCt.set(filePaths.length);
                         DecryptFilesInDir(0);
                     });
@@ -171,7 +175,6 @@
         }
         return false;
     }
-
 </script>
 
 <div class="flex h-screen !rounded-lg">

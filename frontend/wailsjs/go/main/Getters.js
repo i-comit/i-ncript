@@ -33,3 +33,7 @@ export function GetFilesByType(arg1, arg2) {
 export function GetRootFolder() {
   return window['go']['main']['Getters']['GetRootFolder']();
 }
+
+export function GetTotalDirSize(arg1) {
+  return window['go']['main']['Getters']['GetTotalDirSize'](arg1);
+}

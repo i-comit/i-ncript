@@ -17,3 +17,5 @@ export function GetFileTreePath(arg1:number,arg2:string):Promise<string>;
 export function GetFilesByType(arg1:number,arg2:boolean):Promise<Array<string>>;
 
 export function GetRootFolder():Promise<string>;
+
+export function GetTotalDirSize(arg1:string):Promise<number>;

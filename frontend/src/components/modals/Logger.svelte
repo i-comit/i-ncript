@@ -2,13 +2,17 @@
     import { onMount, afterUpdate, onDestroy } from "svelte";
     import { SpeedDial, SpeedDialButton, Tooltip } from "flowbite-svelte";
     import {
-        ShareNodesSolid,
         PrinterOutline,
         DownloadSolid,
         FileCopySolid,
     } from "flowbite-svelte-icons";
 
-    import { addLogEntry, formatTime, logEntries } from "../../tools/logger";
+    import {
+        addLogEntry,
+        formatTime,
+        getEntryKeyword,
+        logEntries,
+    } from "../../tools/logger";
     import { get, writable } from "svelte/store";
     import {
         lightBGColor,
@@ -18,6 +22,7 @@
         tooltipTailwindClass,
     } from "../../stores/constantVariables.ts";
     import { darkLightMode } from "../../stores/dynamicVariables.ts";
+    import { SaveLogEntries } from "../../../wailsjs/go/main/FileUtils";
 
     let logContainer: { scrollTop: any; scrollHeight: any }; // Reference to the log entries container element
 
@@ -29,6 +34,13 @@
 
     function clearLogEntry() {
         logEntries.set([]);
+    }
+
+    function saveLogEntries() {
+        const logs = get(logEntries); // Directly use the store's value if this function is called reactively.
+        const entries = logs.map((log) => log.entry);
+        const timestamps = logs.map((log) => log.timestamp);
+        SaveLogEntries(entries, timestamps);
     }
 </script>
 
@@ -46,17 +58,18 @@
             class="flex items-center justify-center bg-gray-600 !rounded-br-xl !rounded-tl-3xl h-8 w-14"
             popperDefaultClass="flex items-center !mb-0 gap-0.5"
         >
-            <SpeedDialButton name="Errors " class="h-10 w-14 text-lg">
-                <PrinterOutline class="w-6 h-6" />
-            </SpeedDialButton>
             <SpeedDialButton name="Warnings " class="h-10 w-14">
                 <DownloadSolid class="w-6 h-6" />
             </SpeedDialButton>
-            <SpeedDialButton name="Export " class="h-10 w-14">
+            <SpeedDialButton
+                name="Save"
+                class="h-10 w-14"
+                on:click={saveLogEntries}
+            >
                 <FileCopySolid class="w-6 h-6" />
             </SpeedDialButton>
             <SpeedDialButton
-                name="Clear "
+                name="Clear"
                 class="h-10 w-14"
                 on:click={clearLogEntry}
             >
@@ -64,17 +77,13 @@
             </SpeedDialButton>
         </SpeedDial>
     </div>
-    <div
-        bind:this={logContainer}
-        class="log-entries-container"
-        style={`border-left: 1px solid ${get(darkLightMode) ? lightBGColor : darkBGColor}`}
-    >
+    <div bind:this={logContainer} class="log-entries-container">
         {#each $logEntries as { entry, timestamp }}
             <div
                 class="log-entry text-xs whitespace-nowrap overflow-hidden overflow-ellipsis text-gray-500"
                 style={`color: ${get(darkLightMode) ? lightBGColor : darkBGColor}`}
             >
-                {entry}
+                {getEntryKeyword(entry)}
             </div>
             <Tooltip class={tooltipTailwindClass} offset={-1} arrow={true}
                 >{formatTime(timestamp)}</Tooltip
