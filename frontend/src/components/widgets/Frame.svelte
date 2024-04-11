@@ -62,8 +62,8 @@
 </script>
 
 <div
-    class="window-controls h-6 w-screen flex justify-between items-center py-0.5 px-0 rounded-lg z-30"
-    style="--wails-draggable:drag"
+    class="window-controls h-6 w-screen flex justify-between items-center py-0.5 px-0 rounded-lg z-40"
+    style="--wails-draggable:drag;"
 >
     <div class="flex justify-start h-full ml-1 select-none">
         {#if $darkLightMode}

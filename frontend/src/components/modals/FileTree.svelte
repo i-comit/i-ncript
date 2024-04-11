@@ -69,6 +69,7 @@
     } from "../../tools/inputs.ts";
     import FileIcon from "../widgets/FileIcon.svelte";
     import { darkLightMode } from "../../stores/dynamicVariables.ts";
+    import { FileTasks, currentFileTask } from "../../enums/FileTasks.ts";
 
     export let _fileTree: FileNode;
 
@@ -92,7 +93,7 @@
             ? `position: sticky; top: 1px; left: 0px; 
                background-color: ${get(darkLightMode) ? darkBGColor : lightBGColor}; 
                color: ${accentColor}; 
-               font-weight: 600; z-index: 45`
+               font-weight: 600; z-index: 42`
             : `border-left: 1.5px solid ${get(darkLightMode) ? lightBGColor : darkBGColor};
                position: relative;
                color: ${get(darkLightMode) ? lightTextColor : darkTextColor}; `
@@ -225,6 +226,7 @@
         <li>
             {#if _fileTree.children && _fileTree.children.length > 0}<!-- Folder with children -->
                 <button
+                    disabled={$currentFileTask !== FileTasks.None}
                     class="flex {_fileTree.relPath === getRootDir()
                         ? 'rounded-md px-1 underline mb-0.5'
                         : 'pl-1.5'}"
@@ -269,6 +271,7 @@
                         <button
                             class="flex rounded-md px-0.5 ml-1 my-0.5"
                             bind:this={buttonRef}
+                            disabled={$currentFileTask !== FileTasks.None}
                             on:mousedown={() => {
                                 handleFileClick(_fileTree.relPath, buttonRef);
                             }}

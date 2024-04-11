@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onMount, afterUpdate } from "svelte";
+    import { onMount, afterUpdate, onDestroy } from "svelte";
     import { SpeedDial, SpeedDialButton } from "flowbite-svelte";
     import {
         ShareNodesSolid,
@@ -8,16 +8,14 @@
         FileCopySolid,
     } from "flowbite-svelte-icons";
 
-    import { basePath } from "../../tools/utils.ts";
-
     import { addLogEntry, logEntries } from "../../tools/logger";
-    import { EventsOn } from "../../../wailsjs/runtime/runtime";
+    import { get } from "svelte/store";
+    import {
+        lightBGColor,
+        darkBGColor,
+    } from "../../stores/constantVariables.ts";
+    import { darkLightMode } from "../../stores/dynamicVariables.ts";
 
-    onMount(() => {
-        EventsOn("addLogFile", (fileName) => {
-            addLogEntry(basePath(fileName));
-        });
-    });
     let logContainer: { scrollTop: any; scrollHeight: any }; // Reference to the log entries container element
 
     afterUpdate(() => {
@@ -25,6 +23,10 @@
             logContainer.scrollTop = logContainer.scrollHeight; // Scroll to the bottom
         }
     });
+
+    function clearLogEntry() {
+        logEntries.set([]);
+    }
 </script>
 
 <div>
@@ -33,9 +35,6 @@
             defaultClass="fixed end-0"
             class="bg-gray-800 rounded-full bg-white"
         >
-            <SpeedDialButton name="Share " class="h-10 w-14 right-10">
-                <ShareNodesSolid class="w-6 h-6" />
-            </SpeedDialButton>
             <SpeedDialButton name="Errors " class="h-10 w-14 text-lg">
                 <PrinterOutline class="w-6 h-6" />
             </SpeedDialButton>
@@ -45,12 +44,24 @@
             <SpeedDialButton name="Export " class="h-10 w-14">
                 <FileCopySolid class="w-6 h-6" />
             </SpeedDialButton>
+            <SpeedDialButton
+                name="Clear "
+                class="h-10 w-14"
+                on:click={clearLogEntry}
+            >
+                <FileCopySolid class="w-6 h-6" />
+            </SpeedDialButton>
         </SpeedDial>
     </div>
-    <div bind:this={logContainer} class="log-entries-container">
+    <div
+        bind:this={logContainer}
+        class="log-entries-container"
+        style={`border-left: 1px solid ${get(darkLightMode) ? lightBGColor : darkBGColor}`}
+    >
         {#each $logEntries as entry}
             <div
-                class="log-entry text-xs whitespace-nowrap overflow-hidden overflow-ellipsis"
+                class="log-entry text-xs whitespace-nowrap overflow-hidden overflow-ellipsis text-gray-500"
+                style={`color: ${get(darkLightMode) ? lightBGColor : darkBGColor}`}
             >
                 {entry}
             </div>
@@ -64,7 +75,7 @@
         bottom: 10vh !important;
         /* Ensure the scale transform is applied as you want it */
         transform: scale(0.55) !important;
-        z-index: 5;
+        z-index: 35;
         /* Add any additional styles needed to ensure it's positioned as desired */
     }
     .log-entries-container {
@@ -79,6 +90,7 @@
         text-align: justify;
         box-sizing: border-box;
         scrollbar-width: none;
+        /* background-color: antiquewhite !important; */
         /* For Firefox */
         -ms-overflow-style: none;
         scroll-behavior: smooth; /* Enables smooth scrolling */

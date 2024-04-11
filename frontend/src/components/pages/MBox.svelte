@@ -19,6 +19,7 @@
         darkLightMode,
         fileCount,
         fileTaskPercent,
+        largeFileName,
         largeFilePercent,
         totalFileCt,
     } from "../../stores/dynamicVariables.ts";
@@ -124,12 +125,6 @@
             );
             if (fileCtEvt === 0) currentFileTask.set(FileTasks.None);
         });
-        EventsOn("largeFilePercent", (_largeFilePercent: number) => {
-            largeFilePercent.set(_largeFilePercent);
-            LogInfo("largeFile " + $largeFilePercent);
-            if (_largeFilePercent === 0) EventsOff("largeFilePercent");
-        });
-
         darkLightBGOnId(get(darkLightMode), "right-panel");
         darkLightBGOnId(get(darkLightMode), "left-panel");
         clearUsername();
@@ -140,7 +135,6 @@
         unsub_heldDownBtns();
         unsub_darkLightMode();
         EventsOff("fileProcessed");
-        EventsOff("largeFilePercent");
     });
 
     function handleOnFileClick() {
@@ -166,10 +160,7 @@
                 lastFileType === FileTypes.Encrypted
             ) {
                 currentMBoxState = MboxState.Open;
-            } else {
-                currentMBoxState = MboxState.Pack;
-            }
-            LogDebug("file type is " + lastFileType);
+            } else currentMBoxState = MboxState.Pack;
         }
     }
 
@@ -232,9 +223,6 @@
                         EncryptENCPFile(username, password, zipFilePath)
                             .then((encpFinished) => {
                                 if (encpFinished) {
-                                    currentFileTask.set(FileTasks.None);
-                                    clearUsername();
-                                    clearPassword();
                                     startDisplay(
                                         `packed ${absFilePaths.length} files`,
                                     );
@@ -260,11 +248,18 @@
         if (lastFileType === FileTypes.EncryptedP) {
             AuthenticateENCPFile(password, getRootDir() + lastEntry[0])
                 .then((authenticated) => {
-                    if (authenticated) startDisplay("successful authenticated");
-                    else startDisplay("File failed authentication");
+                    if (authenticated) {
+                        startDisplay("successfully opened");
+                        clearHeldBtns();
+                    } else startDisplay("failed to open");
                 })
                 .catch(() => {
-                    startDisplay("File failed authentication");
+                    startDisplay("failed to open");
+                })
+                .finally(() => {
+                    currentFileTask.set(FileTasks.None);
+                    clearUsername();
+                    clearPassword();
                 });
         }
     }
@@ -291,21 +286,27 @@
                 <p class="text-start">text</p>
             </div>
         {:else if currentMBoxState === MboxState.Open}
-            <div style="height: 3.175rem" />
-            <div class="row" role="none" on:click|stopPropagation>
-                <Input
-                    class="max-h-1 m-0"
-                    id="small-input"
-                    placeholder="enter password.."
-                    type="password"
-                    bind:value={password}
-                    on:keyup={(event) => enterPassword(event)}
+            {#if _currentFileTask === FileTasks.None}
+                <div style="height: 3.175rem" />
+                <div class="row" role="none" on:click|stopPropagation>
+                    <Input
+                        class="max-h-1 m-0"
+                        id="small-input"
+                        placeholder="enter password.."
+                        type="password"
+                        bind:value={password}
+                        on:keyup={(event) => enterPassword(event)}
+                    />
+                </div>
+                <PasswordScan
+                    {password}
+                    on:passwordStrengthUpdated={handlePasswordStrengthUpdated}
                 />
-            </div>
-            <PasswordScan
-                {password}
-                on:passwordStrengthUpdated={handlePasswordStrengthUpdated}
-            />
+            {:else}
+                <TaskDisplay />
+                <div class="h-0.5" />
+                <WaveProgress dataProgress={$fileTaskPercent}></WaveProgress>
+            {/if}
         {:else if currentMBoxState === MboxState.Pack}
             {#if _currentFileTask === FileTasks.None}
                 <div class="row" role="none" on:click|stopPropagation>
@@ -435,6 +436,7 @@
         <RadialProgress
             _style="right: 3.6rem"
             dataProgress={$largeFilePercent}
+            overlayText={$largeFileName}
         />
         {#if _modal === Modals.None}
             <TreeView _fileTree={$fileTree} />

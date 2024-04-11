@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"path/filepath"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -289,6 +290,8 @@ func (a *App) writeCipherFile(data, cipherData []byte, cipherFile *os.File) erro
 	var writtenBytes int64 //Use atomic.Int64 w/ writtenBytes.Load() for 32bit systems
 	if len(data) > thresholdFileSize*1024*1024 {
 		var lastpercentInt = 0
+		runtime.EventsEmit(a.ctx, "largeFileName", filepath.Base(cipherFile.Name()))
+
 		go func() {
 			ticker := time.NewTicker(10 * time.Millisecond)
 			defer ticker.Stop()
@@ -339,7 +342,8 @@ func (a *App) writeCipherFile(data, cipherData []byte, cipherFile *os.File) erro
 		return err
 	}
 	if len(data) > thresholdFileSize*1024*1024 {
-		runtime.EventsEmit(a.ctx, "largeFilePercent", 0)
+		runtime.EventsEmit(a.ctx, "largeFileName", "")
+		runtime.EventsEmit(a.ctx, largeFilePercent, 0)
 	}
 	return nil
 }

@@ -29,6 +29,7 @@
         darkLightMode,
         fileCount,
         fileTaskPercent,
+        largeFileName,
         largeFilePercent,
         totalFileCt,
     } from "../../stores/dynamicVariables.ts";
@@ -88,15 +89,8 @@
             fileTaskPercent.set(
                 Math.round(($fileCount / get(totalFileCt)) * 100),
             );
-            LogInfo("file count " + fileCtEvt);
             if (fileCtEvt === 0) currentFileTask.set(FileTasks.None);
         });
-        EventsOn("largeFilePercent", (_largeFilePercent: number) => {
-            largeFilePercent.set(_largeFilePercent);
-            LogInfo("largeFile " + $largeFilePercent);
-            if (_largeFilePercent === 0) EventsOff("largeFilePercent");
-        });
-
         darkLightBGOnId(get(darkLightMode), "right-panel");
         darkLightBGOnId(get(darkLightMode), "left-panel");
     });
@@ -104,7 +98,6 @@
     onDestroy(() => {
         unsub_darkLightMode();
         EventsOff("fileProcessed");
-        EventsOff("largeFilePercent");
     });
 
     function encrypt() {
@@ -241,6 +234,7 @@
         <RadialProgress
             _style="right: 3.6rem"
             dataProgress={$largeFilePercent}
+            overlayText={$largeFileName}
         />
         {#if _modal === Modals.None}
             <TreeView _fileTree={$fileTree} />

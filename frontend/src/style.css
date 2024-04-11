@@ -38,6 +38,7 @@ body {
     scrollbar-width: none;
     /* For Firefox */
     -ms-overflow-style: none;
+    z-index: 38;
 }
 
 #page-info {

@@ -5,12 +5,25 @@
   import WrongDir from "./components/pages/WrongDir.svelte";
 
   import { AppPage, currentPage } from "./enums/AppPage.ts";
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import { GetDirName, GetDirectoryPath } from "../wailsjs/go/main/Getters";
-  import { LogDebug, LogInfo, LogWarning } from "../wailsjs/runtime/runtime";
+  import {
+    EventsOff,
+    EventsOn,
+    LogDebug,
+    LogInfo,
+    LogWarning,
+  } from "../wailsjs/runtime/runtime";
   import { DirectoryWatcher } from "../wailsjs/go/main/App";
-  import { vaultDir, mBoxDir } from "./stores/dynamicVariables.ts";
+  import {
+    vaultDir,
+    mBoxDir,
+    largeFilePercent,
+    largeFileName,
+  } from "./stores/dynamicVariables.ts";
   import { buildFileTree, fileTree } from "./tools/fileTree.ts";
+  import { addLogEntry } from "./tools/logger.ts";
+  import { basePath } from "./tools/utils.ts";
 
   let _page: AppPage;
   currentPage.subscribe((value) => {
@@ -45,6 +58,21 @@
   onMount(async () => {
     isRightDir = await GetDirName();
     LogDebug(isRightDir.toString());
+    EventsOn("addLogFile", (fileName) => {
+      addLogEntry(basePath(fileName));
+    });
+    EventsOn("largeFilePercent", (_largeFilePercent: number) => {
+      largeFilePercent.set(_largeFilePercent);
+      LogInfo("largeFile " + $largeFilePercent);
+    });
+    EventsOn("largeFileName", (_largeFileName: string) => {
+      largeFileName.set(_largeFileName);
+      LogInfo("largeFile " + $largeFileName);
+    });
+  });
+
+  onDestroy(() => {
+    EventsOff("addLogFile");
   });
 </script>
 

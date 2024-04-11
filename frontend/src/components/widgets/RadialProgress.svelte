@@ -1,57 +1,57 @@
 <!-- https://codepen.io/eZ0/pen/eZXNzd -->
 <script lang="ts">
-    import { onDestroy, onMount } from "svelte";
-    import { lightBGColor } from "../../stores/constantVariables.ts";
+    import {
+        darkBGColor,
+        lightBGColor,
+    } from "../../stores/constantVariables.ts";
 
-    import { darkLightBGOnElement } from "../../tools/themes";
     import {
         darkLightMode,
         largeFilePercent,
     } from "../../stores/dynamicVariables.ts";
-    import { get } from "svelte/store";
 
     export let className = "";
     export let dataProgress: number;
     export let _style = "";
-
-    let overlay: HTMLDivElement;
-
-    // let dataProgress: number = 0; // Initial value
-
-    // function randomize(): void {
-    //     dataProgress = Math.floor(Math.random() * 100);
-    // }
-    const unsub_darkLightMode = darkLightMode.subscribe((value) => {
-        darkLightBGOnElement(!value, overlay);
-    });
-
-    // $: darkLightBGOnElement(!darkLightMode, overlay);
-
-    onDestroy(() => {
-        unsub_darkLightMode();
-        darkLightBGOnElement(!get(darkLightMode), overlay);
-    });
+    export let overlayText: string = "";
 </script>
 
-{#if $largeFilePercent > 0}
+{#if $largeFilePercent > 0 && $largeFilePercent < 100}
     <div
-        class="ko-progress-circle z-5 {` ${className}`}"
-        data-progress={dataProgress}
-        style={_style}
+        class="fixed w-full h-full"
+        style="background-color: rgba(180, 180, 180, 0.2); z-index:36;"
     >
-        <div class="ko-circle">
-            <div class="full ko-progress-circle__slice">
-                <div class="ko-progress-circle__fill"></div>
+        <div
+            class="ko-progress-circle z-5 {` ${className}`} h-full"
+            data-progress={dataProgress}
+            style={_style}
+        >
+            <div class="ko-circle">
+                <div class="full ko-progress-circle__slice">
+                    <div class="ko-progress-circle__fill"></div>
+                </div>
+                <div class="ko-progress-circle__slice">
+                    <div class="ko-progress-circle__fill"></div>
+                    <div
+                        class="ko-progress-circle__fill ko-progress-circle__bar"
+                    ></div>
+                </div>
             </div>
-            <div class="ko-progress-circle__slice">
-                <div class="ko-progress-circle__fill"></div>
+            {#if $darkLightMode}
                 <div
-                    class="ko-progress-circle__fill ko-progress-circle__bar"
-                ></div>
-            </div>
-        </div>
-        <div class="ko-progress-circle__overlay" bind:this={overlay}>
-            <slot />
+                    class="ko-progress-circle__overlay flex items-center justify-center text-ellipsis"
+                    style={`background-color:${darkBGColor}`}
+                >
+                    <span class="truncate px-1 text-sm">{overlayText}</span>
+                </div>
+            {:else}
+                <div
+                    class="ko-progress-circle__overlay flex items-center justify-center text-ellipsis"
+                    style={`background-color:${lightBGColor}`}
+                >
+                    <span class="truncate px-1 text-sm">{overlayText}</span>
+                </div>
+            {/if}
         </div>
     </div>
 {/if}
@@ -61,7 +61,7 @@
     $circle-size: 125px;
     $circle-background: #d9d9d9;
     $circle-color: #1291d4;
-    $inset-size: 115px;
+    $inset-size: 110px;
     $transition-length: 0.1s;
 
     .ko-progress-circle {
@@ -73,6 +73,7 @@
         bottom: 0.6rem;
         background-color: $circle-background;
         border-radius: 50%;
+        opacity: 1;
         .ko-progress-circle__slice,
         .ko-progress-circle__fill {
             width: $circle-size;
@@ -95,8 +96,6 @@
             position: absolute;
             margin-left: math.div($circle-size - $inset-size, 2);
             margin-top: math.div($circle-size - $inset-size, 2);
-            --bg-color: #757575;
-            background-color: var(--bg-color);
             border-radius: 50%;
             ::slotted(*) {
                 font-size: 1px !important; // Tailwind equivalent: text-xs
