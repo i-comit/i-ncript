@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 	"sync/atomic"
+	"time"
 
 	stdRuntime "runtime"
 
@@ -210,59 +211,19 @@ func (f *FileUtils) GetAppendedFileBytes(filePath string) error {
 	return nil
 }
 
-func insertBytesProcedurally(b1, b2 []byte) []rune {
-	if len(b1) < len(b2) {
-		b1, b2 = b2, b1
-	}
-	r1, r2 := bytesToRunes(b1), bytesToRunes(b2)
-	// Determine total length and ratio
-	totalLength := len(r1) + len(r2)
-	ratio := float64(len(r1)) / float64(len(r2))
-	// Prepare result slice
-	var result []rune
-	i, j := 0, 0.0 // i tracks position in r1, j tracks float position in r2
-	for len(result) < totalLength {
-		// Decide whether to append from r1 or r2 based on ratio and progress
-		if float64(i) <= j*ratio && i < len(r1) {
-			result = append(result, r1[i])
-			i++
-		} else if int(j) < len(r2) {
-			result = append(result, r2[int(j)])
-			j++
-		}
-	}
-	return result
+func (f *FileUtils) SaveLogEntries(files, timestamps []string) {
+
 }
 
-func matchBytesProcedurally(combinedByte []rune, byteToMatch []byte) (bool, []byte) {
-	rByteToMatch := bytesToRunes(byteToMatch)
-	originalS1Length := len(combinedByte) - len(rByteToMatch)
-	var ratio float64
-
-	if originalS1Length != 0 {
-		ratio = float64(len(combinedByte)) / float64(originalS1Length)
-	} else {
-		fmt.Println("Matched string: (none, combinedByte is the same as byteToMatch)")
-		return false, runesToBytes(combinedByte)
+func formatTime(isoString string) string {
+	// Parse the ISO string
+	t, err := time.Parse(time.RFC3339, isoString)
+	if err != nil {
+		fmt.Println("Error parsing time:", err)
+		return ""
 	}
 
-	var matchedRunes []rune
-	var remainingRunes []rune
-	j := 0.0 // j tracks the float position in rByteToMatch based on the ratio.
-	for i := 0; i < len(combinedByte); i++ {
-		if int(j) < len(rByteToMatch) && float64(i) >= j*ratio && combinedByte[i] == rByteToMatch[int(j)] {
-			matchedRunes = append(matchedRunes, combinedByte[i])
-			j++
-		} else {
-			remainingRunes = append(remainingRunes, combinedByte[i])
-		}
-	}
-
-	fmt.Println("Matched string:", string(matchedRunes))
-	fmt.Println("Matched?:", len(matchedRunes) == len(rByteToMatch))
-	// Success is determined by whether we've matched all runes from byteToMatch.
-	// Returns the remaining bytes as a byte array if the full sequence was found.
-	return len(matchedRunes) == len(rByteToMatch), runesToBytes(remainingRunes)
+	return t.Format("01-02-06 03:04 PM")
 }
 
 func (f *FileUtils) addFileToZip(zipWriter *zip.Writer, zipFilePath string) error {

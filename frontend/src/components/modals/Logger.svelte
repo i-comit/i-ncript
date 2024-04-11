@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount, afterUpdate, onDestroy } from "svelte";
-    import { SpeedDial, SpeedDialButton } from "flowbite-svelte";
+    import { SpeedDial, SpeedDialButton, Tooltip } from "flowbite-svelte";
     import {
         ShareNodesSolid,
         PrinterOutline,
@@ -8,13 +8,14 @@
         FileCopySolid,
     } from "flowbite-svelte-icons";
 
-    import { addLogEntry, logEntries } from "../../tools/logger";
-    import { get } from "svelte/store";
+    import { addLogEntry, formatTime, logEntries } from "../../tools/logger";
+    import { get, writable } from "svelte/store";
     import {
         lightBGColor,
         darkBGColor,
         darkTextColor,
         lightTextColor,
+        tooltipTailwindClass,
     } from "../../stores/constantVariables.ts";
     import { darkLightMode } from "../../stores/dynamicVariables.ts";
 
@@ -32,7 +33,7 @@
 </script>
 
 <div
-    class="mb-0.5 w-1/3 left-1/3 rounded-bl-lg rounded-br-lg"
+    class="mb-0.5 w-1/3 left-1/3 rounded-bl-lg rounded-br-lg z-10"
     style={`position: sticky; top: 0px; height: 1.4rem;
         background-color: ${$darkLightMode ? lightBGColor : darkBGColor}; 
         color: ${$darkLightMode ? darkTextColor : lightTextColor};`}
@@ -68,13 +69,16 @@
         class="log-entries-container"
         style={`border-left: 1px solid ${get(darkLightMode) ? lightBGColor : darkBGColor}`}
     >
-        {#each $logEntries as entry}
+        {#each $logEntries as { entry, timestamp }}
             <div
                 class="log-entry text-xs whitespace-nowrap overflow-hidden overflow-ellipsis text-gray-500"
                 style={`color: ${get(darkLightMode) ? lightBGColor : darkBGColor}`}
             >
                 {entry}
             </div>
+            <Tooltip class={tooltipTailwindClass} offset={-1} arrow={true}
+                >{formatTime(timestamp)}</Tooltip
+            >
         {/each}
     </div>
 </div>
@@ -91,7 +95,7 @@
         position: absolute;
         bottom: 0;
         width: 100%; /* Adjust if necessary */
-        max-height: 200px; /* Example maximum height; adjust as needed */
+        max-height: 100%; /* Example maximum height; adjust as needed */
         overflow-x: hidden; /* Enables horizontal scrolling */
         overflow-y: auto; /* Enables vertical scrolling */
         white-space: nowrap; /* Keeps log entries in a single line for horizontal scrolling */

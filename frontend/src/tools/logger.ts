@@ -1,13 +1,40 @@
 import { writable } from 'svelte/store';
 
-export const logEntries = writable<string[]>([]);
-export function addLogEntry(entry: string) {
-    logEntries.update(entries => [...entries, entry]);
-}
+export const logEntries = writable<{ entry: string; timestamp: string }[]>([]);
 
 export function clearLogEntries(entry: string) {
     logEntries.set([]);
 }
+export function addLogEntry(entry: string) {
+    logEntries.update(entries => {
+        // Generate a timestamp for the new entry
+        const timestamp = new Date().toISOString();
+        // Construct the new entry object
+        const newEntry = { entry, timestamp };
+        // Check if the array has reached its limit
+        if (entries.length >= 2000) {
+            // Remove the oldest entry and add the new one
+            return [...entries.slice(1), newEntry];
+        } else {
+            return [...entries, newEntry];
+        }
+    });
+}
+
+export function formatTime(isoString: string): string {
+    const date = new Date(isoString);
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12; // Convert 24h to 12h format and treat 0 as 12
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    const month = date.getMonth() + 1; // getMonth() is zero-based
+    const day = date.getDate();
+    const year = date.getFullYear().toString().slice(-2); // Get last two digits of year
+  
+    return `${month}/${day}/${year} | ${formattedHours}:${formattedMinutes} ${ampm}`;
+  }
+
 
 export let alertInterval = 25;
 let inputString = 'Hello';

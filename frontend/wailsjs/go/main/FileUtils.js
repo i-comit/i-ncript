@@ -29,3 +29,7 @@ export function OpenFile(arg1) {
 export function PackFilesForENCP(arg1, arg2, arg3) {
   return window['go']['main']['FileUtils']['PackFilesForENCP'](arg1, arg2, arg3);
 }
+
+export function SaveLogEntries(arg1, arg2) {
+  return window['go']['main']['FileUtils']['SaveLogEntries'](arg1, arg2);
+}
