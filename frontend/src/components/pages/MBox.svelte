@@ -287,7 +287,10 @@
             </div>
         {:else if currentMBoxState === MboxState.Open}
             {#if _currentFileTask === FileTasks.None}
-                <div style="height: 3.175rem" />
+                <div style="height: 3.175rem">
+                    <div style="height: 2.075rem" />
+                    <FileTools />
+                </div>
                 <div class="row" role="none" on:click|stopPropagation>
                     <Input
                         class="max-h-1 m-0"

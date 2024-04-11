@@ -3,16 +3,20 @@
     import {
         Button,
         Input,
-        GradientButton,
-        Tooltip,
         ButtonGroup,
         Dropdown,
         DropdownItem,
         Range,
     } from "flowbite-svelte";
+    import { get } from "svelte/store";
     import { switchPages } from "../../tools/utils";
     import {
-        InfoCircleOutline,
+        darkBGColor,
+        lightBGColor,
+        lightTextColor,
+        darkTextColor,
+    } from "../../stores/constantVariables";
+    import {
         ChevronDownOutline,
         SunSolid,
         MoonSolid,
@@ -35,10 +39,20 @@
 
 <div
     id="modal-panel"
-    class="bg-gray-200 rounded-lg mt-1 mb-2 ml-1 mr-1.5"
-    style="max-height: {_currentPage === AppPage.Login ? '50vh' : '94vh'}"
+    class="bg-gray-200 rounded-md ml-0.5 mr-1 !mb-0.5 hover:outline"
+    style="max-height: {_currentPage === AppPage.Login
+        ? '50vh'
+        : '96%'};  margin-top: 0.16rem"
 >
-    <div class="row bg-gray-500 rounded-lg">
+    <div
+        class="mb-0.5 w-1/2 left-1/4 rounded-bl-lg rounded-br-lg"
+        style={`position: sticky; top: 0px; height: 1.2rem;
+        background-color: ${$darkLightMode ? darkBGColor : lightBGColor}; 
+        color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
+    >
+        SETTINGS
+    </div>
+    <div class="flex justify-between mb-2 bg-gray-500 rounded-lg">
         <button class="!p-1" on:click={() => toggleLightDarkMode()}>
             {#if $darkLightMode}
                 <MoonSolid class="w-5 h-5 m-0 p-0 " color="white" />
@@ -46,36 +60,33 @@
                 <SunSolid class="w-5 h-5 m-0 p-0 " color="white" />
             {/if}
         </button>
-        <div id="languages h-1 bg-gray-400">
+        <div id="languages" class="h-full">
             <Button
                 >Languages<ChevronDownOutline
-                    class="w-3 h-3 ms-2 text-white dark:text-white "
+                    class="w-5 h-5 ms-2 text-white dark:text-white"
                 /></Button
             >
-            <Dropdown class="py-1 my-1">
-                <DropdownItem>English</DropdownItem>
-                <DropdownItem>French</DropdownItem>
-                <DropdownItem>German</DropdownItem>
-                <DropdownItem>Urdu</DropdownItem>
+            <Dropdown class="">
+                <DropdownItem
+                    defaultClass="font-medium py-1 px-1 text-sm hover:bg-gray-100 dark:hover:bg-gray-600"
+                    >English</DropdownItem
+                >
+                <DropdownItem
+                    defaultClass="font-medium py-1 px-1 text-sm hover:bg-gray-100 dark:hover:bg-gray-600"
+                    >French</DropdownItem
+                >
+                <DropdownItem
+                    defaultClass="font-medium py-1 px-1 text-sm hover:bg-gray-100 dark:hover:bg-gray-600"
+                    >German</DropdownItem
+                >
+                <DropdownItem
+                    defaultClass="font-medium py-1 px-1 text-sm hover:bg-gray-100 dark:hover:bg-gray-600"
+                    >Urdu</DropdownItem
+                >
             </Dropdown>
         </div>
     </div>
-    <div id="changeUsername" class=" px-4">
-        <Input
-            class="max-h-6 w-full"
-            id="small-input"
-            placeholder="change username.."
-            type="text"
-        />
-    </div>
-    <div id="changePassword" class=" px-4">
-        <Input
-            class="max-h-6 w-full"
-            id="small-input"
-            placeholder="change password.."
-            type="password"
-        />
-    </div>
+    
     <div class="h-1" />
     <div id="darkLightMode"></div>
     <div id="accentColor flex" class="p-0 m-0">

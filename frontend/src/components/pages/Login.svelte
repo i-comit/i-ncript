@@ -167,7 +167,7 @@
             <div class="h-1.5"></div>
             <div class="field">
                 <Input
-                    class="max-h-5 w-full bg py-0"
+                    class="max-h-5 w-full bg py-0 focus:outline-none"
                     id="small-input"
                     placeholder="enter username.."
                     type="text"

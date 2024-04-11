@@ -347,6 +347,7 @@
     <div id="dial" class="fixed">
         <SpeedDial
             class="flex items-center justify-center bg-gray-600 !rounded-br-xl !rounded-tl-3xl h-8 w-14"
+            popperDefaultClass="flex items-center !mb-0 gap-0.5"
         >
             <SpeedDialButton
                 name="Collapse "
@@ -375,7 +376,7 @@
         right: -0.7rem !important;
         bottom: -8vh !important;
         transform: scale(0.55) !important;
-        z-index: 5;
+        z-index: 35;
     }
 
     ul {

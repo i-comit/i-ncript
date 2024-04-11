@@ -13,6 +13,8 @@
     import {
         lightBGColor,
         darkBGColor,
+        darkTextColor,
+        lightTextColor,
     } from "../../stores/constantVariables.ts";
     import { darkLightMode } from "../../stores/dynamicVariables.ts";
 
@@ -29,11 +31,19 @@
     }
 </script>
 
+<div
+    class="mb-0.5 w-1/3 left-1/3 rounded-bl-lg rounded-br-lg"
+    style={`position: sticky; top: 0px; height: 1.4rem;
+        background-color: ${$darkLightMode ? lightBGColor : darkBGColor}; 
+        color: ${$darkLightMode ? darkTextColor : lightTextColor};`}
+>
+    LOGGER
+</div>
 <div>
     <div id="dial" class="fixed">
         <SpeedDial
-            defaultClass="fixed end-0"
-            class="bg-gray-800 rounded-full bg-white"
+            class="flex items-center justify-center bg-gray-600 !rounded-br-xl !rounded-tl-3xl h-8 w-14"
+            popperDefaultClass="flex items-center !mb-0 gap-0.5"
         >
             <SpeedDialButton name="Errors " class="h-10 w-14 text-lg">
                 <PrinterOutline class="w-6 h-6" />
@@ -71,9 +81,8 @@
 
 <style>
     #dial {
-        right: -12px !important;
-        bottom: 10vh !important;
-        /* Ensure the scale transform is applied as you want it */
+        right: -0.7rem !important;
+        bottom: -8vh !important;
         transform: scale(0.55) !important;
         z-index: 35;
         /* Add any additional styles needed to ensure it's positioned as desired */

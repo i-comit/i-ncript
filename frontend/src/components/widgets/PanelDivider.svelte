@@ -12,9 +12,7 @@
 
     import { Modals } from "../../enums/Modals";
 
-    import {
-        accentColor,
-    } from "../../stores/constantVariables";
+    import { accentColor } from "../../stores/constantVariables";
     import { darkLightMode } from "../../stores/dynamicVariables";
 
     import { switchModals } from "../../tools/utils";
@@ -54,11 +52,8 @@
     ></div>
 
     <div class="icon space-y-1">
-        <button class="icon__info">
-            <InfoCircleOutline
-                class="p-px pt-0.5"
-                on:click={() => switchModals(Modals.Info)}
-            />
+        <button class="icon__info" on:click={() => switchModals(Modals.Info)}>
+            <InfoCircleOutline class="p-px pt-0.5" />
         </button>
         <button
             class="icon__logger"
