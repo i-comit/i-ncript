@@ -29,7 +29,7 @@
     id="modal-panel"
     class="bg-gray-200 rounded-md ml-0.5 mr-1 !mb-0.5 hover:outline"
     style="max-height: {_currentPage === AppPage.Login
-        ? '50vh'
+        ? '67vh'
         : '96%'};  margin-top: 0.16rem"
 >
     <div

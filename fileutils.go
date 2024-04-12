@@ -45,7 +45,7 @@ func (f *FileUtils) MoveFilesToPath(filePaths []string, targetPath string) {
 				continue
 			}
 			wailsRuntime.LogError(f.app.ctx, "Successfully moved file to: "+newFilePath)
-			s := "moved " + strconv.Itoa(len(filePaths)) + " to " + targetPath
+			s := "moved " + strconv.Itoa(len(filePaths)) + "file(s) to " + filepath.Base(targetPath)
 			wailsRuntime.EventsEmit(f.app.ctx, addLogFile, s)
 		}
 		wailsRuntime.EventsEmit(f.app.ctx, rebuildFileTree)
@@ -219,7 +219,7 @@ func (f *FileUtils) SaveLogEntries(entries, timestamps []string) error {
 		fmt.Printf("Failed to get CWD: %s\n", err)
 		return err
 	}
-	logFilePath := filepath.Join(cwd, "log.md")
+	logFilePath := filepath.Join(cwd, "i-ncript.log")
 	file, err := os.Create(logFilePath)
 	if err != nil {
 		fmt.Printf("Failed to create log file: %s\n", err)
@@ -235,14 +235,12 @@ func (f *FileUtils) SaveLogEntries(entries, timestamps []string) error {
 		if formattedTime == "" {
 			continue // Skip entries with invalid timestamps
 		}
-		// Write to the log file
 		_, err := file.WriteString(fmt.Sprintf("%s | %s\n", formattedTime, entry))
 		if err != nil {
 			fmt.Printf("Failed to write to log file: %s\n", err)
 			return err
 		}
 	}
-
 	return nil
 }
 

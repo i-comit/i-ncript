@@ -20,39 +20,38 @@
     <div
         class="fixed w-full h-full"
         style="background-color: rgba(180, 180, 180, 0.2); z-index:36;"
+    />
+    <div
+        class="ko-progress-circle z-5 {` ${className}`} h-full"
+        data-progress={dataProgress}
+        style={_style}
     >
-        <div
-            class="ko-progress-circle z-5 {` ${className}`} h-full"
-            data-progress={dataProgress}
-            style={_style}
-        >
-            <div class="ko-circle">
-                <div class="full ko-progress-circle__slice">
-                    <div class="ko-progress-circle__fill"></div>
-                </div>
-                <div class="ko-progress-circle__slice">
-                    <div class="ko-progress-circle__fill"></div>
-                    <div
-                        class="ko-progress-circle__fill ko-progress-circle__bar"
-                    ></div>
-                </div>
+        <div class="ko-circle">
+            <div class="full ko-progress-circle__slice">
+                <div class="ko-progress-circle__fill"></div>
             </div>
-            {#if $darkLightMode}
+            <div class="ko-progress-circle__slice">
+                <div class="ko-progress-circle__fill"></div>
                 <div
-                    class="ko-progress-circle__overlay flex items-center justify-center text-ellipsis"
-                    style={`background-color:${darkBGColor}`}
-                >
-                    <span class="truncate px-1 text-sm">{overlayText}</span>
-                </div>
-            {:else}
-                <div
-                    class="ko-progress-circle__overlay flex items-center justify-center text-ellipsis"
-                    style={`background-color:${lightBGColor}`}
-                >
-                    <span class="truncate px-1 text-sm">{overlayText}</span>
-                </div>
-            {/if}
+                    class="ko-progress-circle__fill ko-progress-circle__bar"
+                ></div>
+            </div>
         </div>
+        {#if $darkLightMode}
+            <div
+                class="ko-progress-circle__overlay flex items-center justify-center text-ellipsis"
+                style={`background-color:${darkBGColor}`}
+            >
+                <span class="truncate px-1 text-sm">{overlayText}</span>
+            </div>
+        {:else}
+            <div
+                class="ko-progress-circle__overlay flex items-center justify-center text-ellipsis"
+                style={`background-color:${lightBGColor}`}
+            >
+                <span class="truncate px-1 text-sm">{overlayText}</span>
+            </div>
+        {/if}
     </div>
 {/if}
 

@@ -46,6 +46,9 @@ export function getEntryKeyword(entry: string): string {
         case "moved":
             replacedChar = '💼'
             break;
+        case "warning":
+            replacedChar = '⚠️'
+            break;
     }
     const modifiedEntry = entry.replace(firstWord, replacedChar);
     return modifiedEntry;

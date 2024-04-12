@@ -91,8 +91,8 @@
             );
             if (fileCtEvt === 0) currentFileTask.set(FileTasks.None);
         });
-        darkLightBGOnId(get(darkLightMode), "right-panel");
-        darkLightBGOnId(get(darkLightMode), "left-panel");
+        darkLightBGOnId($darkLightMode, "right-panel");
+        darkLightBGOnId($darkLightMode, "left-panel");
     });
 
     onDestroy(() => {

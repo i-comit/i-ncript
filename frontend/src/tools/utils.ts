@@ -61,21 +61,17 @@ export function switchModals(modal: Modals) {
     const _currentModal = get(currentModal);
     if (_currentModal === modal) {
         currentModal.set(Modals.None);
-    } else {
-        currentModal.set(modal);
-    }
+    } else currentModal.set(modal);
     const _currentPage = get(currentPage);
 
-    switch (_currentModal) {
+    switch (get(currentModal)) {
         case Modals.Info:
         case Modals.Settings:
         case Modals.Logger:
             try {
                 if (_currentPage === AppPage.Login)
-                    ResizeWindow(width, height + 15)
-                else
-                    ResizeWindow(width * 2, height)
-
+                    ResizeWindow(width, height + 50)
+                else ResizeWindow(width * 2, height)
             } catch (error) {
                 console.error("Error calling ResizeWindow", error);
             }
@@ -84,9 +80,8 @@ export function switchModals(modal: Modals) {
         default:
             try {
                 if (_currentPage === AppPage.Login)
-                    ResizeWindow(width, height)
-                else
-                    ResizeWindow(width * 2, height)
+                    ResizeWindow(width, height + 5)
+                else ResizeWindow(width * 2, height)
             } catch (error) {
                 LogTrace("Error calling ResizeWindow: " + error);
             }

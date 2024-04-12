@@ -10,6 +10,7 @@
     import {
         InfoCircleOutline,
         AdjustmentsVerticalOutline,
+        CogSolid,
     } from "flowbite-svelte-icons";
 
     import {
@@ -28,6 +29,9 @@
         tooltipTailwindClass,
         accentColor,
         darkBGColor,
+        darkTextColor,
+        lightTextColor,
+        lightBGColor,
     } from "../../stores/constantVariables.ts";
 
     import { darkLightMode } from "../../stores/dynamicVariables.ts";
@@ -38,9 +42,9 @@
     import { LogInfo } from "../../../wailsjs/runtime/runtime";
 
     import PasswordScan from "../widgets/PasswordScan.svelte";
+    import NeuButtonFake from "../widgets/NeuButtonFake.svelte";
 
-    let displayString = "";
-    var typewriter;
+    let typewriter = "";
 
     const appName = __APP_NAME__;
     const appVersion = __APP_VERSION__;
@@ -51,15 +55,17 @@
     let loginForm;
     const unsub_darkLightMode = darkLightMode.subscribe((value) => {
         darkLightBGOnElement(value, loginForm);
-        darkLightTextOnElement(!value, typewriter);
+        darkLightTextOnElement(value, typewriter);
     });
 
-    onMount(() => {
+    onMount(async () => {
         const interval = setInterval(() => {
-            displayString = getDisplayString();
+            typewriter = getDisplayString();
         }, alertInterval);
-        darkLightBGOnElement(false, loginForm);
-        darkLightTextOnElement(true, loginForm);
+        const _value = await get(darkLightMode);
+
+        darkLightBGOnElement(_value, loginForm);
+        darkLightTextOnElement(_value, typewriter);
         return () => {
             clearInterval(interval);
         };
@@ -109,8 +115,6 @@
         passwordCheck: false,
     };
 
-    let passwordMatch;
-
     // Function to handle the custom event
     function handlePasswordStrengthUpdated(event) {
         const {
@@ -136,38 +140,74 @@
     autocomplete="off"
     class="login-form flex-col rounded-lg"
 >
-    <p
-        class="absolute top-0 left-0 text-justify w-screen pl-6 pt-1 text-sm"
-        bind:this={typewriter}
-    >
-        {displayString}
-    </p>
+    {#if $darkLightMode}
+        <p
+            class="absolute top-0 left-0 text-justify w-screen pl-6 pt-1 text-sm"
+            style={`--text-color: ${lightTextColor};`}
+        >
+            {typewriter}
+        </p>
+    {:else}
+        <p
+            class="absolute top-0 left-0 text-justify w-screen pl-6 pt-1 text-sm"
+            style={`--text-color: ${darkTextColor};`}
+        >
+            {typewriter}
+        </p>
+    {/if}
+
     <Frame />
-    <!-- <div class=" pt-5"></div> -->
     <div class="loginField">
         {#if _modal === Modals.None}
             <div class="flex items-center mx-auto">
-                <p class="shrink-0 text-left mr-auto">{appName}</p>
+                {#if $darkLightMode}
+                    <p
+                        class="shrink-0 text-left mr-auto"
+                        style={`--text-color: ${lightTextColor};`}
+                    >
+                        {appName}
+                    </p>
+                {:else}
+                    <p
+                        class="shrink-0 text-left mr-auto"
+                        style={`--text-color: ${darkTextColor};`}
+                    >
+                        {appName}
+                    </p>
+                {/if}
                 <Tooltip
                     placement="right"
                     type="custom"
-                    defaultClass=""
-                    class="px-0.5 text-s font-medium bg-gray-600 text-gray-100"
+                    class={tooltipTailwindClass}
                     arrow={false}>{appVersion}</Tooltip
                 >
-                <p class="shrink-0 text-right ml-auto">3.6GB</p>
+                {#if $darkLightMode}
+                    <p
+                        class="shrink-0 text-right ml-auto"
+                        style={`--text-color: ${lightTextColor};`}
+                    >
+                        3.6GB
+                    </p>
+                {:else}
+                    <p
+                        class="shrink-0 text-right ml-auto"
+                        style={`--text-color: ${darkTextColor};`}
+                    >
+                        3.6GB
+                    </p>
+                {/if}
+
                 <Tooltip
                     placement="left"
                     type="custom"
-                    defaultClass=""
-                    class="px-0.5 text-s font-medium bg-gray-600 text-gray-100"
+                    class={tooltipTailwindClass}
                     arrow={false}>99%</Tooltip
                 >
             </div>
-            <div class="h-1.5"></div>
+            <div class="h-0.5"></div>
             <div class="field">
                 <Input
-                    class="max-h-5 w-full bg py-0 focus:outline-none"
+                    class="max-h-5 w-full bg py-0 focus:none"
                     id="small-input"
                     placeholder="enter username.."
                     type="text"
@@ -176,10 +216,7 @@
                     required
                 />
             </div>
-            <div
-                class="flex w-full h-1.5 px-0.5 relative bottom-2"
-                tabindex="-1"
-            >
+            <div class="flex w-full h-1 px-0.5 relative bottom-2" tabindex="-1">
                 <div
                     class="flex-1 text-center rounded-lg"
                     style={`background-color: ${usernameCheck ? accentColor : darkBGColor};`}
@@ -195,7 +232,7 @@
             </div>
             <div class="field">
                 <Input
-                    class="max-h-5 w-full"
+                    class="max-h-4 w-full"
                     id="small-input"
                     placeholder="enter password.."
                     type="password"
@@ -205,7 +242,7 @@
             </div>
             <PasswordScan
                 {password}
-                _class="flex w-full h-1.5 px-0.5 relative bottom-2"
+                _class="flex w-full h-1 px-0.5 relative bottom-2"
                 on:passwordStrengthUpdated={handlePasswordStrengthUpdated}
             />
         {:else if _modal === Modals.Settings}
@@ -215,38 +252,38 @@
         {/if}
     </div>
 
-    <div class="flex justify-between items-center">
+    <div
+        class={`flex justify-between items-center ${$currentModal === Modals.None ? `mt-0` : `mt-1`}`}
+    >
         <div class="flex space-x-1">
-            <!-- First two buttons -->
             <Button
                 pill={true}
-                outline={true}
-                class="!p-1"
-                color="dark"
+                class="!p-0"
                 on:click={() => switchModals(Modals.Info)}
-                ><InfoCircleOutline class="w-5 h-5" color="white" /></Button
             >
+                {#if $darkLightMode}
+                    <InfoCircleOutline class="w-6 h-6" color={lightTextColor} />
+                {:else}
+                    <InfoCircleOutline class="w-7 h-7" color={darkTextColor} />
+                {/if}
+            </Button>
             <Button
                 pill={true}
-                outline={true}
-                class="!p-1"
-                color="dark"
+                class="!p-0.5"
                 on:click={() => switchModals(Modals.Settings)}
-                ><AdjustmentsVerticalOutline
-                    class="w-5 h-5"
-                    color="white"
-                /></Button
             >
+                {#if $darkLightMode}
+                    <CogSolid class="w-6 h-6" color={lightTextColor} />
+                {:else}
+                    <CogSolid class="w-6 h-6" color={darkTextColor} />
+                {/if}
+            </Button>
         </div>
         <div>
             {#if usernameCheck && checks.passwordCheck}
                 <NeuButton _class="!w-20 " type="submit">LOGIN</NeuButton>
             {:else}
-                <NeuButton
-                    disabled={true}
-                    _class="!w-20 opacity-20"
-                    type="submit">LOGIN</NeuButton
-                >
+                <NeuButtonFake _class="!w-20 opacity-20">LOGIN</NeuButtonFake>
             {/if}
         </div>
     </div>
@@ -266,10 +303,11 @@
         margin: auto;
         padding: 0.5rem;
         padding-top: 1.5rem;
+        padding-bottom: 0.25rem !important;
         background-color: var(--bg-color);
     }
 
     .field {
-        margin-bottom: 0.6rem;
+        margin-bottom: 0.5rem;
     }
 </style>

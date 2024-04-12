@@ -127,10 +127,10 @@ func (a *App) resetProgress(encrypt bool, files int) {
 	a.lastFilePath = ""
 	if files > 0 {
 		if encrypt {
-			response := fmt.Sprintf("encrypted %d files.", files)
+			response := fmt.Sprintf("encrypted %d file(s) ENCRYPTED.", files)
 			runtime.EventsEmit(a.ctx, addLogFile, response)
 		} else {
-			response := fmt.Sprintf("decrypted %d files.", files)
+			response := fmt.Sprintf("decrypted %d file(s) DECRYPTED.", files)
 			runtime.EventsEmit(a.ctx, addLogFile, response)
 		}
 	}

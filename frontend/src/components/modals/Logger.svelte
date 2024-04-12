@@ -2,7 +2,6 @@
     import { onMount, afterUpdate, onDestroy } from "svelte";
     import { SpeedDial, SpeedDialButton, Tooltip } from "flowbite-svelte";
     import {
-        PrinterOutline,
         DownloadSolid,
         FileCopySolid,
     } from "flowbite-svelte-icons";
@@ -23,9 +22,9 @@
     } from "../../stores/constantVariables.ts";
     import { darkLightMode } from "../../stores/dynamicVariables.ts";
     import { SaveLogEntries } from "../../../wailsjs/go/main/FileUtils";
-
     let logContainer: { scrollTop: any; scrollHeight: any }; // Reference to the log entries container element
 
+  
     afterUpdate(() => {
         if (logContainer) {
             logContainer.scrollTop = logContainer.scrollHeight; // Scroll to the bottom
@@ -45,7 +44,12 @@
 </script>
 
 <div
-    class="mb-0.5 w-1/3 left-1/3 rounded-bl-lg rounded-br-lg z-10"
+    class="fixed w-full h-full rounded-lg"
+    id="grid-dot-bg"
+    style=" z-index:5;"
+/>
+<div
+    class="mb-0.5 w-1/3 left-1/3 rounded-bl-lg rounded-br-lg z-20"
     style={`position: sticky; top: 0px; height: 1.4rem;
         background-color: ${$darkLightMode ? lightBGColor : darkBGColor}; 
         color: ${$darkLightMode ? darkTextColor : lightTextColor};`}
@@ -58,15 +62,12 @@
             class="flex items-center justify-center bg-gray-600 !rounded-br-xl !rounded-tl-3xl h-8 w-14"
             popperDefaultClass="flex items-center !mb-0 gap-0.5"
         >
-            <SpeedDialButton name="Warnings " class="h-10 w-14">
-                <DownloadSolid class="w-6 h-6" />
-            </SpeedDialButton>
             <SpeedDialButton
                 name="Save"
                 class="h-10 w-14"
                 on:click={saveLogEntries}
             >
-                <FileCopySolid class="w-6 h-6" />
+                <DownloadSolid class="w-6 h-6" />
             </SpeedDialButton>
             <SpeedDialButton
                 name="Clear"
@@ -80,39 +81,59 @@
     <div bind:this={logContainer} class="log-entries-container">
         {#each $logEntries as { entry, timestamp }}
             <div
-                class="log-entry text-xs whitespace-nowrap overflow-hidden overflow-ellipsis text-gray-500"
                 style={`color: ${get(darkLightMode) ? lightBGColor : darkBGColor}`}
+                class="log-entry text-xs truncate !hover:text-sky-400"
             >
                 {getEntryKeyword(entry)}
             </div>
             <Tooltip class={tooltipTailwindClass} offset={-1} arrow={true}
                 >{formatTime(timestamp)}</Tooltip
             >
+            {#if $darkLightMode}
+                <div
+                    class="divider div-transparent"
+                    style={`--bg-color: ${lightBGColor};`}
+                ></div>
+            {:else}
+                <div
+                    class="divider div-transparent"
+                    style={`--bg-color: ${darkBGColor};`}
+                ></div>
+            {/if}
         {/each}
     </div>
 </div>
 
 <style>
+    #grid-dot-bg {
+        /* https://codepen.io/mapsandapps/pen/pbzooY */
+        background: hsla(0, 0%, 75%, 0.1);
+        background-image: radial-gradient(rgb(180, 180, 180) 5%, transparent 0);
+        border: 1px solid rgb(95, 95, 95);
+        outline-style: solid;
+        outline-width: thin;
+        background-size: 15px 15px;
+    }
     #dial {
         right: -0.7rem !important;
         bottom: -8vh !important;
         transform: scale(0.55) !important;
         z-index: 35;
-        /* Add any additional styles needed to ensure it's positioned as desired */
     }
     .log-entries-container {
+        z-index: 10;
+        user-select: none;
         position: absolute;
         bottom: 0;
-        width: 100%; /* Adjust if necessary */
+        width: 95%; /* Adjust if necessary */
         max-height: 100%; /* Example maximum height; adjust as needed */
         overflow-x: hidden; /* Enables horizontal scrolling */
         overflow-y: auto; /* Enables vertical scrolling */
         white-space: nowrap; /* Keeps log entries in a single line for horizontal scrolling */
-        padding-left: 1rem; /* Matches your existing styling */
+        padding-left: 0.2rem;
         text-align: justify;
         box-sizing: border-box;
         scrollbar-width: none;
-        /* background-color: antiquewhite !important; */
         /* For Firefox */
         -ms-overflow-style: none;
         scroll-behavior: smooth; /* Enables smooth scrolling */
@@ -121,5 +142,26 @@
     .log-entry {
         white-space: normal; /* Ensures text within each entry wraps properly */
         min-width: max-content; /* Ensures content dictates container width, allowing for horizontal scroll */
+    }
+
+    .divider {
+        position: relative;
+        margin-bottom: 2px;
+    }
+
+    .div-transparent:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 5%;
+        right: 5%;
+        width: 95%;
+        height: 1px;
+        background-image: linear-gradient(
+            to right,
+            transparent,
+            var(--bg-color, #000),
+            transparent
+        );
     }
 </style>
