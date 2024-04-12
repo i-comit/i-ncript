@@ -7,8 +7,7 @@
     import {
         darkBGColor,
         lightBGColor,
-        lightTextColor,
-        darkTextColor,
+        accentColor
     } from "../../stores/constantVariables";
     import { darkLightMode } from "../../stores/dynamicVariables";
     import { DownloadSolid, GithubSolid } from "flowbite-svelte-icons";
@@ -32,10 +31,10 @@
         : '96%'};  margin-top: 0.16rem"
 >
     <div
-        class="mb-0.5 w-1/2 left-1/4 rounded-bl-lg rounded-br-lg h-5 z-10"
+        class="mb-0.5 w-1/3 left-1/3 rounded-bl-lg rounded-br-lg h-5 font-semibold z-10"
         style={`position: sticky; top: 0px;
                 background-color: ${$darkLightMode ? lightBGColor : darkBGColor}; 
-                color: ${$darkLightMode ? darkTextColor : lightTextColor};`}
+                color: ${accentColor};`}
     >
         INFO
     </div>

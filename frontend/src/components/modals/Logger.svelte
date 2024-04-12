@@ -19,6 +19,7 @@
         darkTextColor,
         lightTextColor,
         tooltipTailwindClass,
+        accentColor,
     } from "../../stores/constantVariables.ts";
     import { darkLightMode } from "../../stores/dynamicVariables.ts";
     import { SaveLogEntries } from "../../../wailsjs/go/main/FileUtils";
@@ -49,10 +50,10 @@
     style=" z-index:5;"
 />
 <div
-    class="mb-0.5 w-1/3 left-1/3 rounded-bl-lg rounded-br-lg z-20"
+    class="mb-0.5 w-1/3 left-1/3 rounded-bl-lg rounded-br-lg font-semibold z-10"
     style={`position: sticky; top: 0px; height: 1.45rem;
         background-color: ${$darkLightMode ? lightBGColor : darkBGColor}; 
-        color: ${$darkLightMode ? darkTextColor : lightTextColor};`}
+        color: ${accentColor};`}
 >
     LOGGER
 </div>
@@ -108,9 +109,6 @@
     #grid-dot-bg {
         /* https://codepen.io/mapsandapps/pen/pbzooY */
         background-image: radial-gradient(rgb(180, 180, 180) 5%, transparent 0);
-        border: 1px solid rgb(95, 95, 95);
-        outline-style: solid;
-        outline-width: thin;
         background-size: 15px 15px;
     }
     #dial {
@@ -120,7 +118,7 @@
         z-index: 35;
     }
     .log-entries-container {
-        z-index: 10;
+        z-index: 8;
         user-select: none;
         position: absolute;
         bottom: 0;

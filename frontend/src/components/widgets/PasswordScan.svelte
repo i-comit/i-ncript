@@ -44,28 +44,35 @@
     }
 </script>
 
-<div class={_class} tabindex="-1">
-    <div
-        class="flex-1 text-center rounded-l-lg"
-        style={`background-color: ${passwordCheck1 ? accentColor : darkBGColor};`}
-    ></div>
+<div class={`flex w-full h-1 px-0.5 relative bottom-1 ${_class}`} tabindex="-1">
+    {#if passwordCheck1 === false}
+        <div
+            class="flex-1 text-center rounded-l-lg bg-primary-400 dark:bg-primary-300"
+        />
+    {:else}
+        <div class="flex-1 text-center rounded-l-lg bg-primary-500" />
+    {/if}
     <Tooltip placement="left" class={tooltipTailwindClass} arrow={false}
-        >more than 4 characters</Tooltip
+        >&gt; 4 characters</Tooltip
     >
-    <div
-        class="flex-1 text-center"
-        style={`background-color: ${passwordCheck2 ? accentColor : darkBGColor};`}
-    ></div>
+    {#if passwordCheck2 === false}
+        <div class="flex-1 text-center bg-primary-400 dark:bg-primary-300" />
+    {:else}
+        <div class="flex-1 text-center bg-primary-500" />
+    {/if}
     <Tooltip
-        placement="bottom"
+        placement="top"
         offset={0}
         class={tooltipTailwindClass}
         arrow={false}>a symbol ( #$&amp;! )</Tooltip
     >
-    <div
-        class="flex-1 text-center rounded-r-lg"
-        style={`background-color: ${passwordCheck3 ? accentColor : darkBGColor};`}
-    ></div>
+    {#if passwordCheck3 === false}
+        <div
+            class="flex-1 text-center rounded-r-lg bg-primary-400 dark:bg-primary-300"
+        />
+    {:else}
+        <div class="flex-1 text-center rounded-r-lg bg-primary-500" />
+    {/if}
     <Tooltip placement="right" class={tooltipTailwindClass} arrow={false}
         >upper &amp; lower case</Tooltip
     >

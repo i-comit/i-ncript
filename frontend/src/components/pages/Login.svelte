@@ -165,14 +165,6 @@
                     class={tooltipTailwindClass}
                     arrow={false}>{appVersion}</Tooltip
                 >
-                <!-- <Progressbar
-                    class="top-0 z-10 w-full my-1  mb-1.5 mx-9 c"
-                    progress="50"
-                    size="h-3"
-                    labelInside
-                    labelInsideClass="h-3 rounded-lg text-xs font-medium text-center leading-none"
-                /> -->
-
                 <div
                     class=" top-0 z-10 w-full my-1 mb-1.5 mx-9 w-full rounded-full h-2.5 bg-primary-400 dark:bg-primary-300"
                 >
@@ -203,11 +195,20 @@
                     required
                 />
             </div>
-            <div class="flex w-full h-1 px-0.5 relative bottom-2" tabindex="-1">
-                <div
-                    class="flex-1 text-center rounded-lg"
-                    style={`background-color: ${usernameCheck ? accentColor : darkBGColor};`}
-                ></div>
+            <div
+                class="flex w-full h-1 px-0.5 relative bottom-1.5"
+                tabindex="-1"
+            >
+                {#if usernameCheck === false}
+                    <div
+                        class="flex-1 text-center rounded-lg bg-primary-400 dark:bg-primary-300"
+                    />
+                {:else}
+                    <div
+                        class="flex-1 text-center rounded-lg"
+                        style={`background-color: ${accentColor};`}
+                    />
+                {/if}
                 <div tabindex="-1">
                     <Tooltip
                         placement="bottom"
@@ -231,7 +232,7 @@
             </div>
             <PasswordScan
                 {password}
-                _class="flex w-full h-1 px-0.5 relative bottom-2"
+                _class="flex w-full h-1 px-0.5 relative bottom-1.5"
                 on:passwordStrengthUpdated={handlePasswordStrengthUpdated}
             />
         {:else if _modal === Modals.Settings}

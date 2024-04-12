@@ -173,12 +173,18 @@
             password = "";
             const inputElement = event.target as HTMLInputElement;
             enteredPassword = inputElement.value;
+            Object.keys(checks).forEach((key) => {
+                checks[key as keyof typeof checks] = false;
+            });
         }
     }
 
     function enterPasswordBtn() {
         enteredPassword = password;
         password = "";
+        Object.keys(checks).forEach((key) => {
+            checks[key as keyof typeof checks] = false;
+        });
     }
 
     function clearUsername() {
@@ -307,6 +313,7 @@
                     />
                 </div>
                 <PasswordScan
+                    _class="!bottom-0.5"
                     {password}
                     on:passwordStrengthUpdated={handlePasswordStrengthUpdated}
                 />
@@ -330,13 +337,19 @@
                     />
                 </div>
                 <div
-                    class="flex w-full h-1 px-0.5 relative bottom-1"
+                    class="flex w-full h-1 px-0.5 relative bottom-0.5"
                     tabindex="-1"
                 >
-                    <div
-                        class="flex-1 text-center rounded-lg"
-                        style={`background-color: ${usernameCheck ? accentColor : darkBGColor};`}
-                    ></div>
+                    {#if usernameCheck === false}
+                        <div
+                            class="flex-1 text-center rounded-lg bg-primary-400 dark:bg-primary-300"
+                        />
+                    {:else}
+                        <div
+                            class="flex-1 text-center rounded-lg"
+                            style={`background-color: ${usernameCheck ? accentColor : darkBGColor};`}
+                        />
+                    {/if}
                     <Tooltip
                         placement="left"
                         class={tooltipTailwindClass}
@@ -361,6 +374,7 @@
                         />
                     </div>
                     <PasswordScan
+                        _class="!bottom-0.5"
                         {password}
                         on:passwordStrengthUpdated={handlePasswordStrengthUpdated}
                     />
@@ -384,13 +398,19 @@
                         </button>
                     </div>
                     <div
-                        class="flex w-full h-1 px-0.5 relative bottom-1"
+                        class="flex w-full h-1 px-0.5 relative bottom-0.5"
                         tabindex="-1"
                     >
-                        <div
-                            class="flex-1 text-center rounded-lg"
-                            style={`background-color: ${passwordMatch ? accentColor : darkBGColor};`}
-                        ></div>
+                        {#if !passwordMatch}
+                            <div
+                                class="flex-1 text-center rounded-lg bg-primary-400 dark:bg-primary-300"
+                            />
+                        {:else}
+                            <div
+                                class="flex-1 text-center rounded-lg"
+                                style={`background-color: ${accentColor};`}
+                            />
+                        {/if}
                         <Tooltip
                             placement="left"
                             class={tooltipTailwindClass}

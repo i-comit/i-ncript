@@ -21,7 +21,7 @@
     import { FileTasks, currentFileTask } from "../../enums/FileTasks";
     export let dataProgress: number;
 
-    let pauseBtn: HTMLButtonElement;
+    let pauseBtn: HTMLDivElement;
 
     const unsub_darkLightMode = darkLightMode.subscribe((value) => {
         darkLightTextOnElement(!value, pauseBtn);
@@ -50,8 +50,8 @@
 
 <div class="flex items-center mb-1 mt-0">
     <div class="icon space-y-1 flex flex-grow justify-center items-center">
-        <div class="icon__pause">
-            <button bind:this={pauseBtn} on:click={interruptFileTask}>
+        <div class="icon__pause" bind:this={pauseBtn}>
+            <button on:click={interruptFileTask}>
                 <PauseSolid class="pl-px !w-8 !h-8" />
             </button>
         </div>
@@ -99,7 +99,7 @@
             }
         }
     }
-    @mixin gradient-striped($color: rgba(255, 255, 255, 0.15), $angle: 45deg) {
+    @mixin gradient-striped($color: rgba(150, 150, 150, 0.75), $angle: 45deg) {
         background-image: -webkit-linear-gradient(
             $angle,
             $color 25%,

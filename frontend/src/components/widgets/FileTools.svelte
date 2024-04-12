@@ -20,18 +20,22 @@
         OpenDirectory,
         OpenFile,
     } from "../../../wailsjs/go/main/FileUtils";
+    import {
+        lightTextColor,
+        darkTextColor,
+    } from "../../stores/constantVariables";
 
-    const unsub_darkLightMode = darkLightMode.subscribe((value) => {
-        darkLightTextOnClasses(!value, "tool");
-    });
+    // const unsub_darkLightMode = darkLightMode.subscribe((value) => {
+    //     darkLightTextOnClasses(!value, "tool");
+    // });
 
-    onMount(() => {
-        var _value = get(darkLightMode);
-        darkLightTextOnClasses(!_value, "tool");
-    });
-    onDestroy(() => {
-        unsub_darkLightMode();
-    });
+    // onMount(() => {
+    //     var _value = get(darkLightMode);
+    //     darkLightTextOnClasses(!_value, "tool");
+    // });
+    // onDestroy(() => {
+    //     unsub_darkLightMode();
+    // });
 
     var lastFile: FileTypes;
     var lastFilePath: string;
@@ -46,33 +50,28 @@
         if (lastEntryString) {
             lastFilePath = getRootDir() + lastEntryString;
             return getFileType(lastFilePath);
-            // GetAppendedFileBytes(lastFilePath).then(() => {
-            //     LogInfo("Last file path Play FileTools" + lastFilePath);
-            // });
         }
         return FileTypes.Unknown;
-    }
-
-    function openDirectory() {
-        OpenDirectory(lastFilePath);
     }
 </script>
 
 {#if Object.keys($heldDownBtns).length > 0}
     <div id="file-tools" class="flex justify-end space-x-1">
-        <button class="tool">
+        <button
+            style={`--text-color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
+        >
             <FolderArrowRightOutline />
         </button>
         {#if lastFile !== FileTypes.Encrypted && lastFile !== FileTypes.Unknown && lastFile !== FileTypes.EncryptedP}
             <button
-                class="tool"
+                style={`--text-color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
                 on:click|stopPropagation={() => OpenFile(lastFilePath)}
             >
                 <PlaySolid />
             </button>
         {/if}
         <button
-            class="tool"
+            style={`--text-color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
             on:click|stopPropagation={() => OpenDirectory(lastFilePath)}
         >
             <FolderOpenSolid />
@@ -81,8 +80,7 @@
 {/if}
 
 <style>
-    .tool {
-        --text-color: #757575;
+    button {
         color: var(--text-color);
     }
 </style>
