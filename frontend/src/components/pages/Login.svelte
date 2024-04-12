@@ -5,7 +5,7 @@
     import { Modals, currentModal } from "../../enums/Modals";
 
     import { Login } from "../../../wailsjs/go/main/App";
-    import { Button, Input, Tooltip } from "flowbite-svelte";
+    import { Button, Input, Tooltip, Progressbar } from "flowbite-svelte";
     import { switchModals } from "../../tools/utils";
     import {
         InfoCircleOutline,
@@ -32,6 +32,8 @@
         darkTextColor,
         lightTextColor,
         lightBGColor,
+        darkInputColor,
+        lightInputColor,
     } from "../../stores/constantVariables.ts";
 
     import { darkLightMode } from "../../stores/dynamicVariables.ts";
@@ -115,7 +117,6 @@
         passwordCheck: false,
     };
 
-    // Function to handle the custom event
     function handlePasswordStrengthUpdated(event) {
         const {
             passwordCheck1,
@@ -130,7 +131,6 @@
             passwordCheck,
         };
         LogInfo("passwordCheck 1 " + passwordCheck1);
-        // Now 'checks' object contains the updated check values
     }
 </script>
 
@@ -140,62 +140,47 @@
     autocomplete="off"
     class="login-form flex-col rounded-lg"
 >
-    {#if $darkLightMode}
+    <p
+        class="absolute top-0 left-0 text-justify w-screen pl-6 pt-1 text-sm"
+        style={`--text-color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
+    >
+        {typewriter}
+    </p>
+    <Frame />
+    {#if typewriter === ""}
         <p
-            class="absolute top-0 left-0 text-justify w-screen pl-6 pt-1 text-sm"
-            style={`--text-color: ${lightTextColor};`}
+            class="shrink-0 text-left absolute top-0 left-1/3 w-1/2"
+            style={`--text-color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
         >
-            {typewriter}
-        </p>
-    {:else}
-        <p
-            class="absolute top-0 left-0 text-justify w-screen pl-6 pt-1 text-sm"
-            style={`--text-color: ${darkTextColor};`}
-        >
-            {typewriter}
+            {appName}
         </p>
     {/if}
 
-    <Frame />
     <div class="loginField">
         {#if _modal === Modals.None}
             <div class="flex items-center mx-auto">
-                {#if $darkLightMode}
-                    <p
-                        class="shrink-0 text-left mr-auto"
-                        style={`--text-color: ${lightTextColor};`}
-                    >
-                        {appName}
-                    </p>
-                {:else}
-                    <p
-                        class="shrink-0 text-left mr-auto"
-                        style={`--text-color: ${darkTextColor};`}
-                    >
-                        {appName}
-                    </p>
-                {/if}
                 <Tooltip
                     placement="right"
                     type="custom"
                     class={tooltipTailwindClass}
                     arrow={false}>{appVersion}</Tooltip
                 >
-                {#if $darkLightMode}
-                    <p
-                        class="shrink-0 text-right ml-auto"
-                        style={`--text-color: ${lightTextColor};`}
-                    >
-                        3.6GB
-                    </p>
-                {:else}
-                    <p
-                        class="shrink-0 text-right ml-auto"
-                        style={`--text-color: ${darkTextColor};`}
-                    >
-                        3.6GB
-                    </p>
-                {/if}
+                <!-- <Progressbar
+                    class="top-0 z-10 w-full my-1  mb-1.5 mx-9 c"
+                    progress="50"
+                    size="h-3"
+                    labelInside
+                    labelInsideClass="h-3 rounded-lg text-xs font-medium text-center leading-none"
+                /> -->
+
+                <div
+                    class=" top-0 z-10 w-full my-1 mb-1.5 mx-9 w-full rounded-full h-2.5 bg-primary-400 dark:bg-primary-300"
+                >
+                    <div
+                        class="h-2.5 rounded-full bg-primary-500"
+                        style={`width: ${65}%`}
+                    ></div>
+                </div>
 
                 <Tooltip
                     placement="left"
@@ -204,10 +189,12 @@
                     arrow={false}>99%</Tooltip
                 >
             </div>
-            <div class="h-0.5"></div>
+            <div class="h-1" />
             <div class="field">
                 <Input
-                    class="max-h-5 w-full bg py-0 focus:none"
+                    class="max-h-5 w-full bg py-0 leading-none"
+                    style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
+                            color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
                     id="small-input"
                     placeholder="enter username.."
                     type="text"
@@ -233,6 +220,8 @@
             <div class="field">
                 <Input
                     class="max-h-4 w-full"
+                    style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
+                            color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
                     id="small-input"
                     placeholder="enter password.."
                     type="password"
@@ -258,25 +247,25 @@
         <div class="flex space-x-1">
             <Button
                 pill={true}
-                class="!p-0"
+                class="p-0 px-0.5"
+                shadow
                 on:click={() => switchModals(Modals.Info)}
             >
-                {#if $darkLightMode}
-                    <InfoCircleOutline class="w-6 h-6" color={lightTextColor} />
-                {:else}
-                    <InfoCircleOutline class="w-7 h-7" color={darkTextColor} />
-                {/if}
+                <InfoCircleOutline
+                    class="w-6 h-6"
+                    color={$darkLightMode ? lightTextColor : darkTextColor}
+                />
             </Button>
             <Button
                 pill={true}
-                class="!p-0.5"
+                shadow
+                class="p-0.5"
                 on:click={() => switchModals(Modals.Settings)}
             >
-                {#if $darkLightMode}
-                    <CogSolid class="w-6 h-6" color={lightTextColor} />
-                {:else}
-                    <CogSolid class="w-6 h-6" color={darkTextColor} />
-                {/if}
+                <CogSolid
+                    class="w-6 h-6"
+                    color={$darkLightMode ? lightTextColor : darkTextColor}
+                />
             </Button>
         </div>
         <div>
@@ -287,6 +276,7 @@
             {/if}
         </div>
     </div>
+    <div class={`${$currentModal === Modals.None ? `h-0.5` : `h-0`}`} />
 </form>
 
 <style>

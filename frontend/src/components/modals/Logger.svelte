@@ -50,7 +50,7 @@
 />
 <div
     class="mb-0.5 w-1/3 left-1/3 rounded-bl-lg rounded-br-lg z-20"
-    style={`position: sticky; top: 0px; height: 1.4rem;
+    style={`position: sticky; top: 0px; height: 1.45rem;
         background-color: ${$darkLightMode ? lightBGColor : darkBGColor}; 
         color: ${$darkLightMode ? darkTextColor : lightTextColor};`}
 >
@@ -107,7 +107,6 @@
 <style>
     #grid-dot-bg {
         /* https://codepen.io/mapsandapps/pen/pbzooY */
-        background: hsla(0, 0%, 75%, 0.1);
         background-image: radial-gradient(rgb(180, 180, 180) 5%, transparent 0);
         border: 1px solid rgb(95, 95, 95);
         outline-style: solid;

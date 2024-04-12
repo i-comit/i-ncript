@@ -10,8 +10,6 @@
     import { alertInterval, getDisplayString } from "../../tools/logger";
     import { darkLightMode } from "../../stores/dynamicVariables";
     import { darkLightTextOnElement } from "../../tools/themes";
-    import { get } from "svelte/store";
-    import { LogInfo } from "../../../wailsjs/runtime/runtime";
 
     let typewriter: HTMLElement;
     let displayString = "";
@@ -46,14 +44,14 @@
             {/if}
         </div>
     {:else}
-        <Progressbar
-            class="absolute top-0 left-4 z-10 w-1/3 ml-3 mt-1.5"
-            progress="50"
-            size="h-3"
-            color="red"
-            labelInside
-            labelInsideClass="h-3 rounded-full text-xs font-medium text-center leading-none"
-        /><!--Folder size to Drive size -->
+        <div
+            class="absolute top-0 left-4 z-10 w-1/3 ml-3 mt-1.5 rounded-full h-2.5 bg-primary-400 dark:bg-primary-300"
+        >
+            <div
+                class="h-2.5 rounded-full bg-primary-500"
+                style={`width: ${65}%`}
+            ></div>
+        </div>
         <Tooltip class={tooltipTailwindClass} offset={1}></Tooltip>
     {/if}
 </div>
@@ -61,7 +59,6 @@
 <style>
     p {
         --text-color: #757575;
-
         color: var(--text-color);
     }
 </style>

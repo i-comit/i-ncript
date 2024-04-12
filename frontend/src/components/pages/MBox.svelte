@@ -12,7 +12,11 @@
     import {
         accentColor,
         darkBGColor,
+        darkInputColor,
+        darkTextColor,
         lightBGColor,
+        lightInputColor,
+        lightTextColor,
         tooltipTailwindClass,
     } from "../../stores/constantVariables.ts";
     import {
@@ -277,7 +281,6 @@
         }}
     >
         <DirSize />
-
         {#if currentMBoxState === MboxState.None}
             <div class="h-12">
                 <p class="text-start">no selected files</p>
@@ -294,6 +297,8 @@
                 <div class="row" role="none" on:click|stopPropagation>
                     <Input
                         class="max-h-1 m-0"
+                        style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
+                                color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
                         id="small-input"
                         placeholder="enter password.."
                         type="password"
@@ -315,6 +320,8 @@
                 <div class="row" role="none" on:click|stopPropagation>
                     <Input
                         class="max-h-1"
+                        style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
+                                color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
                         id="small-input"
                         placeholder="enter username.."
                         type="text"
@@ -344,6 +351,8 @@
                     <div class="row" role="none" on:click|stopPropagation>
                         <Input
                             class="max-h-1 m-0"
+                            style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
+                                    color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
                             id="small-input"
                             placeholder="enter password.."
                             type="password"
@@ -362,6 +371,8 @@
                     <div class="row" role="none" on:click|stopPropagation>
                         <Input
                             class="max-h-1 m-0"
+                            style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
+                            color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
                             id="small-input"
                             placeholder="confirm password.."
                             type="password"

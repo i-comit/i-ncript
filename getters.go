@@ -122,9 +122,6 @@ func (b *Getters) GetFileProperties(filePath string) (FileProperties, error) {
 	if fileInfo.IsDir() {
 		props.FileType = "dir"
 	} else {
-		// fmt.Println("\033[33mFileType:", fileInfo.Name(), "\033[0m")
-		// switch(filepath.Ext(fileInfo.Name()))
-
 		props.FileType = "file"
 	}
 	return props, nil

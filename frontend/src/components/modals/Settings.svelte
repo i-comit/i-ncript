@@ -7,6 +7,7 @@
         Dropdown,
         DropdownItem,
         Range,
+        DarkMode,
     } from "flowbite-svelte";
     import { get } from "svelte/store";
     import { switchPages } from "../../tools/utils";
@@ -39,29 +40,25 @@
 
 <div
     id="modal-panel"
-    class="bg-gray-200 rounded-md ml-0.5 mr-1 !mb-0.5 hover:outline"
+    class="rounded-md ml-0.5 mr-1 !mb-0.5 hover:outline bg-primary-300 dark:bg-primary-400"
     style="max-height: {_currentPage === AppPage.Login
         ? '67vh'
         : '96%'};  margin-top: 0.16rem"
 >
     <div
-        class="mb-0.5 w-1/2 left-1/4 rounded-bl-lg rounded-br-lg"
-        style={`position: sticky; top: 0px; height: 1.2rem;
-        background-color: ${$darkLightMode ? darkBGColor : lightBGColor}; 
-        color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
+        class="mb-0.5 w-1/2 left-1/4 rounded-bl-lg rounded-br-lg h-5"
+        style={`position: sticky; top: 0px;;
+        background-color: ${$darkLightMode ? lightBGColor : darkBGColor}; 
+        color: ${$darkLightMode ? darkTextColor : lightTextColor};`}
     >
         SETTINGS
     </div>
-    <div class="flex justify-between mb-2 bg-gray-500 rounded-lg">
-        <button class="!p-1" on:click={() => toggleLightDarkMode()}>
-            {#if $darkLightMode}
-                <MoonSolid class="w-5 h-5 m-0 p-0 " color="white" />
-            {:else}
-                <SunSolid class="w-5 h-5 m-0 p-0 " color="white" />
-            {/if}
+    <div class="flex justify-between my-1 bg-primary-500 rounded-lg mx-1">
+        <button class="!p-0" on:click={() => toggleLightDarkMode()}>
+            <DarkMode btnClass="w-6 h-6 rounded-lg text-md p-2" />
         </button>
         <div id="languages" class="h-full">
-            <Button
+            <Button data-placement="left-start"
                 >Languages<ChevronDownOutline
                     class="w-5 h-5 ms-2 text-white dark:text-white"
                 /></Button
@@ -86,46 +83,23 @@
             </Dropdown>
         </div>
     </div>
-    
+
     <div class="h-1" />
     <div id="darkLightMode"></div>
     <div id="accentColor flex" class="p-0 m-0">
-        <p class="p-0 m-0">accent color</p>
+        <p class="p-0 m-0 text-primary-200 dark:text-primary-100">accent color</p>
         <ButtonGroup class="space-x-px">
-            <Button pill color="blue"></Button>
+            <Button pill color="primary"></Button>
             <Button pill color="green"></Button>
             <Button pill color="red"></Button>
             <Button pill color="yellow"></Button>
         </ButtonGroup>
     </div>
-    <div id="accentColor flex" class="p-0 m-0">
-        <p class="p-0 m-0">accent color</p>
-        <ButtonGroup class="space-x-px">
-            <Button pill color="blue"></Button>
-            <Button pill color="green"></Button>
-            <Button pill color="red"></Button>
-            <Button pill color="yellow"></Button>
-        </ButtonGroup>
-    </div>
-    <div id="accentColor flex" class="p-0 m-0">
-        <p class="p-0 m-0">accent color</p>
-        <ButtonGroup class="space-x-px">
-            <Button pill color="blue"></Button>
-            <Button pill color="green"></Button>
-            <Button pill color="red"></Button>
-            <Button pill color="yellow"></Button>
-        </ButtonGroup>
-    </div>
-    <div id="transparency">
-        <p class="p-0 m-0">transparency</p>
-        <Range id="range1" min="0" max="100" bind:value={stepValue} size="md" />
+
+    <div class="px-5">
+        <p class="p-0 text-sm text-primary-200 dark:text-primary-100">delete log entries older than: </p>
+        <Range id="range1" min="0" max="5" bind:value={stepValue} size="md" />
     </div>
 </div>
 
-<style>
-    .row {
-        display: flex;
-        justify-content: space-between; /* Spread the buttons evenly */
-        margin-bottom: 10px; /* Spacing between rows of buttons */
-    }
-</style>
+

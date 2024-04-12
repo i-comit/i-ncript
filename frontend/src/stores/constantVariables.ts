@@ -11,17 +11,20 @@ export const lightBGColor = "#eeeeee"
 export const darkTextColor = "#111111"
 export const lightTextColor = "#dddddd"
 
-export const neuDropShadowDark = "#484f60";
-export const neuDropShadowLight = "#484f60";
+export const lightInputColor = "#dedede"
+export const darkInputColor = "#8c8c8c"
 
-export const neuInnerShadowDark = "#ffffff";
-export const neuInnerShadowLight = "#ffffff";
+export const neuDropShadowDark = "#484f60"
+export const neuDropShadowLight = "#484f60"
 
-export const prevHighlight_light = "#b0b0b0";
-export const lastHighlight_light = "#c4c4c4";
+export const neuInnerShadowDark = "#ffffff"
+export const neuInnerShadowLight = "#ffffff"
 
-export const lightShadow_Dark = "#808080";
-export const lightShadow_Light = "#fafafa";
+export const prevHighlight_light = "#b0b0b0"
+export const lastHighlight_light = "#c4c4c4"
 
-export const darkShadow_Dark = "30, 30, 30";
-export const darkShadow_Light = "95, 95, 95";
+export const lightShadow_Dark = "#808080"
+export const lightShadow_Light = "#fafafa"
+
+export const darkShadow_Dark = "30, 30, 30"
+export const darkShadow_Light = "95, 95, 95"
