@@ -27,16 +27,16 @@
     import NeuButton from "../widgets/NeuButton.svelte";
     import {
         tooltipTailwindClass,
-        accentColor,
-        darkBGColor,
         darkTextColor,
         lightTextColor,
-        lightBGColor,
         darkInputColor,
         lightInputColor,
     } from "../../stores/constantVariables.ts";
 
-    import { darkLightMode } from "../../stores/dynamicVariables.ts";
+    import {
+        darkLightMode,
+        accentColor,
+    } from "../../stores/dynamicVariables.ts";
     import {
         darkLightBGOnElement,
         darkLightTextOnElement,
@@ -169,8 +169,8 @@
                     class=" top-0 z-10 w-full my-1 mb-1.5 mx-9 w-full rounded-full h-2.5 bg-primary-400 dark:bg-primary-300"
                 >
                     <div
-                        class="h-2.5 rounded-full bg-primary-500"
-                        style={`width: ${65}%`}
+                        class="h-2.5 rounded-full"
+                        style={`width: ${65}%; background-color: ${$accentColor}`}
                     ></div>
                 </div>
 
@@ -206,7 +206,7 @@
                 {:else}
                     <div
                         class="flex-1 text-center rounded-lg"
-                        style={`background-color: ${accentColor};`}
+                        style={`background-color: ${$accentColor};`}
                     />
                 {/if}
                 <div tabindex="-1">

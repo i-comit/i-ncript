@@ -12,8 +12,7 @@
 
     import { Modals } from "../../enums/Modals";
 
-    import { accentColor } from "../../stores/constantVariables";
-    import { darkLightMode } from "../../stores/dynamicVariables";
+    import { darkLightMode, accentColor } from "../../stores/dynamicVariables";
 
     import { switchModals } from "../../tools/utils";
 
@@ -43,12 +42,12 @@
 
 <div
     class="absolute -z-10 w-20 h-full select-none left-1/3"
-    style="background-color:{accentColor}"
+    style="background-color:{$accentColor}"
 ></div>
 <div id="panel">
     <div
         class="absolute w-full h-1/5 rounded-full select-none"
-        style={`top:90%; background-color: ${accentColor}`}
+        style={`top:90%; background-color: ${$accentColor}`}
     ></div>
 
     <div class="icon space-y-1">
@@ -70,7 +69,7 @@
     </div>
     <div
         class="absolute w-full h-1/5 rounded-full select-none"
-        style={`bottom:90%; background-color: ${accentColor}`}
+        style={`bottom:90%; background-color: ${$accentColor}`}
     ></div>
 </div>
 

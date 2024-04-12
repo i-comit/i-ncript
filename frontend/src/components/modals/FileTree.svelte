@@ -51,7 +51,6 @@
     import { darkLightTextOnElement } from "../../tools/themes.ts";
 
     import {
-        accentColor,
         darkBGColor,
         darkTextColor,
         lightBGColor,
@@ -67,7 +66,10 @@
         onTouchEnd,
     } from "../../tools/inputs.ts";
     import FileIcon from "../widgets/FileIcon.svelte";
-    import { darkLightMode } from "../../stores/dynamicVariables.ts";
+    import {
+        darkLightMode,
+        accentColor,
+    } from "../../stores/dynamicVariables.ts";
     import { FileTasks, currentFileTask } from "../../enums/FileTasks.ts";
     import { OpenDirectory } from "../../../wailsjs/go/main/FileUtils";
     import { GetTotalDirSize } from "../../../wailsjs/go/main/Getters";
@@ -94,7 +96,7 @@
         _fileTree.relPath === getRootDir()
             ? `position: sticky; top: 1px; left: 0px; 
                background-color: ${get(darkLightMode) ? darkBGColor : lightBGColor}; 
-               color: ${accentColor}; 
+               color: ${$accentColor}; 
                font-weight: 600; z-index: 42`
             : `border-left: 1.5px solid ${get(darkLightMode) ? lightBGColor : darkBGColor};
                position: relative;
@@ -354,8 +356,9 @@
     </ul>
     <div id="dial" class="fixed">
         <SpeedDial
-            class="flex items-center justify-center bg-gray-600 !rounded-br-xl !rounded-tl-3xl h-8 w-14"
+            class="flex items-center justify-center h-8 w-14"
             popperDefaultClass="flex items-center !mb-0 gap-0.5"
+            style={`background-color: ${$accentColor}; border-radius: 50% 0% 50% 0%;`}
         >
             <SpeedDialButton
                 name="Collapse "
@@ -382,7 +385,7 @@
 <style>
     #dial {
         right: -0.7rem !important;
-        bottom: -8vh !important;
+        bottom: -9vh !important;
         transform: scale(0.55) !important;
         z-index: 35;
     }

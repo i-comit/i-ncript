@@ -1,13 +1,9 @@
 <script lang="ts">
     import { onMount, afterUpdate, onDestroy } from "svelte";
     import { SpeedDial, SpeedDialButton, Tooltip } from "flowbite-svelte";
-    import {
-        DownloadSolid,
-        FileCopySolid,
-    } from "flowbite-svelte-icons";
+    import { DownloadSolid, FileCopySolid } from "flowbite-svelte-icons";
 
     import {
-        addLogEntry,
         formatTime,
         getEntryKeyword,
         logEntries,
@@ -16,16 +12,15 @@
     import {
         lightBGColor,
         darkBGColor,
-        darkTextColor,
-        lightTextColor,
         tooltipTailwindClass,
-        accentColor,
     } from "../../stores/constantVariables.ts";
-    import { darkLightMode } from "../../stores/dynamicVariables.ts";
+    import {
+        darkLightMode,
+        accentColor,
+    } from "../../stores/dynamicVariables.ts";
     import { SaveLogEntries } from "../../../wailsjs/go/main/FileUtils";
     let logContainer: { scrollTop: any; scrollHeight: any }; // Reference to the log entries container element
 
-  
     afterUpdate(() => {
         if (logContainer) {
             logContainer.scrollTop = logContainer.scrollHeight; // Scroll to the bottom
@@ -53,15 +48,16 @@
     class="mb-0.5 w-1/3 left-1/3 rounded-bl-lg rounded-br-lg font-semibold z-10"
     style={`position: sticky; top: 0px; height: 1.45rem;
         background-color: ${$darkLightMode ? lightBGColor : darkBGColor}; 
-        color: ${accentColor};`}
+        color: ${$accentColor};`}
 >
     LOGGER
 </div>
 <div>
     <div id="dial" class="fixed">
         <SpeedDial
-            class="flex items-center justify-center bg-gray-600 !rounded-br-xl !rounded-tl-3xl h-8 w-14"
+            class="flex items-center justify-center h-8 w-14"
             popperDefaultClass="flex items-center !mb-0 gap-0.5"
+            style={`background-color: ${$accentColor}; border-radius: 50% 0% 50% 0%;`}
         >
             <SpeedDialButton
                 name="Save"
@@ -113,7 +109,7 @@
     }
     #dial {
         right: -0.7rem !important;
-        bottom: -8vh !important;
+        bottom: -9vh !important;
         transform: scale(0.55) !important;
         z-index: 35;
     }

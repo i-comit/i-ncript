@@ -9,8 +9,8 @@
         fileProgress,
         fileTaskPercent,
         largeFilePercent,
+        accentColor,
     } from "../../stores/dynamicVariables";
-    import { getCurrentPageStore, buildFileTree } from "../../tools/fileTree";
 
     import {
         darkLightTextOnElement,
@@ -60,20 +60,16 @@
 <!-- {#if dataProgress > 0} -->
 <div class="progress progress-striped active rounded-md h-3.5 p-0 m-0">
     <div
-        style="width: {` ${dataProgress}`}%;"
+        style={`width: ${dataProgress}%; background-color: ${$accentColor}`}
         class="progress-bar rounded-lg h-3.5"
     >
         <p class="text-center text-sm"><slot /></p>
     </div>
 </div>
-
 <!-- {/if} -->
 
 <style lang="scss">
     @import "../../neumorphic.scss";
-
-    $brand-default: #b0bec5;
-    $brand-primary: #2196f3;
 
     $brand-danger: #ef1c1c;
     $bg-light-gray: #cdcdcd;
@@ -84,7 +80,6 @@
     }
 
     .progress-bar {
-        background-color: $brand-primary;
         box-shadow: none;
         &.text-left {
             text-align: left;
@@ -99,7 +94,7 @@
             }
         }
     }
-    @mixin gradient-striped($color: rgba(150, 150, 150, 0.75), $angle: 45deg) {
+    @mixin gradient-striped($color: rgba(150, 150, 150, 0.5), $angle: 45deg) {
         background-image: -webkit-linear-gradient(
             $angle,
             $color 25%,

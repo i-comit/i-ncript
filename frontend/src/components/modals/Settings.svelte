@@ -11,17 +11,8 @@
     } from "flowbite-svelte";
     import { get } from "svelte/store";
     import { switchPages } from "../../tools/utils";
-    import {
-        darkBGColor,
-        lightBGColor,
-        lightTextColor,
-        darkTextColor,
-    } from "../../stores/constantVariables";
-    import {
-        ChevronDownOutline,
-        SunSolid,
-        MoonSolid,
-    } from "flowbite-svelte-icons";
+    import { darkBGColor, lightBGColor } from "../../stores/constantVariables";
+    import { ChevronDownOutline } from "flowbite-svelte-icons";
 
     import { AppPage, currentPage } from "../../enums/AppPage";
     import { darkLightMode, accentColor } from "../../stores/dynamicVariables";
@@ -54,35 +45,40 @@
         class="mb-0.5 w-1/2 left-1/4 rounded-bl-lg rounded-br-lg font-semibold h-5"
         style={`position: sticky; top: 0px;
         background-color: ${$darkLightMode ? lightBGColor : darkBGColor}; 
-        color: ${accentColor};`}
+        color: ${$accentColor};`}
     >
         SETTINGS
     </div>
-    <div class="flex justify-between my-1 bg-primary-500 rounded-lg mx-1">
+    <div
+        class="flex justify-between my-1 rounded-lg mx-0"
+        style={`background-color: ${$accentColor}`}
+    >
         <button class="!p-0" on:click={() => toggleLightDarkMode()}>
             <DarkMode btnClass="w-6 h-6 rounded-lg text-md p-2" />
         </button>
-        <div id="languages" class="h-full w-1/2">
-            <Button data-placement="left-start"
+        <div id="languages">
+            <Button
+                data-placement="left-start"
+                style={`background-color: ${$accentColor}`}
                 >Languages<ChevronDownOutline
                     class="w-5 h-5 text-white dark:text-white"
                 /></Button
             >
             <Dropdown class="">
                 <DropdownItem
-                    defaultClass="font-medium py-1 px-1 text-sm hover:bg-gray-100 dark:hover:bg-gray-600"
+                    defaultClass="font-medium py-1 px-1 text-sm hover:bg-gray-100 dark:hover:bg-gray-400"
                     >English</DropdownItem
                 >
                 <DropdownItem
-                    defaultClass="font-medium py-1 px-1 text-sm hover:bg-gray-100 dark:hover:bg-gray-600"
+                    defaultClass="font-medium py-1 px-1 text-sm hover:bg-gray-100 dark:hover:bg-gray-400"
                     >French</DropdownItem
                 >
                 <DropdownItem
-                    defaultClass="font-medium py-1 px-1 text-sm hover:bg-gray-100 dark:hover:bg-gray-600"
+                    defaultClass="font-medium py-1 px-1 text-sm hover:bg-gray-100 dark:hover:bg-gray-400"
                     >German</DropdownItem
                 >
                 <DropdownItem
-                    defaultClass="font-medium py-1 px-1 text-sm hover:bg-gray-100 dark:hover:bg-gray-600"
+                    defaultClass="font-medium py-1 px-1 text-sm hover:bg-gray-100 dark:hover:bg-gray-400"
                     >Urdu</DropdownItem
                 >
             </Dropdown>
@@ -95,31 +91,32 @@
         <p class="p-0 m-0 text-primary-200 dark:text-primary-100">
             accent color
         </p>
-        <ButtonGroup class="space-x-px ">
+        <ButtonGroup>
             <Button
-                pill
-                class="bg-primary-500 dark:bg-primary-500 rounded-r-lg"
-                on:click={() => setAccentColor("#95c7db")}
+                class="rounded-l-lg"
+                style="background-color: #95C7DB"
+                on:click={() => setAccentColor("#95C7DB")}
             />
             <Button
-                pill
-                class="bg-primary-600 dark:bg-primary-600"
-                on:click={() => setAccentColor("#CF33ED")}
-            />
-            <Button
-                pill
-                class="bg-primary-700 dark:bg-primary-700"
+                style="background-color: #E9C456"
                 on:click={() => setAccentColor("#E9C456")}
             ></Button>
-            <Button pill class="bg-primary-800 dark:bg-primary-800"></Button>
-            <Button pill class="bg-primary-900 dark:bg-primary-900"></Button>
             <Button
-                pill
-                class="bg-primary-1000 dark:bg-primary-1000 rounded-r-lg"
-            ></Button>
+                style="background-color: #D43820"
+                on:click={() => setAccentColor("#D43820")}
+            />
+            <Button
+                style="background-color: #31A51C"
+                on:click={() => setAccentColor("#31A51C")}
+            />
+            <Button
+                class="rounded-r-lg"
+                style="background-color: #CF33ED"
+                on:click={() => setAccentColor("#CF33ED")}
+            />
         </ButtonGroup>
     </div>
-
+    <div class="h-2" />
     <div class="px-5">
         <p class="p-0 text-sm text-primary-200 dark:text-primary-100">
             delete log entries older than:

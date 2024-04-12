@@ -1,11 +1,8 @@
 <script lang="ts">
     import { Input, Tooltip } from "flowbite-svelte";
     import { createEventDispatcher } from "svelte";
-    import {
-        accentColor,
-        darkBGColor,
-        tooltipTailwindClass,
-    } from "../../stores/constantVariables";
+    import { tooltipTailwindClass } from "../../stores/constantVariables";
+    import { accentColor } from "../../stores/dynamicVariables";
 
     export let password: string = "";
     export let _class: string = "flex w-full h-1 px-0.5 relative bottom-1";
@@ -50,7 +47,10 @@
             class="flex-1 text-center rounded-l-lg bg-primary-400 dark:bg-primary-300"
         />
     {:else}
-        <div class="flex-1 text-center rounded-l-lg bg-primary-500" />
+        <div
+            class="flex-1 text-center rounded-l-lg"
+            style={`background-color: ${$accentColor}`}
+        />
     {/if}
     <Tooltip placement="left" class={tooltipTailwindClass} arrow={false}
         >&gt; 4 characters</Tooltip
@@ -58,7 +58,10 @@
     {#if passwordCheck2 === false}
         <div class="flex-1 text-center bg-primary-400 dark:bg-primary-300" />
     {:else}
-        <div class="flex-1 text-center bg-primary-500" />
+        <div
+            class="flex-1 text-center"
+            style={`background-color: ${$accentColor}`}
+        />
     {/if}
     <Tooltip
         placement="top"
@@ -71,7 +74,10 @@
             class="flex-1 text-center rounded-r-lg bg-primary-400 dark:bg-primary-300"
         />
     {:else}
-        <div class="flex-1 text-center rounded-r-lg bg-primary-500" />
+        <div
+            class="flex-1 text-center rounded-r-lg"
+            style={`background-color: ${$accentColor}`}
+        />
     {/if}
     <Tooltip placement="right" class={tooltipTailwindClass} arrow={false}
         >upper &amp; lower case</Tooltip

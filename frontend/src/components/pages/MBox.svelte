@@ -10,11 +10,8 @@
     import { FileTasks, currentFileTask } from "../../enums/FileTasks.ts";
 
     import {
-        accentColor,
-        darkBGColor,
         darkInputColor,
         darkTextColor,
-        lightBGColor,
         lightInputColor,
         lightTextColor,
         tooltipTailwindClass,
@@ -26,6 +23,7 @@
         largeFileName,
         largeFilePercent,
         totalFileCt,
+        accentColor,
     } from "../../stores/dynamicVariables.ts";
 
     import {
@@ -347,7 +345,7 @@
                     {:else}
                         <div
                             class="flex-1 text-center rounded-lg"
-                            style={`background-color: ${usernameCheck ? accentColor : darkBGColor};`}
+                            style={`background-color: ${$accentColor};`}
                         />
                     {/if}
                     <Tooltip
@@ -408,7 +406,7 @@
                         {:else}
                             <div
                                 class="flex-1 text-center rounded-lg"
-                                style={`background-color: ${accentColor};`}
+                                style={`background-color: ${$accentColor};`}
                             />
                         {/if}
                         <Tooltip

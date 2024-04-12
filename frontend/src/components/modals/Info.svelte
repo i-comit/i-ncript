@@ -4,12 +4,8 @@
     import { onMount } from "svelte";
     import { AppPage, currentPage } from "../../enums/AppPage";
 
-    import {
-        darkBGColor,
-        lightBGColor,
-        accentColor
-    } from "../../stores/constantVariables";
-    import { darkLightMode } from "../../stores/dynamicVariables";
+    import { darkBGColor, lightBGColor } from "../../stores/constantVariables";
+    import { darkLightMode, accentColor } from "../../stores/dynamicVariables";
     import { DownloadSolid, GithubSolid } from "flowbite-svelte-icons";
 
     let cwd = "";
@@ -34,7 +30,7 @@
         class="mb-0.5 w-1/3 left-1/3 rounded-bl-lg rounded-br-lg h-5 font-semibold z-10"
         style={`position: sticky; top: 0px;
                 background-color: ${$darkLightMode ? lightBGColor : darkBGColor}; 
-                color: ${accentColor};`}
+                color: ${$accentColor};`}
     >
         INFO
     </div>
@@ -56,7 +52,7 @@
     <div id="viewLog" class="px-4"></div>
     <div class="h-1" />
     <div id="reportBug" class="flex justify-between px-4">
-        <p class="p-0 m-0">open source repo: </p>
+        <p class="p-0 m-0">open source repo:</p>
         <Button pill={true} outline={true} class="!p-1" color="dark"
             ><GithubSolid class="w-4 h-4 m-0" color="dark" /></Button
         >

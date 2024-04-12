@@ -7,9 +7,9 @@
         lightTextColor,
         tooltipTailwindClass,
     } from "../../stores/constantVariables";
-    import { alertInterval, getDisplayString } from "../../tools/logger";
-    import { darkLightMode } from "../../stores/dynamicVariables";
+    import { darkLightMode, accentColor } from "../../stores/dynamicVariables";
     import { darkLightTextOnElement } from "../../tools/themes";
+    import { alertInterval, getDisplayString } from "../../tools/logger";
 
     let typewriter: HTMLElement;
     let displayString = "";
@@ -48,8 +48,8 @@
             class="absolute top-0 left-4 z-10 w-1/3 ml-3 mt-1.5 rounded-full h-2.5 bg-primary-400 dark:bg-primary-300"
         >
             <div
-                class="h-2.5 rounded-full bg-primary-500"
-                style={`width: ${65}%`}
+                class="h-2.5 rounded-full"
+                style={`width: ${65}%; background-color: ${$accentColor}`}
             ></div>
         </div>
         <Tooltip class={tooltipTailwindClass} offset={1}></Tooltip>
