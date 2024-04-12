@@ -30,6 +30,10 @@ export function GetFilesByType(arg1, arg2) {
   return window['go']['main']['Getters']['GetFilesByType'](arg1, arg2);
 }
 
+export function GetRootDiskSpace() {
+  return window['go']['main']['Getters']['GetRootDiskSpace']();
+}
+
 export function GetRootFolder() {
   return window['go']['main']['Getters']['GetRootFolder']();
 }

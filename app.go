@@ -13,6 +13,7 @@ import (
 )
 
 type App struct {
+	getters         *Getters
 	ctx             context.Context
 	directories     []string
 	hotFilerEnabled bool
@@ -23,6 +24,7 @@ type App struct {
 
 func NewApp() *App {
 	return &App{
+		getters:         &Getters{}, // Initialize Getters here
 		directories:     []string{"VAULT", "M-BOX"},
 		hotFilerEnabled: false,
 	}
@@ -33,7 +35,12 @@ func (a *App) startup(ctx context.Context) {
 	log.Print("app has started")
 	keyFilePath := getKeyFilePath()
 	if keyFilePath != "" {
-
+		space, err := a.getters.GetRootDiskSpace()
+		if err != nil {
+			fmt.Println("Error getting disk space:", err)
+			return
+		}
+		fmt.Printf("Available disk space: %d bytes\n", space)
 	}
 }
 

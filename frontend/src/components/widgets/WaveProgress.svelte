@@ -2,7 +2,6 @@
     import { PauseOutline, PauseSolid } from "flowbite-svelte-icons";
     import { onMount, onDestroy } from "svelte";
     import { get } from "svelte/store";
-    import { EventsOn } from "../../../wailsjs/runtime/runtime";
     import {
         darkLightMode,
         fileCount,
@@ -81,20 +80,8 @@
 
     .progress-bar {
         box-shadow: none;
-        &.text-left {
-            text-align: left;
-            span {
-                margin-left: 10px;
-            }
-        }
-        &.text-right {
-            text-align: right;
-            span {
-                margin-right: 10px;
-            }
-        }
     }
-    @mixin gradient-striped($color: rgba(150, 150, 150, 0.5), $angle: 45deg) {
+    @mixin gradient-striped($color: rgba(160, 160, 160, 0.4), $angle: 45deg) {
         background-image: -webkit-linear-gradient(
             $angle,
             $color 25%,

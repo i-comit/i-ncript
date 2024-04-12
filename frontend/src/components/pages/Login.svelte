@@ -166,11 +166,11 @@
                     arrow={false}>{appVersion}</Tooltip
                 >
                 <div
-                    class=" top-0 z-10 w-full my-1 mb-1.5 mx-9 w-full rounded-full h-2.5 bg-primary-400 dark:bg-primary-300"
+                    class="top-0 z-10 w-full my-1 mb-1.5 mx-9 rounded-full h-2.5 bg-primary-400 dark:bg-primary-300"
                 >
                     <div
-                        class="h-2.5 rounded-full"
-                        style={`width: ${65}%; background-color: ${$accentColor}`}
+                        class="h-2.5 rounded-full transition-all duration-700 ease-in-out"
+                        style={`width: ${65}%; background-color: ${$accentColor};`}
                     ></div>
                 </div>
 
