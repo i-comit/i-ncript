@@ -1,7 +1,4 @@
 <script lang="ts">
-    import { onDestroy, onMount } from "svelte";
-    import { get } from "svelte/store";
-
     import {
         FolderArrowRightOutline,
         FolderOpenSolid,
@@ -16,7 +13,6 @@
     import { LogInfo } from "../../../wailsjs/runtime/runtime";
     import { FileTypes, getFileType } from "../../enums/FileTypes";
     import {
-        GetAppendedFileBytes,
         OpenDirectory,
         OpenFile,
     } from "../../../wailsjs/go/main/FileUtils";
@@ -24,18 +20,6 @@
         lightTextColor,
         darkTextColor,
     } from "../../stores/constantVariables";
-
-    // const unsub_darkLightMode = darkLightMode.subscribe((value) => {
-    //     darkLightTextOnClasses(!value, "tool");
-    // });
-
-    // onMount(() => {
-    //     var _value = get(darkLightMode);
-    //     darkLightTextOnClasses(!_value, "tool");
-    // });
-    // onDestroy(() => {
-    //     unsub_darkLightMode();
-    // });
 
     var lastFile: FileTypes;
     var lastFilePath: string;

@@ -74,6 +74,23 @@ func (g *Getters) GetTotalDirSize(dirPath string) (int64, error) {
 	return totalSize, nil // Return the total size of the files
 }
 
+func (g *Getters) CheckRootFolderInCWD() (string, error) {
+	cwd, err := os.Getwd()
+	if err != nil {
+		return "", fmt.Errorf("failed to get cwd: %w", err)
+	}
+	dirPath := fmt.Sprintf("%s%s%s", cwd, string(filepath.Separator), rootFolder)
+	fmt.Println("full path " + dirPath)
+	_, err = os.Stat(dirPath)
+	if os.IsNotExist(err) {
+		return "", nil // Directory does not exist
+	}
+	if err != nil {
+		return "", fmt.Errorf("error checking directory %s: %w", dirPath, err)
+	}
+	return dirPath, nil
+}
+
 func (g *Getters) GetDirectoryPath(dirIndex int) (string, error) {
 	if dirIndex < 0 {
 		dirIndex = 0

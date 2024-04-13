@@ -4,9 +4,7 @@
     import { get } from "svelte/store";
     import {
         EventsOn,
-        LogError,
         LogInfo,
-        LogPrint,
     } from "../../../wailsjs/runtime/runtime";
 
     import {

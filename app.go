@@ -49,7 +49,6 @@ func (a *App) InitializeRootFolder() error {
 	if err != nil {
 		return err
 	}
-
 	executableDir := filepath.Dir(executablePath) // Directory of the executable
 	newFolderPath := filepath.Join(executableDir, rootFolder)
 
