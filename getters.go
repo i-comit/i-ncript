@@ -75,12 +75,28 @@ func (g *Getters) GetTotalDirSize(dirPath string) (int64, error) {
 }
 
 func (g *Getters) CheckRootFolderInCWD() (string, error) {
+	dirPath, err := g.getEndPathExist(rootFolder)
+	if err != nil {
+		return "", fmt.Errorf("error checking  %s: %w", dirPath, err)
+	}
+	return dirPath, nil
+}
+
+func (g *Getters) CheckKeyFileInCWD() (string, error) {
+	dirPath, err := g.getEndPathExist(keyFileName)
+	if err != nil {
+		return "", fmt.Errorf("error checking  %s: %w", dirPath, err)
+	}
+	return dirPath, nil
+}
+
+func (g *Getters) getEndPathExist(endPathName string) (string, error) {
 	cwd, err := os.Getwd()
 	if err != nil {
 		return "", fmt.Errorf("failed to get cwd: %w", err)
 	}
-	dirPath := fmt.Sprintf("%s%s%s", cwd, string(filepath.Separator), rootFolder)
-	fmt.Println("full path " + dirPath)
+	dirPath := fmt.Sprintf("%s%s%s", cwd, string(filepath.Separator), endPathName)
+	fmt.Println("full path " + endPathName + " " + dirPath)
 	_, err = os.Stat(dirPath)
 	if os.IsNotExist(err) {
 		return "", nil // Directory does not exist
@@ -118,6 +134,10 @@ func (g *Getters) GetDirectoryFileCt(dirIndex int) (int, error) {
 	return fileCount, nil
 }
 
+func (g *Getters) GetRootFolder() string {
+	return rootFolder
+}
+
 type FileProperties struct {
 	ModifiedDate string `json:"modifiedDate"`
 	FileSize     int64  `json:"fileSize"`
@@ -131,7 +151,6 @@ func (b *Getters) GetFileProperties(filePath string) (FileProperties, error) {
 		fmt.Println("\033[33mError accessing file:", err, "\033[0m")
 		return props, err
 	}
-
 	// Convert time.Time to RFC3339 formatted string
 	props.ModifiedDate = fileInfo.ModTime().Format(time.DateOnly) + " " + fileInfo.ModTime().Format(time.Kitchen)
 	props.FileSize = fileInfo.Size()
@@ -142,10 +161,6 @@ func (b *Getters) GetFileProperties(filePath string) (FileProperties, error) {
 		props.FileType = "file"
 	}
 	return props, nil
-}
-
-func (g *Getters) GetRootFolder() string {
-	return rootFolder
 }
 
 func getKeyFilePath() string {

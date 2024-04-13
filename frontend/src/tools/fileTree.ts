@@ -21,9 +21,6 @@ import {
     GetDirectoryPath,
     GetFileTreePath,
 } from "../../wailsjs/go/main/Getters";
-import {
-    OpenDirectory, OpenFile,
-} from "../../wailsjs/go/main/FileUtils";
 import { lastHighlight_light, prevHighlight_light } from "../stores/constantVariables";
 
 export const vaultExpansionState = writable<{ [key: string]: boolean }>({});
@@ -124,7 +121,6 @@ export function clearHeldBtnsFromContainer() {
     if (get(currentFilePath) === "" &&
         get(currentDirPath) === "") {
         clearHeldBtns();
-        LogInfo("Hmm idk")
     }
 }
 export async function checkFileDragDirectory(relPath: string): Promise<boolean> {

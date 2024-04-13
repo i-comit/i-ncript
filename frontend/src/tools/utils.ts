@@ -144,7 +144,7 @@ export function checkIfRelPathIsInHeldDownBtns(relPath: string): boolean {
 export function addToHeldFileBtnsArr(relPath: string, button: HTMLButtonElement) {
     heldDownBtns.update(currentHeldDownBtns => {
         if (!(relPath in currentHeldDownBtns)) {
-            LogDebug("Added to heldDownBtns: " + relPath);
+            // LogDebug("Added to heldDownBtns: " + relPath);
             return { ...currentHeldDownBtns, [relPath]: button };
         }
         return currentHeldDownBtns;
@@ -158,13 +158,11 @@ export function checkFileTypesinHeldDownBtns(encryptOrDecrypt: boolean): number 
         if (fileTypes === FileTypes.Unknown) { filteredFileCt++; return }
 
         if (encryptOrDecrypt) {
-            if (fileTypes !== FileTypes.Encrypted) {
+            if (fileTypes !== FileTypes.Encrypted)
                 filteredFileCt++
-            }
         } else {
-            if (fileTypes === FileTypes.Encrypted) {
+            if (fileTypes === FileTypes.Encrypted)
                 filteredFileCt++
-            }
         }
     });
     LogInfo("Final fileCount: " + filteredFileCt);
@@ -182,7 +180,6 @@ export function moveFilesToRelPath(targetRelPath: string) {
         if (fileProps.fileType) {
             let pathToMoveTo: string;
             if (fileProps.fileType === "dir") {
-                LogDebug("Node being used for drop is dir derp ");
                 pathToMoveTo = fullPath;
             } else {
                 LogDebug("Node being used for drop is file ");

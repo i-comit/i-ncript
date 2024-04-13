@@ -22,7 +22,7 @@ const addLogFile = "addLogFile"
 const largeFilePercent = "largeFilePercent"
 
 // DATA consts
-const rootFolder = "--i-ncript" //Change to whatever name you want the root folder to be
+const rootFolder = "i-ncript" //Change to whatever name you want the root folder to be
 const keyFileName = ".i-ncript.🔑"
 const _width = 220
 const _height = 145

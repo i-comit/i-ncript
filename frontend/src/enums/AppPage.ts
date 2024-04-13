@@ -2,7 +2,7 @@ export enum AppPage {
     Vault = 'VAULT',
     Mbox = 'M-BOX',
     Login = 'Login',
-    WrongDir = 'WrongDir',
+    AppSetup = 'AppSetup',
 }
 
 import { writable } from 'svelte/store';

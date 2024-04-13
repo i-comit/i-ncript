@@ -6,7 +6,11 @@
 
   import { AppPage, currentPage } from "./enums/AppPage.ts";
   import { onDestroy, onMount } from "svelte";
-  import { GetDirName, GetDirectoryPath } from "../wailsjs/go/main/Getters";
+  import {
+    CheckKeyFileInCWD,
+    GetDirName,
+    GetDirectoryPath,
+  } from "../wailsjs/go/main/Getters";
   import {
     EventsOff,
     EventsOn,
@@ -24,6 +28,7 @@
   import { buildFileTree, fileTree } from "./tools/fileTree.ts";
   import { addLogEntry } from "./tools/logger.ts";
   import { basePath } from "./tools/utils.ts";
+  import AppSetup from "./components/pages/AppSetup.svelte";
 
   let _page: AppPage;
   currentPage.subscribe((value) => {
@@ -58,6 +63,14 @@
   onMount(async () => {
     isRightDir = await GetDirName();
     LogDebug(isRightDir.toString());
+
+    CheckKeyFileInCWD().then((_keyFilePath) => {
+      if (_keyFilePath === "") {
+        LogInfo("Key file not found");
+        currentPage.set(AppPage.AppSetup);
+      }
+    });
+
     EventsOn("addLogFile", (logEntry) => {
       addLogEntry(logEntry);
     });
@@ -79,6 +92,8 @@
 <main class="rounded-lg">
   {#if !isRightDir}
     <WrongDir />
+  {:else if _page === AppPage.AppSetup}
+    <AppSetup />
   {:else if _page === AppPage.Login}
     <Login on:loginSuccess={loggedIn} />
   {:else if _page === AppPage.Vault}

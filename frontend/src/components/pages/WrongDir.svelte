@@ -36,7 +36,7 @@
     var rootFolderPath = "";
     onMount(async () => {
         rootFolder = await GetRootFolder();
-        ResizeWindow(300, height + 10);
+        ResizeWindow(350, height + 10);
         checkForRootFolderInCWD();
     });
     function initializeRootFolder() {
@@ -55,12 +55,12 @@
 </script>
 
 <div
-    class="mb-2 w- left-1/2 rounded-bl-lg rounded-br-lg font-semibold h-6 z-10 select-none"
+    class="mb-2 w- left-1/2 rounded-bl-lg rounded-br-lg font-semibold z-10 select-none"
     style={`position: sticky; top: 0px;
-    background-color: ${$darkLightMode ? lightBGColor : darkBGColor}; 
+    background-color: ${darkBGColor}; 
     color: ${$accentColor};`}
 >
-    incorrect directory.
+    incorrect directory
 </div>
 <Frame />
 
@@ -72,7 +72,6 @@
         >
     </p>
     <div class="h-2" />
-
     <Accordion
         class="mx-1 outline bg-primary-200 outline"
         activeClass="focus:none"
@@ -85,11 +84,6 @@
                     class={rootFolderClass}>{rootFolder}</span
                 >.
             </p>
-            <p class="mb-2 text-gray-500 dark:text-gray-400">
-                As i-ncript is designed to be a portable application that
-                operates within a removable storage device, it must be entirely
-                self contained inside a single unlinked folder.
-            </p>
             <p class="text-gray-500 dark:text-gray-400">
                 This will prevent unintentional encryption of unrelated files
                 from other subdirectories, keep encrypted files organized within
@@ -97,43 +91,51 @@
                 easily transferred to another device.
             </p>
         </AccordionItem>
-
         <AccordionItem>
             <span slot="header">how do I create a directory?</span>
             <p class="mb-2 text-gray-500 dark:text-gray-400">
+                As i-ncript is designed to be a portable application that
+                operates within a removable storage device, it must be entirely
+                self contained inside a single directory.
+            </p>
+            <p class="mb-2 text-gray-500 dark:text-gray-400">
                 You can create a directory named <span class={rootFolderClass}
                     >{rootFolder}</span
-                >, preferably inside a removable drive, such as a USB, then
+                >, preferably inside a removable drive such as a USB, then
                 close the app and move the executable inside there.
             </p>
             {#if rootFolderPath === ""}
                 <p class="text-gray-500 dark:text-gray-400">
-                    Otherwise, click the [Create Folder] button which will
+                    Otherwise, click the [Create Folder] button below which will
                     generate the <span class={rootFolderClass}
                         >{rootFolder}</span
-                    > directory for you to place the app in.
+                    > directory for you to place the executable in.
                 </p>
             {/if}
         </AccordionItem>
     </Accordion>
     <div class="h-3" />
 
-    {#if rootFolderPath !== ""}
+    {#if rootFolderPath === ""}
+        <NeuButton on:click={initializeRootFolder}>Create Folder</NeuButton>
+    {:else}
         <div class="flex justify-center">
             <p
-                class="text-primary-400 dark:text-primary-300 text-sm pl-2 leading-none"
+                class="text-primary-400 dark:text-primary-300 text-sm pl-2 leading-none !text-justify"
             >
                 the <button
-                    class={rootFolderClass}
+                    class={`${rootFolderClass} hover:outline`}
                     on:click={() => OpenDirectory(rootFolderPath)}
                     >{rootFolder}</button
                 > directory has been found, close the app and place the executable
                 inside there.
             </p>
-            <FolderArrowRightOutline size="xl" class="m-2" />
+            <button on:click={() => OpenDirectory(rootFolderPath)}>
+                <FolderArrowRightOutline
+                    class="mx-1.5 text-primary-200 w-10 h-10 outline-dotted border rounded-lg hover:text-primary-500"
+                />
+            </button>
         </div>
-    {:else}
-        <NeuButton on:click={initializeRootFolder}>Create Folder</NeuButton>
     {/if}
     <div class="h-2.5" />
 </div>

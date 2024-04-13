@@ -4,14 +4,10 @@
 
     import { Modals, currentModal } from "../../enums/Modals";
 
-    import { Login } from "../../../wailsjs/go/main/App";
+    import { Login, ResizeWindow } from "../../../wailsjs/go/main/App";
     import { Button, Input, Tooltip, Progressbar } from "flowbite-svelte";
     import { switchModals } from "../../tools/utils";
-    import {
-        InfoCircleOutline,
-        AdjustmentsVerticalOutline,
-        CogSolid,
-    } from "flowbite-svelte-icons";
+    import { InfoCircleOutline, CogSolid } from "flowbite-svelte-icons";
 
     import {
         startDisplay,
@@ -31,6 +27,8 @@
         lightTextColor,
         darkInputColor,
         lightInputColor,
+        width,
+        height,
     } from "../../stores/constantVariables.ts";
 
     import {
@@ -65,6 +63,7 @@
             typewriter = getDisplayString();
         }, alertInterval);
         const _value = await get(darkLightMode);
+        ResizeWindow(width, height);
 
         darkLightBGOnElement(_value, loginForm);
         darkLightTextOnElement(_value, typewriter);
