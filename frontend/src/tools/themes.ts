@@ -2,6 +2,13 @@ import { LogInfo } from "../../wailsjs/runtime/runtime";
 import { darkBGColor, lightBGColor, darkTextColor, lightTextColor, lightShadow_Dark, darkShadow_Dark, lightShadow_Light, darkShadow_Light } from "../stores/constantVariables";
 
 //BG(background-color) element properties
+export function darkLightBGOnHTML(darkLightMode: boolean): void {
+    if (darkLightMode)
+        document.documentElement.style.setProperty("--bg-color", darkBGColor,);
+    else
+        document.documentElement.style.setProperty("--bg-color", lightBGColor,);
+}
+
 export function darkLightBGOnElement(darkLightMode: boolean, element: HTMLElement) {
     if (!element) return
     if (darkLightMode)

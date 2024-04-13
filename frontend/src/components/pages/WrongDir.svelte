@@ -36,7 +36,6 @@
     var rootFolderPath = "";
     onMount(async () => {
         rootFolder = await GetRootFolder();
-        ResizeWindow(350, height + 10);
         checkForRootFolderInCWD();
     });
     function initializeRootFolder() {
@@ -51,7 +50,8 @@
             }
         });
     }
-    let rootFolderClass = "text-primary-500 font-semibold select-text";
+    let rootFolderClass =
+        "text-primary-500 font-semibold select-text whitespace-nowrap";
 </script>
 
 <div
@@ -73,11 +73,13 @@
     </p>
     <div class="h-2" />
     <Accordion
-        class="mx-1 outline bg-primary-200 outline"
+        class="mx-1 outline bg-primary-200 outline "
         activeClass="focus:none"
     >
         <AccordionItem>
-            <span slot="header">why is this step necessary?</span>
+            <span slot="header" class="select-none"
+                >why is this step necessary?</span
+            >
             <p class="mb-2 text-gray-500 dark:text-gray-400">
                 For organizational and security purposes, i-ncript can only run
                 within a specified directory, in this case: <span
@@ -92,17 +94,19 @@
             </p>
         </AccordionItem>
         <AccordionItem>
-            <span slot="header">how do I create a directory?</span>
+            <span slot="header" class="select-none"
+                >how do I create a directory?</span
+            >
             <p class="mb-2 text-gray-500 dark:text-gray-400">
                 As i-ncript is designed to be a portable application that
                 operates within a removable storage device, it must be entirely
                 self contained inside a single directory.
             </p>
             <p class="mb-2 text-gray-500 dark:text-gray-400">
-                You can create a directory named <span class={rootFolderClass}
-                    >{rootFolder}</span
-                >, preferably inside a removable drive such as a USB, then
-                close the app and move the executable inside there.
+                You can then create a directory named <span
+                    class={rootFolderClass}>{rootFolder}</span
+                >, preferably inside a removable drive such as a USB, then close
+                the app and move the executable inside there.
             </p>
             {#if rootFolderPath === ""}
                 <p class="text-gray-500 dark:text-gray-400">

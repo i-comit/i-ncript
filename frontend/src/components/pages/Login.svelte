@@ -63,7 +63,6 @@
             typewriter = getDisplayString();
         }, alertInterval);
         const _value = await get(darkLightMode);
-        ResizeWindow(width, height);
 
         darkLightBGOnElement(_value, loginForm);
         darkLightTextOnElement(_value, typewriter);

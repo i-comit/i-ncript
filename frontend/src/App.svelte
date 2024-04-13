@@ -18,7 +18,7 @@
     LogInfo,
     LogWarning,
   } from "../wailsjs/runtime/runtime";
-  import { DirectoryWatcher } from "../wailsjs/go/main/App";
+  import { DirectoryWatcher, ResizeWindow } from "../wailsjs/go/main/App";
   import {
     vaultDir,
     mBoxDir,
@@ -29,6 +29,7 @@
   import { addLogEntry } from "./tools/logger.ts";
   import { basePath } from "./tools/utils.ts";
   import AppSetup from "./components/pages/AppSetup.svelte";
+  import { height } from "./stores/constantVariables.ts";
 
   let _page: AppPage;
   currentPage.subscribe((value) => {
@@ -49,7 +50,6 @@
     let unsubscribe = () => {}; // Define a no-op function to avoid undefined errors
     unsubscribe = fileTree.subscribe((value) => {
       if (value && value.relPath !== "") {
-        // Check if fileTree has been initialized
         buildFileTree();
         DirectoryWatcher(0);
         LogInfo("fileTree loaded on login");
@@ -64,13 +64,16 @@
     isRightDir = await GetDirName();
     LogDebug(isRightDir.toString());
 
-    CheckKeyFileInCWD().then((_keyFilePath) => {
-      if (_keyFilePath === "") {
-        LogInfo("Key file not found");
-        currentPage.set(AppPage.AppSetup);
-      }
-    });
-
+    if (!isRightDir) ResizeWindow(320, height + 20);
+    else {
+      CheckKeyFileInCWD().then((_keyFilePath) => {
+        if (_keyFilePath === "") {
+          LogInfo("Key file not found");
+          currentPage.set(AppPage.AppSetup);
+          ResizeWindow(350, height + 300);
+        }
+      });
+    }
     EventsOn("addLogFile", (logEntry) => {
       addLogEntry(logEntry);
     });

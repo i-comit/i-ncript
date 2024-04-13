@@ -20,7 +20,6 @@
 
     function toggleLightDarkMode() {
         darkLightMode.update((v) => !v);
-        LogInfo("calling darklight ");
     }
     let _currentPage;
     currentPage.subscribe((value) => {
