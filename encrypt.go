@@ -136,6 +136,7 @@ func (a *App) resetProgress(encrypt bool, files int) {
 	}
 
 	if a.ctx != nil {
+		runtime.EventsEmit(a.ctx, refreshDirSize)
 		runtime.EventsEmit(a.ctx, rebuildFileTree)
 		a.ResizeWindow(_width*2, _height)
 		runtime.EventsEmit(a.ctx, fileProcessed, 0)
@@ -214,6 +215,7 @@ func (a *App) EncryptENCPFile(_username, _password, filePath string) (bool, erro
 	}
 	s := "encrypted " + filepath.Base(newFilePath)
 	runtime.EventsEmit(a.ctx, addLogFile, s)
+	runtime.EventsEmit(a.ctx, refreshDirSize)
 	return true, nil
 }
 
@@ -250,6 +252,7 @@ func (a *App) decryptENCPFile(hashedReceiverCredentials []byte, filePath string)
 	}
 	s := "opened " + filepath.Base(filePath)
 	runtime.EventsEmit(a.ctx, addLogFile, s)
+	runtime.EventsEmit(a.ctx, refreshDirSize)
 	return true, nil
 }
 

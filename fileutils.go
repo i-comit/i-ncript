@@ -239,7 +239,6 @@ func (f *FileUtils) SaveLogEntries(entries, timestamps []string) error {
 }
 
 func formatTime(isoString string) string {
-	// Parse the ISO string
 	t, err := time.Parse(time.RFC3339, isoString)
 	if err != nil {
 		fmt.Println("Error parsing time:", err)

@@ -20,6 +20,7 @@ const fileProcessed = "fileProcessed"
 const totalFileCt = "totalFileCount"
 const addLogFile = "addLogFile"
 const largeFilePercent = "largeFilePercent"
+const refreshDirSize = "refreshDirSize"
 
 // DATA consts
 const rootFolder = "i-ncript" //Change to whatever name you want the root folder to be

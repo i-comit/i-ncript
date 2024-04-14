@@ -210,7 +210,7 @@ func (b *Getters) GetFileProperties(filePath string) (FileProperties, error) {
 // performant as directories can be much larger than files.
 func formatDirSize(fileByteSize int64) string {
 	if fileByteSize < 1 {
-		return "no size"
+		return "empty"
 	}
 	units := []string{"B", "KB", "MB", "GB", "TB", "EB", "ZB", "YB"}
 	digits := int(math.Log(float64(fileByteSize)) / math.Log(1024))

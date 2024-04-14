@@ -83,14 +83,14 @@
             .then((_driveToAppDirPercent) => {
                 driveToAppDirPercent = _driveToAppDirPercent;
                 // Return the next promise in the chain
-                return GetFormattedAppDirSize();
-            })
-            .then((_formattedAppDirSize) => {
-                formattedAppDirSize = _formattedAppDirSize;
                 return GetFormattedDriveSize();
             })
             .then((_formattedDriveSize) => {
                 formattedDriveSize = _formattedDriveSize;
+                return GetFormattedAppDirSize();
+            })
+            .then((_formattedAppDirSize) => {
+                formattedAppDirSize = _formattedAppDirSize;
             })
             .catch((error) => {
                 console.error("An error occurred:", error);
@@ -240,6 +240,7 @@
                     type="custom"
                     class={tooltipTailwindClass}
                     arrow={false}
+                    offset={1}
                     >{formattedAppDirSize} / {formattedDriveSize} | {driveToAppDirPercent}%</Tooltip
                 >
             </div>

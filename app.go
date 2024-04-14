@@ -266,6 +266,12 @@ func (a *App) DirectoryWatcher(dirIndex int) {
 					return
 				}
 				fmt.Printf("DirectoryWatcherEvent: %s\n", event)
+				switch {
+				case event.Op&fsnotify.Write == fsnotify.Write:
+					runtime.EventsEmit(a.ctx, refreshDirSize)
+				case event.Op&fsnotify.Remove == fsnotify.Remove:
+					runtime.EventsEmit(a.ctx, refreshDirSize)
+				}
 				if !debounceTimer.Stop() {
 					select {
 					case <-debounceTimer.C: // Try to drain the channel
@@ -275,13 +281,11 @@ func (a *App) DirectoryWatcher(dirIndex int) {
 				debounceTimer.Reset(delayDuration)
 			case <-debounceTimer.C:
 				fmt.Println("Handling event after debounce.")
-				if a.ctx != nil {
-					if !isInFileTask {
-						fmt.Println("Emitting rebuildFileTree event...")
-						runtime.EventsEmit(a.ctx, rebuildFileTree)
-						if a.hotFilerEnabled {
-							a.EncryptFilesInDir(0)
-						}
+				if !isInFileTask {
+					fmt.Println("Emitting rebuildFileTree event")
+					runtime.EventsEmit(a.ctx, rebuildFileTree)
+					if a.hotFilerEnabled {
+						a.EncryptFilesInDir(0)
 					}
 				}
 
