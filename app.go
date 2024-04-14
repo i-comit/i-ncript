@@ -20,11 +20,12 @@ type App struct {
 	done            chan bool
 	watcher         *fsnotify.Watcher
 	lastFilePath    string
+	cwd             string
 }
 
 func NewApp() *App {
 	return &App{
-		getters:         &Getters{}, // Initialize Getters here
+		getters:         &Getters{},
 		directories:     []string{"VAULT", "M-BOX"},
 		hotFilerEnabled: false,
 	}
@@ -32,13 +33,24 @@ func NewApp() *App {
 
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
-	log.Print("app has started")
-	space, err := a.getters.GetRootDiskSpace()
+	cwd, err := os.Getwd()
+	if err != nil {
+		log.Fatalf("Failed to get CWD: %s", err)
+	}
+	a.cwd = cwd
+	fmt.Println("\033[32mCWD: ", a.cwd, "\033[0m")
+	driveSize, err := a.getters.GetRootDiskSpace()
 	if err != nil {
 		fmt.Println("Error getting disk space:", err)
 		return
 	}
-	fmt.Printf("Available disk space: %d bytes\n", space)
+	fmt.Printf("Available disk space: %s\n", formatDirSize(int64(driveSize)))
+
+	appDirSize, err := a.getters.GetTotalDirSize(cwd)
+	if err != nil {
+		fmt.Printf("dir size err %s", err)
+	}
+	fmt.Printf("Dir size %d\n", appDirSize)
 }
 
 func (a *App) InitializeRootFolder() error {
@@ -90,11 +102,7 @@ func (a *App) Login(username, password string) (int, error) {
 		fmt.Println("Username or password is empty")
 		return -1, nil
 	}
-	cwd, err := os.Getwd()
-	if err != nil {
-		log.Fatalf("Failed to get CWD: %s", err)
-	}
-	filePath := filepath.Join(cwd, keyFileName)
+	filePath := filepath.Join(a.cwd, keyFileName)
 	var loginStat int
 
 	_hashedUsername, err := hashString(username)
@@ -126,7 +134,7 @@ func (a *App) Login(username, password string) (int, error) {
 			a.ResizeWindow(_width*2, _height)
 		}
 		for i, dir := range a.directories {
-			a.directories[i] = cwd + string(os.PathSeparator) + dir
+			a.directories[i] = a.cwd + string(os.PathSeparator) + dir
 		}
 		err = createDirectories(a.directories...)
 		if err != nil {

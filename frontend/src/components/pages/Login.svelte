@@ -49,6 +49,11 @@
     import PasswordScan from "../widgets/PasswordScan.svelte";
     import NeuButtonFake from "../widgets/NeuButtonFake.svelte";
     import { get } from "svelte/store";
+    import {
+        GetFormattedAppDirSize,
+        GetFormattedDriveSize,
+        GetPercentOfDriveToAppDirSize,
+    } from "../../../wailsjs/go/main/Getters";
 
     let typewriter = "";
     const dispatch = createEventDispatcher();
@@ -60,6 +65,10 @@
     let enteredPassword: string = "";
     let passwordMatch = false;
 
+    let driveToAppDirPercent: number;
+    let formattedDriveSize: string;
+    let formattedAppDirSize: string;
+
     let loginForm: HTMLFormElement;
     const unsub_darkLightMode = darkLightMode.subscribe((value) => {
         darkLightBGOnElement(value, loginForm);
@@ -70,6 +79,22 @@
             typewriter = getDisplayString();
         }, alertInterval);
         const _value = get(darkLightMode);
+        GetPercentOfDriveToAppDirSize()
+            .then((_driveToAppDirPercent) => {
+                driveToAppDirPercent = _driveToAppDirPercent;
+                // Return the next promise in the chain
+                return GetFormattedAppDirSize();
+            })
+            .then((_formattedAppDirSize) => {
+                formattedAppDirSize = _formattedAppDirSize;
+                return GetFormattedDriveSize();
+            })
+            .then((_formattedDriveSize) => {
+                formattedDriveSize = _formattedDriveSize;
+            })
+            .catch((error) => {
+                console.error("An error occurred:", error);
+            });
 
         darkLightBGOnElement(_value, loginForm);
         return () => {
@@ -206,15 +231,16 @@
                 >
                     <div
                         class="h-2.5 rounded-full transition-all duration-700 ease-in-out"
-                        style={`width: ${65}%; background-color: ${$accentColor};`}
+                        style={`width: ${driveToAppDirPercent}%; background-color: ${$accentColor};`}
                     ></div>
                 </div>
 
                 <Tooltip
-                    placement="left"
+                    placement="bottom"
                     type="custom"
                     class={tooltipTailwindClass}
-                    arrow={false}>99%</Tooltip
+                    arrow={false}
+                    >{formattedAppDirSize} / {formattedDriveSize} | {driveToAppDirPercent}%</Tooltip
                 >
             </div>
             <div class="h-1" />

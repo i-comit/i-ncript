@@ -38,6 +38,26 @@ export function GetFilesByType(arg1, arg2) {
   return window['go']['main']['Getters']['GetFilesByType'](arg1, arg2);
 }
 
+export function GetFormattedAppDirSize() {
+  return window['go']['main']['Getters']['GetFormattedAppDirSize']();
+}
+
+export function GetFormattedDirIndexSize(arg1) {
+  return window['go']['main']['Getters']['GetFormattedDirIndexSize'](arg1);
+}
+
+export function GetFormattedDriveSize() {
+  return window['go']['main']['Getters']['GetFormattedDriveSize']();
+}
+
+export function GetPercentOfDriveToAppDirSize() {
+  return window['go']['main']['Getters']['GetPercentOfDriveToAppDirSize']();
+}
+
+export function GetPercentOfDriveToDirIndexSize(arg1) {
+  return window['go']['main']['Getters']['GetPercentOfDriveToDirIndexSize'](arg1);
+}
+
 export function GetRootDiskSpace() {
   return window['go']['main']['Getters']['GetRootDiskSpace']();
 }

@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/fs"
+	"math"
 	"os"
 	"path/filepath"
 	"strings"
@@ -17,18 +19,10 @@ type Getters struct {
 }
 
 func (g *Getters) GetAppPath() (string, error) {
-	cwd, err := os.Getwd()
-	if err != nil {
-		return "", err
-	}
-	return cwd + string(filepath.Separator), nil
+	return g.app.cwd + string(filepath.Separator), nil
 }
-func (b *Getters) GetDirName() (bool, error) {
-	path, err := os.Getwd()
-	if err != nil {
-		return false, err
-	}
-	dirName := filepath.Base(path)
+func (g *Getters) GetDirName() (bool, error) {
+	dirName := filepath.Base(g.app.cwd)
 	match := (dirName == rootFolder)
 	return match, nil
 }
@@ -58,20 +52,86 @@ func (g *Getters) GetFilesByType(dirIndex int, getFileType bool) ([]string, erro
 }
 
 func (g *Getters) GetTotalDirSize(dirPath string) (int64, error) {
-	var totalSize int64 // This will hold the total size of all files
-	err := filepath.Walk(dirPath, func(path string, info os.FileInfo, err error) error {
+	var totalSize int64
+	err := filepath.WalkDir(dirPath, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
-			return err // Propagate the error
+			return err
 		}
-		if !info.IsDir() {
-			totalSize += info.Size() // Add file size, ignoring directories
+		if !d.IsDir() {
+			info, err := d.Info()
+			if err != nil {
+				return err
+			}
+			totalSize += info.Size()
 		}
 		return nil
 	})
 	if err != nil {
-		return 0, err // Return the error if something went wrong during the walk
+		return 0, err
 	}
-	return totalSize, nil // Return the total size of the files
+	return totalSize, nil
+}
+
+// This value is between 0 to 100
+func (g *Getters) GetPercentOfDriveToAppDirSize() (int64, error) {
+	driveSize, err := g.GetRootDiskSpace()
+	if err != nil {
+		fmt.Println("Error getting disk space:", err)
+		return 0, err
+	}
+	appDirSize, err := g.GetTotalDirSize(g.app.cwd)
+	if err != nil {
+		fmt.Printf("app size err %s", err)
+		return 0, err
+	}
+	percent := appDirSize / int64(driveSize) * 100
+	fmt.Printf("percent of drive to appdir %d", percent)
+	return percent, nil
+}
+
+// GetFormattedDriveSize and GetFormattedAppDirSize retrieves the available memory from the backend
+// and only returns the formatted string, which is much faster than calculating it on the frontend
+func (g *Getters) GetFormattedDriveSize() (string, error) {
+	driveSize, err := g.GetRootDiskSpace()
+	if err != nil {
+		fmt.Println("Error getting disk space:", err)
+		return "", err
+	}
+	return formatDirSize(int64(driveSize)), nil
+}
+
+func (g *Getters) GetFormattedAppDirSize() (string, error) {
+	appDirSize, err := g.GetTotalDirSize(g.app.cwd)
+	if err != nil {
+		fmt.Printf("app size err %s", err)
+		return "", err
+	}
+	return formatDirSize(appDirSize), nil
+}
+
+func (g *Getters) GetPercentOfDriveToDirIndexSize(dirIndex int) (int64, error) {
+	driveSize, err := g.GetRootDiskSpace()
+	if err != nil {
+		fmt.Println("Error getting disk space:", err)
+		return 0, err
+	}
+	appDirSize, err := g.GetTotalDirSize(g.app.directories[dirIndex])
+	if err != nil {
+		fmt.Printf("app size err %s", err)
+		return 0, err
+	}
+	percent := appDirSize / int64(driveSize) * 100
+	fmt.Printf("percent of drive to appdir %d", percent)
+	return percent, nil
+}
+
+func (g *Getters) GetFormattedDirIndexSize(dirIndex int) (string, error) {
+	appDirSize, err := g.GetTotalDirSize(g.app.directories[dirIndex])
+	if err != nil {
+		fmt.Printf("app size err %s", err)
+		return "", err
+	}
+	return formatDirSize(appDirSize), nil
 }
 
 func (g *Getters) CheckRootFolderInCWD() (string, error) {
@@ -144,6 +204,32 @@ func (b *Getters) GetFileProperties(filePath string) (FileProperties, error) {
 		props.FileType = "file"
 	}
 	return props, nil
+}
+
+// Backend method for formatting directory size, being more
+// performant as directories can be much larger than files.
+func formatDirSize(fileByteSize int64) string {
+	if fileByteSize < 1 {
+		return "no size"
+	}
+	units := []string{"B", "KB", "MB", "GB", "TB", "EB", "ZB", "YB"}
+	digits := int(math.Log(float64(fileByteSize)) / math.Log(1024))
+	unitIndex := digits
+	if unitIndex >= len(units) {
+		unitIndex = len(units) - 1
+	}
+	sizeInUnit := float64(fileByteSize) / math.Pow(1024, float64(unitIndex))
+
+	var formattedSize string
+	switch {
+	case sizeInUnit >= 100:
+		formattedSize = fmt.Sprintf("%.0f", sizeInUnit)
+	case sizeInUnit >= 10:
+		formattedSize = fmt.Sprintf("%.1f", sizeInUnit)
+	default:
+		formattedSize = fmt.Sprintf("%.2f", sizeInUnit)
+	}
+	return fmt.Sprintf("%s%s", formattedSize, units[unitIndex])
 }
 
 func getEndPathExist(endPathName string) (string, error) {

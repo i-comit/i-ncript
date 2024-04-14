@@ -213,13 +213,7 @@ func (f *FileUtils) GetAppendedFileBytes(filePath string) error {
 }
 
 func (f *FileUtils) SaveLogEntries(entries, timestamps []string) error {
-	// Get current working directory
-	cwd, err := os.Getwd()
-	if err != nil {
-		fmt.Printf("Failed to get CWD: %s\n", err)
-		return err
-	}
-	logFilePath := filepath.Join(cwd, "i-ncript.log")
+	logFilePath := filepath.Join(f.app.cwd, "i-ncript.log")
 	file, err := os.Create(logFilePath)
 	if err != nil {
 		fmt.Printf("Failed to create log file: %s\n", err)
@@ -251,7 +245,6 @@ func formatTime(isoString string) string {
 		fmt.Println("Error parsing time:", err)
 		return ""
 	}
-
 	return t.Format("01/02/06 03:04PM")
 }
 
