@@ -30,6 +30,7 @@
         CreateAccount = "create account",
     }
     let currentSetupPage: SetupPage = SetupPage.Intro;
+    let setupPageContainer: HTMLDivElement;
 
     const unsub_darkLightMode = darkLightMode.subscribe((value) => {
         darkLightBGOnHTML(value);
@@ -45,6 +46,12 @@
         darkLightMode.update((v) => !v);
     }
 
+    function goToLoginPage() {
+        currentPage.set(AppPage.Login);
+        ResizeWindow(width, height + 5);
+        LogInfo("going to login page");
+    }
+
     function goToNextPage() {
         switch (currentSetupPage) {
             case SetupPage.Intro:
@@ -57,12 +64,9 @@
                 currentSetupPage = SetupPage.CreateAccount;
                 break;
         }
-    }
-
-    function goToLoginPage() {
-        currentPage.set(AppPage.Login);
-        ResizeWindow(width, height + 5);
-        LogInfo("going to login page");
+        if (setupPageContainer) {
+            setupPageContainer.scrollTop = 0;
+        }
     }
 
     function goToPreviousPage() {
@@ -76,6 +80,9 @@
             case SetupPage.Vault:
                 currentSetupPage = SetupPage.Intro;
                 break;
+        }
+        if (setupPageContainer) {
+            setupPageContainer.scrollTop = 0;
         }
     }
 </script>
@@ -130,6 +137,7 @@
 </div>
 <div
     class="setupPage h-[65vh] outline outline-1 outline-primary-200 dark:outline-primary-100 px-4 pt-1 pb-4 flex flex-col"
+    bind:this={setupPageContainer}
 >
     {#if currentSetupPage === SetupPage.Intro}
         <Introduction on:click={goToLoginPage} />
@@ -162,7 +170,7 @@ color: ${$accentColor};`}
         <button disabled>
             <ArrowLeftOutline
                 class="outline outline-1 bg-primary-400 dark:bg-primary-300 
-                        rounded-tr-md text-primary-100 dark:text-primary-200 opacity-0"
+                        rounded-tr-md text-primary-100 dark:text-primary-200 opacity-10"
                 size="lg"
             /></button
         >

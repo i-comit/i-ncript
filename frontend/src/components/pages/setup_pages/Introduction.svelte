@@ -52,11 +52,17 @@
     for its frontend, incorporating the "Neumorphic" design style.
 </p>
 <p class={setupPagePClass}>
-    Not only can i&#8209;ncript encrypt your personal files, but it can also
-    pack and send files using a one time password for another i&#8209;ncript
-    account to open.
+    i&#8209;ncript not only encrypts your personal files, but it also allows
+    you to package and send files with a one-time password, enabling another
+    i&#8209;ncript account to access them.
 </p>
 <p class={setupPagePClass}>
     i&#8209;ncript is open source and uses the permissive copyleft GNU GPLv3
     license.
 </p>
+
+<style>
+    p {
+        color: #eeeeee;
+    }
+</style>

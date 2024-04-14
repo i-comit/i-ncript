@@ -6,7 +6,7 @@
     This is your mailbox, and is linked to the generated M-BOX folder. Here you
     can select files from the file tree to Pack or Open them.
 </p>
-<p class={`${setupPagePClass} text-center text-lg font-semibold !mb-0`}>
+<p class={`${setupPagePClass} text-center text-lg font-semibold !my-0`}>
     PACK
 </p>
 <p class={setupPagePClass}>

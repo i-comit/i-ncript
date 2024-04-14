@@ -19,6 +19,7 @@
 
     export let _class = "";
     export let _style = "";
+    export let type: "button" | "submit" | "reset" = "button"; // Default to 'button'
 
     const dispatch = createEventDispatcher();
 
@@ -49,6 +50,7 @@
     bind:this={neuButton}
     class="oval-lg select-none {` ${_class}`}"
     style={` ${_style}`}
+    {type}
     on:click|stopPropagation={handleClick}><slot /></button
 >
 

@@ -7,7 +7,7 @@ export const mBoxDir = writable<string>("");
 
 export const accentColor = writable<string>("#95C7DB");
 
-export const newAccount = writable<boolean>(true);
+export const newAccount = writable<boolean>(false);
 export const darkLightMode = writable<boolean>(true);
 
 export const fileCount = writable<number>(0);

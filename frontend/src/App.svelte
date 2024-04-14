@@ -24,6 +24,7 @@
     mBoxDir,
     largeFilePercent,
     largeFileName,
+    newAccount,
   } from "./stores/dynamicVariables.ts";
   import { buildFileTree, fileTree } from "./tools/fileTree.ts";
   import { addLogEntry } from "./tools/logger.ts";
@@ -69,6 +70,7 @@
       CheckKeyFileInCWD().then((_keyFilePath) => {
         if (_keyFilePath === "") {
           currentPage.set(AppPage.AppSetup);
+          newAccount.set(true);
           ResizeWindow(350, height + 100);
         }
       });

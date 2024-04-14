@@ -1,5 +1,5 @@
 <!-- Login.svelte -->
-<script>
+<script lang="ts">
     import { createEventDispatcher, onMount, onDestroy } from "svelte";
 
     import { Modals, currentModal } from "../../enums/Modals";
@@ -7,7 +7,11 @@
     import { Login, ResizeWindow } from "../../../wailsjs/go/main/App";
     import { Button, Input, Tooltip, Progressbar } from "flowbite-svelte";
     import { switchModals } from "../../tools/utils";
-    import { InfoCircleOutline, CogSolid } from "flowbite-svelte-icons";
+    import {
+        InfoCircleOutline,
+        CogSolid,
+        CloseOutline,
+    } from "flowbite-svelte-icons";
 
     import {
         startDisplay,
@@ -34,6 +38,7 @@
     import {
         darkLightMode,
         accentColor,
+        newAccount,
     } from "../../stores/dynamicVariables.ts";
     import {
         darkLightBGOnElement,
@@ -43,29 +48,30 @@
 
     import PasswordScan from "../widgets/PasswordScan.svelte";
     import NeuButtonFake from "../widgets/NeuButtonFake.svelte";
+    import { get } from "svelte/store";
 
     let typewriter = "";
-
-    const appName = __APP_NAME__;
-    const appVersion = __APP_VERSION__;
-    let username = "";
-    let password = "";
     const dispatch = createEventDispatcher();
 
-    let loginForm;
+    const appName: string = __APP_NAME__;
+    const appVersion: string = __APP_VERSION__;
+    let username = "";
+    let password = "";
+    let enteredPassword: string = "";
+    let passwordMatch = false;
+
+    let loginForm: HTMLFormElement;
     const unsub_darkLightMode = darkLightMode.subscribe((value) => {
         darkLightBGOnElement(value, loginForm);
-        darkLightTextOnElement(value, typewriter);
     });
 
-    onMount(async () => {
+    onMount(() => {
         const interval = setInterval(() => {
             typewriter = getDisplayString();
         }, alertInterval);
-        const _value = await get(darkLightMode);
+        const _value = get(darkLightMode);
 
         darkLightBGOnElement(_value, loginForm);
-        darkLightTextOnElement(_value, typewriter);
         return () => {
             clearInterval(interval);
         };
@@ -76,7 +82,7 @@
         unsub_darkLightMode();
     });
 
-    async function submit(event) {
+    async function submit(event: SubmitEvent) {
         event.preventDefault();
         try {
             await Login(username, password).then((loginResult) => {
@@ -97,7 +103,7 @@
             console.error("Error calling Login method:", error);
         }
     }
-    let _modal;
+    let _modal: Modals;
     currentModal.subscribe((value) => {
         _modal = value;
     });
@@ -106,6 +112,7 @@
     function queryUsernameStrength() {
         const regex = /^.{5,}$/;
         usernameCheck = regex.test(username);
+        if (username === "") enteredPassword = "";
     }
 
     let checks = {
@@ -115,7 +122,38 @@
         passwordCheck: false,
     };
 
-    function handlePasswordStrengthUpdated(event) {
+    function enterPassword(event: KeyboardEvent) {
+        LogInfo("emteriong password ");
+        if (event.code === "Enter" && checks.passwordCheck) {
+            password = "";
+            const inputElement = event.target as HTMLInputElement;
+            enteredPassword = inputElement.value;
+            Object.keys(checks).forEach((key) => {
+                checks[key as keyof typeof checks] = false;
+            });
+        }
+    }
+
+    function enterPasswordBtn() {
+        enteredPassword = password;
+        password = "";
+        Object.keys(checks).forEach((key) => {
+            checks[key as keyof typeof checks] = false;
+        });
+    }
+
+    function checkMatchedPassword() {
+        passwordMatch = password === enteredPassword;
+    }
+    function clearPassword() {
+        password = "";
+        Object.keys(checks).forEach((key) => {
+            checks[key as keyof typeof checks] = false;
+        });
+        enteredPassword = "";
+    }
+
+    function handlePasswordStrengthUpdated(event: CustomEvent) {
         const {
             passwordCheck1,
             passwordCheck2,
@@ -164,7 +202,7 @@
                     arrow={false}>{appVersion}</Tooltip
                 >
                 <div
-                    class="top-0 z-10 w-full my-1 mb-1.5 mx-9 rounded-full h-2.5 bg-primary-400 dark:bg-primary-300"
+                    class="top-0 z-10 w-full my-1 mb-1.5 mx-4 rounded-full h-2.5 bg-primary-400 dark:bg-primary-300"
                 >
                     <div
                         class="h-2.5 rounded-full transition-all duration-700 ease-in-out"
@@ -186,7 +224,7 @@
                     style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
                             color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
                     id="small-input"
-                    placeholder="enter username.."
+                    placeholder={`${$newAccount ? "create username.." : "enter username.."} `}
                     type="text"
                     bind:value={username}
                     on:keyup={queryUsernameStrength}
@@ -216,27 +254,84 @@
                     >
                 </div>
             </div>
-            <div class="field">
+
+            {#if $newAccount}
+                {#if !enteredPassword}
+                    <Input
+                        class="max-h-4 w-full mb-2"
+                        style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
+                        color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
+                        id="small-input"
+                        placeholder="create password.."
+                        type="password"
+                        bind:value={password}
+                        on:keyup={(event) => enterPassword(event)}
+                        required
+                    />
+                    <PasswordScan
+                        {password}
+                        _class="flex w-full h-1 px-0.5 relative bottom-1.5"
+                        on:passwordStrengthUpdated={handlePasswordStrengthUpdated}
+                    />
+                {:else}
+                    <div class="flex justify-between">
+                        <Input
+                            class="max-h-4 w-full mb-2"
+                            style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
+                                    color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
+                            id="small-input"
+                            placeholder="confirm password.."
+                            type="password"
+                            bind:value={password}
+                            on:keyup={checkMatchedPassword}
+                            required
+                        />
+                        <button on:click|stopPropagation={clearPassword}>
+                            <CloseOutline class=" text-primary-500 mb-2" />
+                        </button>
+                    </div>
+                    <div
+                        class="flex w-full h-1 px-0.5 relative bottom-1"
+                        tabindex="-1"
+                    >
+                        {#if !passwordMatch}
+                            <div
+                                class="flex-1 text-center rounded-lg bg-primary-400 dark:bg-primary-300"
+                            />
+                        {:else}
+                            <div
+                                class="flex-1 text-center rounded-lg"
+                                style={`background-color: ${$accentColor};`}
+                            />
+                        {/if}
+                        <Tooltip
+                            placement="left"
+                            class={tooltipTailwindClass}
+                            arrow={false}>must match password</Tooltip
+                        >
+                    </div>
+                {/if}
+            {:else}
                 <Input
-                    class="max-h-4 w-full"
+                    class="max-h-4 w-full mb-2"
                     style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
-                            color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
+                        color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
                     id="small-input"
                     placeholder="enter password.."
                     type="password"
                     bind:value={password}
                     required
                 />
-            </div>
-            <PasswordScan
-                {password}
-                _class="flex w-full h-1 px-0.5 relative bottom-1.5"
-                on:passwordStrengthUpdated={handlePasswordStrengthUpdated}
-            />
-        {:else if _modal === Modals.Settings}
-            <Settings />
+                <PasswordScan
+                    {password}
+                    _class="flex w-full h-1 px-0.5 relative bottom-1.5"
+                    on:passwordStrengthUpdated={handlePasswordStrengthUpdated}
+                />
+            {/if}
         {:else if _modal === Modals.Info}
             <Info />
+        {:else if _modal === Modals.Settings}
+            <Settings />
         {/if}
     </div>
 
@@ -268,8 +363,27 @@
             </Button>
         </div>
         <div>
-            {#if usernameCheck && checks.passwordCheck}
-                <NeuButton _class="!w-20 " type="submit">LOGIN</NeuButton>
+            {#if $newAccount}
+                {#if !enteredPassword}
+                    {#if usernameCheck && checks.passwordCheck}
+                        <NeuButton
+                            _class="!w-20 "
+                            on:click={() => enterPasswordBtn()}>ENTER</NeuButton
+                        >
+                    {:else}
+                        <NeuButtonFake _class="!w-20 opacity-20"
+                            >ENTER</NeuButtonFake
+                        >
+                    {/if}
+                {:else if usernameCheck && passwordMatch}
+                    <NeuButton _class="!w-20" type="submit">LOGIN</NeuButton>
+                {:else}
+                    <NeuButtonFake _class="!w-20 opacity-20"
+                        >LOGIN</NeuButtonFake
+                    >
+                {/if}
+            {:else if usernameCheck && checks.passwordCheck}
+                <NeuButton _class="!w-20" type="submit">LOGIN</NeuButton>
             {:else}
                 <NeuButtonFake _class="!w-20 opacity-20">LOGIN</NeuButtonFake>
             {/if}

@@ -27,13 +27,12 @@
 <p class={setupPagePClass}>
     The author does not condone using i-ncript for illicit or malicious acts,
     such as encrypting and sending illegal content, or encrypting someone else's
-    data without their consent as a form of blackmail.
+    data without their consent.
 </p>
 <p class={setupPagePClass}>
-    Please note that using this software may lead to damage or data loss, as
-    there is no password recovery option because your key is stored locally. The
-    author is not responsible for any resulting damages or loss of data under
-    any circumstances.
+    Please note that using this software may lead to damage or data loss, and a
+    key, once lost, cannot be recovered. The author is therefore not responsible
+    for any resulting damages or loss of data under any circumstances.
 </p>
 <p class={setupPagePClass}>
     By creating an account, you consent to abide by the terms above.

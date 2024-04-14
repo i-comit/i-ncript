@@ -167,7 +167,7 @@
     }
 
     function enterPassword(event: KeyboardEvent) {
-        if (event.code === "Enter") {
+        if (event.code === "Enter" && checks.passwordCheck) {
             password = "";
             const inputElement = event.target as HTMLInputElement;
             enteredPassword = inputElement.value;
@@ -204,8 +204,9 @@
     function queryUsernameStrength() {
         const regex = /^.{5,}$/;
         usernameCheck = regex.test(username);
+        if (username === "") enteredPassword = "";
     }
-    // Function to handle the custom event
+
     function handlePasswordStrengthUpdated(event: CustomEvent) {
         const {
             passwordCheck1,
@@ -392,7 +393,9 @@
                             on:keyup={checkMatchedPassword}
                         />
                         <button on:click|stopPropagation={clearPassword}>
-                            <CloseOutline class=" text-blue-700 " />
+                            <CloseOutline
+                                class=" text-primary-300 dark:text-primary-200 "
+                            />
                         </button>
                     </div>
                     <div
