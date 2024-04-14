@@ -1,5 +1,6 @@
 <!-- https://codepen.io/singhimalaya/pen/EdVzNL -->
 <script lang="ts">
+    import { onDestroy } from "svelte";
     import { LogPrint } from "../../../wailsjs/runtime/runtime";
     import {
         EncryptFilesInDir,
@@ -28,6 +29,10 @@
                 });
             });
     }
+
+    onDestroy(() => {
+        isChecked = true;
+    });
 </script>
 
 <div class="button r" id="button-1">

@@ -22,6 +22,7 @@ import {
     GetFileTreePath,
 } from "../../wailsjs/go/main/Getters";
 import { lastHighlight_light, prevHighlight_light } from "../stores/constantVariables";
+import { FileTypes, getFileType } from "../enums/FileTypes";
 
 export const vaultExpansionState = writable<{ [key: string]: boolean }>({});
 export const mBoxExpansionState = writable<{ [key: string]: boolean }>({});
@@ -41,12 +42,12 @@ let expanded = false;
 let _appPage: AppPage;
 
 export function handleFileClick(relPath: string, _buttonRef: HTMLButtonElement) {
-    if (!get(leftCtrlDown) && checkIfRelPathIsInHeldDownBtns(relPath)) {
+    if (!get(leftCtrlDown) && checkIfRelPathIsInHeldDownBtns(relPath) ||
+        getFileType(relPath) === FileTypes.EncryptedP) {
         clearHeldBtns();
         LogInfo("Cleared held buttons from file click")
     }
     addToHeldFileBtnsArr(relPath, _buttonRef);
-
     setHeldBtnsStyle();
 }
 

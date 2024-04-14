@@ -323,19 +323,6 @@
                             OpenDirectory( _fileTree.relPath)}
                         > nothing here yet.</button
                     >
-
-                    <!-- <button
-                        class="absolute top-1/3 left-1/2 z-20 p-2 !py-0.5 text-xs font-semibold rounded-lg"
-                        style={`padding-left: 0.1rem; 
-                        border: 1px solid black;
-                        outline-style: solid;
-                        outline-width: thin;
-                        color: ${$accentColor}`}
-                        on:click={() => OpenDirectory(_fileTree.relPath)}
-                    >
-                        {pageName()}
-                        <FolderSolid class="mr-1" size="xl"></FolderSolid>
-                    </button> -->
                 {/await}
 
                 {#if $pointerDown}

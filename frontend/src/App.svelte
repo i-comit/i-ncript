@@ -68,9 +68,8 @@
     else {
       CheckKeyFileInCWD().then((_keyFilePath) => {
         if (_keyFilePath === "") {
-          LogInfo("Key file not found");
           currentPage.set(AppPage.AppSetup);
-          ResizeWindow(350, height + 300);
+          ResizeWindow(350, height + 100);
         }
       });
     }

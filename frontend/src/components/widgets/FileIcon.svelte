@@ -5,6 +5,7 @@
         FileVideoSolid,
         FileMusicSolid,
         FileOutline,
+        EnvelopeSolid,
     } from "flowbite-svelte-icons";
     import { getFileType, FileTypes } from "../../enums/FileTypes";
     import { FileNode } from "../../tools/fileTree";
@@ -20,6 +21,8 @@
     <FileVideoSolid class="w-3 mr-0.5"></FileVideoSolid>
 {:else if getFileType(_fileTree.relPath) === FileTypes.Audio}
     <FileMusicSolid class="w-3 mr-0.5"></FileMusicSolid>
+{:else if getFileType(_fileTree.relPath) === FileTypes.EncryptedP}
+    <EnvelopeSolid class="w-3 mr-0.5"></EnvelopeSolid>
 {:else}
     <FileOutline class="w-3 mr-1"></FileOutline>
 {/if}

@@ -55,7 +55,8 @@
 </script>
 
 <div
-    class="mb-2 w- left-1/2 rounded-bl-lg rounded-br-lg font-semibold z-10 select-none"
+    class="mb-2 w-1/2 left-1/4 rounded-bl-lg rounded-br-lg font-semibold
+            select-none outline outline-1 outline-primary-400 z-10"
     style={`position: sticky; top: 0px;
     background-color: ${darkBGColor}; 
     color: ${$accentColor};`}
