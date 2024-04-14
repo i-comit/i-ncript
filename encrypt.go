@@ -374,7 +374,11 @@ func initFileCipher(_hashedCredentials []byte, filePath string) (cipher.AEAD, []
 }
 
 func checkCredentials(_hashedCredentials string) int {
-	file, err := os.Open(getKeyFilePath())
+	keyFilePath, err := getEndPathExist(keyFileName)
+	if err != nil {
+		return 0
+	}
+	file, err := os.Open(keyFilePath)
 	if err != nil {
 		fmt.Println("Key file doesn't exist", err)
 		return 0

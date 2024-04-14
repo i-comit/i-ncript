@@ -75,7 +75,7 @@ func (g *Getters) GetTotalDirSize(dirPath string) (int64, error) {
 }
 
 func (g *Getters) CheckRootFolderInCWD() (string, error) {
-	dirPath, err := g.getEndPathExist(rootFolder)
+	dirPath, err := getEndPathExist(rootFolder)
 	if err != nil {
 		return "", fmt.Errorf("error checking  %s: %w", dirPath, err)
 	}
@@ -83,26 +83,9 @@ func (g *Getters) CheckRootFolderInCWD() (string, error) {
 }
 
 func (g *Getters) CheckKeyFileInCWD() (string, error) {
-	dirPath, err := g.getEndPathExist(keyFileName)
+	dirPath, err := getEndPathExist(keyFileName)
 	if err != nil {
 		return "", fmt.Errorf("error checking  %s: %w", dirPath, err)
-	}
-	return dirPath, nil
-}
-
-func (g *Getters) getEndPathExist(endPathName string) (string, error) {
-	cwd, err := os.Getwd()
-	if err != nil {
-		return "", fmt.Errorf("failed to get cwd: %w", err)
-	}
-	dirPath := fmt.Sprintf("%s%s%s", cwd, string(filepath.Separator), endPathName)
-	fmt.Println("full path " + endPathName + " " + dirPath)
-	_, err = os.Stat(dirPath)
-	if os.IsNotExist(err) {
-		return "", nil // Directory does not exist
-	}
-	if err != nil {
-		return "", fmt.Errorf("error checking directory %s: %w", dirPath, err)
 	}
 	return dirPath, nil
 }
@@ -163,22 +146,21 @@ func (b *Getters) GetFileProperties(filePath string) (FileProperties, error) {
 	return props, nil
 }
 
-func getKeyFilePath() string {
+func getEndPathExist(endPathName string) (string, error) {
 	cwd, err := os.Getwd()
 	if err != nil {
-		fmt.Printf("Failed to get current working directory: %s", err)
-		return ""
+		return "", fmt.Errorf("failed to get cwd: %w", err)
 	}
-	keyFilePath := filepath.Join(cwd, keyFileName)
-	fmt.Println("path to keyFile " + keyFilePath)
-
-	file, err := os.Open(keyFilePath)
+	dirPath := fmt.Sprintf("%s%s%s", cwd, string(filepath.Separator), endPathName)
+	fmt.Println("full path " + endPathName + " " + dirPath)
+	_, err = os.Stat(dirPath)
+	if os.IsNotExist(err) {
+		return "", nil // Directory does not exist
+	}
 	if err != nil {
-		fmt.Println("Key file doesn't exist", err)
-		return ""
+		return "", fmt.Errorf("error checking directory %s: %w", dirPath, err)
 	}
-	defer file.Close()
-	return keyFilePath
+	return dirPath, nil
 }
 
 func printFileTree(fileTree *FileNode, print bool) error {
