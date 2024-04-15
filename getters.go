@@ -135,7 +135,7 @@ func (g *Getters) GetFormattedDirIndexSize(dirIndex int) (string, error) {
 }
 
 func (g *Getters) CheckRootFolderInCWD() (string, error) {
-	dirPath, err := getEndPathExist(rootFolder)
+	dirPath, err := getEndPath(rootFolder)
 	if err != nil {
 		return "", fmt.Errorf("error checking  %s: %w", dirPath, err)
 	}
@@ -143,7 +143,7 @@ func (g *Getters) CheckRootFolderInCWD() (string, error) {
 }
 
 func (g *Getters) CheckKeyFileInCWD() (string, error) {
-	dirPath, err := getEndPathExist(keyFileName)
+	dirPath, err := getEndPath(keyFileName)
 	if err != nil {
 		return "", fmt.Errorf("error checking  %s: %w", dirPath, err)
 	}
@@ -232,7 +232,7 @@ func formatDirSize(fileByteSize int64) string {
 	return fmt.Sprintf("%s%s", formattedSize, units[unitIndex])
 }
 
-func getEndPathExist(endPathName string) (string, error) {
+func getEndPath(endPathName string) (string, error) {
 	cwd, err := os.Getwd()
 	if err != nil {
 		return "", fmt.Errorf("failed to get cwd: %w", err)
@@ -247,6 +247,37 @@ func getEndPathExist(endPathName string) (string, error) {
 		return "", fmt.Errorf("error checking directory %s: %w", dirPath, err)
 	}
 	return dirPath, nil
+}
+
+func findEncryptedDuplicates(dir string) ([]string, error) {
+	filesMap := make(map[string][]string)
+	var duplicates []string
+	err := filepath.WalkDir(dir, func(path string, d os.DirEntry, err error) error {
+		if err != nil {
+			return err // Propagate errors
+		}
+		if d.IsDir() {
+			return nil // Skip directories
+		}
+		fileName := d.Name()
+		ext := filepath.Ext(fileName)
+		baseName := fileName[0 : len(fileName)-len(ext)] // Remove extension
+
+		if ext == ".enc" {
+			originalExt := filepath.Ext(baseName)
+			baseName = baseName[0 : len(baseName)-len(originalExt)] // Remove original extension
+		}
+		filesMap[baseName] = append(filesMap[baseName], path)
+		return nil
+	})
+
+	// Check for duplicates
+	for _, paths := range filesMap {
+		if len(paths) > 1 {
+			duplicates = append(duplicates, paths...)
+		}
+	}
+	return duplicates, err
 }
 
 func printFileTree(fileTree *FileNode, print bool) error {

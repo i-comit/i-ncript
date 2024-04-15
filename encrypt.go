@@ -6,6 +6,7 @@ import (
 	"crypto/cipher"
 	"crypto/rand"
 	"crypto/sha256"
+	"encoding/base64"
 	"encoding/hex"
 	"fmt"
 	"io"
@@ -19,6 +20,7 @@ import (
 	"os"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
+	"golang.org/x/crypto/argon2"
 )
 
 func (a *App) EncryptFilesInDir(dirIndex int) (bool, error) {
@@ -377,7 +379,7 @@ func initFileCipher(_hashedCredentials []byte, filePath string) (cipher.AEAD, []
 }
 
 func checkCredentials(_hashedCredentials string) int {
-	keyFilePath, err := getEndPathExist(keyFileName)
+	keyFilePath, err := getEndPath(keyFileName)
 	if err != nil {
 		return 0
 	}
@@ -404,18 +406,62 @@ func checkCredentials(_hashedCredentials string) int {
 		}
 		line = append(line, more...)
 	}
-	hashedStringToCheck, err := hashString(_hashedCredentials)
+	hashedStringToCheck, err := verifySavedCredentials(_hashedCredentials)
 	if err != nil {
 		log.Printf("Failed to hash credentials to check %s", err)
 		return -1
 	}
-	if string(line) == hashedStringToCheck {
+	if hashedStringToCheck {
 		log.Printf("String matched with key hash")
 		return 2
 	} else {
 		log.Printf("String not matched with key hash")
 		return 3
 	}
+}
+
+func saveHashedCredentials(credentials string) error {
+	// Generate a random salt
+	salt := make([]byte, 16)
+	if _, err := rand.Read(salt); err != nil {
+		return err
+	}
+	// Generate the hash
+	hash := argon2.Key([]byte(credentials), salt, 3, 32*1024, 4, 500)
+	// Encode salt and hash to base64 to store them as strings
+	saltStr := base64.StdEncoding.EncodeToString(salt)
+	hashStr := base64.StdEncoding.EncodeToString(hash)
+	keyFilePath, err := getEndPath(keyFileName)
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(keyFilePath, []byte(saltStr+hashStr), 0600)
+}
+
+func verifySavedCredentials(credentials string) (bool, error) {
+	keyFilePath, err := getEndPath(keyFileName)
+	if err != nil {
+		return false, err
+	}
+	content, err := os.ReadFile(keyFilePath)
+	if err != nil {
+		return false, err
+	}
+	saltStr := content[:24] // Salt is the first 24 characters (base64)
+	hashStr := content[24:] // Hash is the rest
+
+	salt, err := base64.StdEncoding.DecodeString(string(saltStr))
+	if err != nil {
+		return false, err
+	}
+	storedHash, err := base64.StdEncoding.DecodeString(string(hashStr))
+	if err != nil {
+		return false, err
+	}
+	enteredHash := argon2.Key([]byte(credentials), salt, 3, 32*1024, 4, 500)
+	fmt.Println("entered Hash " + base64.StdEncoding.EncodeToString(enteredHash))
+	fmt.Println("stored Hash " + base64.StdEncoding.EncodeToString(storedHash))
+	return base64.StdEncoding.EncodeToString(enteredHash) == base64.StdEncoding.EncodeToString(storedHash), nil
 }
 
 func hashString(stringToHash string) (string, error) {

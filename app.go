@@ -112,12 +112,13 @@ func (a *App) Login(username, password string) (int, error) {
 	}
 	hashedUsername = _hashedUsername
 	var shuffledCredentials = shuffleStrings(_hashedUsername, password)
-	loginStat = checkCredentials(shuffledCredentials)
 	_hashedCredentials, err := hashString(shuffledCredentials)
+	hashedCredentials = []byte(_hashedCredentials)
+
+	loginStat = checkCredentials(_hashedCredentials)
 	if err != nil {
 		log.Fatalf("Failed to hash credentials: %s", err)
 	}
-	hashedCredentials = []byte(_hashedCredentials)
 
 	switch loginStat {
 	case 0: //Key file does not exist
@@ -126,7 +127,8 @@ func (a *App) Login(username, password string) (int, error) {
 			log.Fatalf("Failed to create file: %s", err)
 		}
 		defer file.Close()
-		a.grantAccessToApp(file, _hashedCredentials)
+		saveHashedCredentials(_hashedCredentials)
+		a.grantAccessToApp()
 	case 1: //File exists but is empty
 		break
 	case 2: //credentials match file hash
@@ -149,22 +151,14 @@ func (a *App) Login(username, password string) (int, error) {
 	return loginStat, nil
 }
 
-func (a *App) grantAccessToApp(file *os.File, _hashedCredentials string) {
-	cwd, err := os.Getwd()
-	if err != nil {
-		log.Fatalf("Failed to get CWD: %s", err)
-	}
-	_, err = file.WriteString(_hashedCredentials)
-	if err != nil {
-		log.Fatalf("Failed to write to file: %s", err)
-	}
+func (a *App) grantAccessToApp() {
 	if a.ctx != nil {
 		a.ResizeWindow(_width*2, _height)
 	}
 	for i, dir := range a.directories {
-		a.directories[i] = cwd + string(os.PathSeparator) + dir
+		a.directories[i] = a.cwd + string(os.PathSeparator) + dir
 	}
-	err = createDirectories(a.directories...)
+	err := createDirectories(a.directories...)
 	if err != nil {
 		log.Fatal(err)
 	}
