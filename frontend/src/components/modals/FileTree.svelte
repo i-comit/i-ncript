@@ -2,7 +2,7 @@
     // import { slide } from 'svelte/transition'
     import { onMount, onDestroy, afterUpdate } from "svelte";
     import { get } from "svelte/store";
-    import { EventsOn, LogInfo } from "../../../wailsjs/runtime/runtime";
+    import { EventsOff, EventsOn, LogInfo } from "../../../wailsjs/runtime/runtime";
 
     import {
         FolderOpenSolid,
@@ -130,6 +130,7 @@
 
     onDestroy(() => {
         unsub_darkLightMode();
+        // EventsOff("rebuildFileTree");
     });
 
     function expandCollapseAllNodes(node: FileNode, expand: boolean) {

@@ -19,8 +19,22 @@
         accentColor,
     } from "../../stores/dynamicVariables.ts";
     import { SaveLogEntries } from "../../../wailsjs/go/main/FileUtils";
+    import {
+        EventsOff,
+        EventsOn,
+        LogInfo,
+    } from "../../../wailsjs/runtime/runtime";
     let logContainer: { scrollTop: any; scrollHeight: any }; // Reference to the log entries container element
+    let isPointerIn: boolean = false;
 
+    onMount(() => {
+        EventsOn("rebuildFileTree", () => {
+            LogInfo("rebuild file tree called");
+        });
+    });
+    onDestroy(() => {
+        EventsOff("rebuildFileTree");
+    });
     afterUpdate(() => {
         if (logContainer) {
             logContainer.scrollTop = logContainer.scrollHeight; // Scroll to the bottom
@@ -43,6 +57,18 @@
     class="fixed w-full h-full rounded-lg"
     id="grid-dot-bg"
     style=" z-index:5;"
+    on:pointerover={() => {
+        LogInfo("pointer over logger bg");
+        isPointerIn = true;
+    }}
+    on:pointerleave={() => {
+        LogInfo("pointer over logger bg");
+        isPointerIn = false;
+    }}
+    on:pointerdown={() => {
+        LogInfo("pointer down on logger bg");
+        isPointerIn = true;
+    }}
 />
 <div
     class="mb-0.5 w-1/3 left-1/3 rounded-bl-lg rounded-br-lg font-semibold z-10"
@@ -75,7 +101,22 @@
             </SpeedDialButton>
         </SpeedDial>
     </div>
-    <div bind:this={logContainer} class="log-entries-container">
+    <div
+        bind:this={logContainer}
+        class="log-entries-container"
+        on:pointerover={() => {
+            // LogInfo("pointer over log entries");
+            isPointerIn = true;
+        }}
+        on:pointerleave={() => {
+            // LogInfo("pointer over log entries");
+            isPointerIn = false;
+        }}
+        on:pointerdown={() => {
+            // LogInfo("pointer down on log entries");
+            isPointerIn = true;
+        }}
+    >
         {#each $logEntries as { entry, timestamp }}
             <div
                 style={`color: ${get(darkLightMode) ? lightBGColor : darkBGColor}`}

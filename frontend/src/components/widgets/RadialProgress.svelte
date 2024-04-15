@@ -18,11 +18,11 @@
 
 {#if $largeFilePercent > 0 && $largeFilePercent < 100}
     <div
-        class="fixed w-full h-full"
+        class="fixed w-full h-full pointer-events-none"
         style="background-color: rgba(180, 180, 180, 0.2); z-index:36;"
     />
     <div
-        class="ko-progress-circle z-5 {` ${className}`} h-full"
+        class="ko-progress-circle z-5 {` ${className}`} h-full pointer-events-none"
         data-progress={dataProgress}
         style={_style}
     >
@@ -37,21 +37,12 @@
                 ></div>
             </div>
         </div>
-        {#if $darkLightMode}
-            <div
-                class="ko-progress-circle__overlay flex items-center justify-center text-ellipsis"
-                style={`background-color:${darkBGColor}`}
-            >
-                <span class="truncate px-1 text-sm">{overlayText}</span>
-            </div>
-        {:else}
-            <div
-                class="ko-progress-circle__overlay flex items-center justify-center text-ellipsis"
-                style={`background-color:${lightBGColor}`}
-            >
-                <span class="truncate px-1 text-sm">{overlayText}</span>
-            </div>
-        {/if}
+        <div
+            class="ko-progress-circle__overlay flex items-center justify-center
+                    text-ellipsis bg-primary-300 dark:bg-primary-200"
+        >
+            <span class="truncate px-1 text-sm">{overlayText}</span>
+        </div>
     </div>
 {/if}
 

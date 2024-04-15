@@ -28,7 +28,6 @@ export function getEntryKeyword(entry: string): string {
     // Get the first word
     const firstWord = words[0];
     // Print the first word
-    LogInfo("First entry word " + firstWord);
     let replacedChar = '';
     switch (firstWord) {
         case "encrypted":

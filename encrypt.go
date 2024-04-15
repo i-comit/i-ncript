@@ -321,7 +321,6 @@ func (a *App) writeCipherFile(data, cipherData []byte, cipherFile *os.File) erro
 					percentInt := int(percent + 0.5) // Adds 0.5 before casting to round to nearest whole number
 					if lastpercentInt != percentInt {
 						runtime.EventsEmit(a.ctx, largeFilePercent, percentInt)
-						fmt.Printf("Cipher Progress: %.2f%%\n", percent)
 					}
 					lastpercentInt = percentInt
 				case <-done:

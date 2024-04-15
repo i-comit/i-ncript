@@ -81,20 +81,32 @@ func (a *App) InitializeRootFolder() error {
 }
 
 func (a *App) InterruptFileTask() error {
-	file, err := os.OpenFile(a.lastFilePath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0666)
-	if err != nil {
-		log.Printf("failed to open last file: %v", err)
-		return err
+	if a.lastFilePath != "" {
+		// Attempt to open the last file
+		file, err := os.OpenFile(a.lastFilePath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0666)
+		if err != nil {
+			log.Printf("failed to open last file: %v", err)
+			// Don't return here, just log the error
+		} else {
+			// If opening succeeds, close the file immediately
+			file.Close()
+			fmt.Println("\033[31minterrupted file task: ", filepath.Base(a.lastFilePath), "\033[0m")
+			// Attempt to remove the file
+			if err := os.Remove(a.lastFilePath); err != nil {
+				fmt.Printf("last file remove failed %s", err)
+				// Log the error but continue to close the interrupt channel
+			}
+		}
+		a.lastFilePath = ""
 	}
-	file.Close()
-	fmt.Println("\033[31minterrupted file task: ", filepath.Base(a.lastFilePath), "\033[0m")
-	if err := os.Remove(a.lastFilePath); err != nil {
-		fmt.Printf("last file remove failed %s", err)
-		return err
+	select {
+	case <-interrupt:
+		// Channel already closed or has been read from
+		return nil
+	default:
+		close(interrupt)
 	}
-	close(interrupt) // Closing the channel sends a signal to all receivers
 	return nil
-	//Make sure to not run this method when interrupt is already closed; this will cause a panic
 }
 
 func (a *App) Login(username, password string) (int, error) {
