@@ -132,21 +132,7 @@ func (a *App) Login(username, password string) (int, error) {
 	case 1: //File exists but is empty
 		break
 	case 2: //credentials match file hash
-		if a.ctx != nil {
-			a.ResizeWindow(_width*2, _height)
-		}
-		for i, dir := range a.directories {
-			a.directories[i] = a.cwd + string(os.PathSeparator) + dir
-		}
-		err = createDirectories(a.directories...)
-		if err != nil {
-			log.Fatal(err)
-		}
-		tree, err := a.BuildDirectoryFileTree(0)
-		if err != nil {
-			log.Fatalf("Failed to write to file: %s", err)
-		}
-		printFileTree(tree, false)
+		a.grantAccessToApp()
 	}
 	return loginStat, nil
 }

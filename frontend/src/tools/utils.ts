@@ -8,6 +8,7 @@ import {
     DirectoryWatcher, ResizeWindow
 } from "../../wailsjs/go/main/App";
 import {
+    FindEncryptedDuplicates,
     GetDirectoryPath,
     GetFileProperties
 } from "../../wailsjs/go/main/Getters";
@@ -15,7 +16,7 @@ import { LogDebug, LogError, LogInfo, LogTrace, LogWarning } from "../../wailsjs
 import { MoveFilesToPath } from '../../wailsjs/go/main/FileUtils';
 
 import { FileTypes, getFileType } from '../enums/FileTypes.ts';
-import { mBoxDir, vaultDir } from '../stores/dynamicVariables.ts';
+import { duplicateFiles, mBoxDir, vaultDir } from '../stores/dynamicVariables.ts';
 import {
     clearHeldBtns,
     setIsInFileTask,
@@ -207,4 +208,22 @@ export async function prependAbsPathToRelPaths(dirIndex: number): Promise<string
         );
         return preprendedRelPaths;
     } catch (error) { return []; }
+}
+
+export async function retrieveDuplicateFiles() {
+    duplicateFiles.set([]);
+    FindEncryptedDuplicates(0)
+        .then((_duplicateFiles) => {
+            duplicateFiles.update((current) => [
+                ...current,
+                ..._duplicateFiles,
+            ]);
+            // return FindEncryptedDuplicates(1);
+        })
+    // .then((_duplicateFiles) => {
+    //     duplicateFiles.update((current) => [
+    //         ...current,
+    //         ..._duplicateFiles,
+    //     ]);
+    // });
 }

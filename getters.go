@@ -207,8 +207,9 @@ func (b *Getters) GetFileProperties(filePath string) (FileProperties, error) {
 }
 
 func (b *Getters) FindEncryptedDuplicates(dirIndex int) ([]string, error) {
-	filesMap := make(map[string][]string)
+	filesMap := make(map[string]map[string]string)
 	var duplicates []string
+
 	err := filepath.WalkDir(b.app.directories[dirIndex], func(path string, d os.DirEntry, err error) error {
 		if err != nil {
 			return err // Propagate errors
@@ -216,24 +217,30 @@ func (b *Getters) FindEncryptedDuplicates(dirIndex int) ([]string, error) {
 		if d.IsDir() {
 			return nil // Skip directories
 		}
-		fileName := d.Name()
-		ext := filepath.Ext(fileName)
-		baseName := fileName[0 : len(fileName)-len(ext)] // Remove extension
+		fullPath := filepath.Dir(path)                // Directory of the file
+		fileName := d.Name()                          // Full filename
+		ext := filepath.Ext(fileName)                 // Extension including ".enc" if present
+		baseName := fileName[:len(fileName)-len(ext)] // Base name without extension
 
-		if ext == ".enc" {
-			originalExt := filepath.Ext(baseName)
-			baseName = baseName[0 : len(baseName)-len(originalExt)] // Remove original extension
+		// Initialize map for directory if not already done
+		if filesMap[fullPath] == nil {
+			filesMap[fullPath] = make(map[string]string)
 		}
-		filesMap[baseName] = append(filesMap[baseName], path)
+		// Check if the file is an encrypted file
+		if ext == ".enc" {
+			originalExt := filepath.Ext(baseName)                         // Extract original file extension from file like "example.txt.enc"
+			originalBaseName := baseName[:len(baseName)-len(originalExt)] // Base name without original extension
+
+			// Check for presence of non-encrypted counterpart
+			if _, ok := filesMap[fullPath][originalBaseName+originalExt]; ok {
+				duplicates = append(duplicates, path) // Append the path of the .enc file if counterpart exists
+			}
+		} else {
+			// Store non-encrypted file with its extension
+			filesMap[fullPath][baseName+ext] = path
+		}
 		return nil
 	})
-	for _, paths := range filesMap {
-		if len(paths) > 1 {
-			fmt.Println("found duplicate ")
-			duplicates = append(duplicates, paths...)
-		}
-	}
-	fmt.Println(duplicates)
 	return duplicates, err
 }
 

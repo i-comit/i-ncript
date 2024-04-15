@@ -94,7 +94,7 @@
                background-color: ${get(darkLightMode) ? darkBGColor : lightBGColor}; 
                color: ${$accentColor}; 
                font-weight: 600;
-                z-index: ${$duplicateFiles ? 32 : 42}`
+                z-index: ${$duplicateFiles.length === 0 ? 42 : 32}`
             : `border-left: 1.5px solid ${get(darkLightMode) ? lightBGColor : darkBGColor};
                position: relative;
                color: ${get(darkLightMode) ? lightTextColor : darkTextColor}; `

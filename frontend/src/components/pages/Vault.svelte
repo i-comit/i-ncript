@@ -47,6 +47,7 @@
         heldDownBtns,
         prependAbsPathToRelPaths,
         checkFileTypesinHeldDownBtns,
+        retrieveDuplicateFiles,
     } from "../../tools/utils.ts";
 
     import { darkLightBGOnId } from "../../tools/themes";
@@ -92,6 +93,7 @@
             );
             if (fileCtEvt === 0) currentFileTask.set(FileTasks.None);
         });
+        retrieveDuplicateFiles();
         darkLightBGOnId($darkLightMode, "right-panel");
         darkLightBGOnId($darkLightMode, "left-panel");
     });
@@ -178,8 +180,8 @@
     }
 </script>
 
-<DuplicateFiles />
 <div class="flex h-screen !rounded-lg">
+    <DuplicateFiles />
     <Frame />
     <div
         id="left-panel"

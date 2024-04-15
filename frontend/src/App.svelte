@@ -50,9 +50,7 @@
     });
 
     currentPage.set(AppPage.Vault);
-    FindEncryptedDuplicates(0).then((_duplicateFiles) => {
-      duplicateFiles.set(_duplicateFiles);
-    });
+
     let unsubscribe = () => {}; // Define a no-op function to avoid undefined errors
     unsubscribe = fileTree.subscribe((value) => {
       if (value && value.relPath !== "") {
