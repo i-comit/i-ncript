@@ -206,6 +206,37 @@ func (b *Getters) GetFileProperties(filePath string) (FileProperties, error) {
 	return props, nil
 }
 
+func (b *Getters) FindEncryptedDuplicates(dirIndex int) ([]string, error) {
+	filesMap := make(map[string][]string)
+	var duplicates []string
+	err := filepath.WalkDir(b.app.directories[dirIndex], func(path string, d os.DirEntry, err error) error {
+		if err != nil {
+			return err // Propagate errors
+		}
+		if d.IsDir() {
+			return nil // Skip directories
+		}
+		fileName := d.Name()
+		ext := filepath.Ext(fileName)
+		baseName := fileName[0 : len(fileName)-len(ext)] // Remove extension
+
+		if ext == ".enc" {
+			originalExt := filepath.Ext(baseName)
+			baseName = baseName[0 : len(baseName)-len(originalExt)] // Remove original extension
+		}
+		filesMap[baseName] = append(filesMap[baseName], path)
+		return nil
+	})
+	for _, paths := range filesMap {
+		if len(paths) > 1 {
+			fmt.Println("found duplicate ")
+			duplicates = append(duplicates, paths...)
+		}
+	}
+	fmt.Println(duplicates)
+	return duplicates, err
+}
+
 // Backend method for formatting directory size, being more
 // performant as directories can be much larger than files.
 func formatDirSize(fileByteSize int64) string {
@@ -247,37 +278,6 @@ func getEndPath(endPathName string) (string, error) {
 		return "", fmt.Errorf("error checking directory %s: %w", dirPath, err)
 	}
 	return dirPath, nil
-}
-
-func findEncryptedDuplicates(dir string) ([]string, error) {
-	filesMap := make(map[string][]string)
-	var duplicates []string
-	err := filepath.WalkDir(dir, func(path string, d os.DirEntry, err error) error {
-		if err != nil {
-			return err // Propagate errors
-		}
-		if d.IsDir() {
-			return nil // Skip directories
-		}
-		fileName := d.Name()
-		ext := filepath.Ext(fileName)
-		baseName := fileName[0 : len(fileName)-len(ext)] // Remove extension
-
-		if ext == ".enc" {
-			originalExt := filepath.Ext(baseName)
-			baseName = baseName[0 : len(baseName)-len(originalExt)] // Remove original extension
-		}
-		filesMap[baseName] = append(filesMap[baseName], path)
-		return nil
-	})
-
-	// Check for duplicates
-	for _, paths := range filesMap {
-		if len(paths) > 1 {
-			duplicates = append(duplicates, paths...)
-		}
-	}
-	return duplicates, err
 }
 
 func printFileTree(fileTree *FileNode, print bool) error {

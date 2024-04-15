@@ -153,6 +153,9 @@ func (a *App) encryptFile(filePath string) (*os.File, error) {
 	if err != nil {
 		return nil, err
 	}
+	if len(data) < 1 {
+		return nil, fmt.Errorf("file is empty")
+	}
 	nonce := make([]byte, aesGCM.NonceSize())
 	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
 		return nil, err
@@ -264,7 +267,6 @@ func (a *App) decryptFile(filePath string) (*os.File, error) {
 		return nil, err
 	}
 	nonceSize := aesGCM.NonceSize()
-
 	if len(data) < nonceSize {
 		return nil, fmt.Errorf("data too short")
 	}

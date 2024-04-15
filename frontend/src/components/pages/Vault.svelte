@@ -66,6 +66,7 @@
     import PanelDivider from "../widgets/PanelDivider.svelte";
     import FileTools from "../widgets/FileTools.svelte";
     import { startDisplay } from "../../tools/logger.ts";
+    import DuplicateFiles from "../modals/DuplicateFiles.svelte";
 
     let _currentFileTask: FileTasks;
     currentFileTask.subscribe((value) => {
@@ -177,6 +178,7 @@
     }
 </script>
 
+<DuplicateFiles />
 <div class="flex h-screen !rounded-lg">
     <Frame />
     <div

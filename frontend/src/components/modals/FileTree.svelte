@@ -2,10 +2,7 @@
     // import { slide } from 'svelte/transition'
     import { onMount, onDestroy, afterUpdate } from "svelte";
     import { get } from "svelte/store";
-    import {
-        EventsOn,
-        LogInfo,
-    } from "../../../wailsjs/runtime/runtime";
+    import { EventsOn, LogInfo } from "../../../wailsjs/runtime/runtime";
 
     import {
         FolderOpenSolid,
@@ -67,6 +64,7 @@
     import {
         darkLightMode,
         accentColor,
+        duplicateFiles,
     } from "../../stores/dynamicVariables.ts";
     import { FileTasks, currentFileTask } from "../../enums/FileTasks.ts";
     import { OpenDirectory } from "../../../wailsjs/go/main/FileUtils";
@@ -95,7 +93,8 @@
             ? `position: sticky; top: 1px; left: 0px; 
                background-color: ${get(darkLightMode) ? darkBGColor : lightBGColor}; 
                color: ${$accentColor}; 
-               font-weight: 600; z-index: 42`
+               font-weight: 600;
+                z-index: ${$duplicateFiles ? 32 : 42}`
             : `border-left: 1.5px solid ${get(darkLightMode) ? lightBGColor : darkBGColor};
                position: relative;
                color: ${get(darkLightMode) ? lightTextColor : darkTextColor}; `
@@ -318,10 +317,8 @@
                         </button>
                     {/if}
                 {:catch error}
-                    <button
-                        on:click={() =>
-                            OpenDirectory( _fileTree.relPath)}
-                        > nothing here yet.</button
+                    <button on:click={() => OpenDirectory(_fileTree.relPath)}>
+                        nothing here yet.</button
                     >
                 {/await}
 

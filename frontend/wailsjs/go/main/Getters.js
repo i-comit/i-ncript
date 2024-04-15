@@ -10,6 +10,10 @@ export function CheckRootFolderInCWD() {
   return window['go']['main']['Getters']['CheckRootFolderInCWD']();
 }
 
+export function FindEncryptedDuplicates(arg1) {
+  return window['go']['main']['Getters']['FindEncryptedDuplicates'](arg1);
+}
+
 export function GetAppPath() {
   return window['go']['main']['Getters']['GetAppPath']();
 }

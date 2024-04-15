@@ -8,6 +8,7 @@
   import { onDestroy, onMount } from "svelte";
   import {
     CheckKeyFileInCWD,
+    FindEncryptedDuplicates,
     GetDirName,
     GetDirectoryPath,
   } from "../wailsjs/go/main/Getters";
@@ -25,6 +26,7 @@
     largeFilePercent,
     largeFileName,
     newAccount,
+    duplicateFiles,
   } from "./stores/dynamicVariables.ts";
   import { buildFileTree, fileTree } from "./tools/fileTree.ts";
   import { addLogEntry } from "./tools/logger.ts";
@@ -48,6 +50,9 @@
     });
 
     currentPage.set(AppPage.Vault);
+    FindEncryptedDuplicates(0).then((_duplicateFiles) => {
+      duplicateFiles.set(_duplicateFiles);
+    });
     let unsubscribe = () => {}; // Define a no-op function to avoid undefined errors
     unsubscribe = fileTree.subscribe((value) => {
       if (value && value.relPath !== "") {

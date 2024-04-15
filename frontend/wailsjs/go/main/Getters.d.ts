@@ -6,6 +6,8 @@ export function CheckKeyFileInCWD():Promise<string>;
 
 export function CheckRootFolderInCWD():Promise<string>;
 
+export function FindEncryptedDuplicates(arg1:number):Promise<Array<string>>;
+
 export function GetAppPath():Promise<string>;
 
 export function GetDirName():Promise<boolean>;

@@ -2,6 +2,8 @@ import { writable } from 'svelte/store';
 
 export const fileProgress = writable<number>(0);
 
+export const duplicateFiles = writable<string[]>([]);
+
 export const vaultDir = writable<string>("");
 export const mBoxDir = writable<string>("");
 
