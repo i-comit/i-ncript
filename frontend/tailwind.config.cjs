@@ -13,6 +13,10 @@ const config = {
           500: '#95C7DB', //Default accent color
         }
       },
+      zIndex: {
+        '60': '60',
+        '100': '100',
+      }
     },
   },
 

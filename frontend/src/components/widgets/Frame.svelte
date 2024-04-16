@@ -72,12 +72,6 @@
         {:else}
             <img src={appLogoDark} alt="Description" class="p-0.5" />
         {/if}
-        <Tooltip
-            class={tooltipTailwindClass}
-            offset={-1}
-            arrow={true}
-            placement="right">{appVersion}</Tooltip
-        >
     </div>
     <div class="flex justify-end">
         <button

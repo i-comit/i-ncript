@@ -5,7 +5,7 @@
 
 <p class={setupPagePClass}>
     Linked to the generated VAULT folder and the first page you see when logged
-    in, the VAULT where you can store your personal files for encryption. The
+    in, the VAULT is where you can store your personal files for encryption. The
     files are encrypted based on the unique hash which was generated from your
     login credentials.
 </p>

@@ -1,9 +1,29 @@
 /*
-This file is part of [Project Name], a software project which is licensed under the GNU General Public License version 3 (GPLv3). This project is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+██╗      ███╗   ██╗ ██████╗██████╗ ██╗██████╗ ████████╗
+██║      ████╗  ██║██╔════╝██╔══██╗██║██╔══██╗╚══██╔══╝
+██║█████╗██╔██╗ ██║██║     ██████╔╝██║██████╔╝   ██║
+██║╚════╝██║╚██╗██║██║     ██╔══██╗██║██╔═══╝    ██║
+██║      ██║ ╚████║╚██████╗██║  ██║██║██║        ██║
+╚═╝      ╚═╝  ╚═══╝ ╚═════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝
 
-This project is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+A portable, cross-platform file encryption app
+Copyright (C) 2022-present Khiem Luong (@khiemgluong)
 
-You should have received a copy of the GNU General Public License along with this project. If not, see <http://www.gnu.org/licenses/>.
+	This software project is licensed under the GNU General Public
+License version 3 (GPLv3). This project is free software: you can
+redistribute it and/or modify it under the terms of the GNU General
+Public License as published by the Free Software Foundation, either
+version 3 of the License, or (at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+Business Email: khiemluong@i-comit.com
 */
 
 package main
@@ -31,11 +51,14 @@ const largeFilePercent = "largeFilePercent"
 const refreshDirSize = "refreshDirSize"
 
 // DATA consts
-const rootFolder = "i-ncript" //Change to whatever name you want the root folder to be
+// Change to whatever name you want the root folder to be
+const rootFolder = "i-ncript"
 const keyFileName = ".i-ncript.🔑"
 const _width = 220
 const _height = 145
-const _uniqueID = "f56bcbf2-db56-481b-a722-11c21a4b3ae2" //Change this in your build for extra security
+
+// Change this in your build for extra security
+const _uniqueID = "f56bcbf2-db56-481b-a722-11c21a4b3ae2"
 
 // DYNAMIC data
 var interrupt = make(chan struct{})
@@ -55,7 +78,6 @@ func main() {
 	}
 	fileUtils := &FileUtils{app: app}
 
-	// Create application with options
 	err := wails.Run(&options.App{
 		Title:         "i-ncript",
 		Width:         _width,
@@ -90,18 +112,6 @@ func main() {
 				LightModeTitleText: windows.RGB(20, 20, 20),
 				LightModeBorder:    windows.RGB(200, 200, 200),
 			},
-			// ZoomFactor is the zoom factor for the WebView2. This is the option matching the Edge user activated zoom in or out.
-			// ZoomFactor:           float64,
-			// // IsZoomControlEnabled enables the zoom factor to be changed by the user.
-			// IsZoomControlEnabled: bool,
-			// User messages that can be customised
-			// Messages: *windows.Messages
-			// // OnSuspend is called when Windows enters low power mode
-			// OnSuspend: func()
-			// // OnResume is called when Windows resumes from low power mode
-			// OnResume: func(),
-			// // Disable GPU hardware acceleration for the webview
-			// WebviewGpuDisabled: false,
 		},
 		SingleInstanceLock: &options.SingleInstanceLock{
 			UniqueId:               _uniqueID,

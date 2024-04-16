@@ -1,15 +1,26 @@
 <!-- Info.svelte -->
 <script>
-    import { Button } from "flowbite-svelte";
+    import { Button, Kbd } from "flowbite-svelte";
     import { onMount } from "svelte";
     import { AppPage, currentPage } from "../../enums/AppPage";
 
     import { darkBGColor, lightBGColor } from "../../stores/constantVariables";
     import { darkLightMode, accentColor } from "../../stores/dynamicVariables";
-    import { DownloadSolid, GithubSolid } from "flowbite-svelte-icons";
+    import {
+        DownloadSolid,
+        GithubSolid,
+        InfoCircleSolid,
+    } from "flowbite-svelte-icons";
 
     let cwd = "";
     import { GetAppPath } from "../../../wailsjs/go/main/Getters";
+    import InfoVault from "../pages/setup_pages/Info_Vault.svelte";
+    import InfoMBox from "../pages/setup_pages/Info_MBox.svelte";
+
+    import wailsLogo from "../../assets/images/wailsLogo.png";
+    import svelteLogo from "../../assets/images/svelteLogo.png";
+    import tailwindLogo from "../../assets/images/tailwind.svg";
+
     onMount(async () => {
         cwd = await GetAppPath();
     });
@@ -21,7 +32,7 @@
 
 <div
     id="modal-panel"
-    class="fixed rounded-md ml-0.5 mr-1 !mb-0.5 hover:outline bg-primary-300 dark:bg-primary-400"
+    class="fixed rounded-md ml-0.5 mr-1 !mb-0.5 hover:outline outline-1 bg-primary-300 dark:bg-primary-400"
     style="max-height: {_currentPage === AppPage.Login
         ? '67vh'
         : '96%'};  margin-top: 0.16rem"
@@ -36,9 +47,9 @@
     </div>
     <div
         id="cwd"
-        class=" px-0 m-0 bg-primary-500 text-primary-200 dark:text-primary-100 rounded-lg !mx-4"
+        class=" px-0 m-0 mt-2 bg-primary-500 text-primary-200 dark:text-primary-100 rounded-md !mx-4 h-4 leading-none"
     >
-        current working directory
+        current working directory:
     </div>
     <div class="relative w-full overflow-hidden" style="max-width: 100%;">
         <!-- Ensure the parent doesn't expand -->
@@ -59,19 +70,129 @@
     </div>
     <div class="h-1" />
     <div id="checkUpdate" class="flex justify-between px-4">
-        <p class="p-0 m-0">check for updates:</p>
+        <p class="p-0 m-0">check for update:</p>
         <Button pill={true} outline={true} class="!p-1" color="dark"
             ><DownloadSolid class="w-4 h-4 m-0" color="dark" /></Button
         >
     </div>
+    <div class="h-3" />
+    <Kbd class="px-2 py-0.5 text-md">FRAMEWORKS</Kbd>
     <div class="h-1" />
 
-    <div id="credits">
-        <ul class="flex justify-start">
-            <li>GUI: Wails</li>
-            <li>Frontend: Svelte</li>
-            <li>CSS: Flowbite</li>
-        </ul>
-    </div>
-    <div class="h-1" />
+    <ul class="flex justify-center mx-4 space-x-2.5 text-sm">
+        <li class="flex flex-col items-center justify-center">
+            GUI
+            <a
+                href="https://github.com/wailsapp/wails"
+                target="_blank"
+                class="text-primary-200 dark:text-primary-100
+                        hover:underline hover:text-primary-500"
+            >
+                <img
+                    src={wailsLogo}
+                    alt="A GUI Framework for building applications using Go and Web Technologies"
+                    class="p-0.5 mt-0.5 h-8"
+                />
+                Wails
+            </a>
+        </li>
+        <li class="flex flex-col items-center justify-center">
+            Frontend
+            <a
+                href="https://github.com/sveltejs/svelte"
+                target="_blank"
+                class="text-primary-200 dark:text-primary-100
+                        hover:underline hover:text-primary-500"
+            >
+                <img
+                    src={svelteLogo}
+                    alt="A GUI Framework for building applications using Go and Web Technologies"
+                    class="p-0.5 mt-0.5 h-8 !ml-1.5"
+                />
+                Svelte
+            </a>
+        </li>
+        <li class="flex flex-col items-center justify-center">
+            CSS
+            <a
+                href="https://github.com/tailwindlabs/tailwindcss"
+                target="_blank"
+                class="text-primary-200 dark:text-primary-100
+                        hover:underline hover:text-primary-500"
+            >
+                <img
+                    src={tailwindLogo}
+                    alt="Tailwind"
+                    class="p-1 mt-0.5 h-8"
+                />
+                Tailwind
+            </a>
+        </li>
+    </ul>
+
+    {#if $currentPage === AppPage.Vault}
+        <h2 class="divider line glow">
+            VAULT <InfoCircleSolid class="pl-1" />
+        </h2>
+        <div class="!text-sm !text-left px-2">
+            <InfoVault />
+        </div>
+    {:else if $currentPage === AppPage.Mbox}
+        <h2 class="divider line glow">
+            M-BOX <InfoCircleSolid class="pl-1" />
+        </h2>
+        <div class="!text-sm !text-left px-2">
+            <InfoMBox />
+        </div>
+    {:else}
+        <div class="h-1" />
+    {/if}
 </div>
+
+<style lang="scss">
+    // https://codepen.io/benknight/pen/zxxeay
+    .divider {
+        display: flex;
+        &:before,
+        &:after {
+            content: "";
+            flex: 1;
+        }
+    }
+    .line {
+        align-items: center;
+        margin: 0.5em 0em;
+
+        &:before,
+        &:after {
+            height: 2px;
+            margin: 0 0.8em;
+        }
+    }
+
+    .glow {
+        &:before,
+        &:after {
+            height: 2px;
+            filter: blur(2px);
+            -webkit-filter: blur(2px);
+            border-radius: 10%;
+        }
+
+        &:before {
+            background: linear-gradient(
+                to right,
+                rgb(188, 188, 188),
+                rgb(65, 65, 65)
+            );
+        }
+
+        &:after {
+            background: linear-gradient(
+                to left,
+                rgb(188, 188, 188),
+                rgb(65, 65, 65)
+            );
+        }
+    }
+</style>

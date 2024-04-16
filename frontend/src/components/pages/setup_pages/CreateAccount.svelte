@@ -12,10 +12,9 @@
 </script>
 
 <p class={setupPagePClass}>
-    While i-ncript does have mechanisms in place to check for zero byte or
-    duplicate files, it is up to the user to take precaution when encrypting
-    their data. Always ensure that you are encrypting the data that you want to
-    encrypt.
+    While i-ncript does have mechanisms in place to check for duplicate files,
+    it is up to the user to take precaution when encrypting their data. Always
+    ensure that you are encrypting the data that you want to encrypt.
 </p>
 <p class={`${setupPagePClass} text-center text-lg font-semibold !mb-0`}>
     TERMS
@@ -46,5 +45,5 @@
     >create account</GradientButton
 >
 <p class={`${setupPagePClass} leading-none text-left text-xs !mt-4 !mb-2`}>
-    copyright © 2022-present Khiem Luong (@khiemgluong).
+    Copyright © 2022-present Khiem Luong (@khiemgluong).
 </p>

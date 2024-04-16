@@ -169,7 +169,7 @@ color: ${$accentColor};`}
         <button disabled>
             <ArrowLeftOutline
                 class="outline outline-1 bg-primary-400 dark:bg-primary-300 
-                        rounded-tr-md text-primary-100 dark:text-primary-200 opacity-10"
+                        rounded-tr-md text-primary-100 dark:text-primary-200 opacity-0"
                 size="lg"
             /></button
         >
@@ -185,7 +185,7 @@ color: ${$accentColor};`}
         <button disabled>
             <ArrowRightOutline
                 class="outline outline-1 bg-primary-400 dark:bg-primary-300
-                        rounded-tl-md text-primary-100 dark:text-primary-200 opacity-10"
+                        rounded-tl-md text-primary-100 dark:text-primary-200 opacity-0"
                 size="lg"
             /></button
         >

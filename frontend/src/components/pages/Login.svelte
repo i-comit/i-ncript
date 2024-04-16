@@ -210,7 +210,7 @@
     <Frame />
     {#if typewriter === ""}
         <p
-            class="shrink-0 text-left absolute top-0 left-1/3 w-1/2"
+            class="shrink-0 text-left absolute top-0 left-1/3 w-1/2 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
             style={`--text-color: ${$darkLightMode ? lightTextColor : darkTextColor};
             font-family: "Orbitron"; font-weight: 600;`}
         >
@@ -228,7 +228,7 @@
                     arrow={false}>{appVersion}</Tooltip
                 >
                 <div
-                    class="top-0 z-10 w-full my-1 mb-1.5 mx-4 rounded-full h-2.5 bg-primary-400 dark:bg-primary-300"
+                    class="top-0 z-10 w-full my-1.5 mb-1 mx-5 rounded-full h-2.5 bg-primary-400 dark:bg-primary-300"
                 >
                     <div
                         class="h-2.5 rounded-full transition-all duration-700 ease-in-out"

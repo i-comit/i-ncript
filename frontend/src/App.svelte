@@ -26,11 +26,9 @@
     largeFilePercent,
     largeFileName,
     newAccount,
-    duplicateFiles,
   } from "./stores/dynamicVariables.ts";
   import { buildFileTree, fileTree } from "./tools/fileTree.ts";
   import { addLogEntry } from "./tools/logger.ts";
-  import { basePath } from "./tools/utils.ts";
   import AppSetup from "./components/pages/AppSetup.svelte";
   import { height } from "./stores/constantVariables.ts";
 
