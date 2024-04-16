@@ -218,12 +218,34 @@ export async function retrieveDuplicateFiles() {
                 ...current,
                 ..._duplicateFiles,
             ]);
-            // return FindEncryptedDuplicates(1);
+            return FindEncryptedDuplicates(1);
         })
-    // .then((_duplicateFiles) => {
-    //     duplicateFiles.update((current) => [
-    //         ...current,
-    //         ..._duplicateFiles,
-    //     ]);
-    // });
+        .then((_duplicateFiles) => {
+            duplicateFiles.update((current) => [
+                ...current,
+                ..._duplicateFiles,
+            ]);
+        });
+}
+
+export function formatNumber(num: number | bigint): string {
+    // Define the upper bounds for JavaScript's safe integer calculations.
+    const MAX_SAFE_INTEGER = 9007199254740991;
+    if (typeof num === 'bigint' || num > MAX_SAFE_INTEGER) {
+        return "MAX";
+    }
+    // Conversion thresholds
+    const sizes = [
+        { limit: 1e9, suffix: 'B' },
+        { limit: 1e6, suffix: 'M' },
+        { limit: 1e3, suffix: 'K' }
+    ];
+    // Check and format based on thresholds
+    for (const size of sizes) {
+        if (num >= size.limit) {
+            return (num / size.limit).toFixed(1).replace(/\.0$/, '') + size.suffix;
+        }
+    }
+    // If number is less than 1000, return it as a string with no changes
+    return num.toString();
 }

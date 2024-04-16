@@ -1,14 +1,17 @@
 <script lang="ts">
     import { onMount, afterUpdate, onDestroy } from "svelte";
+    import { get } from "svelte/store";
+
     import { SpeedDial, SpeedDialButton, Tooltip } from "flowbite-svelte";
     import { DownloadSolid, FileCopySolid } from "flowbite-svelte-icons";
+    import { Modals, currentModal } from "../../enums/Modals.ts";
 
     import {
-        formatTime,
-        getEntryKeyword,
-        logEntries,
-    } from "../../tools/logger";
-    import { get, writable } from "svelte/store";
+        EventsOff,
+        EventsOn,
+        LogInfo,
+    } from "../../../wailsjs/runtime/runtime";
+
     import {
         lightBGColor,
         darkBGColor,
@@ -18,22 +21,32 @@
         darkLightMode,
         accentColor,
     } from "../../stores/dynamicVariables.ts";
-    import { SaveLogEntries } from "../../../wailsjs/go/main/FileUtils";
+
     import {
-        EventsOff,
-        EventsOn,
-        LogInfo,
-    } from "../../../wailsjs/runtime/runtime";
-    let logContainer: { scrollTop: any; scrollHeight: any }; // Reference to the log entries container element
+        formatTime,
+        getEntryKeyword,
+        logEntries,
+    } from "../../tools/logger";
+    import { SaveLogEntries } from "../../../wailsjs/go/main/FileUtils";
+
+    let logContainer: { scrollTop: any; scrollHeight: any };
     let isPointerIn: boolean = false;
 
     onMount(() => {
-        EventsOn("rebuildFileTree", () => {
-            LogInfo("rebuild file tree called");
+        logContainer.scrollTop = logContainer.scrollHeight; // Scroll to the bottom
+        EventsOn("refreshDirSize", () => {
+            LogInfo("Filect reset " + isPointerIn);
+            if (!isPointerIn) {
+                LogInfo("pointer change page modal");
+                setTimeout(() => {
+                    currentModal.set(Modals.None);
+                }, 100);
+            }
+            EventsOff("refreshDirSize");
         });
     });
     onDestroy(() => {
-        EventsOff("rebuildFileTree");
+        EventsOff("refreshDirSize");
     });
     afterUpdate(() => {
         if (logContainer) {
@@ -58,15 +71,12 @@
     id="grid-dot-bg"
     style=" z-index:5;"
     on:pointerover={() => {
-        LogInfo("pointer over logger bg");
         isPointerIn = true;
     }}
     on:pointerleave={() => {
-        LogInfo("pointer over logger bg");
         isPointerIn = false;
     }}
     on:pointerdown={() => {
-        LogInfo("pointer down on logger bg");
         isPointerIn = true;
     }}
 />
@@ -78,68 +88,65 @@
 >
     LOGGER
 </div>
-<div>
-    <div id="dial" class="fixed">
-        <SpeedDial
-            class="flex items-center justify-center h-8 w-14"
-            popperDefaultClass="flex items-center !mb-0 gap-0.5"
-            style={`background-color: ${$accentColor}; border-radius: 50% 0% 50% 0%;`}
-        >
-            <SpeedDialButton
-                name="Save"
-                class="h-10 w-14"
-                on:click={saveLogEntries}
-            >
-                <DownloadSolid class="w-6 h-6" />
-            </SpeedDialButton>
-            <SpeedDialButton
-                name="Clear"
-                class="h-10 w-14"
-                on:click={clearLogEntry}
-            >
-                <FileCopySolid class="w-6 h-6" />
-            </SpeedDialButton>
-        </SpeedDial>
-    </div>
-    <div
-        bind:this={logContainer}
-        class="log-entries-container"
-        on:pointerover={() => {
-            // LogInfo("pointer over log entries");
-            isPointerIn = true;
-        }}
-        on:pointerleave={() => {
-            // LogInfo("pointer over log entries");
-            isPointerIn = false;
-        }}
-        on:pointerdown={() => {
-            // LogInfo("pointer down on log entries");
-            isPointerIn = true;
-        }}
+<div id="dial" class="fixed">
+    <SpeedDial
+        class="flex items-center justify-center h-8 w-14"
+        popperDefaultClass="flex items-center !mb-0 gap-0.5"
+        style={`background-color: ${$accentColor}; border-radius: 50% 0% 50% 0%;`}
     >
-        {#each $logEntries as { entry, timestamp }}
+        <SpeedDialButton
+            name="Save"
+            class="h-10 w-14"
+            on:click={saveLogEntries}
+        >
+            <DownloadSolid class="w-6 h-6" />
+        </SpeedDialButton>
+        <SpeedDialButton
+            name="Clear"
+            class="h-10 w-14"
+            on:click={clearLogEntry}
+        >
+            <FileCopySolid class="w-6 h-6" />
+        </SpeedDialButton>
+    </SpeedDial>
+</div>
+<div
+    bind:this={logContainer}
+    class="log-entries-container"
+    on:pointerover={() => {
+        isPointerIn = true;
+        LogInfo("entered log  entries");
+    }}
+    on:pointerleave={() => {
+        isPointerIn = false;
+        LogInfo("Left log  entries");
+    }}
+    on:pointerdown={() => {
+        isPointerIn = true;
+    }}
+>
+    {#each $logEntries as { entry, timestamp }}
+        <div
+            style={`color: ${get(darkLightMode) ? lightBGColor : darkBGColor}`}
+            class="log-entry text-xs truncate !hover:text-sky-400"
+        >
+            {getEntryKeyword(entry)}
+        </div>
+        <Tooltip class={tooltipTailwindClass} offset={-1} arrow={true}
+            >{formatTime(timestamp)}</Tooltip
+        >
+        {#if $darkLightMode}
             <div
-                style={`color: ${get(darkLightMode) ? lightBGColor : darkBGColor}`}
-                class="log-entry text-xs truncate !hover:text-sky-400"
-            >
-                {getEntryKeyword(entry)}
-            </div>
-            <Tooltip class={tooltipTailwindClass} offset={-1} arrow={true}
-                >{formatTime(timestamp)}</Tooltip
-            >
-            {#if $darkLightMode}
-                <div
-                    class="divider div-transparent"
-                    style={`--bg-color: ${lightBGColor};`}
-                ></div>
-            {:else}
-                <div
-                    class="divider div-transparent"
-                    style={`--bg-color: ${darkBGColor};`}
-                ></div>
-            {/if}
-        {/each}
-    </div>
+                class="divider div-transparent"
+                style={`--bg-color: ${lightBGColor};`}
+            ></div>
+        {:else}
+            <div
+                class="divider div-transparent"
+                style={`--bg-color: ${darkBGColor};`}
+            ></div>
+        {/if}
+    {/each}
 </div>
 
 <style>

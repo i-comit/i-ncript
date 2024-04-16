@@ -19,8 +19,9 @@ type App struct {
 	hotFilerEnabled bool
 	done            chan bool
 	watcher         *fsnotify.Watcher
-	lastFilePath    string
 	cwd             string
+	fileTaskSize    int64
+	lastFilePath    string
 }
 
 func NewApp() *App {

@@ -62,7 +62,7 @@
             <div class="p-2 md:p-3 space-y-1.5">
                 {#each $duplicateFiles as duplicateFile}
                     <button
-                        class="text:center hover:text-center flex"
+                        class="text:left hover:text-center"
                         on:click={() => OpenDirectory(duplicateFile)}
                     >
                         <div

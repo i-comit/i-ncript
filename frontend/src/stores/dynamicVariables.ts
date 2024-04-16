@@ -1,7 +1,5 @@
 import { writable } from 'svelte/store';
 
-export const fileProgress = writable<number>(0);
-
 export const duplicateFiles = writable<string[]>([]);
 
 export const vaultDir = writable<string>("");
@@ -13,6 +11,8 @@ export const newAccount = writable<boolean>(false);
 export const darkLightMode = writable<boolean>(true);
 
 export const fileCount = writable<number>(0);
+export const cipheredFilesSize = writable<string>("");
+
 export const totalFileCt = writable<number>(0);
 export const fileTaskPercent = writable<number>(0);
 

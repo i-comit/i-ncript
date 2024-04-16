@@ -38,6 +38,7 @@
         heldDownBtns,
         prependAbsPathToRelPaths,
         getRootDir,
+        retrieveDuplicateFiles,
     } from "../../tools/utils.ts";
 
     import { darkLightBGOnId } from "../../tools/themes";
@@ -120,13 +121,8 @@
 
     onMount(() => {
         buildFileTree();
-        EventsOn("fileProcessed", (fileCtEvt: number) => {
-            fileCount.set(fileCtEvt);
-            fileTaskPercent.set(
-                Math.round(($fileCount / get(totalFileCt)) * 100),
-            );
-            if (fileCtEvt === 0) currentFileTask.set(FileTasks.None);
-        });
+        if (_currentFileTask === FileTasks.None) retrieveDuplicateFiles();
+
         darkLightBGOnId(get(darkLightMode), "right-panel");
         darkLightBGOnId(get(darkLightMode), "left-panel");
         clearUsername();
@@ -287,12 +283,17 @@
     >
         <DirSize />
         {#if currentMBoxState === MboxState.None}
-            <div class="h-12">
-                <p class="text-start">no selected files</p>
-            </div>
-            <div class="h-9">
-                <p class="text-start">text</p>
-            </div>
+            {#if _currentFileTask === FileTasks.None}
+                <div class="h-12 text-primary-200 dark:text-primary-100">
+                    <p class="text-start">no files selected..</p>
+                </div>
+
+                <div class="h-9 text-primary-200 dark:text-primary-100"></div>
+            {:else}
+                <TaskDisplay />
+                <WaveProgress dataProgress={$fileTaskPercent} />
+                <div class="h-0.5" />
+            {/if}
         {:else if currentMBoxState === MboxState.Open}
             {#if _currentFileTask === FileTasks.None}
                 <div style="height: 3.175rem">
@@ -318,8 +319,8 @@
                 />
             {:else}
                 <TaskDisplay />
+                <WaveProgress dataProgress={$fileTaskPercent} />
                 <div class="h-0.5" />
-                <WaveProgress dataProgress={$fileTaskPercent}></WaveProgress>
             {/if}
         {:else if currentMBoxState === MboxState.Pack}
             {#if _currentFileTask === FileTasks.None}

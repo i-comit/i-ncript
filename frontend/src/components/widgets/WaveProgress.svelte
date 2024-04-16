@@ -1,14 +1,15 @@
 <script lang="ts">
-    import { PauseOutline, PauseSolid } from "flowbite-svelte-icons";
+    import { PauseSolid } from "flowbite-svelte-icons";
     import { onMount, onDestroy } from "svelte";
     import { get } from "svelte/store";
     import {
         darkLightMode,
         fileCount,
-        fileProgress,
         fileTaskPercent,
         largeFilePercent,
         accentColor,
+        totalFileCt,
+        cipheredFilesSize,
     } from "../../stores/dynamicVariables";
 
     import {
@@ -18,6 +19,10 @@
 
     import { InterruptFileTask } from "../../../wailsjs/go/main/App";
     import { FileTasks, currentFileTask } from "../../enums/FileTasks";
+    import { formatFileSize, formatNumber } from "../../tools/utils";
+    import { EventsOff, EventsOn } from "../../../wailsjs/runtime/runtime";
+    import { Tooltip } from "flowbite-svelte";
+    import { tooltipTailwindClass } from "../../stores/constantVariables";
     export let dataProgress: number;
 
     let pauseBtn: HTMLDivElement;
@@ -28,6 +33,20 @@
     });
 
     onMount(() => {
+        EventsOn("fileProcessed", (fileCtEvt: number) => {
+            fileCount.set(fileCtEvt);
+            fileTaskPercent.set(
+                Math.round(($fileCount / get(totalFileCt)) * 100),
+            );
+            if (fileCtEvt === 0) {
+                // setTimeout(() => {
+                interruptFileTask();
+                // }, 1000);
+            }
+        });
+        EventsOn("fileTaskSize", (fileTaskSize: string) => {
+            cipheredFilesSize.set(fileTaskSize);
+        });
         var _value = get(darkLightMode);
         darkLightTextOnElement(!_value, pauseBtn);
         darkLightShadowOnIcons(_value);
@@ -35,13 +54,16 @@
 
     onDestroy(() => {
         unsub_darkLightMode();
+        EventsOff("fileProcessed");
+        EventsOff("fileTaskSize");
     });
 
     function interruptFileTask() {
         InterruptFileTask();
         currentFileTask.set(FileTasks.None);
+        cipheredFilesSize.set("");
         fileCount.set(0);
-        fileProgress.set(0);
+        totalFileCt.set(0);
         fileTaskPercent.set(0);
         largeFilePercent.set(0);
     }
@@ -56,16 +78,22 @@
         </div>
     </div>
 </div>
-<!-- {#if dataProgress > 0} -->
+<div
+    class="absolute flex justify-between w-full bottom-5 px-1 text-xs
+            text-primary-200 dark:text-primary-100 font-semibold"
+>
+    <p>{formatNumber($fileCount)}/{formatNumber($totalFileCt)}</p>
+    <p>{$cipheredFilesSize}</p>
+</div>
 <div class="progress progress-striped active rounded-md h-3.5 p-0 m-0">
     <div
         style={`width: ${dataProgress}%; background-color: ${$accentColor}`}
-        class="progress-bar rounded-lg h-3.5"
+        class="progress-bar rounded-md h-3.5"
+    ></div>
+    <Tooltip placement="bottom" class={tooltipTailwindClass} arrow={false}
+        >{dataProgress}</Tooltip
     >
-        <p class="text-center text-sm"><slot /></p>
-    </div>
 </div>
-<!-- {/if} -->
 
 <style lang="scss">
     @import "../../neumorphic.scss";
@@ -81,7 +109,7 @@
     .progress-bar {
         box-shadow: none;
     }
-    @mixin gradient-striped($color: rgba(160, 160, 160, 0.4), $angle: 45deg) {
+    @mixin gradient-striped($color: rgba(180, 180, 180, 0.5), $angle: 50deg) {
         background-image: -webkit-linear-gradient(
             $angle,
             $color 25%,

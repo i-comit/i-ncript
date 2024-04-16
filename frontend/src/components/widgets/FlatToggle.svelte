@@ -16,7 +16,6 @@
 
     // Function to log the checkbox's state
     function toggleHotFiler() {
-        LogPrint("toggle state: " + !isChecked);
         SetIsHotFilerEnabled(!isChecked);
         if (!isChecked)
             GetFilesByType(0, false).then((filePaths) => {

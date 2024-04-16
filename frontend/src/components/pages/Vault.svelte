@@ -86,21 +86,13 @@
 
     onMount(() => {
         buildFileTree();
-        EventsOn("fileProcessed", (fileCtEvt: number) => {
-            fileCount.set(fileCtEvt);
-            fileTaskPercent.set(
-                Math.round(($fileCount / get(totalFileCt)) * 100),
-            );
-            if (fileCtEvt === 0) currentFileTask.set(FileTasks.None);
-        });
-        retrieveDuplicateFiles();
+        if (_currentFileTask === FileTasks.None) retrieveDuplicateFiles();
         darkLightBGOnId($darkLightMode, "right-panel");
         darkLightBGOnId($darkLightMode, "left-panel");
     });
 
     onDestroy(() => {
         unsub_darkLightMode();
-        EventsOff("fileProcessed");
     });
 
     function encrypt() {
@@ -214,7 +206,7 @@
                     HOT FILER
                 </p> -->
             {:else}
-                <WaveProgress dataProgress={$fileTaskPercent}></WaveProgress>
+                <WaveProgress dataProgress={$fileTaskPercent} />
             {/if}
         </div>
 

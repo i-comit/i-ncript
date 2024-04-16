@@ -48,6 +48,7 @@ func (a *App) EncryptFilesInArr(filePaths []string) (bool, error) {
 func (a *App) encryptOrDecrypt(encryptOrDecrypt bool, filePaths []string) (bool, error) {
 	interrupt = make(chan struct{})
 	var fileIter = 0
+	a.fileTaskSize = 0
 	for i, filePath := range filePaths {
 		select {
 		case <-interrupt: // Check if there's an interrupt signal
@@ -143,6 +144,7 @@ func (a *App) resetProgress(encrypt bool, files int) {
 		a.ResizeWindow(_width*2, _height)
 		runtime.EventsEmit(a.ctx, fileProcessed, 0)
 		runtime.EventsEmit(a.ctx, totalFileCt, 0)
+		runtime.EventsEmit(a.ctx, "fileTaskSize", "")
 		runtime.EventsOff(a.ctx, fileProcessed, totalFileCt, addLogFile)
 		a.SetIsInFileTask(false)
 	}
@@ -357,6 +359,8 @@ func (a *App) writeCipherFile(data, cipherData []byte, cipherFile *os.File) erro
 		runtime.EventsEmit(a.ctx, "largeFileName", "")
 		runtime.EventsEmit(a.ctx, largeFilePercent, 0)
 	}
+	a.fileTaskSize += int64(len(data))
+	runtime.EventsEmit(a.ctx, "fileTaskSize", formatDirSize(a.fileTaskSize))
 	return nil
 }
 
@@ -427,7 +431,6 @@ func saveHashedCredentials(credentials string) error {
 	if _, err := rand.Read(salt); err != nil {
 		return err
 	}
-	// Generate the hash
 	hash := argon2.Key([]byte(credentials), salt, 3, 32*1024, 4, 500)
 	// Encode salt and hash to base64 to store them as strings
 	saltStr := base64.StdEncoding.EncodeToString(salt)
@@ -460,8 +463,6 @@ func verifySavedCredentials(credentials string) (bool, error) {
 		return false, err
 	}
 	enteredHash := argon2.Key([]byte(credentials), salt, 3, 32*1024, 4, 500)
-	fmt.Println("entered Hash " + base64.StdEncoding.EncodeToString(enteredHash))
-	fmt.Println("stored Hash " + base64.StdEncoding.EncodeToString(storedHash))
 	return base64.StdEncoding.EncodeToString(enteredHash) == base64.StdEncoding.EncodeToString(storedHash), nil
 }
 
