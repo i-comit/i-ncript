@@ -11,6 +11,7 @@
     FindEncryptedDuplicates,
     GetDirName,
     GetDirectoryPath,
+    GetHeight,
   } from "../wailsjs/go/main/Getters";
   import {
     EventsOff,
@@ -27,14 +28,16 @@
     largeFileName,
     newAccount,
     darkLightMode,
+    height,
   } from "./stores/dynamicVariables.ts";
   import { buildFileTree, fileTree } from "./tools/fileTree.ts";
   import { addLogEntry } from "./tools/logger.ts";
   import AppSetup from "./components/pages/AppSetup.svelte";
-  import { height } from "./stores/constantVariables.ts";
   import { darkLightBGOnHTML } from "./tools/themes.ts";
 
   let _page: AppPage;
+  let isRightDir = false;
+
   currentPage.subscribe((value) => {
     _page = value;
   });
@@ -42,8 +45,34 @@
   darkLightMode.subscribe((value) => {
     darkLightBGOnHTML(value);
   });
-  onMount(() => {
+
+
+  onMount(async () => {
     darkLightBGOnHTML($darkLightMode);
+    isRightDir = await GetDirName();
+    let _height = await GetHeight();
+    height.set(_height);
+
+    if (!isRightDir) ResizeWindow(320, _height + 20);
+    else {
+      CheckKeyFileInCWD().then((_keyFilePath) => {
+        if (_keyFilePath === "") {
+          currentPage.set(AppPage.AppSetup);
+          newAccount.set(true);
+          ResizeWindow(350, _height + 100);
+        }
+      });
+    }
+    EventsOn("addLogFile", (logEntry) => {
+      addLogEntry(logEntry);
+    });
+    EventsOn("largeFilePercent", (_largeFilePercent: number) => {
+      largeFilePercent.set(_largeFilePercent);
+      LogInfo("largeFile " + $largeFilePercent);
+    });
+    EventsOn("largeFileName", (_largeFileName: string) => {
+      largeFileName.set(_largeFileName);
+    });
   });
 
   async function loggedIn() {
@@ -68,38 +97,6 @@
       }
     });
   }
-
-  let isRightDir = false;
-
-  onMount(async () => {
-    isRightDir = await GetDirName();
-    LogDebug(isRightDir.toString());
-
-    if (!isRightDir) ResizeWindow(320, height + 20);
-    else {
-      CheckKeyFileInCWD().then((_keyFilePath) => {
-        if (_keyFilePath === "") {
-          currentPage.set(AppPage.AppSetup);
-          newAccount.set(true);
-          ResizeWindow(350, height + 100);
-        }
-      });
-    }
-    EventsOn("addLogFile", (logEntry) => {
-      addLogEntry(logEntry);
-    });
-    EventsOn("largeFilePercent", (_largeFilePercent: number) => {
-      largeFilePercent.set(_largeFilePercent);
-      LogInfo("largeFile " + $largeFilePercent);
-    });
-    EventsOn("largeFileName", (_largeFileName: string) => {
-      largeFileName.set(_largeFileName);
-    });
-  });
-
-  onDestroy(() => {
-    EventsOff("addLogFile");
-  });
 </script>
 
 <main class="rounded-lg">

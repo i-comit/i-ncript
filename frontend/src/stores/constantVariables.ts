@@ -1,6 +1,6 @@
 export const tooltipTailwindClass = "p-0.5 m-0 text-xs bg-gray-400 px-1 z-[100]";
 export const setupPagePClass =
-    "leading-1 text-primary-200 dark:text-primary-100 my-2";
+    "leading-1 text-primary-100 dark:text-primary-200 my-2";
 
 export const inputFloatClass =
     "flex absolute inset-y-0 items-center text-green-300"

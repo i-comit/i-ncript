@@ -287,7 +287,7 @@
         <DirSize />
         {#if currentMBoxState === MboxState.None}
             {#if _currentFileTask === FileTasks.None}
-                <div class="h-12 text-primary-200 dark:text-primary-100">
+                <div class="h-12 text-primary-100 dark:text-primary-200">
                     <p
                         class="text-center text-sm"
                         style="font-family: 'Orbitron'; font-weight: regular;"
@@ -296,7 +296,7 @@
                     </p>
                 </div>
 
-                <div class="h-9 text-primary-200 dark:text-primary-100"></div>
+                <div class="h-9"></div>
             {:else}
                 <TaskDisplay />
                 <WaveProgress dataProgress={$fileTaskPercent} />

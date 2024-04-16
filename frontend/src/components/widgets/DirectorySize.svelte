@@ -88,7 +88,7 @@
     {:else}
         <div
             class="absolute top-0 left-4 w-1/3 ml-3 mt-1.5 rounded-full h-2.5
-                    bg-primary-400 dark:bg-primary-300 outline outline-1 hover:outline-2"
+                    bg-primary-300 dark:bg-primary-400 outline outline-1 hover:outline-2"
             style={`outline-color:${$accentColor}; z-index:42`}
         >
             <div

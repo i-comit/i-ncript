@@ -137,7 +137,8 @@
             </p>
             <button on:click={() => OpenDirectory(rootFolderPath)}>
                 <FolderArrowRightOutline
-                    class="mx-1.5 text-primary-200 w-10 h-10 outline-dotted border rounded-lg hover:text-primary-500"
+                    class="mx-1.5 text-primary-100 dark:text-primary-200 w-10 h-10 
+                            outline-dotted border rounded-lg hover:text-primary-500"
                 />
             </button>
         </div>

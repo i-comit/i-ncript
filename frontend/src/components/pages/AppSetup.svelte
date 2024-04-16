@@ -10,12 +10,15 @@
     import { LogInfo } from "../../../wailsjs/runtime/runtime";
 
     import { ArrowLeftOutline, ArrowRightOutline } from "flowbite-svelte-icons";
-    import { darkBGColor, height, width } from "../../stores/constantVariables";
-    import { accentColor, darkLightMode } from "../../stores/dynamicVariables";
+    import { width } from "../../stores/constantVariables";
+    import {
+        accentColor,
+        darkLightMode,
+        height,
+    } from "../../stores/dynamicVariables";
     import Frame from "../widgets/Frame.svelte";
     import License from "../modals/License.svelte";
     import { ChevronDownOutline } from "flowbite-svelte-icons";
-    import { darkLightBGOnHTML } from "../../tools/themes";
     import Introduction from "./setup_pages/Introduction.svelte";
     import Info_Vault from "./setup_pages/Info_Vault.svelte";
     import Info_MBox from "./setup_pages/Info_MBox.svelte";
@@ -38,7 +41,7 @@
 
     function goToLoginPage() {
         currentPage.set(AppPage.Login);
-        ResizeWindow(width, height + 5);
+        ResizeWindow(width, $height + 5);
         LogInfo("going to login page");
     }
 
@@ -80,7 +83,7 @@
 <div
     class="mb-2 w-1/2 left-1/4 rounded-bl-lg rounded-br-lg font-semibold select-none z-10
             bg-primary-300 dark:bg-primary-400 outline outline-1 outline-primary-400 dark:outline-primary-300"
-    style={`position: sticky; top: 0px; color: ${$accentColor}; font-family: "Orbitron"; font-weight: 600;`}
+    style={`position: sticky; top: 0px; color: ${$accentColor}; font-family: 'Orbitron'; font-weight: 600;`}
 >
     first time setup
 </div>
@@ -126,7 +129,6 @@
 </div>
 <div
     class="setupPage h-[65vh] outline outline-1 outline-primary-200 dark:outline-primary-100 px-4 pt-1 pb-4 flex flex-col"
-    style="color: #eeeeee;"
     bind:this={setupPageContainer}
 >
     {#if currentSetupPage === SetupPage.Intro}
@@ -140,10 +142,9 @@
     {/if}
 </div>
 <div
-    class="mt-2 w-1/3 left-1/3 rounded-tl-lg rounded-tr-lg font-semibold select-none z-10
+    class="mt-2 w-1/2 left-1/4 rounded-tl-lg rounded-tr-lg font-semibold select-none z-10
             bg-primary-300 dark:bg-primary-400 outline outline-1 outline-primary-400 dark:outline-primary-300"
-    style={`position: fixed; bottom: 0px;
-color: ${$accentColor};`}
+    style={`position: fixed; bottom: 0px; color: ${$accentColor}; ; font-family: 'Orbitron'; font-weight: 600;`}
 >
     {currentSetupPage}
 </div>
@@ -152,33 +153,25 @@ color: ${$accentColor};`}
     {#if currentSetupPage !== SetupPage.Intro}
         <button on:click={goToPreviousPage}>
             <ArrowLeftOutline
-                class="outline outline-1 bg-primary-400 dark:bg-primary-300 rounded-tr-md text-primary-100 dark:text-primary-200"
+                class="outline outline-1 bg-primary-300 dark:bg-primary-400 rounded-tr-md text-primary-200 dark:text-primary-100"
                 size="lg"
             /></button
         >
     {:else}
         <button disabled>
-            <ArrowLeftOutline
-                class="outline outline-1 bg-primary-400 dark:bg-primary-300 
-                        rounded-tr-md text-primary-100 dark:text-primary-200 opacity-0"
-                size="lg"
-            /></button
+            <ArrowLeftOutline class="opacity-0" size="lg" /></button
         >
     {/if}
     {#if currentSetupPage !== SetupPage.CreateAccount}
         <button on:click={goToNextPage}>
             <ArrowRightOutline
-                class="outline outline-1 bg-primary-400 dark:bg-primary-300 rounded-tl-md text-primary-100 dark:text-primary-200"
+                class="outline outline-1 bg-primary-300 dark:bg-primary-400 rounded-tl-md text-primary-200 dark:text-primary-100"
                 size="lg"
             /></button
         >
     {:else}
         <button disabled>
-            <ArrowRightOutline
-                class="outline outline-1 bg-primary-400 dark:bg-primary-300
-                        rounded-tl-md text-primary-100 dark:text-primary-200 opacity-0"
-                size="lg"
-            /></button
+            <ArrowRightOutline class="opacity-0" size="lg" /></button
         >
     {/if}
 </div>

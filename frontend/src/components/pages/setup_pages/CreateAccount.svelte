@@ -1,9 +1,8 @@
 <script>
     import { createEventDispatcher } from "svelte";
     import { GradientButton } from "flowbite-svelte";
-    // import { setupPagePClass } from "../../../stores/constantVariables";
-    const setupPagePClass =
-        "leading-1 text-primary-200 dark:text-primary-100 my-2";
+    import { setupPagePClass } from "../../../stores/constantVariables";
+
     const dispatch = createEventDispatcher();
 
     function handleClick() {
@@ -41,7 +40,8 @@
     shadow
     color="cyan"
     on:click={handleClick}
-    class="relative h-6 outline-dashed outline-1 border-0 mt-2 mb-1.5 w-1/2 left-1/4"
+    class="relative h-6 outline-dashed outline-1 border-0 mt-2 mb-1.5 w-1/2 left-1/4 select-none"
+    style="font-family: 'Nunito'; font-weight: 600;"
     >create account</GradientButton
 >
 <p class={`${setupPagePClass} leading-none text-left text-xs !mt-4 !mb-2`}>

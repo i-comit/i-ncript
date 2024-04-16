@@ -79,7 +79,7 @@
 </div>
 <div
     class="absolute flex justify-between w-full bottom-5 px-1 text-xs
-            text-primary-200 dark:text-primary-100 font-semibold select-none"
+            text-primary-100 dark:text-primary-200 font-semibold select-none"
 >
     <p>{formatNumber($fileCount)}/{formatNumber($totalFileCt)}</p>
     <p>{$cipheredFilesSize}</p>

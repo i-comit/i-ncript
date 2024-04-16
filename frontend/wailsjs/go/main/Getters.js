@@ -54,6 +54,10 @@ export function GetFormattedDriveSize() {
   return window['go']['main']['Getters']['GetFormattedDriveSize']();
 }
 
+export function GetHeight() {
+  return window['go']['main']['Getters']['GetHeight']();
+}
+
 export function GetPercentOfDriveToAppDirSize() {
   return window['go']['main']['Getters']['GetPercentOfDriveToAppDirSize']();
 }

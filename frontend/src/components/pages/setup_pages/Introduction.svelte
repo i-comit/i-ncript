@@ -1,14 +1,12 @@
 <script lang="ts">
     import { GradientButton } from "flowbite-svelte";
     import { createEventDispatcher } from "svelte";
-    // import { setupPagePClass } from "../../../stores/constantVariables";
+    import { setupPagePClass } from "../../../stores/constantVariables";
     const dispatch = createEventDispatcher();
 
     function handleClick() {
         dispatch("click");
     }
-    const setupPagePClass =
-        "leading-1 text-primary-200 dark:text-primary-100 my-2";
 </script>
 
 <p class={`${setupPagePClass} !mt-1`}>
@@ -20,7 +18,8 @@
     shadow
     color="cyan"
     on:click={handleClick}
-    class="relative h-5 outline-dashed outline-1 border-0 mb-2.5 w-1/2 left-1/4"
+    class="relative h-5 outline-dashed outline-1 border-0 mb-2.5 w-1/2 left-1/4 select-none"
+    style="font-family: 'Nunito'; font-weight: 600;"
     >create account</GradientButton
 >
 <p class={setupPagePClass}>

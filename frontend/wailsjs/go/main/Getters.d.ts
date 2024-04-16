@@ -28,6 +28,8 @@ export function GetFormattedDirIndexSize(arg1:number):Promise<string>;
 
 export function GetFormattedDriveSize():Promise<string>;
 
+export function GetHeight():Promise<number>;
+
 export function GetPercentOfDriveToAppDirSize():Promise<number>;
 
 export function GetPercentOfDriveToDirIndexSize(arg1:number):Promise<number>;

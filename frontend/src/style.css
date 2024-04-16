@@ -1,7 +1,6 @@
 html {
     --bg-color: #757575;
     background-color: var(--bg-color);
-    color: white;
     border-radius: 0.5rem;
 }
 

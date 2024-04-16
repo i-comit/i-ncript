@@ -44,7 +44,7 @@
 <div class={`flex w-full h-1 px-0.5 relative bottom-1 ${_class}`} tabindex="-1">
     {#if passwordCheck1 === false}
         <div
-            class="flex-1 text-center rounded-l-lg bg-primary-400 dark:bg-primary-300"
+            class="flex-1 text-center rounded-l-lg bg-primary-300 dark:bg-primary-400"
         />
     {:else}
         <div
@@ -56,7 +56,7 @@
         >&gt; 4 characters</Tooltip
     >
     {#if passwordCheck2 === false}
-        <div class="flex-1 text-center bg-primary-400 dark:bg-primary-300" />
+        <div class="flex-1 text-center bg-primary-300 dark:bg-primary-400" />
     {:else}
         <div
             class="flex-1 text-center"
@@ -71,7 +71,7 @@
     >
     {#if passwordCheck3 === false}
         <div
-            class="flex-1 text-center rounded-r-lg bg-primary-400 dark:bg-primary-300"
+            class="flex-1 text-center rounded-r-lg bg-primary-300 dark:bg-primary-400"
         />
     {:else}
         <div

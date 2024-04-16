@@ -76,21 +76,20 @@
 
 <div
     id="modal-panel"
-    class="rounded-md ml-0.5 mr-1 !mb-0.5 hover:outline outline-1 bg-primary-300 dark:bg-primary-400"
+    class="rounded-md ml-0.5 mr-1 !mb-0.5 hover:outline outline-1 bg-primary-700 dark:bg-primary-600"
     style="max-height: {_currentPage === AppPage.Login
         ? '67vh'
         : '96%'};  margin-top: 0.16rem"
 >
     <div
-        class="mb-0.5 w-1/2 left-1/4 rounded-bl-lg rounded-br-lg font-semibold h-5"
-        style={`position: sticky; top: 0px;
-        background-color: ${$darkLightMode ? lightBGColor : darkBGColor}; 
-        color: ${$accentColor};`}
+        class="mb-1.5 pb-6 w-1/2 left-1/4 rounded-bl-lg rounded-br-lg font-semibold h-5 bg-primary-400 dark:bg-primary-300 
+                outline outline-1 outline-primary-100 dark:outline-primary-200"
+        style={`position: sticky; top: 0px; color: ${$accentColor};`}
     >
         SETTINGS
     </div>
     <div
-        class="flex justify-between my-1 rounded-lg mx-0"
+        class="flex justify-between my-1 rounded-lg mx-1"
         style={`background-color: ${$accentColor}`}
     >
         <button class="!p-0" on:click={() => toggleLightDarkMode()}>
@@ -128,7 +127,7 @@
     <div class="h-1" />
     <div id="darkLightMode"></div>
     <div id="accentColor flex" class="p-0 m-0">
-        <p class="p-0 m-0 text-primary-200 dark:text-primary-100">
+        <p class="p-0 m-0 text-primary-100 dark:text-primary-200">
             accent color
         </p>
         <ButtonGroup>
@@ -157,8 +156,8 @@
         </ButtonGroup>
     </div>
     <div class="h-2" />
-    <!-- <div class="px-5">
-        <p class="p-0 text-sm text-primary-200 dark:text-primary-100">
+    <div class="px-5">
+        <p class="p-0 text-sm text-primary-100 dark:text-primary-200">
             delete log entries older than:
         </p>
         <Range
@@ -171,5 +170,5 @@
         <Tooltip placement="bottom" class={tooltipTailwindClass} arrow={false}
             >{currentLogRetentionTime}</Tooltip
         >
-    </div> -->
+    </div>
 </div>

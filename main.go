@@ -55,7 +55,6 @@ const refreshDirSize = "refreshDirSize"
 const rootFolder = "i-ncript"
 const keyFileName = ".i-ncript.🔑"
 const _width = 220
-const _height = 145
 
 // Change this in your build for extra security
 const _uniqueID = "f56bcbf2-db56-481b-a722-11c21a4b3ae2"

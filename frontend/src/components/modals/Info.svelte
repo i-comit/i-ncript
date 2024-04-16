@@ -35,27 +35,26 @@
     });
 
     let iconButtonClass =
-        "!p-1 text-primary-200 dark:text-primary-100 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] hover:drop-shadow-[0_1.2px_1.2px_rgba(220,220,220,1)]";
+        "!p-1 text-primary-100 dark:text-primary-200 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] hover:drop-shadow-[0_1.2px_1.2px_rgba(220,220,220,1)]";
 </script>
 
 <div
     id="modal-panel"
-    class="fixed rounded-md ml-0.5 mr-1 !mb-0.5 hover:outline outline-1 bg-primary-300 dark:bg-primary-400"
+    class="fixed rounded-md ml-0.5 mr-1 !mb-0.5 hover:outline outline-1 bg-primary-700 dark:bg-primary-600"
     style="max-height: {_currentPage === AppPage.Login
         ? '67vh'
         : '96%'};  margin-top: 0.16rem"
 >
     <div
-        class="mb-0.5 w-1/3 left-1/3 rounded-bl-lg rounded-br-lg h-5 font-semibold z-10"
-        style={`position: sticky; top: 0px;
-                background-color: ${$darkLightMode ? lightBGColor : darkBGColor}; 
-                color: ${$accentColor};`}
+        class="mb-0.5 w-1/3 left-1/3 rounded-bl-lg rounded-br-lg font-semibold h-5 z-10 bg-primary-400 dark:bg-primary-300
+        outline outline-1 outline-primary-100 dark:outline-primary-200"
+        style={`position: sticky; top: 0px; color: ${$accentColor};`}
     >
         INFO
     </div>
     <div
-        id="cwd"
-        class=" px-0 m-0 mt-2 bg-primary-500 text-primary-200 dark:text-primary-100 rounded-md !mx-4 h-4 leading-none"
+        class="px-0 m-0 mt-2 bg-primary-500 text-primary-100 dark:text-primary-200
+                rounded-md !mx-2 h-4 leading-none font-semibold text-sm"
     >
         current working directory:
     </div>
@@ -63,7 +62,7 @@
         <!-- Ensure the parent doesn't expand -->
         <!-- Child div that can scroll horizontally -->
         <div
-            class="px-0 m-0 whitespace-nowrap overflow-x-auto text-primary-200 dark:text-primary-100
+            class="m-0 whitespace-nowrap overflow-x-auto text-primary-100 dark:text-primary-200
             z-5 drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)] hover:underline"
             style="scrollbar-width: none;"
         >
@@ -72,7 +71,7 @@
     </div>
     <div class="h-2" />
     <div
-        class="flex justify-between px-4 text-primary-200 dark:text-primary-100"
+        class="flex justify-between px-4 text-primary-100 dark:text-primary-200"
     >
         <p class="p-0 m-0">open source repo:</p>
         <Button pill={true} outline={true} class={iconButtonClass}>
@@ -86,7 +85,7 @@
     </div>
     <div class="h-0.5" />
     <div
-        class="flex justify-between px-4 text-primary-200 dark:text-primary-100"
+        class="flex justify-between px-4 text-primary-100 dark:text-primary-200"
     >
         <p class="p-0 m-0">check for updates:</p>
         <Button pill={true} outline={true} class={iconButtonClass}>
@@ -106,7 +105,7 @@
     <div class="h-1" />
 
     <ul
-        class="flex justify-center mx-4 space-x-2.5 text-sm text-primary-200 dark:text-primary-100"
+        class="flex justify-center mx-4 space-x-2.5 text-sm text-primary-100 dark:text-primary-200"
     >
         <li class="flex flex-col items-center justify-center">
             GUI
@@ -132,7 +131,7 @@
             >
                 <img
                     src={svelteLogo}
-                    alt="A GUI Framework for building applications using Go and Web Technologies"
+                    alt="Cybernetically enhanced web apps"
                     class="p-0.5 mt-0.5 h-8 !ml-1.5"
                 />
                 Svelte
@@ -145,27 +144,31 @@
                 target="_blank"
                 class="hover:underline hover:text-primary-500"
             >
-                <img src={tailwindLogo} alt="Tailwind" class="p-1 mt-0.5 h-8" />
+                <img
+                    src={tailwindLogo}
+                    alt="A utility-first CSS framework for rapid UI development."
+                    class="p-1 mt-0.5 h-8"
+                />
                 Tailwind
             </a>
         </li>
     </ul>
 
     {#if $currentPage === AppPage.Vault}
-        <h2 class="divider line glow text-primary-200 dark:text-primary-100">
+        <h2 class="divider line glow text-primary-100 dark:text-primary-200">
             VAULT <InfoCircleSolid class="pl-1" />
         </h2>
         <div
-            class="!text-sm !text-left px-2 text-primary-200 dark:text-primary-100"
+            class="!text-sm !text-left px-2 text-primary-100 dark:text-primary-200"
         >
             <InfoVault />
         </div>
     {:else if $currentPage === AppPage.Mbox}
-        <h2 class="divider line glow text-primary-200 dark:text-primary-100">
+        <h2 class="divider line glow text-primary-100 dark:text-primary-200">
             M-BOX <InfoCircleSolid class="pl-1" />
         </h2>
         <div
-            class="!text-sm !text-left px-2 text-primary-200 dark:text-primary-100"
+            class="!text-sm !text-left px-2 text-primary-100 dark:text-primary-200"
         >
             <InfoMBox />
         </div>

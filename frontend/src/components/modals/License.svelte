@@ -11,7 +11,8 @@
 <GradientButton
     color="cyan"
     on:click={() => (modalBool = true)}
-    class="mx-3 h-5 mt-2 outline outline-1 border-0">GNU GPLv3</GradientButton
+    class="mx-3 h-5 mt-2 outline outline-1 border-0 select-none"
+    >GNU GPLv3</GradientButton
 >
 
 <Modal

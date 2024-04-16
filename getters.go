@@ -177,6 +177,10 @@ func (g *Getters) GetDirectoryFileCt(dirIndex int) (int, error) {
 	return fileCount, nil
 }
 
+func (g *Getters) GetHeight() int {
+	return _height
+}
+
 func (g *Getters) GetRootFolder() string {
 	return rootFolder
 }

@@ -10,7 +10,9 @@ const config = {
           200: '#dddddd', //Light text color
           300: '#757575', //Dark BG color
           400: '#eeeeee', //Light BG color
-          500: '#95C7DB', //Default accent color
+          500: '#95c7db', //Default accent color
+          600: '#707070', //Dark Modal BG color
+          700: '#e1e1e1', //Light Modal BG color
         }
       },
       zIndex: {

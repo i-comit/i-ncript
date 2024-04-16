@@ -244,10 +244,10 @@
                     arrow={false}>{appVersion}</Tooltip
                 >
                 <div
-                    class="top-0 z-10 w-full my-1.5 mb-1 mx-5 rounded-full h-2.5 bg-primary-400 dark:bg-primary-300"
+                    class="top-0 z-10 w-full my-1.5 mb-1 mx-5 rounded-full h-2.5 bg-primary-300 dark:bg-primary-400"
                 >
                     <div
-                        class="h-2.5 rounded-full transition-all duration-700 ease-in-out"
+                        class="h-2.5 rounded-full"
                         style={`width: ${driveToAppDirPercent}%; background-color: ${$accentColor};`}
                     ></div>
                 </div>
@@ -281,7 +281,7 @@
             >
                 {#if usernameCheck === false}
                     <div
-                        class="flex-1 text-center rounded-lg bg-primary-400 dark:bg-primary-300"
+                        class="flex-1 text-center rounded-lg bg-primary-300 dark:bg-primary-400"
                     />
                 {:else}
                     <div
@@ -340,7 +340,7 @@
                     >
                         {#if !passwordMatch}
                             <div
-                                class="flex-1 text-center rounded-lg bg-primary-400 dark:bg-primary-300"
+                                class="flex-1 text-center rounded-lg bg-primary-300 dark:bg-primary-400"
                             />
                         {:else}
                             <div
