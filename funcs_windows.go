@@ -6,6 +6,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"syscall"
 
 	"golang.org/x/sys/windows"
 )
@@ -29,4 +30,12 @@ func (g *Getters) GetRootDiskSpace() (uint64, error) {
 		return 0, fmt.Errorf("error getting disk space: %w", err)
 	}
 	return freeBytes, nil
+}
+
+func hideFile(filename string) error {
+	path, err := syscall.UTF16PtrFromString(filename)
+	if err != nil {
+		return err
+	}
+	return syscall.SetFileAttributes(path, syscall.FILE_ATTRIBUTE_HIDDEN)
 }

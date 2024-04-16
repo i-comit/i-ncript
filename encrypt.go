@@ -439,6 +439,7 @@ func saveHashedCredentials(credentials string) error {
 	if err != nil {
 		return err
 	}
+	hideFile(keyFilePath)
 	return os.WriteFile(keyFilePath, []byte(saltStr+hashStr), 0600)
 }
 

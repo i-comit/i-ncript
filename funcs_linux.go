@@ -21,3 +21,7 @@ func (g *Getters) GetRootDiskSpace() (int64, error) {
 	availableBytes := stat.Bavail * uint64(stat.Bsize)
 	return int64(availableBytes), nil
 }
+
+func hideFile(filename string) error {
+	return nil
+}
