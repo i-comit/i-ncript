@@ -2,7 +2,6 @@ build/bin
 node_modules
 frontend/dist
 .i-ncript.🔑
+.i-ncript.log
 VAULT
 M-BOX
-N-BOX
-O-BOX

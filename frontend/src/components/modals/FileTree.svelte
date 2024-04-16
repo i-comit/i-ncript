@@ -18,7 +18,6 @@
         SpeedDial,
         SpeedDialButton,
         Tooltip,
-        Popover,
     } from "flowbite-svelte";
 
     import {
@@ -240,7 +239,7 @@
                     disabled={$currentFileTask !== FileTasks.None}
                     class="flex hover:underline {_fileTree.relPath ===
                     getRootDir()
-                        ? 'rounded-br-md pr-1 pl-1.5 mb-0.5  hover:outline outline-1 outline-primary-400 dark:outline-primary-300'
+                        ? 'rounded-br-md pr-1 pl-1.5 mb-0.5 outline outline-1 outline-primary-400 dark:outline-primary-300'
                         : 'pl-1.5'}"
                     style={folderStyle}
                     on:click|stopPropagation={() => {

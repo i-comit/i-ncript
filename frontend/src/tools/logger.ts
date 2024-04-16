@@ -2,6 +2,7 @@ import { writable } from 'svelte/store';
 import { LogInfo } from '../../wailsjs/runtime/runtime';
 
 export const logEntries = writable<{ entry: string; timestamp: string }[]>([]);
+export const logRetentionTimeStep = writable<number>(3);
 
 export function clearLogEntries(entry: string) {
     logEntries.set([]);
@@ -13,7 +14,7 @@ export function addLogEntry(entry: string) {
         // Construct the new entry object
         const newEntry = { entry, timestamp };
         // Check if the array has reached its limit
-        if (entries.length >= 2000) {
+        if (entries.length >= 10000) {
             // Remove the oldest entry and add the new one
             return [...entries.slice(1), newEntry];
         } else {

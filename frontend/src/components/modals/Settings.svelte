@@ -1,5 +1,5 @@
 <!-- Settings.svelte -->
-<script>
+<script lang="ts">
     import {
         Button,
         Input,
@@ -8,28 +8,69 @@
         DropdownItem,
         Range,
         DarkMode,
+        Tooltip,
     } from "flowbite-svelte";
     import { get } from "svelte/store";
-    import { switchPages } from "../../tools/utils";
-    import { darkBGColor, lightBGColor } from "../../stores/constantVariables";
     import { ChevronDownOutline } from "flowbite-svelte-icons";
+
+    import {
+        tooltipTailwindClass,
+        lightBGColor,
+        darkBGColor,
+    } from "../../stores/constantVariables";
 
     import { AppPage, currentPage } from "../../enums/AppPage";
     import { darkLightMode, accentColor } from "../../stores/dynamicVariables";
     import { LogInfo } from "../../../wailsjs/runtime/runtime";
+    import { logRetentionTimeStep } from "../../tools/logger";
+
+    enum LogEntriesRetentionTime {
+        Never = "NEVER",
+        OneWeek = "1 WEEK",
+        TwoWeeks = "2 WEEKS",
+        OneMonth = "1 MONTH",
+        SixMonths = "6 MONTHS",
+        OneYear = "1 YEAR",
+    }
+
+    let currentLogRetentionTime: LogEntriesRetentionTime =
+        LogEntriesRetentionTime.OneMonth;
 
     function toggleLightDarkMode() {
         darkLightMode.update((v) => !v);
     }
-    let _currentPage;
+    let _currentPage: AppPage;
     currentPage.subscribe((value) => {
         _currentPage = value;
     });
-    let stepValue = 2.5;
 
-    function setAccentColor(hexColor) {
+    function setAccentColor(hexColor: string) {
         accentColor.set(hexColor);
         LogInfo("accent color set to " + hexColor);
+    }
+
+    function changeLogEntriesRetentionPeriod() {
+        switch ($logRetentionTimeStep) {
+            case 0:
+            default:
+                currentLogRetentionTime = LogEntriesRetentionTime.Never;
+                break;
+            case 1:
+                currentLogRetentionTime = LogEntriesRetentionTime.OneWeek;
+                break;
+            case 2:
+                currentLogRetentionTime = LogEntriesRetentionTime.TwoWeeks;
+                break;
+            case 3:
+                currentLogRetentionTime = LogEntriesRetentionTime.OneMonth;
+                break;
+            case 4:
+                currentLogRetentionTime = LogEntriesRetentionTime.SixMonths;
+                break;
+            case 5:
+                currentLogRetentionTime = LogEntriesRetentionTime.OneYear;
+                break;
+        }
     }
 </script>
 
@@ -116,10 +157,19 @@
         </ButtonGroup>
     </div>
     <div class="h-2" />
-    <div class="px-5">
+    <!-- <div class="px-5">
         <p class="p-0 text-sm text-primary-200 dark:text-primary-100">
             delete log entries older than:
         </p>
-        <Range id="range1" min="0" max="5" bind:value={stepValue} size="md" />
-    </div>
+        <Range
+            min="0"
+            max="5"
+            bind:value={$logRetentionTimeStep}
+            size="md"
+            on:change={changeLogEntriesRetentionPeriod}
+        />
+        <Tooltip placement="bottom" class={tooltipTailwindClass} arrow={false}
+            >{currentLogRetentionTime}</Tooltip
+        >
+    </div> -->
 </div>

@@ -13,6 +13,8 @@ export function OpenDirectory(arg1:string):Promise<void>;
 
 export function OpenFile(arg1:string):Promise<void>;
 
+export function OpenLogEntriesFile():Promise<void>;
+
 export function PackFilesForENCP(arg1:string,arg2:string,arg3:Array<string>):Promise<string>;
 
 export function SaveLogEntries(arg1:Array<string>,arg2:Array<string>):Promise<void>;

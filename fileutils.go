@@ -2,6 +2,7 @@ package main
 
 import (
 	"archive/zip"
+	"bufio"
 	"fmt"
 	"io"
 	"os"
@@ -211,28 +212,57 @@ func (f *FileUtils) GetAppendedFileBytes(filePath string) error {
 	}
 	return nil
 }
+func (f *FileUtils) OpenLogEntriesFile() {
+	logFilePath := filepath.Join(f.app.cwd, ".i-ncript.log")
+	f.OpenFile(logFilePath)
+}
 
 func (f *FileUtils) SaveLogEntries(entries, timestamps []string) error {
-	logFilePath := filepath.Join(f.app.cwd, "i-ncript.log")
-	file, err := os.Create(logFilePath)
+	logFilePath := filepath.Join(f.app.cwd, ".i-ncript.log")
+
+	// Open the file for reading and writing. If it does not exist, create it.
+	file, err := os.OpenFile(logFilePath, os.O_RDWR|os.O_CREATE, 0666)
 	if err != nil {
-		fmt.Printf("Failed to create log file: %s\n", err)
+		fmt.Printf("Failed to open log file: %s\n", err)
 		return err
 	}
 	defer file.Close()
-	// Check if the lengths of entries and timestamps are equal
-	if len(entries) != len(timestamps) {
-		return fmt.Errorf("entries and timestamps slice length mismatch")
+	// Read existing data from file
+	scanner := bufio.NewScanner(file)
+	existingEntries := make(map[string]map[string]bool)
+	for scanner.Scan() {
+		line := scanner.Text()
+		parts := strings.SplitN(line, " | ", 2)
+		if len(parts) == 2 {
+			if _, ok := existingEntries[parts[0]]; !ok {
+				existingEntries[parts[0]] = make(map[string]bool)
+			}
+			existingEntries[parts[0]][parts[1]] = true
+		}
 	}
-	for i, entry := range entries {
-		formattedTime := formatTime(timestamps[i])
+	// Check if there were any errors during reading
+	if err := scanner.Err(); err != nil {
+		fmt.Printf("Failed to read log file: %s\n", err)
+		return err
+	}
+	// Rewind the file to the beginning for appending
+	if _, err := file.Seek(0, io.SeekEnd); err != nil {
+		fmt.Printf("Failed to seek log file: %s\n", err)
+		return err
+	}
+	// Append new entries if they don't exist
+	for i, timestamp := range timestamps {
+		formattedTime := formatTime(timestamp)
 		if formattedTime == "" {
 			continue // Skip entries with invalid timestamps
 		}
-		_, err := file.WriteString(fmt.Sprintf("%s | %s\n", formattedTime, entry))
-		if err != nil {
-			fmt.Printf("Failed to write to log file: %s\n", err)
-			return err
+		newEntry := entries[i]
+		if !existingEntries[formattedTime][newEntry] { // Check if the entry for this timestamp doesn't already exist
+			line := fmt.Sprintf("%s | %s\n", formattedTime, newEntry)
+			if _, err := file.WriteString(line); err != nil {
+				fmt.Printf("Failed to write to log file: %s\n", err)
+				return err
+			}
 		}
 	}
 	return nil

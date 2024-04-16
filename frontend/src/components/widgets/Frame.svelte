@@ -25,6 +25,7 @@
         darkLightBGOnElement,
         darkLightTextOnId,
     } from "../../tools/themes";
+    import { AppPage, currentPage } from "../../enums/AppPage";
 
     let minimizeBtn: HTMLButtonElement;
     let closeBtn: HTMLButtonElement;
@@ -71,6 +72,14 @@
             <img src={appLogoLight} alt="Description" class="p-0.5" />
         {:else}
             <img src={appLogoDark} alt="Description" class="p-0.5" />
+        {/if}
+        {#if $currentPage !== AppPage.Vault && $currentPage !== AppPage.Mbox}
+            <Tooltip
+                placement="right"
+                class={tooltipTailwindClass}
+                offset={1}
+                arrow={false}>{appVersion}</Tooltip
+            >
         {/if}
     </div>
     <div class="flex justify-end">
