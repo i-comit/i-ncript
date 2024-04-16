@@ -88,10 +88,9 @@
 </script>
 
 <div
-    class="mb-2 w-1/3 left-1/3 rounded-bl-lg rounded-br-lg font-semibold select-none z-10
+    class="mb-2 w-1/2 left-1/4 rounded-bl-lg rounded-br-lg font-semibold select-none z-10
             bg-primary-300 dark:bg-primary-400 outline outline-1 outline-primary-400 dark:outline-primary-300"
-    style={`position: sticky; top: 0px;
-    color: ${$accentColor};`}
+    style={`position: sticky; top: 0px; color: ${$accentColor}; font-family: "Orbitron"; font-weight: 600;`}
 >
     first time setup
 </div>

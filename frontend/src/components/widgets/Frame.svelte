@@ -28,6 +28,7 @@
 
     let minimizeBtn: HTMLButtonElement;
     let closeBtn: HTMLButtonElement;
+    const appVersion: string = __APP_VERSION__;
 
     const unsub_darkLightMode = darkLightMode.subscribe((value) => {
         darkLightBGOnElement(!value, minimizeBtn);
@@ -71,8 +72,11 @@
         {:else}
             <img src={appLogoDark} alt="Description" class="p-0.5" />
         {/if}
-        <Tooltip class={tooltipTailwindClass} offset={-1} arrow={true}
-            >portable data encryption app</Tooltip
+        <Tooltip
+            class={tooltipTailwindClass}
+            offset={-1}
+            arrow={true}
+            placement="right">{appVersion}</Tooltip
         >
     </div>
     <div class="flex justify-end">

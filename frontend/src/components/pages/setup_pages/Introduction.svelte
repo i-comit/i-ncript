@@ -1,12 +1,14 @@
 <script lang="ts">
     import { GradientButton } from "flowbite-svelte";
     import { createEventDispatcher } from "svelte";
-    import { setupPagePClass } from "../../../stores/constantVariables";
+    // import { setupPagePClass } from "../../../stores/constantVariables";
     const dispatch = createEventDispatcher();
 
     function handleClick() {
         dispatch("click");
     }
+    const setupPagePClass =
+        "leading-1 text-primary-200 dark:text-primary-100 my-2";
 </script>
 
 <p class={setupPagePClass}>
@@ -52,8 +54,8 @@
     for its frontend, incorporating the "Neumorphic" design style.
 </p>
 <p class={setupPagePClass}>
-    i&#8209;ncript not only encrypts your personal files, but it also allows
-    you to package and send files with a one-time password, enabling another
+    i&#8209;ncript not only encrypts your personal files, but it also allows you
+    to package and send files with a one-time password, enabling another
     i&#8209;ncript account to access them.
 </p>
 <p class={setupPagePClass}>

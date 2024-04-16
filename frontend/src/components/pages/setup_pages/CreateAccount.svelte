@@ -1,8 +1,9 @@
 <script>
     import { createEventDispatcher } from "svelte";
     import { GradientButton } from "flowbite-svelte";
-    import { setupPagePClass } from "../../../stores/constantVariables";
-
+    // import { setupPagePClass } from "../../../stores/constantVariables";
+    const setupPagePClass =
+        "leading-1 text-primary-200 dark:text-primary-100 my-2";
     const dispatch = createEventDispatcher();
 
     function handleClick() {

@@ -19,7 +19,7 @@
 
     import { InterruptFileTask } from "../../../wailsjs/go/main/App";
     import { FileTasks, currentFileTask } from "../../enums/FileTasks";
-    import { formatFileSize, formatNumber } from "../../tools/utils";
+    import { formatFileSize, formatNumber, retrieveDuplicateFiles } from "../../tools/utils";
     import { EventsOff, EventsOn } from "../../../wailsjs/runtime/runtime";
     import { Tooltip } from "flowbite-svelte";
     import { tooltipTailwindClass } from "../../stores/constantVariables";
@@ -66,6 +66,7 @@
         totalFileCt.set(0);
         fileTaskPercent.set(0);
         largeFilePercent.set(0);
+        retrieveDuplicateFiles();
     }
 </script>
 
