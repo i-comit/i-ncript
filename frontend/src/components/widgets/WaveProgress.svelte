@@ -19,7 +19,7 @@
 
     import { InterruptFileTask } from "../../../wailsjs/go/main/App";
     import { FileTasks, currentFileTask } from "../../enums/FileTasks";
-    import { formatFileSize, formatNumber, retrieveDuplicateFiles } from "../../tools/utils";
+    import { formatNumber, retrieveDuplicateFiles } from "../../tools/utils";
     import { EventsOff, EventsOn } from "../../../wailsjs/runtime/runtime";
     import { Tooltip } from "flowbite-svelte";
     import { tooltipTailwindClass } from "../../stores/constantVariables";
@@ -38,11 +38,7 @@
             fileTaskPercent.set(
                 Math.round(($fileCount / get(totalFileCt)) * 100),
             );
-            if (fileCtEvt === 0) {
-                // setTimeout(() => {
-                interruptFileTask();
-                // }, 1000);
-            }
+            if (fileCtEvt === 0) interruptFileTask();
         });
         EventsOn("fileTaskSize", (fileTaskSize: string) => {
             cipheredFilesSize.set(fileTaskSize);
@@ -66,13 +62,15 @@
         totalFileCt.set(0);
         fileTaskPercent.set(0);
         largeFilePercent.set(0);
-        retrieveDuplicateFiles();
+        setTimeout(() => {
+            retrieveDuplicateFiles();
+        }, 1000);
     }
 </script>
 
 <div class="flex items-center mb-1 mt-0">
     <div class="icon space-y-1 flex flex-grow justify-center items-center">
-        <div class="icon__pause" bind:this={pauseBtn}>
+        <div class="icon__neumorphic" bind:this={pauseBtn}>
             <button on:click={interruptFileTask}>
                 <PauseSolid class="pl-px !w-8 !h-8" />
             </button>
@@ -81,7 +79,7 @@
 </div>
 <div
     class="absolute flex justify-between w-full bottom-5 px-1 text-xs
-            text-primary-200 dark:text-primary-100 font-semibold"
+            text-primary-200 dark:text-primary-100 font-semibold select-none"
 >
     <p>{formatNumber($fileCount)}/{formatNumber($totalFileCt)}</p>
     <p>{$cipheredFilesSize}</p>

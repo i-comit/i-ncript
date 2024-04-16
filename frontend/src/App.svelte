@@ -85,7 +85,6 @@
     });
     EventsOn("largeFileName", (_largeFileName: string) => {
       largeFileName.set(_largeFileName);
-      LogInfo("largeFile " + $largeFileName);
     });
   });
 

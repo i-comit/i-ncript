@@ -12,10 +12,7 @@
     --inner-shadow: inset -3px -3px 3px -1px var(--light-shadow),
         inset 2px 2px 2px -1px rgba(var(--dark-shadow-rgb), 0.6);
 
-    &__info,
-    &__logger,
-    &__settings,
-    &__pause {
+    &__neumorphic {
         width: $icon-size;
         height: $icon-size;
         border-radius: 50%;

@@ -51,7 +51,7 @@
         });
     }
     let rootFolderClass =
-        "text-primary-500 font-semibold select-text whitespace-nowrap";
+        "text-primary-500 font-semibold select-text whitespace-nowrap hover:underline";
 </script>
 
 <div

@@ -7,13 +7,10 @@
         InfoCircleSolid,
         InfoCircleOutline,
     } from "flowbite-svelte-icons";
-
-    import { LogInfo } from "../../../wailsjs/runtime/runtime";
-
     import { Modals } from "../../enums/Modals";
 
-    import { darkLightMode, accentColor } from "../../stores/dynamicVariables";
 
+    import { darkLightMode, accentColor } from "../../stores/dynamicVariables";
     import { switchModals } from "../../tools/utils";
 
     import {
@@ -51,17 +48,20 @@
     ></div>
 
     <div class="icon space-y-1">
-        <button class="icon__info" on:click={() => switchModals(Modals.Info)}>
+        <button
+            class="icon__neumorphic"
+            on:click={() => switchModals(Modals.Info)}
+        >
             <InfoCircleOutline class="p-px pt-0.5" />
         </button>
         <button
-            class="icon__logger"
+            class="icon__neumorphic"
             on:click={() => switchModals(Modals.Logger)}
         >
             <BarsFromLeftOutline class="p-px pt-0.5" role="button" />
         </button>
         <button
-            class="icon__settings"
+            class="icon__neumorphic"
             on:click={() => switchModals(Modals.Settings)}
         >
             <CogSolid class="p-px pt-0.5" />

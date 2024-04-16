@@ -179,7 +179,10 @@
         id="left-panel"
         role="none"
         on:click={clearHeldBtnsFromContainer}
-        on:mouseenter={checkMouseEnter}
+        on:pointerenter={checkMouseEnter}
+        on:pointerdown={() => {
+            currentModal.set(Modals.None);
+        }}
     >
         <DirSize />
         {#if _currentFileTask === FileTasks.None}
@@ -225,7 +228,7 @@
         id="right-panel"
         role="none"
         on:mouseleave={onmouseleave}
-        on:mouseup={clearHeldBtnsFromContainer}
+        on:pointerup={clearHeldBtnsFromContainer}
     >
         <!-- <NeuSearch /> -->
         <RadialProgress

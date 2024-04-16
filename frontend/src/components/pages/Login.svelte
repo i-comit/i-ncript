@@ -148,7 +148,6 @@
     };
 
     function enterPassword(event: KeyboardEvent) {
-        LogInfo("emteriong password ");
         if (event.code === "Enter" && checks.passwordCheck) {
             password = "";
             const inputElement = event.target as HTMLInputElement;
@@ -191,7 +190,6 @@
             passwordCheck3,
             passwordCheck,
         };
-        LogInfo("passwordCheck 1 " + passwordCheck1);
     }
 </script>
 
@@ -374,7 +372,7 @@
                 on:click={() => switchModals(Modals.Info)}
             >
                 <InfoCircleOutline
-                    class="w-6 h-6"
+                    class="w-6 h-6 "
                     color={$darkLightMode ? lightTextColor : darkTextColor}
                 />
             </Button>

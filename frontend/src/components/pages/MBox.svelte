@@ -280,6 +280,9 @@
             clearUsername();
             clearPassword();
         }}
+        on:pointerdown={() => {
+            currentModal.set(Modals.None);
+        }}
     >
         <DirSize />
         {#if currentMBoxState === MboxState.None}

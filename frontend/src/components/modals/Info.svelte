@@ -4,7 +4,12 @@
     import { onMount } from "svelte";
     import { AppPage, currentPage } from "../../enums/AppPage";
 
-    import { darkBGColor, lightBGColor } from "../../stores/constantVariables";
+    import {
+        darkBGColor,
+        lightBGColor,
+        darkTextColor,
+        lightTextColor,
+    } from "../../stores/constantVariables";
     import { darkLightMode, accentColor } from "../../stores/dynamicVariables";
     import {
         DownloadSolid,
@@ -28,6 +33,9 @@
     currentPage.subscribe((value) => {
         _currentPage = value;
     });
+
+    let iconButtonClass =
+        "!p-1 text-primary-200 dark:text-primary-100 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] hover:drop-shadow-[0_1.2px_1.2px_rgba(220,220,220,1)]";
 </script>
 
 <div
@@ -55,38 +63,56 @@
         <!-- Ensure the parent doesn't expand -->
         <!-- Child div that can scroll horizontally -->
         <div
-            class="px-0 m-0 whitespace-nowrap overflow-x-auto text-primary-200 dark:text-primary-100 z-5"
+            class="px-0 m-0 whitespace-nowrap overflow-x-auto text-primary-200 dark:text-primary-100
+            z-5 drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)] hover:underline"
         >
             {cwd}
         </div>
     </div>
-    <div id="viewLog" class="px-4"></div>
-    <div class="h-1" />
-    <div id="reportBug" class="flex justify-between px-4">
+    <div class="h-2" />
+    <div
+        class="flex justify-between px-4 text-primary-200 dark:text-primary-100"
+    >
         <p class="p-0 m-0">open source repo:</p>
-        <Button pill={true} outline={true} class="!p-1" color="dark"
-            ><GithubSolid class="w-4 h-4 m-0" color="dark" /></Button
+        <Button pill={true} outline={true} class={iconButtonClass}>
+            <a href="https://github.com/i-comit/i-ncript" target="_blank">
+                <GithubSolid
+                    class="w-4 h-4 m-0"
+                    color={$darkLightMode ? lightTextColor : darkTextColor}
+                /></a
+            ></Button
         >
     </div>
-    <div class="h-1" />
-    <div id="checkUpdate" class="flex justify-between px-4">
-        <p class="p-0 m-0">check for update:</p>
-        <Button pill={true} outline={true} class="!p-1" color="dark"
-            ><DownloadSolid class="w-4 h-4 m-0" color="dark" /></Button
+    <div class="h-0.5" />
+    <div
+        class="flex justify-between px-4 text-primary-200 dark:text-primary-100"
+    >
+        <p class="p-0 m-0">check for updates:</p>
+        <Button pill={true} outline={true} class={iconButtonClass}>
+            <a
+                href="https://sourceforge.net/projects/i-ncript/"
+                target="_blank"
+            >
+                <DownloadSolid
+                    class="w-4 h-4 m-0"
+                    color={$darkLightMode ? lightTextColor : darkTextColor}
+                /></a
+            ></Button
         >
     </div>
-    <div class="h-3" />
+    <div class="h-4" />
     <Kbd class="px-2 py-0.5 text-md">FRAMEWORKS</Kbd>
     <div class="h-1" />
 
-    <ul class="flex justify-center mx-4 space-x-2.5 text-sm">
+    <ul
+        class="flex justify-center mx-4 space-x-2.5 text-sm text-primary-200 dark:text-primary-100"
+    >
         <li class="flex flex-col items-center justify-center">
             GUI
             <a
                 href="https://github.com/wailsapp/wails"
                 target="_blank"
-                class="text-primary-200 dark:text-primary-100
-                        hover:underline hover:text-primary-500"
+                class="hover:underline hover:text-primary-500"
             >
                 <img
                     src={wailsLogo}
@@ -101,8 +127,7 @@
             <a
                 href="https://github.com/sveltejs/svelte"
                 target="_blank"
-                class="text-primary-200 dark:text-primary-100
-                        hover:underline hover:text-primary-500"
+                class="hover:underline hover:text-primary-500"
             >
                 <img
                     src={svelteLogo}
@@ -117,31 +142,30 @@
             <a
                 href="https://github.com/tailwindlabs/tailwindcss"
                 target="_blank"
-                class="text-primary-200 dark:text-primary-100
-                        hover:underline hover:text-primary-500"
+                class="hover:underline hover:text-primary-500"
             >
-                <img
-                    src={tailwindLogo}
-                    alt="Tailwind"
-                    class="p-1 mt-0.5 h-8"
-                />
+                <img src={tailwindLogo} alt="Tailwind" class="p-1 mt-0.5 h-8" />
                 Tailwind
             </a>
         </li>
     </ul>
 
     {#if $currentPage === AppPage.Vault}
-        <h2 class="divider line glow">
+        <h2 class="divider line glow text-primary-200 dark:text-primary-100">
             VAULT <InfoCircleSolid class="pl-1" />
         </h2>
-        <div class="!text-sm !text-left px-2">
+        <div
+            class="!text-sm !text-left px-2 text-primary-200 dark:text-primary-100"
+        >
             <InfoVault />
         </div>
     {:else if $currentPage === AppPage.Mbox}
-        <h2 class="divider line glow">
+        <h2 class="divider line glow text-primary-200 dark:text-primary-100">
             M-BOX <InfoCircleSolid class="pl-1" />
         </h2>
-        <div class="!text-sm !text-left px-2">
+        <div
+            class="!text-sm !text-left px-2 text-primary-200 dark:text-primary-100"
+        >
             <InfoMBox />
         </div>
     {:else}
