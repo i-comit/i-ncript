@@ -31,8 +31,6 @@
         lightTextColor,
         darkInputColor,
         lightInputColor,
-        width,
-        height,
     } from "../../stores/constantVariables.ts";
 
     import {
@@ -44,7 +42,7 @@
         darkLightBGOnElement,
         darkLightTextOnElement,
     } from "../../tools/themes";
-    import { LogInfo } from "../../../wailsjs/runtime/runtime";
+    import { LogError, LogInfo } from "../../../wailsjs/runtime/runtime";
 
     import PasswordScan from "../widgets/PasswordScan.svelte";
     import NeuButtonFake from "../widgets/NeuButtonFake.svelte";
@@ -70,6 +68,22 @@
     let formattedAppDirSize: string;
 
     let loginForm: HTMLFormElement;
+    let loginBtn: HTMLButtonElement;
+
+    let _modal: Modals;
+    currentModal.subscribe((value) => {
+        _modal = value;
+    });
+
+    let usernameCheck = false;
+
+    let checks = {
+        passwordCheck1: false,
+        passwordCheck2: false,
+        passwordCheck3: false,
+        passwordCheck: false,
+    };
+
     const unsub_darkLightMode = darkLightMode.subscribe((value) => {
         darkLightBGOnElement(value, loginForm);
     });
@@ -107,55 +121,58 @@
         unsub_darkLightMode();
     });
 
-    async function submit(event: SubmitEvent) {
-        event.preventDefault();
+    async function verifyLogin(): Promise<boolean> {
         try {
-            await Login(username, password).then((loginResult) => {
-                switch (loginResult) {
-                    case 0: //File does not exist
-                    case 2: //hash matched with key
-                        dispatch("loginSuccess");
-                        break;
-                    case 1: //File is empty
-                        startDisplay("key file is empty...");
-                        break;
-                    case 3:
-                        startDisplay("wrong credentials...");
-                        break;
-                }
-            });
+            const loginResult = await Login(username, password); // Await the promise here directly
+            switch (loginResult) {
+                case 0: // File does not exist
+                case 2: // Hash matched with key
+                    dispatch("loginSuccess");
+                    return true;
+                case 1: // File is empty
+                    startDisplay("key file is empty...");
+                    return false;
+                case 3: // Wrong credentials
+                    startDisplay("wrong credentials...");
+                    return false;
+                default:
+                    LogError("Unexpected login result: " + loginResult);
+                    return false;
+            }
         } catch (error) {
-            console.error("Error calling Login method:", error);
+            LogError("Error calling Login method: " + error);
+            return false;
         }
     }
-    let _modal: Modals;
-    currentModal.subscribe((value) => {
-        _modal = value;
-    });
 
-    let usernameCheck = false;
+    function submit(event: SubmitEvent) {
+        event.preventDefault();
+        verifyLogin();
+    }
+
+    function enterPassword(event: KeyboardEvent) {
+        if (event.code === "Enter" && checks.passwordCheck) {
+            if ($newAccount && !enteredPassword) {
+                password = "";
+                const inputElement = event.target as HTMLInputElement;
+                enteredPassword = inputElement.value;
+                Object.keys(checks).forEach((key) => {
+                    checks[key as keyof typeof checks] = false;
+                });
+            } else if (!$newAccount)
+                verifyLogin().then((loginBool) => {
+                    if (!loginBool) {
+                        username = "";
+                        clearPassword();
+                    }
+                });
+        }
+    }
+
     function queryUsernameStrength() {
         const regex = /^.{5,}$/;
         usernameCheck = regex.test(username);
         if (username === "") enteredPassword = "";
-    }
-
-    let checks = {
-        passwordCheck1: false,
-        passwordCheck2: false,
-        passwordCheck3: false,
-        passwordCheck: false,
-    };
-
-    function enterPassword(event: KeyboardEvent) {
-        if (event.code === "Enter" && checks.passwordCheck) {
-            password = "";
-            const inputElement = event.target as HTMLInputElement;
-            enteredPassword = inputElement.value;
-            Object.keys(checks).forEach((key) => {
-                checks[key as keyof typeof checks] = false;
-            });
-        }
     }
 
     function enterPasswordBtn() {
@@ -168,6 +185,7 @@
 
     function checkMatchedPassword() {
         passwordMatch = password === enteredPassword;
+        if (passwordMatch) loginBtn.focus();
     }
     function clearPassword() {
         password = "";
@@ -339,13 +357,14 @@
                 {/if}
             {:else}
                 <Input
-                    class="max-h-4 w-full mb-2"
+                    class="max-h-4 w-full mb-2 focus:outline-1"
                     style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
                         color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
                     id="small-input"
                     placeholder="enter password.."
                     type="password"
                     bind:value={password}
+                    on:keyup={(event) => enterPassword(event)}
                     required
                 />
                 <PasswordScan
@@ -402,14 +421,19 @@
                         >
                     {/if}
                 {:else if usernameCheck && passwordMatch}
-                    <NeuButton _class="!w-20" type="submit">LOGIN</NeuButton>
+                    <button class="focus:outline-none" bind:this={loginBtn}>
+                        <NeuButton _class="!w-20" type="submit">LOGIN</NeuButton
+                        >
+                    </button>
                 {:else}
                     <NeuButtonFake _class="!w-20 opacity-20"
                         >LOGIN</NeuButtonFake
                     >
                 {/if}
             {:else if usernameCheck && checks.passwordCheck}
-                <NeuButton _class="!w-20" type="submit">LOGIN</NeuButton>
+                <button class="focus:outline-none" bind:this={loginBtn}>
+                    <NeuButton _class="!w-20" type="submit">LOGIN</NeuButton>
+                </button>
             {:else}
                 <NeuButtonFake _class="!w-20 opacity-20">LOGIN</NeuButtonFake>
             {/if}
@@ -419,10 +443,6 @@
 </form>
 
 <style>
-    :root {
-        --bg-color: #757575;
-    }
-
     p {
         --text-color: #757575;
         color: var(--text-color);

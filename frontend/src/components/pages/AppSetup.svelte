@@ -32,16 +32,6 @@
     let currentSetupPage: SetupPage = SetupPage.Intro;
     let setupPageContainer: HTMLDivElement;
 
-    const unsub_darkLightMode = darkLightMode.subscribe((value) => {
-        darkLightBGOnHTML(value);
-    });
-    onMount(async () => {
-        darkLightBGOnHTML($darkLightMode);
-    });
-
-    onDestroy(() => {
-        unsub_darkLightMode();
-    });
     function toggleLightDarkMode() {
         darkLightMode.update((v) => !v);
     }
@@ -136,6 +126,7 @@
 </div>
 <div
     class="setupPage h-[65vh] outline outline-1 outline-primary-200 dark:outline-primary-100 px-4 pt-1 pb-4 flex flex-col"
+    style="color: #eeeeee;"
     bind:this={setupPageContainer}
 >
     {#if currentSetupPage === SetupPage.Intro}

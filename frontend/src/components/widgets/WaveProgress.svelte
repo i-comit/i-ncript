@@ -84,6 +84,7 @@
     <p>{formatNumber($fileCount)}/{formatNumber($totalFileCt)}</p>
     <p>{$cipheredFilesSize}</p>
 </div>
+<!-- https://codepen.io/uimax/pen/KgdgGa -->
 <div class="progress progress-striped active rounded-md h-3.5 p-0 m-0">
     <div
         style={`width: ${dataProgress}%; background-color: ${$accentColor}`}
@@ -97,7 +98,6 @@
 <style lang="scss">
     @import "../../neumorphic.scss";
 
-    $brand-danger: #ef1c1c;
     $bg-light-gray: #cdcdcd;
 
     .progress {

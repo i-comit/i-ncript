@@ -3,7 +3,7 @@
     import { Kbd } from "flowbite-svelte";
 </script>
 
-<p class={setupPagePClass}>
+<p class={`${setupPagePClass} !mt-1`}>
     Linked to the generated VAULT folder and the first page you see when logged
     in, the VAULT is where you can store your personal files for encryption. The
     files are encrypted based on the unique hash which was generated from your

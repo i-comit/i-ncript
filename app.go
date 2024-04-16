@@ -40,18 +40,6 @@ func (a *App) startup(ctx context.Context) {
 	}
 	a.cwd = cwd
 	fmt.Println("\033[32mCWD: ", a.cwd, "\033[0m")
-	driveSize, err := a.getters.GetRootDiskSpace()
-	if err != nil {
-		fmt.Println("Error getting disk space:", err)
-		return
-	}
-	fmt.Printf("Available disk space: %s\n", formatDirSize(int64(driveSize)))
-
-	appDirSize, err := a.getters.GetTotalDirSize(cwd)
-	if err != nil {
-		fmt.Printf("dir size err %s", err)
-	}
-	fmt.Printf("Dir size %d\n", appDirSize)
 }
 
 func (a *App) InitializeRootFolder() error {

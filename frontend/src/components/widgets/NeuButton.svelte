@@ -10,12 +10,6 @@
     } from "../../tools/themes";
 
     import { darkLightMode } from "../../stores/dynamicVariables";
-    import {
-        lightShadow_Dark,
-        darkShadow_Dark,
-        lightShadow_Light,
-        darkShadow_Light,
-    } from "../../stores/constantVariables";
 
     export let _class = "";
     export let _style = "";

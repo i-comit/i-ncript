@@ -11,7 +11,7 @@
     }
 </script>
 
-<p class={setupPagePClass}>
+<p class={`${setupPagePClass} !mt-1`}>
     While i-ncript does have mechanisms in place to check for duplicate files,
     it is up to the user to take precaution when encrypting their data. Always
     ensure that you are encrypting the data that you want to encrypt.

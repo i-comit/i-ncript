@@ -26,15 +26,24 @@
     largeFilePercent,
     largeFileName,
     newAccount,
+    darkLightMode,
   } from "./stores/dynamicVariables.ts";
   import { buildFileTree, fileTree } from "./tools/fileTree.ts";
   import { addLogEntry } from "./tools/logger.ts";
   import AppSetup from "./components/pages/AppSetup.svelte";
   import { height } from "./stores/constantVariables.ts";
+  import { darkLightBGOnHTML } from "./tools/themes.ts";
 
   let _page: AppPage;
   currentPage.subscribe((value) => {
     _page = value;
+  });
+
+  darkLightMode.subscribe((value) => {
+    darkLightBGOnHTML(value);
+  });
+  onMount(() => {
+    darkLightBGOnHTML($darkLightMode);
   });
 
   async function loggedIn() {

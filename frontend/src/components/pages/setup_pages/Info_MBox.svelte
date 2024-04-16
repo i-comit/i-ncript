@@ -2,7 +2,7 @@
     import { setupPagePClass } from "../../../stores/constantVariables";
 </script>
 
-<p class={setupPagePClass}>
+<p class={`${setupPagePClass} !mt-1`}>
     This is your mailbox, and is linked to the generated M-BOX folder. Here you
     can select files from the file tree to Pack or Open them.
 </p>

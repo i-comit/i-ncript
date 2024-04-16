@@ -65,6 +65,7 @@
         <div
             class="px-0 m-0 whitespace-nowrap overflow-x-auto text-primary-200 dark:text-primary-100
             z-5 drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)] hover:underline"
+            style="scrollbar-width: none;"
         >
             {cwd}
         </div>

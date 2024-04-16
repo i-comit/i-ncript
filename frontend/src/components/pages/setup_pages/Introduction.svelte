@@ -11,7 +11,7 @@
         "leading-1 text-primary-200 dark:text-primary-100 my-2";
 </script>
 
-<p class={setupPagePClass}>
+<p class={`${setupPagePClass} !mt-1`}>
     It looks like this is your first time running i&#8209;ncript. If you are
     already familiar with the app, click the button below to skip to account
     creation.
@@ -50,7 +50,7 @@
         class="text-primary-500 hover:underline">Wails</a
     >
     GUI framework which leverages the Golang language for backend encryption tasks,
-    and web frameworks such as TailwindCSS and Svelte to create a modern user interface
+    and web frameworks such as Tailwind and Svelte to create a modern user interface
     for its frontend, incorporating the "Neumorphic" design style.
 </p>
 <p class={setupPagePClass}>
@@ -62,9 +62,3 @@
     i&#8209;ncript is open source and uses the permissive copyleft GNU GPLv3
     license.
 </p>
-
-<style>
-    p {
-        color: #eeeeee;
-    }
-</style>
