@@ -16,17 +16,17 @@
 >
 
 <Modal
+    title="GNU GENERAL PUBLIC LICENSE"
     bind:open={modalBool}
     autoclose
     outsideclose
     dialogClass="fixed top-0 start-0 end-0 h-modal z-50 w-full p-3.5 flex"
+    headerClass=" items-center p-0 rounded-t-lg !bg-primary-600 !dark:bg-primary-700
+                     !text-primary-200 !dark:text-primary-100"
     backdropClass="fixed inset-0 z-40 bg-gray-600 bg-opacity-60 dark:bg-opacity-80"
-    bodyClass="bg-primary-400 dark:bg-primary-300 text-primary-100 dark:text-primary-200 rounded-lg"
+    bodyClass="bg-primary-400 dark:bg-primary-300 text-primary-100 dark:text-primary-200 rounded-b-lg pl-1"
 >
     <div class="license-modal overflow-y-auto p-1">
-        <h1 class={`${modalHBodyClass} !mb-1 !mt-2`}>
-            GNU GENERAL PUBLIC LICENSE
-        </h1>
         <h1 class={`${modalHBodyClass} !mt-1`}>Version 3, 29 June 2007</h1>
         <div class="h-2" />
         <p class={modalPBodyClass}>
@@ -905,7 +905,7 @@
         text-align: start;
     }
     .license-modal {
-        height: 68vh;
+        height: 62vh;
         scroll-behavior: smooth;
     }
     ol {

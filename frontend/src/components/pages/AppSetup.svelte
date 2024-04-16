@@ -78,6 +78,7 @@
             setupPageContainer.scrollTop = 0;
         }
     }
+
 </script>
 
 <div
@@ -93,7 +94,7 @@
     class="flex justify-between rounded-xl mx-6"
     style={`background-color: ${$accentColor}`}
 >
-    <button class="!p-0" on:click={() => toggleLightDarkMode()}>
+    <button class="!p-0" on:pointerdown={() => toggleLightDarkMode()}>
         <DarkMode btnClass="w-6 h-6 rounded-lg text-md p-2" />
     </button>
     <License />

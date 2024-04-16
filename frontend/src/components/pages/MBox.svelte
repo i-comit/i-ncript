@@ -402,9 +402,7 @@
                             on:keyup={checkMatchedPassword}
                         />
                         <button on:click|stopPropagation={clearPassword}>
-                            <CloseOutline
-                                class=" text-primary-300 dark:text-primary-200 "
-                            />
+                            <CloseOutline style="color: {$accentColor};" />
                         </button>
                     </div>
                     <div

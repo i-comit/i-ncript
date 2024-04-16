@@ -92,7 +92,7 @@
         class="flex justify-between my-1 rounded-lg mx-1"
         style={`background-color: ${$accentColor}`}
     >
-        <button class="!p-0" on:click={() => toggleLightDarkMode()}>
+        <button class="!p-0" on:pointerdown={() => toggleLightDarkMode()}>
             <DarkMode btnClass="w-6 h-6 rounded-lg text-md p-2" />
         </button>
         <div id="languages">

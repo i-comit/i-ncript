@@ -3,13 +3,9 @@
     import { get } from "svelte/store";
     import { MinimizeApp, CloseApp } from "../../../wailsjs/go/main/App";
     import { MinusOutline, CloseOutline } from "flowbite-svelte-icons";
-    import { Button, Input, GradientButton, Tooltip } from "flowbite-svelte";
+    import { Tooltip } from "flowbite-svelte";
 
-    import {
-        lightBGColor,
-        darkBGColor,
-        tooltipTailwindClass,
-    } from "../../stores/constantVariables";
+    import { tooltipTailwindClass } from "../../stores/constantVariables";
 
     import {
         LogDebug,
@@ -21,32 +17,11 @@
 
     import { darkLightMode } from "../../stores/dynamicVariables";
 
-    import {
-        darkLightBGOnElement,
-        darkLightTextOnId,
-    } from "../../tools/themes";
     import { AppPage, currentPage } from "../../enums/AppPage";
 
     let minimizeBtn: HTMLButtonElement;
     let closeBtn: HTMLButtonElement;
     const appVersion: string = __APP_VERSION__;
-
-    const unsub_darkLightMode = darkLightMode.subscribe((value) => {
-        darkLightBGOnElement(!value, minimizeBtn);
-        darkLightBGOnElement(!value, closeBtn);
-        darkLightTextOnId(value, "minimize-icon");
-        darkLightTextOnId(value, "close-icon");
-    });
-    onMount(() => {
-        var _value = get(darkLightMode);
-        darkLightBGOnElement(!_value, minimizeBtn);
-        darkLightBGOnElement(!_value, closeBtn);
-        darkLightTextOnId(_value, "minimize-icon");
-        darkLightTextOnId(_value, "close-icon");
-    });
-    onDestroy(() => {
-        unsub_darkLightMode();
-    });
 
     function minimizeApp(event: MouseEvent) {
         if (event.detail === 0) {
@@ -85,19 +60,19 @@
     <div class="flex justify-end">
         <button
             bind:this={minimizeBtn}
-            class="p-0 my-1 rounded-md"
+            class="p-0 my-1 rounded-md bg-primary-300 dark:bg-primary-400"
             on:click|preventDefault={(event) => minimizeApp(event)}
         >
-            <div id="minimize-icon">
+            <div class="text-primary-200 dark:text-primary-100">
                 <MinusOutline id="icon" class="w-5 h-5 m-0 p-0" />
             </div>
         </button>
         <button
             bind:this={closeBtn}
-            class="p-0 my-1 mr-1 ml-px rounded-md"
+            class="p-0 my-1 mr-1 ml-px rounded-md bg-primary-300 dark:bg-primary-400"
             on:click={CloseApp}
         >
-            <div id="close-icon">
+            <div class="text-primary-200 dark:text-primary-100">
                 <CloseOutline class="w-5 h-5 m-0 p-0" />
             </div>
         </button>
@@ -105,17 +80,6 @@
 </div>
 
 <style>
-    #minimize-icon,
-    #close-icon {
-        --text-color: #dddddd;
-        color: var(--text-color);
-    }
-
-    button {
-        --bg-color: #757575;
-        background-color: var(--bg-color);
-    }
-
     .window-controls {
         position: absolute;
         top: 0px;

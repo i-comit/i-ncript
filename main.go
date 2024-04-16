@@ -35,8 +35,8 @@ import (
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
 
-	// "github.com/wailsapp/wails/v2/pkg/options/linux"
-	// "github.com/wailsapp/wails/v2/pkg/options/mac"
+	"github.com/wailsapp/wails/v2/pkg/options/linux"
+	"github.com/wailsapp/wails/v2/pkg/options/mac"
 	"github.com/wailsapp/wails/v2/pkg/options/windows"
 )
 
@@ -52,7 +52,7 @@ const refreshDirSize = "refreshDirSize"
 
 // DATA consts
 // Change to whatever name you want the root folder to be
-const rootFolder = "=i-ncript"
+const rootFolder = "i-ncript"
 const keyFileName = ".i-ncript.🔑"
 const _width = 220
 
@@ -112,6 +112,35 @@ func main() {
 				LightModeBorder:    windows.RGB(200, 200, 200),
 			},
 		},
+		Mac: &mac.Options{
+			TitleBar: &mac.TitleBar{
+				TitlebarAppearsTransparent: true,
+				HideTitle:                  false,
+				HideTitleBar:               false,
+				FullSizeContent:            false,
+				UseToolbar:                 false,
+				HideToolbarSeparator:       true,
+				// OnFileOpen:                 app.onFileOpen,
+				// OnUrlOpen:                  app.onUrlOpen,
+			},
+			Appearance:           mac.NSAppearanceNameDarkAqua,
+			WebviewIsTransparent: true,
+			WindowIsTranslucent:  false,
+			About: &mac.AboutInfo{
+				Title:   "My Application",
+				Message: "© 2021 Me",
+			},
+		},
+		Linux: &linux.Options{
+			// Icon: icon,
+			WindowIsTranslucent: false,
+			WebviewGpuPolicy:    linux.WebviewGpuPolicyAlways,
+			// ProgramName: "wails"
+		},
+		Debug: options.Debug{
+			OpenInspectorOnStartup: false,
+		},
+
 		SingleInstanceLock: &options.SingleInstanceLock{
 			UniqueId:               _uniqueID,
 			OnSecondInstanceLaunch: app.onSecondInstanceLaunch,

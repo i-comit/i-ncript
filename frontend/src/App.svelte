@@ -42,13 +42,12 @@
     _page = value;
   });
 
-  darkLightMode.subscribe((value) => {
-    darkLightBGOnHTML(value);
-  });
+  // darkLightMode.subscribe((value) => {
+  //   darkLightBGOnHTML(value);
+  // });
 
 
   onMount(async () => {
-    darkLightBGOnHTML($darkLightMode);
     isRightDir = await GetDirName();
     let _height = await GetHeight();
     height.set(_height);

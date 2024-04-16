@@ -331,7 +331,10 @@
                             required
                         />
                         <button on:click|stopPropagation={clearPassword}>
-                            <CloseOutline class=" text-primary-500 mb-2" />
+                            <CloseOutline
+                                class="mb-2"
+                                style="color: {$accentColor};"
+                            />
                         </button>
                     </div>
                     <div
@@ -386,7 +389,7 @@
         <div class="flex space-x-1">
             <Button
                 pill={true}
-                class="p-0 px-0.5"
+                class="p-0 px-0.5 hover:drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] "
                 shadow
                 on:click={() => switchModals(Modals.Info)}
             >
@@ -398,7 +401,7 @@
             <Button
                 pill={true}
                 shadow
-                class="p-0.5"
+                class="p-0.5 hover:drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
                 on:click={() => switchModals(Modals.Settings)}
             >
                 <CogSolid
