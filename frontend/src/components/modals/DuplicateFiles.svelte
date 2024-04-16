@@ -21,8 +21,6 @@
     //     }
     //     return filePath;
     // }
-
-
 </script>
 
 <!-- Main modal -->

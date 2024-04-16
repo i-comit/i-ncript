@@ -211,7 +211,8 @@
     {#if typewriter === ""}
         <p
             class="shrink-0 text-left absolute top-0 left-1/3 w-1/2"
-            style={`--text-color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
+            style={`--text-color: ${$darkLightMode ? lightTextColor : darkTextColor};
+            font-family: "Orbitron"; font-weight: 600;`}
         >
             {appName}
         </p>

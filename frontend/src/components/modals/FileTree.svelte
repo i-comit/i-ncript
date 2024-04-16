@@ -2,7 +2,11 @@
     // import { slide } from 'svelte/transition'
     import { onMount, onDestroy, afterUpdate } from "svelte";
     import { get } from "svelte/store";
-    import { EventsOff, EventsOn, LogInfo } from "../../../wailsjs/runtime/runtime";
+    import {
+        EventsOff,
+        EventsOn,
+        LogInfo,
+    } from "../../../wailsjs/runtime/runtime";
 
     import {
         FolderOpenSolid,
@@ -93,8 +97,8 @@
             ? `position: sticky; top: 1px; left: 0px; 
                background-color: ${get(darkLightMode) ? darkBGColor : lightBGColor}; 
                color: ${$accentColor}; 
-               font-weight: 600;
-                z-index: ${$duplicateFiles.length === 0 ? 42 : 32}`
+               font-family: 'Orbitron'; font-weight: regular;
+               z-index: ${$duplicateFiles.length === 0 ? 42 : 32}`
             : `border-left: 1.5px solid ${get(darkLightMode) ? lightBGColor : darkBGColor};
                position: relative;
                color: ${get(darkLightMode) ? lightTextColor : darkTextColor}; `
@@ -236,7 +240,7 @@
                     disabled={$currentFileTask !== FileTasks.None}
                     class="flex hover:underline {_fileTree.relPath ===
                     getRootDir()
-                        ? 'rounded-md px-1 mb-0.5'
+                        ? 'rounded-br-md pr-1 pl-1.5 mb-0.5  hover:outline outline-1 outline-primary-400 dark:outline-primary-300'
                         : 'pl-1.5'}"
                     style={folderStyle}
                     on:click|stopPropagation={() => {

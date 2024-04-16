@@ -28,7 +28,7 @@ export function darkLightBGOnId(darkLightMode: boolean, idName: string) {
 //END OF BG(background-color) element propetyies
 
 export function darkLightTextOnElement(darkLightMode: boolean, element: HTMLElement) {
-    if (!element) { LogInfo("no element found"); return }
+    if (!element) return
     if (darkLightMode)
         element.style.setProperty("--text-color", darkTextColor,);
     else

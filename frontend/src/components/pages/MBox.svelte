@@ -285,7 +285,12 @@
         {#if currentMBoxState === MboxState.None}
             {#if _currentFileTask === FileTasks.None}
                 <div class="h-12 text-primary-200 dark:text-primary-100">
-                    <p class="text-start">no files selected..</p>
+                    <p
+                        class="text-center text-sm"
+                        style="font-family: 'Orbitron'; font-weight: regular;"
+                    >
+                        no files selected..
+                    </p>
                 </div>
 
                 <div class="h-9 text-primary-200 dark:text-primary-100"></div>

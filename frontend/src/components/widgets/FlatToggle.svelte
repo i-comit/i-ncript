@@ -9,7 +9,7 @@
     import { GetFilesByType } from "../../../wailsjs/go/main/Getters";
     import { setIsInFileTask } from "../../tools/fileTree";
     import { FileTasks, currentFileTask } from "../../enums/FileTasks";
-    import { totalFileCt } from "../../stores/dynamicVariables";
+    import { accentColor, totalFileCt } from "../../stores/dynamicVariables";
 
     let isChecked: boolean;
     isChecked = false;
@@ -34,7 +34,11 @@
     });
 </script>
 
-<div class="button r" id="button-1">
+<div
+    class="button r hover:outline"
+    style={`outline-color:${$accentColor}`}
+    id="button-1"
+>
     <input
         type="checkbox"
         class="checkbox"
@@ -58,7 +62,7 @@
         position: relative;
         width: 50%;
         height: 22px;
-        top: 0px;
+        top: 0.5px;
         margin: 1px auto 0 10px;
         overflow: hidden;
     }
