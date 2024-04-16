@@ -67,7 +67,7 @@
 
 <div class="rounded-lg wrongdir px-1 text-center">
     <div class="h-8" />
-    <p class="mx-2 select-none">
+    <p class="mx-2 select-none text-primary-200">
         i-ncript must run inside a directory named <span class={rootFolderClass}
             >{rootFolder}</span
         >
@@ -78,16 +78,16 @@
         activeClass="focus:none"
     >
         <AccordionItem>
-            <span slot="header" class="select-none"
+            <span slot="header" class="select-none text-gray-500"
                 >why is this step necessary?</span
             >
-            <p class="mb-2 text-gray-500 dark:text-gray-400">
+            <p class="mb-2 text-gray-500">
                 For organizational and security purposes, i-ncript can only run
                 within a specified directory, in this case: <span
                     class={rootFolderClass}>{rootFolder}</span
                 >.
             </p>
-            <p class="text-gray-500 dark:text-gray-400">
+            <p class="text-gray-500">
                 This will prevent unintentional encryption of unrelated files
                 from other subdirectories, keep encrypted files organized within
                 the apps directory, and allow the app and its contents to be
@@ -95,22 +95,22 @@
             </p>
         </AccordionItem>
         <AccordionItem>
-            <span slot="header" class="select-none"
+            <span slot="header" class="select-none text-gray-500"
                 >how do I create a directory?</span
             >
-            <p class="mb-2 text-gray-500 dark:text-gray-400">
+            <p class="mb-2 text-gray-500">
                 As i-ncript is designed to be a portable application that
                 operates within a removable storage device, it must be entirely
                 self contained inside a single directory.
             </p>
-            <p class="mb-2 text-gray-500 dark:text-gray-400">
+            <p class="mb-2 text-gray-500">
                 You can then create a directory named <span
                     class={rootFolderClass}>{rootFolder}</span
                 >, preferably inside a removable drive such as a USB, then close
                 the app and move the executable inside there.
             </p>
             {#if rootFolderPath === ""}
-                <p class="text-gray-500 dark:text-gray-400">
+                <p class="text-gray-500">
                     Otherwise, click the [Create Folder] button below which will
                     generate the <span class={rootFolderClass}
                         >{rootFolder}</span
@@ -126,7 +126,7 @@
     {:else}
         <div class="flex justify-center">
             <p
-                class="text-primary-400 dark:text-primary-300 text-sm pl-2 leading-none !text-justify"
+                class="text-primary-200 text-sm pl-2 leading-none !text-justify"
             >
                 the <button
                     class={`${rootFolderClass} hover:outline`}
