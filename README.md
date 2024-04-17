@@ -9,10 +9,9 @@
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
 
-<!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
+  <a href="https://sourceforge.net/projects/i-ncript/">
     <img src="/build/appicon.png" alt="Logo" width="80" height="80">
   </a>
 
@@ -51,13 +50,13 @@
 ## Introduction
 
 <div style="display: flex; justify-content: space-around; align-items: center; width: 100%; margin-bottom: 1.5rem">
-<img src="/screenshots/darkMode.png" alt="Dark mode w/ blue accent" style="flex-grow: 1; max-width: 45%; height: auto;">
+<img src="/screenshots/darkMode.png" alt="Dark mode on VAULT page w/ Blue Accent, showing Logger page while decrypting files" style="flex-grow: 1; max-width: 45%; height: auto;">
 <img src="/screenshots/lightMode.png" alt="Light mode w/ green accent" style="flex-grow: 1; max-width: 45%; height: auto;">
 </div>
 
-i-ncript is a portable data encryption app, designed for use with removable storage devices. It is portable as it does not require aninstaller to run, can execute on any drive, and can be quickly transferred to another device without an install/uninstall process. 
+i-ncript is a portable data encryption app, designed for use with removable storage devices. It is portable as it does not require aninstaller to run, can execute on any drive, and can be quickly transferred to another device without an install/uninstall process.
 
-It leverages Wails for the backend file processing speed of Go and the reactive and modern UI frontend of several web frameworks such as Svelte, Flowbite and Tailwind.
+It leverages Wails for the backend file processing speed of Go with the reactive and modern UI frontend of several web frameworks.
 
 The focus on portability plays an important role in data security. The fact is, data is most vulnerable is when it is connected to the internet, and while many measures have been taken to ensure the safety of online data, an offline, portable data store is a far more simple yet far more effective method of data security.
 
@@ -154,8 +153,6 @@ Distributed under the GNU GPL v3 License. See the <a href="./LICENSE">LICENSE</a
 ## Contact
 
 <khiemluong@i-comit.com>
-
-[Source Forge](https://sourceforge.net/projects/i-ncript/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
