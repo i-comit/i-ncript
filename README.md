@@ -55,7 +55,9 @@
 <img src="/screenshots/lightMode.png" alt="Light mode w/ green accent" style="flex-grow: 1; max-width: 45%; height: auto;">
 </div>
 
-i-ncript is a portable data encryption app, designed for use with removable storage devices. It is portable as it does not require aninstaller to run, can execute on any drive, and can be quickly transferred to another device without an install/uninstall process.
+i-ncript is a portable data encryption app, designed for use with removable storage devices. It is portable as it does not require aninstaller to run, can execute on any drive, and can be quickly transferred to another device without an install/uninstall process. 
+
+It leverages Wails for the backend file processing speed of Go and the reactive and modern UI frontend of several web frameworks such as Svelte, Flowbite and Tailwind.
 
 The focus on portability plays an important role in data security. The fact is, data is most vulnerable is when it is connected to the internet, and while many measures have been taken to ensure the safety of online data, an offline, portable data store is a far more simple yet far more effective method of data security.
 
