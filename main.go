@@ -52,7 +52,7 @@ const refreshDirSize = "refreshDirSize"
 
 // DATA consts
 // Change to whatever name you want the root folder to be
-const rootFolder = "i-ncript"
+const rootFolder = "=i-ncript"
 const keyFileName = ".i-ncript.🔑"
 const _width = 220
 

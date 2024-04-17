@@ -70,7 +70,6 @@
     import FileTools from "../widgets/FileTools.svelte";
     import { startDisplay } from "../../tools/logger.ts";
     import DuplicateFiles from "../modals/DuplicateFiles.svelte";
-    import { Spinner } from "flowbite-svelte";
     import OvalSpinner from "../widgets/OvalSpinner.svelte";
 
     let _currentFileTask: FileTasks;
@@ -178,89 +177,81 @@
 </script>
 
 <TitleBar />
-{#if $pageLoading}
-    <OvalSpinner />
-{:else}
-    <div class="flex h-screen !rounded-lg">
-        <DuplicateFiles />
-        <div
-            id="left-panel"
-            role="none"
-            on:click={clearHeldBtnsFromContainer}
-            on:pointerenter={checkMouseEnter}
-            on:pointerdown={() => {
-                currentModal.set(Modals.None);
-            }}
-        >
-            <DirSize />
+<OvalSpinner />
+<div
+    class="flex h-screen !rounded-lg {$pageLoading
+        ? 'pointer-events-none opacity-40'
+        : ''}"
+>
+    <DuplicateFiles />
+    <div
+        id="left-panel"
+        role="none"
+        on:click={clearHeldBtnsFromContainer}
+        on:pointerenter={checkMouseEnter}
+        on:pointerdown={() => {
+            currentModal.set(Modals.None);
+        }}
+    >
+        <DirSize />
+        {#if _currentFileTask === FileTasks.None}
+            <div class="row space-x-2">
+                <NeuButton on:click={() => encrypt()} _style="font-size: 14px;"
+                    >ENCRYPT</NeuButton
+                >
+                <NeuButton on:click={() => decrypt()} _style="font-size: 14px;"
+                    >DECRYPT</NeuButton
+                >
+            </div>
+        {:else}
+            <TaskDisplay />
+        {/if}
+
+        <div class="relative h-14">
             {#if _currentFileTask === FileTasks.None}
-                <div class="row space-x-2">
-                    <NeuButton
-                        on:click={() => encrypt()}
-                        _style="font-size: 14px;">ENCRYPT</NeuButton
-                    >
-                    <NeuButton
-                        on:click={() => decrypt()}
-                        _style="font-size: 14px;">DECRYPT</NeuButton
-                    >
+                <div style="padding-top: 0.325rem">
+                    <FileTools />
                 </div>
             {:else}
-                <TaskDisplay />
+                <WaveProgress dataProgress={$fileTaskPercent} />
             {/if}
-
-            <div class="relative h-14">
-                {#if _currentFileTask === FileTasks.None}
-                    <div style="padding-top: 0.325rem">
-                        <FileTools />
-                    </div>
-                    <!-- <p
-                    class="absolute bottom-0 right-0 leading-none text-sm select-none"
-                >
-                    HOT FILER
-                </p> -->
-                {:else}
-                    <WaveProgress dataProgress={$fileTaskPercent} />
-                {/if}
-            </div>
-
-            <div
-                class={_currentFileTask === FileTasks.None ? "h-1" : "h-0.5"}
-            />
-
-            <div class="row space-x-0">
-                <NeuButton
-                    on:click={() => switchPages(AppPage.Mbox)}
-                    _class="!w-20">M-BOX</NeuButton
-                >
-                <Toggle />
-            </div>
         </div>
 
-        <PanelDivider />
-        <div
-            id="right-panel"
-            role="none"
-            on:mouseleave={onmouseleave}
-            on:pointerup={clearHeldBtnsFromContainer}
-        >
-            <!-- <NeuSearch /> -->
-            <RadialProgress
-                _style="right: 3.6rem"
-                dataProgress={$largeFilePercent}
-                overlayText={$largeFileName}
-            />
-            {#if _modal === Modals.None}
-                <TreeView _fileTree={$fileTree} />
-            {:else if _modal === Modals.Settings}
-                <Settings />
-            {:else if _modal === Modals.Info}
-                <Info />
-            {:else if _modal === Modals.Logger}
-                <Logger />
-            {/if}
+        <div class={_currentFileTask === FileTasks.None ? "h-1" : "h-0.5"} />
+
+        <div class="row space-x-0">
+            <NeuButton on:click={() => switchPages(AppPage.Mbox)} _class="!w-20"
+                >M-BOX</NeuButton
+            >
+            <Toggle />
         </div>
     </div>
-{/if}
+
+    <PanelDivider />
+    <div
+        id="right-panel"
+        role="none"
+        on:mouseleave={onmouseleave}
+        on:pointerup={clearHeldBtnsFromContainer}
+    >
+        <RadialProgress
+            _style="right: 3.6rem"
+            dataProgress={$largeFilePercent}
+            overlayText={$largeFileName}
+        />
+        {#if _modal === Modals.None}
+            {#if !$pageLoading}
+                <TreeView _fileTree={$fileTree} />
+            {/if}
+        {:else if _modal === Modals.Settings}
+            <Settings />
+        {:else if _modal === Modals.Info}
+            <Info />
+        {:else if _modal === Modals.Logger}
+            <Logger />
+        {/if}
+    </div>
+</div>
 
 <style>
     .row {
