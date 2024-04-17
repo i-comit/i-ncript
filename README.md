@@ -30,9 +30,9 @@
   <summary>Table of Contents</summary>
   <ol>
     <li>
-      <a href="#about-the-project">About The Project</a>
+      <a href="#about-the-project">Introduction</a>
       <ul>
-        <li><a href="#built-with">Built With</a></li>
+        <li><a href="#built-with">Frameworks Used</a></li>
         <li><a href="#common-issues">Common Issues</a></li>
       </ul>
     </li>
@@ -48,11 +48,9 @@
   </ol>
 </details>
 
-<!-- ABOUT THE PROJECT -->
 ## Introduction
 
-<!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
-<div style="display: flex; justify-content: space-around; align-items: center; width: 100%; margin-bottom: 1rem">
+<div style="display: flex; justify-content: space-around; align-items: center; width: 100%; margin-bottom: 1.5rem">
 <img src="/screenshots/darkMode.png" alt="Dark mode w/ blue accent" style="flex-grow: 1; max-width: 45%; height: auto;">
 <img src="/screenshots/lightMode.png" alt="Light mode w/ green accent" style="flex-grow: 1; max-width: 45%; height: auto;">
 </div>
@@ -63,31 +61,27 @@ The focus on portability plays an important role in data security. The fact is, 
 
 Files are encrypted using the Advanced Encryption Standard (AES), which employs a sophisticated round-based encryption method to provide a robust security foundation. Your key is additionally encrypted using the Argon2i algorithm, which enhances security by resisting side-channel attacks and using "salting" to defend against rainbow tables.
 
-You can also send
+You can also send and receive encrypted data by using the M-BOX, which provides the option of encrypting a set of files for another i-ncript account username and a one time password associated with that file.
 
-Summary:
+Please note that using this software may lead to damage or data loss, and a key, once lost, cannot be recovered. The author is therefore not responsible for any resulting damages or loss of data under any circumstances.
+
+_Summary:_
 
 * Lightweight (<4MB) self contained executable.
 * Encryption using AES & Argon2i.
 * Send & receive files with one time password.
 * Cross platform for desktop OS, and soon mobile.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-### Built With
+### Frameworks Used
 
 * [![Wails][Wails_Badge]][Wails-url]
 * [![Svelte][Svelte_Badge]][Svelte-url]
 * [![Tailwind][Tailwind_Badge]][Tailwind-url]
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+### Common Issues
 
-### Common Errors
-
-> On Linux, I got an "Invalid url:path/to/app No ':' in the uri" error and can't open the app in my USB
+> On Linux, I got an "Invalid url:path/to/i-ncript No ':' in the uri" error and can't open the app in my USB
 >>This is a permission issue. Make sure the USB is formatted with NTFS.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -96,8 +90,9 @@ This is an example of how you may give instructions on setting up your project l
 To get a local copy up and running follow these simple example steps.
 
 To compile this app. You will need to install [![Node.js][Node.js_Badge]][Node.js-url] &  [![Go][Golang_Badge]][Golang-url]
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-#### 1. first install the go modules
+### 1. install the go modules
 
   ```sh
   go mod download
@@ -110,7 +105,7 @@ To compile this app. You will need to install [![Node.js][Node.js_Badge]][Node.j
   go list -u -m all
   ```
 
-#### 2. then cd to /frontend
+### 2. then cd to /frontend
 
   ```sh
   cd frontend
@@ -141,8 +136,6 @@ To compile this app. You will need to install [![Node.js][Node.js_Badge]][Node.j
 You can track the current project roadmap <a href="https://github.com/users/khiemgluong/projects/3">here</a>:
 See the [open issues](https://github.com/i-comit/i-ncript/issues) for a full list of proposed features (and known issues).
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 <!-- CONTRIBUTING -->
 ## Contributing
 
@@ -150,14 +143,10 @@ Contributions are what make the open source community such an amazing place to l
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 <!-- LICENSE -->
 ## License
 
 Distributed under the GNU GPL v3 License. See the <a href="./LICENSE">LICENSE</a> for more information.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTACT -->
 ## Contact
@@ -170,7 +159,6 @@ Distributed under the GNU GPL v3 License. See the <a href="./LICENSE">LICENSE</a
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[product-screenshot]: images/screenshot.png
 
 [Wails_Badge]:https://img.shields.io/badge/Wails-red?style=for-the-badge&logo=Wails
 [Wails-url]: https://wails.io
