@@ -4,8 +4,8 @@
 
     import { Modals, currentModal } from "../../enums/Modals";
 
-    import { Login, ResizeWindow } from "../../../wailsjs/go/main/App";
-    import { Button, Input, Tooltip, Progressbar } from "flowbite-svelte";
+    import { Login } from "../../../wailsjs/go/main/App";
+    import { Button, Input, Tooltip, Spinner } from "flowbite-svelte";
     import { switchModals } from "../../tools/utils";
     import {
         InfoCircleOutline,
@@ -37,6 +37,7 @@
         darkLightMode,
         accentColor,
         newAccount,
+        loginLoading,
     } from "../../stores/dynamicVariables.ts";
     import {
         darkLightBGOnElement,
@@ -122,6 +123,7 @@
     });
 
     async function verifyLogin(): Promise<boolean> {
+        loginLoading.set(true);
         try {
             const loginResult = await Login(username, password); // Await the promise here directly
             switch (loginResult) {
@@ -131,12 +133,15 @@
                     return true;
                 case 1: // File is empty
                     startDisplay("key file is empty...");
+                    loginLoading.set(false);
                     return false;
                 case 3: // Wrong credentials
                     startDisplay("wrong credentials...");
+                    loginLoading.set(false);
                     return false;
                 default:
                     LogError("Unexpected login result: " + loginResult);
+                    loginLoading.set(false);
                     return false;
             }
         } catch (error) {
@@ -164,6 +169,7 @@
                     if (!loginBool) {
                         username = "";
                         clearPassword();
+                        loginLoading.set(false);
                     }
                 });
         }
@@ -211,102 +217,169 @@
     }
 </script>
 
-<form
-    on:submit|preventDefault={submit}
-    bind:this={loginForm}
-    autocomplete="off"
-    class="login-form flex-col rounded-lg"
->
-    <p
-        class="absolute top-0 left-0 text-justify w-screen pl-6 pt-1 text-sm"
-        style={`--text-color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
+<Frame />
+{#if $loginLoading}
+    <div class="flex items-center justify-center h-screen">
+        <Spinner
+            style="fill: {$accentColor} !important"
+            bg="!text-primary-400 !dark:text-primary-300"
+            size={24}
+        />
+    </div>
+{:else}
+    <form
+        on:submit|preventDefault={submit}
+        bind:this={loginForm}
+        autocomplete="off"
+        class="login-form flex-col rounded-lg"
     >
-        {typewriter}
-    </p>
-    <Frame />
-    {#if typewriter === ""}
         <p
-            class="shrink-0 text-left absolute top-0 left-1/3 w-1/2 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
-            style={`--text-color: ${$darkLightMode ? lightTextColor : darkTextColor};
-            font-family: "Orbitron"; font-weight: 600;`}
+            class="absolute top-0 left-0 text-justify w-screen pl-6 pt-1 text-sm"
+            style={`--text-color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
         >
-            {appName}
+            {typewriter}
         </p>
-    {/if}
-
-    <div class="loginField">
-        {#if _modal === Modals.None}
-            <div class="flex items-center mx-auto">
-                <Tooltip
-                    placement="right"
-                    type="custom"
-                    class={tooltipTailwindClass}
-                    arrow={false}>{appVersion}</Tooltip
-                >
-                <div
-                    class="top-0 z-10 w-full my-1.5 mb-1 mx-5 rounded-full h-2.5 bg-primary-300 dark:bg-primary-400"
-                >
-                    <div
-                        class="h-2.5 rounded-full"
-                        style={`width: ${driveToAppDirPercent}%; background-color: ${$accentColor};`}
-                    ></div>
-                </div>
-
-                <Tooltip
-                    placement="bottom"
-                    type="custom"
-                    class={tooltipTailwindClass}
-                    arrow={false}
-                    offset={1}
-                    >{formattedAppDirSize} / {formattedDriveSize} | {driveToAppDirPercent}%</Tooltip
-                >
-            </div>
-            <div class="h-1" />
-            <div class="field">
-                <Input
-                    class="max-h-5 w-full bg py-0 leading-none"
-                    style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
-                            color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
-                    id="small-input"
-                    placeholder={`${$newAccount ? "create username.." : "enter username.."} `}
-                    type="text"
-                    bind:value={username}
-                    on:keyup={queryUsernameStrength}
-                    required
-                />
-            </div>
-            <div
-                class="flex w-full h-1 px-0.5 relative bottom-1.5"
-                tabindex="-1"
+        {#if typewriter === ""}
+            <p
+                class="shrink-0 text-left absolute top-0 left-1/3 w-1/2 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
+                style={`--text-color: ${$darkLightMode ? lightTextColor : darkTextColor};
+            font-family: "Orbitron"; font-weight: 600;`}
             >
-                {#if usernameCheck === false}
+                {appName}
+            </p>
+        {/if}
+
+        <div class="loginField">
+            {#if _modal === Modals.None}
+                <div class="flex items-center mx-auto">
+                    <Tooltip
+                        placement="right"
+                        type="custom"
+                        class={tooltipTailwindClass}
+                        arrow={false}>{appVersion}</Tooltip
+                    >
                     <div
-                        class="flex-1 text-center rounded-lg bg-primary-300 dark:bg-primary-400"
-                    />
-                {:else}
-                    <div
-                        class="flex-1 text-center rounded-lg"
-                        style={`background-color: ${$accentColor};`}
-                    />
-                {/if}
-                <div tabindex="-1">
+                        class="top-0 z-10 w-full my-1.5 mb-1 mx-5 rounded-full h-2.5 bg-primary-300 dark:bg-primary-400"
+                    >
+                        <div
+                            class="h-2.5 rounded-full"
+                            style={`width: ${driveToAppDirPercent}%; background-color: ${$accentColor};`}
+                        ></div>
+                    </div>
+
                     <Tooltip
                         placement="bottom"
-                        offset={0}
+                        type="custom"
                         class={tooltipTailwindClass}
-                        arrow={false}>more than 4 characters</Tooltip
+                        arrow={false}
+                        offset={1}
+                        >{formattedAppDirSize} / {formattedDriveSize} | {driveToAppDirPercent}%</Tooltip
                     >
                 </div>
-            </div>
-
-            {#if $newAccount}
-                {#if !enteredPassword}
+                <div class="h-1" />
+                <div class="field">
                     <Input
-                        class="max-h-4 w-full mb-2"
+                        class="max-h-5 w-full bg py-0 leading-none"
+                        style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
+                            color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
+                        id="small-input"
+                        placeholder={`${$newAccount ? "create username.." : "enter username.."} `}
+                        type="text"
+                        bind:value={username}
+                        on:keyup={queryUsernameStrength}
+                        required
+                    />
+                </div>
+                <div
+                    class="flex w-full h-1 px-0.5 relative bottom-1.5"
+                    tabindex="-1"
+                >
+                    {#if usernameCheck === false}
+                        <div
+                            class="flex-1 text-center rounded-lg bg-primary-300 dark:bg-primary-400"
+                        />
+                    {:else}
+                        <div
+                            class="flex-1 text-center rounded-lg"
+                            style={`background-color: ${$accentColor};`}
+                        />
+                    {/if}
+                    <div tabindex="-1">
+                        <Tooltip
+                            placement="bottom"
+                            offset={0}
+                            class={tooltipTailwindClass}
+                            arrow={false}>more than 4 characters</Tooltip
+                        >
+                    </div>
+                </div>
+
+                {#if $newAccount}
+                    {#if !enteredPassword}
+                        <Input
+                            class="max-h-4 w-full mb-2"
+                            style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
+                        color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
+                            id="small-input"
+                            placeholder="create password.."
+                            type="password"
+                            bind:value={password}
+                            on:keyup={(event) => enterPassword(event)}
+                            required
+                        />
+                        <PasswordScan
+                            {password}
+                            _class="flex w-full h-1 px-0.5 relative bottom-1.5"
+                            on:passwordStrengthUpdated={handlePasswordStrengthUpdated}
+                        />
+                    {:else}
+                        <div class="flex justify-between">
+                            <Input
+                                class="max-h-4 w-full mb-2"
+                                style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
+                                    color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
+                                id="small-input"
+                                placeholder="confirm password.."
+                                type="password"
+                                bind:value={password}
+                                on:keyup={checkMatchedPassword}
+                                required
+                            />
+                            <button on:click|stopPropagation={clearPassword}>
+                                <CloseOutline
+                                    class="mb-2"
+                                    style="color: {$accentColor};"
+                                />
+                            </button>
+                        </div>
+                        <div
+                            class="flex w-full h-1 px-0.5 relative bottom-1"
+                            tabindex="-1"
+                        >
+                            {#if !passwordMatch}
+                                <div
+                                    class="flex-1 text-center rounded-lg bg-primary-300 dark:bg-primary-400"
+                                />
+                            {:else}
+                                <div
+                                    class="flex-1 text-center rounded-lg"
+                                    style={`background-color: ${$accentColor};`}
+                                />
+                            {/if}
+                            <Tooltip
+                                placement="left"
+                                class={tooltipTailwindClass}
+                                arrow={false}>must match password</Tooltip
+                            >
+                        </div>
+                    {/if}
+                {:else}
+                    <Input
+                        class="max-h-4 w-full mb-2 focus:outline-1"
                         style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
                         color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
                         id="small-input"
-                        placeholder="create password.."
+                        placeholder="enter password.."
                         type="password"
                         bind:value={password}
                         on:keyup={(event) => enterPassword(event)}
@@ -317,113 +390,67 @@
                         _class="flex w-full h-1 px-0.5 relative bottom-1.5"
                         on:passwordStrengthUpdated={handlePasswordStrengthUpdated}
                     />
-                {:else}
-                    <div class="flex justify-between">
-                        <Input
-                            class="max-h-4 w-full mb-2"
-                            style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
-                                    color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
-                            id="small-input"
-                            placeholder="confirm password.."
-                            type="password"
-                            bind:value={password}
-                            on:keyup={checkMatchedPassword}
-                            required
-                        />
-                        <button on:click|stopPropagation={clearPassword}>
-                            <CloseOutline
-                                class="mb-2"
-                                style="color: {$accentColor};"
-                            />
-                        </button>
-                    </div>
-                    <div
-                        class="flex w-full h-1 px-0.5 relative bottom-1"
-                        tabindex="-1"
-                    >
-                        {#if !passwordMatch}
-                            <div
-                                class="flex-1 text-center rounded-lg bg-primary-300 dark:bg-primary-400"
-                            />
-                        {:else}
-                            <div
-                                class="flex-1 text-center rounded-lg"
-                                style={`background-color: ${$accentColor};`}
-                            />
-                        {/if}
-                        <Tooltip
-                            placement="left"
-                            class={tooltipTailwindClass}
-                            arrow={false}>must match password</Tooltip
-                        >
-                    </div>
                 {/if}
-            {:else}
-                <Input
-                    class="max-h-4 w-full mb-2 focus:outline-1"
-                    style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
-                        color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
-                    id="small-input"
-                    placeholder="enter password.."
-                    type="password"
-                    bind:value={password}
-                    on:keyup={(event) => enterPassword(event)}
-                    required
-                />
-                <PasswordScan
-                    {password}
-                    _class="flex w-full h-1 px-0.5 relative bottom-1.5"
-                    on:passwordStrengthUpdated={handlePasswordStrengthUpdated}
-                />
+            {:else if _modal === Modals.Info}
+                <Info />
+            {:else if _modal === Modals.Settings}
+                <Settings />
             {/if}
-        {:else if _modal === Modals.Info}
-            <Info />
-        {:else if _modal === Modals.Settings}
-            <Settings />
-        {/if}
-    </div>
-
-    <div
-        class={`flex justify-between items-center ${$currentModal === Modals.None ? `mt-0` : `mt-1`}`}
-    >
-        <div class="flex space-x-1">
-            <Button
-                pill={true}
-                class="p-0 px-0.5 hover:drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] "
-                shadow
-                on:click={() => switchModals(Modals.Info)}
-            >
-                <InfoCircleOutline
-                    class="w-6 h-6 "
-                    color={$darkLightMode ? lightTextColor : darkTextColor}
-                />
-            </Button>
-            <Button
-                pill={true}
-                shadow
-                class="p-0.5 hover:drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
-                on:click={() => switchModals(Modals.Settings)}
-            >
-                <CogSolid
-                    class="w-6 h-6"
-                    color={$darkLightMode ? lightTextColor : darkTextColor}
-                />
-            </Button>
         </div>
-        <div>
-            {#if $newAccount}
-                {#if !enteredPassword}
-                    {#if usernameCheck && checks.passwordCheck}
-                        <NeuButton
-                            _class="!w-20 "
-                            on:click={() => enterPasswordBtn()}>ENTER</NeuButton
-                        >
+
+        <div
+            class={`flex justify-between items-center ${$currentModal === Modals.None ? `mt-0` : `mt-1`}`}
+        >
+            <div class="flex space-x-1">
+                <Button
+                    pill={true}
+                    class="p-0 px-0.5 hover:drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] "
+                    shadow
+                    on:click={() => switchModals(Modals.Info)}
+                >
+                    <InfoCircleOutline
+                        class="w-6 h-6 "
+                        color={$darkLightMode ? lightTextColor : darkTextColor}
+                    />
+                </Button>
+                <Button
+                    pill={true}
+                    shadow
+                    class="p-0.5 hover:drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
+                    on:click={() => switchModals(Modals.Settings)}
+                >
+                    <CogSolid
+                        class="w-6 h-6"
+                        color={$darkLightMode ? lightTextColor : darkTextColor}
+                    />
+                </Button>
+            </div>
+            <div>
+                {#if $newAccount}
+                    {#if !enteredPassword}
+                        {#if usernameCheck && checks.passwordCheck}
+                            <NeuButton
+                                _class="!w-20 "
+                                on:click={() => enterPasswordBtn()}
+                                >ENTER</NeuButton
+                            >
+                        {:else}
+                            <NeuButtonFake _class="!w-20 opacity-20"
+                                >ENTER</NeuButtonFake
+                            >
+                        {/if}
+                    {:else if usernameCheck && passwordMatch}
+                        <button class="focus:outline-none" bind:this={loginBtn}>
+                            <NeuButton _class="!w-20" type="submit"
+                                >LOGIN</NeuButton
+                            >
+                        </button>
                     {:else}
                         <NeuButtonFake _class="!w-20 opacity-20"
-                            >ENTER</NeuButtonFake
+                            >LOGIN</NeuButtonFake
                         >
                     {/if}
-                {:else if usernameCheck && passwordMatch}
+                {:else if usernameCheck && checks.passwordCheck}
                     <button class="focus:outline-none" bind:this={loginBtn}>
                         <NeuButton _class="!w-20" type="submit">LOGIN</NeuButton
                         >
@@ -433,17 +460,11 @@
                         >LOGIN</NeuButtonFake
                     >
                 {/if}
-            {:else if usernameCheck && checks.passwordCheck}
-                <button class="focus:outline-none" bind:this={loginBtn}>
-                    <NeuButton _class="!w-20" type="submit">LOGIN</NeuButton>
-                </button>
-            {:else}
-                <NeuButtonFake _class="!w-20 opacity-20">LOGIN</NeuButtonFake>
-            {/if}
+            </div>
         </div>
-    </div>
-    <div class={`${$currentModal === Modals.None ? `h-0.5` : `h-0`}`} />
-</form>
+        <div class={`${$currentModal === Modals.None ? `h-0.5` : `h-0`}`} />
+    </form>
+{/if}
 
 <style>
     p {

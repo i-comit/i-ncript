@@ -29,11 +29,12 @@
     newAccount,
     darkLightMode,
     height,
+    loginLoading,
   } from "./stores/dynamicVariables.ts";
   import { buildFileTree, fileTree } from "./tools/fileTree.ts";
   import { addLogEntry } from "./tools/logger.ts";
   import AppSetup from "./components/pages/AppSetup.svelte";
-  import { darkLightBGOnHTML } from "./tools/themes.ts";
+  import { width } from "./stores/constantVariables.ts";
 
   let _page: AppPage;
   let isRightDir = false;
@@ -41,11 +42,6 @@
   currentPage.subscribe((value) => {
     _page = value;
   });
-
-  // darkLightMode.subscribe((value) => {
-  //   darkLightBGOnHTML(value);
-  // });
-
 
   onMount(async () => {
     isRightDir = await GetDirName();
@@ -90,8 +86,9 @@
     unsubscribe = fileTree.subscribe((value) => {
       if (value && value.relPath !== "") {
         buildFileTree();
+        ResizeWindow(width * 2, $height);
         DirectoryWatcher(0);
-        LogInfo("fileTree loaded on login");
+        loginLoading.set(false);
         unsubscribe(); // Now safe to unsubscribe
       }
     });

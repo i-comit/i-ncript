@@ -26,11 +26,13 @@
     import { FileTasks, currentFileTask } from "../../enums/FileTasks.ts";
 
     import {
+        accentColor,
         darkLightMode,
         fileCount,
         fileTaskPercent,
         largeFileName,
         largeFilePercent,
+        loginLoading,
         totalFileCt,
     } from "../../stores/dynamicVariables.ts";
 
@@ -68,6 +70,7 @@
     import FileTools from "../widgets/FileTools.svelte";
     import { startDisplay } from "../../tools/logger.ts";
     import DuplicateFiles from "../modals/DuplicateFiles.svelte";
+    import { Spinner } from "flowbite-svelte";
 
     let _currentFileTask: FileTasks;
     currentFileTask.subscribe((value) => {
@@ -172,81 +175,96 @@
     }
 </script>
 
-<div class="flex h-screen !rounded-lg">
-    <DuplicateFiles />
-    <Frame />
-    <div
-        id="left-panel"
-        role="none"
-        on:click={clearHeldBtnsFromContainer}
-        on:pointerenter={checkMouseEnter}
-        on:pointerdown={() => {
-            currentModal.set(Modals.None);
-        }}
-    >
-        <DirSize />
-        {#if _currentFileTask === FileTasks.None}
-            <div class="row space-x-2">
-                <NeuButton on:click={() => encrypt()} _style="font-size: 14px;"
-                    >ENCRYPT</NeuButton
-                >
-                <NeuButton on:click={() => decrypt()} _style="font-size: 14px;"
-                    >DECRYPT</NeuButton
-                >
-            </div>
-        {:else}
-            <TaskDisplay />
-        {/if}
-
-        <div class="relative h-14">
+<Frame />
+{#if $loginLoading}
+    <div class="flex items-center justify-center h-screen">
+        <Spinner
+            style="fill: {$accentColor} !important"
+            bg="!text-primary-400 !dark:text-primary-300"
+            size={24}
+        />
+    </div>
+{:else}
+    <div class="flex h-screen !rounded-lg">
+        <DuplicateFiles />
+        <div
+            id="left-panel"
+            role="none"
+            on:click={clearHeldBtnsFromContainer}
+            on:pointerenter={checkMouseEnter}
+            on:pointerdown={() => {
+                currentModal.set(Modals.None);
+            }}
+        >
+            <DirSize />
             {#if _currentFileTask === FileTasks.None}
-                <div style="padding-top: 0.325rem">
-                    <FileTools />
+                <div class="row space-x-2">
+                    <NeuButton
+                        on:click={() => encrypt()}
+                        _style="font-size: 14px;">ENCRYPT</NeuButton
+                    >
+                    <NeuButton
+                        on:click={() => decrypt()}
+                        _style="font-size: 14px;">DECRYPT</NeuButton
+                    >
                 </div>
-                <!-- <p
+            {:else}
+                <TaskDisplay />
+            {/if}
+
+            <div class="relative h-14">
+                {#if _currentFileTask === FileTasks.None}
+                    <div style="padding-top: 0.325rem">
+                        <FileTools />
+                    </div>
+                    <!-- <p
                     class="absolute bottom-0 right-0 leading-none text-sm select-none"
                 >
                     HOT FILER
                 </p> -->
-            {:else}
-                <WaveProgress dataProgress={$fileTaskPercent} />
+                {:else}
+                    <WaveProgress dataProgress={$fileTaskPercent} />
+                {/if}
+            </div>
+
+            <div
+                class={_currentFileTask === FileTasks.None ? "h-1" : "h-0.5"}
+            />
+
+            <div class="row space-x-0">
+                <NeuButton
+                    on:click={() => switchPages(AppPage.Mbox)}
+                    _class="!w-20">M-BOX</NeuButton
+                >
+                <Toggle />
+            </div>
+        </div>
+
+        <PanelDivider />
+        <div
+            id="right-panel"
+            role="none"
+            on:mouseleave={onmouseleave}
+            on:pointerup={clearHeldBtnsFromContainer}
+        >
+            <!-- <NeuSearch /> -->
+            <RadialProgress
+                _style="right: 3.6rem"
+                dataProgress={$largeFilePercent}
+                overlayText={$largeFileName}
+            />
+            {#if _modal === Modals.None}
+                <TreeView _fileTree={$fileTree} />
+            {:else if _modal === Modals.Settings}
+                <Settings />
+            {:else if _modal === Modals.Info}
+                <Info />
+            {:else if _modal === Modals.Logger}
+                <Logger />
             {/if}
         </div>
-
-        <div class={_currentFileTask === FileTasks.None ? "h-1" : "h-0.5"} />
-
-        <div class="row space-x-0">
-            <NeuButton on:click={() => switchPages(AppPage.Mbox)} _class="!w-20"
-                >M-BOX</NeuButton
-            >
-            <Toggle />
-        </div>
     </div>
-
-    <PanelDivider />
-    <div
-        id="right-panel"
-        role="none"
-        on:mouseleave={onmouseleave}
-        on:pointerup={clearHeldBtnsFromContainer}
-    >
-        <!-- <NeuSearch /> -->
-        <RadialProgress
-            _style="right: 3.6rem"
-            dataProgress={$largeFilePercent}
-            overlayText={$largeFileName}
-        />
-        {#if _modal === Modals.None}
-            <TreeView _fileTree={$fileTree} />
-        {:else if _modal === Modals.Settings}
-            <Settings />
-        {:else if _modal === Modals.Info}
-            <Info />
-        {:else if _modal === Modals.Logger}
-            <Logger />
-        {/if}
-    </div>
-</div>
+{/if}
 
 <style>
     .row {

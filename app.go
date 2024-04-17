@@ -139,9 +139,6 @@ func (a *App) Login(username, password string) (int, error) {
 }
 
 func (a *App) grantAccessToApp() {
-	if a.ctx != nil {
-		a.ResizeWindow(_width*2, _height)
-	}
 	for i, dir := range a.directories {
 		a.directories[i] = a.cwd + string(os.PathSeparator) + dir
 	}

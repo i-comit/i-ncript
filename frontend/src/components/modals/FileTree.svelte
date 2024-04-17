@@ -14,11 +14,7 @@
         ExpandOutline,
         CompressOutline,
     } from "flowbite-svelte-icons";
-    import {
-        SpeedDial,
-        SpeedDialButton,
-        Tooltip,
-    } from "flowbite-svelte";
+    import { SpeedDial, SpeedDialButton, Tooltip } from "flowbite-svelte";
 
     import {
         clearHeldBtns,
@@ -133,7 +129,6 @@
 
     onDestroy(() => {
         unsub_darkLightMode();
-        // EventsOff("rebuildFileTree");
     });
 
     function expandCollapseAllNodes(node: FileNode, expand: boolean) {
@@ -320,10 +315,6 @@
                             {_label} &#40;empty&#41;
                         </button>
                     {/if}
-                {:catch error}
-                    <button on:click={() => OpenDirectory(_fileTree.relPath)}>
-                        nothing here yet.</button
-                    >
                 {/await}
 
                 {#if $pointerDown}

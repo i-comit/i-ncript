@@ -10,13 +10,10 @@
         DarkMode,
         Tooltip,
     } from "flowbite-svelte";
-    import { get } from "svelte/store";
     import { ChevronDownOutline } from "flowbite-svelte-icons";
 
     import {
         tooltipTailwindClass,
-        lightBGColor,
-        darkBGColor,
     } from "../../stores/constantVariables";
 
     import { AppPage, currentPage } from "../../enums/AppPage";
