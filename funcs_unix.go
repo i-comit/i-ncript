@@ -1,5 +1,5 @@
-//go:build darwin
-// +build darwin
+//go:build linux || darwin
+// +build linux darwin
 
 package main
 
@@ -9,7 +9,7 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-const _height = 130
+const _height = 120
 
 func (g *Getters) GetRootDiskSpace() (int64, error) {
 	// Extract the root path from the current working directory.
