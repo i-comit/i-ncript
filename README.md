@@ -1,16 +1,16 @@
-# README
+# i_ncript
 
-## About
+A new Flutter project.
 
-This is the official Wails Svelte template.
+## Getting Started
 
-## Live Development
+This project is a starting point for a Flutter application.
 
-To run in live development mode, run `wails dev` in the project directory. This will run a Vite development
-server that will provide very fast hot reload of your frontend changes. If you want to develop in a browser
-and have access to your Go methods, there is also a dev server that runs on http://localhost:34115. Connect
-to this in your browser, and you can call your Go code from devtools.
+A few resources to get you started if this is your first Flutter project:
 
-## Building
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-To build a redistributable, production mode package, use `wails build`.
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
