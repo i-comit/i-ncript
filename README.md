@@ -51,13 +51,10 @@
 <!-- ABOUT THE PROJECT -->
 ## Introduction
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-<div style="display: flex; justify-content: space-around; align-items: center; width: 100%;">
-
-<img src="https://example.com/image1.jpg" alt="Image 1" style="flex-grow: 1; max-width: 33%; height: auto;">
-<img src="https://example.com/image2.jpg" alt="Image 2" style="flex-grow: 1; max-width: 33%; height: auto;">
-<img src="https://example.com/image3.jpg" alt="Image 3" style="flex-grow: 1; max-width: 33%; height: auto;">
-
+<!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
+<div style="display: flex; justify-content: space-around; align-items: center; width: 100%; margin-bottom: 1rem">
+<img src="/screenshots/darkMode.png" alt="Dark mode w/ blue accent" style="flex-grow: 1; max-width: 45%; height: auto;">
+<img src="/screenshots/lightMode.png" alt="Light mode w/ green accent" style="flex-grow: 1; max-width: 45%; height: auto;">
 </div>
 
 i-ncript is a portable data encryption app, designed for use with removable storage devices. It is portable as it does not require aninstaller to run, can execute on any drive, and can be quickly transferred to another device without an install/uninstall process.
@@ -66,7 +63,7 @@ The focus on portability plays an important role in data security. The fact is, 
 
 Files are encrypted using the Advanced Encryption Standard (AES), which employs a sophisticated round-based encryption method to provide a robust security foundation. Your key is additionally encrypted using the Argon2i algorithm, which enhances security by resisting side-channel attacks and using "salting" to defend against rainbow tables.
 
-You can also send 
+You can also send
 
 Summary:
 
