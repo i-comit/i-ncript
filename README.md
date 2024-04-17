@@ -134,7 +134,8 @@ To compile this app. You will need to install [![Node.js][Node.js_Badge]][Node.j
 <!-- ROADMAP -->
 ## Roadmap
 
-You can track the current project roadmap <a href="https://github.com/users/khiemgluong/projects/3">here</a>:
+You can track the current project roadmap <a href="https://github.com/orgs/i-comit/projects/1">here</a>.
+
 See the [open issues](https://github.com/i-comit/i-ncript/issues) for a full list of proposed features (and known issues).
 
 <!-- CONTRIBUTING -->
