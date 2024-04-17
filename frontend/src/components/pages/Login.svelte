@@ -20,7 +20,7 @@
         alertInterval,
     } from "../../tools/logger";
 
-    import Frame from "../widgets/Frame.svelte";
+    import TitleBar from "../widgets/TitleBar.svelte";
     import Info from "../modals/Info.svelte";
     import Settings from "../modals/Settings.svelte";
 
@@ -37,7 +37,7 @@
         darkLightMode,
         accentColor,
         newAccount,
-        loginLoading,
+        pageLoading,
     } from "../../stores/dynamicVariables.ts";
     import {
         darkLightBGOnElement,
@@ -123,7 +123,7 @@
     });
 
     async function verifyLogin(): Promise<boolean> {
-        loginLoading.set(true);
+        pageLoading.set(true);
         try {
             const loginResult = await Login(username, password); // Await the promise here directly
             switch (loginResult) {
@@ -133,15 +133,15 @@
                     return true;
                 case 1: // File is empty
                     startDisplay("key file is empty...");
-                    loginLoading.set(false);
+                    pageLoading.set(false);
                     return false;
                 case 3: // Wrong credentials
                     startDisplay("wrong credentials...");
-                    loginLoading.set(false);
+                    pageLoading.set(false);
                     return false;
                 default:
                     LogError("Unexpected login result: " + loginResult);
-                    loginLoading.set(false);
+                    pageLoading.set(false);
                     return false;
             }
         } catch (error) {
@@ -169,7 +169,7 @@
                     if (!loginBool) {
                         username = "";
                         clearPassword();
-                        loginLoading.set(false);
+                        pageLoading.set(false);
                     }
                 });
         }
@@ -217,8 +217,8 @@
     }
 </script>
 
-<Frame />
-{#if $loginLoading}
+<TitleBar />
+{#if $pageLoading}
     <div class="flex items-center justify-center h-screen">
         <Spinner
             style="fill: {$accentColor} !important"

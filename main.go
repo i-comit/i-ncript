@@ -127,8 +127,8 @@ func main() {
 			WebviewIsTransparent: true,
 			WindowIsTranslucent:  false,
 			About: &mac.AboutInfo{
-				Title:   "My Application",
-				Message: "© 2021 Me",
+				Title:   "i-ncript",
+				Message: "© 2022-present Khiem Luong",
 			},
 		},
 		Linux: &linux.Options{

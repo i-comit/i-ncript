@@ -23,6 +23,7 @@ import {
 } from "../../wailsjs/go/main/Getters";
 import { lastHighlight_light, prevHighlight_light } from "../stores/constantVariables";
 import { FileTypes, getFileType } from "../enums/FileTypes";
+import { pageLoading } from "../stores/dynamicVariables";
 
 export const vaultExpansionState = writable<{ [key: string]: boolean }>({});
 export const mBoxExpansionState = writable<{ [key: string]: boolean }>({});
@@ -63,6 +64,7 @@ export function buildFileTree() {
         .then(updateExpansionStateStore)
         .then(() => {
             LogPrint("Fully initialized and loaded " + pageName());
+            pageLoading.set(false);
         })
         .catch((error) => {
             LogError("Failed to get directory structure: " + error);

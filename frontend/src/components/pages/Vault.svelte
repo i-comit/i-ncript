@@ -32,7 +32,7 @@
         fileTaskPercent,
         largeFileName,
         largeFilePercent,
-        loginLoading,
+        pageLoading,
         totalFileCt,
     } from "../../stores/dynamicVariables.ts";
 
@@ -64,13 +64,14 @@
     import TreeView from "../modals/FileTree.svelte";
     import Logger from "../modals/Logger.svelte";
 
-    import Frame from "../widgets/Frame.svelte";
+    import TitleBar from "../widgets/TitleBar.svelte";
     import DirSize from "../widgets/DirectorySize.svelte";
     import PanelDivider from "../widgets/PanelDivider.svelte";
     import FileTools from "../widgets/FileTools.svelte";
     import { startDisplay } from "../../tools/logger.ts";
     import DuplicateFiles from "../modals/DuplicateFiles.svelte";
     import { Spinner } from "flowbite-svelte";
+    import OvalSpinner from "../widgets/OvalSpinner.svelte";
 
     let _currentFileTask: FileTasks;
     currentFileTask.subscribe((value) => {
@@ -88,6 +89,7 @@
     });
 
     onMount(() => {
+        pageLoading.set(true);
         buildFileTree();
         if (_currentFileTask === FileTasks.None) retrieveDuplicateFiles();
         darkLightBGOnId($darkLightMode, "right-panel");
@@ -175,15 +177,9 @@
     }
 </script>
 
-<Frame />
-{#if $loginLoading}
-    <div class="flex items-center justify-center h-screen">
-        <Spinner
-            style="fill: {$accentColor} !important"
-            bg="!text-primary-400 !dark:text-primary-300"
-            size={24}
-        />
-    </div>
+<TitleBar />
+{#if $pageLoading}
+    <OvalSpinner />
 {:else}
     <div class="flex h-screen !rounded-lg">
         <DuplicateFiles />

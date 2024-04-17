@@ -26,6 +26,8 @@
     export let dataProgress: number;
 
     let pauseBtn: HTMLDivElement;
+    let progressPClass =
+        "text-xs text-primary-100 dark:text-primary-200 font-semibold";
 
     const unsub_darkLightMode = darkLightMode.subscribe((value) => {
         darkLightTextOnElement(!value, pauseBtn);
@@ -55,16 +57,17 @@
     });
 
     function interruptFileTask() {
-        InterruptFileTask();
+        InterruptFileTask().finally(() => {
+            setTimeout(() => {
+                retrieveDuplicateFiles();
+            }, 2000);
+        });
         currentFileTask.set(FileTasks.None);
         cipheredFilesSize.set("");
         fileCount.set(0);
         totalFileCt.set(0);
         fileTaskPercent.set(0);
         largeFilePercent.set(0);
-        setTimeout(() => {
-            retrieveDuplicateFiles();
-        }, 1000);
     }
 </script>
 
@@ -77,12 +80,11 @@
         </div>
     </div>
 </div>
-<div
-    class="absolute flex justify-between w-full bottom-5 px-1 text-xs
-            text-primary-100 dark:text-primary-200 font-semibold select-none"
->
-    <p>{formatNumber($fileCount)}/{formatNumber($totalFileCt)}</p>
-    <p>{$cipheredFilesSize}</p>
+<div class="absolute flex justify-between w-full bottom-5 px-1 select-none">
+    <p class={progressPClass}>
+        {formatNumber($fileCount)}/{formatNumber($totalFileCt)}
+    </p>
+    <p class={progressPClass}>{$cipheredFilesSize}</p>
 </div>
 <!-- https://codepen.io/uimax/pen/KgdgGa -->
 <div class="progress progress-striped active rounded-md h-3.5 p-0 m-0">

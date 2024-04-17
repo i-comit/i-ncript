@@ -29,7 +29,7 @@
     newAccount,
     darkLightMode,
     height,
-    loginLoading,
+    pageLoading,
   } from "./stores/dynamicVariables.ts";
   import { buildFileTree, fileTree } from "./tools/fileTree.ts";
   import { addLogEntry } from "./tools/logger.ts";
@@ -81,14 +81,13 @@
     });
 
     currentPage.set(AppPage.Vault);
+    ResizeWindow(width * 2, $height);
 
     let unsubscribe = () => {}; // Define a no-op function to avoid undefined errors
     unsubscribe = fileTree.subscribe((value) => {
       if (value && value.relPath !== "") {
         buildFileTree();
-        ResizeWindow(width * 2, $height);
         DirectoryWatcher(0);
-        loginLoading.set(false);
         unsubscribe(); // Now safe to unsubscribe
       }
     });

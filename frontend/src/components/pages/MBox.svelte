@@ -24,6 +24,7 @@
         largeFilePercent,
         totalFileCt,
         accentColor,
+        pageLoading,
     } from "../../stores/dynamicVariables.ts";
 
     import {
@@ -50,7 +51,7 @@
         LogInfo,
     } from "../../../wailsjs/runtime/runtime";
 
-    import Frame from "../widgets/Frame.svelte";
+    import TitleBar from "../widgets/TitleBar.svelte";
     import PanelDivider from "../widgets/PanelDivider.svelte";
     import FileTools from "../widgets/FileTools.svelte";
     import DirSize from "../widgets/DirectorySize.svelte";
@@ -73,6 +74,7 @@
     import { EncryptENCPFile } from "../../../wailsjs/go/main/App";
     import RadialProgress from "../widgets/RadialProgress.svelte";
     import { startDisplay } from "../../tools/logger.ts";
+    import OvalSpinner from "../widgets/OvalSpinner.svelte";
 
     enum MboxState {
         Pack = "PACK",
@@ -120,6 +122,7 @@
     });
 
     onMount(() => {
+        pageLoading.set(true);
         buildFileTree();
         if (_currentFileTask === FileTasks.None) retrieveDuplicateFiles();
 
@@ -270,110 +273,52 @@
     }
 </script>
 
-<div class="flex h-screen !rounded-lg">
-    <Frame />
-    <div
-        id="left-panel"
-        role="none"
-        on:click={() => {
-            clearHeldBtnsFromContainer();
-            clearUsername();
-            clearPassword();
-        }}
-        on:pointerdown={() => {
-            currentModal.set(Modals.None);
-        }}
-    >
-        <DirSize />
-        {#if currentMBoxState === MboxState.None}
-            {#if _currentFileTask === FileTasks.None}
-                <div class="h-12 text-primary-100 dark:text-primary-200">
-                    <p
-                        class="text-center text-sm"
-                        style="font-family: 'Orbitron'; font-weight: regular;"
-                    >
-                        no files selected..
-                    </p>
-                </div>
-
-                <div class="h-9"></div>
-            {:else}
-                <TaskDisplay />
-                <WaveProgress dataProgress={$fileTaskPercent} />
-                <div class="h-0.5" />
-            {/if}
-        {:else if currentMBoxState === MboxState.Open}
-            {#if _currentFileTask === FileTasks.None}
-                <div style="height: 3.175rem">
-                    <div style="height: 2.075rem" />
-                    <FileTools />
-                </div>
-                <div class="row" role="none" on:click|stopPropagation>
-                    <Input
-                        class="max-h-1 m-0"
-                        style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
-                                color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
-                        id="small-input"
-                        placeholder="enter password.."
-                        type="password"
-                        bind:value={password}
-                        on:keyup={(event) => enterPassword(event)}
-                    />
-                </div>
-                <PasswordScan
-                    _class="!bottom-0.5"
-                    {password}
-                    on:passwordStrengthUpdated={handlePasswordStrengthUpdated}
-                />
-            {:else}
-                <TaskDisplay />
-                <WaveProgress dataProgress={$fileTaskPercent} />
-                <div class="h-0.5" />
-            {/if}
-        {:else if currentMBoxState === MboxState.Pack}
-            {#if _currentFileTask === FileTasks.None}
-                <div class="row" role="none" on:click|stopPropagation>
-                    <Input
-                        class="max-h-1"
-                        style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
-                                color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
-                        id="small-input"
-                        placeholder="enter username.."
-                        type="text"
-                        bind:value={username}
-                        on:keyup={queryUsernameStrength}
-                    />
-                </div>
-                <div
-                    class="flex w-full h-1 px-0.5 relative bottom-0.5"
-                    tabindex="-1"
-                >
-                    {#if usernameCheck === false}
-                        <div
-                            class="flex-1 text-center rounded-lg bg-primary-400 dark:bg-primary-300"
-                        />
-                    {:else}
-                        <div
-                            class="flex-1 text-center rounded-lg"
-                            style={`background-color: ${$accentColor};`}
-                        />
-                    {/if}
-                    <Tooltip
-                        placement="left"
-                        class={tooltipTailwindClass}
-                        arrow={false}>more than 4 characters</Tooltip
-                    >
-                </div>
-                {#if !enteredPassword}
-                    <div style="height: 1.1rem">
-                        <FileTools />
+<TitleBar />
+{#if $pageLoading}
+    <OvalSpinner />
+{:else}
+    <div class="flex h-screen !rounded-lg">
+        <div
+            id="left-panel"
+            role="none"
+            on:click={() => {
+                clearHeldBtnsFromContainer();
+                clearUsername();
+                clearPassword();
+            }}
+            on:pointerdown={() => {
+                currentModal.set(Modals.None);
+            }}
+        >
+            <DirSize />
+            {#if currentMBoxState === MboxState.None}
+                {#if _currentFileTask === FileTasks.None}
+                    <div class="h-12 text-primary-100 dark:text-primary-200">
+                        <p
+                            class="text-center text-sm"
+                            style="font-family: 'Orbitron'; font-weight: regular;"
+                        >
+                            no files selected..
+                        </p>
                     </div>
 
+                    <div class="h-9"></div>
+                {:else}
+                    <TaskDisplay />
+                    <WaveProgress dataProgress={$fileTaskPercent} />
+                    <div class="h-0.5" />
+                {/if}
+            {:else if currentMBoxState === MboxState.Open}
+                {#if _currentFileTask === FileTasks.None}
+                    <div style="height: 3.175rem">
+                        <div style="height: 2.075rem" />
+                        <FileTools />
+                    </div>
                     <div class="row" role="none" on:click|stopPropagation>
                         <Input
                             class="max-h-1 m-0"
                             style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
-                                    color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
+                                color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
                             id="small-input"
                             placeholder="enter password.."
                             type="password"
@@ -387,29 +332,29 @@
                         on:passwordStrengthUpdated={handlePasswordStrengthUpdated}
                     />
                 {:else}
-                    <div style="height: 1.1rem">
-                        <FileTools />
-                    </div>
+                    <TaskDisplay />
+                    <WaveProgress dataProgress={$fileTaskPercent} />
+                    <div class="h-0.5" />
+                {/if}
+            {:else if currentMBoxState === MboxState.Pack}
+                {#if _currentFileTask === FileTasks.None}
                     <div class="row" role="none" on:click|stopPropagation>
                         <Input
-                            class="max-h-1 m-0"
+                            class="max-h-1"
                             style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
-                            color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
+                                color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
                             id="small-input"
-                            placeholder="confirm password.."
-                            type="password"
-                            bind:value={password}
-                            on:keyup={checkMatchedPassword}
+                            placeholder="enter username.."
+                            type="text"
+                            bind:value={username}
+                            on:keyup={queryUsernameStrength}
                         />
-                        <button on:click|stopPropagation={clearPassword}>
-                            <CloseOutline style="color: {$accentColor};" />
-                        </button>
                     </div>
                     <div
                         class="flex w-full h-1 px-0.5 relative bottom-0.5"
                         tabindex="-1"
                     >
-                        {#if !passwordMatch}
+                        {#if usernameCheck === false}
                             <div
                                 class="flex-1 text-center rounded-lg bg-primary-400 dark:bg-primary-300"
                             />
@@ -422,75 +367,138 @@
                         <Tooltip
                             placement="left"
                             class={tooltipTailwindClass}
-                            arrow={false}>must match password</Tooltip
+                            arrow={false}>more than 4 characters</Tooltip
                         >
                     </div>
-                {/if}
-            {:else}
-                <TaskDisplay />
-                <div class="h-0.5" />
-                <WaveProgress dataProgress={$fileTaskPercent}></WaveProgress>
-            {/if}
-        {/if}
+                    {#if !enteredPassword}
+                        <div style="height: 1.1rem">
+                            <FileTools />
+                        </div>
 
-        <div class="row space-x-5 space-evenly">
-            <NeuButton on:click={() => switchPages(AppPage.Vault)}
-                >VAULT</NeuButton
-            >
-            {#if currentMBoxState === MboxState.Pack}
-                {#if !enteredPassword}
-                    {#if checks.passwordCheck}
-                        <NeuButton on:click={() => enterPasswordBtn()}
-                            >ENTER</NeuButton
+                        <div class="row" role="none" on:click|stopPropagation>
+                            <Input
+                                class="max-h-1 m-0"
+                                style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
+                                    color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
+                                id="small-input"
+                                placeholder="enter password.."
+                                type="password"
+                                bind:value={password}
+                                on:keyup={(event) => enterPassword(event)}
+                            />
+                        </div>
+                        <PasswordScan
+                            _class="!bottom-0.5"
+                            {password}
+                            on:passwordStrengthUpdated={handlePasswordStrengthUpdated}
+                        />
+                    {:else}
+                        <div style="height: 1.1rem">
+                            <FileTools />
+                        </div>
+                        <div class="row" role="none" on:click|stopPropagation>
+                            <Input
+                                class="max-h-1 m-0"
+                                style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
+                            color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
+                                id="small-input"
+                                placeholder="confirm password.."
+                                type="password"
+                                bind:value={password}
+                                on:keyup={checkMatchedPassword}
+                            />
+                            <button on:click|stopPropagation={clearPassword}>
+                                <CloseOutline style="color: {$accentColor};" />
+                            </button>
+                        </div>
+                        <div
+                            class="flex w-full h-1 px-0.5 relative bottom-0.5"
+                            tabindex="-1"
+                        >
+                            {#if !passwordMatch}
+                                <div
+                                    class="flex-1 text-center rounded-lg bg-primary-400 dark:bg-primary-300"
+                                />
+                            {:else}
+                                <div
+                                    class="flex-1 text-center rounded-lg"
+                                    style={`background-color: ${$accentColor};`}
+                                />
+                            {/if}
+                            <Tooltip
+                                placement="left"
+                                class={tooltipTailwindClass}
+                                arrow={false}>must match password</Tooltip
+                            >
+                        </div>
+                    {/if}
+                {:else}
+                    <TaskDisplay />
+                    <div class="h-0.5" />
+                    <WaveProgress dataProgress={$fileTaskPercent}
+                    ></WaveProgress>
+                {/if}
+            {/if}
+
+            <div class="row space-x-5 space-evenly">
+                <NeuButton on:click={() => switchPages(AppPage.Vault)}
+                    >VAULT</NeuButton
+                >
+                {#if currentMBoxState === MboxState.Pack}
+                    {#if !enteredPassword}
+                        {#if checks.passwordCheck}
+                            <NeuButton on:click={() => enterPasswordBtn()}
+                                >ENTER</NeuButton
+                            >
+                        {:else}
+                            <NeuButtonFake>ENTER</NeuButtonFake>
+                        {/if}
+                    {:else if passwordMatch}
+                        <NeuButton on:click={packFilesForENCP}>PACK</NeuButton>
+                    {:else}
+                        <NeuButtonFake>PACK</NeuButtonFake>
+                    {/if}
+                {:else if currentMBoxState === MboxState.Open}
+                    {#if Object.keys(_heldDownBtns).length > 0}
+                        <NeuButton on:click={() => authenticateENCPFile()}
+                            >OPEN</NeuButton
                         >
                     {:else}
-                        <NeuButtonFake>ENTER</NeuButtonFake>
+                        <NeuButtonFake>OPEN</NeuButtonFake>
                     {/if}
-                {:else if passwordMatch}
-                    <NeuButton on:click={packFilesForENCP}>PACK</NeuButton>
                 {:else}
-                    <NeuButtonFake>PACK</NeuButtonFake>
+                    <NeuButtonFake></NeuButtonFake>
                 {/if}
-            {:else if currentMBoxState === MboxState.Open}
-                {#if Object.keys(_heldDownBtns).length > 0}
-                    <NeuButton on:click={() => authenticateENCPFile()}
-                        >OPEN</NeuButton
-                    >
-                {:else}
-                    <NeuButtonFake>OPEN</NeuButtonFake>
-                {/if}
-            {:else}
-                <NeuButtonFake></NeuButtonFake>
+            </div>
+        </div>
+        <PanelDivider />
+
+        <div
+            id="right-panel"
+            role="none"
+            on:mouseleave={onmouseleave}
+            on:click={() => {
+                clearHeldBtnsFromContainer();
+            }}
+        >
+            <!-- <NeuSearch /> -->
+            <RadialProgress
+                _style="right: 3.6rem"
+                dataProgress={$largeFilePercent}
+                overlayText={$largeFileName}
+            />
+            {#if _modal === Modals.None}
+                <TreeView _fileTree={$fileTree} />
+            {:else if _modal === Modals.Settings}
+                <Settings />
+            {:else if _modal === Modals.Info}
+                <Info />
+            {:else if _modal === Modals.Logger}
+                <Logger />
             {/if}
         </div>
     </div>
-    <PanelDivider />
-
-    <div
-        id="right-panel"
-        role="none"
-        on:mouseleave={onmouseleave}
-        on:click={() => {
-            clearHeldBtnsFromContainer();
-        }}
-    >
-        <!-- <NeuSearch /> -->
-        <RadialProgress
-            _style="right: 3.6rem"
-            dataProgress={$largeFilePercent}
-            overlayText={$largeFileName}
-        />
-        {#if _modal === Modals.None}
-            <TreeView _fileTree={$fileTree} />
-        {:else if _modal === Modals.Settings}
-            <Settings />
-        {:else if _modal === Modals.Info}
-            <Info />
-        {:else if _modal === Modals.Logger}
-            <Logger />
-        {/if}
-    </div>
-</div>
+{/if}
 
 <style>
     .row {

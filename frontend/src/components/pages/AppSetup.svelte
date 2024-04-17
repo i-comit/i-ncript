@@ -16,7 +16,7 @@
         darkLightMode,
         height,
     } from "../../stores/dynamicVariables";
-    import Frame from "../widgets/Frame.svelte";
+    import TitleBar from "../widgets/TitleBar.svelte";
     import License from "../modals/License.svelte";
     import { ChevronDownOutline } from "flowbite-svelte-icons";
     import Introduction from "./setup_pages/Introduction.svelte";
@@ -88,7 +88,7 @@
 >
     first time setup
 </div>
-<Frame />
+<TitleBar />
 
 <div
     class="flex justify-between rounded-xl mx-6"

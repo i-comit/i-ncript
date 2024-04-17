@@ -4,8 +4,6 @@
     import { Accordion, AccordionItem } from "flowbite-svelte";
     import {
         FolderArrowRightOutline,
-        FolderOpenSolid,
-        PlaySolid,
     } from "flowbite-svelte-icons";
 
     import { LogInfo } from "../../../wailsjs/runtime/runtime";
@@ -14,22 +12,17 @@
     import { OpenDirectory } from "../../../wailsjs/go/main/FileUtils";
 
     import {
-        lightBGColor,
         darkBGColor,
-        width,
-        height,
     } from "../../stores/constantVariables";
     import {
         InitializeRootFolder,
-        CloseApp,
-        ResizeWindow,
     } from "../../../wailsjs/go/main/App";
     import {
         GetRootFolder,
         CheckRootFolderInCWD,
     } from "../../../wailsjs/go/main/Getters";
 
-    import Frame from "../widgets/Frame.svelte";
+    import TitleBar from "../widgets/TitleBar.svelte";
     import NeuButton from "../widgets/NeuButton.svelte";
 
     let rootFolder = "";
@@ -63,8 +56,7 @@
 >
     incorrect directory
 </div>
-<Frame />
-
+<TitleBar />
 <div class="rounded-lg wrongdir px-1 text-center">
     <div class="h-8" />
     <p class="mx-2 select-none text-primary-200">
