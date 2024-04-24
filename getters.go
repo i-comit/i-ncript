@@ -23,7 +23,7 @@ func (g *Getters) GetAppPath() (string, error) {
 }
 func (g *Getters) GetDirName() (bool, error) {
 	dirName := filepath.Base(g.app.cwd)
-	match := (dirName == rootFolder)
+	match := (dirName == strings.ToLower(rootFolder))
 	return match, nil
 }
 
@@ -135,7 +135,7 @@ func (g *Getters) GetFormattedDirIndexSize(dirIndex int) (string, error) {
 }
 
 func (g *Getters) CheckRootFolderInCWD() (string, error) {
-	dirPath, err := getEndPath(rootFolder)
+	dirPath, err := getEndPath(strings.ToLower(rootFolder))
 	if err != nil {
 		return "", fmt.Errorf("error checking  %s: %w", dirPath, err)
 	}
@@ -182,7 +182,7 @@ func (g *Getters) GetHeight() int {
 }
 
 func (g *Getters) GetRootFolder() string {
-	return rootFolder
+	return strings.ToLower(rootFolder)
 }
 
 type FileProperties struct {

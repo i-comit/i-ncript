@@ -2,21 +2,15 @@
 <script>
     import { onMount } from "svelte";
     import { Accordion, AccordionItem } from "flowbite-svelte";
-    import {
-        FolderArrowRightOutline,
-    } from "flowbite-svelte-icons";
+    import { FolderArrowRightOutline } from "flowbite-svelte-icons";
 
     import { LogInfo } from "../../../wailsjs/runtime/runtime";
     import { darkLightMode, accentColor } from "../../stores/dynamicVariables";
 
     import { OpenDirectory } from "../../../wailsjs/go/main/FileUtils";
 
-    import {
-        darkBGColor,
-    } from "../../stores/constantVariables";
-    import {
-        InitializeRootFolder,
-    } from "../../../wailsjs/go/main/App";
+    import { darkBGColor } from "../../stores/constantVariables";
+    import { InitializeRootFolder } from "../../../wailsjs/go/main/App";
     import {
         GetRootFolder,
         CheckRootFolderInCWD,
@@ -117,9 +111,7 @@
         <NeuButton on:click={initializeRootFolder}>Create Folder</NeuButton>
     {:else}
         <div class="flex justify-center">
-            <p
-                class="text-primary-200 text-sm pl-2 leading-none !text-justify"
-            >
+            <p class="text-primary-200 text-sm pl-2 leading-none !text-justify">
                 the <button
                     class={`${rootFolderClass} hover:outline`}
                     on:click={() => OpenDirectory(rootFolderPath)}
@@ -151,7 +143,7 @@
         overflow-x: hidden;
         overflow-y: auto;
         box-sizing: border-box;
-        scrollbar-width: none;
+        /*scrollbar-width: none; */
         /* For Firefox */
         -ms-overflow-style: none;
         scroll-behavior: smooth; /* Enables smooth scrolling */

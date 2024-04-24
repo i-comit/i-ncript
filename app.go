@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/fsnotify/fsnotify"
@@ -48,7 +49,7 @@ func (a *App) InitializeRootFolder() error {
 		return err
 	}
 	executableDir := filepath.Dir(executablePath) // Directory of the executable
-	newFolderPath := filepath.Join(executableDir, rootFolder)
+	newFolderPath := filepath.Join(executableDir, strings.ToLower(rootFolder))
 
 	if _, err := os.Stat(newFolderPath); os.IsNotExist(err) {
 		err = os.MkdirAll(newFolderPath, os.ModePerm)

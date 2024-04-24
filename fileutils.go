@@ -110,6 +110,9 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 	var separator = string(filepath.Separator)
 	rootDir = filepath.Clean(rootDir)
 	rootNode := &FileNode{RelPath: rootDir + separator, Children: []*FileNode{}}
+
+	exclusionPrefix := a.excludeAllInEndpathMatching("VAULT/MISC/*")
+
 	err := filepath.Walk(rootDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -119,6 +122,11 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 			return nil
 		}
 		relativePath, err := filepath.Rel(rootDir, path)
+		fmt.Println("path " + path + " " + relativePath)
+		if relativePath == "." || strings.HasPrefix(path, exclusionPrefix) {
+			fmt.Println("exclusion prefix " + exclusionPrefix)
+			return filepath.SkipDir // skip entire directory tree under the match
+		}
 		if err != nil {
 			return err
 		}

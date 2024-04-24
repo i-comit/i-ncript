@@ -52,8 +52,9 @@ const refreshDirSize = "refreshDirSize"
 
 // DATA consts
 // Change to whatever name you want the root folder to be
-const rootFolder = "=i-ncript"
+const rootFolder = "I-NCRIPT"
 const keyFileName = ".i-ncript.🔑"
+const configFileName = ".i-ncript.⚙️"
 const _width = 220
 
 // Change this in your build for extra security
@@ -135,7 +136,7 @@ func main() {
 			// Icon: icon,
 			WindowIsTranslucent: false,
 			WebviewGpuPolicy:    linux.WebviewGpuPolicyAlways,
-			// ProgramName: "wails"
+			ProgramName:         "i-ncript",
 		},
 		Debug: options.Debug{
 			OpenInspectorOnStartup: false,

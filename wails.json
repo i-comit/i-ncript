@@ -13,8 +13,9 @@
   "info": {
     "companyName": "i-comit LLC",
     "productName": "i-ncript",
-    "productVersion": "0.2.1",
-    "copyright": "",
+    "productVersion": "0.2.2",
+    "copyright": "2022-present Khiem Luong",
+    "description": "a portable data encryption app",
     "comments": "Built using Wails (https://wails.app)"
   }
 }
