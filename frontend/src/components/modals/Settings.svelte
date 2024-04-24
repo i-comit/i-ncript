@@ -9,18 +9,39 @@
         Range,
         DarkMode,
         Tooltip,
+        Textarea,
+        Label,
     } from "flowbite-svelte";
     import { ChevronDownOutline } from "flowbite-svelte-icons";
 
-    import {
-        tooltipTailwindClass,
-    } from "../../stores/constantVariables";
+    import { tooltipTailwindClass } from "../../stores/constantVariables";
 
     import { AppPage, currentPage } from "../../enums/AppPage";
     import { darkLightMode, accentColor } from "../../stores/dynamicVariables";
     import { LogInfo } from "../../../wailsjs/runtime/runtime";
     import { logRetentionTimeStep } from "../../tools/logger";
 
+    let filterInput: string = "";
+    let filterInputLineCt: number = 1;
+    function readFilterInputs() {
+        let lines = filterInput
+            .split("\n")
+            .filter((line) => line.trim() !== "");
+        lines.forEach((_filterInput) =>
+            LogInfo("filter input: " + _filterInput),
+        );
+    }
+
+    function updateFilterInputLineCt(event: KeyboardEvent) {
+        if (event.code === "Enter") {
+            let lines = filterInput.split("\n");
+            if (lines.length < 1) {
+                filterInputLineCt = 1;
+                return;
+            }
+            if (filterInputLineCt < 5) filterInputLineCt = lines.length;
+        }
+    }
     enum LogEntriesRetentionTime {
         Never = "NEVER",
         OneWeek = "1 WEEK",
@@ -79,7 +100,7 @@
         : '96%'};  margin-top: 0.16rem"
 >
     <div
-        class="mb-1.5 pb-6 w-1/2 left-1/4 rounded-bl-lg rounded-br-lg font-semibold h-5 bg-primary-400 dark:bg-primary-300 
+        class="mb-1.5 pb-6 w-1/2 left-1/4 rounded-bl-lg rounded-br-lg font-semibold h-5 bg-primary-400 dark:bg-primary-300
                 outline outline-1 outline-primary-100 dark:outline-primary-200"
         style={`position: sticky; top: 0px; color: ${$accentColor};`}
     >
@@ -153,6 +174,19 @@
         </ButtonGroup>
     </div>
     <div class="h-2" />
+    <div class="mx-2">
+        <Label for="textarea-id" class="mb-2">filters</Label>
+        <Textarea
+            id="textarea-id"
+            placeholder="/VAULT/Thumbs.db"
+            bind:value={filterInput}
+            rows={filterInputLineCt}
+            on:blur={readFilterInputs}
+            on:keypress={(event) => {
+                updateFilterInputLineCt(event);
+            }}
+        />
+    </div>
     <div class="px-5">
         <p class="p-0 text-sm text-primary-100 dark:text-primary-200">
             delete log entries older than:

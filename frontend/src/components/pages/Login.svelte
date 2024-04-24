@@ -259,7 +259,7 @@
                         arrow={false}>{appVersion}</Tooltip
                     >
                     <div
-                        class="top-0 z-10 w-full my-1.5 mb-1 mx-5 rounded-full h-2.5 bg-primary-300 dark:bg-primary-400"
+                        class="top-0 z-10 w-full my-2 mb-0 mx-5 rounded-full h-2.5 bg-primary-300 dark:bg-primary-400"
                     >
                         <div
                             class="h-2.5 rounded-full"

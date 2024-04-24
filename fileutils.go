@@ -111,7 +111,9 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 	rootDir = filepath.Clean(rootDir)
 	rootNode := &FileNode{RelPath: rootDir + separator, Children: []*FileNode{}}
 
-	exclusionPrefix := a.excludeAllInEndpathMatching("VAULT/MISC/*")
+	a.excludeInputStartingIn("VAULT/MISC/Farts/*")
+	a.excludeInputStartingIn("VAULT/MISC/sync - android.ffs_gui")
+	a.excludePathContaining("*/Education/*")
 
 	err := filepath.Walk(rootDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -123,9 +125,8 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 		}
 		relativePath, err := filepath.Rel(rootDir, path)
 		fmt.Println("path " + path + " " + relativePath)
-		if relativePath == "." || strings.HasPrefix(path, exclusionPrefix) {
-			fmt.Println("exclusion prefix " + exclusionPrefix)
-			return filepath.SkipDir // skip entire directory tree under the match
+		if relativePath == "." || a.checkExcludedDirsAgainstPath(path) {
+			return filepath.SkipDir
 		}
 		if err != nil {
 			return err

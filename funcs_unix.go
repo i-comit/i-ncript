@@ -5,6 +5,8 @@ package main
 
 import (
 	"fmt"
+	"path/filepath"
+	"strings"
 
 	"golang.org/x/sys/unix"
 )
@@ -24,4 +26,8 @@ func (g *Getters) GetRootDiskSpace() (int64, error) {
 
 func hideFile(filename string) error {
 	return nil
+}
+
+func replaceSeparator(filePath string) string {
+	return strings.ReplaceAll(filePath, "\\", string(filepath.Separator))
 }

@@ -6,6 +6,8 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
+	"strings"
 	"syscall"
 
 	"golang.org/x/sys/windows"
@@ -38,4 +40,8 @@ func hideFile(filename string) error {
 		return err
 	}
 	return syscall.SetFileAttributes(path, syscall.FILE_ATTRIBUTE_HIDDEN)
+}
+
+func replaceSeparator(filePath string) string {
+	return strings.ReplaceAll(filePath, "/", string(filepath.Separator))
 }
