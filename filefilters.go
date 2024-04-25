@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	// "os"
 	"path/filepath"
+
+	// "os"
 	"strings"
 )
 
@@ -13,17 +14,11 @@ import (
 
 var excludedDirsStartingIn []string
 var excludedDirsContaining []string
-var excludedDirsMatching []string
+var excludedPathsMatching []string
 
 var excludedFilesEndingIn []string
 
-func (a *App) checkExcludedDirsAgainstPath(path string) bool {
-	// pathInfo, err := os.Stat(path)
-	// if err != nil {
-	// 	fmt.Println("Error accessing path:", err)
-	// 	return true
-	// }
-	// if pathInfo.IsDir() {
+func checkExcludedDirsAgainstPath(path string) bool {
 	lowercasePath := strings.ToLower(path)
 	for _, element := range excludedDirsStartingIn {
 		if strings.HasPrefix(lowercasePath, element) {
@@ -37,6 +32,13 @@ func (a *App) checkExcludedDirsAgainstPath(path string) bool {
 			return true
 		}
 	}
+	for _, element := range excludedPathsMatching {
+		pathMatch := lowercasePath == element
+		if pathMatch {
+			fmt.Println("found excluded path matching " + element)
+			return true
+		}
+	}
 
 	for _, element := range excludedFilesEndingIn {
 		if strings.HasSuffix(lowercasePath, element) {
@@ -44,65 +46,67 @@ func (a *App) checkExcludedDirsAgainstPath(path string) bool {
 			return true
 		}
 	}
-
-	// } else {
-	// 	return true
-	// }
 	return false
-
 }
 
 func (f *FileUtils) AddInputToFilterTemplate(input string) {
+	// clear(excludedDirsStartingIn)
+	// clear(excludedDirsContaining)
+	// clear(excludedPathsMatching)
+	// clear(excludedFilesEndingIn)
+	input = replaceSeparator(input)
+	var separator = string(filepath.Separator)
 	// Check if input starts with '*/', ends with '/*'
-	if strings.HasPrefix(input, "*/") && strings.HasSuffix(input, "/*") {
+	if strings.HasPrefix(input, "*"+separator) && strings.HasSuffix(input, separator+"*") {
 		f.app.excludePathContaining(input)
 		fmt.Println("excludePathContaining " + input)
 		// Check if input starts with a folder name and ends with a folder name without wildcard '*'
-	} else if !strings.Contains(input, "*") && strings.Contains(input, string(filepath.Separator)) {
-		excludePathMatching(input)
+	} else if !strings.Contains(input, "*") && strings.Contains(input, separator) {
 		fmt.Println("excludePathMatching " + input)
+		f.app.excludePathMatching(input)
 		// Check if input starts with a folder name and ends with a folder name but contains wildcard '*'
-	} else if strings.Contains(input, "*") && !strings.HasPrefix(input, "*") && !strings.HasSuffix(input, "*") {
+	} else if strings.Contains(input, "*") &&
+		!strings.HasPrefix(input, "*") &&
+		strings.HasSuffix(input, "*") {
 		f.app.excludeInputStartingIn(input)
 		fmt.Println("excludeInputStartingIn " + input)
 		// Check if input starts with wildcard '*' and has no separator
-	} else if strings.HasPrefix(input, "*") && !strings.Contains(input, string(filepath.Separator)) {
+	} else if strings.HasPrefix(input, "*") && !strings.Contains(input, separator) {
 		f.app.excludeFileEndingIn(input)
-		//Check if input starts with a folder name, ends with a
 	}
-	// else if !strings.HasPrefix(input, "*") && !strings.Contains(input, string(filepath.Separator)) {
-	// 	f.app.excludeFileEndingIn(input)
-	// }
 }
 
-// Folder filters
 func (a *App) excludePathContaining(input string) {
 	//example: */.git/objects/*
 	input = strings.ReplaceAll(input, "*", "")
 	input = replaceSeparator(input)
 	fmt.Println("excluded dir containing: " + input)
-	excludedDirsContaining = append(excludedDirsContaining, strings.ToLower(input))
-
+	if !contains(excludedDirsContaining, strings.ToLower(input)) {
+		excludedDirsContaining = append(excludedDirsContaining, strings.ToLower(input))
+	}
 }
 
-func excludePathMatching(input string) {
+func (a *App) excludePathMatching(input string) {
 	//example: VAULT/CODE/.git/objects/ or VAULT/CODE/Thumbs.db
-	input = replaceSeparator(input)
-	excludedDirsMatching = append(excludedDirsMatching, strings.ToLower(input))
+	input = a.formatExcludePath(input)
+	if !contains(excludedPathsMatching, input) {
+		excludedPathsMatching = append(excludedPathsMatching, input)
+	}
 }
 
-func (a *App) excludeInputStartingIn(input string) string {
+func (a *App) excludeInputStartingIn(input string) {
 	//example: VAULT/MISC/* or VAULT/MISC/thumbs.txt*
 	input = strings.TrimSuffix(input, "*")
 	input = a.formatExcludePath(input)
 	fmt.Println("exclude dirs starting in: ", input) // Print the final path to debug
-	excludedDirsStartingIn = append(excludedDirsStartingIn, input)
-	return input
+	if !contains(excludedDirsStartingIn, input) {
+		excludedDirsStartingIn = append(excludedDirsStartingIn, input)
+	}
 }
 
-func (a *App) excludePathStartingEndingIn(input string) {
-	//example: VAULT/CODE/*/frontend/dist/ or VAULT/CODE/*/Filename.txt
-}
+// func (a *App) excludePathStartingEndingIn(input string) {
+// 	//example: VAULT/CODE/*/frontend/dist/ or VAULT/CODE/*/Filename.txt
+// }
 
 func (a *App) excludeFileEndingIn(input string) {
 	//example : *Thumbs.db || *.txt
@@ -115,7 +119,7 @@ func (a *App) formatExcludePath(input string) string {
 	input = filepath.Clean(input) // Clean the input path to normalize it
 	input = replaceSeparator(input)
 	if !strings.HasPrefix(input, a.cwd) {
-		input = filepath.Join(a.cwd, input) // Prepend the cwd only if it's not already part of the input
+		input = filepath.Join(a.cwd, input)
 	}
 	return strings.ToLower(input) // Return the possibly modified input
 }
@@ -133,4 +137,14 @@ func isDirectory(path string) bool {
 		return false // it's likely a file
 	}
 	return true
+}
+
+// contains checks if a slice contains a particular string.
+func contains(slice []string, str string) bool {
+	for _, v := range slice {
+		if v == str {
+			return true
+		}
+	}
+	return false
 }

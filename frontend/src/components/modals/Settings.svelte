@@ -1,8 +1,9 @@
 <!-- Settings.svelte -->
 <script lang="ts">
+    import { onMount } from "svelte";
+    import { get } from "svelte/store";
     import {
         Button,
-        Input,
         ButtonGroup,
         Dropdown,
         DropdownItem,
@@ -13,35 +14,20 @@
         Label,
     } from "flowbite-svelte";
     import { ChevronDownOutline } from "flowbite-svelte-icons";
-
+    import { buildFileTree } from "../../tools/fileTree";
     import { tooltipTailwindClass } from "../../stores/constantVariables";
 
     import { AppPage, currentPage } from "../../enums/AppPage";
-    import { darkLightMode, accentColor } from "../../stores/dynamicVariables";
+    import {
+        darkLightMode,
+        accentColor,
+        filterInputs,
+        pageLoading,
+    } from "../../stores/dynamicVariables";
     import { LogInfo } from "../../../wailsjs/runtime/runtime";
     import { logRetentionTimeStep } from "../../tools/logger";
+    import { AddInputToFilterTemplate } from "../../../wailsjs/go/main/FileUtils";
 
-    let filterInput: string = "";
-    let filterInputLineCt: number = 1;
-    function readFilterInputs() {
-        let lines = filterInput
-            .split("\n")
-            .filter((line) => line.trim() !== "");
-        lines.forEach((_filterInput) =>
-            LogInfo("filter input: " + _filterInput),
-        );
-    }
-
-    function updateFilterInputLineCt(event: KeyboardEvent) {
-        if (event.code === "Enter") {
-            let lines = filterInput.split("\n");
-            if (lines.length < 1) {
-                filterInputLineCt = 1;
-                return;
-            }
-            if (filterInputLineCt < 5) filterInputLineCt = lines.length;
-        }
-    }
     enum LogEntriesRetentionTime {
         Never = "NEVER",
         OneWeek = "1 WEEK",
@@ -51,20 +37,51 @@
         OneYear = "1 YEAR",
     }
 
+    let filterInputLineCt: number = 1;
+
     let currentLogRetentionTime: LogEntriesRetentionTime =
         LogEntriesRetentionTime.OneMonth;
 
-    function toggleLightDarkMode() {
-        darkLightMode.update((v) => !v);
-    }
     let _currentPage: AppPage;
     currentPage.subscribe((value) => {
         _currentPage = value;
     });
 
+    onMount(() => {
+        setfFilterInputLineCt();
+    });
+
+    function readFilterInputs() {
+        let lines = get(filterInputs)
+            .split("\n")
+            .filter((line) => line.trim() !== "");
+        lines.forEach((_filterInput) => {
+            LogInfo("filterInput: " + _filterInput);
+            AddInputToFilterTemplate(_filterInput);
+        });
+        pageLoading.set(true);
+        buildFileTree();
+    }
+    function toggleLightDarkMode() {
+        darkLightMode.update((v) => !v);
+    }
+
+    function keyFilterInputLineCt(event: KeyboardEvent) {
+        if (event.code === "Enter") setfFilterInputLineCt();
+    }
+
+    function setfFilterInputLineCt() {
+        let lines = get(filterInputs).split("\n");
+        if (lines.length < 1) {
+            filterInputLineCt = 1;
+            return;
+        }
+        if (filterInputLineCt < 5) filterInputLineCt = lines.length;
+    }
+
     function setAccentColor(hexColor: string) {
         accentColor.set(hexColor);
-        LogInfo("accent color set to " + hexColor);
+        LogInfo("accent color: " + hexColor);
     }
 
     function changeLogEntriesRetentionPeriod() {
@@ -175,15 +192,16 @@
     </div>
     <div class="h-2" />
     <div class="mx-2">
-        <Label for="textarea-id" class="mb-2">filters</Label>
+        <Label for="textarea-id" class="mb-0.5">filters</Label>
         <Textarea
             id="textarea-id"
             placeholder="/VAULT/Thumbs.db"
-            bind:value={filterInput}
+            unWrappedClass="text-xs"
+            bind:value={$filterInputs}
             rows={filterInputLineCt}
             on:blur={readFilterInputs}
             on:keypress={(event) => {
-                updateFilterInputLineCt(event);
+                keyFilterInputLineCt(event);
             }}
         />
     </div>

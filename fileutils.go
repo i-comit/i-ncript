@@ -111,10 +111,6 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 	rootDir = filepath.Clean(rootDir)
 	rootNode := &FileNode{RelPath: rootDir + separator, Children: []*FileNode{}}
 
-	a.excludeInputStartingIn("VAULT/MISC/Farts/*")
-	a.excludeInputStartingIn("VAULT/MISC/sync - android.ffs_gui")
-	a.excludePathContaining("*/Education/*")
-
 	err := filepath.Walk(rootDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -124,8 +120,7 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 			return nil
 		}
 		relativePath, err := filepath.Rel(rootDir, path)
-		fmt.Println("path " + path + " " + relativePath)
-		if relativePath == "." || a.checkExcludedDirsAgainstPath(path) {
+		if relativePath == "." || checkExcludedDirsAgainstPath(path) {
 			return filepath.SkipDir
 		}
 		if err != nil {
@@ -401,6 +396,10 @@ func getFilesRecursively(dirs ...string) ([]string, error) {
 		err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 			if err != nil {
 				return err
+			}
+			if checkExcludedDirsAgainstPath(path) {
+				fmt.Println("skipping filtered path")
+				return filepath.SkipDir
 			}
 			if !info.IsDir() { // Ensure we're only appending files, not directories
 				if filepath.Base(path) != keyFileName {

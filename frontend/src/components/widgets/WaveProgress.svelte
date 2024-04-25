@@ -110,7 +110,7 @@
     .progress-bar {
         box-shadow: none;
     }
-    @mixin gradient-striped($color: rgba(180, 180, 180, 0.5), $angle: 50deg) {
+    @mixin gradient-striped($color: rgba(200, 200, 200, 0.5), $angle: 50deg) {
         background-image: -webkit-linear-gradient(
             $angle,
             $color 25%,
