@@ -52,8 +52,6 @@
         retrieveDuplicateFiles,
     } from "../../tools/utils.ts";
 
-    import { darkLightBGOnId } from "../../tools/themes";
-
     import TaskDisplay from "../widgets/TaskDisplay.svelte";
     import NeuButton from "../widgets/NeuButton.svelte";
     import WaveProgress from "../widgets/WaveProgress.svelte";
@@ -82,21 +80,10 @@
         _modal = value;
     });
 
-    const unsub_darkLightMode = darkLightMode.subscribe((value) => {
-        darkLightBGOnId(value, "right-panel");
-        darkLightBGOnId(value, "left-panel");
-    });
-
     onMount(() => {
         pageLoading.set(true);
         buildFileTree();
         if (_currentFileTask === FileTasks.None) retrieveDuplicateFiles();
-        darkLightBGOnId($darkLightMode, "right-panel");
-        darkLightBGOnId($darkLightMode, "left-panel");
-    });
-
-    onDestroy(() => {
-        unsub_darkLightMode();
     });
 
     function encrypt() {
@@ -187,6 +174,7 @@
     <div
         id="left-panel"
         role="none"
+        class="bg-primary-400 dark:bg-primary-300"
         on:click={clearHeldBtnsFromContainer}
         on:pointerenter={checkMouseEnter}
         on:pointerdown={() => {
@@ -231,6 +219,7 @@
     <div
         id="right-panel"
         role="none"
+        class="bg-primary-400 dark:bg-primary-300"
         on:mouseleave={onmouseleave}
         on:pointerup={clearHeldBtnsFromContainer}
     >

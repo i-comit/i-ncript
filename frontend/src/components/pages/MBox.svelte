@@ -1,7 +1,6 @@
 <!-- NBox.svelte -->
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
-    import { get } from "svelte/store";
     import { Input, Tooltip } from "flowbite-svelte";
     import { CloseOutline } from "flowbite-svelte-icons";
 
@@ -18,11 +17,9 @@
     } from "../../stores/constantVariables.ts";
     import {
         darkLightMode,
-        fileCount,
         fileTaskPercent,
         largeFileName,
         largeFilePercent,
-        totalFileCt,
         accentColor,
         pageLoading,
     } from "../../stores/dynamicVariables.ts";
@@ -42,12 +39,8 @@
         retrieveDuplicateFiles,
     } from "../../tools/utils.ts";
 
-    import { darkLightBGOnId } from "../../tools/themes";
-
     import {
         EventsOff,
-        EventsOn,
-        LogDebug,
         LogInfo,
     } from "../../../wailsjs/runtime/runtime";
 
@@ -116,25 +109,17 @@
         handleOnFileClick();
     });
 
-    const unsub_darkLightMode = darkLightMode.subscribe((value) => {
-        darkLightBGOnId(value, "right-panel");
-        darkLightBGOnId(value, "left-panel");
-    });
-
     onMount(() => {
         pageLoading.set(true);
         buildFileTree();
         if (_currentFileTask === FileTasks.None) retrieveDuplicateFiles();
 
-        darkLightBGOnId(get(darkLightMode), "right-panel");
-        darkLightBGOnId(get(darkLightMode), "left-panel");
         clearUsername();
         clearPassword();
     });
 
     onDestroy(() => {
         unsub_heldDownBtns();
-        unsub_darkLightMode();
         EventsOff("fileProcessed");
     });
 
@@ -283,6 +268,7 @@
     <div
         id="left-panel"
         role="none"
+        class="bg-primary-400 dark:bg-primary-300"
         on:click={() => {
             clearHeldBtnsFromContainer();
             clearUsername();
@@ -477,6 +463,7 @@
     <div
         id="right-panel"
         role="none"
+        class="bg-primary-400 dark:bg-primary-300"
         on:mouseleave={onmouseleave}
         on:click={() => {
             clearHeldBtnsFromContainer();

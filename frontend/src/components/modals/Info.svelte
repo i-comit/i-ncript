@@ -63,7 +63,7 @@
         <!-- Child div that can scroll horizontally -->
         <div
             class="m-0 whitespace-nowrap overflow-x-auto text-primary-100 dark:text-primary-200
-            z-5 drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)] hover:underline"
+            z-5 drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]"
             style="scrollbar-width: none;"
         >
             {cwd}

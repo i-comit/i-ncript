@@ -78,14 +78,16 @@
       LogWarning("mboxPath " + mBoxPath);
     });
     await LoadFileFilters().then((_filterInputs) => {
-      const singleString = _filterInputs.join("\n");
-      filterInputs.set(singleString);
-      let lines = get(filterInputs)
-        .split("\n")
-        .filter((line) => line.trim() !== "");
-      lines.forEach((_filterInput) => {
-        AddInputToFilterTemplate(_filterInput);
-      });
+      if (_filterInputs.length !== 0) {
+        const singleString = _filterInputs.join("\n");
+        filterInputs.set(singleString);
+        let lines = get(filterInputs)
+          .split("\n")
+          .filter((line) => line.trim() !== "");
+        lines.forEach((_filterInput) => {
+          AddInputToFilterTemplate(_filterInput);
+        });
+      }
     });
 
     currentPage.set(AppPage.Vault);
@@ -102,16 +104,16 @@
   }
 </script>
 
-<main class="rounded-lg">
-  {#if !isRightDir}
-    <WrongDir />
-  {:else if _page === AppPage.AppSetup}
-    <AppSetup />
-  {:else if _page === AppPage.Login}
-    <Login on:loginSuccess={loggedIn} />
-  {:else if _page === AppPage.Vault}
-    <Vault />
-  {:else if _page === AppPage.Mbox}
-    <M_Box />
-  {/if}
-</main>
+  <main class="rounded-lg">
+    {#if !isRightDir}
+      <WrongDir />
+    {:else if _page === AppPage.AppSetup}
+      <AppSetup />
+    {:else if _page === AppPage.Login}
+      <Login on:loginSuccess={loggedIn} />
+    {:else if _page === AppPage.Vault}
+      <Vault />
+    {:else if _page === AppPage.Mbox}
+      <M_Box />
+    {/if}
+  </main>

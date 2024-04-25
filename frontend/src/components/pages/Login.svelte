@@ -39,10 +39,7 @@
         newAccount,
         pageLoading,
     } from "../../stores/dynamicVariables.ts";
-    import {
-        darkLightBGOnElement,
-        darkLightTextOnElement,
-    } from "../../tools/themes";
+
     import { LogError, LogInfo } from "../../../wailsjs/runtime/runtime";
 
     import PasswordScan from "../widgets/PasswordScan.svelte";
@@ -85,10 +82,6 @@
         passwordCheck: false,
     };
 
-    const unsub_darkLightMode = darkLightMode.subscribe((value) => {
-        darkLightBGOnElement(value, loginForm);
-    });
-
     onMount(() => {
         const interval = setInterval(() => {
             typewriter = getDisplayString();
@@ -111,7 +104,6 @@
                 console.error("An error occurred:", error);
             });
 
-        darkLightBGOnElement(_value, loginForm);
         return () => {
             clearInterval(interval);
         };
@@ -119,7 +111,6 @@
 
     onDestroy(() => {
         stopDisplay();
-        unsub_darkLightMode();
     });
 
     async function verifyLogin(): Promise<boolean> {
@@ -231,7 +222,7 @@
         on:submit|preventDefault={submit}
         bind:this={loginForm}
         autocomplete="off"
-        class="login-form flex-col rounded-lg"
+        class="login-form flex-col rounded-lg bg-primary-400 dark:bg-primary-300"
     >
         <p
             class="absolute top-0 left-0 text-justify w-screen pl-6 pt-1 text-sm"
@@ -477,7 +468,6 @@
         padding: 0.5rem;
         padding-top: 1.5rem;
         padding-bottom: 0.25rem !important;
-        background-color: var(--bg-color);
     }
 
     .field {

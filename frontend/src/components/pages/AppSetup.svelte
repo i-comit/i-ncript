@@ -1,12 +1,6 @@
 <script lang="ts">
     import { onDestroy, onMount } from "svelte";
-    import {
-        Button,
-        DarkMode,
-        Dropdown,
-        DropdownItem,
-        GradientButton,
-    } from "flowbite-svelte";
+    import { Button, DarkMode, Dropdown, DropdownItem } from "flowbite-svelte";
     import { LogInfo } from "../../../wailsjs/runtime/runtime";
 
     import { ArrowLeftOutline, ArrowRightOutline } from "flowbite-svelte-icons";
@@ -78,7 +72,6 @@
             setupPageContainer.scrollTop = 0;
         }
     }
-
 </script>
 
 <div

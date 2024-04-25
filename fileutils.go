@@ -15,7 +15,7 @@ import (
 
 	stdRuntime "runtime"
 
-	wailsRuntime "github.com/wailsapp/wails/v2/pkg/runtime" // This is an example path
+	wailsRuntime "github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
 type FileUtils struct {

@@ -1,13 +1,4 @@
-import { LogInfo } from "../../wailsjs/runtime/runtime";
 import { darkBGColor, lightBGColor, darkTextColor, lightTextColor, lightShadow_Dark, darkShadow_Dark, lightShadow_Light, darkShadow_Light } from "../stores/constantVariables";
-
-//BG(background-color) element properties
-export function darkLightBGOnHTML(darkLightMode: boolean): void {
-    if (darkLightMode)
-        document.documentElement.style.setProperty("--bg-color", darkBGColor,);
-    else
-        document.documentElement.style.setProperty("--bg-color", lightBGColor,);
-}
 
 export function darkLightBGOnElement(darkLightMode: boolean, element: HTMLElement) {
     if (!element) return
@@ -16,7 +7,6 @@ export function darkLightBGOnElement(darkLightMode: boolean, element: HTMLElemen
     else
         element.style.setProperty("--bg-color", lightBGColor,);
 }
-
 export function darkLightBGOnId(darkLightMode: boolean, idName: string) {
     const element = document.getElementById(idName);
     if (!element) return
@@ -25,23 +15,12 @@ export function darkLightBGOnId(darkLightMode: boolean, idName: string) {
     else
         element?.style.setProperty("--bg-color", lightBGColor,);
 }
-//END OF BG(background-color) element propetyies
-
 export function darkLightTextOnElement(darkLightMode: boolean, element: HTMLElement) {
     if (!element) return
     if (darkLightMode)
         element.style.setProperty("--text-color", darkTextColor,);
     else
         element.style.setProperty("--text-color", lightTextColor,);
-}
-
-export function darkLightTextOnId(darkLightMode: boolean, idName: string) {
-    const element = document.getElementById(idName);
-    if (!element) return
-    if (darkLightMode)
-        element?.style.setProperty("--text-color", darkTextColor,);
-    else
-        element?.style.setProperty("--text-color", lightTextColor,);
 }
 
 

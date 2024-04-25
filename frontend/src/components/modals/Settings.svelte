@@ -1,6 +1,6 @@
 <!-- Settings.svelte -->
 <script lang="ts">
-    import { onMount } from "svelte";
+    import { onDestroy, onMount } from "svelte";
     import { get } from "svelte/store";
     import {
         Button,
@@ -55,8 +55,11 @@
         setfFilterInputLineCt();
     });
 
-    function readFilterInputs() {
+    onDestroy(() => {
         SaveFileFilters(get(filterInputs));
+    });
+
+    function readFilterInputs() {
         ClearExcludedSlices().finally(() => {
             let lines = get(filterInputs)
                 .split("\n")

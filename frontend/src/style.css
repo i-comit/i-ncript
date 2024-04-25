@@ -63,12 +63,6 @@ body {
     /* Provides spacing between this section and the buttons */
 }
 
-#left-panel,
-#right-panel {
-    --bg-color: #757575;
-    background-color: var(--bg-color);
-}
-
 #left-panel {
     padding: 0.5rem;
     padding-top: 0rem;

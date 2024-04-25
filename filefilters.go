@@ -142,9 +142,6 @@ func (f *FileUtils) LoadFileFilters() ([]string, error) {
 		return nil, err
 	}
 
-	for _, value := range stringSlice {
-		fmt.Println(value)
-	}
 	return stringSlice, nil
 }
 

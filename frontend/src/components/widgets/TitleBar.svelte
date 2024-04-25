@@ -15,9 +15,10 @@
     import appLogoLight from "../../assets/images/appLogo_light.png";
     import appLogoDark from "../../assets/images/appLogo_dark.png";
 
-    import { darkLightMode } from "../../stores/dynamicVariables";
+    import { darkLightMode, filterInputs } from "../../stores/dynamicVariables";
 
     import { AppPage, currentPage } from "../../enums/AppPage";
+    import { SaveFileFilters } from "../../../wailsjs/go/main/FileUtils";
 
     let minimizeBtn: HTMLButtonElement;
     let closeBtn: HTMLButtonElement;
@@ -35,6 +36,10 @@
             .catch((error) => {
                 LogError("Failed to minimize application: " + error);
             });
+    }
+
+    function closeApp() {
+        SaveFileFilters(get(filterInputs)).finally(() => CloseApp());
     }
 </script>
 
@@ -70,7 +75,7 @@
         <button
             bind:this={closeBtn}
             class="p-0 my-1 mr-1 ml-px rounded-md bg-primary-300 dark:bg-primary-400"
-            on:click={CloseApp}
+            on:click={closeApp}
         >
             <div class="text-primary-200 dark:text-primary-100">
                 <CloseOutline class="w-5 h-5 m-0 p-0" />
