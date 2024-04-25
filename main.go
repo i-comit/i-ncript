@@ -51,10 +51,10 @@ const largeFilePercent = "largeFilePercent"
 const refreshDirSize = "refreshDirSize"
 
 // DATA consts
-// Change to whatever name you want the root folder to be
 const rootFolder = "I-NCRIPT"
 const keyFileName = ".i-ncript.🔑"
-const configFileName = ".i-ncript.⚙️"
+const logFileName = ".i-ncript.🧾️"
+
 const _width = 220
 
 // Change this in your build for extra security

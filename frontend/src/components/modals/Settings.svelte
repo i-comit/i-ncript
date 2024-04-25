@@ -56,6 +56,7 @@
     });
 
     function readFilterInputs() {
+        SaveFileFilters(get(filterInputs));
         ClearExcludedSlices().finally(() => {
             let lines = get(filterInputs)
                 .split("\n")
@@ -65,7 +66,7 @@
             });
             pageLoading.set(true);
             buildFileTree();
-            SaveFileFilters();
+            setfFilterInputLineCt();
         });
     }
     function toggleLightDarkMode() {
@@ -78,6 +79,7 @@
 
     function setfFilterInputLineCt() {
         let lines = get(filterInputs).split("\n");
+        LogInfo("Line count " + lines.length);
         if (lines.length < 1) {
             filterInputLineCt = 1;
             return;
@@ -201,7 +203,7 @@
         <Label for="textarea-id" class="mb-0.5">filters</Label>
         <Textarea
             id="textarea-id"
-            placeholder="/VAULT/Thumbs.db"
+            placeholder="*/.git/*"
             unWrappedClass="text-xs"
             bind:value={$filterInputs}
             rows={filterInputLineCt}

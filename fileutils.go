@@ -217,12 +217,12 @@ func (f *FileUtils) GetAppendedFileBytes(filePath string) error {
 	return nil
 }
 func (f *FileUtils) OpenLogEntriesFile() {
-	logFilePath := filepath.Join(f.app.cwd, ".i-ncript.log")
+	logFilePath := filepath.Join(f.app.cwd, logFileName)
 	f.OpenFile(logFilePath)
 }
 
 func (f *FileUtils) SaveLogEntries(entries, timestamps []string) error {
-	logFilePath := filepath.Join(f.app.cwd, ".i-ncript.log")
+	logFilePath := filepath.Join(f.app.cwd, logFileName)
 
 	// Open the file for reading and writing. If it does not exist, create it.
 	file, err := os.OpenFile(logFilePath, os.O_RDWR|os.O_CREATE, 0666)

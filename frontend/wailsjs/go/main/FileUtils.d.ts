@@ -11,6 +11,8 @@ export function ClearExcludedSlices():Promise<void>;
 
 export function GetAppendedFileBytes(arg1:string):Promise<void>;
 
+export function LoadFileFilters():Promise<Array<string>>;
+
 export function MoveFilesToPath(arg1:Array<string>,arg2:string):Promise<void>;
 
 export function OpenDirectory(arg1:string):Promise<void>;
@@ -21,6 +23,6 @@ export function OpenLogEntriesFile():Promise<void>;
 
 export function PackFilesForENCP(arg1:string,arg2:string,arg3:Array<string>):Promise<string>;
 
-export function SaveFileFilters():Promise<void>;
+export function SaveFileFilters(arg1:string):Promise<void>;
 
 export function SaveLogEntries(arg1:Array<string>,arg2:Array<string>):Promise<void>;

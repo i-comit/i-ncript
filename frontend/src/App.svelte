@@ -1,25 +1,20 @@
 <script lang="ts">
+  import { onDestroy, onMount } from "svelte";
+  import { get } from "svelte/store";
+
   import Login from "./components/pages/Login.svelte";
   import Vault from "./components/pages/Vault.svelte";
   import M_Box from "./components/pages/MBox.svelte";
   import WrongDir from "./components/pages/WrongDir.svelte";
 
   import { AppPage, currentPage } from "./enums/AppPage.ts";
-  import { onDestroy, onMount } from "svelte";
   import {
     CheckKeyFileInCWD,
-    FindEncryptedDuplicates,
     GetDirName,
     GetDirectoryPath,
     GetHeight,
   } from "../wailsjs/go/main/Getters";
-  import {
-    EventsOff,
-    EventsOn,
-    LogDebug,
-    LogInfo,
-    LogWarning,
-  } from "../wailsjs/runtime/runtime";
+  import { EventsOn, LogInfo, LogWarning } from "../wailsjs/runtime/runtime";
   import { DirectoryWatcher, ResizeWindow } from "../wailsjs/go/main/App";
   import {
     vaultDir,
@@ -27,14 +22,17 @@
     largeFilePercent,
     largeFileName,
     newAccount,
-    darkLightMode,
     height,
-    pageLoading,
+    filterInputs,
   } from "./stores/dynamicVariables.ts";
   import { buildFileTree, fileTree } from "./tools/fileTree.ts";
   import { addLogEntry } from "./tools/logger.ts";
   import AppSetup from "./components/pages/AppSetup.svelte";
   import { width } from "./stores/constantVariables.ts";
+  import {
+    AddInputToFilterTemplate,
+    LoadFileFilters,
+  } from "../wailsjs/go/main/FileUtils";
 
   let _page: AppPage;
   let isRightDir = false;
@@ -78,6 +76,16 @@
     await GetDirectoryPath(1).then((mBoxPath) => {
       mBoxDir.set(mBoxPath);
       LogWarning("mboxPath " + mBoxPath);
+    });
+    await LoadFileFilters().then((_filterInputs) => {
+      const singleString = _filterInputs.join("\n");
+      filterInputs.set(singleString);
+      let lines = get(filterInputs)
+        .split("\n")
+        .filter((line) => line.trim() !== "");
+      lines.forEach((_filterInput) => {
+        AddInputToFilterTemplate(_filterInput);
+      });
     });
 
     currentPage.set(AppPage.Vault);

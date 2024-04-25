@@ -10,17 +10,11 @@ import (
 	"strings"
 )
 
-// Wild cards may be used:   	* means zero or more characters
-// 								? represents exactly one character
-// 								?* matches one or more characters
-
 var excludedDirsStartingIn []string
 var excludedDirsContaining []string
 var excludedPathsMatching []string
 
 var excludedFilesEndingIn []string
-
-var savedExcludedInputs []string
 
 func checkExcludedDirsAgainstPath(path string) bool {
 	lowercasePath := strings.ToLower(path)
@@ -52,7 +46,8 @@ func checkExcludedDirsAgainstPath(path string) bool {
 	return false
 }
 
-func (f *FileUtils) SaveFileFilters() error {
+func (f *FileUtils) SaveFileFilters(filterInputs string) error {
+	savedExcludedInputs := strings.Split(filterInputs, "\n")
 	keyFilePath, err := getEndPath(keyFileName)
 	if err != nil {
 		return err
@@ -80,47 +75,15 @@ func (f *FileUtils) SaveFileFilters() error {
 	if err := scanner.Err(); err != nil {
 		return err
 	}
-	// Prepare JSON data for excludedDirsStartingIn
-	// trimmed1 := f.app.trimExcludePath(excludedDirsStartingIn)
 	jsonData, err := json.Marshal(savedExcludedInputs)
 	if err != nil {
 		return err
 	}
 	// Ensure there is a line to replace or append.
 	if len(lines) < 2 {
-		lines = append(lines, "") // Append empty line if less than 2 lines exist
+		lines = append(lines, "") // Append empty line if < 2lines
 	}
-	lines[1] = string(jsonData) // Line 2 for excludedDirsStartingIn
-
-	// trimmed2 := f.app.trimExcludePath(excludedDirsContaining)
-	// jsonData1, err := json.Marshal(trimmed2)
-	// if err != nil {
-	// 	return err
-	// }
-
-	// if len(lines) < 3 {
-	// 	lines = append(lines, "")
-	// }
-	// lines[2] = string(jsonData1)
-
-	// trimmed3 := f.app.trimExcludePath(excludedPathsMatching)
-	// jsonData2, err := json.Marshal(trimmed3)
-	// if err != nil {
-	// 	return err
-	// }
-	// if len(lines) < 4 {
-	// 	lines = append(lines, "")
-	// }
-	// lines[3] = string(jsonData2)
-
-	// jsonData3, err := json.Marshal(excludedFilesEndingIn)
-	// if err != nil {
-	// 	return err
-	// }
-	// if len(lines) < 5 {
-	// 	lines = append(lines, "")
-	// }
-	// lines[4] = string(jsonData3)
+	lines[1] = string(jsonData)
 
 	if err = file.Truncate(0); err != nil {
 		return err
@@ -140,16 +103,49 @@ func (f *FileUtils) SaveFileFilters() error {
 	return nil
 }
 
-func (a *App) trimExcludePath(sliceToTrim []string) []string {
-	lowerCwd := strings.ToLower(a.cwd) // Convert cwd to lowercase once and reuse
-	for i, line := range sliceToTrim {
-		if strings.HasPrefix(strings.ToLower(line), lowerCwd) {
-			// Ensure both the line and prefix are in the same case when trimming
-			sliceToTrim[i] = strings.TrimPrefix(strings.ToLower(line), lowerCwd)
-			fmt.Println("Trimmed line:", sliceToTrim[i]) // Print the trimmed line
-		}
+func (f *FileUtils) LoadFileFilters() ([]string, error) {
+	keyFilePath, err := getEndPath(keyFileName)
+	if err != nil {
+		return nil, err
 	}
-	return sliceToTrim
+	_, err = os.Stat(keyFilePath)
+	if os.IsNotExist(err) {
+		fmt.Println("Key file does not exist")
+		return nil, err
+	}
+	file, err := os.Open(keyFilePath)
+	if err != nil {
+		fmt.Println("Error opening the file:", err)
+		return nil, err
+	}
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
+
+	if !scanner.Scan() && scanner.Err() != nil {
+		fmt.Println("Failed to scan the first line:", scanner.Err())
+		return nil, scanner.Err()
+	}
+	// Read the second line which should contain the JSON string array
+	if !scanner.Scan() {
+		if err := scanner.Err(); err != nil {
+			fmt.Println("Failed to scan the second line:", err)
+			return nil, err
+		}
+		fmt.Println("No second line in the file")
+		return nil, fmt.Errorf("no second line in file")
+	}
+	jsonLine := scanner.Text()
+	// Decode JSON string into a slice of strings
+	var stringSlice []string
+	if err := json.Unmarshal([]byte(jsonLine), &stringSlice); err != nil {
+		fmt.Println("Error decoding JSON:", err)
+		return nil, err
+	}
+
+	for _, value := range stringSlice {
+		fmt.Println(value)
+	}
+	return stringSlice, nil
 }
 
 func (f *FileUtils) ClearExcludedSlices() {
@@ -227,21 +223,6 @@ func (a *App) formatExcludePath(input string) string {
 		input = filepath.Join(a.cwd, input)
 	}
 	return strings.ToLower(input) // Return the possibly modified input
-}
-
-func isDirectory(path string) bool {
-	cleanedPath := filepath.Clean(path)
-	cleanedPath = replaceSeparator(cleanedPath)
-
-	if len(cleanedPath) > 0 && strings.HasSuffix(cleanedPath, string(filepath.Separator)) {
-		cleanedPath = cleanedPath[:len(cleanedPath)-1]
-	}
-	_, file := filepath.Split(cleanedPath)
-
-	if strings.Contains(file, ".") && !strings.HasSuffix(file, ".") {
-		return false // it's likely a file
-	}
-	return true
 }
 
 // contains checks if a slice contains a particular string.

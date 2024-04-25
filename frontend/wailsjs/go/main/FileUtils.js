@@ -22,6 +22,10 @@ export function GetAppendedFileBytes(arg1) {
   return window['go']['main']['FileUtils']['GetAppendedFileBytes'](arg1);
 }
 
+export function LoadFileFilters() {
+  return window['go']['main']['FileUtils']['LoadFileFilters']();
+}
+
 export function MoveFilesToPath(arg1, arg2) {
   return window['go']['main']['FileUtils']['MoveFilesToPath'](arg1, arg2);
 }
@@ -42,8 +46,8 @@ export function PackFilesForENCP(arg1, arg2, arg3) {
   return window['go']['main']['FileUtils']['PackFilesForENCP'](arg1, arg2, arg3);
 }
 
-export function SaveFileFilters() {
-  return window['go']['main']['FileUtils']['SaveFileFilters']();
+export function SaveFileFilters(arg1) {
+  return window['go']['main']['FileUtils']['SaveFileFilters'](arg1);
 }
 
 export function SaveLogEntries(arg1, arg2) {

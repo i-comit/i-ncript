@@ -142,7 +142,6 @@ export function checkIfRelPathIsInHeldDownBtns(relPath: string): boolean {
 export function addToHeldFileBtnsArr(relPath: string, button: HTMLButtonElement) {
     heldDownBtns.update(currentHeldDownBtns => {
         if (!(relPath in currentHeldDownBtns)) {
-            // LogDebug("Added to heldDownBtns: " + relPath);
             return { ...currentHeldDownBtns, [relPath]: button };
         }
         return currentHeldDownBtns;
