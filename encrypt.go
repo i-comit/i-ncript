@@ -388,30 +388,23 @@ func checkCredentials(_hashedCredentials string) int {
 	if err != nil {
 		return 0
 	}
-	file, err := os.Open(keyFilePath)
+	keyfile, err := os.Open(keyFilePath)
 	if err != nil {
 		fmt.Println("Key file doesn't exist", err)
 		return 0
 	}
-	defer file.Close()
+	defer keyfile.Close()
 
-	reader := bufio.NewReader(file)
-	line, isPrefix, err := reader.ReadLine()
-	if err != nil || line == nil {
-		fmt.Println("Error reading line:", err)
-		return 1
-	}
-	// Handling the case where the line is longer than the buffer
-	for isPrefix {
-		var more []byte
-		more, isPrefix, err = reader.ReadLine()
-		if err != nil {
-			fmt.Println("Error reading continuation of line:", err)
+	reader := bufio.NewReader(keyfile)
+	readHash, err := reader.ReadString('\n') // Read until the newline, which should be the end of your hash
+	if err != nil {
+		if err != io.EOF {
+			fmt.Println("Error reading line:", err)
 			return 1
 		}
-		line = append(line, more...)
 	}
-	hashedStringToCheck, err := verifySavedCredentials(_hashedCredentials)
+	fmt.Printf("First line read: %s\n", readHash)
+	hashedStringToCheck, err := verifySavedCredentials(_hashedCredentials, []byte(readHash))
 	if err != nil {
 		log.Printf("Failed to hash credentials to check %s", err)
 		return -1
@@ -444,17 +437,9 @@ func saveHashedCredentials(credentials string) error {
 	return nil
 }
 
-func verifySavedCredentials(credentials string) (bool, error) {
-	keyFilePath, err := getEndPath(keyFileName)
-	if err != nil {
-		return false, err
-	}
-	content, err := os.ReadFile(keyFilePath)
-	if err != nil {
-		return false, err
-	}
-	saltStr := content[:24] // Salt is the first 24 characters (base64)
-	hashStr := content[24:] // Hash is the rest
+func verifySavedCredentials(credentials string, readHash []byte) (bool, error) {
+	saltStr := readHash[:24] // Salt is the first 24 characters (base64)
+	hashStr := readHash[24:] // Hash is the rest
 
 	salt, err := base64.StdEncoding.DecodeString(string(saltStr))
 	if err != nil {
@@ -492,6 +477,5 @@ func hashBytes(byteData []byte) ([]byte, error) {
 	}
 	//The nonce is omitted as we need to ensure that the hash is the same for repeated logins
 	encrypted := aesGCM.Seal(nil, make([]byte, aesGCM.NonceSize()), byteData, nil) // Using a zero
-	log.Printf("hashed string %s", hex.EncodeToString(encrypted))
 	return encrypted, nil
 }

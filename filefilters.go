@@ -1,10 +1,12 @@
 package main
 
 import (
+	"bufio"
+	"encoding/json"
 	"fmt"
+	"os"
 	"path/filepath"
 
-	// "os"
 	"strings"
 )
 
@@ -17,6 +19,8 @@ var excludedDirsContaining []string
 var excludedPathsMatching []string
 
 var excludedFilesEndingIn []string
+
+var savedExcludedInputs []string
 
 func checkExcludedDirsAgainstPath(path string) bool {
 	lowercasePath := strings.ToLower(path)
@@ -39,7 +43,6 @@ func checkExcludedDirsAgainstPath(path string) bool {
 			return true
 		}
 	}
-
 	for _, element := range excludedFilesEndingIn {
 		if strings.HasSuffix(lowercasePath, element) {
 			fmt.Println("found excluded file ending in " + element)
@@ -49,11 +52,114 @@ func checkExcludedDirsAgainstPath(path string) bool {
 	return false
 }
 
+func (f *FileUtils) SaveFileFilters() error {
+	keyFilePath, err := getEndPath(keyFileName)
+	if err != nil {
+		return err
+	}
+	_, err = os.Stat(keyFilePath)
+	if os.IsNotExist(err) {
+		if err != nil {
+			fmt.Println("Key file does not exist")
+			return err
+		}
+	}
+
+	file, err := os.OpenFile(keyFilePath, os.O_RDWR|os.O_CREATE, 0666)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	var lines []string
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+
+	if err := scanner.Err(); err != nil {
+		return err
+	}
+	// Prepare JSON data for excludedDirsStartingIn
+	// trimmed1 := f.app.trimExcludePath(excludedDirsStartingIn)
+	jsonData, err := json.Marshal(savedExcludedInputs)
+	if err != nil {
+		return err
+	}
+	// Ensure there is a line to replace or append.
+	if len(lines) < 2 {
+		lines = append(lines, "") // Append empty line if less than 2 lines exist
+	}
+	lines[1] = string(jsonData) // Line 2 for excludedDirsStartingIn
+
+	// trimmed2 := f.app.trimExcludePath(excludedDirsContaining)
+	// jsonData1, err := json.Marshal(trimmed2)
+	// if err != nil {
+	// 	return err
+	// }
+
+	// if len(lines) < 3 {
+	// 	lines = append(lines, "")
+	// }
+	// lines[2] = string(jsonData1)
+
+	// trimmed3 := f.app.trimExcludePath(excludedPathsMatching)
+	// jsonData2, err := json.Marshal(trimmed3)
+	// if err != nil {
+	// 	return err
+	// }
+	// if len(lines) < 4 {
+	// 	lines = append(lines, "")
+	// }
+	// lines[3] = string(jsonData2)
+
+	// jsonData3, err := json.Marshal(excludedFilesEndingIn)
+	// if err != nil {
+	// 	return err
+	// }
+	// if len(lines) < 5 {
+	// 	lines = append(lines, "")
+	// }
+	// lines[4] = string(jsonData3)
+
+	if err = file.Truncate(0); err != nil {
+		return err
+	}
+	if _, err = file.Seek(0, 0); err != nil {
+		return err
+	}
+	writer := bufio.NewWriter(file)
+	for _, line := range lines {
+		if _, err = writer.WriteString(line + "\n"); err != nil {
+			return err
+		}
+	}
+	if err = writer.Flush(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (a *App) trimExcludePath(sliceToTrim []string) []string {
+	lowerCwd := strings.ToLower(a.cwd) // Convert cwd to lowercase once and reuse
+	for i, line := range sliceToTrim {
+		if strings.HasPrefix(strings.ToLower(line), lowerCwd) {
+			// Ensure both the line and prefix are in the same case when trimming
+			sliceToTrim[i] = strings.TrimPrefix(strings.ToLower(line), lowerCwd)
+			fmt.Println("Trimmed line:", sliceToTrim[i]) // Print the trimmed line
+		}
+	}
+	return sliceToTrim
+}
+
+func (f *FileUtils) ClearExcludedSlices() {
+	excludedDirsStartingIn = nil
+	excludedDirsContaining = nil
+	excludedPathsMatching = nil
+	excludedFilesEndingIn = nil
+}
+
 func (f *FileUtils) AddInputToFilterTemplate(input string) {
-	// clear(excludedDirsStartingIn)
-	// clear(excludedDirsContaining)
-	// clear(excludedPathsMatching)
-	// clear(excludedFilesEndingIn)
 	input = replaceSeparator(input)
 	var separator = string(filepath.Separator)
 	// Check if input starts with '*/', ends with '/*'
@@ -62,10 +168,10 @@ func (f *FileUtils) AddInputToFilterTemplate(input string) {
 		fmt.Println("excludePathContaining " + input)
 		// Check if input starts with a folder name and ends with a folder name without wildcard '*'
 	} else if !strings.Contains(input, "*") && strings.Contains(input, separator) {
-		fmt.Println("excludePathMatching " + input)
 		f.app.excludePathMatching(input)
+		fmt.Println("excludePathMatching " + input)
 		// Check if input starts with a folder name and ends with a folder name but contains wildcard '*'
-	} else if strings.Contains(input, "*") &&
+	} else if strings.Contains(input, separator) &&
 		!strings.HasPrefix(input, "*") &&
 		strings.HasSuffix(input, "*") {
 		f.app.excludeInputStartingIn(input)
@@ -112,7 +218,6 @@ func (a *App) excludeFileEndingIn(input string) {
 	//example : *Thumbs.db || *.txt
 	input = strings.TrimPrefix(input, "*")
 	excludedFilesEndingIn = append(excludedFilesEndingIn, strings.ToLower(input))
-
 }
 
 func (a *App) formatExcludePath(input string) string {

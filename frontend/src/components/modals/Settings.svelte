@@ -26,7 +26,11 @@
     } from "../../stores/dynamicVariables";
     import { LogInfo } from "../../../wailsjs/runtime/runtime";
     import { logRetentionTimeStep } from "../../tools/logger";
-    import { AddInputToFilterTemplate } from "../../../wailsjs/go/main/FileUtils";
+    import {
+        AddInputToFilterTemplate,
+        ClearExcludedSlices,
+        SaveFileFilters,
+    } from "../../../wailsjs/go/main/FileUtils";
 
     enum LogEntriesRetentionTime {
         Never = "NEVER",
@@ -52,15 +56,17 @@
     });
 
     function readFilterInputs() {
-        let lines = get(filterInputs)
-            .split("\n")
-            .filter((line) => line.trim() !== "");
-        lines.forEach((_filterInput) => {
-            LogInfo("filterInput: " + _filterInput);
-            AddInputToFilterTemplate(_filterInput);
+        ClearExcludedSlices().finally(() => {
+            let lines = get(filterInputs)
+                .split("\n")
+                .filter((line) => line.trim() !== "");
+            lines.forEach((_filterInput) => {
+                AddInputToFilterTemplate(_filterInput);
+            });
+            pageLoading.set(true);
+            buildFileTree();
+            SaveFileFilters();
         });
-        pageLoading.set(true);
-        buildFileTree();
     }
     function toggleLightDarkMode() {
         darkLightMode.update((v) => !v);
@@ -200,7 +206,7 @@
             bind:value={$filterInputs}
             rows={filterInputLineCt}
             on:blur={readFilterInputs}
-            on:keypress={(event) => {
+            on:keyup={(event) => {
                 keyFilterInputLineCt(event);
             }}
         />

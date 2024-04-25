@@ -7,6 +7,8 @@ export function AuthenticateENCPFile(arg1:string,arg2:string):Promise<boolean>;
 
 export function CheckIfPathIsFile(arg1:string):Promise<boolean>;
 
+export function ClearExcludedSlices():Promise<void>;
+
 export function GetAppendedFileBytes(arg1:string):Promise<void>;
 
 export function MoveFilesToPath(arg1:Array<string>,arg2:string):Promise<void>;
@@ -18,5 +20,7 @@ export function OpenFile(arg1:string):Promise<void>;
 export function OpenLogEntriesFile():Promise<void>;
 
 export function PackFilesForENCP(arg1:string,arg2:string,arg3:Array<string>):Promise<string>;
+
+export function SaveFileFilters():Promise<void>;
 
 export function SaveLogEntries(arg1:Array<string>,arg2:Array<string>):Promise<void>;

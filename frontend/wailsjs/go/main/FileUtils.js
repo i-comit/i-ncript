@@ -14,6 +14,10 @@ export function CheckIfPathIsFile(arg1) {
   return window['go']['main']['FileUtils']['CheckIfPathIsFile'](arg1);
 }
 
+export function ClearExcludedSlices() {
+  return window['go']['main']['FileUtils']['ClearExcludedSlices']();
+}
+
 export function GetAppendedFileBytes(arg1) {
   return window['go']['main']['FileUtils']['GetAppendedFileBytes'](arg1);
 }
@@ -36,6 +40,10 @@ export function OpenLogEntriesFile() {
 
 export function PackFilesForENCP(arg1, arg2, arg3) {
   return window['go']['main']['FileUtils']['PackFilesForENCP'](arg1, arg2, arg3);
+}
+
+export function SaveFileFilters() {
+  return window['go']['main']['FileUtils']['SaveFileFilters']();
 }
 
 export function SaveLogEntries(arg1, arg2) {
