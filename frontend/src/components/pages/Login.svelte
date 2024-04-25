@@ -120,7 +120,7 @@
             switch (loginResult) {
                 case 0: // File does not exist
                 case 2: // Hash matched with key
-                    dispatch("loginSuccess");
+                    dispatch("loginSuccess", { resultInt: loginResult });
                     return true;
                 case 1: // File is empty
                     startDisplay("key file is empty...");
@@ -277,7 +277,7 @@
                         placeholder={`${$newAccount ? "create username.." : "enter username.."} `}
                         type="text"
                         bind:value={username}
-                        on:keyup={queryUsernameStrength}
+                        on:input={queryUsernameStrength}
                         required
                     />
                 </div>
@@ -333,20 +333,20 @@
                                 placeholder="confirm password.."
                                 type="password"
                                 bind:value={password}
-                                on:keyup={checkMatchedPassword}
+                                on:input={checkMatchedPassword}
                                 required
                             />
-                            <button on:click|stopPropagation={clearPassword}>
+                            <button
+                                on:pointerdown|stopPropagation={clearPassword}
+                                tabindex={1}
+                            >
                                 <CloseOutline
                                     class="mb-2"
                                     style="color: {$accentColor};"
                                 />
                             </button>
                         </div>
-                        <div
-                            class="flex w-full h-1 px-0.5 relative bottom-1"
-                            tabindex="-1"
-                        >
+                        <div class="flex w-full h-1 px-0.5 relative bottom-1">
                             {#if !passwordMatch}
                                 <div
                                     class="flex-1 text-center rounded-lg bg-primary-300 dark:bg-primary-400"

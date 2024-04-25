@@ -68,7 +68,7 @@
     });
   });
 
-  async function loggedIn() {
+  async function loggedIn(event: CustomEvent) {
     await GetDirectoryPath(0).then((vaultPath) => {
       vaultDir.set(vaultPath);
       LogWarning("vaultPath " + vaultPath);
@@ -77,18 +77,22 @@
       mBoxDir.set(mBoxPath);
       LogWarning("mboxPath " + mBoxPath);
     });
-    await LoadFileFilters().then((_filterInputs) => {
-      if (_filterInputs.length !== 0) {
-        const singleString = _filterInputs.join("\n");
-        filterInputs.set(singleString);
-        let lines = get(filterInputs)
-          .split("\n")
-          .filter((line) => line.trim() !== "");
-        lines.forEach((_filterInput) => {
-          AddInputToFilterTemplate(_filterInput);
-        });
-      }
-    });
+    var loginInt = event.detail.resultInt;
+    if (loginInt === 2)
+      await LoadFileFilters().then((_filterInputs) => {
+        if (_filterInputs) {
+          if (_filterInputs.length !== 0) {
+            const singleString = _filterInputs.join("\n");
+            filterInputs.set(singleString);
+            let lines = get(filterInputs)
+              .split("\n")
+              .filter((line) => line.trim() !== "");
+            lines.forEach((_filterInput) => {
+              AddInputToFilterTemplate(_filterInput);
+            });
+          }
+        }
+      });
 
     currentPage.set(AppPage.Vault);
     ResizeWindow(width * 2, $height);
@@ -104,16 +108,16 @@
   }
 </script>
 
-  <main class="rounded-lg">
-    {#if !isRightDir}
-      <WrongDir />
-    {:else if _page === AppPage.AppSetup}
-      <AppSetup />
-    {:else if _page === AppPage.Login}
-      <Login on:loginSuccess={loggedIn} />
-    {:else if _page === AppPage.Vault}
-      <Vault />
-    {:else if _page === AppPage.Mbox}
-      <M_Box />
-    {/if}
-  </main>
+<main class="rounded-lg">
+  {#if !isRightDir}
+    <WrongDir />
+  {:else if _page === AppPage.AppSetup}
+    <AppSetup />
+  {:else if _page === AppPage.Login}
+    <Login on:loginSuccess={loggedIn} />
+  {:else if _page === AppPage.Vault}
+    <Vault />
+  {:else if _page === AppPage.Mbox}
+    <M_Box />
+  {/if}
+</main>

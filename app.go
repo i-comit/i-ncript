@@ -41,6 +41,11 @@ func (a *App) startup(ctx context.Context) {
 	}
 	a.cwd = cwd
 	fmt.Println("\033[32mCWD: ", a.cwd, "\033[0m")
+	release, err := a.getters.getLatestRelease()
+	if err != nil {
+		log.Printf("Error fetching latest release: %v", err)
+	}
+	fmt.Printf("Latest Release: %s, %s\n", release.TagName, release.HtmlUrl)
 }
 
 func (a *App) InitializeRootFolder() error {

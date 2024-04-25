@@ -202,20 +202,22 @@
         </ButtonGroup>
     </div>
     <div class="h-2" />
-    <div class="mx-2">
-        <Label for="textarea-id" class="mb-0.5">filters</Label>
-        <Textarea
-            id="textarea-id"
-            placeholder="*/.git/*"
-            unWrappedClass="text-xs"
-            bind:value={$filterInputs}
-            rows={filterInputLineCt}
-            on:blur={readFilterInputs}
-            on:keyup={(event) => {
-                keyFilterInputLineCt(event);
-            }}
-        />
-    </div>
+    {#if $currentPage !== AppPage.Login}
+        <div class="mx-2">
+            <Label for="textarea-id" class="mb-0.5">filters</Label>
+            <Textarea
+                id="textarea-id"
+                placeholder="*/.git/objects/*"
+                unWrappedClass="text-xs"
+                bind:value={$filterInputs}
+                rows={filterInputLineCt}
+                on:blur={readFilterInputs}
+                on:keyup={(event) => {
+                    keyFilterInputLineCt(event);
+                }}
+            />
+        </div>
+    {/if}
     <div class="px-5">
         <p class="p-0 text-sm text-primary-100 dark:text-primary-200">
             delete log entries older than:

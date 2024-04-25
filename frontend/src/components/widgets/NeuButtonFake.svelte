@@ -1,6 +1,6 @@
 <!-- https://codepen.io/caesura/pen/QWNjvOX -->
 <script lang="ts">
-    import { createEventDispatcher, onDestroy, onMount } from "svelte";
+    import { onDestroy, onMount } from "svelte";
     import { get } from "svelte/store";
 
     import { darkLightMode } from "../../stores/dynamicVariables";

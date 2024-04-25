@@ -3,8 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/fs"
 	"math"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
@@ -85,7 +87,6 @@ func (g *Getters) GetPercentOfDriveToAppDirSize() (int64, error) {
 		return 0, err
 	}
 	percent := appDirSize / int64(driveSize) * 100
-	fmt.Printf("percent of drive to appdir %d", percent)
 	return percent, nil
 }
 
@@ -121,7 +122,6 @@ func (g *Getters) GetPercentOfDriveToDirIndexSize(dirIndex int) (int64, error) {
 		return 0, err
 	}
 	percent := appDirSize / int64(driveSize) * 100
-	fmt.Printf("percent of drive to appdir %d", percent)
 	return percent, nil
 }
 
@@ -183,6 +183,38 @@ func (g *Getters) GetHeight() int {
 
 func (g *Getters) GetRootFolder() string {
 	return strings.ToLower(rootFolder)
+}
+
+type Release struct {
+	TagName string `json:"tag_name"` // You can add more fields based on the JSON response
+	HtmlUrl string `json:"html_url"` // URL pointing to the release on GitHub's website
+}
+
+func (g *Getters) getLatestRelease() (*Release, error) {
+	repo := "i-comit/i-ncript"
+	url := fmt.Sprintf("https://api.github.com/repos/%s/releases/latest", repo)
+
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("received non-200 response status: %d", resp.StatusCode)
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var release Release
+	if err := json.Unmarshal(body, &release); err != nil {
+		return nil, err
+	}
+
+	return &release, nil
 }
 
 type FileProperties struct {

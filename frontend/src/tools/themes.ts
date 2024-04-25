@@ -7,14 +7,7 @@ export function darkLightBGOnElement(darkLightMode: boolean, element: HTMLElemen
     else
         element.style.setProperty("--bg-color", lightBGColor,);
 }
-export function darkLightBGOnId(darkLightMode: boolean, idName: string) {
-    const element = document.getElementById(idName);
-    if (!element) return
-    if (darkLightMode)
-        element?.style.setProperty("--bg-color", darkBGColor,);
-    else
-        element?.style.setProperty("--bg-color", lightBGColor,);
-}
+
 export function darkLightTextOnElement(darkLightMode: boolean, element: HTMLElement) {
     if (!element) return
     if (darkLightMode)

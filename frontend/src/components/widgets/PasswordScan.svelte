@@ -41,7 +41,7 @@
     }
 </script>
 
-<div class={`flex w-full h-1 px-0.5 relative bottom-1 ${_class}`} tabindex="-1">
+<div class={`flex w-full h-1 px-0.5 relative bottom-1 ${_class}`}>
     {#if passwordCheck1 === false}
         <div
             class="flex-1 text-center rounded-l-lg bg-primary-300 dark:bg-primary-400"

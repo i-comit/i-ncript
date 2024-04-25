@@ -5,8 +5,6 @@
     import { AppPage, currentPage } from "../../enums/AppPage";
 
     import {
-        darkBGColor,
-        lightBGColor,
         darkTextColor,
         lightTextColor,
     } from "../../stores/constantVariables";
@@ -25,6 +23,8 @@
     import wailsLogo from "../../assets/images/wailsLogo.png";
     import svelteLogo from "../../assets/images/svelteLogo.png";
     import tailwindLogo from "../../assets/images/tailwind.svg";
+
+    const appVersion = __APP_VERSION__;
 
     onMount(async () => {
         cwd = await GetAppPath();
@@ -52,9 +52,17 @@
     >
         INFO
     </div>
+
+    <div
+        class="px-0 m-0 mt-2 font-semibold text-primary-100 leading-none
+                dark:text-primary-200 rounded-md !mx-5 h-4 text-sm"
+    >
+        v{appVersion}
+    </div>
+
     <div
         class="px-0 m-0 mt-2 bg-primary-500 text-primary-100 dark:text-primary-200
-                rounded-md !mx-2 h-4 leading-none font-semibold text-sm"
+                rounded-md !mx-2 h-4 leading-none text-sm"
     >
         current working directory:
     </div>
