@@ -13,7 +13,7 @@
         Textarea,
         Label,
     } from "flowbite-svelte";
-    import { ChevronDownOutline } from "flowbite-svelte-icons";
+    import { ChevronDownOutline, InfoCircleSolid } from "flowbite-svelte-icons";
     import { buildFileTree } from "../../tools/fileTree";
     import { tooltipTailwindClass } from "../../stores/constantVariables";
 
@@ -174,9 +174,7 @@
     <div class="h-1" />
     <div id="darkLightMode"></div>
     <div id="accentColor flex" class="p-0 m-0">
-        <p class="p-0 m-0 text-primary-100 dark:text-primary-200">
-            accent color
-        </p>
+        <Label class="mb-0.5 text-md">accent colors:</Label>
         <ButtonGroup>
             <Button
                 class="rounded-l-lg"
@@ -205,7 +203,22 @@
     <div class="h-2" />
     {#if $currentPage !== AppPage.Login}
         <div class="mx-2">
-            <Label for="textarea-id" class="mb-0.5">filters</Label>
+            <div class="flex justify-center items-center space-x-1">
+                <Label for="textarea-id" class="mb-0.5 text-md"
+                    >file filters:</Label
+                >
+
+                <InfoCircleSolid
+                    slot="icon"
+                    class="w-4 h-4 text-primary-100 dark:text-primary-200"
+                />
+                <Tooltip>
+                    <p>*/.git/objects/*</p>
+                    <p>/VAULT/*</p>
+                    <p>*.jpg</p>
+                    <p>*Image.png</p>
+                </Tooltip>
+            </div>
             <Textarea
                 id="textarea-id"
                 placeholder="*/.git/objects/*"
