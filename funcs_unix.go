@@ -11,8 +11,6 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-const _height = 120
-
 func (g *Getters) GetRootDiskSpace() (int64, error) {
 	// Extract the root path from the current working directory.
 	var root = "/" // UNIX-like, simplified assumption

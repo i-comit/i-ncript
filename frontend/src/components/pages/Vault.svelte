@@ -183,7 +183,7 @@
     >
         <DirSize />
         {#if _currentFileTask === FileTasks.None}
-            <div class="row space-x-2">
+            <div class="flex justify-between mb-[4px] space-x-2">
                 <NeuButton on:click={() => encrypt()} _style="font-size: 14px;"
                     >ENCRYPT</NeuButton
                 >
@@ -196,7 +196,7 @@
         {/if}
 
         <div class="relative h-14">
-            {#if _currentFileTask === FileTasks.None}
+            {#if _currentFileTask !== FileTasks.None}
                 <div style="padding-top: 0.325rem">
                     <FileTools />
                 </div>
@@ -207,7 +207,7 @@
 
         <div class={_currentFileTask === FileTasks.None ? "h-1" : "h-0.5"} />
 
-        <div class="row space-x-0">
+        <div class="flex justify-between relative !top-10">
             <NeuButton on:click={() => switchPages(AppPage.Mbox)} _class="!w-20"
                 >M-BOX</NeuButton
             >
@@ -241,11 +241,3 @@
         {/if}
     </div>
 </div>
-
-<style>
-    .row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 4px;
-    }
-</style>

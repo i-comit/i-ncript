@@ -52,13 +52,13 @@
     let _height = await GetHeight();
     height.set(_height);
 
-    if (!isRightDir) ResizeWindow(320, _height + 20);
+    if (!isRightDir) ResizeWindow(320, _height + 10);
     else {
       CheckKeyFileInCWD().then((_keyFilePath) => {
         if (_keyFilePath === "") {
           currentPage.set(AppPage.AppSetup);
           newAccount.set(true);
-          ResizeWindow(350, _height + 100);
+          ResizeWindow(350, _height + 50);
         }
       });
     }

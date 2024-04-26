@@ -39,10 +39,7 @@
         retrieveDuplicateFiles,
     } from "../../tools/utils.ts";
 
-    import {
-        EventsOff,
-        LogInfo,
-    } from "../../../wailsjs/runtime/runtime";
+    import { EventsOff, LogInfo } from "../../../wailsjs/runtime/runtime";
 
     import TitleBar from "../widgets/TitleBar.svelte";
     import PanelDivider from "../widgets/PanelDivider.svelte";
@@ -427,7 +424,9 @@
             {/if}
         {/if}
 
-        <div class="row space-x-5 space-evenly">
+        <div
+            class="flex justify-between relative !top-11 space-x-5 space-evenly"
+        >
             <NeuButton on:click={() => switchPages(AppPage.Vault)}
                 >VAULT</NeuButton
             >

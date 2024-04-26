@@ -267,13 +267,12 @@
                         >{formattedAppDirSize} / {formattedDriveSize} | {driveToAppDirPercent}%</Tooltip
                     >
                 </div>
-                <div class="h-1" />
+                <div class="h-1.5" />
                 <div class="field">
                     <Input
-                        class="max-h-5 w-full bg py-0 leading-none"
+                        class="max-h-5 w-full py-0 leading-none"
                         style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
                             color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
-                        id="small-input"
                         placeholder={`${$newAccount ? "create username.." : "enter username.."} `}
                         type="text"
                         bind:value={username}
@@ -281,10 +280,7 @@
                         required
                     />
                 </div>
-                <div
-                    class="flex w-full h-1 px-0.5 relative bottom-1.5"
-                    tabindex="-1"
-                >
+                <div class="flex w-full h-1.5 px-0.5 relative bottom-2">
                     {#if usernameCheck === false}
                         <div
                             class="flex-1 text-center rounded-lg bg-primary-300 dark:bg-primary-400"
@@ -295,20 +291,19 @@
                             style={`background-color: ${$accentColor};`}
                         />
                     {/if}
-                    <div tabindex="-1">
-                        <Tooltip
-                            placement="bottom"
-                            offset={0}
-                            class={tooltipTailwindClass}
-                            arrow={false}>more than 4 characters</Tooltip
-                        >
-                    </div>
+                    <Tooltip
+                        placement="bottom"
+                        offset={0}
+                        class={tooltipTailwindClass}
+                        arrow={false}>more than 4 characters</Tooltip
+                    >
                 </div>
+                <div class="h-1" />
 
                 {#if $newAccount}
                     {#if !enteredPassword}
                         <Input
-                            class="max-h-4 w-full mb-2"
+                            class="max-h-5 w-full mb-2"
                             style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
                         color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
                             id="small-input"
@@ -326,7 +321,7 @@
                     {:else}
                         <div class="flex justify-between">
                             <Input
-                                class="max-h-4 w-full mb-2"
+                                class="max-h-5 w-full mb-2"
                                 style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
                                     color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
                                 id="small-input"
@@ -366,7 +361,7 @@
                     {/if}
                 {:else}
                     <Input
-                        class="max-h-4 w-full mb-2 focus:outline-1"
+                        class="max-h-5 w-full mb-1.5 focus:outline-1"
                         style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
                         color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
                         id="small-input"
@@ -389,10 +384,10 @@
             {/if}
         </div>
 
-        <div
-            class={`flex justify-between items-center ${$currentModal === Modals.None ? `mt-0.5` : `mt-1`}`}
-        >
-            <div class="flex space-x-1">
+        <div class={`flex justify-between items-center`}>
+            <div
+                class={`flex space-x-1 relative ${_modal === Modals.None ? `top-9` : `top-0`}`}
+            >
                 <Button
                     pill={true}
                     class="p-0 px-0.5 hover:drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] "
@@ -416,7 +411,9 @@
                     />
                 </Button>
             </div>
-            <div>
+            <div
+                class={`relative ${_modal === Modals.None ? `top-9` : `top-0`}`}
+            >
                 {#if $newAccount}
                     {#if !enteredPassword}
                         {#if usernameCheck && checks.passwordCheck}
@@ -453,7 +450,6 @@
                 {/if}
             </div>
         </div>
-        <div class={`${$currentModal === Modals.None ? `h-0.5` : `h-0`}`} />
     </form>
 {/if}
 

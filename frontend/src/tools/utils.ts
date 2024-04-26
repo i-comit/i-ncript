@@ -62,29 +62,29 @@ export function switchModals(modal: Modals) {
     } else currentModal.set(modal);
     const _currentPage = get(currentPage);
     let _height = get(height)
-    switch (get(currentModal)) {
-        case Modals.Info:
-        case Modals.Settings:
-        case Modals.Logger:
-            try {
-                if (_currentPage === AppPage.Login)
-                    ResizeWindow(width, _height + 50)
-                else ResizeWindow(width * 2, _height)
-            } catch (error) {
-                console.error("Error calling ResizeWindow", error);
-            }
-            break;
-        case Modals.None:
-        default:
-            try {
-                if (_currentPage === AppPage.Login)
-                    ResizeWindow(width, _height + 5)
-                else ResizeWindow(width * 2, _height)
-            } catch (error) {
-                LogTrace("Error calling ResizeWindow: " + error);
-            }
-            break;
-    }
+    // switch (get(currentModal)) {
+    //     case Modals.Info:
+    //     case Modals.Settings:
+    //     case Modals.Logger:
+    //         try {
+    //             if (_currentPage === AppPage.Login)
+    //                 ResizeWindow(width, _height + 50)
+    //             else ResizeWindow(width * 2, _height)
+    //         } catch (error) {
+    //             console.error("Error calling ResizeWindow", error);
+    //         }
+    //         break;
+    //     case Modals.None:
+    //     default:
+    //         try {
+    //             if (_currentPage === AppPage.Login)
+    //                 ResizeWindow(width, _height + 5)
+    //             else ResizeWindow(width * 2, _height)
+    //         } catch (error) {
+    //             LogTrace("Error calling ResizeWindow: " + error);
+    //         }
+    //         break;
+    // }
 }
 
 interface FileProperties {

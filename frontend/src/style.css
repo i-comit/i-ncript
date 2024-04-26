@@ -41,6 +41,7 @@ body {
 
 #modal-panel {
     max-width: 100%;
+    /* max-height: 50vh!important; */
     /* Enable scrolling within the div */
     overflow-y: auto;
     /* Enables vertical scrolling */

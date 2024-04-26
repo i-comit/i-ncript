@@ -13,8 +13,6 @@ import (
 	"golang.org/x/sys/windows"
 )
 
-const _height = 145
-
 func (g *Getters) GetRootDiskSpace() (uint64, error) {
 	cwd, err := os.Getwd()
 	if err != nil {

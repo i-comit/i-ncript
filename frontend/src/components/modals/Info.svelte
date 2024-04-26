@@ -40,14 +40,14 @@
 
 <div
     id="modal-panel"
-    class="fixed rounded-md ml-0.5 mr-1 !mb-0.5 hover:outline outline-1 bg-primary-700 dark:bg-primary-600"
+    class="rounded-md ml-0.5 mr-1 !mt-0.5 hover:outline outline-1 bg-primary-700 dark:bg-primary-600"
     style="max-height: {_currentPage === AppPage.Login
-        ? '67vh'
-        : '96%'};  margin-top: 0.16rem"
+        ? '68vh'
+        : '96%'};"
 >
     <div
-        class="mb-0.5 w-1/3 left-1/3 rounded-bl-lg rounded-br-lg font-semibold h-5 z-10 bg-primary-400 dark:bg-primary-300
-        outline outline-1 outline-primary-100 dark:outline-primary-200"
+        class="mb-1.5 pb-6 w-1/3 left-1/3 rounded-bl-lg rounded-br-lg font-semibold h-5 bg-primary-400 dark:bg-primary-300
+    outline outline-1 outline-primary-100 dark:outline-primary-200"
         style={`position: sticky; top: 0px; color: ${$accentColor};`}
     >
         INFO
