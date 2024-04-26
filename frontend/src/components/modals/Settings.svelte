@@ -82,7 +82,6 @@
 
     function setfFilterInputLineCt() {
         let lines = get(filterInputs).split("\n");
-        LogInfo("Line count " + lines.length);
         if (lines.length < 1) {
             filterInputLineCt = 1;
             return;

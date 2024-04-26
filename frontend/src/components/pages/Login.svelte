@@ -120,7 +120,7 @@
             switch (loginResult) {
                 case 0: // File does not exist
                 case 2: // Hash matched with key
-                    dispatch("loginSuccess", { resultInt: loginResult });
+                    dispatch("loginSuccess");
                     return true;
                 case 1: // File is empty
                     startDisplay("key file is empty...");
@@ -390,7 +390,7 @@
         </div>
 
         <div
-            class={`flex justify-between items-center ${$currentModal === Modals.None ? `mt-0` : `mt-1`}`}
+            class={`flex justify-between items-center ${$currentModal === Modals.None ? `mt-0.5` : `mt-1`}`}
         >
             <div class="flex space-x-1">
                 <Button

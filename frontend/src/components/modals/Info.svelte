@@ -67,8 +67,7 @@
         current working directory:
     </div>
     <div class="relative w-full overflow-hidden" style="max-width: 100%;">
-        <!-- Ensure the parent doesn't expand -->
-        <!-- Child div that can scroll horizontally -->
+        <!-- Ensure the parent doesn't expand & Child div that can scroll horizontally-->
         <div
             class="m-0 whitespace-nowrap overflow-x-auto text-primary-100 dark:text-primary-200
             z-5 drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]"

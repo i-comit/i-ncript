@@ -48,6 +48,20 @@ export namespace main {
 	        this.fileType = source["fileType"];
 	    }
 	}
+	export class Release {
+	    tag_name: string;
+	    html_url: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new Release(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.tag_name = source["tag_name"];
+	        this.html_url = source["html_url"];
+	    }
+	}
 
 }
 

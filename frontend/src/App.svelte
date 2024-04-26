@@ -14,7 +14,12 @@
     GetDirectoryPath,
     GetHeight,
   } from "../wailsjs/go/main/Getters";
-  import { EventsOn, LogInfo, LogWarning } from "../wailsjs/runtime/runtime";
+  import {
+    EventsOn,
+    LogError,
+    LogInfo,
+    LogWarning,
+  } from "../wailsjs/runtime/runtime";
   import { DirectoryWatcher, ResizeWindow } from "../wailsjs/go/main/App";
   import {
     vaultDir,
@@ -33,6 +38,7 @@
     AddInputToFilterTemplate,
     LoadFileFilters,
   } from "../wailsjs/go/main/FileUtils";
+  import UpdateApp from "./components/modals/UpdateApp.svelte";
 
   let _page: AppPage;
   let isRightDir = false;
@@ -68,7 +74,7 @@
     });
   });
 
-  async function loggedIn(event: CustomEvent) {
+  async function loggedIn() {
     await GetDirectoryPath(0).then((vaultPath) => {
       vaultDir.set(vaultPath);
       LogWarning("vaultPath " + vaultPath);
@@ -77,27 +83,27 @@
       mBoxDir.set(mBoxPath);
       LogWarning("mboxPath " + mBoxPath);
     });
-    var loginInt = event.detail.resultInt;
-    if (loginInt === 2)
-      await LoadFileFilters().then((_filterInputs) => {
-        if (_filterInputs) {
-          if (_filterInputs.length !== 0) {
-            const singleString = _filterInputs.join("\n");
-            filterInputs.set(singleString);
-            let lines = get(filterInputs)
-              .split("\n")
-              .filter((line) => line.trim() !== "");
-            lines.forEach((_filterInput) => {
-              AddInputToFilterTemplate(_filterInput);
-            });
-          }
-        }
-      });
+    try {
+      const _filterInputs = await LoadFileFilters();
+      if (_filterInputs && _filterInputs.length !== 0) {
+        const singleString = _filterInputs.join("\n");
+        filterInputs.set(singleString);
+        let lines = get(filterInputs)
+          .split("\n")
+          .filter((line) => line.trim() !== "");
+
+        lines.forEach((_filterInput) => {
+          AddInputToFilterTemplate(_filterInput);
+        });
+      }
+    } catch (error) {
+      LogError("Error loading file filters:" + error);
+    }
 
     currentPage.set(AppPage.Vault);
     ResizeWindow(width * 2, $height);
 
-    let unsubscribe = () => {}; // Define a no-op function to avoid undefined errors
+    let unsubscribe = () => {};
     unsubscribe = fileTree.subscribe((value) => {
       if (value && value.relPath !== "") {
         buildFileTree();
@@ -109,6 +115,7 @@
 </script>
 
 <main class="rounded-lg">
+  <UpdateApp />
   {#if !isRightDir}
     <WrongDir />
   {:else if _page === AppPage.AppSetup}

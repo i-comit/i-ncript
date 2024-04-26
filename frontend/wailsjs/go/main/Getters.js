@@ -58,6 +58,10 @@ export function GetHeight() {
   return window['go']['main']['Getters']['GetHeight']();
 }
 
+export function GetLatestRelease() {
+  return window['go']['main']['Getters']['GetLatestRelease']();
+}
+
 export function GetPercentOfDriveToAppDirSize() {
   return window['go']['main']['Getters']['GetPercentOfDriveToAppDirSize']();
 }

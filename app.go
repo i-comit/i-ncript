@@ -41,11 +41,11 @@ func (a *App) startup(ctx context.Context) {
 	}
 	a.cwd = cwd
 	fmt.Println("\033[32mCWD: ", a.cwd, "\033[0m")
-	release, err := a.getters.getLatestRelease()
-	if err != nil {
-		log.Printf("Error fetching latest release: %v", err)
-	}
-	fmt.Printf("Latest Release: %s, %s\n", release.TagName, release.HtmlUrl)
+	// release, err := a.getters.GetLatestRelease()
+	// if err != nil {
+	// 	log.Printf("Error fetching latest release: %v", err)
+	// }
+	// fmt.Printf("Latest Release: %s, %s\n", release.TagName, release.HtmlUrl)
 }
 
 func (a *App) InitializeRootFolder() error {
@@ -64,9 +64,7 @@ func (a *App) InitializeRootFolder() error {
 	} else if err != nil {
 		return err
 	}
-
 	newFilePath := filepath.Join(newFolderPath, filepath.Base(executablePath))
-
 	if _, err := os.Stat(newFilePath); err == nil {
 		return nil // or return an appropriate message/error if needed
 	} else if !os.IsNotExist(err) {
@@ -77,7 +75,6 @@ func (a *App) InitializeRootFolder() error {
 
 func (a *App) InterruptFileTask() error {
 	if a.lastFilePath != "" {
-		// Attempt to open the last file
 		file, err := os.OpenFile(a.lastFilePath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0666)
 		if err != nil {
 			log.Printf("failed to open last file: %v", err)
@@ -106,7 +103,6 @@ func (a *App) InterruptFileTask() error {
 
 func (a *App) Login(username, password string) (int, error) {
 	if username == "" || password == "" {
-		fmt.Println("Username or password is empty")
 		return -1, nil
 	}
 	filePath := filepath.Join(a.cwd, keyFileName)

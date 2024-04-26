@@ -66,14 +66,12 @@
         duplicateFiles,
     } from "../../stores/dynamicVariables.ts";
     import { FileTasks, currentFileTask } from "../../enums/FileTasks.ts";
-    import { OpenDirectory } from "../../../wailsjs/go/main/FileUtils";
     import { GetTotalDirSize } from "../../../wailsjs/go/main/Getters";
 
     export let _fileTree: FileNode;
 
     $: _label = basePath(_fileTree.relPath);
     let buttonRef: HTMLButtonElement;
-    let clickedOnButtonRef: HTMLButtonElement;
 
     let _heldDownBtns: { [key: string]: HTMLButtonElement };
     heldDownBtns.subscribe((value) => {

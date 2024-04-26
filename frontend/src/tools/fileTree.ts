@@ -18,7 +18,6 @@ import {
 
 import { pageName, pageIndex } from "./utils";
 import {
-    GetDirectoryPath,
     GetFileTreePath,
 } from "../../wailsjs/go/main/Getters";
 import { lastHighlight_light, prevHighlight_light } from "../stores/constantVariables";

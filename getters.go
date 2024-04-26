@@ -190,7 +190,7 @@ type Release struct {
 	HtmlUrl string `json:"html_url"` // URL pointing to the release on GitHub's website
 }
 
-func (g *Getters) getLatestRelease() (*Release, error) {
+func (g *Getters) GetLatestRelease() (*Release, error) {
 	repo := "i-comit/i-ncript"
 	url := fmt.Sprintf("https://api.github.com/repos/%s/releases/latest", repo)
 
@@ -264,8 +264,10 @@ func (b *Getters) FindEncryptedDuplicates(dirIndex int) ([]string, error) {
 		}
 		// Check if the file is an encrypted file
 		if ext == ".enc" {
-			originalExt := filepath.Ext(baseName)                         // Extract original file extension from file like "example.txt.enc"
-			originalBaseName := baseName[:len(baseName)-len(originalExt)] // Base name without original extension
+			// Extract original file extension from file like "example.txt.enc"
+			originalExt := filepath.Ext(baseName)
+			// Base name without original extension
+			originalBaseName := baseName[:len(baseName)-len(originalExt)]
 
 			// Check for presence of non-encrypted counterpart
 			if _, ok := filesMap[fullPath][originalBaseName+originalExt]; ok {

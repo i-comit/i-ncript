@@ -6,12 +6,6 @@
     import { tooltipTailwindClass } from "../../stores/constantVariables";
     import { OpenDirectory } from "../../../wailsjs/go/main/FileUtils";
     import { getRootDir, removeFileName, retrieveDuplicateFiles } from "../../tools/utils";
-    import {
-        FindEncryptedDuplicates,
-        GetDirectoryPath,
-    } from "../../../wailsjs/go/main/Getters";
-    import { onMount } from "svelte";
-    import { LogInfo } from "../../../wailsjs/runtime/runtime";
 
     // function removeRootPathFromFilePath(filePath: string): string {
     //     var rootPath = removeFileName(getRootDir());
@@ -23,7 +17,6 @@
     // }
 </script>
 
-<!-- Main modal -->
 <div
     id="static-modal"
     data-modal-backdrop="static"
