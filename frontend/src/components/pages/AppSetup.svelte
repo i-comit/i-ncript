@@ -94,7 +94,7 @@
     <div id="languages">
         <Button
             data-placement="left-start"
-            class="outline outline-1 h-5 mt-2 mr-2 select-none"
+            class="outline outline-1 h-5 mt-2 mr-2"
             size="xs"
             style={`background-color: ${$accentColor}`}
             >Languages<ChevronDownOutline

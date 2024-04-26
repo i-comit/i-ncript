@@ -1,6 +1,7 @@
 <script lang="ts">
     import { Button, ButtonGroup, Modal } from "flowbite-svelte";
     import { GetLatestRelease } from "../../../wailsjs/go/main/Getters";
+    import { onMount } from "svelte";
     import { LogError, LogInfo } from "../../../wailsjs/runtime/runtime";
     import { ArrowRightOutline } from "flowbite-svelte-icons";
     import { accentColor } from "../../stores/dynamicVariables";
