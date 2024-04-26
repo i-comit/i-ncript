@@ -56,6 +56,7 @@
     });
 
     onDestroy(() => {
+        filterInputs.update((value) => value.replaceAll("\\", "/"));
         SaveFileFilters(get(filterInputs));
     });
 
@@ -77,6 +78,7 @@
     }
 
     function keyFilterInputLineCt(event: KeyboardEvent) {
+        filterInputs.update((value) => value.replaceAll("\\", "/"));
         if (event.code === "Enter") setfFilterInputLineCt();
     }
 

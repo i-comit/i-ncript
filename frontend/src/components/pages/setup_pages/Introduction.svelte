@@ -23,17 +23,15 @@
     >create account</GradientButton
 >
 <p class={setupPagePClass}>
-    i&#8209;ncript is a portable data encryption app, designed for use with
-    removable storage devices. It is portable as it does not require an
-    installer to run, can execute on any drive, and can be quickly transferred
-    to another device without an install/uninstall process.
+    i&#8209;ncript is a portable data encryption app. It is portable as it does
+    not require an installer to run, can execute on any drive, and can be
+    quickly transferred to another device without an install/uninstall process.
 </p>
 <p class={setupPagePClass}>
-    The focus on portability plays an important role in data security. The fact
-    is, data is most vulnerable is when it is connected to the internet, and
-    while many measures have been taken to ensure the safety of online data, an
-    offline, portable data store is a far more simple yet far more effective
-    method of data security.
+    Portability is crucial for data security because data is most at risk when
+    connected to the internet. Although various steps have been taken to secure
+    online data, using an offline, portable data storage method is a simpler and
+    more effective way to protect data.
 </p>
 <p class={setupPagePClass}>
     In cybersecurity, an "attack vector" refers to a method that an attacker

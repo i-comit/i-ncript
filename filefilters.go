@@ -16,7 +16,7 @@ var excludedPathsMatching []string
 
 var excludedFilesEndingIn []string
 
-func checkExcludedDirsAgainstPath(path string) bool {
+func checkExcludedDirAgainstPath(path string) bool {
 	lowercasePath := strings.ToLower(path)
 	for _, element := range excludedDirsStartingIn {
 		if strings.HasPrefix(lowercasePath, element) {
@@ -37,9 +37,21 @@ func checkExcludedDirsAgainstPath(path string) bool {
 			return true
 		}
 	}
+	return false
+}
+
+func checkExcludedFileAgainstPath(path string) bool {
+	lowercasePath := strings.ToLower(path)
 	for _, element := range excludedFilesEndingIn {
 		if strings.HasSuffix(lowercasePath, element) {
 			fmt.Println("found excluded file ending in " + element)
+			return true
+		}
+	}
+	for _, element := range excludedPathsMatching {
+		pathMatch := lowercasePath == element
+		if pathMatch {
+			fmt.Println("found excluded path matching file" + element)
 			return true
 		}
 	}
@@ -141,7 +153,6 @@ func (f *FileUtils) LoadFileFilters() ([]string, error) {
 		fmt.Println("Error decoding JSON:", err)
 		return nil, err
 	}
-
 	return stringSlice, nil
 }
 
@@ -170,8 +181,10 @@ func (f *FileUtils) AddInputToFilterTemplate(input string) {
 		f.app.excludeInputStartingIn(input)
 		fmt.Println("excludeInputStartingIn " + input)
 		// Check if input starts with wildcard '*' and has no separator
-	} else if strings.HasPrefix(input, "*") && !strings.Contains(input, separator) {
+	} else if strings.HasPrefix(input, "*") && !strings.Contains(input, separator) && strings.Contains(input, ".") {
 		f.app.excludeFileEndingIn(input)
+	} else if !strings.HasPrefix(input, "*") && !strings.Contains(input, separator) && strings.Contains(input, ".") {
+		f.app.excludePathMatching(input)
 	}
 }
 
@@ -185,14 +198,6 @@ func (a *App) excludePathContaining(input string) {
 	}
 }
 
-func (a *App) excludePathMatching(input string) {
-	//example: VAULT/CODE/.git/objects/ or VAULT/CODE/Thumbs.db
-	input = a.formatExcludePath(input)
-	if !contains(excludedPathsMatching, input) {
-		excludedPathsMatching = append(excludedPathsMatching, input)
-	}
-}
-
 func (a *App) excludeInputStartingIn(input string) {
 	//example: VAULT/MISC/* or VAULT/MISC/thumbs.txt*
 	input = strings.TrimSuffix(input, "*")
@@ -203,14 +208,18 @@ func (a *App) excludeInputStartingIn(input string) {
 	}
 }
 
-// func (a *App) excludePathStartingEndingIn(input string) {
-// 	//example: VAULT/CODE/*/frontend/dist/ or VAULT/CODE/*/Filename.txt
-// }
-
 func (a *App) excludeFileEndingIn(input string) {
 	//example : *Thumbs.db || *.txt
 	input = strings.TrimPrefix(input, "*")
 	excludedFilesEndingIn = append(excludedFilesEndingIn, strings.ToLower(input))
+}
+
+func (a *App) excludePathMatching(input string) {
+	//example: VAULT/CODE/.git/objects/ or VAULT/CODE/Thumbs.db
+	input = a.formatExcludePath(input)
+	if !contains(excludedPathsMatching, input) {
+		excludedPathsMatching = append(excludedPathsMatching, input)
+	}
 }
 
 func (a *App) formatExcludePath(input string) string {
@@ -222,7 +231,6 @@ func (a *App) formatExcludePath(input string) string {
 	return strings.ToLower(input) // Return the possibly modified input
 }
 
-// contains checks if a slice contains a particular string.
 func contains(slice []string, str string) bool {
 	for _, v := range slice {
 		if v == str {
