@@ -69,6 +69,7 @@
     import { startDisplay } from "../../tools/logger.ts";
     import DuplicateFiles from "../modals/DuplicateFiles.svelte";
     import OvalSpinner from "../widgets/OvalSpinner.svelte";
+    import ModalButtons from "../widgets/ModalButtons.svelte";
 
     let _currentFileTask: FileTasks;
     currentFileTask.subscribe((value) => {
@@ -195,8 +196,8 @@
             <TaskDisplay />
         {/if}
 
-        <div class="relative h-14">
-            {#if _currentFileTask !== FileTasks.None}
+        <div class="h-2 !mt-2">
+            {#if _currentFileTask === FileTasks.None}
                 <div style="padding-top: 0.325rem">
                     <FileTools />
                 </div>
@@ -204,14 +205,17 @@
                 <WaveProgress dataProgress={$fileTaskPercent} />
             {/if}
         </div>
-
-        <div class={_currentFileTask === FileTasks.None ? "h-1" : "h-0.5"} />
-
-        <div class="flex justify-between relative !top-10">
-            <NeuButton on:click={() => switchPages(AppPage.Mbox)} _class="!w-20"
-                >M-BOX</NeuButton
-            >
-            <Toggle />
+        <div class="h-9">
+            <div class="relative !top-[3.3rem]">
+                <ModalButtons />
+            </div>
+            <div class="flex justify-between relative !top-[3.9rem]">
+                <NeuButton
+                    on:click={() => switchPages(AppPage.Mbox)}
+                    _class="!w-20">M-BOX</NeuButton
+                >
+                <Toggle />
+            </div>
         </div>
     </div>
 

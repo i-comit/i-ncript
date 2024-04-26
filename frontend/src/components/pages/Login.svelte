@@ -386,7 +386,7 @@
 
         <div class={`flex justify-between items-center`}>
             <div
-                class={`flex space-x-1 relative ${_modal === Modals.None ? `top-9` : `top-0`}`}
+                class={`flex space-x-1 relative ${_modal === Modals.None ? `top-10` : `top-0`}`}
             >
                 <Button
                     pill={true}
@@ -412,7 +412,7 @@
                 </Button>
             </div>
             <div
-                class={`relative ${_modal === Modals.None ? `top-9` : `top-0`}`}
+                class={`relative ${_modal === Modals.None ? `top-10` : `top-0`}`}
             >
                 {#if $newAccount}
                     {#if !enteredPassword}

@@ -124,7 +124,7 @@
     class="rounded-md ml-0.5 mr-1 !mt-0.5 hover:outline outline-1 bg-primary-700 dark:bg-primary-600"
     style="max-height: {_currentPage === AppPage.Login
         ? '68vh'
-        : '96%'};"
+        : '97%'};"
 >
     <div
         class="mb-1.5 pb-6 w-1/2 left-1/4 rounded-bl-lg rounded-br-lg font-semibold h-5 bg-primary-400 dark:bg-primary-300

@@ -27,7 +27,7 @@
 
     let pauseBtn: HTMLDivElement;
     let progressPClass =
-        "text-xs text-primary-100 dark:text-primary-200 font-semibold";
+        "text-sm text-primary-100 dark:text-primary-200 font-semibold";
 
     const unsub_darkLightMode = darkLightMode.subscribe((value) => {
         darkLightTextOnElement(!value, pauseBtn);
@@ -71,23 +71,24 @@
     }
 </script>
 
-<div class="flex items-center mb-1 mt-0">
+<div class="flex items-center mb-1">
     <div class="icon space-y-1 flex flex-grow justify-center items-center">
         <div class="icon__neumorphic" bind:this={pauseBtn}>
             <button on:click={interruptFileTask}>
-                <PauseSolid class="pl-px !w-8 !h-8" />
+                <PauseSolid class="pl-px !w-10 !h-10" />
             </button>
         </div>
     </div>
 </div>
-<div class="absolute flex justify-between w-full bottom-5 px-1 select-none">
-    <p class={progressPClass}>
-        {formatNumber($fileCount)}/{formatNumber($totalFileCt)}
-    </p>
-    <p class={progressPClass}>{$cipheredFilesSize}</p>
-</div>
+
 <!-- https://codepen.io/uimax/pen/KgdgGa -->
-<div class="progress progress-striped active rounded-md h-3.5 p-0 m-0">
+<div class="progress progress-striped active rounded-md h-3.5 p-0 m-0 !mt-1.5">
+    <div class="relative bottom-5 flex justify-between w-full px-1 select-none">
+        <p class={progressPClass}>
+            {formatNumber($fileCount)}/{formatNumber($totalFileCt)}
+        </p>
+        <p class={progressPClass}>{$cipheredFilesSize}</p>
+    </div>
     <div
         style={`width: ${dataProgress}%; background-color: ${$accentColor}`}
         class="progress-bar rounded-md h-3.5"
@@ -177,7 +178,7 @@
         background-size: 40px 40px;
     }
 
-    $icon-size: 2.1rem;
+    $icon-size: 2.4rem;
 
     /*  ICONS  */
     @import "../../neu_icons.scss";

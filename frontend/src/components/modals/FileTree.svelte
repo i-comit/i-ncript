@@ -371,7 +371,7 @@
 <style>
     #dial {
         right: -0.7rem !important;
-        bottom: -14.5vh !important;
+        bottom: -14vh !important;
         transform: scale(0.55) !important;
         z-index: 35;
     }

@@ -1,16 +1,8 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
     import { get } from "svelte/store";
-    import {
-        CogSolid,
-        BarsFromLeftOutline,
-        InfoCircleOutline,
-    } from "flowbite-svelte-icons";
-    import { Modals } from "../../enums/Modals";
 
     import { darkLightMode, accentColor } from "../../stores/dynamicVariables";
-    import { switchModals } from "../../tools/utils";
-
     import {
         darkLightTextOnClasses,
         darkLightShadowOnIcons,
@@ -42,26 +34,6 @@
         style={`top:90%; background-color: ${$accentColor}`}
     ></div>
 
-    <div class="icon space-y-1">
-        <button
-            class="icon__neumorphic"
-            on:click={() => switchModals(Modals.Info)}
-        >
-            <InfoCircleOutline class="p-px pt-0.5" />
-        </button>
-        <button
-            class="icon__neumorphic"
-            on:click={() => switchModals(Modals.Logger)}
-        >
-            <BarsFromLeftOutline class="p-px pt-0.5" role="button" />
-        </button>
-        <button
-            class="icon__neumorphic"
-            on:click={() => switchModals(Modals.Settings)}
-        >
-            <CogSolid class="p-px pt-0.5" />
-        </button>
-    </div>
     <div
         class="absolute w-full h-1/5 rounded-full select-none"
         style={`bottom:90%; background-color: ${$accentColor}`}
@@ -69,7 +41,7 @@
 </div>
 
 <style lang="scss">
-    $panel-width: 1.65rem;
+    $panel-width: 0.4rem;
     @import "../../neumorphic.scss";
 
     #panel {

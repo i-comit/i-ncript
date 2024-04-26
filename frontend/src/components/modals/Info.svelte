@@ -41,9 +41,7 @@
 <div
     id="modal-panel"
     class="rounded-md ml-0.5 mr-1 !mt-0.5 hover:outline outline-1 bg-primary-700 dark:bg-primary-600"
-    style="max-height: {_currentPage === AppPage.Login
-        ? '68vh'
-        : '96%'};"
+    style="max-height: {_currentPage === AppPage.Login ? '68vh' : '97%'};"
 >
     <div
         class="mb-1.5 pb-6 w-1/3 left-1/3 rounded-bl-lg rounded-br-lg font-semibold h-5 bg-primary-400 dark:bg-primary-300
@@ -62,7 +60,7 @@
 
     <div
         class="px-0 m-0 mt-2 bg-primary-500 text-primary-100 dark:text-primary-200
-                rounded-md !mx-2 h-4 leading-none text-sm"
+                rounded-md !mx-2 h-4 leading-none select-none text-sm"
     >
         current working directory:
     </div>
@@ -80,7 +78,7 @@
     <div
         class="flex justify-between px-4 text-primary-100 dark:text-primary-200"
     >
-        <p class="p-0 m-0">open source repo:</p>
+        <p class="p-0 m-0 select-none">open source repo:</p>
         <Button pill={true} outline={true} class={iconButtonClass}>
             <a href="https://github.com/i-comit/i-ncript" target="_blank">
                 <GithubSolid
@@ -94,7 +92,7 @@
     <div
         class="flex justify-between px-4 text-primary-100 dark:text-primary-200"
     >
-        <p class="p-0 m-0">check for updates:</p>
+        <p class="p-0 m-0 select-none">check for updates:</p>
         <Button pill={true} outline={true} class={iconButtonClass}>
             <a
                 href="https://sourceforge.net/projects/i-ncript/"

@@ -16,7 +16,6 @@ import { LogDebug, LogError, LogInfo, LogTrace, LogWarning } from "../../wailsjs
 import { MoveFilesToPath } from '../../wailsjs/go/main/FileUtils';
 
 import { FileTypes, getFileType } from '../enums/FileTypes.ts';
-import { width } from "../stores/constantVariables.ts"
 import { duplicateFiles, mBoxDir, height, vaultDir } from '../stores/dynamicVariables.ts';
 import {
     clearHeldBtns,
@@ -60,31 +59,6 @@ export function switchModals(modal: Modals) {
     if (_currentModal === modal) {
         currentModal.set(Modals.None);
     } else currentModal.set(modal);
-    const _currentPage = get(currentPage);
-    let _height = get(height)
-    // switch (get(currentModal)) {
-    //     case Modals.Info:
-    //     case Modals.Settings:
-    //     case Modals.Logger:
-    //         try {
-    //             if (_currentPage === AppPage.Login)
-    //                 ResizeWindow(width, _height + 50)
-    //             else ResizeWindow(width * 2, _height)
-    //         } catch (error) {
-    //             console.error("Error calling ResizeWindow", error);
-    //         }
-    //         break;
-    //     case Modals.None:
-    //     default:
-    //         try {
-    //             if (_currentPage === AppPage.Login)
-    //                 ResizeWindow(width, _height + 5)
-    //             else ResizeWindow(width * 2, _height)
-    //         } catch (error) {
-    //             LogTrace("Error calling ResizeWindow: " + error);
-    //         }
-    //         break;
-    // }
 }
 
 interface FileProperties {
