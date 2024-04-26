@@ -59,18 +59,17 @@
         SaveFileFilters(get(filterInputs));
     });
 
-    function readFilterInputs() {
-        ClearExcludedSlices().finally(() => {
-            let lines = get(filterInputs)
-                .split("\n")
-                .filter((line) => line.trim() !== "");
-            lines.forEach((_filterInput) => {
-                AddInputToFilterTemplate(_filterInput);
-            });
-            pageLoading.set(true);
-            buildFileTree();
-            setfFilterInputLineCt();
+    async function readFilterInputs() {
+        await ClearExcludedSlices();
+        let lines = get(filterInputs)
+            .split("\n")
+            .filter((line) => line.trim() !== "");
+        lines.forEach((_filterInput) => {
+            AddInputToFilterTemplate(_filterInput);
         });
+        pageLoading.set(true);
+        buildFileTree();
+        setfFilterInputLineCt();
     }
     function toggleLightDarkMode() {
         darkLightMode.update((v) => !v);
@@ -122,9 +121,7 @@
 <div
     id="modal-panel"
     class="rounded-md ml-0.5 mr-1 !mt-0.5 hover:outline outline-1 bg-primary-700 dark:bg-primary-600"
-    style="max-height: {_currentPage === AppPage.Login
-        ? '68vh'
-        : '97%'};"
+    style="max-height: {_currentPage === AppPage.Login ? '68vh' : '97%'};"
 >
     <div
         class="mb-1.5 pb-6 w-1/2 left-1/4 rounded-bl-lg rounded-br-lg font-semibold h-5 bg-primary-400 dark:bg-primary-300

@@ -119,8 +119,11 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 		if path == rootDir {
 			return nil
 		}
+		if checkExcludedFileAgainstPath(path) {
+			return nil
+		}
 		relativePath, err := filepath.Rel(rootDir, path)
-		if relativePath == "." || checkExcludedDirsAgainstPath(path) {
+		if relativePath == "." || checkExcludedDirAgainstPath(path) {
 			return filepath.SkipDir
 		}
 		if err != nil {
@@ -397,7 +400,10 @@ func getFilesRecursively(dirs ...string) ([]string, error) {
 			if err != nil {
 				return err
 			}
-			if checkExcludedDirsAgainstPath(path) {
+			if checkExcludedFileAgainstPath(path) {
+				return nil
+			}
+			if checkExcludedDirAgainstPath(path) {
 				fmt.Println("skipping filtered path")
 				return filepath.SkipDir
 			}
