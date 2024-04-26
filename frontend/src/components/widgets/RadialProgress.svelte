@@ -1,14 +1,6 @@
 <!-- https://codepen.io/eZ0/pen/eZXNzd -->
 <script lang="ts">
-    import {
-        darkBGColor,
-        lightBGColor,
-    } from "../../stores/constantVariables.ts";
-
-    import {
-        darkLightMode,
-        largeFilePercent,
-    } from "../../stores/dynamicVariables.ts";
+    import { largeFilePercent } from "../../stores/dynamicVariables.ts";
 
     export let className = "";
     export let dataProgress: number;
@@ -69,7 +61,7 @@
             width: $circle-size;
             height: $circle-size;
             position: absolute;
-            -webkit-backface-visibility: hidden;
+            // -webkit-backface-visibility: hidden;
             transition: transform $transition-length;
             border-radius: 50%;
         }

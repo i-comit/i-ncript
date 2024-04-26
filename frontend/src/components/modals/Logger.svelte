@@ -166,23 +166,23 @@
         user-select: none;
         position: absolute;
         bottom: 0;
-        width: 95%; /* Adjust if necessary */
-        max-height: 100%; /* Example maximum height; adjust as needed */
-        overflow-x: hidden; /* Enables horizontal scrolling */
-        overflow-y: auto; /* Enables vertical scrolling */
-        white-space: nowrap; /* Keeps log entries in a single line for horizontal scrolling */
+        width: 95%;
+        max-height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        white-space: nowrap;
         padding-left: 0.2rem;
         text-align: justify;
         box-sizing: border-box;
         scrollbar-width: none;
         /* For Firefox */
         -ms-overflow-style: none;
-        scroll-behavior: smooth; /* Enables smooth scrolling */
+        scroll-behavior: smooth;
     }
 
     .log-entry {
-        white-space: normal; /* Ensures text within each entry wraps properly */
-        min-width: max-content; /* Ensures content dictates container width, allowing for horizontal scroll */
+        white-space: normal;
+        min-width: max-content;
     }
 
     .divider {

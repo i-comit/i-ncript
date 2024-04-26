@@ -71,11 +71,6 @@
 <style lang="scss">
     $panel-width: 1.65rem;
     @import "../../neumorphic.scss";
-    body {
-        --text-color: #757575;
-        --icon-hover: #8abdff;
-        --icon-active: #a0d6ff;
-    }
 
     #panel {
         width: $panel-width;

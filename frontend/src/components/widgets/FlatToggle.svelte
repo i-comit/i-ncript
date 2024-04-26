@@ -1,7 +1,6 @@
 <!-- https://codepen.io/singhimalaya/pen/EdVzNL -->
 <script lang="ts">
     import { onDestroy } from "svelte";
-    import { LogPrint } from "../../../wailsjs/runtime/runtime";
     import {
         EncryptFilesInDir,
         SetIsHotFilerEnabled,
