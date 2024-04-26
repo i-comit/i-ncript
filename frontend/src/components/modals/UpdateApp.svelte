@@ -47,11 +47,11 @@
     bind:open={modalBool}
     autoclose
     outsideclose
-    dialogClass="fixed top-0 start-0 end-0 z-50 w-full p-4 mt-4 !h-100"
+    dialogClass="fixed top-0 start-0 end-0 z-50 w-full p-3.5 mt-4 !h-100"
     headerClass="flex justify-center items-center p-4 md:p-5 rounded-t-lg h-4 !bg-primary-600 
                     !dark:bg-primary-700 !text-primary-200 !dark:text-primary-100"
     backdropClass="fixed inset-0 z-40 bg-gray-800 !bg-opacity-70"
-    bodyClass="bg-primary-400 dark:bg-primary-300 text-primary-100 dark:text-primary-200 rounded-b-lg !h-50"
+    bodyClass="bg-primary-400 dark:bg-primary-300 text-primary-100 dark:text-primary-200 rounded-b-lg  !h-50"
 >
     <div class="update-modal overflow-y-auto overflow-x-clip p-1">
         <div class="flex flex-wrap">

@@ -1,4 +1,3 @@
-import { LogInfo } from "../../wailsjs/runtime/runtime";
 import { leftCtrlDown, pointerDown } from "./utils";
 
 export function ctrlLeftDown(event: KeyboardEvent) {
@@ -15,13 +14,13 @@ export function ctrlLeftUp(event: KeyboardEvent) {
 export function onMouseDown(event: MouseEvent) {
     if (event.button === 0) {
         pointerDown.set(true);
-        LogInfo("Mouse down");
+        // LogInfo("Mouse down");
     }
 }
 export function onMouseUp(event: MouseEvent) {
     if (event.button === 0) {
         pointerDown.set(false);
-        LogInfo("Mouse up");
+        // LogInfo("Mouse up");
     }
 }
 export function onTouchStart(event: TouchEvent) {

@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+	"unicode/utf8"
 )
 
 // GETTER STRUCT
@@ -181,7 +182,7 @@ func (g *Getters) GetHeight() int {
 }
 
 func (g *Getters) GetRootFolder() string {
-	return rootFolder
+	return strings.ToLower(rootFolder)
 }
 
 type Release struct {
@@ -366,4 +367,21 @@ func removeFileExtension(_filePath string) string {
 	filePathWithoutExtension := strings.TrimSuffix(_filePath, extension)
 	fmt.Println("file w/o extension " + filePathWithoutExtension)
 	return filePathWithoutExtension
+}
+
+func bytesToRunes(b []byte) []rune {
+	var r []rune
+	for len(b) > 0 {
+		runeValue, size := utf8.DecodeRune(b)
+		r = append(r, runeValue)
+		b = b[size:]
+	}
+	return r
+}
+func runesToBytes(r []rune) []byte {
+	var b []byte
+	for _, runeVal := range r {
+		b = append(b, byte(runeVal))
+	}
+	return b
 }
