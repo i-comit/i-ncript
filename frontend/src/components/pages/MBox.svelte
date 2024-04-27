@@ -1,4 +1,4 @@
-<!-- NBox.svelte -->
+<!-- MBox.svelte -->
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
     import { Input, Tooltip } from "flowbite-svelte";

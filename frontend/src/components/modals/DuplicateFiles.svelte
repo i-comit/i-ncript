@@ -1,4 +1,3 @@
-<!-- Modal toggle -->
 <script lang="ts">
     import { Alert, Tooltip } from "flowbite-svelte";
     import { duplicateFiles } from "../../stores/dynamicVariables";
