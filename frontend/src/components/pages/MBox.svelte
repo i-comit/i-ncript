@@ -120,7 +120,6 @@
         unsub_heldDownBtns();
         EventsOff("fileProcessed");
     });
-
     function handleOnFileClick() {
         LogInfo("on heldDownBtns changed ");
 
@@ -135,7 +134,7 @@
         const entries = Object.entries(_heldDownBtns);
         var lastEntry = entries[entries.length - 1];
 
-        const [key, value] = lastEntry;
+        const [key, _] = lastEntry;
         if (lastEntry) {
             LogInfo("Last entry rel path " + key);
             var lastFileType = getFileType(key);
@@ -149,14 +148,20 @@
     }
 
     function enterPassword(event: KeyboardEvent) {
-        if (event.code === "Enter" && checks.passwordCheck) {
-            password = "";
-            const inputElement = event.target as HTMLInputElement;
-            enteredPassword = inputElement.value;
-            Object.keys(checks).forEach((key) => {
-                checks[key as keyof typeof checks] = false;
-            });
-        }
+        if (event.code === "Enter")
+            if (checks.passwordCheck && !enteredPassword) {
+                if (currentMBoxState === MboxState.Pack) {
+                    const inputElement = event.target as HTMLInputElement;
+                    enteredPassword = inputElement.value;
+                }
+                if (currentMBoxState === MboxState.Open) openENCPFiles();
+                password = "";
+                Object.keys(checks).forEach((key) => {
+                    checks[key as keyof typeof checks] = false;
+                });
+            } else if (passwordMatch && enteredPassword) {
+                packFilesToENCP();
+            }
     }
 
     function enterPasswordBtn() {
@@ -204,7 +209,7 @@
         };
     }
 
-    function packFilesForENCP() {
+    function packFilesToENCP() {
         prependAbsPathToRelPaths(1).then((absFilePaths) => {
             currentFileTask.set(FileTasks.Pack);
             PackFilesForENCP(username, password, absFilePaths).then(
@@ -232,17 +237,18 @@
         });
     }
 
-    function authenticateENCPFile() {
+    function openENCPFiles() {
         const entries = Object.entries(_heldDownBtns);
         var lastEntry = entries[entries.length - 1];
-
         var lastFileType = getFileType(lastEntry[0]);
         if (lastFileType === FileTypes.EncryptedP) {
+            currentFileTask.set(FileTasks.Open);
             AuthenticateENCPFile(password, getRootDir() + lastEntry[0])
                 .then((authenticated) => {
                     if (authenticated) {
                         startDisplay("successfully opened");
                         clearHeldBtns();
+                        buildFileTree();
                     } else startDisplay("failed to open");
                 })
                 .catch(() => {
@@ -305,10 +311,9 @@
                     </div>
                     <div class="row" role="none" on:click|stopPropagation>
                         <Input
-                            class="max-h-1 m-0"
+                            class="max-h-5 m-0"
                             style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
                                 color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
-                            id="small-input"
                             placeholder="enter password.."
                             type="password"
                             bind:value={password}
@@ -331,14 +336,13 @@
                 <div class="h-9">
                     <div class="row" role="none" on:click|stopPropagation>
                         <Input
-                            class="max-h-1"
+                            class="max-h-5"
                             style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
                                 color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
-                            id="small-input"
                             placeholder="enter username.."
                             type="text"
                             bind:value={username}
-                            on:keyup={queryUsernameStrength}
+                            on:input={queryUsernameStrength}
                         />
                     </div>
                     <div
@@ -368,10 +372,9 @@
 
                         <div class="row" role="none" on:click|stopPropagation>
                             <Input
-                                class="max-h-1 m-0"
+                                class="max-h-5 m-0"
                                 style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
                                     color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
-                                id="small-input"
                                 placeholder="enter password.."
                                 type="password"
                                 bind:value={password}
@@ -389,16 +392,19 @@
                         </div>
                         <div class="row" role="none" on:click|stopPropagation>
                             <Input
-                                class="max-h-1 m-0"
+                                class="max-h-5 m-0"
                                 style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
                             color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
-                                id="small-input"
                                 placeholder="confirm password.."
                                 type="password"
                                 bind:value={password}
-                                on:keyup={checkMatchedPassword}
+                                on:input={checkMatchedPassword}
+                                on:keyup={(event) => enterPassword(event)}
                             />
-                            <button on:click|stopPropagation={clearPassword}>
+                            <button
+                                on:pointerdown|stopPropagation={clearPassword}
+                                tabindex={-1}
+                            >
                                 <CloseOutline style="color: {$accentColor};" />
                             </button>
                         </div>
@@ -451,15 +457,13 @@
                             <NeuButtonFake></NeuButtonFake>
                         {/if}
                     {:else if passwordMatch}
-                        <NeuButton on:click={packFilesForENCP}>PACK</NeuButton>
+                        <NeuButton on:click={packFilesToENCP}>PACK</NeuButton>
                     {:else}
                         <NeuButtonFake></NeuButtonFake>
                     {/if}
                 {:else if currentMBoxState === MboxState.Open}
                     {#if Object.keys(_heldDownBtns).length > 0 && checks.passwordCheck}
-                        <NeuButton on:click={() => authenticateENCPFile()}
-                            >OPEN</NeuButton
-                        >
+                        <NeuButton on:click={openENCPFiles}>OPEN</NeuButton>
                     {:else}
                         <NeuButtonFake></NeuButtonFake>
                     {/if}
@@ -481,7 +485,7 @@
         }}
     >
         <RadialProgress
-            _style="right: 3.6rem"
+            _style="right: 3.4rem"
             dataProgress={$largeFilePercent}
             overlayText={$largeFileName}
         />

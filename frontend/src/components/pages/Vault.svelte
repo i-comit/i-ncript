@@ -232,7 +232,7 @@
         on:pointerup={clearHeldBtnsFromContainer}
     >
         <RadialProgress
-            _style="right: 3.6rem"
+            _style="right: 3.4rem"
             dataProgress={$largeFilePercent}
             overlayText={$largeFileName}
         />

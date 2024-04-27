@@ -76,7 +76,7 @@ export function buildFileTree() {
 
 function subscribeToRebuildFileTree() {
     EventsOn("rebuildFileTree", buildFileTree);
-    LogDebug("subscribed to rebuildFileTree");
+    LogDebug("subscribed to buildFileTree");
 }
 
 function loadExpansionState() {

@@ -9,6 +9,8 @@
     import { setIsInFileTask } from "../../tools/fileTree";
     import { FileTasks, currentFileTask } from "../../enums/FileTasks";
     import { accentColor, totalFileCt } from "../../stores/dynamicVariables";
+    import { heldDownBtns } from "../../tools/utils";
+    import { startDisplay } from "../../tools/logger";
 
     let isChecked: boolean;
     isChecked = false;
@@ -18,7 +20,12 @@
         SetIsHotFilerEnabled(!isChecked);
         if (!isChecked)
             GetFilesByType(0, false).then((filePaths) => {
+                if (!filePaths) {
+                    startDisplay("no files to encrypt..");
+                    return;
+                }
                 setIsInFileTask(true).then(() => {
+                    heldDownBtns.set({});
                     currentFileTask.set(FileTasks.Encrypt);
                     if (filePaths.length > 0) {
                         totalFileCt.set(filePaths.length);
@@ -34,7 +41,7 @@
 </script>
 
 <div
-    class="button r hover:outline"
+    class="button r hover:outline focus:outline-none"
     style={`outline-color:${$accentColor}`}
     id="button-1"
 >

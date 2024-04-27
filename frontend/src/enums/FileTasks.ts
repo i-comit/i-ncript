@@ -3,7 +3,7 @@ export enum FileTasks {
     Decrypt = "DECRYPTING",
     Move = "MOVING",
     Pack = "PACKING",
-    Copy = "COPYING",
+    Open = "OPENING",
     None = "none",
 }
 

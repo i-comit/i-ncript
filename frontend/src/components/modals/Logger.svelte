@@ -68,7 +68,7 @@
 </script>
 
 <div
-    class="fixed w-full h-full rounded-lg"
+    class="fixed w-full h-full rounded-lg bg-radial-gradient-200 dark:bg-radial-gradient-100"
     id="grid-dot-bg"
     style=" z-index:5;"
     on:pointerover={() => {
@@ -153,7 +153,6 @@
 <style>
     #grid-dot-bg {
         /* https://codepen.io/mapsandapps/pen/pbzooY */
-        background-image: radial-gradient(rgb(180, 180, 180) 5%, transparent 0);
         background-size: 15px 15px;
     }
     #dial {

@@ -48,6 +48,7 @@
             {#if lastFile !== FileTypes.Encrypted && lastFile !== FileTypes.Unknown && lastFile !== FileTypes.EncryptedP}
                 <button
                     style={`--text-color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
+                    tabindex={-1}
                     on:click|stopPropagation={() => OpenFile(lastFilePath)}
                 >
                     <PlaySolid />
@@ -55,6 +56,7 @@
             {/if}
             <button
                 style={`--text-color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
+                tabindex={-1}
                 on:click|stopPropagation={() => OpenDirectory(lastFilePath)}
             >
                 <FolderOpenSolid />
@@ -65,6 +67,7 @@
     <div id="file-tools" class="flex justify-end space-x-1">
         <button
             style={`--text-color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
+            tabindex={-1}
             on:pointerdown|stopPropagation={OpenLogEntriesFile}
         >
             <BookOpenOutline />

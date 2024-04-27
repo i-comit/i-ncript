@@ -167,10 +167,7 @@
                     isFile().then((_isFile) => {
                         if (_isFile) currentFilePath.set(_fileTree.relPath);
                     });
-                } else {
-                    currentDirPath.set(_fileTree.relPath);
-                    LogInfo("current Dir Path " + get(currentDirPath));
-                }
+                } else currentDirPath.set(_fileTree.relPath);
             },
         );
     }
