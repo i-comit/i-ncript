@@ -437,12 +437,12 @@
             {/if}
         {/if}
 
-        <div class="h-9">
-            <div class="relative !top-[3.3rem]">
+        <div class="h-[64%] bg-green-400">
+            <div class="relative !top-[43%]">
                 <ModalButtons />
             </div>
             <div
-                class="flex justify-between space-x-5 space-evenly relative !top-[3.9rem]"
+                class="flex justify-between space-x-3.5 space-evenly relative !top-[53%]"
             >
                 <NeuButton on:click={() => switchPages(AppPage.Vault)}
                     >VAULT</NeuButton

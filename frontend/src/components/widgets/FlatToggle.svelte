@@ -72,7 +72,7 @@
         width: 50%;
         height: 22px;
         top: 0.5px;
-        margin: 1px auto 0 10px;
+        margin: 1px 0.5px 0 10px;
         overflow: hidden;
     }
 

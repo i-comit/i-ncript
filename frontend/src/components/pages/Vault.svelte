@@ -219,11 +219,11 @@
                 <WaveProgress dataProgress={$fileTaskPercent} />
             {/if}
         </div>
-        <div class="h-9">
-            <div class="relative !top-[3.3rem]">
+        <div class="h-[64%] bg-red-600">
+            <div class="relative !top-[43%]">
                 <ModalButtons />
             </div>
-            <div class="flex justify-between relative !top-[3.9rem]">
+            <div class="flex justify-between relative !top-[53%]">
                 <NeuButton
                     on:click={() => switchPages(AppPage.Mbox)}
                     _class="!w-20">M-BOX</NeuButton
