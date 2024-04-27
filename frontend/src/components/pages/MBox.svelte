@@ -284,8 +284,8 @@
         }}
     >
         <DirSize />
-        {#if currentMBoxState === MboxState.None}
-            <div class="h-10">
+        <div class="h-1/3 bg-red-100">
+            {#if currentMBoxState === MboxState.None}
                 {#if _currentFileTask === FileTasks.None}
                     <div class="text-primary-100 dark:text-primary-200">
                         <p
@@ -300,13 +300,10 @@
                     <WaveProgress dataProgress={$fileTaskPercent} />
                     <div class="h-0.5" />
                 {/if}
-            </div>
-        {:else if currentMBoxState === MboxState.Open}
-            <div class="h-10">
+            {:else if currentMBoxState === MboxState.Open}
                 {#if _currentFileTask === FileTasks.None}
-                    <div class="h-0.5" />
-                    <div style="height: 3.175rem">
-                        <div style="height: 2.075rem" />
+                    <div style="height: 3.2rem">
+                        <div style="height: 1.95rem" />
                         <FileTools />
                     </div>
                     <div class="row" role="none" on:click|stopPropagation>
@@ -330,10 +327,8 @@
                     <WaveProgress dataProgress={$fileTaskPercent} />
                     <div class="h-0.5" />
                 {/if}
-            </div>
-        {:else if currentMBoxState === MboxState.Pack}
-            {#if _currentFileTask === FileTasks.None}
-                <div class="h-9">
+            {:else if currentMBoxState === MboxState.Pack}
+                {#if _currentFileTask === FileTasks.None}
                     <div class="row" role="none" on:click|stopPropagation>
                         <Input
                             class="max-h-5"
@@ -366,7 +361,7 @@
                         >
                     </div>
                     {#if !enteredPassword}
-                        <div style="height: 1.1rem">
+                        <div style="height: 1.25rem">
                             <FileTools />
                         </div>
 
@@ -429,51 +424,46 @@
                             >
                         </div>
                     {/if}
-                </div>
-            {:else}
-                <TaskDisplay />
-                <div class="h-0.5" />
-                <WaveProgress dataProgress={$fileTaskPercent}></WaveProgress>
+                {:else}
+                    <TaskDisplay />
+                    <WaveProgress dataProgress={$fileTaskPercent} />
+                    <div class="h-0.5" />
+                {/if}
             {/if}
-        {/if}
-
-        <div class="relative">
-            <div class="h-12 bg-green-400 relative top-16">
-                <div class="relative bottom-4">
-                    <ModalButtons />
-                </div>
-                <div
-                    class="flex justify-between space-x-3.5 space-evenly relative bottom-1"
+        </div>
+        <div class="h-1/2 bg-green-300">
+            <div class="relative !top-[1.3rem]">
+                <ModalButtons />
+            </div>
+            <div
+                class="flex justify-between space-x-3.5 space-evenly relative !top-[2.6rem]"
+            >
+                <NeuButton on:click={() => switchPages(AppPage.Vault)}
+                    >VAULT</NeuButton
                 >
-                    <NeuButton on:click={() => switchPages(AppPage.Vault)}
-                        >VAULT</NeuButton
-                    >
-                    {#if currentMBoxState === MboxState.Pack}
-                        {#if !enteredPassword}
-                            {#if checks.passwordCheck}
-                                <NeuButton on:click={() => enterPasswordBtn()}
-                                    >ENTER</NeuButton
-                                >
-                            {:else}
-                                <NeuButtonFake></NeuButtonFake>
-                            {/if}
-                        {:else if passwordMatch}
-                            <NeuButton on:click={packFilesToENCP}
-                                >PACK</NeuButton
+                {#if currentMBoxState === MboxState.Pack}
+                    {#if !enteredPassword}
+                        {#if checks.passwordCheck}
+                            <NeuButton on:click={() => enterPasswordBtn()}
+                                >ENTER</NeuButton
                             >
                         {:else}
                             <NeuButtonFake></NeuButtonFake>
                         {/if}
-                    {:else if currentMBoxState === MboxState.Open}
-                        {#if Object.keys(_heldDownBtns).length > 0 && checks.passwordCheck}
-                            <NeuButton on:click={openENCPFiles}>OPEN</NeuButton>
-                        {:else}
-                            <NeuButtonFake></NeuButtonFake>
-                        {/if}
+                    {:else if passwordMatch}
+                        <NeuButton on:click={packFilesToENCP}>PACK</NeuButton>
                     {:else}
                         <NeuButtonFake></NeuButtonFake>
                     {/if}
-                </div>
+                {:else if currentMBoxState === MboxState.Open}
+                    {#if Object.keys(_heldDownBtns).length > 0 && checks.passwordCheck}
+                        <NeuButton on:click={openENCPFiles}>OPEN</NeuButton>
+                    {:else}
+                        <NeuButtonFake></NeuButtonFake>
+                    {/if}
+                {:else}
+                    <NeuButtonFake></NeuButtonFake>
+                {/if}
             </div>
         </div>
     </div>
@@ -512,6 +502,5 @@
         display: flex;
         justify-content: space-between; /* Spread the buttons evenly */
         margin-bottom: 4px; /* Spacing between rows of buttons */
-        margin-top: 4px;
     }
 </style>

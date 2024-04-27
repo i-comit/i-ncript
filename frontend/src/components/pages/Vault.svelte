@@ -187,14 +187,12 @@
         }}
     >
         <DirSize />
-        <div class="h-[1.375rem]">
+        <div class="h-1/3 bg-red-400">
             {#if _currentFileTask === FileTasks.None}
                 {#if _hotFiler}
                     <Chronograph />
                 {:else}
-                    <div
-                        class="flex justify-between mb-[4px] space-x-2.5 mt-0.5"
-                    >
+                    <div class="flex justify-between mb-[4px] space-x-2.5 pt-1">
                         <NeuButton
                             on:click={() => encrypt()}
                             _style="font-size: 14px;">ENCRYPT</NeuButton
@@ -208,32 +206,32 @@
             {:else}
                 <TaskDisplay />
             {/if}
+            <div class="bg-blue-100">
+                {#if _currentFileTask === FileTasks.None}
+                    <div>
+                        <FileTools />
+                    </div>
+                {:else}
+                    <WaveProgress dataProgress={$fileTaskPercent} />
+                {/if}
+            </div>
+            <div class="h-0.5" />
         </div>
 
-        <div class="h-2 !mt-2">
-            {#if _currentFileTask === FileTasks.None}
-                <div style="padding-top: 0.325rem">
-                    <FileTools />
-                </div>
-            {:else}
-                <WaveProgress dataProgress={$fileTaskPercent} />
-            {/if}
-        </div>
-        <div class="relative">
-            <div class="h-12 bg-red-600 relative top-16">
-                <div class="relative bottom-4">
-                    <ModalButtons />
-                </div>
-                <div class="flex justify-between relative bottom-1">
-                    <NeuButton
-                        on:click={() => switchPages(AppPage.Mbox)}
-                        _class="!w-20">M-BOX</NeuButton
-                    >
-                    <Toggle />
-                </div>
+        <div class="h-1/2 bg-green-400">
+            <div class="relative !top-[1.3rem]">
+                <ModalButtons />
+            </div>
+            <div class="flex justify-between relative !top-[2.6rem]">
+                <NeuButton
+                    on:click={() => switchPages(AppPage.Mbox)}
+                    _class="!w-20">M-BOX</NeuButton
+                >
+                <Toggle />
             </div>
         </div>
     </div>
+
     <PanelDivider />
     <div
         id="right-panel"

@@ -353,11 +353,11 @@
         </li>
     </ul>
     {#if showSpeedDial}
-        <div id="dial" class="absolute">
+        <div id="dial" class="fixed">
             <SpeedDial
                 class="flex items-center justify-center h-8 w-14 "
                 popperDefaultClass="flex items-center !mb-0 gap-0.5"
-                style={`background-color: ${$accentColor}; border-radius: 50% 0% 50% 0%;`}
+                style={`background-color: ${$accentColor}; border-radius: 50% 0% 0% 0%;`}
             >
                 <SpeedDialButton
                     name="Collapse "
