@@ -219,20 +219,21 @@
                 <WaveProgress dataProgress={$fileTaskPercent} />
             {/if}
         </div>
-        <div class="h-[64%] bg-red-600">
-            <div class="relative !top-[43%]">
-                <ModalButtons />
-            </div>
-            <div class="flex justify-between relative !top-[53%]">
-                <NeuButton
-                    on:click={() => switchPages(AppPage.Mbox)}
-                    _class="!w-20">M-BOX</NeuButton
-                >
-                <Toggle />
+        <div class="relative">
+            <div class="h-12 bg-red-600 relative top-16">
+                <div class="relative bottom-4">
+                    <ModalButtons />
+                </div>
+                <div class="flex justify-between relative bottom-1">
+                    <NeuButton
+                        on:click={() => switchPages(AppPage.Mbox)}
+                        _class="!w-20">M-BOX</NeuButton
+                    >
+                    <Toggle />
+                </div>
             </div>
         </div>
     </div>
-
     <PanelDivider />
     <div
         id="right-panel"

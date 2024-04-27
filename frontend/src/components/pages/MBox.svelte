@@ -437,39 +437,43 @@
             {/if}
         {/if}
 
-        <div class="h-[64%] bg-green-400">
-            <div class="relative !top-[43%]">
-                <ModalButtons />
-            </div>
-            <div
-                class="flex justify-between space-x-3.5 space-evenly relative !top-[53%]"
-            >
-                <NeuButton on:click={() => switchPages(AppPage.Vault)}
-                    >VAULT</NeuButton
+        <div class="relative">
+            <div class="h-12 bg-green-400 relative top-16">
+                <div class="relative bottom-4">
+                    <ModalButtons />
+                </div>
+                <div
+                    class="flex justify-between space-x-3.5 space-evenly relative bottom-1"
                 >
-                {#if currentMBoxState === MboxState.Pack}
-                    {#if !enteredPassword}
-                        {#if checks.passwordCheck}
-                            <NeuButton on:click={() => enterPasswordBtn()}
-                                >ENTER</NeuButton
+                    <NeuButton on:click={() => switchPages(AppPage.Vault)}
+                        >VAULT</NeuButton
+                    >
+                    {#if currentMBoxState === MboxState.Pack}
+                        {#if !enteredPassword}
+                            {#if checks.passwordCheck}
+                                <NeuButton on:click={() => enterPasswordBtn()}
+                                    >ENTER</NeuButton
+                                >
+                            {:else}
+                                <NeuButtonFake></NeuButtonFake>
+                            {/if}
+                        {:else if passwordMatch}
+                            <NeuButton on:click={packFilesToENCP}
+                                >PACK</NeuButton
                             >
                         {:else}
                             <NeuButtonFake></NeuButtonFake>
                         {/if}
-                    {:else if passwordMatch}
-                        <NeuButton on:click={packFilesToENCP}>PACK</NeuButton>
+                    {:else if currentMBoxState === MboxState.Open}
+                        {#if Object.keys(_heldDownBtns).length > 0 && checks.passwordCheck}
+                            <NeuButton on:click={openENCPFiles}>OPEN</NeuButton>
+                        {:else}
+                            <NeuButtonFake></NeuButtonFake>
+                        {/if}
                     {:else}
                         <NeuButtonFake></NeuButtonFake>
                     {/if}
-                {:else if currentMBoxState === MboxState.Open}
-                    {#if Object.keys(_heldDownBtns).length > 0 && checks.passwordCheck}
-                        <NeuButton on:click={openENCPFiles}>OPEN</NeuButton>
-                    {:else}
-                        <NeuButtonFake></NeuButtonFake>
-                    {/if}
-                {:else}
-                    <NeuButtonFake></NeuButtonFake>
-                {/if}
+                </div>
             </div>
         </div>
     </div>
