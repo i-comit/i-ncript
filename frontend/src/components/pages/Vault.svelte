@@ -26,10 +26,8 @@
     import { FileTasks, currentFileTask } from "../../enums/FileTasks.ts";
 
     import {
-        accentColor,
-        darkLightMode,
-        fileCount,
         fileTaskPercent,
+        hotFiler,
         largeFileName,
         largeFilePercent,
         pageLoading,
@@ -70,10 +68,16 @@
     import DuplicateFiles from "../modals/DuplicateFiles.svelte";
     import OvalSpinner from "../widgets/OvalSpinner.svelte";
     import ModalButtons from "../widgets/ModalButtons.svelte";
+    import Chronograph from "../widgets/Chronograph.svelte";
 
     let _currentFileTask: FileTasks;
     currentFileTask.subscribe((value) => {
         _currentFileTask = value;
+    });
+
+    let _hotFiler: boolean;
+    hotFiler.subscribe((value) => {
+        _hotFiler = value;
     });
 
     let _modal: Modals;
@@ -185,16 +189,22 @@
         <DirSize />
         <div class="h-[1.375rem]">
             {#if _currentFileTask === FileTasks.None}
-                <div class="flex justify-between mb-[4px] space-x-2 mt-0.5">
-                    <NeuButton
-                        on:click={() => encrypt()}
-                        _style="font-size: 14px;">ENCRYPT</NeuButton
+                {#if _hotFiler}
+                    <Chronograph />
+                {:else}
+                    <div
+                        class="flex justify-between mb-[4px] space-x-2.5 mt-0.5"
                     >
-                    <NeuButton
-                        on:click={() => decrypt()}
-                        _style="font-size: 14px;">DECRYPT</NeuButton
-                    >
-                </div>
+                        <NeuButton
+                            on:click={() => encrypt()}
+                            _style="font-size: 14px;">ENCRYPT</NeuButton
+                        >
+                        <NeuButton
+                            on:click={() => decrypt()}
+                            _style="font-size: 14px;">DECRYPT</NeuButton
+                        >
+                    </div>
+                {/if}
             {:else}
                 <TaskDisplay />
             {/if}

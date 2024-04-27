@@ -14,22 +14,22 @@ import (
 )
 
 type App struct {
-	getters         *Getters
-	ctx             context.Context
-	directories     []string
-	hotFilerEnabled bool
-	done            chan bool
-	watcher         *fsnotify.Watcher
-	cwd             string
-	fileTaskSize    int64
-	lastFilePath    string
+	getters      *Getters
+	ctx          context.Context
+	directories  []string
+	hotFiler     bool
+	done         chan bool
+	watcher      *fsnotify.Watcher
+	cwd          string
+	fileTaskSize int64
+	lastFilePath string
 }
 
 func NewApp() *App {
 	return &App{
-		getters:         &Getters{},
-		directories:     []string{"VAULT", "M-BOX"},
-		hotFilerEnabled: false,
+		getters:     &Getters{},
+		directories: []string{"VAULT", "M-BOX"},
+		hotFiler:    false,
 	}
 }
 
@@ -166,9 +166,8 @@ func (a *App) CloseApp() {
 	os.Exit(0)
 }
 
-func (a *App) SetIsHotFilerEnabled(b bool) {
-	// fmt.Printf("hot Filer set %s", b)
-	a.hotFilerEnabled = b
+func (a *App) SetHotFiler(b bool) {
+	a.hotFiler = b
 }
 
 func (a *App) SetIsInFileTask(b bool) bool {
@@ -258,7 +257,7 @@ func (a *App) DirectoryWatcher(dirIndex int) {
 				if !isInFileTask {
 					runtime.LogInfo(a.ctx, "Emitting rebuildFileTree event")
 					runtime.EventsEmit(a.ctx, rebuildFileTree)
-					if a.hotFilerEnabled {
+					if a.hotFiler {
 						a.EncryptFilesInDir(0)
 					}
 				}

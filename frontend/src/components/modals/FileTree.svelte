@@ -1,6 +1,6 @@
 <script lang="ts">
-    // import { slide } from 'svelte/transition'
-    import { onMount, onDestroy, afterUpdate } from "svelte";
+    import { onMount, onDestroy } from "svelte";
+    import { blur, fade } from "svelte/transition";
     import { get } from "svelte/store";
     import {
         EventsOff,
@@ -278,7 +278,7 @@
                     {/await}
                 {/if}
                 {#if expanded}
-                    <ul>
+                    <ul in:blur={{ duration: 240, amount: 8 }}>
                         {#each _fileTree.children as child}
                             <svelte:self _fileTree={child} />
                         {/each}

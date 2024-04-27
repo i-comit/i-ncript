@@ -54,8 +54,8 @@ export function ResizeWindow(arg1, arg2) {
   return window['go']['main']['App']['ResizeWindow'](arg1, arg2);
 }
 
-export function SetIsHotFilerEnabled(arg1) {
-  return window['go']['main']['App']['SetIsHotFilerEnabled'](arg1);
+export function SetHotFiler(arg1) {
+  return window['go']['main']['App']['SetHotFiler'](arg1);
 }
 
 export function SetIsInFileTask(arg1) {

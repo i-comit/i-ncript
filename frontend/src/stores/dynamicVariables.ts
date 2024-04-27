@@ -4,6 +4,8 @@ export const duplicateFiles = writable<string[]>([]);
 export const height = writable<number>(145);
 export const pageLoading = writable<boolean>(false);
 
+export const hotFiler = writable<boolean>(false);
+
 export const vaultDir = writable<string>("");
 export const mBoxDir = writable<string>("");
 

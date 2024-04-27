@@ -3,22 +3,25 @@
     import { onDestroy } from "svelte";
     import {
         EncryptFilesInDir,
-        SetIsHotFilerEnabled,
+        SetHotFiler,
     } from "../../../wailsjs/go/main/App";
     import { GetFilesByType } from "../../../wailsjs/go/main/Getters";
     import { setIsInFileTask } from "../../tools/fileTree";
     import { FileTasks, currentFileTask } from "../../enums/FileTasks";
-    import { accentColor, totalFileCt } from "../../stores/dynamicVariables";
+    import {
+        accentColor,
+        hotFiler,
+        totalFileCt,
+    } from "../../stores/dynamicVariables";
     import { heldDownBtns } from "../../tools/utils";
     import { startDisplay } from "../../tools/logger";
+    import { get } from "svelte/store";
 
-    let isChecked: boolean;
-    isChecked = false;
-
-    // Function to log the checkbox's state
     function toggleHotFiler() {
-        SetIsHotFilerEnabled(!isChecked);
-        if (!isChecked)
+        hotFiler.update((v) => !v);
+        let _hotFiler = get(hotFiler);
+        SetHotFiler(_hotFiler);
+        if (_hotFiler)
             GetFilesByType(0, false).then((filePaths) => {
                 if (!filePaths) {
                     startDisplay("no files to encrypt..");
@@ -36,7 +39,7 @@
     }
 
     onDestroy(() => {
-        isChecked = true;
+        hotFiler.set(false);
     });
 </script>
 
@@ -48,7 +51,7 @@
     <input
         type="checkbox"
         class="checkbox"
-        bind:checked={isChecked}
+        bind:checked={$hotFiler}
         on:click={toggleHotFiler}
     />
     <div class="knobs"></div>
