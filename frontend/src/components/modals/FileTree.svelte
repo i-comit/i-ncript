@@ -183,12 +183,22 @@
 
     function moveFilesFromFileNode() {
         if (_fileTree.children && _fileTree.children.length > 0) {
+            const _heldDownBtns = get(heldDownBtns);
+            Object.entries(_heldDownBtns).forEach(([_, btn]) => {
+                btn.style.backgroundColor = "transparent";
+                btn.style.textDecoration = "none";
+            });
             if (Object.keys(_heldDownBtns).length > 0) {
                 moveFilesToRelPath(_fileTree.relPath);
-                LogInfo("Moved Files to Dir " + _fileTree.relPath);
+                LogInfo("Moved files to: " + _fileTree.relPath);
             }
         } else {
             if (_fileTree.relPath !== get(currentFilePath)) {
+                const _heldDownBtns = get(heldDownBtns);
+                Object.entries(_heldDownBtns).forEach(([_, btn]) => {
+                    btn.style.backgroundColor = "transparent";
+                    btn.style.textDecoration = "none";
+                });
                 var dirPath = removeFileName(_fileTree.relPath);
                 moveFilesToRelPath(dirPath);
             }
@@ -342,7 +352,7 @@
     </ul>
     <div id="dial" class="fixed">
         <SpeedDial
-            class="flex items-center justify-center h-8 w-14"
+            class="flex items-center justify-center h-8 w-14 "
             popperDefaultClass="flex items-center !mb-0 gap-0.5"
             style={`background-color: ${$accentColor}; border-radius: 50% 0% 50% 0%;`}
         >
@@ -371,7 +381,7 @@
 <style>
     #dial {
         right: -0.7rem !important;
-        bottom: -14vh !important;
+        bottom: -13.3vh !important;
         transform: scale(0.55) !important;
         z-index: 35;
     }

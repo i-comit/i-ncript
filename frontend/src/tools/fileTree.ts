@@ -103,7 +103,7 @@ export function setHeldBtnsStyle() {
     const entries = Object.entries(_heldDownBtns);
     const lastIndex = entries.length - 1; // Get the index of the last element
 
-    entries.forEach(([path, btn], index) => {
+    entries.forEach(([_, btn], index) => {
         btn.style.backgroundColor = index === lastIndex ? prevHighlight_light : lastHighlight_light;
         btn.style.textDecoration = index === lastIndex ? "underline" : "none";
     });

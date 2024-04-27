@@ -50,7 +50,6 @@ func (f *FileUtils) MoveFilesToPath(filePaths []string, targetPath string) {
 			wailsRuntime.EventsEmit(f.app.ctx, addLogFile, s)
 		}
 		wailsRuntime.EventsEmit(f.app.ctx, rebuildFileTree)
-		f.app.SetIsInFileTask(false)
 	}
 }
 

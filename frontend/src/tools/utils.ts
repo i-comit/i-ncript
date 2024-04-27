@@ -20,7 +20,8 @@ import { duplicateFiles, mBoxDir, height, vaultDir } from '../stores/dynamicVari
 import {
     clearHeldBtns,
     setIsInFileTask,
-    currentFilePath
+    currentFilePath,
+    setHeldBtnsStyle
 } from './fileTree';
 
 export const pageName: () => string = () => {
@@ -161,8 +162,16 @@ export function moveFilesToRelPath(targetRelPath: string) {
             if (Object.keys(_heldDownBtns).length > 0) {
                 setIsInFileTask(true).then(() => {
                     prependAbsPathToRelPaths(pageIndex()).then((preprendedRelPaths) => {
-                        MoveFilesToPath(preprendedRelPaths, pathToMoveTo);
+                        MoveFilesToPath(preprendedRelPaths, pathToMoveTo).then(() => {
+                            LogInfo("Move files completed");
+                            heldDownBtns.set({});
+                        }).finally(() => {
+                            LogDebug("File move finalized");
+                            setIsInFileTask(false)
+                        }
+                        )
                     })
+
                 });
             }
         }

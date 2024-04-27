@@ -218,6 +218,7 @@
                                         `packed ${absFilePaths.length} files`,
                                     );
                                     clearHeldBtns();
+                                    buildFileTree();
                                 }
                             })
                             .finally(() => {
@@ -278,23 +279,26 @@
     >
         <DirSize />
         {#if currentMBoxState === MboxState.None}
-            {#if _currentFileTask === FileTasks.None}
-                <div class="h-10 text-primary-100 dark:text-primary-200">
-                    <p
-                        class="text-center text-sm"
-                        style="font-family: 'Orbitron'; font-weight: regular;"
-                    >
-                        no files selected..
-                    </p>
-                </div>
-            {:else}
-                <TaskDisplay />
-                <WaveProgress dataProgress={$fileTaskPercent} />
-                <div class="h-0.5" />
-            {/if}
+            <div class="h-10">
+                {#if _currentFileTask === FileTasks.None}
+                    <div class="text-primary-100 dark:text-primary-200">
+                        <p
+                            class="text-center text-sm"
+                            style="font-family: 'Orbitron'; font-weight: regular;"
+                        >
+                            no files selected..
+                        </p>
+                    </div>
+                {:else}
+                    <TaskDisplay />
+                    <WaveProgress dataProgress={$fileTaskPercent} />
+                    <div class="h-0.5" />
+                {/if}
+            </div>
         {:else if currentMBoxState === MboxState.Open}
-            {#if _currentFileTask === FileTasks.None}
-                <div class="h-10">
+            <div class="h-10">
+                {#if _currentFileTask === FileTasks.None}
+                    <div class="h-0.5" />
                     <div style="height: 3.175rem">
                         <div style="height: 2.075rem" />
                         <FileTools />
@@ -312,16 +316,16 @@
                         />
                     </div>
                     <PasswordScan
-                        _class="!bottom-0.5"
+                        _class="!bottom-1"
                         {password}
                         on:passwordStrengthUpdated={handlePasswordStrengthUpdated}
                     />
-                </div>
-            {:else}
-                <TaskDisplay />
-                <WaveProgress dataProgress={$fileTaskPercent} />
-                <div class="h-0.5" />
-            {/if}
+                {:else}
+                    <TaskDisplay />
+                    <WaveProgress dataProgress={$fileTaskPercent} />
+                    <div class="h-0.5" />
+                {/if}
+            </div>
         {:else if currentMBoxState === MboxState.Pack}
             {#if _currentFileTask === FileTasks.None}
                 <div class="h-9">
@@ -338,12 +342,12 @@
                         />
                     </div>
                     <div
-                        class="flex w-full h-1 px-0.5 relative bottom-0.5"
+                        class="flex w-full h-1.5 px-0.5 relative bottom-1"
                         tabindex="-1"
                     >
                         {#if usernameCheck === false}
                             <div
-                                class="flex-1 text-center rounded-lg bg-primary-400 dark:bg-primary-300"
+                                class="flex-1 text-center rounded-lg bg-primary-300 dark:bg-primary-400"
                             />
                         {:else}
                             <div
@@ -375,7 +379,7 @@
                             />
                         </div>
                         <PasswordScan
-                            _class="!bottom-0.5"
+                            _class="!bottom-1"
                             {password}
                             on:passwordStrengthUpdated={handlePasswordStrengthUpdated}
                         />
@@ -399,12 +403,12 @@
                             </button>
                         </div>
                         <div
-                            class="flex w-full h-1 px-0.5 relative bottom-0.5"
+                            class="flex w-full h-1.5 px-0.5 relative bottom-1"
                             tabindex="-1"
                         >
                             {#if !passwordMatch}
                                 <div
-                                    class="flex-1 text-center rounded-lg bg-primary-400 dark:bg-primary-300"
+                                    class="flex-1 text-center rounded-lg bg-primary-300 dark:bg-primary-400"
                                 />
                             {:else}
                                 <div

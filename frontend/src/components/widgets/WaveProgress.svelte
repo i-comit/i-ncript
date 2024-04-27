@@ -19,7 +19,11 @@
 
     import { InterruptFileTask } from "../../../wailsjs/go/main/App";
     import { FileTasks, currentFileTask } from "../../enums/FileTasks";
-    import { formatNumber, retrieveDuplicateFiles } from "../../tools/utils";
+    import {
+        formatNumber,
+        heldDownBtns,
+        retrieveDuplicateFiles,
+    } from "../../tools/utils";
     import { EventsOff, EventsOn } from "../../../wailsjs/runtime/runtime";
     import { Tooltip } from "flowbite-svelte";
     import { tooltipTailwindClass } from "../../stores/constantVariables";
@@ -40,7 +44,7 @@
             fileTaskPercent.set(
                 Math.round(($fileCount / get(totalFileCt)) * 100),
             );
-            if (fileCtEvt === 0) interruptFileTask();
+            if (fileCtEvt === 0) endFileTask();
         });
         EventsOn("fileTaskSize", (fileTaskSize: string) => {
             cipheredFilesSize.set(fileTaskSize);
@@ -56,7 +60,7 @@
         EventsOff("fileTaskSize");
     });
 
-    function interruptFileTask() {
+    function endFileTask() {
         InterruptFileTask().finally(() => {
             setTimeout(() => {
                 retrieveDuplicateFiles();
@@ -68,13 +72,14 @@
         totalFileCt.set(0);
         fileTaskPercent.set(0);
         largeFilePercent.set(0);
+        heldDownBtns.set({});
     }
 </script>
 
 <div class="flex items-center mb-1">
     <div class="icon space-y-1 flex flex-grow justify-center items-center">
         <div class="icon__neumorphic" bind:this={pauseBtn}>
-            <button on:click={interruptFileTask}>
+            <button on:click={endFileTask}>
                 <PauseSolid class="pl-px !w-10 !h-10" />
             </button>
         </div>
@@ -82,7 +87,10 @@
 </div>
 
 <!-- https://codepen.io/uimax/pen/KgdgGa -->
-<div class="progress progress-striped active rounded-md h-3.5 p-0 m-0 !mt-1.5">
+<div
+    class="progress progress-striped active rounded-md h-3.5 p-0 m-0 !mt-1.5 outline outline-1 hover:outline-2"
+    style={`outline-color: ${$accentColor}`}
+>
     <div class="relative bottom-5 flex justify-between w-full px-1 select-none">
         <p class={progressPClass}>
             {formatNumber($fileCount)}/{formatNumber($totalFileCt)}

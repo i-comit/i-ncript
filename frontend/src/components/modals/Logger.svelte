@@ -9,6 +9,7 @@
     import {
         EventsOff,
         EventsOn,
+        LogDebug,
         LogInfo,
     } from "../../../wailsjs/runtime/runtime";
 
@@ -115,11 +116,11 @@
     class="log-entries-container"
     on:pointerover={() => {
         isPointerIn = true;
-        LogInfo("entered log  entries");
+        LogDebug("entered log entries");
     }}
     on:pointerleave={() => {
         isPointerIn = false;
-        LogInfo("Left log  entries");
+        LogDebug("left log entries");
     }}
     on:pointerdown={() => {
         isPointerIn = true;

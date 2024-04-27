@@ -183,18 +183,22 @@
         }}
     >
         <DirSize />
-        {#if _currentFileTask === FileTasks.None}
-            <div class="flex justify-between mb-[4px] space-x-2">
-                <NeuButton on:click={() => encrypt()} _style="font-size: 14px;"
-                    >ENCRYPT</NeuButton
-                >
-                <NeuButton on:click={() => decrypt()} _style="font-size: 14px;"
-                    >DECRYPT</NeuButton
-                >
-            </div>
-        {:else}
-            <TaskDisplay />
-        {/if}
+        <div class="h-[1.375rem]">
+            {#if _currentFileTask === FileTasks.None}
+                <div class="flex justify-between mb-[4px] space-x-2 mt-0.5">
+                    <NeuButton
+                        on:click={() => encrypt()}
+                        _style="font-size: 14px;">ENCRYPT</NeuButton
+                    >
+                    <NeuButton
+                        on:click={() => decrypt()}
+                        _style="font-size: 14px;">DECRYPT</NeuButton
+                    >
+                </div>
+            {:else}
+                <TaskDisplay />
+            {/if}
+        </div>
 
         <div class="h-2 !mt-2">
             {#if _currentFileTask === FileTasks.None}
