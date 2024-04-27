@@ -7,7 +7,7 @@
 
 {#if $pageLoading}
     <div
-        class="fixed items-center justify-center mt-6 w-full left-1/2 mr-10 z-60"
+        class="fixed items-center justify-center mt-10 w-full left-1/2 mr-10 z-60"
         style="--wails-draggable: drag; background-color:transparent"
     >
         <div id="oval-spinner">

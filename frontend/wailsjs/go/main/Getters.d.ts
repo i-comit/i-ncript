@@ -32,9 +32,7 @@ export function GetHeight():Promise<number>;
 
 export function GetLatestRelease():Promise<main.Release>;
 
-export function GetPercentOfDriveToAppDirSize():Promise<number>;
-
-export function GetPercentOfDriveToDirIndexSize(arg1:number):Promise<number>;
+export function GetPercentOfDriveToDirSize(arg1:number):Promise<number>;
 
 export function GetRootDiskSpace():Promise<number>;
 

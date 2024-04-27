@@ -48,7 +48,7 @@
     import {
         GetFormattedAppDirSize,
         GetFormattedDriveSize,
-        GetPercentOfDriveToAppDirSize,
+        GetPercentOfDriveToDirSize,
     } from "../../../wailsjs/go/main/Getters";
 
     let typewriter = "";
@@ -86,8 +86,7 @@
         const interval = setInterval(() => {
             typewriter = getDisplayString();
         }, alertInterval);
-        const _value = get(darkLightMode);
-        GetPercentOfDriveToAppDirSize()
+        GetPercentOfDriveToDirSize(-1)
             .then((_driveToAppDirPercent) => {
                 driveToAppDirPercent = _driveToAppDirPercent;
                 // Return the next promise in the chain

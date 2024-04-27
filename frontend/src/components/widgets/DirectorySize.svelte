@@ -18,7 +18,7 @@
     import {
         GetFormattedDirIndexSize,
         GetFormattedDriveSize,
-        GetPercentOfDriveToDirIndexSize,
+        GetPercentOfDriveToDirSize,
     } from "../../../wailsjs/go/main/Getters";
     import { pageIndex } from "../../tools/utils";
 
@@ -46,7 +46,7 @@
     function refreshDirSize() {
         LogDebug("refreshing dir size");
         let _pageIndex = pageIndex();
-        GetPercentOfDriveToDirIndexSize(_pageIndex)
+        GetPercentOfDriveToDirSize(_pageIndex)
             .then((_driveToDirIndexPercent) => {
                 driveToDirIndexPercent = _driveToDirIndexPercent;
                 return GetFormattedDriveSize();
@@ -71,7 +71,7 @@
         >
             {#if $darkLightMode}
                 <p
-                    class="relative top-1.5 text-left leading-none"
+                    class="relative top-1 text-left leading-none"
                     style={`color:${lightTextColor}`}
                 >
                     {displayString}

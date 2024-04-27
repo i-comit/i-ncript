@@ -108,7 +108,6 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 	var separator = string(filepath.Separator)
 	rootDir = filepath.Clean(rootDir)
 	rootNode := &FileNode{RelPath: rootDir + separator, Children: []*FileNode{}}
-
 	err := filepath.Walk(rootDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err

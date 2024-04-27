@@ -71,25 +71,10 @@ func (g *Getters) GetTotalDirSize(dirPath string) (int64, error) {
 		return nil
 	})
 	if err != nil {
+		runtime.LogError(g.app.ctx, "Error getting dir size: "+err.Error())
 		return 0, err
 	}
 	return totalSize, nil
-}
-
-// This value is between 0 to 100
-func (g *Getters) GetPercentOfDriveToAppDirSize() (int64, error) {
-	driveSize, err := g.GetRootDiskSpace()
-	if err != nil {
-		fmt.Println("Error getting disk space:", err)
-		return 0, err
-	}
-	appDirSize, err := g.GetTotalDirSize(g.app.cwd)
-	if err != nil {
-		fmt.Printf("app size err %s", err)
-		return 0, err
-	}
-	percent := appDirSize / int64(driveSize) * 100
-	return percent, nil
 }
 
 // GetFormattedDriveSize and GetFormattedAppDirSize retrieves the available memory from the backend
@@ -112,19 +97,25 @@ func (g *Getters) GetFormattedAppDirSize() (string, error) {
 	return formatDirSize(appDirSize), nil
 }
 
-func (g *Getters) GetPercentOfDriveToDirIndexSize(dirIndex int) (int64, error) {
+func (g *Getters) GetPercentOfDriveToDirSize(dirIndex int) (int, error) {
 	driveSize, err := g.GetRootDiskSpace()
 	if err != nil {
-		fmt.Println("Error getting disk space:", err)
+		runtime.LogError(g.app.ctx, "Error getting disk space: "+err.Error())
 		return 0, err
 	}
-	appDirSize, err := g.GetTotalDirSize(g.app.directories[dirIndex])
+	var appDirSize int64
+	if dirIndex < 0 {
+		appDirSize, err = g.GetTotalDirSize(g.app.cwd)
+	} else {
+		appDirSize, err = g.GetTotalDirSize(g.app.directories[dirIndex])
+	}
 	if err != nil {
-		fmt.Printf("app size err %s", err)
+		runtime.LogError(g.app.ctx, "Error getting dir size: "+err.Error())
 		return 0, err
 	}
-	percent := appDirSize / int64(driveSize) * 100
-	return percent, nil
+	percent := (float64(appDirSize) / float64(driveSize)) * 100
+	percentInt := int(percent)
+	return percentInt, nil
 }
 
 func (g *Getters) GetFormattedDirIndexSize(dirIndex int) (string, error) {

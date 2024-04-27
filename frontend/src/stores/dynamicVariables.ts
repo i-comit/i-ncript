@@ -6,6 +6,8 @@ export const pageLoading = writable<boolean>(false);
 
 export const hotFiler = writable<boolean>(false);
 
+export const maxFileSize = writable<number>(10);
+
 export const vaultDir = writable<string>("");
 export const mBoxDir = writable<string>("");
 

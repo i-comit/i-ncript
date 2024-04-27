@@ -66,7 +66,7 @@ func (a *App) encryptOrDecrypt(encryptOrDecrypt bool, filePaths []string) (bool,
 					runtime.LogWarning(a.ctx, fmt.Sprintf("cipher issue: %v", err))
 					continue
 				}
-				cipherFile.Close() // Close right after done to avoid deferred pileup
+				cipherFile.Close()
 			} else {
 				if !strings.HasSuffix(filePath, ".enc") {
 					continue
@@ -79,7 +79,7 @@ func (a *App) encryptOrDecrypt(encryptOrDecrypt bool, filePaths []string) (bool,
 				cipherFile.Close()
 			}
 
-			a.lastFilePath = filePath // Update lastFile after successful
+			a.lastFilePath = filePath // Update lastFile if successful
 			fileIter++
 			if a.ctx != nil {
 				runtime.EventsEmit(a.ctx, fileProcessed, i+1)

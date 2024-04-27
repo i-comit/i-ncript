@@ -110,6 +110,8 @@
         darkLightTextOnElement(!value, ulElement);
     });
 
+    let showSpeedDial = false;
+
     onMount(() => {
         const currentPageStore = getCurrentPageStore();
         const unsubscribe = currentPageStore.subscribe((state) => {
@@ -119,6 +121,9 @@
                 _label = basePath(_fileTree.relPath); //sets the rootdir Name
             }
         });
+        setTimeout(() => {
+            showSpeedDial = true;
+        }, 250);
         darkLightTextOnElement(!get(darkLightMode), ulElement);
         _label = basePath(_fileTree.relPath);
         EventsOn("rebuildFileTree", buildFileTree);
@@ -347,38 +352,40 @@
             {/if}
         </li>
     </ul>
-    <div id="dial" class="fixed">
-        <SpeedDial
-            class="flex items-center justify-center h-8 w-14 "
-            popperDefaultClass="flex items-center !mb-0 gap-0.5"
-            style={`background-color: ${$accentColor}; border-radius: 50% 0% 50% 0%;`}
-        >
-            <SpeedDialButton
-                name="Collapse "
-                class="h-10 w-14 right-10"
-                on:click={() => {
-                    expandCollapseAllNodes(_fileTree, false);
-                }}
+    {#if showSpeedDial}
+        <div id="dial" class="absolute">
+            <SpeedDial
+                class="flex items-center justify-center h-8 w-14 "
+                popperDefaultClass="flex items-center !mb-0 gap-0.5"
+                style={`background-color: ${$accentColor}; border-radius: 50% 0% 50% 0%;`}
             >
-                <CompressOutline class="w-6 h-6" />
-            </SpeedDialButton>
-            <SpeedDialButton
-                name="Expand "
-                class="h-10 w-14 text-lg"
-                on:click={() => {
-                    expandCollapseAllNodes(_fileTree, true);
-                }}
-            >
-                <ExpandOutline class="w-6 h-6" />
-            </SpeedDialButton>
-        </SpeedDial>
-    </div>
+                <SpeedDialButton
+                    name="Collapse "
+                    class="h-10 w-14 right-10"
+                    on:click={() => {
+                        expandCollapseAllNodes(_fileTree, false);
+                    }}
+                >
+                    <CompressOutline class="w-6 h-6" />
+                </SpeedDialButton>
+                <SpeedDialButton
+                    name="Expand "
+                    class="h-10 w-14 text-lg"
+                    on:click={() => {
+                        expandCollapseAllNodes(_fileTree, true);
+                    }}
+                >
+                    <ExpandOutline class="w-6 h-6" />
+                </SpeedDialButton>
+            </SpeedDial>
+        </div>
+    {/if}
 </div>
 
 <style>
     #dial {
         right: -0.7rem !important;
-        bottom: -13.3vh !important;
+        bottom: -11vh !important;
         transform: scale(0.55) !important;
         z-index: 35;
     }
@@ -395,7 +402,7 @@
     }
     button {
         text-align: justify;
-        max-width: 20rem;
+        max-width: 21rem;
 
         overflow: hidden;
         white-space: nowrap;

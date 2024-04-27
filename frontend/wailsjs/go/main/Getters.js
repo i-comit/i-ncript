@@ -62,12 +62,8 @@ export function GetLatestRelease() {
   return window['go']['main']['Getters']['GetLatestRelease']();
 }
 
-export function GetPercentOfDriveToAppDirSize() {
-  return window['go']['main']['Getters']['GetPercentOfDriveToAppDirSize']();
-}
-
-export function GetPercentOfDriveToDirIndexSize(arg1) {
-  return window['go']['main']['Getters']['GetPercentOfDriveToDirIndexSize'](arg1);
+export function GetPercentOfDriveToDirSize(arg1) {
+  return window['go']['main']['Getters']['GetPercentOfDriveToDirSize'](arg1);
 }
 
 export function GetRootDiskSpace() {

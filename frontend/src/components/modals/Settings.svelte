@@ -23,14 +23,16 @@
         accentColor,
         filterInputs,
         pageLoading,
+        maxFileSize,
     } from "../../stores/dynamicVariables";
-    import { LogInfo } from "../../../wailsjs/runtime/runtime";
+    import { LogDebug, LogInfo } from "../../../wailsjs/runtime/runtime";
     import { logRetentionTimeStep } from "../../tools/logger";
     import {
         AddInputToFilterTemplate,
         ClearExcludedSlices,
         SaveFileFilters,
     } from "../../../wailsjs/go/main/FileUtils";
+    import { formatFileSize } from "../../tools/utils";
 
     enum LogEntriesRetentionTime {
         Never = "NEVER",
@@ -45,6 +47,8 @@
 
     let currentLogRetentionTime: LogEntriesRetentionTime =
         LogEntriesRetentionTime.OneMonth;
+
+    let maxFileSizeFormatted: string = "";
 
     let _currentPage: AppPage;
     currentPage.subscribe((value) => {
@@ -91,6 +95,15 @@
     function setAccentColor(hexColor: string) {
         accentColor.set(hexColor);
         LogInfo("accent color: " + hexColor);
+    }
+
+    function changeMaxFileSize() {
+        const minLog = Math.log(1048576); //1MB in binary
+        const maxLog = Math.log(17179869184); //16GB binary
+        const scale = (maxLog - minLog) / 99; // 99 is the difference in the slider range (100 - 1)
+        const bytes = Math.exp(minLog + scale * ($maxFileSize - 1));
+        maxFileSizeFormatted = formatFileSize(bytes);
+        LogDebug("maxFileSize " + maxFileSizeFormatted);
     }
 
     function changeLogEntriesRetentionPeriod() {
@@ -199,16 +212,14 @@
     {#if $currentPage !== AppPage.Login}
         <div class="mx-2">
             <div class="flex justify-center items-center space-x-1">
-                <Label for="textarea-id" class="mb-0.5 text-md"
-                    >file filters:</Label
-                >
+                <Label class="mb-0.5 text-md">file filters:</Label>
                 <InfoCircleSolid
                     slot="icon"
                     class="w-4 h-4 text-primary-100 dark:text-primary-200"
                 />
                 <Tooltip>
                     <p>*/.git/objects/*</p>
-                    <p>/VAULT/*</p>
+                    <p>/VAULT/*/docs</p>
                     <p>*.jpg</p>
                     <p>*Image.png</p>
                 </Tooltip>
@@ -226,10 +237,21 @@
             />
         </div>
     {/if}
-    <div class="px-5">
-        <p class="p-0 text-sm text-primary-100 dark:text-primary-200">
-            delete log entries older than:
-        </p>
+    <div class="px-4">
+        <div class="flex justify-between mt-1.5">
+            <Label class="text-md">maximum file size:</Label>
+            <Label class="text-md">{maxFileSizeFormatted}</Label>
+        </div>
+        <Range
+            min="1"
+            max="100"
+            bind:value={$maxFileSize}
+            size="md"
+            on:change={changeMaxFileSize}
+        />
+    </div>
+    <div class="px-4">
+        <Label class="mt-3 text-md text-left">delete logs older than:</Label>
         <Range
             min="0"
             max="5"
