@@ -91,7 +91,7 @@
     </div>
     <div
         style={`width: ${dataProgress}%; background-color: ${$accentColor}`}
-        class="progress-bar rounded-md h-3.5"
+        class="progress-bar rounded-md h-3.5 relative bottom-5"
     ></div>
     <Tooltip placement="bottom" class={tooltipTailwindClass} arrow={false}
         >{dataProgress}</Tooltip

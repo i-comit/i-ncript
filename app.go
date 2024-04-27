@@ -37,15 +37,10 @@ func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 	cwd, err := os.Getwd()
 	if err != nil {
-		log.Fatalf("Failed to get CWD: %s", err)
+		runtime.LogFatal(a.ctx, fmt.Sprintf("Failed to get CWD: %v", err))
 	}
 	a.cwd = cwd
-	fmt.Println("\033[32mCWD: ", a.cwd, "\033[0m")
-	// release, err := a.getters.GetLatestRelease()
-	// if err != nil {
-	// 	log.Printf("Error fetching latest release: %v", err)
-	// }
-	// fmt.Printf("Latest Release: %s, %s\n", release.TagName, release.HtmlUrl)
+	runtime.LogInfo(a.ctx, "CWD "+a.cwd)
 }
 
 func (a *App) InitializeRootFolder() error {
@@ -77,16 +72,15 @@ func (a *App) InterruptFileTask() error {
 	if a.lastFilePath != "" {
 		file, err := os.OpenFile(a.lastFilePath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0666)
 		if err != nil {
-			log.Printf("failed to open last file: %v", err)
+			runtime.LogWarning(a.ctx, fmt.Sprintf("Last file null or error: %v", err))
 			// Don't return here, just log the error
 		} else {
 			// If opening succeeds, close the file immediately
 			file.Close()
-			fmt.Println("\033[31minterrupted file task: ", filepath.Base(a.lastFilePath), "\033[0m")
+			runtime.LogError(a.ctx, "interrupted file task: "+filepath.Base(a.lastFilePath))
 			// Attempt to remove the file
 			if err := os.Remove(a.lastFilePath); err != nil {
-				fmt.Printf("last file remove failed %s", err)
-				// Log the error but continue to close the interrupt channel
+				runtime.LogError(a.ctx, fmt.Sprintf("Failed to remove last file: %v", err))
 			}
 		}
 		a.lastFilePath = ""
@@ -110,7 +104,7 @@ func (a *App) Login(username, password string) (int, error) {
 
 	_hashedUsername, err := hashString(username)
 	if err != nil {
-		log.Printf("Failed to hash username %s", err)
+		runtime.LogError(a.ctx, fmt.Sprintf("Failed to hash username: %v", err))
 		return -1, err
 	}
 	hashedUsername = _hashedUsername
@@ -120,14 +114,14 @@ func (a *App) Login(username, password string) (int, error) {
 
 	loginStat = checkCredentials(_hashedCredentials)
 	if err != nil {
-		log.Fatalf("Failed to hash credentials: %s", err)
+		runtime.LogFatal(a.ctx, fmt.Sprintf("Failed to hash credentials: %v", err))
 	}
 
 	switch loginStat {
 	case 0: //Key file does not exist
 		file, err := os.Create(filePath)
 		if err != nil {
-			log.Fatalf("Failed to create file: %s", err)
+			runtime.LogFatal(a.ctx, fmt.Sprintf("Failed to create file: %v", err))
 		}
 		defer file.Close()
 		saveHashedCredentials(_hashedCredentials)
@@ -150,9 +144,9 @@ func (a *App) grantAccessToApp() {
 	}
 	fileTree, err := a.BuildDirectoryFileTree(0)
 	if err != nil {
-		log.Fatalf("Failed to build fileTree: %s", err)
+		runtime.LogError(a.ctx, fmt.Sprintf("Failed to build fileTree: %v", err))
 	}
-	printFileTree(fileTree, true)
+	printFileTree(fileTree, false)
 }
 
 func (a *App) ResizeWindow(width int, height int) {
@@ -195,7 +189,8 @@ func MoveFiles(srcPaths []string, destDir string) error {
 		// Perform the move operation
 		err := os.Rename(srcPath, destPath)
 		if err != nil {
-			return fmt.Errorf("failed to move %s to %s: %w", srcPath, destPath, err)
+
+			return err
 		}
 	}
 	return nil
@@ -210,8 +205,7 @@ func (a *App) closeDirectoryWatcher() {
 				fmt.Println("\033[31m", "Failed to remove directory from watcher:", "\033[0m")
 			}
 		}
-		s := fmt.Sprintf("stopped watching %s directory", filepath.Base(a.directories[lastDirIndex]))
-		fmt.Println("\033[33m", s, "\033[0m")
+		runtime.LogWarning(a.ctx, "stopped watching "+filepath.Base(a.directories[lastDirIndex]))
 		a.watcher.Close() // Close the current watcher to clean up resources
 	}
 }
@@ -220,7 +214,7 @@ func (a *App) resetDirectoryWatcher(dirIndex int) {
 	var err error
 	a.watcher, err = fsnotify.NewWatcher()
 	if err != nil {
-		log.Println("Failed to create watcher:", err)
+		runtime.LogError(a.ctx, fmt.Sprintf("Failed to create watcher: %v", err))
 		return
 	}
 
@@ -260,9 +254,9 @@ func (a *App) DirectoryWatcher(dirIndex int) {
 				}
 				debounceTimer.Reset(delayDuration)
 			case <-debounceTimer.C:
-				fmt.Println("Handling event after debounce.")
+				runtime.LogDebug(a.ctx, "Handling event after debounce")
 				if !isInFileTask {
-					fmt.Println("Emitting rebuildFileTree event")
+					runtime.LogInfo(a.ctx, "Emitting rebuildFileTree event")
 					runtime.EventsEmit(a.ctx, rebuildFileTree)
 					if a.hotFilerEnabled {
 						a.EncryptFilesInDir(0)
@@ -273,7 +267,7 @@ func (a *App) DirectoryWatcher(dirIndex int) {
 				if !ok {
 					return
 				}
-				fmt.Println("Error:", err)
+				runtime.LogError(a.ctx, fmt.Sprintf("Watcher error: %v", err))
 			}
 		}
 	}()
@@ -281,8 +275,7 @@ func (a *App) DirectoryWatcher(dirIndex int) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	s := fmt.Sprintf("began watching %s directory", filepath.Base(a.directories[lastDirIndex]))
-	fmt.Println("\033[32m", s, "\033[0m")
+	runtime.LogDebug(a.ctx, "began watching "+filepath.Base(a.directories[lastDirIndex]))
 	lastDirIndex = dirIndex // Update the current index
 	<-a.done                // Keep the watcher goroutine alive
 }

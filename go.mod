@@ -6,6 +6,8 @@ toolchain go1.22.1
 
 require github.com/wailsapp/wails/v2 v2.8.0
 
+require github.com/fatih/color v1.16.0
+
 require (
 	github.com/bep/debounce v1.2.1 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // direct

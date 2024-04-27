@@ -52,7 +52,7 @@ func (a *App) encryptOrDecrypt(encryptOrDecrypt bool, filePaths []string) (bool,
 	for i, filePath := range filePaths {
 		select {
 		case <-interrupt: // Check if there's an interrupt signal
-			fmt.Printf("encryption interrupted")
+			runtime.LogError(a.ctx, "CIPHER interrupted")
 			a.lastFilePath = filePath
 			a.resetProgress(encryptOrDecrypt, i)
 			return false, nil
@@ -63,7 +63,7 @@ func (a *App) encryptOrDecrypt(encryptOrDecrypt bool, filePaths []string) (bool,
 				}
 				cipherFile, err := a.encryptFile(filePath)
 				if err != nil {
-					fmt.Println("\033[31mcipher issue ", err, "\033[0m")
+					runtime.LogWarning(a.ctx, fmt.Sprintf("cipher issue: %v", err))
 					continue
 				}
 				cipherFile.Close() // Close right after done to avoid deferred pileup
@@ -73,7 +73,7 @@ func (a *App) encryptOrDecrypt(encryptOrDecrypt bool, filePaths []string) (bool,
 				}
 				cipherFile, err := a.decryptFile(filePath)
 				if err != nil {
-					fmt.Println("\033[31mcipher issue ", err, "\033[0m")
+					runtime.LogWarning(a.ctx, fmt.Sprintf("cipher issue: %v", err))
 					continue
 				}
 				cipherFile.Close()
@@ -171,10 +171,11 @@ func (a *App) encryptFile(filePath string) (*os.File, error) {
 	}
 	defer encFile.Close() // Ensure the file is closed when the function returns
 
-	largeFileErr := a.writeCipherFile(data, encrypted, encFile)
+	cipherFileWrite := a.writeCipherFile(data, encrypted, encFile)
 
-	if largeFileErr != nil {
-		return nil, fmt.Errorf("encrypt file fail: %w", largeFileErr)
+	if cipherFileWrite != nil {
+		runtime.LogError(a.ctx, fmt.Sprintf("Failed to write encrypt file: %v", err))
+		return nil, err
 	}
 	if err := os.Remove(filePath); err != nil {
 		encFile.Close() // Best effort to close the encrypted file before returning error
@@ -250,8 +251,8 @@ func (a *App) decryptENCPFile(hashedReceiverCredentials []byte, filePath string)
 
 	largeFileErr := a.writeCipherFile(data, decrypted, decFile)
 	if largeFileErr != nil {
-		fmt.Printf("decrypt file fail: %s", largeFileErr)
-		return false, fmt.Errorf("decrypt file fail: %w", largeFileErr)
+		runtime.LogError(a.ctx, fmt.Sprintf("Failed to decrypt file: %v", err))
+		return false, err
 	}
 	if err := os.Remove(filePath); err != nil {
 		decFile.Close()
@@ -285,9 +286,10 @@ func (a *App) decryptFile(filePath string) (*os.File, error) {
 	}
 	defer decFile.Close()
 
-	largeFileErr := a.writeCipherFile(data, decrypted, decFile)
-	if largeFileErr != nil {
-		return nil, fmt.Errorf("decrypt file fail: %w", largeFileErr)
+	fileWrite := a.writeCipherFile(data, decrypted, decFile)
+	if fileWrite != nil {
+		runtime.LogError(a.ctx, fmt.Sprintf("Failed to write decrypt file: %v", err))
+		return nil, err
 	}
 	if err := os.Remove(filePath); err != nil {
 		decFile.Close()

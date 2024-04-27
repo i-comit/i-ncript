@@ -16,6 +16,7 @@
   } from "../wailsjs/go/main/Getters";
   import {
     EventsOn,
+    LogDebug,
     LogError,
     LogInfo,
     LogWarning,
@@ -77,11 +78,11 @@
   async function loggedIn() {
     await GetDirectoryPath(0).then((vaultPath) => {
       vaultDir.set(vaultPath);
-      LogWarning("vaultPath " + vaultPath);
+      LogDebug("vaultPath " + vaultPath);
     });
     await GetDirectoryPath(1).then((mBoxPath) => {
       mBoxDir.set(mBoxPath);
-      LogWarning("mboxPath " + mBoxPath);
+      LogDebug("mboxPath " + mBoxPath);
     });
     try {
       const _filterInputs = await LoadFileFilters();
@@ -99,14 +100,12 @@
     } catch (error) {
       LogError("Error loading file filters:" + error);
     }
-
     currentPage.set(AppPage.Vault);
     ResizeWindow(width * 2, $height);
 
     let unsubscribe = () => {};
     unsubscribe = fileTree.subscribe((value) => {
       if (value && value.relPath !== "") {
-        buildFileTree();
         DirectoryWatcher(0);
         unsubscribe(); // Now safe to unsubscribe
       }

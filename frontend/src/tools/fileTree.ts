@@ -11,6 +11,7 @@ import { BuildDirectoryFileTree, SetIsInFileTask } from "../../wailsjs/go/main/A
 import {
     EventsOff,
     EventsOn,
+    LogDebug,
     LogError,
     LogInfo,
     LogPrint,
@@ -51,7 +52,6 @@ export function handleFileClick(relPath: string, _buttonRef: HTMLButtonElement) 
     setHeldBtnsStyle();
 }
 
-
 export function buildFileTree() {
     BuildDirectoryFileTree(pageIndex())
         .then(sortFileTree)
@@ -62,7 +62,7 @@ export function buildFileTree() {
         .then(loadExpansionState)
         .then(updateExpansionStateStore)
         .then(() => {
-            LogPrint("Fully initialized and loaded " + pageName());
+            LogInfo("Fully initialized and loaded " + pageName());
             pageLoading.set(false);
         })
         .catch((error) => {
@@ -76,7 +76,7 @@ export function buildFileTree() {
 
 function subscribeToRebuildFileTree() {
     EventsOn("rebuildFileTree", buildFileTree);
-    LogError("subscribed to rebuildFileTree");
+    LogDebug("subscribed to rebuildFileTree");
 }
 
 function loadExpansionState() {
@@ -171,7 +171,7 @@ export function getCurrentPageStore() {
 export async function setIsInFileTask(b: boolean): Promise<boolean> {
     const _isInFileTask = await SetIsInFileTask(b);
     isInFileTask.set(_isInFileTask);
-    LogPrint("SetIsInFileTask " + _isInFileTask);
+    LogDebug("SetIsInFileTask " + _isInFileTask);
     return b; // Return the boolean value
 }
 

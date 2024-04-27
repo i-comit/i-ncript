@@ -30,6 +30,7 @@ package main
 
 import (
 	"embed"
+	"os"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -79,6 +80,12 @@ func main() {
 	}
 	fileUtils := &FileUtils{app: app}
 
+	customLogger := NewCustomLogger()
+	if customLogger == nil {
+		println("Failed to init customLogger")
+		os.Exit(1)
+	}
+
 	err := wails.Run(&options.App{
 		Title:         "i-ncript",
 		Width:         _width,
@@ -86,6 +93,7 @@ func main() {
 		DisableResize: true,
 		Fullscreen:    false,
 		Frameless:     true,
+		Logger:        customLogger,
 
 		AssetServer: &assetserver.Options{
 			Assets: assets,

@@ -9,6 +9,9 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+
+	"github.com/wailsapp/wails/v2/pkg/runtime"
+
 	"strings"
 	"time"
 )
@@ -226,7 +229,7 @@ func (b *Getters) GetFileProperties(filePath string) (FileProperties, error) {
 	var props FileProperties
 	fileInfo, err := os.Stat(filePath)
 	if err != nil {
-		fmt.Println("\033[33mError accessing file:", err, "\033[0m")
+		runtime.LogError(b.app.ctx, fmt.Sprintf("File access error: %v", err))
 		return props, err
 	}
 	// Convert time.Time to RFC3339 formatted string
@@ -313,7 +316,6 @@ func getEndPath(endPathName string) (string, error) {
 		return "", fmt.Errorf("failed to get cwd: %w", err)
 	}
 	dirPath := fmt.Sprintf("%s%s%s", cwd, string(filepath.Separator), endPathName)
-	fmt.Println("full path " + endPathName + " " + dirPath)
 	_, err = os.Stat(dirPath)
 	if os.IsNotExist(err) {
 		return "", nil // Directory does not exist

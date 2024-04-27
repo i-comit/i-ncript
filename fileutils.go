@@ -45,7 +45,7 @@ func (f *FileUtils) MoveFilesToPath(filePaths []string, targetPath string) {
 				wailsRuntime.LogError(f.app.ctx, "Error moving file: "+err.Error())
 				continue
 			}
-			wailsRuntime.LogError(f.app.ctx, "Successfully moved file to: "+newFilePath)
+			wailsRuntime.LogDebug(f.app.ctx, "Moved file to: "+newFilePath)
 			s := "moved " + strconv.Itoa(len(filePaths)) + "file(s) to " + filepath.Base(targetPath)
 			wailsRuntime.EventsEmit(f.app.ctx, addLogFile, s)
 		}
@@ -80,7 +80,6 @@ func (f *FileUtils) OpenDirectory(_filePath string) error {
 	if !fileInfo.IsDir() {
 		dirPath = filepath.Dir(_filePath) + string(filepath.Separator)
 	}
-	fmt.Println("DirPath open directory " + dirPath)
 	var cmd *exec.Cmd
 	switch stdRuntime.GOOS {
 	case "windows":
@@ -159,7 +158,7 @@ func (f *FileUtils) PackFilesForENCP(receiverUsername, receiverPassword string, 
 	for _, filePath := range filePaths {
 		select {
 		case <-interrupt: // Check if there's an interrupt signal
-			fmt.Printf("packing interrupted")
+			wailsRuntime.LogError(f.app.ctx, "PACK interrupted")
 			f.app.lastFilePath = filePath
 			return "", nil
 		default:
@@ -169,7 +168,8 @@ func (f *FileUtils) PackFilesForENCP(receiverUsername, receiverPassword string, 
 		}
 	}
 	if err := zipWriter.Close(); err != nil {
-		return "", fmt.Errorf("error closing zip writer: %s", err)
+		wailsRuntime.LogError(f.app.ctx, "Error closing zip writer: "+err.Error())
+		return "", err
 	}
 	zipFile.Close()
 	s := "packed " + strconv.Itoa(len(filePaths)) + " files into " + filenameWithoutExtension
@@ -185,8 +185,8 @@ func (f *FileUtils) AuthenticateENCPFile(password string, encFilePath string) (b
 	}
 	decryptedZipFile, err := f.app.decryptENCPFile([]byte(_hashedCredentials), encFilePath)
 	if err != nil {
-		fmt.Printf("error decrypting zip file: %s", err)
-		return false, fmt.Errorf("error writing decrypted encp to file: %s", err)
+		wailsRuntime.LogError(f.app.ctx, "Error writing decrypted zip to file: "+err.Error())
+		return false, err
 	}
 	return decryptedZipFile, nil
 }
