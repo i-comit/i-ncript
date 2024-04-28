@@ -89,7 +89,7 @@ func main() {
 	err := wails.Run(&options.App{
 		Title:         "i-ncript",
 		Width:         _width,
-		Height:        _height + 5,
+		Height:        _height,
 		DisableResize: true,
 		Fullscreen:    false,
 		Frameless:     true,

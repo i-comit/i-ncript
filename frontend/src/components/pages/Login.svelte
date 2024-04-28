@@ -302,10 +302,9 @@
                 {#if $newAccount}
                     {#if !enteredPassword}
                         <Input
-                            class="max-h-5 w-full mb-2"
+                            class="max-h-5 w-full mb-0.5"
                             style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
                         color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
-                            id="small-input"
                             placeholder="create password.."
                             type="password"
                             bind:value={password}
@@ -314,16 +313,15 @@
                         />
                         <PasswordScan
                             {password}
-                            _class="flex w-full h-1 px-0.5 relative bottom-1.5"
+                            _class="flex w-full px-0.5 relative bottom-px"
                             on:passwordStrengthUpdated={handlePasswordStrengthUpdated}
                         />
                     {:else}
                         <div class="flex justify-between">
                             <Input
-                                class="max-h-5 w-full mb-2"
+                                class="max-h-5 w-full mb-0.5"
                                 style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
                                     color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
-                                id="small-input"
                                 placeholder="confirm password.."
                                 type="password"
                                 bind:value={password}
@@ -335,12 +333,12 @@
                                 tabindex={1}
                             >
                                 <CloseOutline
-                                    class="mb-2"
+                                    class="mb-0.5"
                                     style="color: {$accentColor};"
                                 />
                             </button>
                         </div>
-                        <div class="flex w-full h-1 px-0.5 relative bottom-1">
+                        <div class="flex w-full h-1.5 px-0.5 relative bottom-px">
                             {#if !passwordMatch}
                                 <div
                                     class="flex-1 text-center rounded-lg bg-primary-300 dark:bg-primary-400"
@@ -360,10 +358,9 @@
                     {/if}
                 {:else}
                     <Input
-                        class="max-h-5 w-full mb-1.5 focus:outline-1"
+                        class="max-h-5 w-full mb-0.5"
                         style={`background-color: ${$darkLightMode ? darkInputColor : lightInputColor};
                         color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
-                        id="small-input"
                         placeholder="enter password.."
                         type="password"
                         bind:value={password}
@@ -372,7 +369,7 @@
                     />
                     <PasswordScan
                         {password}
-                        _class="flex w-full h-1 px-0.5 relative bottom-1.5"
+                        _class="flex w-full px-0.5 relative bottom-px"
                         on:passwordStrengthUpdated={handlePasswordStrengthUpdated}
                     />
                 {/if}
@@ -401,7 +398,7 @@
                 <Button
                     pill={true}
                     shadow
-                    class="p-0.5 hover:drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
+                    class="p-0.5 hover:drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] hover:outline outline-1"
                     on:click={() => switchModals(Modals.Settings)}
                 >
                     <CogSolid
