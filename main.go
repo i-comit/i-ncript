@@ -57,7 +57,7 @@ const keyFileName = ".i-ncript.🔑"
 const logFileName = ".i-ncript.🧾️"
 
 const _width = 220
-const _height = 190
+const _height = 195
 
 // Change this in your build for extra security
 const _uniqueID = "f56bcbf2-db56-481b-a722-11c21a4b3ae2"

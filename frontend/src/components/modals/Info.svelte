@@ -41,7 +41,8 @@
 <div
     id="modal-panel"
     class="rounded-md ml-0.5 mr-1 !mt-0.5 hover:outline outline-1 bg-primary-700 dark:bg-primary-600"
-    style="max-height: {_currentPage === AppPage.Login ? '68vh' : '97%'};"
+    style="max-height: {_currentPage === AppPage.Login ? '65.75vh' : '97%'};
+         margin-bottom: {_currentPage === AppPage.Login ? '2.5vh' : ''};"
 >
     <div
         class="mb-1.5 pb-6 w-1/3 left-1/3 rounded-bl-lg rounded-br-lg font-semibold h-5 bg-primary-400 dark:bg-primary-300

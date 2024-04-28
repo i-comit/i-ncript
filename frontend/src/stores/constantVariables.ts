@@ -5,7 +5,7 @@ export const setupPagePClass =
 export const inputFloatClass =
     "flex absolute inset-y-0 items-center text-green-300"
 
-export const width = 220; export const height = 145;
+export const width = 220; export const height = 195;
 
 export const darkBGColor = "#757575"
 export const lightBGColor = "#eeeeee"

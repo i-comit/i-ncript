@@ -6,9 +6,9 @@
         BarsFromLeftOutline,
         InfoCircleOutline,
     } from "flowbite-svelte-icons";
-    import { Modals } from "../../enums/Modals";
+    import { currentModal, Modals } from "../../enums/Modals";
 
-    import { darkLightMode } from "../../stores/dynamicVariables";
+    import { darkLightMode, accentColor } from "../../stores/dynamicVariables";
     import { switchModals } from "../../tools/utils";
 
     import {
@@ -30,6 +30,8 @@
     onDestroy(() => {
         unsub_darkLightMode();
     });
+
+    let iconClass = "p-px hover:outline outline-1 rounded-full";
 </script>
 
 <div class="icon space-y-1 !flex-row !justify-center items-baseline space-x-2">
@@ -37,19 +39,32 @@
         class="icon__neumorphic"
         on:pointerdown|stopPropagation={() => switchModals(Modals.Info)}
     >
-        <InfoCircleOutline class="p-px pt-0.5" size="lg" />
+        <InfoCircleOutline
+            class={iconClass}
+            size="lg"
+            style={`color: ${$currentModal === Modals.Info ? $accentColor : "var(--text-color)"}`}
+        />
     </button>
     <button
         class="icon__neumorphic"
         on:pointerdown|stopPropagation={() => switchModals(Modals.Logger)}
     >
-        <BarsFromLeftOutline class="p-px pt-0.5" role="button" size="lg" />
+        <BarsFromLeftOutline
+            class={iconClass}
+            role="button"
+            size="lg"
+            style={`color: ${$currentModal === Modals.Logger ? $accentColor : "var(--text-color)"}`}
+        />
     </button>
     <button
         class="icon__neumorphic"
         on:pointerdown|stopPropagation={() => switchModals(Modals.Settings)}
     >
-        <CogSolid class="p-px pt-0.5" size="lg" />
+        <CogSolid
+            class={iconClass}
+            size="lg"
+            style={`color: ${$currentModal === Modals.Settings ? $accentColor : "var(--text-color)"}`}
+        />
     </button>
 </div>
 

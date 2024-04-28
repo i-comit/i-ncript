@@ -383,18 +383,18 @@
             {/if}
         </div>
 
-        <div class={`flex justify-between items-center`}>
-            <div
-                class={`flex space-x-1 relative ${_modal === Modals.None ? `top-10` : `top-0`}`}
-            >
+        <div
+            class={`flex justify-between items-center relative ${_modal === Modals.None ? `top-11` : `top-0`}`}
+        >
+            <div class={`flex space-x-1`}>
                 <Button
                     pill={true}
-                    class="p-0 px-0.5 hover:drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] "
+                    class="p-0 px-0.5 hover:drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] hover:outline outline-1"
                     shadow
                     on:click={() => switchModals(Modals.Info)}
                 >
                     <InfoCircleOutline
-                        class="w-6 h-6 "
+                        class="w-6 h-6"
                         color={$darkLightMode ? lightTextColor : darkTextColor}
                     />
                 </Button>
@@ -410,14 +410,12 @@
                     />
                 </Button>
             </div>
-            <div
-                class={`relative ${_modal === Modals.None ? `top-10` : `top-0`}`}
-            >
+            <div class={``}>
                 {#if $newAccount}
                     {#if !enteredPassword}
                         {#if usernameCheck && checks.passwordCheck}
                             <NeuButton
-                                _class="!w-20 "
+                                _class="!w-20"
                                 on:click={() => enterPasswordBtn()}
                                 >ENTER</NeuButton
                             >

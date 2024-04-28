@@ -187,7 +187,7 @@
         }}
     >
         <DirSize />
-        <div class="h-1/3 bg-red-400">
+        <div class="h-1/3">
             {#if _currentFileTask === FileTasks.None}
                 {#if _hotFiler}
                     <Chronograph />
@@ -206,7 +206,7 @@
             {:else}
                 <TaskDisplay />
             {/if}
-            <div class="bg-blue-100">
+            <div>
                 {#if _currentFileTask === FileTasks.None}
                     <div>
                         <FileTools />
@@ -218,11 +218,11 @@
             <div class="h-0.5" />
         </div>
 
-        <div class="h-1/2 bg-green-400">
-            <div class="relative !top-[1.3rem]">
+        <div class="h-1/2">
+            <div class="relative top-[1.8rem]">
                 <ModalButtons />
             </div>
-            <div class="flex justify-between relative !top-[2.6rem]">
+            <div class="flex justify-between relative top-[2.8rem]">
                 <NeuButton
                     on:click={() => switchPages(AppPage.Mbox)}
                     _class="!w-20">M-BOX</NeuButton

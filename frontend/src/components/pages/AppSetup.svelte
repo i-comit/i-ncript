@@ -4,11 +4,10 @@
     import { LogInfo } from "../../../wailsjs/runtime/runtime";
 
     import { ArrowLeftOutline, ArrowRightOutline } from "flowbite-svelte-icons";
-    import { width } from "../../stores/constantVariables";
+    import { height, width } from "../../stores/constantVariables";
     import {
         accentColor,
         darkLightMode,
-        height,
     } from "../../stores/dynamicVariables";
     import TitleBar from "../widgets/TitleBar.svelte";
     import License from "../modals/License.svelte";
@@ -35,7 +34,7 @@
 
     function goToLoginPage() {
         currentPage.set(AppPage.Login);
-        ResizeWindow(width, $height + 5);
+        ResizeWindow(width, height);
         LogInfo("going to login page");
     }
 

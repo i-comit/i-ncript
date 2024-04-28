@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onDestroy, onMount } from "svelte";
+  import { onMount } from "svelte";
   import { get } from "svelte/store";
 
   import Login from "./components/pages/Login.svelte";
@@ -12,14 +12,12 @@
     CheckKeyFileInCWD,
     GetDirName,
     GetDirectoryPath,
-    GetHeight,
   } from "../wailsjs/go/main/Getters";
   import {
     EventsOn,
     LogDebug,
     LogError,
     LogInfo,
-    LogWarning,
   } from "../wailsjs/runtime/runtime";
   import { DirectoryWatcher, ResizeWindow } from "../wailsjs/go/main/App";
   import {
@@ -28,13 +26,12 @@
     largeFilePercent,
     largeFileName,
     newAccount,
-    height,
     filterInputs,
   } from "./stores/dynamicVariables.ts";
-  import { buildFileTree, fileTree } from "./tools/fileTree.ts";
+  import { fileTree } from "./tools/fileTree.ts";
   import { addLogEntry } from "./tools/logger.ts";
   import AppSetup from "./components/pages/AppSetup.svelte";
-  import { width } from "./stores/constantVariables.ts";
+  import { height, width } from "./stores/constantVariables.ts";
   import {
     AddInputToFilterTemplate,
     LoadFileFilters,
@@ -50,16 +47,13 @@
 
   onMount(async () => {
     isRightDir = await GetDirName();
-    let _height = await GetHeight();
-    height.set(_height);
-
-    if (!isRightDir) ResizeWindow(320, _height + 10);
+    if (!isRightDir) ResizeWindow(320, height + 10);
     else {
       CheckKeyFileInCWD().then((_keyFilePath) => {
         if (_keyFilePath === "") {
           currentPage.set(AppPage.AppSetup);
           newAccount.set(true);
-          ResizeWindow(350, _height + 50);
+          ResizeWindow(350, height + 50);
         }
       });
     }
@@ -101,7 +95,7 @@
       LogError("Error loading file filters:" + error);
     }
     currentPage.set(AppPage.Vault);
-    ResizeWindow(width * 2, $height);
+    ResizeWindow(width * 2, height);
 
     let unsubscribe = () => {};
     unsubscribe = fileTree.subscribe((value) => {

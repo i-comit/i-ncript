@@ -24,12 +24,5 @@
         cursor: pointer;
         color: var(--text-color);
         transition: all 0.2s ease;
-        &:active {
-            box-shadow: var(--inner-shadow);
-            color: var(--icon-active);
-        }
-        &:hover {
-            color: var(--icon-hover);
-        }
     }
 }

@@ -1,14 +1,12 @@
 <script lang="ts">
     import {
-        FolderArrowRightOutline,
         FolderOpenSolid,
         PlaySolid,
-        BookOpenOutline,
+        BookOpenSolid,
     } from "flowbite-svelte-icons";
     import { darkLightMode } from "../../stores/dynamicVariables";
     import { getRootDir } from "../../tools/utils";
 
-    import { darkLightTextOnClasses } from "../../tools/themes";
 
     import { heldDownBtns } from "../../tools/utils";
     import { LogInfo } from "../../../wailsjs/runtime/runtime";
@@ -40,18 +38,21 @@
         }
         return FileTypes.Unknown;
     }
+
+    let fileToolIconClass =
+        "drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] hover:drop-shadow-[0_1.2px_1.2px_rgba(220,220,220,1)]";
 </script>
 
 {#if $currentModal !== Modals.Logger}
     {#if Object.keys($heldDownBtns).length > 0}
-        <div id="file-tools" class="flex justify-end space-x-1">
+        <div id="file-tools" class="flex justify-end space-x-0.5">
             {#if lastFile !== FileTypes.Encrypted && lastFile !== FileTypes.Unknown && lastFile !== FileTypes.EncryptedP}
                 <button
                     style={`--text-color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
                     tabindex={-1}
                     on:click|stopPropagation={() => OpenFile(lastFilePath)}
                 >
-                    <PlaySolid />
+                    <PlaySolid size="lg" class={fileToolIconClass} />
                 </button>
             {/if}
             <button
@@ -59,7 +60,7 @@
                 tabindex={-1}
                 on:click|stopPropagation={() => OpenDirectory(lastFilePath)}
             >
-                <FolderOpenSolid />
+                <FolderOpenSolid size="lg" class={fileToolIconClass} />
             </button>
         </div>
     {/if}
@@ -70,7 +71,7 @@
             tabindex={-1}
             on:pointerdown|stopPropagation={OpenLogEntriesFile}
         >
-            <BookOpenOutline />
+            <BookOpenSolid size="lg" class={fileToolIconClass} />
         </button>
     </div>
 {/if}

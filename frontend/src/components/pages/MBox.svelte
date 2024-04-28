@@ -109,6 +109,7 @@
 
     onMount(() => {
         pageLoading.set(true);
+        currentMBoxState = MboxState.None;
         buildFileTree();
         if (_currentFileTask === FileTasks.None) retrieveDuplicateFiles();
 
@@ -284,7 +285,7 @@
         }}
     >
         <DirSize />
-        <div class="h-1/3 bg-red-100">
+        <div class="h-1/3">
             {#if currentMBoxState === MboxState.None}
                 {#if _currentFileTask === FileTasks.None}
                     <div class="text-primary-100 dark:text-primary-200">
@@ -306,6 +307,7 @@
                         <div style="height: 1.95rem" />
                         <FileTools />
                     </div>
+                    <div class="h-1.5" />
                     <div class="row" role="none" on:click|stopPropagation>
                         <Input
                             class="max-h-5 m-0"
@@ -360,11 +362,11 @@
                             arrow={false}>more than 4 characters</Tooltip
                         >
                     </div>
+                    <div class="h-5">
+                        <FileTools />
+                    </div>
+                    <div class="h-1.5" />
                     {#if !enteredPassword}
-                        <div style="height: 1.25rem">
-                            <FileTools />
-                        </div>
-
                         <div class="row" role="none" on:click|stopPropagation>
                             <Input
                                 class="max-h-5 m-0"
@@ -382,9 +384,6 @@
                             on:passwordStrengthUpdated={handlePasswordStrengthUpdated}
                         />
                     {:else}
-                        <div style="height: 1.1rem">
-                            <FileTools />
-                        </div>
                         <div class="row" role="none" on:click|stopPropagation>
                             <Input
                                 class="max-h-5 m-0"
@@ -431,12 +430,12 @@
                 {/if}
             {/if}
         </div>
-        <div class="h-1/2 bg-green-300">
-            <div class="relative !top-[1.3rem]">
+        <div class="h-1/2">
+            <div class="relative top-[1.8rem]">
                 <ModalButtons />
             </div>
             <div
-                class="flex justify-between space-x-3.5 space-evenly relative !top-[2.6rem]"
+                class="flex justify-between space-x-3.5 space-evenly relative top-[2.8rem]"
             >
                 <NeuButton on:click={() => switchPages(AppPage.Vault)}
                     >VAULT</NeuButton
