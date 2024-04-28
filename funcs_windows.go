@@ -13,23 +13,29 @@ import (
 	"golang.org/x/sys/windows"
 )
 
-func (g *Getters) GetRootDiskSpace() (uint64, error) {
+func (g *Getters) getDiskSpace(totalOrFreeSpace bool) (uint64, error) {
 	cwd, err := os.Getwd()
 	if err != nil {
 		return 0, fmt.Errorf("error getting current working directory: %w", err)
 	}
 	var root = cwd[:3] // Windows format, e.g., C:\
-	// Convert root path to UTF-16 pointer as required by the Windows API
 	rootPtr, err := windows.UTF16PtrFromString(root)
 	if err != nil {
 		return 0, fmt.Errorf("error converting string to UTF-16 pointer: %w", err)
 	}
-	var freeBytes uint64 // Changed from int64 to uint64
-	err = windows.GetDiskFreeSpaceEx(rootPtr, nil, nil, &freeBytes)
-	if err != nil {
-		return 0, fmt.Errorf("error getting disk space: %w", err)
+	var bytes uint64
+	if totalOrFreeSpace { // True for total space, False for free space
+		err = windows.GetDiskFreeSpaceEx(rootPtr, nil, &bytes, nil)
+		if err != nil {
+			return 0, fmt.Errorf("error getting total disk space: %w", err)
+		}
+	} else {
+		err = windows.GetDiskFreeSpaceEx(rootPtr, &bytes, nil, nil)
+		if err != nil {
+			return 0, fmt.Errorf("error getting free disk space: %w", err)
+		}
 	}
-	return freeBytes, nil
+	return bytes, nil
 }
 
 func hideFile(filename string) error {

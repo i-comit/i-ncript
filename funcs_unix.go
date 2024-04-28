@@ -11,15 +11,19 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-func (g *Getters) GetRootDiskSpace() (int64, error) {
-	// Extract the root path from the current working directory.
+func (g *Getters) getDiskSpace(totalOrFreeSpace bool) (int64, error) {
 	var root = "/" // UNIX-like, simplified assumption
 	var stat unix.Statfs_t
 	if err := unix.Statfs(root, &stat); err != nil {
 		return 0, fmt.Errorf("failed to get filesystem stats: %w", err)
 	}
-	availableBytes := stat.Bavail * uint64(stat.Bsize)
-	return int64(availableBytes), nil
+	var bytes uint64
+	if totalOrFreeSpace { // True for total space, False for available space
+		bytes = stat.Blocks * uint64(stat.Bsize) // Total bytes
+	} else {
+		bytes = stat.Bavail * uint64(stat.Bsize) // Available bytes
+	}
+	return int64(bytes), nil
 }
 
 func hideFile(filename string) error {

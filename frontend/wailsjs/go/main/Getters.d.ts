@@ -16,25 +16,21 @@ export function GetDirectoryFileCt(arg1:number):Promise<number>;
 
 export function GetDirectoryPath(arg1:number):Promise<string>;
 
+export function GetDiskSpacePercent():Promise<number>;
+
 export function GetFileProperties(arg1:string):Promise<main.FileProperties>;
 
 export function GetFileTreePath(arg1:number,arg2:string):Promise<string>;
 
 export function GetFilesByType(arg1:number,arg2:boolean):Promise<Array<string>>;
 
-export function GetFormattedAppDirSize():Promise<string>;
-
 export function GetFormattedDirIndexSize(arg1:number):Promise<string>;
 
-export function GetFormattedDriveSize():Promise<string>;
+export function GetFormattedDiskSpace(arg1:boolean):Promise<string>;
 
 export function GetHeight():Promise<number>;
 
 export function GetLatestRelease():Promise<main.Release>;
-
-export function GetPercentOfDriveToDirSize(arg1:number):Promise<number>;
-
-export function GetRootDiskSpace():Promise<number>;
 
 export function GetRootFolder():Promise<string>;
 

@@ -55,6 +55,33 @@ func (g *Getters) GetFilesByType(dirIndex int, getFileType bool) ([]string, erro
 	return files, nil
 }
 
+// GetFormattedDriveSize and GetFormattedAppDirSize retrieves the available memory from the backend
+// and only returns the formatted string, which is much faster than calculating it on the frontend
+func (g *Getters) GetFormattedDiskSpace(totalOrFreeSpace bool) (string, error) {
+	driveSize, err := g.getDiskSpace(totalOrFreeSpace)
+	if err != nil {
+		fmt.Println("Error getting disk space:", err)
+		return "", err
+	}
+	return formatDirSize(int64(driveSize)), nil
+}
+
+func (g *Getters) GetDiskSpacePercent() (int, error) {
+	totalDiskSpace, err := g.getDiskSpace(true)
+	if err != nil {
+		fmt.Println("Error getting disk space:", err)
+		return 0, err
+	}
+	freeDiskSpace, err := g.getDiskSpace(false)
+	if err != nil {
+		fmt.Println("Error getting disk space:", err)
+		return 0, err
+	}
+	percent := (float64(freeDiskSpace) / float64(totalDiskSpace)) * 100
+	percentInt := int(percent)
+	return percentInt, nil
+}
+
 func (g *Getters) GetTotalDirSize(dirPath string) (int64, error) {
 	var totalSize int64
 	err := filepath.WalkDir(dirPath, func(path string, d fs.DirEntry, err error) error {
@@ -75,47 +102,6 @@ func (g *Getters) GetTotalDirSize(dirPath string) (int64, error) {
 		return 0, err
 	}
 	return totalSize, nil
-}
-
-// GetFormattedDriveSize and GetFormattedAppDirSize retrieves the available memory from the backend
-// and only returns the formatted string, which is much faster than calculating it on the frontend
-func (g *Getters) GetFormattedDriveSize() (string, error) {
-	driveSize, err := g.GetRootDiskSpace()
-	if err != nil {
-		fmt.Println("Error getting disk space:", err)
-		return "", err
-	}
-	return formatDirSize(int64(driveSize)), nil
-}
-
-func (g *Getters) GetFormattedAppDirSize() (string, error) {
-	appDirSize, err := g.GetTotalDirSize(g.app.cwd)
-	if err != nil {
-		fmt.Printf("app size err %s", err)
-		return "", err
-	}
-	return formatDirSize(appDirSize), nil
-}
-
-func (g *Getters) GetPercentOfDriveToDirSize(dirIndex int) (int, error) {
-	driveSize, err := g.GetRootDiskSpace()
-	if err != nil {
-		runtime.LogError(g.app.ctx, "Error getting disk space: "+err.Error())
-		return 0, err
-	}
-	var appDirSize int64
-	if dirIndex < 0 {
-		appDirSize, err = g.GetTotalDirSize(g.app.cwd)
-	} else {
-		appDirSize, err = g.GetTotalDirSize(g.app.directories[dirIndex])
-	}
-	if err != nil {
-		runtime.LogError(g.app.ctx, "Error getting dir size: "+err.Error())
-		return 0, err
-	}
-	percent := (float64(appDirSize) / float64(driveSize)) * 100
-	percentInt := int(percent)
-	return percentInt, nil
 }
 
 func (g *Getters) GetFormattedDirIndexSize(dirIndex int) (string, error) {
@@ -299,6 +285,23 @@ func formatDirSize(fileByteSize int64) string {
 		formattedSize = fmt.Sprintf("%.2f", sizeInUnit)
 	}
 	return fmt.Sprintf("%s%s", formattedSize, units[unitIndex])
+}
+
+func getDirectoryFileCt(path string) (int, error) {
+	count := 0
+	err := filepath.WalkDir(path, func(_ string, d os.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if !d.IsDir() {
+			count++
+		}
+		return nil
+	})
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
 }
 
 func getEndPath(endPathName string) (string, error) {

@@ -108,9 +108,16 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 	var separator = string(filepath.Separator)
 	rootDir = filepath.Clean(rootDir)
 	rootNode := &FileNode{RelPath: rootDir + separator, Children: []*FileNode{}}
-	err := filepath.Walk(rootDir, func(path string, info os.FileInfo, err error) error {
+	err := filepath.WalkDir(rootDir, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
 			return err
+		}
+		if d.IsDir() && path != rootDir {
+			count, err := getDirectoryFileCt(path)
+			if err != nil {
+				return err
+			}
+			fmt.Println("dir file count:", path, count)
 		}
 		path = filepath.Clean(path)
 		if path == rootDir {

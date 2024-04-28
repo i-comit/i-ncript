@@ -30,6 +30,10 @@ export function GetDirectoryPath(arg1) {
   return window['go']['main']['Getters']['GetDirectoryPath'](arg1);
 }
 
+export function GetDiskSpacePercent() {
+  return window['go']['main']['Getters']['GetDiskSpacePercent']();
+}
+
 export function GetFileProperties(arg1) {
   return window['go']['main']['Getters']['GetFileProperties'](arg1);
 }
@@ -42,16 +46,12 @@ export function GetFilesByType(arg1, arg2) {
   return window['go']['main']['Getters']['GetFilesByType'](arg1, arg2);
 }
 
-export function GetFormattedAppDirSize() {
-  return window['go']['main']['Getters']['GetFormattedAppDirSize']();
-}
-
 export function GetFormattedDirIndexSize(arg1) {
   return window['go']['main']['Getters']['GetFormattedDirIndexSize'](arg1);
 }
 
-export function GetFormattedDriveSize() {
-  return window['go']['main']['Getters']['GetFormattedDriveSize']();
+export function GetFormattedDiskSpace(arg1) {
+  return window['go']['main']['Getters']['GetFormattedDiskSpace'](arg1);
 }
 
 export function GetHeight() {
@@ -60,14 +60,6 @@ export function GetHeight() {
 
 export function GetLatestRelease() {
   return window['go']['main']['Getters']['GetLatestRelease']();
-}
-
-export function GetPercentOfDriveToDirSize(arg1) {
-  return window['go']['main']['Getters']['GetPercentOfDriveToDirSize'](arg1);
-}
-
-export function GetRootDiskSpace() {
-  return window['go']['main']['Getters']['GetRootDiskSpace']();
 }
 
 export function GetRootFolder() {

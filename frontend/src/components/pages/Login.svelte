@@ -44,26 +44,23 @@
 
     import PasswordScan from "../widgets/PasswordScan.svelte";
     import NeuButtonFake from "../widgets/NeuButtonFake.svelte";
-    import { get } from "svelte/store";
     import {
-        GetFormattedAppDirSize,
-        GetFormattedDriveSize,
-        GetPercentOfDriveToDirSize,
+        GetDiskSpacePercent,
+        GetFormattedDiskSpace,
     } from "../../../wailsjs/go/main/Getters";
 
     let typewriter = "";
     const dispatch = createEventDispatcher();
 
     const appName: string = __APP_NAME__;
-    const appVersion: string = __APP_VERSION__;
     let username = "";
     let password = "";
     let enteredPassword: string = "";
     let passwordMatch = false;
 
-    let driveToAppDirPercent: number;
-    let formattedDriveSize: string;
-    let formattedAppDirSize: string;
+    let formattedTotalDriveSize: string;
+    let formattedFreeDriveSize: string;
+    let diskSpacePercent: number;
 
     let loginForm: HTMLFormElement;
     let loginBtn: HTMLButtonElement;
@@ -86,21 +83,22 @@
         const interval = setInterval(() => {
             typewriter = getDisplayString();
         }, alertInterval);
-        GetPercentOfDriveToDirSize(-1)
-            .then((_driveToAppDirPercent) => {
-                driveToAppDirPercent = _driveToAppDirPercent;
+
+        GetFormattedDiskSpace(true)
+            .then((totalDriveSize) => {
+                formattedTotalDriveSize = totalDriveSize;
                 // Return the next promise in the chain
-                return GetFormattedDriveSize();
+                return GetFormattedDiskSpace(false);
             })
-            .then((_formattedDriveSize) => {
-                formattedDriveSize = _formattedDriveSize;
-                return GetFormattedAppDirSize();
+            .then((freeDriveSize) => {
+                formattedFreeDriveSize = freeDriveSize;
+                return GetDiskSpacePercent();
             })
-            .then((_formattedAppDirSize) => {
-                formattedAppDirSize = _formattedAppDirSize;
+            .then((_diskSpacePercent) => {
+                diskSpacePercent = _diskSpacePercent;
             })
             .catch((error) => {
-                console.error("An error occurred:", error);
+                LogError("An error occurred:" + error);
             });
 
         return () => {
@@ -242,29 +240,24 @@
         <div class="loginField">
             {#if _modal === Modals.None}
                 <div class="flex items-center mx-auto">
-                    <Tooltip
-                        placement="right"
-                        type="custom"
-                        class={tooltipTailwindClass}
-                        arrow={false}>{appVersion}</Tooltip
-                    >
-                    <div
-                        class="top-0 z-10 w-full my-2 mb-0 mx-5 rounded-full h-2.5 bg-primary-300 dark:bg-primary-400"
-                    >
+                    {#if diskSpacePercent}
                         <div
-                            class="h-2.5 rounded-full"
-                            style={`width: ${driveToAppDirPercent}%; background-color: ${$accentColor};`}
-                        ></div>
-                    </div>
-
-                    <Tooltip
-                        placement="bottom"
-                        type="custom"
-                        class={tooltipTailwindClass}
-                        arrow={false}
-                        offset={1}
-                        >{formattedAppDirSize} / {formattedDriveSize} | {driveToAppDirPercent}%</Tooltip
-                    >
+                            class="top-0 z-40 w-full my-2 mb-0 mx-5 rounded-full h-2.5 bg-primary-300 dark:bg-primary-400"
+                        >
+                            <div
+                                class="h-2.5 rounded-full"
+                                style={`width: ${diskSpacePercent}%; background-color: ${$accentColor};`}
+                            ></div>
+                        </div>
+                        <Tooltip
+                            placement="bottom"
+                            class={tooltipTailwindClass}
+                            arrow={false}
+                            offset={1}
+                            >{formattedFreeDriveSize} / {formattedTotalDriveSize}
+                            | {diskSpacePercent}%</Tooltip
+                        >
+                    {/if}
                 </div>
                 <div class="h-1.5" />
                 <div class="field">
@@ -338,7 +331,9 @@
                                 />
                             </button>
                         </div>
-                        <div class="flex w-full h-1.5 px-0.5 relative bottom-px">
+                        <div
+                            class="flex w-full h-1.5 px-0.5 relative bottom-px"
+                        >
                             {#if !passwordMatch}
                                 <div
                                     class="flex-1 text-center rounded-lg bg-primary-300 dark:bg-primary-400"

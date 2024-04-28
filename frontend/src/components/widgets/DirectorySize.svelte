@@ -14,20 +14,20 @@
         EventsOff,
         EventsOn,
         LogDebug,
+        LogError,
     } from "../../../wailsjs/runtime/runtime";
     import {
-        GetFormattedDirIndexSize,
-        GetFormattedDriveSize,
-        GetPercentOfDriveToDirSize,
+        GetDiskSpacePercent,
+        GetFormattedDiskSpace,
     } from "../../../wailsjs/go/main/Getters";
     import { pageIndex } from "../../tools/utils";
 
     let typewriter: HTMLElement;
     let displayString = "";
 
-    let driveToDirIndexPercent: number;
-    let formattedDriveSize: string;
-    let formattedDirIndexSize: string;
+    let formattedTotalDriveSize: string;
+    let formattedFreeDriveSize: string;
+    let diskSpacePercent: number;
 
     onMount(() => {
         const interval = setInterval(() => {
@@ -46,20 +46,20 @@
     function refreshDirSize() {
         LogDebug("refreshing dir size");
         let _pageIndex = pageIndex();
-        GetPercentOfDriveToDirSize(_pageIndex)
-            .then((_driveToDirIndexPercent) => {
-                driveToDirIndexPercent = _driveToDirIndexPercent;
-                return GetFormattedDriveSize();
+        GetFormattedDiskSpace(true)
+            .then((totalDriveSize) => {
+                formattedTotalDriveSize = totalDriveSize;
+                return GetFormattedDiskSpace(false);
             })
-            .then((_formattedDriveSize) => {
-                formattedDriveSize = _formattedDriveSize;
-                return GetFormattedDirIndexSize(_pageIndex);
+            .then((freeDriveSize) => {
+                formattedFreeDriveSize = freeDriveSize;
+                return GetDiskSpacePercent();
             })
-            .then((_formattedDirIndexSize) => {
-                formattedDirIndexSize = _formattedDirIndexSize;
+            .then((_diskSpacePercent) => {
+                diskSpacePercent = _diskSpacePercent;
             })
             .catch((error) => {
-                console.error("An error occurred:", error);
+                LogError("An error occurred:" + error);
             });
     }
 </script>
@@ -85,7 +85,7 @@
                 </p>
             {/if}
         </div>
-    {:else}
+    {:else if diskSpacePercent}
         <div
             class="absolute top-px left-4 w-1/3 ml-3 mt-1.5 rounded-full h-2.5
                     bg-primary-300 dark:bg-primary-400 outline outline-1 hover:outline-2"
@@ -93,7 +93,7 @@
         >
             <div
                 class="h-2.5 rounded-full"
-                style={`width: ${driveToDirIndexPercent}%; background-color: ${$accentColor}`}
+                style={`width: ${diskSpacePercent}%; background-color: ${$accentColor}`}
             ></div>
         </div>
         <Tooltip
@@ -102,7 +102,7 @@
             class={tooltipTailwindClass}
             arrow={false}
             offset={1}
-            >{formattedDirIndexSize} / {formattedDriveSize} | {driveToDirIndexPercent}%</Tooltip
+            >{formattedFreeDriveSize} / {formattedTotalDriveSize} | {diskSpacePercent}%</Tooltip
         >
     {/if}
 </div>
