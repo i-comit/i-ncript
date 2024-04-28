@@ -14,6 +14,7 @@
     GetDirectoryPath,
   } from "../wailsjs/go/main/Getters";
   import {
+    EventsOff,
     EventsOn,
     LogDebug,
     LogError,
@@ -27,6 +28,7 @@
     largeFileName,
     newAccount,
     filterInputs,
+    initFileCtTree,
   } from "./stores/dynamicVariables.ts";
   import { fileTree } from "./tools/fileTree.ts";
   import { addLogEntry } from "./tools/logger.ts";
@@ -67,9 +69,14 @@
     EventsOn("largeFileName", (_largeFileName: string) => {
       largeFileName.set(_largeFileName);
     });
+    EventsOn("initFileCtTree", (_initFileCtTree: number) => {
+      LogInfo("Init file tree Ct " + _initFileCtTree);
+      initFileCtTree.set(_initFileCtTree);
+    });
   });
 
   async function loggedIn() {
+    EventsOff("initFileCtTree");
     await GetDirectoryPath(0).then((vaultPath) => {
       vaultDir.set(vaultPath);
       LogDebug("vaultPath " + vaultPath);

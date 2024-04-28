@@ -1,6 +1,7 @@
 <!-- Settings.svelte -->
 <script lang="ts">
     import { onDestroy, onMount } from "svelte";
+    import { fade } from "svelte/transition";
     import { get } from "svelte/store";
     import {
         Button,
@@ -132,6 +133,7 @@
 </script>
 
 <div
+    in:fade={{ duration: 150 }}
     id="modal-panel"
     class="rounded-md ml-0.5 mr-1 !mt-0.5 hover:outline outline-1 bg-primary-700 dark:bg-primary-600"
     style="max-height: {_currentPage === AppPage.Login ? '65.75vh' : '97%'};

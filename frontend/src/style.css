@@ -94,3 +94,15 @@ body {
     width: 0px;
     /* For vertical scrollbar */
 }
+
+/*Utility styles*/
+.text-ellipsis-left {
+    direction: rtl;
+    /* Right-to-left text direction */
+    text-overflow: ellipsis;
+    /* Ellipsis on overflow */
+    overflow: hidden;
+    /* Hide overflow */
+    white-space: nowrap;
+    /* No wrapping to new lines */
+}

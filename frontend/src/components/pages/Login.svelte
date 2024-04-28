@@ -6,7 +6,7 @@
 
     import { Login } from "../../../wailsjs/go/main/App";
     import { Button, Input, Tooltip, Spinner } from "flowbite-svelte";
-    import { switchModals } from "../../tools/utils";
+    import { formatNumber, switchModals } from "../../tools/utils";
     import {
         InfoCircleOutline,
         CogSolid,
@@ -38,9 +38,10 @@
         accentColor,
         newAccount,
         pageLoading,
+        initFileCtTree,
     } from "../../stores/dynamicVariables.ts";
 
-    import { LogError, LogInfo } from "../../../wailsjs/runtime/runtime";
+    import { LogError } from "../../../wailsjs/runtime/runtime";
 
     import PasswordScan from "../widgets/PasswordScan.svelte";
     import NeuButtonFake from "../widgets/NeuButtonFake.svelte";
@@ -206,13 +207,37 @@
 </script>
 
 <TitleBar />
+{#if typewriter === ""}
+    <p
+        class="absolute top-0 left-1/3 w-1/2 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]
+                !text-primary-200 !dark:text-primary-100 text-left shrink-0"
+        style="font-family: 'Orbitron'; font-weight: 600;"
+    >
+        {appName}
+    </p>
+{/if}
 {#if $pageLoading}
-    <div class="flex items-center justify-center h-screen">
-        <Spinner
-            style="fill: {$accentColor} !important"
-            bg="!text-primary-400 !dark:text-primary-300"
-            size={24}
-        />
+    <div class="flex flex-col items-center justify-center h-screen pt-5">
+        <div class="relative">
+            <Spinner
+                class="z-0"
+                style="fill: {$accentColor} !important"
+                bg="!text-primary-400 !dark:text-primary-300"
+                size={32}
+            />
+            <span
+                class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10
+                !text-primary-200 !dark:text-primary-100 text-xl font"
+            >
+                {formatNumber($initFileCtTree)}
+            </span>
+        </div>
+        <span
+            class="!text-primary-200 !dark:text-primary-100 text-sm relative top-3
+                w-full overflow-hidden whitespace-nowrap px-1.5 text-ellipsis-left"
+        >
+            initializing file tree..
+        </span>
     </div>
 {:else}
     <form
@@ -227,16 +252,6 @@
         >
             {typewriter}
         </p>
-        {#if typewriter === ""}
-            <p
-                class="shrink-0 text-left absolute top-0 left-1/3 w-1/2 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
-                style={`--text-color: ${$darkLightMode ? lightTextColor : darkTextColor};
-            font-family: "Orbitron"; font-weight: 600;`}
-            >
-                {appName}
-            </p>
-        {/if}
-
         <div class="loginField">
             {#if _modal === Modals.None}
                 <div class="flex items-center mx-auto">

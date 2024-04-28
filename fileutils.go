@@ -106,6 +106,8 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 	}
 	var rootDir = a.directories[dirIndex]
 	var separator = string(filepath.Separator)
+	var totalFileCt int
+
 	rootDir = filepath.Clean(rootDir)
 	rootNode := &FileNode{RelPath: rootDir + separator, Children: []*FileNode{}}
 	err := filepath.WalkDir(rootDir, func(path string, d os.DirEntry, err error) error {
@@ -117,7 +119,9 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 			if err != nil {
 				return err
 			}
-			fmt.Println("dir file count:", path, count)
+			totalFileCt += count
+			wailsRuntime.EventsEmit(a.ctx, "initFileCtTree", totalFileCt)
+			fmt.Println("dir file count:", path, count, totalFileCt)
 		}
 		path = filepath.Clean(path)
 		if path == rootDir {

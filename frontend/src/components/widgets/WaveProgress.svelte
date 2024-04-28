@@ -31,7 +31,7 @@
 
     let pauseBtn: HTMLDivElement;
     let progressPClass =
-        "text-sm text-primary-100 dark:text-primary-200 font-semibold";
+        "text-xs text-primary-100 dark:text-primary-200 font-semibold";
 
     const unsub_darkLightMode = darkLightMode.subscribe((value) => {
         darkLightTextOnElement(!value, pauseBtn);
