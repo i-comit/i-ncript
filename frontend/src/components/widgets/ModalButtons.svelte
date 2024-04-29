@@ -31,7 +31,8 @@
         unsub_darkLightMode();
     });
 
-    let iconClass = "p-px hover:outline outline-1 rounded-full";
+    let iconClass =
+        "p-px hover:outline outline-1 rounded-full text-primary-400 dark:text-primary-300";
 </script>
 
 <div class="icon space-y-1 !flex-row !justify-center items-baseline space-x-2">

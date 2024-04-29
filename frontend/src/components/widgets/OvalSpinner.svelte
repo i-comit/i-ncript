@@ -2,13 +2,13 @@
 <script>
     import { darkLightMode, accentColor } from "../../stores/dynamicVariables";
     import { lightBGColor, darkBGColor } from "../../stores/constantVariables";
-    import { pageLoading, initFileCtTree } from "../../stores/dynamicVariables";
+    import { pageLoading, loadedFileCt } from "../../stores/dynamicVariables";
     import { formatNumber } from "../../tools/utils";
 </script>
 
 {#if $pageLoading}
     <div
-        class="fixed items-center justify-center mt-11 w-full left-[13.5rem] z-60"
+        class="fixed items-center justify-center mt-10 w-full left-[13.3rem] z-60 select-none"
         style="--wails-draggable: drag; background-color:transparent"
     >
         <div
@@ -40,9 +40,9 @@
                     stroke-miterlimit="10"
                 />
             </svg>
-            {#if $initFileCtTree > 0}
-                <span class="absolute text-center text-xl text-white pr-11">
-                    {formatNumber($initFileCtTree)}</span
+            {#if $loadedFileCt > 0}
+                <span class="absolute text-center text-xl text-white pr-10">
+                    {formatNumber($loadedFileCt)}</span
                 >
             {/if}
         </div>

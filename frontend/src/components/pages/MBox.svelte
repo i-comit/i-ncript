@@ -7,6 +7,7 @@
     import { AppPage, currentPage } from "../../enums/AppPage.ts";
     import { Modals, currentModal } from "../../enums/Modals.ts";
     import { FileTasks, currentFileTask } from "../../enums/FileTasks.ts";
+    import { FileTypes, getFileType } from "../../enums/FileTypes.ts";
 
     import {
         darkInputColor,
@@ -22,6 +23,7 @@
         largeFilePercent,
         accentColor,
         pageLoading,
+        duplicateFiles,
     } from "../../stores/dynamicVariables.ts";
 
     import {
@@ -30,6 +32,7 @@
         clearHeldBtnsFromContainer,
         fileTree,
     } from "../../tools/fileTree.ts";
+    import { EventsOff, LogInfo } from "../../../wailsjs/runtime/runtime";
 
     import {
         switchPages,
@@ -38,8 +41,13 @@
         getRootDir,
         retrieveDuplicateFiles,
     } from "../../tools/utils.ts";
+    import { startDisplay } from "../../tools/logger.ts";
 
-    import { EventsOff, LogInfo } from "../../../wailsjs/runtime/runtime";
+    import { EncryptENCPFile } from "../../../wailsjs/go/main/App";
+    import {
+        AuthenticateENCPFile,
+        PackFilesForENCP,
+    } from "../../../wailsjs/go/main/FileUtils";
 
     import TitleBar from "../widgets/TitleBar.svelte";
     import PanelDivider from "../widgets/PanelDivider.svelte";
@@ -55,15 +63,10 @@
     import Settings from "../modals/Settings.svelte";
     import TreeView from "../modals/FileTree.svelte";
     import Logger from "../modals/Logger.svelte";
-    import { FileTypes, getFileType } from "../../enums/FileTypes.ts";
     import PasswordScan from "../widgets/PasswordScan.svelte";
-    import {
-        AuthenticateENCPFile,
-        PackFilesForENCP,
-    } from "../../../wailsjs/go/main/FileUtils";
-    import { EncryptENCPFile } from "../../../wailsjs/go/main/App";
+
     import RadialProgress from "../widgets/RadialProgress.svelte";
-    import { startDisplay } from "../../tools/logger.ts";
+    import DuplicateFiles from "../modals/DuplicateFiles.svelte";
     import OvalSpinner from "../widgets/OvalSpinner.svelte";
     import ModalButtons from "../widgets/ModalButtons.svelte";
 
@@ -266,8 +269,9 @@
 
 <TitleBar />
 <OvalSpinner />
+<DuplicateFiles />
 <div
-    class="flex h-screen !rounded-lg {$pageLoading
+    class="flex h-screen !rounded-lg {$pageLoading || $duplicateFiles.length > 0
         ? 'pointer-events-none opacity-40'
         : ''}"
 >

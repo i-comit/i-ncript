@@ -24,6 +24,7 @@
         largeFilePercent,
         pageLoading,
         totalFileCt,
+        duplicateFiles,
     } from "../../stores/dynamicVariables.ts";
 
     import {
@@ -41,6 +42,7 @@
         checkFileTypesinHeldDownBtns,
         retrieveDuplicateFiles,
     } from "../../tools/utils.ts";
+    import { startDisplay } from "../../tools/logger.ts";
 
     import TaskDisplay from "../widgets/TaskDisplay.svelte";
     import NeuButton from "../widgets/NeuButton.svelte";
@@ -56,7 +58,6 @@
     import DirSize from "../widgets/DirectorySize.svelte";
     import PanelDivider from "../widgets/PanelDivider.svelte";
     import FileTools from "../widgets/FileTools.svelte";
-    import { startDisplay } from "../../tools/logger.ts";
     import DuplicateFiles from "../modals/DuplicateFiles.svelte";
     import OvalSpinner from "../widgets/OvalSpinner.svelte";
     import ModalButtons from "../widgets/ModalButtons.svelte";
@@ -80,6 +81,7 @@
     onMount(() => {
         pageLoading.set(true);
         buildFileTree();
+        heldDownBtns.set({});
         if (_currentFileTask === FileTasks.None) retrieveDuplicateFiles();
     });
 
@@ -96,10 +98,12 @@
                     EncryptFiles(prependedRelPaths);
                 });
             });
-        else
+        else {
+            currentFileTask.set(FileTasks.LoadFiles);
             GetFilesByType(0, true).then((filePaths) => {
                 if (!filePaths) {
                     startDisplay("no files to encrypt..");
+                    currentFileTask.set(FileTasks.None);
                     return;
                 }
                 if (filePaths.length > 0) {
@@ -112,8 +116,10 @@
                 } else {
                     startDisplay("no files to encrypt..");
                     setIsInFileTask(false);
+                    currentFileTask.set(FileTasks.None);
                 }
             });
+        }
     }
 
     function decrypt() {
@@ -129,10 +135,12 @@
                     DecryptFiles(prependedRelPaths);
                 });
             });
-        else
+        else {
+            currentFileTask.set(FileTasks.LoadFiles);
             GetFilesByType(0, false).then((filePaths) => {
                 if (!filePaths) {
                     startDisplay("no files to decrypt..");
+                    currentFileTask.set(FileTasks.None);
                     return;
                 }
                 if (filePaths.length > 0) {
@@ -145,8 +153,10 @@
                 } else {
                     startDisplay("no files to decrypt..");
                     setIsInFileTask(false);
+                    currentFileTask.set(FileTasks.None);
                 }
             });
+        }
     }
 
     let isFilesDraggedOver: boolean;
@@ -162,12 +172,12 @@
 
 <TitleBar />
 <OvalSpinner />
+<DuplicateFiles />
 <div
-    class="flex h-screen !rounded-lg {$pageLoading
+    class="flex h-screen !rounded-lg {$pageLoading || $duplicateFiles.length > 0
         ? 'pointer-events-none opacity-40'
         : ''}"
 >
-    <DuplicateFiles />
     <div
         id="left-panel"
         role="none"
@@ -185,13 +195,11 @@
                     <Chronograph />
                 {:else}
                     <div class="flex justify-between mb-[4px] space-x-2.5 pt-1">
-                        <NeuButton
-                            on:click={() => encrypt()}
-                            _style="font-size: 14px;">ENCRYPT</NeuButton
+                        <NeuButton on:click={encrypt} _style="font-size: 14px;"
+                            >ENCRYPT</NeuButton
                         >
-                        <NeuButton
-                            on:click={() => decrypt()}
-                            _style="font-size: 14px;">DECRYPT</NeuButton
+                        <NeuButton on:click={decrypt} _style="font-size: 14px;"
+                            >DECRYPT</NeuButton
                         >
                     </div>
                 {/if}
@@ -200,9 +208,7 @@
             {/if}
             <div>
                 {#if _currentFileTask === FileTasks.None}
-                    <div>
-                        <FileTools />
-                    </div>
+                    <FileTools />
                 {:else}
                     <WaveProgress dataProgress={$fileTaskPercent} />
                 {/if}

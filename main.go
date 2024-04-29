@@ -46,11 +46,12 @@ var assets embed.FS
 
 // EVENT consts
 const fileProcessed = "fileProcessed"
+const rebuildFileTree = "rebuildFileTree"
+const loadedFileCt = "loadedFileCt"
 const totalFileCt = "totalFileCount"
 const addLogFile = "addLogFile"
 const largeFilePercent = "largeFilePercent"
 const refreshDirSize = "refreshDirSize"
-const buildFileTreeCt = "buildFileTreeCt"
 
 // DATA consts
 const rootFolder = "i-ncript"

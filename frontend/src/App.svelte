@@ -28,7 +28,7 @@
     largeFileName,
     newAccount,
     filterInputs,
-    initFileCtTree as buildFileTreeCt,
+    loadedFileCt,
   } from "./stores/dynamicVariables.ts";
   import { fileTree } from "./tools/fileTree.ts";
   import { addLogEntry } from "./tools/logger.ts";
@@ -69,9 +69,9 @@
     EventsOn("largeFileName", (_largeFileName: string) => {
       largeFileName.set(_largeFileName);
     });
-    EventsOn("buildFileTreeCt", (_buildFileTreeCt: number) => {
-      LogInfo("buildFileTreeCt " + _buildFileTreeCt);
-      buildFileTreeCt.set(_buildFileTreeCt);
+    EventsOn("loadedFileCt", (_loadedFileCt: number) => {
+      // LogInfo("loadedFileCt " + _loadedFileCt);
+      loadedFileCt.set(_loadedFileCt);
     });
   });
 

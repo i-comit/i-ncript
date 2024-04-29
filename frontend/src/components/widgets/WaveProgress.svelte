@@ -10,6 +10,7 @@
         accentColor,
         totalFileCt,
         cipheredFilesSize,
+        loadedFileCt,
     } from "../../stores/dynamicVariables";
 
     import {
@@ -26,15 +27,18 @@
     } from "../../tools/utils";
     import { EventsOff, EventsOn } from "../../../wailsjs/runtime/runtime";
     import { Tooltip } from "flowbite-svelte";
-    import { tooltipTailwindClass } from "../../stores/constantVariables";
     export let dataProgress: number;
 
     let pauseBtn: HTMLDivElement;
     let progressPClass = "text-primary-100 dark:text-primary-200 font-semibold";
 
     const unsub_darkLightMode = darkLightMode.subscribe((value) => {
-        darkLightTextOnElement(!value, pauseBtn);
         darkLightShadowOnIcons(value);
+    });
+
+    let _currentFileTask: FileTasks;
+    currentFileTask.subscribe((value) => {
+        _currentFileTask = value;
     });
 
     onMount(() => {
@@ -49,7 +53,6 @@
             cipheredFilesSize.set(fileTaskSize);
         });
         var _value = get(darkLightMode);
-        darkLightTextOnElement(!_value, pauseBtn);
         darkLightShadowOnIcons(_value);
     });
 
@@ -75,10 +78,11 @@
     }
 </script>
 
-<div class="flex items-center mb-1 mt-1.5">
+<div class="flex items-center mb-1 mt-2" class:hidden={$totalFileCt === 0}>
     <div class="icon space-y-1 flex flex-grow justify-center items-center">
         <div
-            class="icon__neumorphic hover:outline outline-1"
+            class="icon__neumorphic hover:outline outline-1
+                        text-primary-300 dark:text-primary-400"
             bind:this={pauseBtn}
         >
             <button on:click={endFileTask}>
@@ -87,32 +91,39 @@
         </div>
     </div>
 </div>
-
 <!-- https://codepen.io/uimax/pen/KgdgGa -->
-<div
-    class="progress progress-striped active rounded-md h-3.5 p-0 m-0 !mt-1.5 outline outline-1 hover:outline-2"
-    style={`outline-color: ${$accentColor}`}
->
+{#if $fileCount > 0}
     <div
-        style={`width: ${dataProgress}%; background-color: ${$accentColor}`}
-        class="progress-bar rounded-md h-3.5 relative bottom-0"
-    ></div>
-
-    <div class="relative bottom-3 flex justify-between w-full px-1 select-none">
-        <p class={`${progressPClass} -mt-0.5 text-xs`}>
-            {formatNumber($fileCount)}/{formatNumber($totalFileCt)}
-        </p>
-        <p class={`${progressPClass} -mt-6 text-md`}>
-            {$cipheredFilesSize}
-        </p>
-    </div>
-    <Tooltip
-        placement="bottom"
-        class="py-0 m-0 text-xs font-semibold px-1 !bg-opacity-0 z-20"
-        arrow={false}
-        offset={-17}>{dataProgress}%</Tooltip
+        class="progress progress-striped active rounded-md h-3.5 p-0 m-0 !mt-1.5 outline outline-1 hover:outline-2"
+        style={`outline-color: ${$accentColor}`}
     >
-</div>
+        <div
+            style={`width: ${dataProgress}%; background-color: ${$accentColor}`}
+            class="progress-bar rounded-md h-3.5 relative bottom-0"
+        />
+
+        <div
+            class="relative bottom-3 flex justify-between w-full px-1 select-none"
+        >
+            <p class={`${progressPClass} -mt-0.5 text-xs`}>
+                {formatNumber($fileCount)}/{formatNumber($totalFileCt)}
+            </p>
+            <p class={`${progressPClass} -mt-6 text-md`}>
+                {$cipheredFilesSize}
+            </p>
+        </div>
+        <Tooltip
+            placement="bottom"
+            class="py-0 m-0 text-xs font-semibold px-1 !bg-opacity-0 z-20"
+            arrow={false}
+            offset={-17}>{dataProgress}%</Tooltip
+        >
+    </div>
+{:else}
+    <p class="leading-none p-2 text-primary-100 dark:text-primary-200">
+        {formatNumber($loadedFileCt)}
+    </p>
+{/if}
 
 <style lang="scss">
     @import "../../neumorphic.scss";

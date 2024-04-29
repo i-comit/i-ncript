@@ -82,7 +82,7 @@ func (a *App) encryptOrDecrypt(encryptOrDecrypt bool, filePaths []string) (bool,
 				}
 				cipherFile, err := a.encryptFile(filePath)
 				if err != nil {
-					runtime.LogWarning(a.ctx, fmt.Sprintf("cipher issue: %v", err))
+					runtime.LogError(a.ctx, fmt.Sprintf("cipher issue: %v %s", err, filepath.Base(filePath)))
 					continue
 				}
 				cipherFile.Close()
@@ -92,12 +92,11 @@ func (a *App) encryptOrDecrypt(encryptOrDecrypt bool, filePaths []string) (bool,
 				}
 				cipherFile, err := a.decryptFile(filePath)
 				if err != nil {
-					runtime.LogWarning(a.ctx, fmt.Sprintf("cipher issue: %v", err))
+					runtime.LogError(a.ctx, fmt.Sprintf("cipher issue: %v %s", err, filepath.Base(filePath)))
 					continue
 				}
 				cipherFile.Close()
 			}
-
 			a.lastFilePath = filePath // Update lastFile if successful
 			fileIter++
 			if a.ctx != nil {
@@ -112,7 +111,7 @@ func (a *App) encryptOrDecrypt(encryptOrDecrypt bool, filePaths []string) (bool,
 	}
 	if fileIter != 0 {
 		if a.ctx != nil {
-			a.resetProgress(true, len(filePaths))
+			a.resetProgress(encryptOrDecrypt, len(filePaths))
 			return true, nil
 		}
 	} else {

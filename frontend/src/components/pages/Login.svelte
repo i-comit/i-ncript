@@ -38,7 +38,7 @@
         accentColor,
         newAccount,
         pageLoading,
-        initFileCtTree,
+        loadedFileCt,
     } from "../../stores/dynamicVariables.ts";
 
     import { LogError } from "../../../wailsjs/runtime/runtime";
@@ -225,12 +225,12 @@
                 bg="!text-primary-400 !dark:text-primary-300"
                 size={32}
             />
-            {#if $initFileCtTree > 0}
+            {#if $loadedFileCt > 0}
                 <span
                     class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10
                 !text-primary-200 !dark:text-primary-100 text-xl font"
                 >
-                    {formatNumber($initFileCtTree)}
+                    {formatNumber($loadedFileCt)}
                 </span>
             {/if}
         </div>

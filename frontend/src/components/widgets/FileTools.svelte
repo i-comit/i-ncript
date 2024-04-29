@@ -69,7 +69,7 @@
         <button
             style={`--text-color: ${$darkLightMode ? lightTextColor : darkTextColor};`}
             tabindex={-1}
-            on:pointerdown|stopPropagation={OpenLogEntriesFile}
+            on:click|stopPropagation={OpenLogEntriesFile}
         >
             <BookOpenSolid size="lg" class={fileToolIconClass} />
         </button>

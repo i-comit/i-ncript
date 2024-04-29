@@ -1,4 +1,5 @@
-export const tooltipTailwindClass = "p-0.5 m-0 text-xs bg-gray-400 px-1 z-[100]";
+export const tooltipTailwindClass =
+    "py-0 px-1 m-0 text-xs z-[100] bg-primary-600 dark:bg-primary-700 text-primary-200 dark:text-primary-100 !bg-opacity-60";
 export const setupPagePClass =
     "leading-1 text-primary-100 dark:text-primary-200 my-2";
 

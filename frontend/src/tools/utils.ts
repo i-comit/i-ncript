@@ -16,7 +16,7 @@ import { LogDebug, LogError, LogInfo, LogTrace, LogWarning } from "../../wailsjs
 import { MoveFilesToPath } from '../../wailsjs/go/main/FileUtils';
 
 import { FileTypes, getFileType } from '../enums/FileTypes.ts';
-import { duplicateFiles, mBoxDir, height, vaultDir } from '../stores/dynamicVariables.ts';
+import { duplicateFiles, mBoxDir, vaultDir } from '../stores/dynamicVariables.ts';
 import {
     clearHeldBtns,
     setIsInFileTask,
@@ -138,6 +138,7 @@ export function checkFileTypesinHeldDownBtns(encryptOrDecrypt: boolean): number 
         }
     });
     LogInfo("Final fileCount: " + filteredFileCt);
+    heldDownBtns.set({});
     return filteredFileCt
 }
 
@@ -209,6 +210,7 @@ export async function retrieveDuplicateFiles() {
 
 export function formatNumber(num: number | bigint): string {
     // Define the upper bounds for JavaScript's safe integer calculations.
+    if (num < 1) return ""
     const MAX_SAFE_INTEGER = 9007199254740991;
     if (typeof num === 'bigint' || num > MAX_SAFE_INTEGER) {
         return "MAX";

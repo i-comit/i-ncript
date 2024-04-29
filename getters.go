@@ -275,23 +275,6 @@ func formatDirSize(fileByteSize int64) string {
 	return fmt.Sprintf("%s%s", formattedSize, units[unitIndex])
 }
 
-func getDirectoryFileCt(path string) (int, error) {
-	count := 0
-	err := filepath.WalkDir(path, func(_ string, d os.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-		if !d.IsDir() {
-			count++
-		}
-		return nil
-	})
-	if err != nil {
-		return 0, err
-	}
-	return count, nil
-}
-
 func getEndPath(endPathName string) (string, error) {
 	cwd, err := os.Getwd()
 	if err != nil {

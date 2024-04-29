@@ -1,4 +1,5 @@
 <script>
+    // Inspired by https://codepen.io/ninjascribble/pen/DRPwQY
     import { onMount } from "svelte";
     import { fly } from "svelte/transition";
 

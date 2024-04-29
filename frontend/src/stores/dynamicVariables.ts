@@ -3,7 +3,7 @@ import { writable } from 'svelte/store';
 export const duplicateFiles = writable<string[]>([]);
 export const pageLoading = writable<boolean>(false);
 
-export const initFileCtTree = writable<number>(0);
+export const loadedFileCt = writable<number>(0);
 
 export const hotFiler = writable<boolean>(false);
 

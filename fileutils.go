@@ -23,7 +23,6 @@ type FileUtils struct {
 }
 
 var isInFileTask = false
-var rebuildFileTree = "rebuildFileTree"
 
 func (f *FileUtils) CheckIfPathIsFile(filePath string) (bool, error) {
 	info, err := os.Stat(filePath)
@@ -107,7 +106,7 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 	var rootDir = a.directories[dirIndex]
 	var separator = string(filepath.Separator)
 	var totalFileCt int
-	wailsRuntime.EventsEmit(a.ctx, buildFileTreeCt, 0)
+	wailsRuntime.EventsEmit(a.ctx, loadedFileCt, 0)
 
 	rootDir = filepath.Clean(rootDir)
 	rootNode := &FileNode{RelPath: rootDir + separator, Children: []*FileNode{}}
@@ -115,15 +114,11 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 		if err != nil {
 			return err
 		}
-		if d.IsDir() && path != rootDir {
-			count, err := getDirectoryFileCt(path)
-			if err != nil {
-				return err
-			}
-			totalFileCt += count
-			wailsRuntime.EventsEmit(a.ctx, buildFileTreeCt, totalFileCt)
-			fmt.Println("dir file count:", path, count, totalFileCt)
+		if !d.IsDir() {
+			totalFileCt++
+			wailsRuntime.EventsEmit(a.ctx, loadedFileCt, totalFileCt)
 		}
+
 		path = filepath.Clean(path)
 		if path == rootDir {
 			return nil
@@ -146,7 +141,7 @@ func (a *App) BuildDirectoryFileTree(dirIndex int) (*FileNode, error) {
 	if err != nil {
 		return nil, err
 	}
-	wailsRuntime.EventsEmit(a.ctx, buildFileTreeCt, 0)
+	wailsRuntime.EventsEmit(a.ctx, loadedFileCt, 0)
 	return rootNode, nil
 }
 
@@ -409,26 +404,17 @@ func (a *App) loadFilesRecursively(encryptOrDecrypt bool, dirs ...string) ([]str
 	var files []string
 	var totalFileCt int
 
-	wailsRuntime.EventsEmit(a.ctx, buildFileTreeCt, 0)
+	wailsRuntime.EventsEmit(a.ctx, loadedFileCt, 0)
 	for _, rootDir := range dirs {
 		select {
 		case <-interrupt: // Check if there's an interrupt signal
-			wailsRuntime.LogError(a.ctx, "getFilesRecursively interrupted")
+			wailsRuntime.LogError(a.ctx, "loadFilesRecursively interrupted")
 			a.SetIsInFileTask(false)
 			return nil, nil
 		default:
 			err := filepath.Walk(rootDir, func(path string, info os.FileInfo, err error) error {
 				if err != nil {
 					return err
-				}
-				if info.IsDir() && path != rootDir {
-					count, err := getDirectoryFileCt(path)
-					if err != nil {
-						return err
-					}
-					// totalFileCt += count
-					// wailsRuntime.EventsEmit(a.ctx, "initFileCtTree", totalFileCt)
-					fmt.Println("dir file count getFilesRecursively:", path, count, totalFileCt)
 				}
 				if checkExcludedFileAgainstPath(path) {
 					return nil
@@ -437,21 +423,21 @@ func (a *App) loadFilesRecursively(encryptOrDecrypt bool, dirs ...string) ([]str
 					fmt.Println("skipping filtered path")
 					return filepath.SkipDir
 				}
-				if !info.IsDir() { // Ensure we're only appending files, not directories
+				if !info.IsDir() { // Ensure we're only appending files
 					if encryptOrDecrypt {
 						if strings.HasSuffix(path, ".enc") {
-							wailsRuntime.LogDebug(a.ctx, "skipping encrypted file "+path)
 							return nil
 						}
 					} else {
 						if !strings.HasSuffix(path, ".enc") {
-							wailsRuntime.LogDebug(a.ctx, "skipping normal file "+path)
 							return nil
 						}
 					}
 					if filepath.Base(path) != keyFileName {
 						files = append(files, path)
 					}
+					totalFileCt++
+					wailsRuntime.EventsEmit(a.ctx, loadedFileCt, totalFileCt)
 				}
 				return nil
 			})
@@ -461,6 +447,6 @@ func (a *App) loadFilesRecursively(encryptOrDecrypt bool, dirs ...string) ([]str
 		}
 
 	}
-	wailsRuntime.EventsEmit(a.ctx, buildFileTreeCt, 0)
+	wailsRuntime.EventsEmit(a.ctx, loadedFileCt, 0)
 	return files, nil
 }
