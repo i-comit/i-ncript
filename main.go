@@ -54,7 +54,7 @@ const largeFilePercent = "largeFilePercent"
 const refreshDirSize = "refreshDirSize"
 
 // DATA consts
-const rootFolder = "i-ncript"
+const rootFolder = "=i-ncript"
 const keyFileName = ".i-ncript.🔑"
 const logFileName = ".i-ncript.🧾️"
 
