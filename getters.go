@@ -35,24 +35,12 @@ func (g *Getters) GetFileTreePath(dirIndex int, relPath string) (string, error) 
 	return g.directories[dirIndex] + string(filepath.Separator) + relPath, nil
 }
 
-func (g *Getters) GetFilesByType(dirIndex int, getFileType bool) ([]string, error) {
-	filePaths, err := getFilesRecursively(g.directories[dirIndex])
+func (g *Getters) GetFilesByType(dirIndex int, encryptOrDecrypt bool) ([]string, error) {
+	filePaths, err := g.app.loadFilesRecursively(encryptOrDecrypt, g.directories[dirIndex])
 	if err != nil {
 		return nil, err
 	}
-
-	var files []string
-	for _, filePath := range filePaths {
-		isEncrypted := filepath.Ext(filePath) == ".enc"
-		if getFileType && isEncrypted {
-			// If looking for encrypted files and the file is encrypted
-			files = append(files, filePath)
-		} else if !getFileType && !isEncrypted {
-			// If looking for unencrypted files and the file is not encrypted
-			files = append(files, filePath)
-		}
-	}
-	return files, nil
+	return filePaths, nil
 }
 
 // GetFormattedDriveSize and GetFormattedAppDirSize retrieves the available memory from the backend

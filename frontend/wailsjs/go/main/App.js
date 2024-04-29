@@ -10,12 +10,8 @@ export function CloseApp() {
   return window['go']['main']['App']['CloseApp']();
 }
 
-export function DecryptFilesInArr(arg1) {
-  return window['go']['main']['App']['DecryptFilesInArr'](arg1);
-}
-
-export function DecryptFilesInDir(arg1) {
-  return window['go']['main']['App']['DecryptFilesInDir'](arg1);
+export function DecryptFiles(arg1) {
+  return window['go']['main']['App']['DecryptFiles'](arg1);
 }
 
 export function DirectoryWatcher(arg1) {
@@ -26,12 +22,8 @@ export function EncryptENCPFile(arg1, arg2, arg3) {
   return window['go']['main']['App']['EncryptENCPFile'](arg1, arg2, arg3);
 }
 
-export function EncryptFilesInArr(arg1) {
-  return window['go']['main']['App']['EncryptFilesInArr'](arg1);
-}
-
-export function EncryptFilesInDir(arg1) {
-  return window['go']['main']['App']['EncryptFilesInDir'](arg1);
+export function EncryptFiles(arg1) {
+  return window['go']['main']['App']['EncryptFiles'](arg1);
 }
 
 export function InitializeRootFolder() {

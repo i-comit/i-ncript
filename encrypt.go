@@ -23,11 +23,7 @@ import (
 	"golang.org/x/crypto/argon2"
 )
 
-func (a *App) EncryptFilesInDir(dirIndex int) (bool, error) {
-	filePaths, err := getFilesRecursively(a.directories[dirIndex])
-	if err != nil {
-		return false, err
-	}
+func (a *App) EncryptFiles(filePaths []string) (bool, error) {
 	a.closeDirectoryWatcher()
 	cipherResult, err := a.encryptOrDecrypt(true, filePaths)
 	if err != nil {
@@ -36,13 +32,36 @@ func (a *App) EncryptFilesInDir(dirIndex int) (bool, error) {
 	return cipherResult, nil
 }
 
-func (a *App) EncryptFilesInArr(filePaths []string) (bool, error) {
+func (a *App) DecryptFiles(filePaths []string) (bool, error) {
 	a.closeDirectoryWatcher()
-	cipherResult, err := a.encryptOrDecrypt(true, filePaths)
+	cipherResult, err := a.encryptOrDecrypt(false, filePaths)
 	if err != nil {
 		return false, err
 	}
 	return cipherResult, nil
+}
+
+func (a *App) resetProgress(encrypt bool, files int) {
+	a.lastFilePath = ""
+	if files > 0 {
+		if encrypt {
+			response := fmt.Sprintf("encrypted %d file(s) ENCRYPTED.", files)
+			runtime.EventsEmit(a.ctx, addLogFile, response)
+		} else {
+			response := fmt.Sprintf("decrypted %d file(s) DECRYPTED.", files)
+			runtime.EventsEmit(a.ctx, addLogFile, response)
+		}
+	}
+
+	if a.ctx != nil {
+		runtime.EventsEmit(a.ctx, refreshDirSize)
+		runtime.EventsEmit(a.ctx, rebuildFileTree)
+		runtime.EventsEmit(a.ctx, fileProcessed, 0)
+		runtime.EventsEmit(a.ctx, totalFileCt, 0)
+		runtime.EventsEmit(a.ctx, "fileTaskSize", "")
+		runtime.EventsOff(a.ctx, fileProcessed, totalFileCt, addLogFile)
+		a.SetIsInFileTask(false)
+	}
 }
 
 func (a *App) encryptOrDecrypt(encryptOrDecrypt bool, filePaths []string) (bool, error) {
@@ -101,53 +120,6 @@ func (a *App) encryptOrDecrypt(encryptOrDecrypt bool, filePaths []string) (bool,
 		return false, fmt.Errorf("ciphered files == 0")
 	}
 	return true, nil
-}
-
-func (a *App) DecryptFilesInDir(dirIndex int) (bool, error) {
-	filePaths, err := getFilesRecursively(a.directories[dirIndex])
-	if err != nil {
-		return false, err
-	}
-	a.closeDirectoryWatcher()
-	cipherResult, err := a.encryptOrDecrypt(false, filePaths)
-	if err != nil {
-		return false, err
-	}
-	return cipherResult, nil
-}
-
-func (a *App) DecryptFilesInArr(filePaths []string) (bool, error) {
-	a.closeDirectoryWatcher()
-
-	cipherResult, err := a.encryptOrDecrypt(false, filePaths)
-	if err != nil {
-		return false, err
-	}
-	return cipherResult, nil
-}
-
-func (a *App) resetProgress(encrypt bool, files int) {
-	a.lastFilePath = ""
-	if files > 0 {
-		if encrypt {
-			response := fmt.Sprintf("encrypted %d file(s) ENCRYPTED.", files)
-			runtime.EventsEmit(a.ctx, addLogFile, response)
-		} else {
-			response := fmt.Sprintf("decrypted %d file(s) DECRYPTED.", files)
-			runtime.EventsEmit(a.ctx, addLogFile, response)
-		}
-	}
-
-	if a.ctx != nil {
-		runtime.EventsEmit(a.ctx, refreshDirSize)
-		runtime.EventsEmit(a.ctx, rebuildFileTree)
-		a.ResizeWindow(_width*2, _height)
-		runtime.EventsEmit(a.ctx, fileProcessed, 0)
-		runtime.EventsEmit(a.ctx, totalFileCt, 0)
-		runtime.EventsEmit(a.ctx, "fileTaskSize", "")
-		runtime.EventsOff(a.ctx, fileProcessed, totalFileCt, addLogFile)
-		a.SetIsInFileTask(false)
-	}
 }
 
 func (a *App) encryptFile(filePath string) (*os.File, error) {

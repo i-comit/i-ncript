@@ -225,12 +225,14 @@
                 bg="!text-primary-400 !dark:text-primary-300"
                 size={32}
             />
-            <span
-                class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10
+            {#if $initFileCtTree > 0}
+                <span
+                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10
                 !text-primary-200 !dark:text-primary-100 text-xl font"
-            >
-                {formatNumber($initFileCtTree)}
-            </span>
+                >
+                    {formatNumber($initFileCtTree)}
+                </span>
+            {/if}
         </div>
         <span
             class="!text-primary-200 !dark:text-primary-100 text-sm relative top-3

@@ -2,15 +2,19 @@
 <script>
     import { darkLightMode, accentColor } from "../../stores/dynamicVariables";
     import { lightBGColor, darkBGColor } from "../../stores/constantVariables";
-    import { pageLoading } from "../../stores/dynamicVariables";
+    import { pageLoading, initFileCtTree } from "../../stores/dynamicVariables";
+    import { formatNumber } from "../../tools/utils";
 </script>
 
 {#if $pageLoading}
     <div
-        class="fixed items-center justify-center mt-12 w-full left-1/2 mr-10 z-60"
+        class="fixed items-center justify-center mt-11 w-full left-[13.5rem] z-60"
         style="--wails-draggable: drag; background-color:transparent"
     >
-        <div id="oval-spinner">
+        <div
+            id="oval-spinner"
+            class="relative flex justify-center items-center w-full h-full"
+        >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 24">
                 <linearGradient
                     id="a"
@@ -36,6 +40,11 @@
                     stroke-miterlimit="10"
                 />
             </svg>
+            {#if $initFileCtTree > 0}
+                <span class="absolute text-center text-xl text-white pr-11">
+                    {formatNumber($initFileCtTree)}</span
+                >
+            {/if}
         </div>
     </div>
 {/if}

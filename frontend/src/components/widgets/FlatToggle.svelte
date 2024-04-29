@@ -1,10 +1,7 @@
 <!-- https://codepen.io/singhimalaya/pen/EdVzNL -->
 <script lang="ts">
     import { onDestroy } from "svelte";
-    import {
-        EncryptFilesInDir,
-        SetHotFiler,
-    } from "../../../wailsjs/go/main/App";
+    import { EncryptFiles, SetHotFiler } from "../../../wailsjs/go/main/App";
     import { GetFilesByType } from "../../../wailsjs/go/main/Getters";
     import { setIsInFileTask } from "../../tools/fileTree";
     import { FileTasks, currentFileTask } from "../../enums/FileTasks";
@@ -32,7 +29,7 @@
                     currentFileTask.set(FileTasks.Encrypt);
                     if (filePaths.length > 0) {
                         totalFileCt.set(filePaths.length);
-                        EncryptFilesInDir(0);
+                        EncryptFiles(filePaths);
                     } else setIsInFileTask(false);
                 });
             });

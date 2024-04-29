@@ -258,7 +258,11 @@ func (a *App) DirectoryWatcher(dirIndex int) {
 					runtime.LogInfo(a.ctx, "Emitting rebuildFileTree event")
 					runtime.EventsEmit(a.ctx, rebuildFileTree)
 					if a.hotFiler {
-						a.EncryptFilesInDir(0)
+						filepaths, err := a.getters.GetFilesByType(0, true)
+						if err != nil {
+							runtime.LogError(a.ctx, "error with event debounce "+err.Error())
+						}
+						a.EncryptFiles(filepaths)
 					}
 				}
 
@@ -272,7 +276,7 @@ func (a *App) DirectoryWatcher(dirIndex int) {
 	}()
 	err := a.watcher.Add(a.directories[dirIndex])
 	if err != nil {
-		log.Fatal(err)
+		runtime.LogError(a.ctx, "error with watcher Add() "+err.Error())
 	}
 	runtime.LogDebug(a.ctx, "began watching "+filepath.Base(a.directories[lastDirIndex]))
 	lastDirIndex = dirIndex // Update the current index

@@ -30,8 +30,7 @@
     export let dataProgress: number;
 
     let pauseBtn: HTMLDivElement;
-    let progressPClass =
-        "text-xs text-primary-100 dark:text-primary-200 font-semibold";
+    let progressPClass = "text-primary-100 dark:text-primary-200 font-semibold";
 
     const unsub_darkLightMode = darkLightMode.subscribe((value) => {
         darkLightTextOnElement(!value, pauseBtn);
@@ -76,9 +75,12 @@
     }
 </script>
 
-<div class="flex items-center mb-1">
+<div class="flex items-center mb-1 mt-1.5">
     <div class="icon space-y-1 flex flex-grow justify-center items-center">
-        <div class="icon__neumorphic" bind:this={pauseBtn}>
+        <div
+            class="icon__neumorphic hover:outline outline-1"
+            bind:this={pauseBtn}
+        >
             <button on:click={endFileTask}>
                 <PauseSolid class="pl-px !w-10 !h-10" />
             </button>
@@ -91,18 +93,24 @@
     class="progress progress-striped active rounded-md h-3.5 p-0 m-0 !mt-1.5 outline outline-1 hover:outline-2"
     style={`outline-color: ${$accentColor}`}
 >
-    <div class="relative bottom-5 flex justify-between w-full px-1 select-none">
-        <p class={progressPClass}>
-            {formatNumber($fileCount)}/{formatNumber($totalFileCt)}
-        </p>
-        <p class={progressPClass}>{$cipheredFilesSize}</p>
-    </div>
     <div
         style={`width: ${dataProgress}%; background-color: ${$accentColor}`}
-        class="progress-bar rounded-md h-3.5 relative bottom-5"
+        class="progress-bar rounded-md h-3.5 relative bottom-0"
     ></div>
-    <Tooltip placement="bottom" class={tooltipTailwindClass} arrow={false}
-        >{dataProgress}</Tooltip
+
+    <div class="relative bottom-3 flex justify-between w-full px-1 select-none">
+        <p class={`${progressPClass} -mt-0.5 text-xs`}>
+            {formatNumber($fileCount)}/{formatNumber($totalFileCt)}
+        </p>
+        <p class={`${progressPClass} -mt-6 text-md`}>
+            {$cipheredFilesSize}
+        </p>
+    </div>
+    <Tooltip
+        placement="bottom"
+        class="py-0 m-0 text-xs font-semibold px-1 !bg-opacity-0 z-20"
+        arrow={false}
+        offset={-17}>{dataProgress}%</Tooltip
     >
 </div>
 
@@ -119,7 +127,7 @@
     .progress-bar {
         box-shadow: none;
     }
-    @mixin gradient-striped($color: rgba(200, 200, 200, 0.5), $angle: 50deg) {
+    @mixin gradient-striped($color: rgba(200, 200, 200, 0.5), $angle: -55deg) {
         background-image: -webkit-linear-gradient(
             $angle,
             $color 25%,
@@ -164,7 +172,7 @@
     // Spec and IE10+
     @keyframes progress-bar-stripes {
         from {
-            background-position: 40px 0;
+            background-position: -40px 0;
         }
         to {
             background-position: 0 0;
@@ -186,7 +194,7 @@
         background-size: 40px 40px;
     }
 
-    $icon-size: 2.4rem;
+    $icon-size: 2.5rem;
 
     /*  ICONS  */
     @import "../../neu_icons.scss";

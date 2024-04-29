@@ -4,6 +4,7 @@ export enum FileTasks {
     Move = "MOVING",
     Pack = "PACKING",
     Open = "OPENING",
+    LoadFiles = "LOADING FILES",
     None = "none",
 }
 

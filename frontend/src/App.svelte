@@ -28,7 +28,7 @@
     largeFileName,
     newAccount,
     filterInputs,
-    initFileCtTree,
+    initFileCtTree as buildFileTreeCt,
   } from "./stores/dynamicVariables.ts";
   import { fileTree } from "./tools/fileTree.ts";
   import { addLogEntry } from "./tools/logger.ts";
@@ -69,14 +69,13 @@
     EventsOn("largeFileName", (_largeFileName: string) => {
       largeFileName.set(_largeFileName);
     });
-    EventsOn("initFileCtTree", (_initFileCtTree: number) => {
-      LogInfo("Init file tree Ct " + _initFileCtTree);
-      initFileCtTree.set(_initFileCtTree);
+    EventsOn("buildFileTreeCt", (_buildFileTreeCt: number) => {
+      LogInfo("buildFileTreeCt " + _buildFileTreeCt);
+      buildFileTreeCt.set(_buildFileTreeCt);
     });
   });
 
   async function loggedIn() {
-    EventsOff("initFileCtTree");
     await GetDirectoryPath(0).then((vaultPath) => {
       vaultDir.set(vaultPath);
       LogDebug("vaultPath " + vaultPath);

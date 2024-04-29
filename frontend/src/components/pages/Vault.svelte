@@ -10,16 +10,8 @@
         LogInfo,
     } from "../../../wailsjs/runtime/runtime";
 
-    import {
-        EncryptFilesInDir,
-        DecryptFilesInDir,
-        EncryptFilesInArr,
-        DecryptFilesInArr,
-    } from "../../../wailsjs/go/main/App";
-    import {
-        GetDirectoryPath,
-        GetFilesByType,
-    } from "../../../wailsjs/go/main/Getters";
+    import { EncryptFiles, DecryptFiles } from "../../../wailsjs/go/main/App";
+    import { GetFilesByType } from "../../../wailsjs/go/main/Getters";
 
     import { AppPage, currentPage } from "../../enums/AppPage.ts";
     import { Modals, currentModal } from "../../enums/Modals.ts";
@@ -101,11 +93,11 @@
                 currentModal.set(Modals.Logger);
                 totalFileCt.set(checkFileTypesinHeldDownBtns(true));
                 prependAbsPathToRelPaths(0).then((prependedRelPaths) => {
-                    EncryptFilesInArr(prependedRelPaths);
+                    EncryptFiles(prependedRelPaths);
                 });
             });
         else
-            GetFilesByType(0, false).then((filePaths) => {
+            GetFilesByType(0, true).then((filePaths) => {
                 if (!filePaths) {
                     startDisplay("no files to encrypt..");
                     return;
@@ -115,7 +107,7 @@
                         currentFileTask.set(FileTasks.Encrypt);
                         currentModal.set(Modals.Logger);
                         totalFileCt.set(filePaths.length);
-                        EncryptFilesInDir(0);
+                        EncryptFiles(filePaths);
                     });
                 } else {
                     startDisplay("no files to encrypt..");
@@ -134,11 +126,11 @@
                 currentModal.set(Modals.Logger);
                 totalFileCt.set(checkFileTypesinHeldDownBtns(false));
                 prependAbsPathToRelPaths(0).then((prependedRelPaths) => {
-                    DecryptFilesInArr(prependedRelPaths);
+                    DecryptFiles(prependedRelPaths);
                 });
             });
         else
-            GetFilesByType(0, true).then((filePaths) => {
+            GetFilesByType(0, false).then((filePaths) => {
                 if (!filePaths) {
                     startDisplay("no files to decrypt..");
                     return;
@@ -148,7 +140,7 @@
                         currentFileTask.set(FileTasks.Decrypt);
                         currentModal.set(Modals.Logger);
                         totalFileCt.set(filePaths.length);
-                        DecryptFilesInDir(0);
+                        DecryptFiles(filePaths);
                     });
                 } else {
                     startDisplay("no files to decrypt..");
@@ -219,10 +211,10 @@
         </div>
 
         <div class="h-1/2">
-            <div class="relative top-[1.8rem]">
+            <div class="relative top-[2.25rem]">
                 <ModalButtons />
             </div>
-            <div class="flex justify-between relative top-[2.8rem]">
+            <div class="flex justify-between relative top-[2.85rem]">
                 <NeuButton
                     on:click={() => switchPages(AppPage.Mbox)}
                     _class="!w-20">M-BOX</NeuButton
