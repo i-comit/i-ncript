@@ -31,10 +31,11 @@
     filterInputs,
     loadedFileCt,
   } from "./stores/dynamicVariables.ts";
-  import { fileTree } from "./tools/fileTree.ts";
   import { addLogEntry } from "./tools/logger.ts";
   import AppSetup from "./components/pages/AppSetup.svelte";
   import { height, width } from "./stores/constantVariables.ts";
+  import { fileTree } from "./stores/dynamicVariables.ts";
+
   import {
     AddInputToFilterTemplate,
     LoadFileFilters,

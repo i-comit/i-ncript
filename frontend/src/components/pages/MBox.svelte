@@ -23,6 +23,7 @@
         largeFilePercent,
         accentColor,
         pageLoading,
+        fileTree,
         duplicateFiles,
     } from "../../stores/dynamicVariables.ts";
 
@@ -30,7 +31,6 @@
         buildFileTree,
         clearHeldBtns,
         clearHeldBtnsFromContainer,
-        fileTree,
     } from "../../tools/fileTree.ts";
     import { EventsOff, LogInfo } from "../../../wailsjs/runtime/runtime";
 

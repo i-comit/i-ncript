@@ -16,12 +16,10 @@ import { LogDebug, LogError, LogInfo, LogTrace, LogWarning } from "../../wailsjs
 import { MoveFilesToPath } from '../../wailsjs/go/main/FileUtils';
 
 import { FileTypes, getFileType } from '../enums/FileTypes.ts';
-import { duplicateFiles, mBoxDir, vaultDir } from '../stores/dynamicVariables.ts';
+import { duplicateFiles, mBoxDir, vaultDir, currentFilePath } from '../stores/dynamicVariables.ts';
 import {
     clearHeldBtns,
     setIsInFileTask,
-    currentFilePath,
-    setHeldBtnsStyle
 } from './fileTree';
 
 export const pageName: () => string = () => {

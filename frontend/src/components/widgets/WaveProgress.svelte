@@ -66,7 +66,7 @@
         InterruptFileTask().finally(() => {
             setTimeout(() => {
                 retrieveDuplicateFiles();
-            }, 2000);
+            }, 1800);
         });
         currentFileTask.set(FileTasks.None);
         cipheredFilesSize.set("");

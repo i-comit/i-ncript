@@ -18,11 +18,9 @@
 
     import {
         clearHeldBtns,
-        currentFilePath,
         expandRoot,
         getCurrentPageStore,
         buildFileTree,
-        currentDirPath,
         clearHeldBtnsFromContainer,
         checkFileDragDirectory,
         handleFileClick,
@@ -63,6 +61,8 @@
     import {
         darkLightMode,
         accentColor,
+        currentFilePath,
+        currentDirPath,
         duplicateFiles,
     } from "../../stores/dynamicVariables.ts";
     import { FileTasks, currentFileTask } from "../../enums/FileTasks.ts";

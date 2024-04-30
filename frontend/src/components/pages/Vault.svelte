@@ -4,12 +4,6 @@
     import { get } from "svelte/store";
     import Toggle from "../widgets/FlatToggle.svelte";
 
-    import {
-        EventsOff,
-        EventsOn,
-        LogInfo,
-    } from "../../../wailsjs/runtime/runtime";
-
     import { EncryptFiles, DecryptFiles } from "../../../wailsjs/go/main/App";
     import { GetFilesByType } from "../../../wailsjs/go/main/Getters";
 
@@ -24,12 +18,12 @@
         largeFilePercent,
         pageLoading,
         totalFileCt,
+        fileTree,
         duplicateFiles,
     } from "../../stores/dynamicVariables.ts";
 
     import {
         buildFileTree,
-        fileTree,
         setIsInFileTask,
         clearHeldBtnsFromContainer,
     } from "../../tools/fileTree.ts";

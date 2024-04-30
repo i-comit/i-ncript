@@ -2,7 +2,7 @@ import { writable } from "svelte/store";
 import { get } from "svelte/store";
 import { AppPage, currentPage } from "../enums/AppPage";
 import {
-    addToHeldFileBtnsArr, basePath,
+    addToHeldFileBtnsArr as addToSelectedFilesArr, basePath,
     checkIfRelPathIsInHeldDownBtns,
     getRootDir,
     heldDownBtns, leftCtrlDown, removeFileName
@@ -23,16 +23,10 @@ import {
 } from "../../wailsjs/go/main/Getters";
 import { lastHighlight_light, prevHighlight_light } from "../stores/constantVariables";
 import { FileTypes, getFileType } from "../enums/FileTypes";
-import { pageLoading } from "../stores/dynamicVariables";
-
-export const vaultExpansionState = writable<{ [key: string]: boolean }>({});
-export const mBoxExpansionState = writable<{ [key: string]: boolean }>({});
-
-export const isInFileTask = writable<boolean>(false);
-
-export const fileTree = writable<FileNode>({ relPath: "", children: [] });
-export const currentFilePath = writable<string>("");
-export const currentDirPath = writable<string>("");
+import {
+    fileTree, pageLoading, currentDirPath, currentFilePath,
+    isInFileTask, mBoxExpansionState, vaultExpansionState
+} from "../stores/dynamicVariables";
 
 export interface FileNode {
     relPath: string;
@@ -48,7 +42,7 @@ export function handleFileClick(relPath: string, _buttonRef: HTMLButtonElement) 
         clearHeldBtns();
         LogInfo("Cleared held buttons from file click")
     }
-    addToHeldFileBtnsArr(relPath, _buttonRef);
+    addToSelectedFilesArr(relPath, _buttonRef);
     setHeldBtnsStyle();
 }
 
