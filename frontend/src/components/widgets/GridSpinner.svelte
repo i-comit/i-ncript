@@ -17,7 +17,7 @@
 {#if $pageLoading}
     <div
         in:fly={{ x: -15, duration: 400 }}
-        class="fixed items-center justify-center w-1/2 bottom-[3.5rem] -right-10 z-60 select-none"
+        class="fixed items-center justify-center w-1/2 bottom-[3.5rem] -right-11 z-60 select-none"
         style="--wails-draggable: drag; background-color:transparent"
     >
         <div class="container">
