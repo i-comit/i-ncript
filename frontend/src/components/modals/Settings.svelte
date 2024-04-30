@@ -61,7 +61,7 @@
     });
 
     onDestroy(() => {
-        SaveFileFilters(get(filterInputs));
+        if (get(filterInputs) !== undefined) SaveFileFilters(get(filterInputs));
     });
 
     async function readFilterInputs() {

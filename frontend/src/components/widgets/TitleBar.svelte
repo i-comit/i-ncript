@@ -39,7 +39,9 @@
     }
 
     function closeApp() {
-        SaveFileFilters(get(filterInputs)).finally(() => CloseApp());
+        if (get(filterInputs) !== undefined)
+            SaveFileFilters(get(filterInputs)).finally(() => CloseApp());
+        else CloseApp();
     }
 </script>
 

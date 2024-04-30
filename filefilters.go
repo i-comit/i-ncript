@@ -158,7 +158,6 @@ func (f *FileUtils) LoadFileFilters() ([]string, error) {
 		fmt.Println("Error decoding JSON:", err)
 		return nil, err
 	}
-
 	return stringSlice, nil
 }
 

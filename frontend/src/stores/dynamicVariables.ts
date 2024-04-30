@@ -26,4 +26,4 @@ export const fileTaskPercent = writable<number>(0);
 export const largeFileName = writable<string>("");
 export const largeFilePercent = writable<number>(0);
 
-export const filterInputs = writable<string>("");
+export const filterInputs = writable<string>();

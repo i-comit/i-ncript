@@ -19,6 +19,7 @@
     LogDebug,
     LogError,
     LogInfo,
+    LogWarning,
   } from "../wailsjs/runtime/runtime";
   import { DirectoryWatcher, ResizeWindow } from "../wailsjs/go/main/App";
   import {
@@ -73,6 +74,22 @@
       // LogInfo("loadedFileCt " + _loadedFileCt);
       loadedFileCt.set(_loadedFileCt);
     });
+    try {
+      const _filterInputs = await LoadFileFilters();
+      if (_filterInputs && _filterInputs.length !== 0) {
+        const singleString = _filterInputs.join("\n");
+        filterInputs.set(singleString);
+        let lines = get(filterInputs)
+          .split("\n")
+          .filter((line) => line.trim() !== "");
+        lines.forEach((_filterInput) => {
+          LogWarning("Filter lines: " + _filterInput);
+          AddInputToFilterTemplate(_filterInput);
+        });
+      }
+    } catch (error) {
+      LogError("Error loading file filters:" + error);
+    }
   });
 
   async function loggedIn() {
@@ -84,22 +101,7 @@
       mBoxDir.set(mBoxPath);
       LogDebug("mboxPath " + mBoxPath);
     });
-    try {
-      const _filterInputs = await LoadFileFilters();
-      if (_filterInputs && _filterInputs.length !== 0) {
-        const singleString = _filterInputs.join("\n");
-        filterInputs.set(singleString);
-        let lines = get(filterInputs)
-          .split("\n")
-          .filter((line) => line.trim() !== "");
 
-        lines.forEach((_filterInput) => {
-          AddInputToFilterTemplate(_filterInput);
-        });
-      }
-    } catch (error) {
-      LogError("Error loading file filters:" + error);
-    }
     currentPage.set(AppPage.Vault);
     ResizeWindow(width * 2, height);
 
