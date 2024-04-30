@@ -30,7 +30,7 @@ func checkExcludedDirAgainstPath(path string) bool {
 	}
 	for _, element := range excludedDirsContaining {
 		if strings.Contains(lowercasePath, element) {
-			fmt.Println("found excluded dir containing " + element)
+			fmt.Println("found excluded path containing " + element)
 			return true
 		}
 	}

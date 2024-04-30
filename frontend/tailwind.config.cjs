@@ -8,10 +8,10 @@ const config = {
         primary: {
           100: '#111111', //Dark text color
           200: '#dddddd', //Light text color
-          300: '#707070', //Dark BG color
+          300: '#656565', //Dark BG color
           400: '#eeeeee', //Light BG color
           500: '#95c7db', //Default accent color
-          600: '#656565', //Dark Modal BG color
+          600: '#606060', //Dark Modal BG color
           700: '#e1e1e1', //Light Modal BG color
         }
       },

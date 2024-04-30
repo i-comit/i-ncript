@@ -59,7 +59,7 @@
     import PanelDivider from "../widgets/PanelDivider.svelte";
     import FileTools from "../widgets/FileTools.svelte";
     import DuplicateFiles from "../modals/DuplicateFiles.svelte";
-    import OvalSpinner from "../widgets/OvalSpinner.svelte";
+    import GridSpinner from "../widgets/GridSpinner.svelte";
     import ModalButtons from "../widgets/ModalButtons.svelte";
     import Chronograph from "../widgets/Chronograph.svelte";
 
@@ -171,7 +171,7 @@
 </script>
 
 <TitleBar />
-<OvalSpinner />
+<GridSpinner />
 <DuplicateFiles />
 <div
     class="flex h-screen !rounded-lg {$pageLoading || $duplicateFiles.length > 0

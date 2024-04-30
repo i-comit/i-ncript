@@ -67,7 +67,7 @@
 
     import RadialProgress from "../widgets/RadialProgress.svelte";
     import DuplicateFiles from "../modals/DuplicateFiles.svelte";
-    import OvalSpinner from "../widgets/OvalSpinner.svelte";
+    import GridSpinner from "../widgets/GridSpinner.svelte";
     import ModalButtons from "../widgets/ModalButtons.svelte";
 
     enum MboxState {
@@ -268,7 +268,7 @@
 </script>
 
 <TitleBar />
-<OvalSpinner />
+<GridSpinner />
 <DuplicateFiles />
 <div
     class="flex h-screen !rounded-lg {$pageLoading || $duplicateFiles.length > 0
