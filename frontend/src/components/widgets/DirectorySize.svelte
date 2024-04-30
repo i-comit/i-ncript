@@ -102,7 +102,7 @@
             class={tooltipTailwindClass}
             arrow={false}
             offset={1}
-            >{formattedFreeDriveSize} / {formattedTotalDriveSize} | {diskSpacePercent}%</Tooltip
+            >FREE:{formattedFreeDriveSize}-{formattedTotalDriveSize} | {diskSpacePercent}%</Tooltip
         >
     {/if}
 </div>

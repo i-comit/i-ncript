@@ -65,7 +65,8 @@ func (g *Getters) GetDiskSpacePercent() (int, error) {
 		fmt.Println("Error getting disk space:", err)
 		return 0, err
 	}
-	percent := (float64(freeDiskSpace) / float64(totalDiskSpace)) * 100
+	remainder := totalDiskSpace - freeDiskSpace
+	percent := (float64(remainder) / float64(totalDiskSpace)) * 100
 	percentInt := int(percent)
 	return percentInt, nil
 }
