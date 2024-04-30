@@ -16,7 +16,7 @@
 
 {#if $pageLoading}
     <div
-        in:fly={{ x: -15, duration: 450 }}
+        in:fly={{ x: -15, duration: 400 }}
         class="fixed items-center justify-center w-1/2 bottom-[3.5rem] -right-10 z-60 select-none"
         style="--wails-draggable: drag; background-color:transparent"
     >
@@ -36,11 +36,6 @@
             <div class={blockClass} style={blockStyle} />
             <div class={blockClass} style={blockStyle} />
             <div class={blockClass} style={blockStyle} />
-            <!-- <div class={blockClass} style={blockStyle} />
-        <div class={blockClass} style={blockStyle} />
-        <div class={blockClass} style={blockStyle} />
-        <div class={blockClass} style={blockStyle} />
-        <div class={blockClass} style={blockStyle} /> -->
         </div>
         {#if $loadedFileCt > 0}
             <span class="absolute text-md text-white right-[120px] w-[100px]">
